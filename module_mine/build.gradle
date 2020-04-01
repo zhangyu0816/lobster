@@ -23,6 +23,10 @@ android {
                 arguments = [moduleName: project.getName()]
             }
         }
+
+        dataBinding {
+            enabled true
+        }
     }
 
     buildTypes {
