@@ -1,2 +1,3 @@
 rootProject.name='Lobster'
 include ':app'
+include ':baselib'
