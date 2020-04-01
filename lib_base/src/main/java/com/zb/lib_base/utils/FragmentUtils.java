@@ -10,4 +10,10 @@ public class FragmentUtils {
         Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Home_Fragment_Main).navigation();
         return fragment;
     }
+
+    // 我的
+    public static Fragment getMineFragment(){
+        Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Mine_Fragment_Main).navigation();
+        return fragment;
+    }
 }

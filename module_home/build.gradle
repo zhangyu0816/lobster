@@ -20,7 +20,7 @@ android {
         // 路由模块使用
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = [AROUTER_MODULE_NAME: project.getName()]
+                arguments = [moduleName: project.getName()]
             }
         }
 
@@ -64,6 +64,6 @@ dependencies {
     testImplementation 'junit:junit:4.13'
     // 需要重新在子模块中再引用一次，否则报错
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
-    implementation project(':lib_base')
-    implementation project(':lib_icon')
+    api project(':lib_base')
+    api project(':lib_icon')
 }

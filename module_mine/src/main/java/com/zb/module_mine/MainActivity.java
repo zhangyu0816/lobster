@@ -1,19 +1,21 @@
-package com.zb.module_home;
+package com.zb.module_mine;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.utils.RouteUtils;
-import com.zb.module_home.R;
 
-@Route(path = RouteUtils.Home_Activity_Main)
+@Route(path = RouteUtils.Mine_Activity_Main)
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.home_main);
+        setContentView(R.layout.mine_main);
+        TextView mine = findViewById(R.id.mine);
+        mine.setText("我的");
     }
 }
