@@ -1,16 +1,23 @@
 package com.zb.lib_base.utils;
 
 public class RouteUtils {
-    /*********************** home **************************/
-    //获得home模块fragment
+    /*********************** 首页 **************************/
+    // 首页主fragment
     public static final String Home_Fragment_Main = "/home/MainFragment";
-    //获得home模块主activity
-    public static final String Home_Activity_Main = "/home/MainActivity";
+    // 首页主页
+    public static final String Home_Main = "/home/MainActivity";
 
 
-    /*********************** mine **************************/
-    //获得mine模块fragment
+    /*********************** 我的 **************************/
+    // 我的主Fragment
     public static final String Mine_Fragment_Main = "/mine/MainFragment";
-    //获得mine模块主activity
-    public static final String Mine_Activity_Main = "/mine/MainActivity";
+    // 我的主页
+    public static final String Mine_Main = "/mine/MainActivity";
+
+    /*********************** 注册 **************************/
+
+    // 注册主页
+    public static final String Register_Main = "/register/MainActivity";
+    // 注册--登录
+    public static final String Register_Login = "/register/LoginActivity";
 }

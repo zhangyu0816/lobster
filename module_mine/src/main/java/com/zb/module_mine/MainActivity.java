@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.utils.RouteUtils;
 
-@Route(path = RouteUtils.Mine_Activity_Main)
+@Route(path = RouteUtils.Mine_Main)
 public class MainActivity extends AppCompatActivity {
 
     @Override

@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         TextView hello = findViewById(R.id.hello);
         hello.setOnClickListener(v -> {
-            ARouter.getInstance().build(RouteUtils.Mine_Activity_Main).navigation();
+            ARouter.getInstance().build(RouteUtils.Mine_Main).navigation();
         });
     }
 }
