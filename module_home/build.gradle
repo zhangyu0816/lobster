@@ -65,5 +65,4 @@ dependencies {
     // 需要重新在子模块中再引用一次，否则报错
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
     api project(':lib_base')
-    api project(':lib_icon')
 }
