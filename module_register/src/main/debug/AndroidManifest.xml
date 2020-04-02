@@ -21,6 +21,7 @@
         <activity android:name=".PhoneActivity" />
         <activity android:name=".NickNameActivity" />
         <activity android:name=".BirthdayActivity" />
+        <activity android:name=".CodeActivity" />
     </application>
 
 </manifest>

@@ -51,4 +51,10 @@ public class ActivityUtils {
         AppCompatActivity activity = (AppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Phone).navigation();
         return activity;
     }
+
+    // 注册--验证码
+    public static AppCompatActivity getRegisterCode() {
+        AppCompatActivity activity = (AppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Code).navigation();
+        return activity;
+    }
 }

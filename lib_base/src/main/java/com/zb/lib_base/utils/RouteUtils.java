@@ -26,4 +26,6 @@ public class RouteUtils {
     public static final String Register_Birthday = "/register/BirthdayActivity";
     // 注册--手机号
     public static final String Register_Phone = "/register/PhoneActivity";
+    // 注册--验证码
+    public static final String Register_Code = "/register/CodeActivity";
 }
