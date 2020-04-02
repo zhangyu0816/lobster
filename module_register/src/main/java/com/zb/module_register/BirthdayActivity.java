@@ -5,7 +5,6 @@ import android.view.ViewGroup;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.utils.KeyBroadUtils;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_register.databinding.RegisterBirthdayBinding;
 import com.zb.module_register.vm.BirthdayViewModel;

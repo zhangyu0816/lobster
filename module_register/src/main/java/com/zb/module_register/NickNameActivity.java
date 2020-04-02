@@ -32,7 +32,7 @@ public class NickNameActivity extends BaseActivity {
         // 按钮向上移
         KeyBroadUtils.controlKeyboardLayout(binding.btnLayout, binding.tvNext);
         // 初始化昵称
-        binding.setNick("");
+        binding.setNick(MineApp.registerInfo.getName());
     }
 
 

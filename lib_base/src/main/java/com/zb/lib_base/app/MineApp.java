@@ -18,6 +18,7 @@ public class MineApp extends Application {
     public static RegisterInfo registerInfo = new RegisterInfo();
     public static int W;
     public static int H;
+    public static String PHONE_NUMBER_REG = "^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\\d{8}$";
 
     @Override
     public void onCreate() {
