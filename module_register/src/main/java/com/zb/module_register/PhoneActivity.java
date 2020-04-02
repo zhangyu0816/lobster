@@ -1,5 +1,6 @@
 package com.zb.module_register;
 
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -28,5 +29,6 @@ public class PhoneActivity extends BaseActivity {
         ViewGroup.LayoutParams lp = binding.includeLayout.whiteView.getLayoutParams();
         lp.width = MineApp.W / 3;
         binding.includeLayout.whiteView.setLayoutParams(lp);
+        Log.i("name",""+MineApp.registerInfo.getName());
     }
 }
