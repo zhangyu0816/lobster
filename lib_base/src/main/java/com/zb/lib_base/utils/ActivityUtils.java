@@ -33,4 +33,16 @@ public class ActivityUtils {
         AppCompatActivity activity = (AppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Login).navigation();
         return activity;
     }
+
+    // 注册--昵称
+    public static AppCompatActivity getRegisterNick() {
+        AppCompatActivity activity = (AppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Nick).navigation();
+        return activity;
+    }
+
+    // 注册--手机号
+    public static AppCompatActivity getRegisterPhone() {
+        AppCompatActivity activity = (AppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Phone).navigation();
+        return activity;
+    }
 }

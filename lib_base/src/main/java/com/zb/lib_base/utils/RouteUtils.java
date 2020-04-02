@@ -20,4 +20,8 @@ public class RouteUtils {
     public static final String Register_Main = "/register/MainActivity";
     // 注册--登录
     public static final String Register_Login = "/register/LoginActivity";
+    // 注册--昵称
+    public static final String Register_Nick = "/register/NickNameActivity";
+    // 注册--手机号
+    public static final String Register_Phone = "/register/PhoneActivity";
 }

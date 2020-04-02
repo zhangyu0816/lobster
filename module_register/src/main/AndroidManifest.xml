@@ -7,6 +7,8 @@
         android:supportsRtl="true">
         <activity android:name=".MainActivity"/>
         <activity android:name=".LoginActivity" />
+        <activity android:name=".PhoneActivity" />
+        <activity android:name=".NickNameActivity" />
     </application>
 
 </manifest>

@@ -1,5 +1,7 @@
 package com.zb.lib_base.iv;
 
+import android.view.View;
+
 import androidx.databinding.ViewDataBinding;
 
 @FunctionalInterface
@@ -12,4 +14,6 @@ public interface BaseVMInterface {
 
     default void setList() {
     }
+
+    default void back(View view){}
 }
