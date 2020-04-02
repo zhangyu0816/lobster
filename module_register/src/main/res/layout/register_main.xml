@@ -20,10 +20,9 @@
             android:layout_height="wrap_content"
             android:text="嗨！您的性别为..."
             android:textColor="@android:color/white"
-            android:textSize="26sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -40,6 +39,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView">
 
             <ImageView
+                android:id="@+id/iv_boy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="30dp"
@@ -48,6 +48,7 @@
                 tools:ignore="MissingConstraints" />
 
             <ImageView
+                android:id="@+id/iv_girl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"

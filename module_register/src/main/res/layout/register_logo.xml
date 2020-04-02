@@ -6,15 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.zb.module_register.vm.BirthdayViewModel" />
-
-        <variable
-            name="title"
-            type="String" />
-
-        <variable
-            name="birthday"
-            type="String" />
+            type="com.zb.module_register.vm.LogoViewModel" />
 
     </data>
 
@@ -31,7 +23,7 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{title}"
+            android:text="请选择您的照片哦"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -42,43 +34,17 @@
             app:layout_constraintVertical_bias="0.3" />
 
         <TextView
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginEnd="30dp"
-            android:gravity="center"
-            android:hint="选择生日"
-            android:onClick="@{viewModel::selectBirthday}"
-            android:padding="15dp"
-            android:text="@{birthday}"
-            android:textColor="@android:color/white"
-            android:textColorHint="#f4f4f4"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-        <View
-            android:id="@+id/view1"
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:background="#AC87FF"
-            app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-        <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:alpha="0.8"
-            android:text="您必须满18岁或以上才能使用虾菇"
+            android:text="第一张照片将会当成头像和首图"
             android:textColor="@android:color/white"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view1" />
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <TextView
             android:id="@+id/tv_next"
@@ -88,7 +54,7 @@
             android:background="@drawable/btn_bg_white_radius60"
             android:gravity="center"
             android:onClick="@{viewModel::next}"
-            android:text="继续"
+            android:text="上传照片"
             android:textColor="@color/purple_7a4"
             android:textSize="18sp"
             android:textStyle="bold"

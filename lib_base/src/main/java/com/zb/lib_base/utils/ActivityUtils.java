@@ -57,4 +57,10 @@ public class ActivityUtils {
         AppCompatActivity activity = (AppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Code).navigation();
         return activity;
     }
+
+    // 注册--头像
+    public static AppCompatActivity getRegisterLogo() {
+        AppCompatActivity activity = (AppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Logo).navigation();
+        return activity;
+    }
 }

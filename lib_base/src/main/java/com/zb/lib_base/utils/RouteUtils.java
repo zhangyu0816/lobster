@@ -28,4 +28,6 @@ public class RouteUtils {
     public static final String Register_Phone = "/register/PhoneActivity";
     // 注册--验证码
     public static final String Register_Code = "/register/CodeActivity";
+    // 注册--头像
+    public static final String Register_Logo = "/register/LogoActivity";
 }

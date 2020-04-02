@@ -4,6 +4,7 @@ import android.os.CountDownTimer;
 import android.view.View;
 
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_register.R;
@@ -55,5 +56,6 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
             return;
         }
         SCToastUtil.showToast(activity,"验证成功");
+        ActivityUtils.getRegisterLogo();
     }
 }
