@@ -24,7 +24,6 @@ public class NickNameActivity extends BaseActivity {
         viewModel = new NickViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
-        mBinding.setVariable(BR.nick,"");
 
         RegisterNickBinding binding = (RegisterNickBinding) mBinding;
         ViewGroup.LayoutParams lp = binding.includeLayout.whiteView.getLayoutParams();
@@ -32,6 +31,8 @@ public class NickNameActivity extends BaseActivity {
         binding.includeLayout.whiteView.setLayoutParams(lp);
         // 按钮向上移
         KeyBroadUtils.controlKeyboardLayout(binding.btnLayout, binding.tvNext);
+        // 初始化昵称
+        binding.setNick("");
     }
 
 

@@ -25,6 +25,6 @@ public class NickViewModel extends BaseViewModel implements NickVMInterface {
             return;
         }
         MineApp.registerInfo.setName(nick);
-        ActivityUtils.getRegisterPhone();
+        ActivityUtils.getRegisterBirthday();
     }
 }

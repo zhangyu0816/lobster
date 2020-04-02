@@ -22,6 +22,8 @@ public class RouteUtils {
     public static final String Register_Login = "/register/LoginActivity";
     // 注册--昵称
     public static final String Register_Nick = "/register/NickNameActivity";
+    // 注册--生日
+    public static final String Register_Birthday = "/register/BirthdayActivity";
     // 注册--手机号
     public static final String Register_Phone = "/register/PhoneActivity";
 }

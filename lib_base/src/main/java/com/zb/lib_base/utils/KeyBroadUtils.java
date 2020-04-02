@@ -25,7 +25,7 @@ public class KeyBroadUtils {
                     //获取scrollToView在窗体的坐标
                     scrollToView.getLocationInWindow(location);
                     //计算root滚动高度，使scrollToView在可见区域
-                    int srollHeight = (location[1] + scrollToView.getHeight()) - rect.bottom;
+                    int srollHeight = (location[1] + scrollToView.getHeight()) - rect.bottom+20;
                     root.scrollTo(0, srollHeight);
                 } else {
                     //键盘隐藏

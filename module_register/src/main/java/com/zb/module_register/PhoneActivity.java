@@ -27,8 +27,8 @@ public class PhoneActivity extends BaseActivity {
         mBinding.setVariable(BR.viewModel, viewModel);
         RegisterPhoneBinding binding = (RegisterPhoneBinding) mBinding;
         ViewGroup.LayoutParams lp = binding.includeLayout.whiteView.getLayoutParams();
-        lp.width = MineApp.W / 3;
+        lp.width = MineApp.W / 2;
         binding.includeLayout.whiteView.setLayoutParams(lp);
-        Log.i("name",""+MineApp.registerInfo.getName());
+        Log.i("name", "" + MineApp.registerInfo.getName());
     }
 }

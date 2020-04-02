@@ -40,6 +40,12 @@ public class ActivityUtils {
         return activity;
     }
 
+    // 注册--生日
+    public static AppCompatActivity getRegisterBirthday() {
+        AppCompatActivity activity = (AppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Birthday).navigation();
+        return activity;
+    }
+
     // 注册--手机号
     public static AppCompatActivity getRegisterPhone() {
         AppCompatActivity activity = (AppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Phone).navigation();
