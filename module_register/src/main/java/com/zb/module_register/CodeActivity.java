@@ -8,7 +8,6 @@ import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.KeyBroadUtils;
 import com.zb.lib_base.utils.RouteUtils;
@@ -16,7 +15,7 @@ import com.zb.module_register.databinding.RegisterCodeBinding;
 import com.zb.module_register.vm.CodeViewModel;
 
 @Route(path = RouteUtils.Register_Code)
-public class CodeActivity extends BaseActivity implements KeyBroadUtils.OnSoftKeyboardChangeListener {
+public class CodeActivity extends RegisterBaseActivity implements KeyBroadUtils.OnSoftKeyboardChangeListener {
     private CodeViewModel viewModel;
     private RegisterCodeBinding binding;
     private TextView[] array = new TextView[4];

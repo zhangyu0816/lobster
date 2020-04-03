@@ -3,8 +3,7 @@
     package="com.zb.module_register">
 
     <application
-        android:allowBackup="true"
-        android:supportsRtl="true">
+        android:theme="@style/RegisterTheme">
         <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".PhoneActivity" />

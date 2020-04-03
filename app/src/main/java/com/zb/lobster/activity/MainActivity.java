@@ -4,8 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.alibaba.android.arouter.launcher.ARouter;
-import com.zb.lib_base.utils.RouteUtils;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lobster.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -16,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         TextView hello = findViewById(R.id.hello);
         hello.setOnClickListener(v -> {
-            ARouter.getInstance().build(RouteUtils.Mine_Main).navigation();
+            ActivityUtils.getRegisterMain();
         });
     }
 }

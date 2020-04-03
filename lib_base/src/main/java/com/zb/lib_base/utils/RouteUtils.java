@@ -30,4 +30,8 @@ public class RouteUtils {
     public static final String Register_Code = "/register/CodeActivity";
     // 注册--头像
     public static final String Register_Logo = "/register/LogoActivity";
+
+    /*********************** 相册 **************************/
+    // 相册主页
+    public static final String Camera_Main = "/camera/MainActivity";
 }

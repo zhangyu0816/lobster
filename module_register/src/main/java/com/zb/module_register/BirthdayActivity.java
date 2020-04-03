@@ -3,14 +3,13 @@ package com.zb.module_register;
 import android.view.ViewGroup;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_register.databinding.RegisterBirthdayBinding;
 import com.zb.module_register.vm.BirthdayViewModel;
 
 @Route(path = RouteUtils.Register_Birthday)
-public class BirthdayActivity extends BaseActivity {
+public class BirthdayActivity extends RegisterBaseActivity {
     private BirthdayViewModel viewModel;
     @Override
     public int getRes() {

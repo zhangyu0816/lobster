@@ -63,4 +63,12 @@ public class ActivityUtils {
         AppCompatActivity activity = (AppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Logo).navigation();
         return activity;
     }
+
+    /*********************** 相册 **************************/
+
+    // 相册主页
+    public static AppCompatActivity getCameraMain() {
+        AppCompatActivity activity = (AppCompatActivity) ARouter.getInstance().build(RouteUtils.Camera_Main).navigation();
+        return activity;
+    }
 }

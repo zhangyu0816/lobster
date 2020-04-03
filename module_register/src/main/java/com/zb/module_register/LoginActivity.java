@@ -1,11 +1,10 @@
 package com.zb.module_register;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.utils.RouteUtils;
 
 @Route(path = RouteUtils.Register_Login)
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends RegisterBaseActivity {
 
     @Override
     public int getRes() {

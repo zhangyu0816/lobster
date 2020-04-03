@@ -194,18 +194,15 @@ public class BirthdayPW extends BasePopupWindow {
     private void updateDateUI(CalendarTextAdapter adapter, WheelView wheel) {
         String currentText = (String) adapter.getItemText(wheel.getCurrentItem());
         adapter.setSelectIndex(wheel.getCurrentItem());
-        switch (wheel.getId()) {
-            case R.id.wheel_year:
-                mYear = Integer.parseInt(currentText.replace("年", ""));
-                setDays(mYear, mMonth, mDay, dayList, binding.wheelDay);
-                break;
-            case R.id.wheel_month:
-                mMonth = Integer.parseInt(currentText.replace("月", ""));
-                setDays(mYear, mMonth, mDay, dayList, binding.wheelDay);
-                break;
-            case R.id.wheel_day:
-                mDay = Integer.parseInt(currentText.replace("日", ""));
-                break;
+        int id = wheel.getId();
+        if (id == R.id.wheel_year) {
+            mYear = Integer.parseInt(currentText.replace("年", ""));
+            setDays(mYear, mMonth, mDay, dayList, binding.wheelDay);
+        } else if (id == R.id.wheel_month) {
+            mMonth = Integer.parseInt(currentText.replace("月", ""));
+            setDays(mYear, mMonth, mDay, dayList, binding.wheelDay);
+        } else if (id == R.id.wheel_day) {
+            mDay = Integer.parseInt(currentText.replace("日", ""));
         }
     }
 
