@@ -1,12 +1,12 @@
 package com.zb.module_mine;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.utils.RouteUtils;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 @Route(path = RouteUtils.Mine_Main)
 public class MainActivity extends AppCompatActivity {

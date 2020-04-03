@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
         <variable
             name="viewModel"
             type="com.zb.module_camera.CameraViewModel" />
@@ -33,13 +35,10 @@
                 app:srcCompat="@mipmap/back_white_icon" />
 
             <TextView
-                onClickDelayed="@{viewModel::selectImage}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:drawableEnd="@mipmap/arrow_xia"
-                android:drawablePadding="5dp"
-                android:text="所有照片"
+                android:text="照片"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -62,16 +61,20 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.5f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(1f)}"
                 android:id="@+id/iv_logo"
                 android:layout_width="match_parent"
-                android:layout_height="400dp" />
+                android:layout_height="match_parent" />
         </RelativeLayout>
 
-        <view
+        <androidx.recyclerview.widget.RecyclerView
+            adapter="@{viewModel.adapter}"
+            recyclerType="@{2}"
+            gridNum="@{4}"
             android:id="@+id/images_list"
-            class="androidx.appcompat.app.AlertController$RecycleListView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 </layout>

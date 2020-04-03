@@ -7,13 +7,11 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
-import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.zb.lib_base.R;
 import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.GlideCircleTransform;
 import com.zb.lib_base.utils.GlideRoundTransform;
@@ -62,7 +60,7 @@ public class AdapterBinding {
         } else if (recyclerType == 2) {
             // 九宫格
             view.setLayoutManager(new GridLayoutManager(view.getContext(), gridNum));
-            if (view.getItemDecorationCount() == 0) {
+            if (view.getItemDecorationCount() == 0 && size > 0) {
                 view.addItemDecoration(new GridSpacingItemDecoration(gridNum, DisplayUtils.dip2px(view.getContext(), size), includeEdge));
             }
         } else {

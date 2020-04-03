@@ -1,6 +1,5 @@
 package com.zb.lib_base.utils;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;

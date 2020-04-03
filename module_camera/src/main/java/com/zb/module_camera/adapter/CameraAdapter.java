@@ -12,8 +12,14 @@ import androidx.databinding.ViewDataBinding;
 
 public class CameraAdapter<T> extends BindingItemAdapter<T> {
     private BaseViewModel viewModel;
+    private int selectIndex = -1;
 
-    public CameraAdapter(AppCompatActivity activity, int layoutId, List<T> list,BaseViewModel viewModel) {
+    public void setSelectIndex(int selectIndex) {
+        this.selectIndex = selectIndex;
+        notifyDataSetChanged();
+    }
+
+    public CameraAdapter(AppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
         super(activity, layoutId, list);
         this.viewModel = viewModel;
     }
@@ -22,6 +28,7 @@ public class CameraAdapter<T> extends BindingItemAdapter<T> {
     protected void onBind(RecyclerHolder<ViewDataBinding> holder, T t, int position) {
         holder.binding.setVariable(BR.item, t);
         holder.binding.setVariable(BR.position, position);
+        holder.binding.setVariable(BR.isSelect, selectIndex == position);
         if (viewModel != null) {
             holder.binding.setVariable(BR.viewModel, viewModel);
         }

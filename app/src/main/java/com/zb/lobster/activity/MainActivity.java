@@ -1,11 +1,12 @@
 package com.zb.lobster.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lobster.R;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
