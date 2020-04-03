@@ -34,7 +34,7 @@
                 android:layout_gravity="right"
                 android:padding="15dp"
                 android:text="完成"
-                android:onClick="@{pw::sure}"
+                onClickDelayed="@{pw::sure}"
                 android:textColor="@color/purple_7a4"
                 android:textSize="16sp" />
 

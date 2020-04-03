@@ -11,7 +11,6 @@ import com.zb.module_register.vm.NickViewModel;
 
 @Route(path = RouteUtils.Register_Nick)
 public class NickNameActivity extends RegisterBaseActivity {
-    private NickViewModel viewModel;
 
     @Override
     public int getRes() {
@@ -20,7 +19,7 @@ public class NickNameActivity extends RegisterBaseActivity {
 
     @Override
     public void initUI() {
-        viewModel = new NickViewModel();
+        NickViewModel viewModel = new NickViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
 

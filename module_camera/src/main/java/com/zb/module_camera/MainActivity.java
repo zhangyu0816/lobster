@@ -8,6 +8,7 @@ import com.zb.lib_base.utils.RouteUtils;
 
 @Route(path = RouteUtils.Camera_Main)
 public class MainActivity extends BaseActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.CameraTheme);
@@ -21,6 +22,8 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initUI() {
-
+        CameraViewModel viewModel = new CameraViewModel();
+        viewModel.setBinding(mBinding);
+        mBinding.setVariable(BR.viewModel, viewModel);
     }
 }

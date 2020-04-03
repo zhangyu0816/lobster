@@ -4,7 +4,12 @@ import android.app.Application;
 import android.content.Context;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.zb.lib_base.R;
 import com.zb.lib_base.model.RegisterInfo;
+import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.UIUtils;
 
 import io.realm.Realm;
@@ -20,6 +25,16 @@ public class MineApp extends Application {
     public static int H;
     public static String PHONE_NUMBER_REG = "^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\\d{8}$";
 
+    static {
+        //设置全局的Header构建器
+        SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {
+            layout.setPrimaryColorsId(android.R.color.white, android.R.color.white);//全局设置主题颜色
+            return new ClassicsHeader(context);
+        });
+        //设置全局的Footer构建器
+        SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout) -> new ClassicsFooter(context).setDrawableSize(20));
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -29,6 +44,7 @@ public class MineApp extends Application {
 
         initRouter(this);
         initRealm();
+        DisplayUtils.init(this);
     }
 
     public static Context getInstance() {

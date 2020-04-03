@@ -50,7 +50,7 @@
             android:layout_marginEnd="30dp"
             android:gravity="center"
             android:hint="选择生日"
-            android:onClick="@{viewModel::selectBirthday}"
+            onClickDelayed="@{viewModel::selectBirthday}"
             android:padding="15dp"
             android:text="@{birthday}"
             android:textColor="@android:color/white"
@@ -82,12 +82,12 @@
 
         <TextView
             android:id="@+id/tv_next"
+            onClickDelayed="@{viewModel::next}"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="30dp"
             android:background="@drawable/btn_bg_white_radius60"
             android:gravity="center"
-            android:onClick="@{viewModel::next}"
             android:text="继续"
             android:textColor="@color/purple_7a4"
             android:textSize="18sp"

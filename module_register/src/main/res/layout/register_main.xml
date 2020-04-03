@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.zb.module_register.vm.MainViewModel" />
@@ -40,30 +41,30 @@
 
             <ImageView
                 android:id="@+id/iv_boy"
+                onClickDelayed="@{v->viewModel.selectSex(1)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="30dp"
-                android:onClick="@{v->viewModel.selectSex(1)}"
                 app:srcCompat="@mipmap/boy_icon"
                 tools:ignore="MissingConstraints" />
 
             <ImageView
                 android:id="@+id/iv_girl"
+                onClickDelayed="@{v->viewModel.selectSex(0)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:onClick="@{v->viewModel.selectSex(0)}"
                 app:srcCompat="@mipmap/girl_icon"
                 tools:ignore="MissingConstraints" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/textView2"
+            onClickDelayed="@{viewModel::toLogin}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="100dp"
             android:text="登录"
-            android:onClick="@{viewModel::toLogin}"
             android:textColor="@android:color/white"
             android:textSize="26sp"
             android:textStyle="bold"

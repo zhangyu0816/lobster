@@ -11,8 +11,6 @@ import com.zb.module_register.vm.MainViewModel;
 @Route(path = RouteUtils.Register_Main)
 public class MainActivity extends RegisterBaseActivity {
 
-    private RegisterMainBinding binding;
-
     @Override
     public int getRes() {
         return R.layout.register_main;
@@ -23,7 +21,7 @@ public class MainActivity extends RegisterBaseActivity {
 
         mBinding.setVariable(BR.viewModel, new MainViewModel());
 
-        binding = (RegisterMainBinding) mBinding;
+        RegisterMainBinding binding = (RegisterMainBinding) mBinding;
 
         ViewGroup.LayoutParams lp = binding.ivBoy.getLayoutParams();
         lp.height = lp.width = (int) (300f * MineApp.W / 1080f);

@@ -11,9 +11,6 @@ import com.zb.module_register.vm.LogoViewModel;
 @Route(path = RouteUtils.Register_Logo)
 public class LogoActivity extends RegisterBaseActivity {
 
-    private LogoViewModel viewModel;
-    private RegisterLogoBinding binding;
-
     @Override
     public int getRes() {
         return R.layout.register_logo;
@@ -21,11 +18,11 @@ public class LogoActivity extends RegisterBaseActivity {
 
     @Override
     public void initUI() {
-        viewModel = new LogoViewModel();
+        LogoViewModel viewModel = new LogoViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
 
-        binding = (RegisterLogoBinding) mBinding;
+        RegisterLogoBinding binding = (RegisterLogoBinding) mBinding;
 
         ViewGroup.LayoutParams lp = binding.includeLayout.whiteView.getLayoutParams();
         lp.width = MineApp.W * 5 / 6;

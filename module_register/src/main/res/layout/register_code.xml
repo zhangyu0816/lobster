@@ -119,7 +119,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:alpha="0.8"
-            android:onClick="@{viewModel::reset}"
+            onClickDelayed="@{viewModel::reset}"
             android:text="@{remark}"
             android:textColor="@android:color/white"
             android:textSize="14sp"
@@ -129,6 +129,7 @@
 
         <TextView
             android:id="@+id/tv_next"
+            onClickDelayed="@{viewModel::sure}"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginStart="30dp"
@@ -136,22 +137,21 @@
             android:layout_marginEnd="30dp"
             android:background="@drawable/btn_bg_purple_af9_radius60"
             android:gravity="center"
-            android:onClick="@{viewModel::sure}"
             android:text="确认"
             android:textColor="@color/purple_cab"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@+id/tv_second"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/tv_second" />
 
         <TextView
             android:id="@+id/tv_next2"
+            onClickDelayed="@{viewModel::sure}"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="30dp"
             android:background="@drawable/btn_bg_purple_af9_radius60"
             android:gravity="center"
-            android:onClick="@{viewModel::sure}"
             android:text="确认"
             android:textColor="@color/purple_cab"
             android:textSize="18sp"

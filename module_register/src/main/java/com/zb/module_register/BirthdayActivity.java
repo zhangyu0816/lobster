@@ -10,7 +10,6 @@ import com.zb.module_register.vm.BirthdayViewModel;
 
 @Route(path = RouteUtils.Register_Birthday)
 public class BirthdayActivity extends RegisterBaseActivity {
-    private BirthdayViewModel viewModel;
     @Override
     public int getRes() {
         return R.layout.register_birthday;
@@ -18,8 +17,8 @@ public class BirthdayActivity extends RegisterBaseActivity {
 
     @Override
     public void initUI() {
-        viewModel  = new BirthdayViewModel();
-        mBinding.setVariable(BR.viewModel,viewModel);
+        BirthdayViewModel viewModel = new BirthdayViewModel();
+        mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
 
         RegisterBirthdayBinding binding = (RegisterBirthdayBinding) mBinding;

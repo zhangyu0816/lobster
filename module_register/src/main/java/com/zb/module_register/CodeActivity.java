@@ -16,7 +16,6 @@ import com.zb.module_register.vm.CodeViewModel;
 
 @Route(path = RouteUtils.Register_Code)
 public class CodeActivity extends RegisterBaseActivity implements KeyBroadUtils.OnSoftKeyboardChangeListener {
-    private CodeViewModel viewModel;
     private RegisterCodeBinding binding;
     private TextView[] array = new TextView[4];
 
@@ -29,7 +28,7 @@ public class CodeActivity extends RegisterBaseActivity implements KeyBroadUtils.
 
     @Override
     public void initUI() {
-        viewModel = new CodeViewModel();
+        CodeViewModel viewModel = new CodeViewModel();
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
         binding = (RegisterCodeBinding) mBinding;
