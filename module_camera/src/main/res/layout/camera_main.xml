@@ -11,6 +11,9 @@
             name="viewModel"
             type="com.zb.module_camera.CameraViewModel" />
 
+        <variable
+            name="imageUrl"
+            type="String" />
     </data>
 
     <LinearLayout
@@ -38,12 +41,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="照片"
+                android:text="相册"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
+                onClickDelayed="@{viewModel::upload}"
                 android:layout_width="60dp"
                 android:layout_height="24dp"
                 android:layout_alignParentEnd="true"
@@ -57,22 +61,26 @@
         </RelativeLayout>
 
         <RelativeLayout
+            viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.5f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(1f)}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
                 viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.5f)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(1f)}"
-                android:id="@+id/iv_logo"
+                imageUrl="@{imageUrl}"
+                defaultRes="@{ObjectUtils.getDefaultRes()}"
+                countSize="@{true}"
+                android:layout_centerInParent="true"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            adapter="@{viewModel.adapter}"
-            recyclerType="@{2}"
-            gridNum="@{4}"
             android:id="@+id/images_list"
+            adapter="@{viewModel.adapter}"
+            gridNum="@{4}"
+            recyclerType="@{2}"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

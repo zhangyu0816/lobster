@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_camera.adapter.CameraAdapter;
+import com.zb.module_camera.databinding.CameraMainBinding;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -41,6 +42,12 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
     @Override
     public void selectImage(int position) {
         adapter.setSelectIndex(position);
+        mBinding.setVariable(BR.imageUrl,images.get(position));
+    }
+
+    @Override
+    public void upload(View view) {
+
     }
 
     /**

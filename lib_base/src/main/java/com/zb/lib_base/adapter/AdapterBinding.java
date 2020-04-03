@@ -1,6 +1,7 @@
 package com.zb.lib_base.adapter;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -8,10 +9,13 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.GlideCircleTransform;
 import com.zb.lib_base.utils.GlideRoundTransform;
@@ -21,6 +25,8 @@ import com.zb.lib_base.utils.StaggeredDividerItemDecoration;
 
 import java.util.concurrent.TimeUnit;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.BindingAdapter;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -118,9 +124,9 @@ public class AdapterBinding {
 
     // 加载图片
     @SuppressLint("CheckResult")
-    @BindingAdapter(value = {"imageUrl", "imageRes", "defaultRes", "viewWidthSize", "viewHeightSize", "isCircle", "isRound", "roundSize"}, requireAll = false)
-    public static void loadImage(ImageView view, String imageUrl, int imageRes, int defaultRes, int widthSize, int heightSize, boolean isCircle, boolean isRound, int roundSize) {
-        viewSize(view, widthSize, heightSize);
+    @BindingAdapter(value = {"imageUrl", "imageRes", "defaultRes", "viewWidthSize", "viewHeightSize", "isCircle", "isRound", "roundSize", "countSize"}, requireAll = false)
+    public static void loadImage(ImageView view, String imageUrl, int imageRes, int defaultRes, int widthSize, int heightSize, boolean isCircle, boolean isRound, int roundSize, boolean countSize) {
+
         RequestOptions cropOptions = new RequestOptions().centerCrop();
         if (isCircle) {
             // 圆图
@@ -130,12 +136,29 @@ public class AdapterBinding {
             // 圆角图
             cropOptions.transform(new GlideRoundTransform(roundSize, 0));
         }
-        RequestBuilder builder = Glide.with(view.getContext()).asDrawable().thumbnail(Glide.with(view.getContext()).load(defaultRes)).apply(cropOptions);
 
-        if (imageRes != 0) {
-            builder.load(imageRes).into(view);
+        if (countSize) {
+            Glide.with(view.getContext()).asBitmap().load(imageUrl).into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                    if (widthSize == 0) {
+                        viewSize(view, (int) (resource.getWidth() * (float) heightSize / MineApp.H), heightSize);
+                    }
+                    if (heightSize == 0) {
+                        viewSize(view, heightSize, (int) (resource.getHeight() * (float) widthSize / MineApp.W));
+                    }
+                    view.setImageBitmap(resource);
+                }
+            });
         } else {
-            builder.load(imageUrl).into(view);
+            viewSize(view, widthSize, heightSize);
+            RequestBuilder builder = Glide.with(view.getContext()).asDrawable().thumbnail(Glide.with(view.getContext()).load(defaultRes)).apply(cropOptions);
+
+            if (imageRes != 0) {
+                builder.load(imageRes).into(view);
+            } else {
+                builder.load(imageUrl).into(view);
+            }
         }
     }
 }
