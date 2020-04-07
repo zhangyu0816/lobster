@@ -69,6 +69,9 @@ public class AdapterBinding {
             if (view.getItemDecorationCount() == 0 && size > 0) {
                 view.addItemDecoration(new GridSpacingItemDecoration(gridNum, DisplayUtils.dip2px(view.getContext(), size), includeEdge));
             }
+        } else if (recyclerType == 3) {
+            // 九宫格
+            view.setLayoutManager(new GridLayoutManager(view.getContext(), gridNum));
         } else {
             // 瀑布流
             StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);

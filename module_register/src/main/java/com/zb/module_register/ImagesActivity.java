@@ -32,7 +32,7 @@ public class ImagesActivity extends RegisterBaseActivity {
         lp.width = MineApp.W;
         binding.includeLayout.whiteView.setLayoutParams(lp);
 
-        AdapterBinding.viewSize(binding.imagesList, MineApp.W, ObjectUtils.getLogoHeight(0.6f));
+        AdapterBinding.viewSize(binding.imagesList, ObjectUtils.getViewSizeByWidth(0.9f), ObjectUtils.getLogoHeight(0.6f));
     }
 
     @Override

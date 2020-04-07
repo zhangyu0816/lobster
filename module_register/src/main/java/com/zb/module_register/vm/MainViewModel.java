@@ -18,6 +18,14 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     @Override
     public void toLogin(View view) {
 //        ActivityUtils.getRegisterLogin();
-        ActivityUtils.getRegisterLogo();
+//        ActivityUtils.getRegisterLogo();
+
+        MineApp.registerInfo.getImageList().add("");
+        MineApp.registerInfo.getImageList().add("");
+        MineApp.registerInfo.getImageList().add("");
+        MineApp.registerInfo.getImageList().add("");
+        MineApp.registerInfo.getImageList().add("");
+        MineApp.registerInfo.getImageList().add("");
+        ActivityUtils.getRegisterImages();
     }
 }

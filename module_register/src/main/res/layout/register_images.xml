@@ -38,12 +38,12 @@
             android:id="@+id/images_list"
             adapter="@{viewModel.adapter}"
             gridNum="@{3}"
-            recyclerType="@{2}"
-            size="@{15}"
-            includeEdge="@{true}"
+            recyclerType="@{3}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <TextView

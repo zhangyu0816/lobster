@@ -35,9 +35,9 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
     public void setAdapter() {
         images = MineApp.registerInfo.getImageList();
         adapter = new RegisterAdapter<>(activity, R.layout.item_images, images, this);
-//        callback = new SimpleItemTouchHelperCallback(adapter);
-//        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-//        touchHelper.attachToRecyclerView(((RegisterImagesBinding)mBinding).imagesList);
+        callback = new SimpleItemTouchHelperCallback(adapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(((RegisterImagesBinding)mBinding).imagesList);
 //        callback.setImages(images);
 //        callback.setSort(true);
 //        callback.setDragFlags(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT);

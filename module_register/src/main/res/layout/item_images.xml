@@ -17,24 +17,21 @@
         <variable
             name="viewModel"
             type="com.zb.module_register.vm.ImagesViewModel" />
-
-
     </data>
 
     <RelativeLayout
         onClickDelayed="@{v->viewModel.selectImage(position)}"
-        viewHeightSize="@{ObjectUtils.getLogoHeight(0.27f)}"
-        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.27f)}"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
 
         <LinearLayout
             viewHeightSize="@{ObjectUtils.getLogoHeight(0.27f)}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.27f)}"
-            android:background="@drawable/btn_bg_purple_976_radius10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:background="@drawable/btn_bg_purple_976_radius10"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -60,7 +57,8 @@
             viewHeightSize="@{ObjectUtils.getLogoHeight(0.27f)}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.27f)}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
     </RelativeLayout>
 
 </layout>

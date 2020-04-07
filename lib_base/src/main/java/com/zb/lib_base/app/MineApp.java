@@ -7,6 +7,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.zb.lib_base.adaptive.FitScreen;
 import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.UIUtils;
@@ -44,6 +45,7 @@ public class MineApp extends Application {
         initRouter(this);
         initRealm();
         DisplayUtils.init(this);
+        FitScreen.createDesign(getApplicationContext(), H, W);
     }
 
     public static Context getInstance() {
