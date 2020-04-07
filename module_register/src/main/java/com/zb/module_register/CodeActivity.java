@@ -3,11 +3,11 @@ package com.zb.module_register;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.KeyBroadUtils;
 import com.zb.lib_base.utils.RouteUtils;
@@ -62,7 +62,7 @@ public class CodeActivity extends RegisterBaseActivity implements KeyBroadUtils.
                         binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_7a4));
                         binding.tvNext2.setBackgroundResource(R.drawable.btn_bg_white_radius60);
                         binding.tvNext2.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_7a4));
-                    }else{
+                    } else {
                         binding.tvNext.setBackgroundResource(R.drawable.btn_bg_purple_af9_radius60);
                         binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_cab));
                         binding.tvNext2.setBackgroundResource(R.drawable.btn_bg_purple_af9_radius60);
@@ -71,9 +71,10 @@ public class CodeActivity extends RegisterBaseActivity implements KeyBroadUtils.
                 }
             }
         });
-        ViewGroup.LayoutParams lp = binding.includeLayout.whiteView.getLayoutParams();
-        lp.width = MineApp.W * 2 / 3;
-        binding.includeLayout.whiteView.setLayoutParams(lp);
+
+        // 步骤进度跳
+        AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 5);
+        AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W * 2 / 3, 5);
 
         mOnGlobalLayoutListener = KeyBroadUtils.observeSoftKeyboard(this, this);
     }

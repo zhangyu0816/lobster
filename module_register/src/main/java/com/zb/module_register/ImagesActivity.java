@@ -28,10 +28,10 @@ public class ImagesActivity extends RegisterBaseActivity {
         viewModel.setAdapter();
 
         RegisterImagesBinding binding = (RegisterImagesBinding) mBinding;
-        ViewGroup.LayoutParams lp = binding.includeLayout.whiteView.getLayoutParams();
-        lp.width = MineApp.W;
-        binding.includeLayout.whiteView.setLayoutParams(lp);
-
+        // 步骤进度跳
+        AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 5);
+        AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W , 5);
+        // 列表宽
         AdapterBinding.viewSize(binding.imagesList, ObjectUtils.getViewSizeByWidth(0.9f), ObjectUtils.getLogoHeight(0.6f));
     }
 

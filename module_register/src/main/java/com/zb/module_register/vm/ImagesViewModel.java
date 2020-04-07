@@ -28,6 +28,7 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
     @Override
     public void back(View view) {
         super.back(view);
+        ActivityUtils.getRegisterLogo();
         activity.finish();
     }
 
@@ -44,7 +45,7 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
 
     @Override
     public void complete(View view) {
-
+        activity.finish();
     }
 
     @Override

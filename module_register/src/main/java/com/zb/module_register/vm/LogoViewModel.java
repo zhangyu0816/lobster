@@ -20,6 +20,7 @@ public class LogoViewModel extends BaseViewModel implements LogoVMInterface {
     @Override
     public void back(View view) {
         super.back(view);
+        ActivityUtils.getRegisterCode();
         activity.finish();
     }
 
@@ -71,5 +72,6 @@ public class LogoViewModel extends BaseViewModel implements LogoVMInterface {
         MineApp.registerInfo.getImageList().add("");
         MineApp.registerInfo.getImageList().add("");
         ActivityUtils.getRegisterImages();
+        activity.finish();
     }
 }

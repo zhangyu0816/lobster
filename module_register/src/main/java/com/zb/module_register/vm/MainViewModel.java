@@ -13,19 +13,12 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     public void selectSex(int sex) {
         MineApp.registerInfo.setSex(sex);
         ActivityUtils.getRegisterNick();
+        activity.finish();
     }
 
     @Override
     public void toLogin(View view) {
-//        ActivityUtils.getRegisterLogin();
-//        ActivityUtils.getRegisterLogo();
-
-        MineApp.registerInfo.getImageList().add("");
-        MineApp.registerInfo.getImageList().add("");
-        MineApp.registerInfo.getImageList().add("");
-        MineApp.registerInfo.getImageList().add("");
-        MineApp.registerInfo.getImageList().add("");
-        MineApp.registerInfo.getImageList().add("");
-        ActivityUtils.getRegisterImages();
+        ActivityUtils.getRegisterLogin();
+        activity.finish();
     }
 }

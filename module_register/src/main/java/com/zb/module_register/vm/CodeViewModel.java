@@ -41,6 +41,7 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
     @Override
     public void back(View view) {
         super.back(view);
+        ActivityUtils.getRegisterPhone();
         activity.finish();
     }
 
@@ -57,5 +58,6 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
         }
         SCToastUtil.showToast(activity,"验证成功");
         ActivityUtils.getRegisterLogo();
+        activity.finish();
     }
 }

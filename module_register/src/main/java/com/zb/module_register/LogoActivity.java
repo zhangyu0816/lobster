@@ -1,10 +1,11 @@
 package com.zb.module_register;
 
 import android.content.Intent;
-import android.view.ViewGroup;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_register.databinding.RegisterLogoBinding;
 import com.zb.module_register.vm.LogoViewModel;
@@ -24,15 +25,12 @@ public class LogoActivity extends RegisterBaseActivity {
         mBinding.setVariable(BR.viewModel, viewModel);
 
         RegisterLogoBinding binding = (RegisterLogoBinding) mBinding;
+        // 步骤进度跳
+        AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 5);
+        AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W *5/ 6, 5);
 
-        ViewGroup.LayoutParams lp = binding.includeLayout.whiteView.getLayoutParams();
-        lp.width = MineApp.W * 5 / 6;
-        binding.includeLayout.whiteView.setLayoutParams(lp);
-
-        ViewGroup.LayoutParams lpur = binding.uploadRelative.getLayoutParams();
-        lpur.width = (int) (MineApp.W * 0.4);
-        lpur.height = (int) (lpur.width * 510f / 345f);
-        binding.uploadRelative.setLayoutParams(lpur);
+        // 上传头像
+        AdapterBinding.viewSize(binding.uploadRelative, ObjectUtils.getViewSizeByWidth(0.4f), ObjectUtils.getLogoHeight(0.4f));
 
         mBinding.setVariable(BR.imageUrl,"");
     }

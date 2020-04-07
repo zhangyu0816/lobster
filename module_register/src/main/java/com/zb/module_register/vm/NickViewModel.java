@@ -14,6 +14,7 @@ public class NickViewModel extends BaseViewModel implements NickVMInterface {
     @Override
     public void back(View view) {
         super.back(view);
+        ActivityUtils.getRegisterMain();
         activity.finish();
     }
 
@@ -26,5 +27,6 @@ public class NickViewModel extends BaseViewModel implements NickVMInterface {
         }
         MineApp.registerInfo.setName(nick);
         ActivityUtils.getRegisterBirthday();
+        activity.finish();
     }
 }

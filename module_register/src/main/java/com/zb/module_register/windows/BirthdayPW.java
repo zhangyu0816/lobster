@@ -3,7 +3,6 @@ package com.zb.module_register.windows;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,8 +72,6 @@ public class BirthdayPW extends BasePopupWindow {
             mMonth = Integer.parseInt(strs[1]);
             mYear = Integer.parseInt(strs[2]);
         }
-
-        Log.i("date", mYear + "" + mMonth + "" + mDay);
         // 配置滑轮
         for (int i = 1960; i <= 2100; i++) {
             yearList.add(i + "年");
@@ -82,7 +79,6 @@ public class BirthdayPW extends BasePopupWindow {
         for (int i = 1; i <= 12; i++) {
             monthList.add(i + "月");
         }
-
         setBinding(DataBindingUtil.inflate(LayoutInflater.from(activity), uiRes(), null, false));
         initUI();
     }

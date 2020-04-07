@@ -14,6 +14,7 @@ public class BirthdayViewModel extends BaseViewModel implements BirthdayVMInterf
     @Override
     public void back(View view) {
         super.back(view);
+        ActivityUtils.getRegisterNick();
         activity.finish();
     }
 
@@ -32,5 +33,6 @@ public class BirthdayViewModel extends BaseViewModel implements BirthdayVMInterf
             return;
         }
         ActivityUtils.getRegisterPhone();
+        activity.finish();
     }
 }

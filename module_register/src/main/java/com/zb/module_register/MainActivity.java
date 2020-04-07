@@ -1,9 +1,8 @@
 package com.zb.module_register;
 
-import android.view.ViewGroup;
-
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.adapter.AdapterBinding;
+import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_register.databinding.RegisterMainBinding;
 import com.zb.module_register.vm.MainViewModel;
@@ -18,14 +17,12 @@ public class MainActivity extends RegisterBaseActivity {
 
     @Override
     public void initUI() {
-
-        mBinding.setVariable(BR.viewModel, new MainViewModel());
+        MainViewModel viewModel = new MainViewModel();
+        mBinding.setVariable(BR.viewModel, viewModel);
+        viewModel.setBinding(mBinding);
 
         RegisterMainBinding binding = (RegisterMainBinding) mBinding;
-
-        ViewGroup.LayoutParams lp = binding.ivBoy.getLayoutParams();
-        lp.height = lp.width = (int) (300f * MineApp.W / 1080f);
-        binding.ivBoy.setLayoutParams(lp);
-        binding.ivGirl.setLayoutParams(lp);
+        AdapterBinding.viewSize(binding.ivBoy, ObjectUtils.getViewSizeByWidth(300f / 1080f), ObjectUtils.getViewSizeByWidth(300f / 1080f));
+        AdapterBinding.viewSize(binding.ivGirl, ObjectUtils.getViewSizeByWidth(300f / 1080f), ObjectUtils.getViewSizeByWidth(300f / 1080f));
     }
 }

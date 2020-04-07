@@ -1,8 +1,7 @@
 package com.zb.module_register;
 
-import android.view.ViewGroup;
-
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.KeyBroadUtils;
 import com.zb.lib_base.utils.RouteUtils;
@@ -23,9 +22,10 @@ public class PhoneActivity extends RegisterBaseActivity {
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         RegisterPhoneBinding binding = (RegisterPhoneBinding) mBinding;
-        ViewGroup.LayoutParams lp = binding.includeLayout.whiteView.getLayoutParams();
-        lp.width = MineApp.W / 2;
-        binding.includeLayout.whiteView.setLayoutParams(lp);
+        // 步骤进度跳
+        AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 5);
+        AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W / 2, 5);
+
         // 按钮向上移
         KeyBroadUtils.controlKeyboardLayout(binding.btnLayout, binding.tvNext);
         // 初始化昵称

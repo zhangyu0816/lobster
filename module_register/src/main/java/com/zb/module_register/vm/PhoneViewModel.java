@@ -13,6 +13,7 @@ public class PhoneViewModel extends BaseViewModel implements PhoneVMInterface {
     @Override
     public void back(View view) {
         super.back(view);
+        ActivityUtils.getRegisterBirthday();
         activity.finish();
     }
 
@@ -29,5 +30,6 @@ public class PhoneViewModel extends BaseViewModel implements PhoneVMInterface {
         // 调用发送短信接口后跳页面
 
         ActivityUtils.getRegisterCode();
+        activity.finish();
     }
 }

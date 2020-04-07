@@ -19,6 +19,10 @@ public class ObjectUtils {
         return (int) (getViewSizeByWidth(scale) * 510f / 345f);
     }
 
+    public static int getLogoWidth(float scale) {
+        return (int) (getViewSizeByHeight(scale) * 345f / 510f);
+    }
+
     // 默认图片
     public static int getDefaultRes() {
         return R.mipmap.empty_icon;
