@@ -1,6 +1,7 @@
 package com.zb.lib_base.activity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +13,9 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.zb.lib_base.R;
 import com.zb.lib_base.databinding.PwsPerformBinding;
 import com.zb.lib_base.utils.SCToastUtil;
+
+import java.io.File;
+import java.util.Random;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +31,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = this;
         mBinding = DataBindingUtil.setContentView(this, getRes());
 
         ARouter.getInstance().inject(this);
@@ -43,6 +48,72 @@ public abstract class BaseActivity extends AppCompatActivity {
             mBinding.unbind();
 
         super.onDestroy();
+    }
+
+    /**
+     * 图片地址
+     *
+     * @return
+     */
+    public static File getImageFile() {
+        File imagePath = new File(activity.getFilesDir(), "images");
+        if (!imagePath.exists()) {
+            imagePath.mkdirs();
+        }
+        File newFile = new File(imagePath, randomString(15) + ".jpg");
+        return newFile;
+    }
+
+    /**
+     * 视频文件
+     *
+     * @return
+     */
+    public static File getSurfaceFile() {
+        File videoPath = new File(activity.getFilesDir(), "videos");
+        if (!videoPath.exists()) {
+            videoPath.mkdirs();
+        }
+        File newFile = new File(videoPath, randomString(15) + ".mp4");
+        return newFile;
+    }
+
+    /**
+     * 语音文件
+     *
+     * @return
+     */
+    public static File getAudioFile() {
+        File audioPath = new File(activity.getFilesDir(), "audios");
+        if (!audioPath.exists()) {
+            audioPath.mkdirs();
+        }
+        File newFile = new File(audioPath, randomString(15) + ".amr");
+        return newFile;
+    }
+
+    /**
+     * 随机选取资源名称
+     *
+     * @param length
+     * @return
+     */
+    public final static String randomString(int length) {
+        Random randGen = null;
+        char[] numbersAndLetters = null;
+        if (length < 1) {
+            return null;
+        }
+        if (randGen == null) {
+            randGen = new Random();
+            numbersAndLetters = ("0123456789abcdefghijklmnopqrstuvwxyz"
+                    + "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ").toCharArray();
+        }
+        char[] randBuffer = new char[length];
+        for (int i = 0; i < randBuffer.length; i++) {
+            randBuffer[i] = numbersAndLetters[randGen.nextInt(71)];
+        }
+        return new String(randBuffer);
     }
 
     //**************** Android M Permission (Android 6.0权限控制代码封装)*****************************************************

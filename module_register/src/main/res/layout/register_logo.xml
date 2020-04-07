@@ -4,9 +4,15 @@
 
     <data>
 
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
         <variable
             name="viewModel"
             type="com.zb.module_register.vm.LogoViewModel" />
+
+        <variable
+            name="imageUrl"
+            type="String" />
 
     </data>
 
@@ -52,28 +58,42 @@
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_marginTop="32dp"
-            android:background="@drawable/btn_bg_purple_976_radius20"
+            android:background="@drawable/btn_bg_purple_976_radius10"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView3">
 
-
-            <ImageView
-                android:id="@+id/imageView"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                app:srcCompat="@mipmap/camera_icon" />
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imageView"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:text="上传照片"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@mipmap/camera_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="上传照片"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <ImageView
+                imageUrl="@{imageUrl}"
+                isRound="@{true}"
+                roundSize="@{10}"
+                viewHeightSize="@{ObjectUtils.getLogoHeight(0.4f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.4f)}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true" />
         </RelativeLayout>
 
         <TextView

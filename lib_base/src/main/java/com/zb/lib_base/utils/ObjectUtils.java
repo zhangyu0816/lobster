@@ -15,6 +15,10 @@ public class ObjectUtils {
         return (int) (MineApp.H * scale);
     }
 
+    public static int getLogoHeight(float scale) {
+        return (int) (getViewSizeByWidth(scale) * 510f / 345f);
+    }
+
     // 默认图片
     public static int getDefaultRes() {
         return R.mipmap.empty_icon;

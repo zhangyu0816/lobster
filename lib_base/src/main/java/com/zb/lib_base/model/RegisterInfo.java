@@ -2,15 +2,18 @@ package com.zb.lib_base.model;
 
 import com.zb.lib_base.BR;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 public class RegisterInfo extends BaseObservable {
-    String name="";
+    String name = "";
     int sex = 0;
-    String phone="";
-    String birthday="";
-    String images="";
+    String phone = "";
+    String birthday = "";
+    List<String> imageList = new ArrayList<>();
 
     @Bindable
     public String getName() {
@@ -22,7 +25,8 @@ public class RegisterInfo extends BaseObservable {
         notifyPropertyChanged(BR.name);
     }
 
-    @Bindable public int getSex() {
+    @Bindable
+    public int getSex() {
         return sex;
     }
 
@@ -31,7 +35,8 @@ public class RegisterInfo extends BaseObservable {
         notifyPropertyChanged(BR.sex);
     }
 
-    @Bindable public String getPhone() {
+    @Bindable
+    public String getPhone() {
         return phone;
     }
 
@@ -40,7 +45,8 @@ public class RegisterInfo extends BaseObservable {
         notifyPropertyChanged(BR.phone);
     }
 
-    @Bindable public String getBirthday() {
+    @Bindable
+    public String getBirthday() {
         return birthday;
     }
 
@@ -49,12 +55,13 @@ public class RegisterInfo extends BaseObservable {
         notifyPropertyChanged(BR.birthday);
     }
 
-    @Bindable public String getImages() {
-        return images;
+    @Bindable
+    public List<String> getImageList() {
+        return imageList;
     }
 
-    public void setImages(String images) {
-        this.images = images;
-        notifyPropertyChanged(BR.images);
+    public void setImageList(List<String> imageList) {
+        this.imageList = imageList;
+        notifyPropertyChanged(BR.imageList);
     }
 }

@@ -30,6 +30,8 @@ public class RouteUtils {
     public static final String Register_Code = "/register/CodeActivity";
     // 注册--头像
     public static final String Register_Logo = "/register/LogoActivity";
+    // 注册--多图
+    public static final String Register_Images = "/register/ImagesActivity";
 
     /*********************** 相册 **************************/
     // 相册主页

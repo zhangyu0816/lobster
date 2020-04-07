@@ -3,5 +3,5 @@
 
     <!-- 实心 -->
     <solid android:color="#976bff" />
-    <corners android:radius="20dp" />
+    <corners android:radius="10dp" />
 </shape>

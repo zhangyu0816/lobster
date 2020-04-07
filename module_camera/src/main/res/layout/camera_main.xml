@@ -60,21 +60,14 @@
                 android:textSize="14sp" />
         </RelativeLayout>
 
-        <RelativeLayout
+        <com.zb.lib_base.views.CutImageView
+            android:id="@+id/iv_cut"
             viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.5f)}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(1f)}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"/>
 
-            <ImageView
-                viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.5f)}"
-                imageUrl="@{imageUrl}"
-                defaultRes="@{ObjectUtils.getDefaultRes()}"
-                countSize="@{true}"
-                android:layout_centerInParent="true"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/images_list"

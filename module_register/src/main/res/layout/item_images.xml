@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <variable
+            name="item"
+            type="String" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_register.vm.ImagesViewModel" />
+
+
+    </data>
+
+    <RelativeLayout
+        onClickDelayed="@{v->viewModel.selectImage(position)}"
+        viewHeightSize="@{ObjectUtils.getLogoHeight(0.27f)}"
+        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.27f)}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            viewHeightSize="@{ObjectUtils.getLogoHeight(0.27f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.27f)}"
+            android:background="@drawable/btn_bg_purple_976_radius10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@mipmap/camera_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="上传照片"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <ImageView
+            imageUrl="@{item}"
+            isRound="@{true}"
+            roundSize="@{10}"
+            viewHeightSize="@{ObjectUtils.getLogoHeight(0.27f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.27f)}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+</layout>

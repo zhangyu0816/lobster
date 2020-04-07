@@ -1,5 +1,6 @@
 package com.zb.module_register;
 
+import android.content.Intent;
 import android.view.ViewGroup;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -29,8 +30,19 @@ public class LogoActivity extends RegisterBaseActivity {
         binding.includeLayout.whiteView.setLayoutParams(lp);
 
         ViewGroup.LayoutParams lpur = binding.uploadRelative.getLayoutParams();
-        lpur.height = lpur.width = (int) (MineApp.W * 0.4);
+        lpur.width = (int) (MineApp.W * 0.4);
+        lpur.height = (int) (lpur.width * 510f / 345f);
         binding.uploadRelative.setLayoutParams(lpur);
 
+        mBinding.setVariable(BR.imageUrl,"");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1001 && resultCode == 1) {
+            String fileName = data.getStringExtra("fileName");
+            mBinding.setVariable(BR.imageUrl, fileName);
+        }
     }
 }

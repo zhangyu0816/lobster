@@ -152,7 +152,12 @@ public class AdapterBinding {
             });
         } else {
             viewSize(view, widthSize, heightSize);
-            RequestBuilder builder = Glide.with(view.getContext()).asDrawable().thumbnail(Glide.with(view.getContext()).load(defaultRes)).apply(cropOptions);
+            RequestBuilder builder;
+            if (defaultRes == 0) {
+                builder = Glide.with(view.getContext()).asDrawable().apply(cropOptions);
+            } else {
+                builder = Glide.with(view.getContext()).asDrawable().thumbnail(Glide.with(view.getContext()).load(defaultRes)).apply(cropOptions);
+            }
 
             if (imageRes != 0) {
                 builder.load(imageRes).into(view);
@@ -161,4 +166,6 @@ public class AdapterBinding {
             }
         }
     }
+
+
 }
