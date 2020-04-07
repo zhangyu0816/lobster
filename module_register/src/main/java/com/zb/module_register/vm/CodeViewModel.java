@@ -19,13 +19,14 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
     private int second = 10;
     private RegisterCodeBinding bindings;
     private CountDownTimer timer;
+    public boolean isLogin = false;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         bindings = (RegisterCodeBinding) binding;
         bindings.setRemark(MineApp.getInstance().getResources().getString(R.string.code_second, second));
-        timer = new CountDownTimer(second*1000, 1000) {
+        timer = new CountDownTimer(second * 1000, 1000) {
             public void onTick(long millisUntilFinished) {
                 bindings.setRemark(MineApp.getInstance().getResources().getString(R.string.code_second, millisUntilFinished / 1000));
             }
@@ -41,7 +42,16 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
     @Override
     public void back(View view) {
         super.back(view);
-        ActivityUtils.getRegisterPhone();
+        ActivityUtils.getRegisterPhone(isLogin);
+        timer.cancel();
+        activity.finish();
+    }
+
+    @Override
+    public void right(View view) {
+        super.right(view);
+        ActivityUtils.getRegisterLogin();
+        timer.cancel();
         activity.finish();
     }
 
@@ -52,12 +62,16 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
 
     @Override
     public void sure(View view) {
-        if(bindings.edCode.getText().toString().length()<4){
-            SCToastUtil.showToast(activity,"请输入4位有效验证码");
+        if (bindings.edCode.getText().toString().length() < 4) {
+            SCToastUtil.showToast(activity, "请输入4位有效验证码");
             return;
         }
-        SCToastUtil.showToast(activity,"验证成功");
-        ActivityUtils.getRegisterLogo();
+        if (isLogin) {
+            SCToastUtil.showToast(activity, "登录成功");
+        } else {
+            ActivityUtils.getRegisterLogo();
+        }
+        timer.cancel();
         activity.finish();
     }
 }

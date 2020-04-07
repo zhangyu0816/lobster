@@ -41,13 +41,13 @@ public class ActivityUtils {
     }
 
     // 注册--手机号
-    public static void getRegisterPhone() {
-        ARouter.getInstance().build(RouteUtils.Register_Phone).navigation();
+    public static void getRegisterPhone(boolean isLogin) {
+        ARouter.getInstance().build(RouteUtils.Register_Phone).withBoolean("isLogin", isLogin).navigation();
     }
 
     // 注册--验证码
-    public static void getRegisterCode() {
-        ARouter.getInstance().build(RouteUtils.Register_Code).navigation();
+    public static void getRegisterCode(boolean isLogin) {
+        ARouter.getInstance().build(RouteUtils.Register_Code).withBoolean("isLogin", isLogin).navigation();
     }
 
     // 注册--头像

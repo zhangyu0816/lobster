@@ -24,6 +24,11 @@ public class BaseViewModel implements BaseVMInterface {
 
     }
 
+    @Override
+    public void right(View view) {
+
+    }
+
     /**
      * Android M运行时权限请求封装
      *

@@ -6,11 +6,13 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
+import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.KeyBroadUtils;
 import com.zb.lib_base.utils.RouteUtils;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.module_register.databinding.RegisterCodeBinding;
 import com.zb.module_register.vm.CodeViewModel;
 
@@ -20,6 +22,9 @@ public class CodeActivity extends RegisterBaseActivity implements KeyBroadUtils.
     private TextView[] array = new TextView[4];
 
     private ViewTreeObserver.OnGlobalLayoutListener mOnGlobalLayoutListener;
+
+    @Autowired(name = "isLogin")
+    boolean isLogin;
 
     @Override
     public int getRes() {
@@ -31,8 +36,9 @@ public class CodeActivity extends RegisterBaseActivity implements KeyBroadUtils.
         CodeViewModel viewModel = new CodeViewModel();
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
-        binding = (RegisterCodeBinding) mBinding;
+        viewModel.isLogin = isLogin;
 
+        binding = (RegisterCodeBinding) mBinding;
         array[0] = binding.tvCode1;
         array[1] = binding.tvCode2;
         array[2] = binding.tvCode3;
@@ -57,24 +63,32 @@ public class CodeActivity extends RegisterBaseActivity implements KeyBroadUtils.
                     } else {
                         array[i].setText("");
                     }
-                    if (content.length() == 4) {
-                        binding.tvNext.setBackgroundResource(R.drawable.btn_bg_white_radius60);
-                        binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_7a4));
-                        binding.tvNext2.setBackgroundResource(R.drawable.btn_bg_white_radius60);
-                        binding.tvNext2.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_7a4));
-                    } else {
-                        binding.tvNext.setBackgroundResource(R.drawable.btn_bg_purple_af9_radius60);
-                        binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_cab));
-                        binding.tvNext2.setBackgroundResource(R.drawable.btn_bg_purple_af9_radius60);
-                        binding.tvNext2.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_cab));
-                    }
+                }
+                if (content.length() == 4) {
+                    binding.tvNext.setBackgroundResource(R.drawable.btn_bg_white_radius60);
+                    binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_7a4));
+                    binding.tvNext2.setBackgroundResource(R.drawable.btn_bg_white_radius60);
+                    binding.tvNext2.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_7a4));
+                } else {
+                    binding.tvNext.setBackgroundResource(R.drawable.btn_bg_purple_af9_radius60);
+                    binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_cab));
+                    binding.tvNext2.setBackgroundResource(R.drawable.btn_bg_purple_af9_radius60);
+                    binding.tvNext2.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_cab));
                 }
             }
         });
 
         // 步骤进度跳
+        int width = 0;
+        if (isLogin) {
+            width = MineApp.W;
+            binding.setRight("密码登录");
+        } else {
+            width = MineApp.W * 2 / 3;
+            binding.setRight("");
+        }
         AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 5);
-        AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W * 2 / 3, 5);
+        AdapterBinding.viewSize(binding.includeLayout.whiteView, width, 5);
 
         mOnGlobalLayoutListener = KeyBroadUtils.observeSoftKeyboard(this, this);
     }

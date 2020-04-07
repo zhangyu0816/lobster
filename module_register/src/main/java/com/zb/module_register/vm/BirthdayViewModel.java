@@ -32,7 +32,7 @@ public class BirthdayViewModel extends BaseViewModel implements BirthdayVMInterf
             SCToastUtil.showToast(activity,"请选择生日日期");
             return;
         }
-        ActivityUtils.getRegisterPhone();
+        ActivityUtils.getRegisterPhone(false);
         activity.finish();
     }
 }

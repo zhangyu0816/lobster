@@ -1,15 +1,19 @@
 package com.zb.module_register;
 
+import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.KeyBroadUtils;
 import com.zb.lib_base.utils.RouteUtils;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.module_register.databinding.RegisterPhoneBinding;
 import com.zb.module_register.vm.PhoneViewModel;
 
 @Route(path = RouteUtils.Register_Phone)
 public class PhoneActivity extends RegisterBaseActivity {
+    @Autowired(name = "isLogin")
+    boolean isLogin;
 
     @Override
     public int getRes() {
@@ -21,14 +25,17 @@ public class PhoneActivity extends RegisterBaseActivity {
         PhoneViewModel viewModel = new PhoneViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
+        viewModel.isLogin = isLogin;
         RegisterPhoneBinding binding = (RegisterPhoneBinding) mBinding;
+        binding.setBtnName(isLogin ? "继续" : "获取验证码");
+        binding.setRemark(isLogin ? "" : "您的手机号将获取验证码");
         // 步骤进度跳
         AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 5);
         AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W / 2, 5);
 
         // 按钮向上移
         KeyBroadUtils.controlKeyboardLayout(binding.btnLayout, binding.tvNext);
-        // 初始化昵称
+        // 初始化手机号
         binding.setPhone(MineApp.registerInfo.getPhone());
     }
 }

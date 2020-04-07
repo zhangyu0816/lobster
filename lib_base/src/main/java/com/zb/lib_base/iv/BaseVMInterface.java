@@ -15,5 +15,9 @@ public interface BaseVMInterface {
     default void setList() {
     }
 
-    default void back(View view){}
+    default void back(View view) {
+    }
+
+    default void right(View view) {
+    }
 }

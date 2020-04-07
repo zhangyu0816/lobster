@@ -10,10 +10,16 @@ import com.zb.module_register.databinding.RegisterPhoneBinding;
 import com.zb.module_register.iv.PhoneVMInterface;
 
 public class PhoneViewModel extends BaseViewModel implements PhoneVMInterface {
+    public boolean isLogin = false;
+
     @Override
     public void back(View view) {
         super.back(view);
-        ActivityUtils.getRegisterBirthday();
+        if (isLogin) {
+            ActivityUtils.getRegisterMain();
+        } else {
+            ActivityUtils.getRegisterBirthday();
+        }
         activity.finish();
     }
 
@@ -29,7 +35,7 @@ public class PhoneViewModel extends BaseViewModel implements PhoneVMInterface {
 
         // 调用发送短信接口后跳页面
 
-        ActivityUtils.getRegisterCode();
+        ActivityUtils.getRegisterCode(isLogin);
         activity.finish();
     }
 }

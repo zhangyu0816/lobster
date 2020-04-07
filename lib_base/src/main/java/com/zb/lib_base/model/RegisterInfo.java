@@ -13,6 +13,7 @@ public class RegisterInfo extends BaseObservable {
     int sex = 0;
     String phone = "";
     String birthday = "";
+    String pass = "";
     List<String> imageList = new ArrayList<>();
 
     @Bindable
@@ -53,6 +54,16 @@ public class RegisterInfo extends BaseObservable {
     public void setBirthday(String birthday) {
         this.birthday = birthday;
         notifyPropertyChanged(BR.birthday);
+    }
+
+    @Bindable
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
+        notifyPropertyChanged(BR.pass);
     }
 
     @Bindable

@@ -1,7 +1,6 @@
 package com.zb.module_register;
 
 import android.content.Intent;
-import android.view.ViewGroup;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.adapter.AdapterBinding;

@@ -20,7 +20,7 @@ public class LogoViewModel extends BaseViewModel implements LogoVMInterface {
     @Override
     public void back(View view) {
         super.back(view);
-        ActivityUtils.getRegisterCode();
+        ActivityUtils.getRegisterCode(false);
         activity.finish();
     }
 
