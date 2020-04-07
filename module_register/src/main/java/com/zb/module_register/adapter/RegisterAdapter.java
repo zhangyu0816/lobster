@@ -5,6 +5,7 @@ import com.zb.lib_base.adapter.ItemTouchHelperAdapter;
 import com.zb.lib_base.adapter.RecyclerHolder;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_register.BR;
+import com.zb.module_register.vm.ImagesViewModel;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,18 +33,21 @@ public class RegisterAdapter<T> extends BindingItemAdapter<T> implements ItemTou
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
-        if (fromPosition < toPosition) {
-            //从上往下拖动，每滑动一个item，都将list中的item向下交换，向上滑同理。
-            for (int i = fromPosition; i < toPosition; i++) {
-                Collections.swap(getList(), i, i + 1);//交换数据源两个数据的位置
+        if (!getList().get(fromPosition).equals("") && !getList().get(toPosition).equals("")) {
+            if (fromPosition < toPosition) {
+                //从上往下拖动，每滑动一个item，都将list中的item向下交换，向上滑同理。
+                for (int i = fromPosition; i < toPosition; i++) {
+                    Collections.swap(getList(), i, i + 1);//交换数据源两个数据的位置
+                }
+            } else {
+                for (int i = fromPosition; i > toPosition; i--) {
+                    Collections.swap(getList(), i, i - 1);//交换数据源两个数据的位置
+                }
             }
-        } else {
-            for (int i = fromPosition; i > toPosition; i--) {
-                Collections.swap(getList(), i, i - 1);//交换数据源两个数据的位置
-            }
+            //更新视图
+            notifyItemMoved(fromPosition, toPosition);
         }
-        //更新视图
-        notifyItemMoved(fromPosition, toPosition);
+
     }
 
     @Override

@@ -38,9 +38,8 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
         callback = new SimpleItemTouchHelperCallback(adapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(((RegisterImagesBinding)mBinding).imagesList);
-//        callback.setImages(images);
-//        callback.setSort(true);
-//        callback.setDragFlags(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT);
+        callback.setSort(true);
+        callback.setDragFlags(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT);
     }
 
     @Override

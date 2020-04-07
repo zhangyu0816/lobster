@@ -1,12 +1,9 @@
 package com.zb.lib_base.utils;
 
+import android.os.Vibrator;
 
-import com.zb.lib_base.R;
-import com.zb.lib_base.adapter.BindingItemAdapter;
 import com.zb.lib_base.adapter.ItemTouchHelperAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.zb.lib_base.app.MineApp;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -18,11 +15,13 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     private boolean sort = false;
     private int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;        //允许上下左右的拖动
     private int swipeFlags = 0;   //不允许侧滑
-    private boolean firstUnMoving = false;
-    private List<String> images = new ArrayList<>();
+
+    private Vibrator vibrator;// 震动
+    private boolean isVibrator = false;
 
     public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
         mAdapter = adapter;
+        vibrator = (Vibrator) MineApp.getInstance().getSystemService(MineApp.getInstance().VIBRATOR_SERVICE);
     }
 
     public void setDragFlags(int dragFlags) {
@@ -31,14 +30,6 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     public void setSwipeFlags(int swipeFlags) {
         this.swipeFlags = swipeFlags;
-    }
-
-    public void setFirstUnMoving(boolean firstUnMoving) {
-        this.firstUnMoving = firstUnMoving;
-    }
-
-    public void setImages(List<String> images) {
-        this.images = images;
     }
 
     /*
@@ -59,11 +50,15 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
      */
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
-//        if (sort)
-//            if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
-//                viewHolder.itemView.setBackgroundResource(R.drawable.img_selected_bg);
-//            }
         super.onSelectedChanged(viewHolder, actionState);
+        if(sort){
+            if(!isVibrator){
+                vibrator.vibrate(200);
+                isVibrator = true;
+            }else{
+                isVibrator = false;
+            }
+        }
     }
 
     /**
@@ -75,11 +70,6 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
-        if (sort) {
-            if (images.get(viewHolder.getAdapterPosition()).isEmpty())
-                ((BindingItemAdapter) mAdapter).notifyDataSetChanged();
-        }
-
     }
 
     /*
@@ -87,12 +77,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
      * */
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-        if (images.get(viewHolder.getAdapterPosition()).isEmpty()) {
-            if (viewHolder.getAdapterPosition() != 0 && target.getAdapterPosition() != 0)
-                mAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-        } else {
-            mAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-        }
+        mAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
         return true;
 
     }
