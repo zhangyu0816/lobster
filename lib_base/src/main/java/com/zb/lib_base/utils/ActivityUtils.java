@@ -6,17 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ActivityUtils {
     /*********************** 首页 **************************/
-    // 首页主activity
-    public static void getHomeMainActivity() {
-        ARouter.getInstance().build(RouteUtils.Home_Main).navigation();
-    }
-
-
+    /*********************** 卡片 **************************/
+    /*********************** 对话 **************************/
     /*********************** 我的 **************************/
-    // 我的主activity
-    public static void getMineMainActivity() {
-        ARouter.getInstance().build(RouteUtils.Mine_Main).navigation();
-    }
+
 
     /*********************** 注册 **************************/
 

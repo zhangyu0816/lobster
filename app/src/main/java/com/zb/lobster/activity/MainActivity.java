@@ -1,22 +1,20 @@
 package com.zb.lobster.activity;
 
-import android.os.Bundle;
-import android.widget.TextView;
-
-import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lobster.BR;
 import com.zb.lobster.R;
+import com.zb.lobster.vm.MainViewModel;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppBaseActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        TextView hello = findViewById(R.id.hello);
-        hello.setOnClickListener(v -> {
-            ActivityUtils.getRegisterMain();
-        });
+    public int getRes() {
+        return R.layout.ac_main;
+    }
+
+    @Override
+    public void initUI() {
+        MainViewModel viewModel = new MainViewModel();
+        viewModel.setBinding(mBinding);
+        mBinding.setVariable(BR.viewModel, viewModel);
     }
 }
