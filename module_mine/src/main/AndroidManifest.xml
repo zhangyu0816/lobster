@@ -2,10 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zb.module_mine">
 
-    <application
-        android:allowBackup="true"
-        android:supportsRtl="true">
-        <activity android:name=".MainActivity"/>
+    <application  android:theme="@style/MineTheme">
+
     </application>
 
 </manifest>

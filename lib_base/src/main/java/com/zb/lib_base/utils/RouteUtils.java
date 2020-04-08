@@ -3,16 +3,19 @@ package com.zb.lib_base.utils;
 public class RouteUtils {
     /*********************** 首页 **************************/
     // 首页主fragment
-    public static final String Home_Fragment_Main = "/home/MainFragment";
-    // 首页主页
-    public static final String Home_Main = "/home/MainActivity";
+    public static final String Home_Fragment = "/home/HomeFragment";
 
+    /*********************** 卡片 **************************/
+    // 卡片主Fragment
+    public static final String Card_Fragment = "/card/CardFragment";
+
+    /*********************** 对话 **************************/
+    // 对话主Fragment
+    public static final String Chat_Fragment = "/chat/ChatFragment";
 
     /*********************** 我的 **************************/
     // 我的主Fragment
-    public static final String Mine_Fragment_Main = "/mine/MainFragment";
-    // 我的主页
-    public static final String Mine_Main = "/mine/MainActivity";
+    public static final String Mine_Fragment = "/mine/MineFragment";
 
     /*********************** 注册 **************************/
 
