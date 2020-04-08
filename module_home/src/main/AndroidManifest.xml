@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zb.module_home">
 
-    <application
-        android:theme="@style/HomeTheme"></application>
+    <application android:theme="@style/HomeTheme">
+
+    </application>
 
 </manifest>

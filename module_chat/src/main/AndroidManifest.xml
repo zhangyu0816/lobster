@@ -3,7 +3,7 @@
     package="com.zb.module_chat">
 
     <application android:theme="@style/ChatTheme">
-        <activity android:name=".ChatFragment" />
+
     </application>
 
 </manifest>

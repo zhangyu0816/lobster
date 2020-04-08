@@ -6,7 +6,6 @@ import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.KeyBroadUtils;
 import com.zb.lib_base.utils.RouteUtils;
-import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.module_register.databinding.RegisterPhoneBinding;
 import com.zb.module_register.vm.PhoneViewModel;
 
