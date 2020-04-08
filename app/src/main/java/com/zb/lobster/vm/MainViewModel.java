@@ -1,5 +1,7 @@
 package com.zb.lobster.vm;
 
+import android.util.Log;
+
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lobster.databinding.AcMainBinding;
@@ -11,10 +13,12 @@ import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private ArrayList<Fragment> fragments = new ArrayList<>();
     private AcMainBinding mainBinding;
+    private int nowIndex = -1;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -23,6 +27,22 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         initFragments();
         mainBinding.viewPage.setAdapter(new FragmentAdapter(activity.getSupportFragmentManager()));
         mainBinding.viewPage.setOffscreenPageLimit(2);
+        mainBinding.viewPage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                nowIndex = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                mainBinding.setIndex(nowIndex);
+            }
+        });
+
         selectPage(0);
     }
 
@@ -36,7 +56,10 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
     @Override
     public void selectPage(int index) {
-        mainBinding.setIndex(index);
+        if (nowIndex == index)
+            return;
+        nowIndex = index;
+        mainBinding.setIndex(nowIndex);
         mainBinding.viewPage.setCurrentItem(index);
     }
 
