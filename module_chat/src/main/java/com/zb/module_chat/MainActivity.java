@@ -1,7 +1,5 @@
 package com.zb.module_chat;
 
-import com.zb.lib_base.utils.FragmentUtils;
-
 public class MainActivity extends ChatBaseActivity {
     @Override
     public int getRes() {
@@ -10,8 +8,6 @@ public class MainActivity extends ChatBaseActivity {
 
     @Override
     public void initUI() {
-        findViewById(R.id.tv_chat).setOnClickListener(v -> {
-            FragmentUtils.getChatFragment();
-        });
+        getSupportFragmentManager().beginTransaction().replace(R.id.tv_chat, new ChatFragment()).commit();
     }
 }

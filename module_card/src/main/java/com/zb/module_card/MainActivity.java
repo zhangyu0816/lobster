@@ -1,7 +1,5 @@
 package com.zb.module_card;
 
-import com.zb.lib_base.utils.FragmentUtils;
-
 public class MainActivity extends CardBaseActivity {
     @Override
     public int getRes() {
@@ -10,8 +8,7 @@ public class MainActivity extends CardBaseActivity {
 
     @Override
     public void initUI() {
-        findViewById(R.id.tv_card).setOnClickListener(v -> {
-            FragmentUtils.getCardFragment();
-        });
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.tv_card, new CardFragment()).commit();
     }
 }

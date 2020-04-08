@@ -1,7 +1,5 @@
 package com.zb.module_home;
 
-import com.zb.lib_base.utils.FragmentUtils;
-
 public class MainActivity extends HomeBaseActivity {
 
     @Override
@@ -11,8 +9,6 @@ public class MainActivity extends HomeBaseActivity {
 
     @Override
     public void initUI() {
-        findViewById(R.id.tv_home).setOnClickListener(v -> {
-            FragmentUtils.getHomeFragment();
-        });
+        getSupportFragmentManager().beginTransaction().replace(R.id.tv_home, new HomeFragment()).commit();
     }
 }

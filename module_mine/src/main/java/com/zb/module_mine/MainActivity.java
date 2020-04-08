@@ -1,7 +1,5 @@
 package com.zb.module_mine;
 
-import com.zb.lib_base.utils.FragmentUtils;
-
 public class MainActivity extends MineBaseActivity {
     @Override
     public int getRes() {
@@ -10,8 +8,7 @@ public class MainActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
-        findViewById(R.id.tv_mine).setOnClickListener(v -> {
-            FragmentUtils.getMineFragment();
-        });
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.tv_mine, new MineFragment()).commit();
     }
 }
