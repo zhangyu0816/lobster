@@ -13,6 +13,8 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/lib_base" />
             <option value="$PROJECT_DIR$/module_camera" />
+            <option value="$PROJECT_DIR$/module_card" />
+            <option value="$PROJECT_DIR$/module_chat" />
             <option value="$PROJECT_DIR$/module_home" />
             <option value="$PROJECT_DIR$/module_mine" />
             <option value="$PROJECT_DIR$/module_register" />

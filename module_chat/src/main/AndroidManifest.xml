@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.zb.module_chat">
+
+    <application android:theme="@style/ChatTheme">
+        <activity android:name=".MainActivity" />
+    </application>
+
+</manifest>

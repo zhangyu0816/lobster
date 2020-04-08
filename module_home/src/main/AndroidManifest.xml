@@ -3,8 +3,7 @@
     package="com.zb.module_home">
 
     <application
-        android:allowBackup="true"
-        android:supportsRtl="true">
+        android:theme="@style/HomeTheme">
         <activity android:name=".MainActivity"/>
     </application>
 
