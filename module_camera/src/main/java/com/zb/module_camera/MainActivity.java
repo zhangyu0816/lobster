@@ -2,6 +2,7 @@ package com.zb.module_camera;
 
 import android.os.Bundle;
 
+import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.AdapterBinding;
@@ -11,6 +12,9 @@ import com.zb.module_camera.databinding.CameraMainBinding;
 
 @Route(path = RouteUtils.Camera_Main)
 public class MainActivity extends BaseActivity {
+
+    @Autowired(name = "isMore")
+    boolean isMore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,10 +32,9 @@ public class MainActivity extends BaseActivity {
         CameraViewModel viewModel = new CameraViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
+        viewModel.isMore = isMore;
 
-        CameraMainBinding binding = (CameraMainBinding) mBinding;
-
-        AdapterBinding.viewSize(binding.imagesList, MineApp.W, (int) (MineApp.H * 0.4f));
+        AdapterBinding.viewSize(((CameraMainBinding) mBinding).imagesList, MineApp.W, (int) (MineApp.H * 0.4f));
 
     }
 }

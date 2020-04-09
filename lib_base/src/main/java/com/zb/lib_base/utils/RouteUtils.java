@@ -7,6 +7,7 @@ public class RouteUtils {
     public static final String Home_Follow_Fragment = "/home/FollowFragment";
     public static final String Home_Recommend_Fragment = "/home/RecommendFragment";
     public static final String Home_Video_Fragment = "/home/VideoFragment";
+    public static final String Home_Publish_image = "/home/PublishImageActivity";
 
     /*********************** 卡片 **************************/
     // 卡片主Fragment

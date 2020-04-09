@@ -6,6 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ActivityUtils {
     /*********************** 首页 **************************/
+    // 图文动态
+    public static void getHomePublishImage() {
+        ARouter.getInstance().build(RouteUtils.Home_Publish_image).navigation();
+    }
     /*********************** 卡片 **************************/
     /*********************** 对话 **************************/
     /*********************** 我的 **************************/
@@ -56,7 +60,7 @@ public class ActivityUtils {
     /*********************** 相册 **************************/
 
     // 相册主页
-    public static void getCameraMain(AppCompatActivity activity) {
-        ARouter.getInstance().build(RouteUtils.Camera_Main).navigation(activity, 1001);
+    public static void getCameraMain(AppCompatActivity activity, boolean isMore) {
+        ARouter.getInstance().build(RouteUtils.Camera_Main).withBoolean("isMore", isMore).navigation(activity, 1001);
     }
 }

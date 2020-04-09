@@ -2,6 +2,9 @@ package com.zb.lib_base.utils;
 
 import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.vm.BaseViewModel;
+
+import java.util.Map;
 
 public class ObjectUtils {
 
@@ -28,7 +31,14 @@ public class ObjectUtils {
         return R.mipmap.empty_icon;
     }
 
+    // 线条颜色
     public static int getLineColor() {
         return R.color.black_efe;
     }
+
+    // 获取选中时显示的数量
+    public static String getSelectCount(Map map, int position) {
+        return map.containsKey(position) ? map.get(position) + "" : "";
+    }
+
 }

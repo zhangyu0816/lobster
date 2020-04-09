@@ -3,6 +3,7 @@ package com.zb.module_camera;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -11,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_camera.adapter.CameraAdapter;
 import com.zb.module_camera.databinding.CameraMainBinding;
@@ -26,6 +28,7 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.databinding.ViewDataBinding;
 
 public class CameraViewModel extends BaseViewModel implements CameraVMInterface {
@@ -38,6 +41,12 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
     private String columns[] = new String[]{MediaStore.Images.Media.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
     private Cursor cur;
     public CameraAdapter fileAdapter;
+
+    public Map<Integer, Integer> selectMap = new HashMap<>();
+    private int selectCount = 0;
+    private int maxCount = 9;
+
+    public boolean isMore = false;
 
     @Override
     public void back(View view) {
@@ -59,6 +68,8 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                 null);
         buildImagesBucketList();
         selectImage(0);
+        selectMap.clear();
+        selectCount = 0;
     }
 
     @Override
@@ -88,12 +99,41 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
         });
     }
 
+
+    @Override
+    public void selectImageByMore(int position) {
+        if (selectMap.containsKey(position)) {
+            int count = selectMap.get(position);
+            selectCount--;
+            selectMap.remove(position);
+            adapter.notifyItemChanged(position);
+            for (Map.Entry<Integer, Integer> entry : selectMap.entrySet()) {
+                if (entry.getValue() > count) {
+                    selectMap.put(entry.getKey(), entry.getValue() - 1);
+                    adapter.notifyItemChanged(entry.getKey());
+                }
+            }
+        } else {
+            if (selectCount == maxCount) {
+                SCToastUtil.showToast(activity, "一次最多可选取" + maxCount + "张图片");
+                return;
+            }
+            selectCount++;
+            selectMap.put(position, selectCount);
+            adapter.notifyItemChanged(position);
+        }
+        selectImage(position);
+
+    }
+
     @Override
     public void selectFileIndex(int position) {
         mainBinding.setShowList(false);
         mainBinding.setTitle(fileList.get(position));
         images.clear();
-        for (int i=0;i<imageMap.get(fileList.get(position)).size();i++) {
+        selectMap.clear();
+        selectCount = 0;
+        for (int i = 0; i < imageMap.get(fileList.get(position)).size(); i++) {
             images.add(imageMap.get(fileList.get(position)).get(i));
         }
         Collections.reverse(images);
@@ -103,22 +143,29 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
 
     @Override
     public void upload(View view) {
-        Bitmap bitmap = mainBinding.ivCut.getCutBitmap();
-        File file = BaseActivity.getImageFile();
-        try {
-            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-            bos.flush();
-            bos.close();
+        if (isMore) {
+            for (Integer key : selectMap.keySet()) {
 
-            Intent data = new Intent();
-            data.putExtra("fileName", file.getAbsolutePath());
-            activity.setResult(1, data);
-            activity.finish();
-        } catch (Exception e) {
-            e.printStackTrace();
+            }
+        } else {
+            Bitmap bitmap = mainBinding.ivCut.getCutBitmap();
+            File file = BaseActivity.getImageFile();
+            try {
+                BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+                bos.flush();
+                bos.close();
+
+                Intent data = new Intent();
+                data.putExtra("fileName", file.getAbsolutePath());
+                activity.setResult(1, data);
+                activity.finish();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
+
 
     /**
      * 获取本地图片
@@ -144,7 +191,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
             } while (cur.moveToNext());
         }
         cur.close();
-        for (int i=0;i<imageMap.get("所有图片").size();i++) {
+        for (int i = 0; i < imageMap.get("所有图片").size(); i++) {
             images.add(imageMap.get("所有图片").get(i));
         }
         Collections.reverse(images);

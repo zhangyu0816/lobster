@@ -75,6 +75,6 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
     }
 
     private void setPermissions() {
-        ActivityUtils.getCameraMain(activity);
+        ActivityUtils.getCameraMain(activity,false);
     }
 }

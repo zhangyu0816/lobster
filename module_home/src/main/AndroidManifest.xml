@@ -3,7 +3,7 @@
     package="com.zb.module_home">
 
     <application android:theme="@style/HomeTheme">
-
+        <activity android:name=".PublishImageActivity" />
     </application>
 
 </manifest>

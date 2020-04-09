@@ -6,6 +6,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.model.DiscoverInfo;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_home.HomeAdapter;
@@ -45,7 +46,7 @@ public class RecommendViewModel extends BaseViewModel implements RecommendVMInte
 
     @Override
     public void publishDiscover(View view) {
-        SCToastUtil.showToast(activity, "你好");
+        ActivityUtils.getHomePublishImage();
     }
 
     @Override
