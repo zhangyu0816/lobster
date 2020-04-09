@@ -12,12 +12,12 @@ public interface BaseVMInterface {
     default void setAdapter() {
     }
 
-    default void setList() {
-    }
-
     default void back(View view) {
     }
 
     default void right(View view) {
+    }
+
+    default void clickItem(int position) {
     }
 }

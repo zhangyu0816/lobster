@@ -7,6 +7,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.zb.lib_base.R;
 import com.zb.lib_base.adaptive.FitScreen;
 import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.utils.DisplayUtils;
@@ -28,7 +29,7 @@ public class MineApp extends Application {
     static {
         //设置全局的Header构建器
         SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {
-            layout.setPrimaryColorsId(android.R.color.white, android.R.color.white);//全局设置主题颜色
+            layout.setPrimaryColorsId(R.color.black_efe, R.color.black_252);//全局设置主题颜色
             return new ClassicsHeader(context);
         });
         //设置全局的Footer构建器

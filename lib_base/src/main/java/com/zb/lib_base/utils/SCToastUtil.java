@@ -1,36 +1,29 @@
 package com.zb.lib_base.utils;
 
-import android.content.Context;
+import android.view.Gravity;
 import android.widget.Toast;
 
-/**
- * [�?要描述]: 自定义Toast提示框显�? [详细描述]:
- * 
- * @author [Jarry]
- * @date [Created 2014-2-24]
- * @see [SCToastUtil]
- * @package [com.easycity.manager.utils]
- * @since [EasyCityManager]
- */
+import com.zb.lib_base.R;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
+import androidx.databinding.library.baseAdapters.BR;
+
 public class SCToastUtil {
+    private static Toast toast = null;
+    private static ViewDataBinding mBinding;
 
-	/**
-	 * @param context
-	 * @param text
-	 * @param duration
-	 * @param type
-	 *            参�?�本类静态变�? TOAST_TYPE
-	 * @return
-	 */
-	private static Toast toast = null;
-
-	public static void showToast(Context context, CharSequence text) {
-		if (toast == null) {
-			toast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
-		} else {
-			toast.setText(text);
-		}
-		toast.show();
-	}
+    public static void showToast(AppCompatActivity activity, CharSequence text) {
+        mBinding = DataBindingUtil.inflate(activity.getLayoutInflater(), R.layout.toast_view, null, false);
+        mBinding.setVariable(BR.content, text.toString());
+        if (toast == null) {
+            toast = new Toast(activity);
+        }
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(mBinding.getRoot()); //添加视图文件
+        toast.setGravity(Gravity.TOP, 0, 100);
+        toast.show();
+    }
 
 }

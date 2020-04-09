@@ -17,5 +17,6 @@ public class VideoFragment extends BaseFragment {
         VideoViewModel viewModel = new VideoViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel,viewModel);
+        viewModel.setAdapter();
     }
 }

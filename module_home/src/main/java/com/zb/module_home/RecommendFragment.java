@@ -17,5 +17,6 @@ public class RecommendFragment extends BaseFragment {
         RecommendViewModel viewModel = new RecommendViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel,viewModel);
+        viewModel.setAdapter();
     }
 }

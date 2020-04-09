@@ -127,17 +127,24 @@ public class AdapterBinding {
 
     // 加载图片
     @SuppressLint("CheckResult")
-    @BindingAdapter(value = {"imageUrl", "imageRes", "defaultRes", "viewWidthSize", "viewHeightSize", "isCircle", "isRound", "roundSize", "countSize"}, requireAll = false)
-    public static void loadImage(ImageView view, String imageUrl, int imageRes, int defaultRes, int widthSize, int heightSize, boolean isCircle, boolean isRound, int roundSize, boolean countSize) {
+    @BindingAdapter(value = {"imageUrl", "imageRes", "defaultRes", "viewWidthSize", "viewHeightSize", "isCircle", "isRound", "roundSize", "countSize", "cornerType", "scaleType"}, requireAll = false)
+    public static void loadImage(ImageView view, String imageUrl, int imageRes, int defaultRes, int widthSize, int heightSize, boolean isCircle, boolean isRound, int roundSize, boolean countSize, int cornerType, int scaleType) {
 
         RequestOptions cropOptions = new RequestOptions().centerCrop();
         if (isCircle) {
             // 圆图
             cropOptions.transform(new GlideCircleTransform());
+//            cropOptions.circleCrop();
         }
         if (isRound) {
             // 圆角图
-            cropOptions.transform(new GlideRoundTransform(roundSize, 0));
+            if (cornerType == 0) {
+                cropOptions.transform(new GlideRoundTransform(roundSize, 0));
+            } else {
+                if (scaleType == 0)
+                    scaleType = GlideRoundTransform.FIT_CENTER;
+                cropOptions.transform(new GlideRoundTransform(roundSize, 0, cornerType, scaleType));
+            }
         }
 
         if (countSize) {

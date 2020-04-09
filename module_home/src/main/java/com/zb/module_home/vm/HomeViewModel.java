@@ -14,6 +14,7 @@ import com.zb.module_home.iv.HomeVMInterface;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
@@ -85,10 +86,11 @@ public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
      * 适配器
      */
     public class FragmentAdapter extends FragmentStatePagerAdapter {
-        public FragmentAdapter(FragmentManager fm) {
+        FragmentAdapter(FragmentManager fm) {
             super(fm);
         }
 
+        @NonNull
         @Override
         public Fragment getItem(int position) {
             return fragments.get(position);
