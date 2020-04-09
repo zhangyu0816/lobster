@@ -20,7 +20,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,8 +31,13 @@ import androidx.databinding.ViewDataBinding;
 public class CameraViewModel extends BaseViewModel implements CameraVMInterface {
 
     public CameraAdapter adapter;
+    private Map<String, List<String>> imageMap = new HashMap<>();
     private List<String> images = new ArrayList<>();
     private CameraMainBinding mainBinding;
+    private List<String> fileList = new ArrayList<>();
+    private String columns[] = new String[]{MediaStore.Images.Media.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+    private Cursor cur;
+    public CameraAdapter fileAdapter;
 
     @Override
     public void back(View view) {
@@ -43,12 +50,31 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
         super.setBinding(binding);
         mainBinding = (CameraMainBinding) binding;
         setAdapter();
+        fileList.add("所有图片");
+        imageMap.put("所有图片", new ArrayList<>());
+
+        mainBinding.setTitle(fileList.get(0));
+        mainBinding.setShowList(false);
+        cur = activity.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null,
+                null);
         buildImagesBucketList();
+        selectImage(0);
     }
 
     @Override
     public void setAdapter() {
         adapter = new CameraAdapter<>(activity, R.layout.item_camera, images, this);
+
+        fileAdapter = new CameraAdapter<>(activity, R.layout.item_file, fileList, this);
+    }
+
+    @Override
+    public void selectTitle(View view) {
+        if (mainBinding.getShowList()) {
+            mainBinding.setShowList(false);
+        } else {
+            mainBinding.setShowList(true);
+        }
     }
 
     @Override
@@ -63,11 +89,23 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
     }
 
     @Override
+    public void selectFileIndex(int position) {
+        mainBinding.setShowList(false);
+        mainBinding.setTitle(fileList.get(position));
+        images.clear();
+        for (int i=0;i<imageMap.get(fileList.get(position)).size();i++) {
+            images.add(imageMap.get(fileList.get(position)).get(i));
+        }
+        Collections.reverse(images);
+        adapter.notifyDataSetChanged();
+        selectImage(0);
+    }
+
+    @Override
     public void upload(View view) {
         Bitmap bitmap = mainBinding.ivCut.getCutBitmap();
         File file = BaseActivity.getImageFile();
         try {
-
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
             bos.flush();
@@ -86,27 +124,30 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
      * 获取本地图片
      */
     private void buildImagesBucketList() {
-        String columns[] = new String[]{MediaStore.Images.Media._ID, MediaStore.Images.Media.BUCKET_ID,
-                MediaStore.Images.Media.PICASA_ID, MediaStore.Images.Media.DATA, MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.TITLE,
-                MediaStore.Images.Media.SIZE, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
-        Cursor cur = activity.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null,
-                null);
-
         File file = null;
         if (cur.moveToFirst()) {
             int photoPathIndex = cur.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             do {
                 String path = cur.getString(photoPathIndex);
+                String fileName = cur.getString(1);
+                if (!fileList.contains(fileName)) {
+                    fileList.add(fileName);
+                    imageMap.put(fileName, new ArrayList<>());
+                }
+
                 file = new File(path);
-                if (file.length() != 0)
-                    images.add(path);
-                else
+                if (file.length() != 0) {
+                    imageMap.get(fileName).add(path);
+                    imageMap.get("所有图片").add(path);
+                } else
                     file = null;
             } while (cur.moveToNext());
         }
         cur.close();
+        for (int i=0;i<imageMap.get("所有图片").size();i++) {
+            images.add(imageMap.get("所有图片").get(i));
+        }
         Collections.reverse(images);
-
-        Log.i("images", images.toString());
+        adapter.notifyDataSetChanged();
     }
 }

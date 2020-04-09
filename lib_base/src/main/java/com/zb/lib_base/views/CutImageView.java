@@ -44,7 +44,7 @@ public class CutImageView extends androidx.appcompat.widget.AppCompatImageView {
     /**
      * 截图框外部的默认颜色
      */
-    private final int mDefaultColor = Color.parseColor("#30000000");
+    private final int mDefaultColor = Color.parseColor("#ee000000");
     /**
      * 点击和移动的点
      */

@@ -18,7 +18,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
     @Override
     public void toLogin(View view) {
-        ActivityUtils.getRegisterPhone(true);
-        activity.finish();
+//        ActivityUtils.getRegisterPhone(true);
+//        activity.finish();
+        ActivityUtils.getRegisterLogo();
     }
 }

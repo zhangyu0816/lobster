@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="item"
+            type="String" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_camera.CameraViewModel" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+    </data>
+
+    <TextView
+        onClickDelayed="@{v->viewModel.selectFileIndex(position)}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@{item}"
+        android:textColor="@color/black_252"
+        android:textSize="16sp" />
+</layout>

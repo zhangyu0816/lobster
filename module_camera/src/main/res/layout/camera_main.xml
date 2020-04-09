@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
 
         <variable
             name="viewModel"
@@ -14,13 +15,21 @@
         <variable
             name="imageUrl"
             type="String" />
+
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="showList"
+            type="boolean" />
+
+
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".MainActivity">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:id="@+id/relativeLayout"
@@ -38,10 +47,14 @@
                 app:srcCompat="@mipmap/back_white_icon" />
 
             <TextView
+                onClickDelayed="@{viewModel::selectTitle}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="相册"
+                android:drawableEnd="@mipmap/arrow_xia"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:text="@{title}"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -66,7 +79,8 @@
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(1f)}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_below="@+id/relativeLayout"
+            android:layout_gravity="center_horizontal" />
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -75,7 +89,30 @@
             gridNum="@{4}"
             recyclerType="@{2}"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_below="@+id/iv_cut" />
 
-    </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/relativeLayout"
+            android:visibility="@{showList?View.VISIBLE:View.GONE}">
+
+            <View
+                onClickDelayed="@{viewModel::selectTitle}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.5"
+                android:background="@android:color/black" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                adapter="@{viewModel.fileAdapter}"
+                color="@{ObjectUtils.getLineColor()}"
+                recyclerType="@{0}"
+                size="@{1}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+    </RelativeLayout>
 </layout>

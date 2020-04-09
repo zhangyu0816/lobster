@@ -27,4 +27,8 @@ public class ObjectUtils {
     public static int getDefaultRes() {
         return R.mipmap.empty_icon;
     }
+
+    public static int getLineColor() {
+        return R.color.black_efe;
+    }
 }

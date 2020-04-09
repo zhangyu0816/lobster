@@ -30,7 +30,7 @@ public class MainActivity extends BaseActivity {
         mBinding.setVariable(BR.viewModel, viewModel);
 
         CameraMainBinding binding = (CameraMainBinding) mBinding;
-        viewModel.selectImage(0);
+
         AdapterBinding.viewSize(binding.imagesList, MineApp.W, (int) (MineApp.H * 0.4f));
 
     }
