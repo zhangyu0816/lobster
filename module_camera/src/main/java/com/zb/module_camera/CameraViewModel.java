@@ -43,7 +43,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
     private Map<String, List<String>> imageMap = new HashMap<>();
     private List<String> images = new ArrayList<>();
     private CameraMainBinding mainBinding;
-    private List<String> fileList = new ArrayList<>();
+    private List<ImageFile> fileList = new ArrayList<>();
     private String columns[] = new String[]{MediaStore.Images.Media.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
     private Cursor cur;
     public CameraAdapter fileAdapter;
@@ -68,14 +68,15 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
         super.setBinding(binding);
         mainBinding = (CameraMainBinding) binding;
         setAdapter();
-        fileList.add("所有图片");
+        fileList.add(new ImageFile("所有图片", "", 0));
         imageMap.put("所有图片", new ArrayList<>());
 
-        mainBinding.setTitle(fileList.get(0));
+        mainBinding.setTitle(fileList.get(0).getFileName());
         mainBinding.setShowList(false);
         cur = activity.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null,
                 null);
         buildImagesBucketList();
+        selectImage(0);
         if (isMore) {
             selectCount = MineApp.selectMap.size();
             for (Map.Entry<String, CutImageView> entry : MineApp.cutImageViewMap.entrySet()) {
@@ -83,8 +84,6 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                 cutImageView.countSize(ObjectUtils.getViewSizeByHeight(0.5f), ObjectUtils.getViewSizeByWidth(1f));
                 MineApp.cutImageViewMap.put(entry.getKey(), entry.getValue());
             }
-        } else {
-            selectImage(0);
         }
     }
 
@@ -140,7 +139,6 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
 
     @Override
     public void selectImageByMore(int position) {
-
         if (selectIndex != position) {
             selectMore = true;
             selectImage(position);
@@ -164,7 +162,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
             }
         } else {
             if (selectCount == maxCount) {
-                SCToastUtil.showToast(activity, "一次最多可选取" + maxCount + "张图片");
+                SCToastUtil.showToast(activity, "    一次最多可选取" + maxCount + "张图片    ");
                 return;
             }
             selectCount++;
@@ -178,12 +176,11 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
     @Override
     public void selectFileIndex(int position) {
         mainBinding.setShowList(false);
-        mainBinding.setTitle(fileList.get(position));
+        mainBinding.setTitle(fileList.get(position).getFileName());
         images.clear();
-        for (int i = 0; i < imageMap.get(fileList.get(position)).size(); i++) {
-            images.add(imageMap.get(fileList.get(position)).get(i));
+        for (int i = 0; i < imageMap.get(fileList.get(position).getFileName()).size(); i++) {
+            images.add(imageMap.get(fileList.get(position).getFileName()).get(i));
         }
-        Collections.reverse(images);
         adapter.notifyDataSetChanged();
         selectImage(0);
     }
@@ -191,6 +188,10 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
     @Override
     public void upload(View view) {
         if (isMore) {
+            if (MineApp.selectMap.size() == 0) {
+                activity.finish();
+                return;
+            }
             new Thread(() -> {
                 for (Map.Entry<String, CutImageView> entry : MineApp.cutImageViewMap.entrySet()) {
                     Bitmap bitmap = entry.getValue().getCutBitmap();
@@ -241,8 +242,15 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
             do {
                 String path = cur.getString(photoPathIndex);
                 String fileName = cur.getString(1);
-                if (!fileList.contains(fileName)) {
-                    fileList.add(fileName);
+                boolean hasName = false;
+                for (ImageFile imageFile : fileList) {
+                    if (imageFile.getFileName().equals(fileName)) {
+                        hasName = true;
+                        break;
+                    }
+                }
+                if (!hasName) {
+                    fileList.add(new ImageFile(fileName, "", 0));
                     imageMap.put(fileName, new ArrayList<>());
                 }
 
@@ -260,5 +268,12 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
         }
         Collections.reverse(images);
         adapter.notifyDataSetChanged();
+
+        for (ImageFile item : fileList) {
+            List<String> temp = imageMap.get(item.getFileName());
+            Collections.reverse(temp);
+            item.setImage(temp.get(0));
+            item.setSize(temp.size());
+        }
     }
 }

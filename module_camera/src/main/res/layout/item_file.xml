@@ -3,9 +3,11 @@
 
     <data>
 
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
         <variable
             name="item"
-            type="String" />
+            type="com.zb.module_camera.ImageFile" />
 
         <variable
             name="viewModel"
@@ -17,14 +19,47 @@
 
     </data>
 
-    <TextView
+    <LinearLayout
         onClickDelayed="@{v->viewModel.selectFileIndex(position)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:gravity="center"
-        android:padding="10dp"
-        android:text="@{item}"
-        android:textColor="@color/black_252"
-        android:textSize="16sp" />
+        android:background="@android:color/black"
+        android:orientation="horizontal">
+
+        <ImageView
+            defaultRes="@{ObjectUtils.getDefaultRes()}"
+            imageUrl="@{item.image}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="15dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/black"
+                android:text="@{item.fileName}"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@android:color/black"
+                android:text='@{String.format("%d",item.size)}'
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
 </layout>

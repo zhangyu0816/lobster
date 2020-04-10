@@ -48,6 +48,11 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
         activity.finish();
     }
 
+    @Override
+    public void cancel(View view) {
+        activity.finish();
+    }
+
     /**
      * 权限
      */

@@ -50,13 +50,13 @@
                 app:srcCompat="@mipmap/back_white_icon" />
 
             <TextView
-                onClickDelayed="@{viewModel::selectTitle}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:drawableEnd="@mipmap/arrow_xia"
                 android:drawablePadding="5dp"
                 android:gravity="center"
+                android:onClick="@{viewModel::selectTitle}"
                 android:text="@{title}"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
@@ -134,7 +134,7 @@
                 recyclerType="@{0}"
                 size="@{1}"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent" />
         </RelativeLayout>
 
     </RelativeLayout>
