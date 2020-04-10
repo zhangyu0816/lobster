@@ -34,6 +34,10 @@ public class RecommendViewModel extends BaseViewModel implements RecommendVMInte
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+        // 上拉加载更多
+//            int start = list.size();
+//            list.addAll(newItems);
+//            adapter.notifyItemInserted(start, list.size());
         discoverInfoList.add(new DiscoverInfo());
         refreshLayout.finishLoadMore();
         adapter.notifyDataSetChanged();
@@ -41,6 +45,10 @@ public class RecommendViewModel extends BaseViewModel implements RecommendVMInte
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        // 下拉刷新
+//            list.clear();
+//            list.addAll(newList);
+//            adapter.notifyItemRangeChanged(0, list.size());
         refreshLayout.finishRefresh();
     }
 

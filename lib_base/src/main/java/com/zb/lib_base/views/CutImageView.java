@@ -105,6 +105,23 @@ public class CutImageView extends androidx.appcompat.widget.AppCompatImageView {
         mBitmapHeight = bm.getHeight();
     }
 
+    public void countSize(int widthMeasureSpec, int heightMeasureSpec) {
+        // 计算控件的大小就不用说了
+        int widthMode = View.MeasureSpec.getMode(widthMeasureSpec);
+        int heightMode = View.MeasureSpec.getMode(heightMeasureSpec);
+        if (widthMode == View.MeasureSpec.EXACTLY && heightMode == View.MeasureSpec.EXACTLY) {
+            mWidth = View.MeasureSpec.getSize(widthMeasureSpec);
+            mHeight = View.MeasureSpec.getSize(heightMeasureSpec);
+        } else {
+            setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+            mWidth = getMeasuredWidth();
+            mHeight = getMeasuredHeight();
+        }
+        if (0 != mBitmapWidth && 0 != mWidth) {
+            setScale();
+        }
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -153,9 +170,9 @@ public class CutImageView extends androidx.appcompat.widget.AppCompatImageView {
         float newWidth = height * 345f / 510f;
         float newHeight = width * 510f / 345f;
 
-        if(newWidth>width){
+        if (newWidth > width) {
             newWidth = width;
-        }else if(newHeight>height){
+        } else if (newHeight > height) {
             newHeight = height;
         }
 
@@ -378,16 +395,28 @@ public class CutImageView extends androidx.appcompat.widget.AppCompatImageView {
      * 获取截图的bitmap 这个方法是在图片的原图上处理的，也可以通过截图的方式，不过截图的方式     * 获取的图片大小是有偏差的。     *     * @return
      */
     public Bitmap getCutBitmap() {
-        Drawable drawable = getDrawable();
-        if (null == drawable) return null;
-        Bitmap bitmap = creatBitmapFromDrawable(drawable);
-        // 计算截图框在原图片所在的位置大小，通过比例可以算出
-        float left = (mFloatRect.left - mDefaultRect.left) / (float) mScaleX;
-        float top = (mFloatRect.top - mDefaultRect.top) / (float) mScaleY;
-        float width = mFloatRect.width() / (float) mScaleX;
-        float height = mFloatRect.height() / (float) mScaleY;
-        Bitmap dstBitmap = Bitmap.createBitmap(bitmap, (int) left, (int) top, (int) width, (int) height);
-        return dstBitmap;
+        try {
+            Drawable drawable = getDrawable();
+            if (null == drawable) return null;
+            Bitmap bitmap = creatBitmapFromDrawable(drawable);
+            // 计算截图框在原图片所在的位置大小，通过比例可以算出
+            float left = (mFloatRect.left - mDefaultRect.left) / (float) mScaleX;
+            float top = (mFloatRect.top - mDefaultRect.top) / (float) mScaleY;
+            float width = mFloatRect.width() / (float) mScaleX;
+            float height = mFloatRect.height() / (float) mScaleY;
+
+            if (left + width > bitmap.getWidth()) {
+                width = bitmap.getWidth() - left;
+            }
+
+            if (top + height > bitmap.getHeight()) {
+                height = bitmap.getHeight() - top;
+            }
+            Bitmap dstBitmap = Bitmap.createBitmap(bitmap, (int) left, (int) top, (int) width, (int) height);
+            return dstBitmap;
+        }catch (Exception e){
+            return null;
+        }
     }
 }
 

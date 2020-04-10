@@ -2,6 +2,7 @@ package com.zb.module_register;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
@@ -10,6 +11,7 @@ import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.KeyBroadUtils;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_register.databinding.RegisterCodeBinding;
@@ -19,7 +21,7 @@ import com.zb.module_register.vm.CodeViewModel;
 public class CodeActivity extends RegisterBaseActivity implements KeyBroadUtils.OnSoftKeyboardChangeListener {
     private RegisterCodeBinding binding;
     private TextView[] array = new TextView[4];
-
+    private CodeViewModel viewModel;
     private ViewTreeObserver.OnGlobalLayoutListener mOnGlobalLayoutListener;
 
     @Autowired(name = "isLogin")
@@ -32,7 +34,7 @@ public class CodeActivity extends RegisterBaseActivity implements KeyBroadUtils.
 
     @Override
     public void initUI() {
-        CodeViewModel viewModel = new CodeViewModel();
+        viewModel = new CodeViewModel();
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
         viewModel.isLogin = isLogin;
@@ -101,5 +103,14 @@ public class CodeActivity extends RegisterBaseActivity implements KeyBroadUtils.
     @Override
     public void onSoftKeyBoardChange(int softKeyboardHeight, boolean visible) {
         binding.tvNext.setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            viewModel.back(null);
+            return true;
+        }
+        return false;
     }
 }

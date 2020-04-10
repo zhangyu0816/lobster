@@ -15,6 +15,7 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.GlideCircleTransform;
@@ -67,7 +68,7 @@ public class AdapterBinding {
             // 九宫格
             view.setLayoutManager(new GridLayoutManager(view.getContext(), gridNum));
             if (view.getItemDecorationCount() == 0 && size > 0) {
-                view.addItemDecoration(new GridSpacingItemDecoration(gridNum, DisplayUtils.dip2px(view.getContext(), size), includeEdge));
+                view.addItemDecoration(new GridSpacingItemDecoration(gridNum, (int) size, includeEdge));
             }
         } else if (recyclerType == 3) {
             // 九宫格
@@ -92,15 +93,7 @@ public class AdapterBinding {
                     }
                 }
             });
-            // 上拉加载更多
-//            int start = list.size();
-//            list.addAll(newItems);
-//            adapter.notifyItemInserted(start, list.size());
 
-            // 下拉刷新
-//            list.clear();
-//            list.addAll(newList);
-//            adapter.notifyItemRangeChanged(0, list.size());
         }
     }
 
@@ -129,7 +122,6 @@ public class AdapterBinding {
     @SuppressLint("CheckResult")
     @BindingAdapter(value = {"imageUrl", "imageRes", "defaultRes", "viewWidthSize", "viewHeightSize", "isCircle", "isRound", "roundSize", "countSize", "cornerType", "scaleType"}, requireAll = false)
     public static void loadImage(ImageView view, String imageUrl, int imageRes, int defaultRes, int widthSize, int heightSize, boolean isCircle, boolean isRound, int roundSize, boolean countSize, int cornerType, int scaleType) {
-
         RequestOptions cropOptions = new RequestOptions().centerCrop();
         if (isCircle) {
             // 圆图
@@ -172,7 +164,11 @@ public class AdapterBinding {
             if (imageRes != 0) {
                 builder.load(imageRes).into(view);
             } else {
-                builder.load(imageUrl).into(view);
+                if (imageUrl != null && imageUrl.equals("add_image_icon")) {
+                    builder.load(R.mipmap.add_image_icon).into(view);
+                } else {
+                    builder.load(imageUrl).into(view);
+                }
             }
         }
     }

@@ -55,7 +55,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @return
      */
     public static File getImageFile() {
-        File imagePath = new File(activity.getFilesDir(), "images");
+        File imagePath = new File(activity.getCacheDir(), "images");
         if (!imagePath.exists()) {
             imagePath.mkdirs();
         }
@@ -69,7 +69,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @return
      */
     public static File getSurfaceFile() {
-        File videoPath = new File(activity.getFilesDir(), "videos");
+        File videoPath = new File(activity.getCacheDir(), "videos");
         if (!videoPath.exists()) {
             videoPath.mkdirs();
         }
@@ -83,7 +83,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @return
      */
     public static File getAudioFile() {
-        File audioPath = new File(activity.getFilesDir(), "audios");
+        File audioPath = new File(activity.getCacheDir(), "audios");
         if (!audioPath.exists()) {
             audioPath.mkdirs();
         }

@@ -1,6 +1,7 @@
 package com.zb.module_register;
 
 import android.content.Intent;
+import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.adapter.AdapterBinding;
@@ -53,5 +54,13 @@ public class ImagesActivity extends RegisterBaseActivity {
                 viewModel.adapter.notifyItemChanged(viewModel._position);
             }
         }
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            viewModel.back(null);
+            return true;
+        }
+        return false;
     }
 }

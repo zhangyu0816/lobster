@@ -7,6 +7,9 @@
 
         <import type="android.view.View" />
 
+        <import type="com.zb.lib_base.app.MineApp" />
+
+
         <variable
             name="item"
             type="String" />
@@ -43,11 +46,11 @@
             android:layout_height="20dp"
             android:layout_alignParentEnd="true"
             android:layout_margin="10dp"
+            android:background="@{MineApp.selectMap.containsKey(item)?@drawable/image_select_circle:@drawable/image_unselect_circle}"
             android:gravity="center"
-            android:textSize="14sp"
+            android:text="@{ObjectUtils.getSelectCount(MineApp.selectMap,item)}"
             android:textColor="@android:color/white"
-            android:background="@{viewModel.selectMap.containsKey(position)?@drawable/image_select_circle:@drawable/image_unselect_circle}"
-            android:text="@{ObjectUtils.getSelectCount(viewModel.selectMap,position)}"
+            android:textSize="14sp"
             android:visibility="@{viewModel.isMore?View.VISIBLE:View.GONE}" />
 
         <ImageView

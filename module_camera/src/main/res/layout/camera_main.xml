@@ -24,6 +24,9 @@
             name="showList"
             type="boolean" />
 
+        <variable
+            name="isMore"
+            type="boolean" />
 
     </data>
 
@@ -73,14 +76,34 @@
                 android:textSize="14sp" />
         </RelativeLayout>
 
-        <com.zb.lib_base.views.CutImageView
-            android:id="@+id/iv_cut"
+        <RelativeLayout
+            android:id="@+id/cut_relative"
             viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.5f)}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(1f)}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/relativeLayout"
-            android:layout_gravity="center_horizontal" />
+            android:layout_below="@+id/relativeLayout">
+
+            <com.zb.lib_base.views.CutImageView
+                android:id="@+id/iv_cut"
+                viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.5f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(1f)}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:visibility="@{isMore?View.GONE:View.VISIBLE}" />
+
+            <LinearLayout
+                android:id="@+id/cut_layout"
+                viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.5f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(1f)}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:background="@color/black"
+                android:orientation="vertical"
+                android:visibility="@{isMore?View.VISIBLE:View.GONE}" />
+        </RelativeLayout>
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -90,7 +113,7 @@
             recyclerType="@{2}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/iv_cut" />
+            android:layout_below="@+id/cut_relative" />
 
         <RelativeLayout
             android:layout_width="match_parent"

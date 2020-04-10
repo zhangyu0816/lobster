@@ -22,6 +22,8 @@ public class HomeAdapter<T> extends BindingItemAdapter<T> {
     protected void onBind(RecyclerHolder<ViewDataBinding> holder, T t, int position) {
         holder.binding.setVariable(BR.item, t);
         holder.binding.setVariable(BR.position, position);
+        holder.binding.setVariable(BR.isLast, position == getItemCount()-1);
+
         if (viewModel != null) {
             holder.binding.setVariable(BR.viewModel, viewModel);
         }

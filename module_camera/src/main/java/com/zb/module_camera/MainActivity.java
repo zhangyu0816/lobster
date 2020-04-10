@@ -30,10 +30,10 @@ public class MainActivity extends BaseActivity {
     @Override
     public void initUI() {
         CameraViewModel viewModel = new CameraViewModel();
+        viewModel.isMore = isMore;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
-        viewModel.isMore = isMore;
-
+        mBinding.setVariable(BR.isMore, isMore);
         AdapterBinding.viewSize(((CameraMainBinding) mBinding).imagesList, MineApp.W, (int) (MineApp.H * 0.4f));
 
     }

@@ -1,5 +1,7 @@
 package com.zb.module_register;
 
+import android.view.KeyEvent;
+
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
@@ -10,6 +12,7 @@ import com.zb.module_register.vm.NickViewModel;
 
 @Route(path = RouteUtils.Register_Nick)
 public class NickNameActivity extends RegisterBaseActivity {
+    private NickViewModel viewModel;
 
     @Override
     public int getRes() {
@@ -18,7 +21,7 @@ public class NickNameActivity extends RegisterBaseActivity {
 
     @Override
     public void initUI() {
-        NickViewModel viewModel = new NickViewModel();
+        viewModel = new NickViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
 
@@ -34,5 +37,13 @@ public class NickNameActivity extends RegisterBaseActivity {
         binding.setNick(MineApp.registerInfo.getName());
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            viewModel.back(null);
+            return true;
+        }
+        return false;
+    }
 
 }

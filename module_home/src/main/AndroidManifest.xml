@@ -3,7 +3,9 @@
     package="com.zb.module_home">
 
     <application android:theme="@style/HomeTheme">
-        <activity android:name=".PublishImageActivity" />
+        <activity
+            android:name=".PublishImageActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
     </application>
 
 </manifest>

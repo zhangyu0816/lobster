@@ -11,6 +11,7 @@ import com.zb.module_register.iv.BirthdayVMInterface;
 import com.zb.module_register.windows.BirthdayPW;
 
 public class BirthdayViewModel extends BaseViewModel implements BirthdayVMInterface {
+
     @Override
     public void back(View view) {
         super.back(view);

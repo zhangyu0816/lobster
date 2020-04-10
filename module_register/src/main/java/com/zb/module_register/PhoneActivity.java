@@ -1,5 +1,7 @@
 package com.zb.module_register;
 
+import android.view.KeyEvent;
+
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.adapter.AdapterBinding;
@@ -14,6 +16,7 @@ public class PhoneActivity extends RegisterBaseActivity {
     @Autowired(name = "isLogin")
     boolean isLogin;
 
+    private PhoneViewModel viewModel;
     @Override
     public int getRes() {
         return R.layout.register_phone;
@@ -21,7 +24,7 @@ public class PhoneActivity extends RegisterBaseActivity {
 
     @Override
     public void initUI() {
-        PhoneViewModel viewModel = new PhoneViewModel();
+         viewModel = new PhoneViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.isLogin = isLogin;
@@ -36,5 +39,14 @@ public class PhoneActivity extends RegisterBaseActivity {
         KeyBroadUtils.controlKeyboardLayout(binding.btnLayout, binding.tvNext);
         // 初始化手机号
         binding.setPhone(MineApp.registerInfo.getPhone());
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            viewModel.back(null);
+            return true;
+        }
+        return false;
     }
 }

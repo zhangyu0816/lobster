@@ -2,6 +2,7 @@ package com.zb.module_register;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.adapter.AdapterBinding;
@@ -13,6 +14,7 @@ import com.zb.module_register.vm.LoginViewModel;
 
 @Route(path = RouteUtils.Register_Login)
 public class LoginActivity extends RegisterBaseActivity {
+    private LoginViewModel viewModel;
 
     @Override
     public int getRes() {
@@ -21,7 +23,7 @@ public class LoginActivity extends RegisterBaseActivity {
 
     @Override
     public void initUI() {
-        LoginViewModel viewModel = new LoginViewModel();
+        viewModel = new LoginViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         RegisterLoginBinding binding = (RegisterLoginBinding) mBinding;
@@ -56,5 +58,14 @@ public class LoginActivity extends RegisterBaseActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            viewModel.back(null);
+            return true;
+        }
+        return false;
     }
 }

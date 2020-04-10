@@ -31,14 +31,23 @@ public class ObjectUtils {
         return R.mipmap.empty_icon;
     }
 
+    // 上传图片
+    public static int getAddImageRes() {
+        return R.mipmap.add_image_icon;
+    }
+
     // 线条颜色
     public static int getLineColor() {
         return R.color.black_efe;
     }
 
     // 获取选中时显示的数量
-    public static String getSelectCount(Map map, int position) {
-        return map.containsKey(position) ? map.get(position) + "" : "";
+    public static String getSelectCount(Map map, String s) {
+        return map.containsKey(s) ? map.get(s) + "" : "";
     }
 
+    // 最大输入字数
+    public static String editMax(String content, int max) {
+        return content.length() + "/" + max;
+    }
 }

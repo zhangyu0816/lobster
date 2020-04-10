@@ -7,6 +7,7 @@ import android.view.View;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_register.R;
@@ -45,6 +46,7 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
 
     @Override
     public void complete(View view) {
+        DataCleanManager.deleteFile(activity.getCacheDir());
         activity.finish();
     }
 

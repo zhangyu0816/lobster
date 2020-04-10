@@ -1,17 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
 
         <variable
             name="viewModel"
             type="com.zb.module_home.vm.PublishImageViewModel" />
 
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="content"
+            type="String" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/view3">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:padding="15dp"
+                    android:text="取消"
+                    android:textColor="@color/black_4d4"
+                    android:textSize="14sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    adapter="@{viewModel.adapter}"
+                    gridNum="@{3}"
+                    recyclerType="@{2}"
+                    size="@{ObjectUtils.getViewSizeByWidth(0.04f)}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="15dp" />
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/recyclerView">
+
+                    <EditText
+                        android:id="@+id/editText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toStartOf="@+id/textView2"
+                        android:background="@null"
+                        android:hint="输入标题会有更多赞哦～"
+                        android:maxLength="20"
+                        android:padding="15dp"
+                        android:text="@={title}"
+                        android:textColor="@color/black_252"
+                        android:textColorHint="#827F9A"
+                        android:textCursorDrawable="@drawable/cursor_color_black_252"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="15dp"
+                        android:text="@{ObjectUtils.editMax(title,20)}"
+                        android:textColor="#C3BDCD"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_below="@+id/relativeLayout2"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@color/black_efe" />
+
+                <EditText
+                    android:id="@+id/editText2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/view2"
+                    android:background="@null"
+                    android:gravity="top"
+                    android:hint="添加正文..."
+                    android:maxLength="200"
+                    android:maxLines="10"
+                    android:minLines="6"
+                    android:padding="15dp"
+                    android:text="@={content}"
+                    android:textColor="@color/black_252"
+                    android:textColorHint="#827F9A"
+                    android:textCursorDrawable="@drawable/cursor_color_black_252"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+        </ScrollView>
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/view3"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="8dp"
+            android:text="@{ObjectUtils.editMax(content,200)}"
+            android:textColor="#C3BDCD"
+            android:textSize="14sp" />
+
+        <View
+            android:id="@+id/view3"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_above="@+id/textView4"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/black_efe" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_above="@+id/textView3"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/btn_bg_black_efe_radius40"
+            android:drawableStart="@mipmap/address_icon"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="温州市"
+            android:textColor="@color/black_252"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView3"
+            onClickDelayed="@{viewModel::publish}"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/btn_bg_purple_7a4_radius60"
+            android:gravity="center"
+            android:text="发布"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 </layout>

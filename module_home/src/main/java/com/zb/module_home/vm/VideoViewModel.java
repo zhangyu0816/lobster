@@ -30,9 +30,12 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, O
         adapter = new HomeAdapter<>(activity, R.layout.item_video, discoverInfoList, this);
     }
 
-
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+        // 上拉加载更多
+//            int start = list.size();
+//            list.addAll(newItems);
+//            adapter.notifyItemInserted(start, list.size());
         discoverInfoList.add(new DiscoverInfo());
         refreshLayout.finishLoadMore();
         adapter.notifyDataSetChanged();
@@ -40,6 +43,10 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, O
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        // 下拉刷新
+//            list.clear();
+//            list.addAll(newList);
+//            adapter.notifyItemRangeChanged(0, list.size());
         refreshLayout.finishRefresh();
     }
 

@@ -12,6 +12,10 @@ import com.zb.lib_base.adaptive.FitScreen;
 import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.UIUtils;
+import com.zb.lib_base.views.CutImageView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -25,6 +29,8 @@ public class MineApp extends Application {
     public static int W;
     public static int H;
     public static String PHONE_NUMBER_REG = "^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\\d{8}$";
+    public static Map<String, Integer> selectMap = new HashMap<>();
+    public static Map<String, CutImageView> cutImageViewMap = new HashMap<>();
 
     static {
         //设置全局的Header构建器
