@@ -24,7 +24,7 @@
 
         <variable
             name="viewModel"
-            type="com.zb.lib_base.vm.BaseViewModel" />
+            type="com.zb.module_camera.vm.CameraViewModel" />
     </data>
 
     <RelativeLayout

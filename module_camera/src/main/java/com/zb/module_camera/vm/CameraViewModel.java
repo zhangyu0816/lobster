@@ -50,6 +50,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
     private int maxCount = 9; // 最大数量
     private List<String> selectPaths = new ArrayList<>();
     private int selectIndex = -1;
+    public boolean isMore = false;
 
     private Map<Integer, CutImageView> tempMap = new HashMap<>();
     private boolean selectMore = false;
@@ -92,6 +93,11 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
     }
 
     @Override
+    public void selectIndex(int index) {
+
+    }
+
+    @Override
     public void selectTitle(View view) {
         if (mainBinding.getShowList()) {
             mainBinding.setShowList(false);
@@ -102,7 +108,6 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
 
     @Override
     public void selectImage(int position) {
-        super.selectImage(position);
         selectIndex = position;
         adapter.setSelectIndex(position);
         Glide.with(activity).asBitmap().load(images.get(position)).into(new SimpleTarget<Bitmap>() {
@@ -137,7 +142,6 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
 
     @Override
     public void selectImageByMore(int position) {
-        super.selectImageByMore(position);
         if (selectIndex != position) {
             selectMore = true;
             selectImage(position);
@@ -175,7 +179,6 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
 
     @Override
     public void selectFileIndex(int position) {
-        super.selectFileIndex(position);
         mainBinding.setShowList(false);
         mainBinding.setTitle(fileList.get(position).getFileName());
         images.clear();

@@ -43,10 +43,4 @@ public class RouteUtils {
     /*********************** 相册 **************************/
     // 相册主页
     public static final String Camera_Main = "/camera/MainActivity";
-    // 相册多选
-    public static final String Camera_More = "/camera/MoreActivity";
-    // 选择相册
-    public static final String Camera_Picture_Fragment = "/camera/PictureFragment";
-    // 选择录像
-    public static final String Camera_Video_Fragment = "/camera/PublishVideoFragment";
 }

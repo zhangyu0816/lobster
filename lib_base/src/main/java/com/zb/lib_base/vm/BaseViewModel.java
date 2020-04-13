@@ -23,21 +23,6 @@ public class BaseViewModel implements BaseVMInterface {
 
     }
 
-    @Override
-    public void selectImage(int position) {
-
-    }
-
-    @Override
-    public void selectImageByMore(int position) {
-
-    }
-
-    @Override
-    public void selectFileIndex(int position) {
-
-    }
-
     /**
      * Android M运行时权限请求封装
      *

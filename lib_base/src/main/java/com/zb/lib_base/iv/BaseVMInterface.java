@@ -20,12 +20,4 @@ public interface BaseVMInterface {
 
     default void clickItem(int position) {
     }
-
-    default void selectImage(int position) {
-    }
-
-    default void selectImageByMore(int position) {
-    }
-    default void selectFileIndex(int position) {
-    }
 }
