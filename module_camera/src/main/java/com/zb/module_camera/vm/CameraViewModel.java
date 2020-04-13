@@ -12,6 +12,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.views.CutImageView;
@@ -94,7 +95,12 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
 
     @Override
     public void selectIndex(int index) {
-
+        if (index == 1) {
+            ActivityUtils.getCameraVideo();
+        } else if (index == 2) {
+            ActivityUtils.getCameraPhoto();
+        }
+        activity.finish();
     }
 
     @Override
@@ -212,9 +218,11 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                         }
                     }
                 }
-                Intent data = new Intent();
-                data.putExtra("filePaths", TextUtils.join(",", selectPaths));
-                activity.setResult(1, data);
+                Intent data = new Intent("lobster_camera");
+                data.putExtra("cameraType", 0);
+                data.putExtra("isMore", true);
+                data.putExtra("filePath", TextUtils.join(",", selectPaths));
+                activity.sendBroadcast(data);
                 activity.finish();
             }).start();
         } else {

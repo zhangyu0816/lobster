@@ -43,4 +43,8 @@ public class RouteUtils {
     /*********************** 相册 **************************/
     // 相册主页
     public static final String Camera_Main = "/camera/MainActivity";
+    // 拍视频
+    public static final String Camera_Video = "/camera/VideoActivity";
+    // 拍照
+    public static final String Camera_Photo = "/camera/PhotoActivity";
 }

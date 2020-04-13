@@ -25,7 +25,7 @@ import androidx.databinding.ViewDataBinding;
 public abstract class BaseActivity extends AppCompatActivity {
 
     public ViewDataBinding mBinding;
-    private static AppCompatActivity activity;
+    public static AppCompatActivity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
