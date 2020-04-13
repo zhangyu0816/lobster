@@ -52,8 +52,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         try {
-            //设置设备高宽比
-//            mAspectRatio = getDeviceAspectRatio(context);
             //设置预览方向
             mCamera.setDisplayOrientation(90);
             Camera.Parameters parameters = mCamera.getParameters();

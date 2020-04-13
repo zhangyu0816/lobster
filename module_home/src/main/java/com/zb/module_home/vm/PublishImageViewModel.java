@@ -58,15 +58,16 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     private void getPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             performCodeWithPermission("虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
-                @Override
-                public void hasPermission() {
-                    setPermissions();
-                }
+                        @Override
+                        public void hasPermission() {
+                            setPermissions();
+                        }
 
-                @Override
-                public void noPermission() {
-                }
-            }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                        @Override
+                        public void noPermission() {
+                        }
+                    }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO);
         } else {
             setPermissions();
         }
