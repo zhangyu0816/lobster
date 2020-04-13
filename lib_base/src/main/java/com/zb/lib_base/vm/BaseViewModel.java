@@ -10,6 +10,7 @@ import androidx.databinding.ViewDataBinding;
 public class BaseViewModel implements BaseVMInterface {
     public ViewDataBinding mBinding;
     public AppCompatActivity activity;
+    public boolean isMore = false;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -19,6 +20,21 @@ public class BaseViewModel implements BaseVMInterface {
 
     @Override
     public void clickItem(int position) {
+
+    }
+
+    @Override
+    public void selectImage(int position) {
+
+    }
+
+    @Override
+    public void selectImageByMore(int position) {
+
+    }
+
+    @Override
+    public void selectFileIndex(int position) {
 
     }
 

@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.zb.module_camera.vm.CameraViewModel" />
+            type="com.zb.module_camera.vm.PictureViewModel" />
 
         <variable
             name="imageUrl"

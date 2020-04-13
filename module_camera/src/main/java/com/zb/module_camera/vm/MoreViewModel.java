@@ -1,9 +1,11 @@
-package com.zb.lobster.vm;
+package com.zb.module_camera.vm;
+
+import android.view.View;
 
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.vm.BaseViewModel;
-import com.zb.lobster.databinding.AcMainBinding;
-import com.zb.lobster.iv.MainVMInterface;
+import com.zb.module_camera.databinding.CameraMoreBinding;
+import com.zb.module_camera.iv.MoreVMInterface;
 
 import java.util.ArrayList;
 
@@ -13,19 +15,18 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-public class MainViewModel extends BaseViewModel implements MainVMInterface {
+public class MoreViewModel extends BaseViewModel implements MoreVMInterface {
+    private CameraMoreBinding cameraMoreBinding;
     private ArrayList<Fragment> fragments = new ArrayList<>();
-    private AcMainBinding mainBinding;
     private int nowIndex = -1;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        mainBinding = (AcMainBinding) binding;
+        cameraMoreBinding = (CameraMoreBinding) binding;
         initFragments();
-        mainBinding.viewPage.setAdapter(new FragmentAdapter(activity.getSupportFragmentManager()));
-        mainBinding.viewPage.setOffscreenPageLimit(2);
-        mainBinding.viewPage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        cameraMoreBinding.viewPage.setAdapter(new FragmentAdapter(activity.getSupportFragmentManager()));
+        cameraMoreBinding.viewPage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -37,28 +38,31 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                mainBinding.setIndex(nowIndex);
+                cameraMoreBinding.setIndex(nowIndex);
             }
         });
 
-        selectPage(0);
+        selectIndex(0);
     }
 
     private void initFragments() {
         fragments.clear();
-        fragments.add(FragmentUtils.getHomeFragment());
-        fragments.add(FragmentUtils.getCardFragment());
-        fragments.add(FragmentUtils.getChatFragment());
-        fragments.add(FragmentUtils.getMineFragment());
+        fragments.add(FragmentUtils.getCameraPictureFragment());
+        fragments.add(FragmentUtils.getCameraVideoFragment());
     }
 
     @Override
-    public void selectPage(int index) {
+    public void selectIndex(int index) {
         if (nowIndex == index)
             return;
         nowIndex = index;
-        mainBinding.setIndex(nowIndex);
-        mainBinding.viewPage.setCurrentItem(index);
+        cameraMoreBinding.setIndex(nowIndex);
+        cameraMoreBinding.viewPage.setCurrentItem(index);
+    }
+
+    @Override
+    public void selectCamera(View view) {
+
     }
 
     /**

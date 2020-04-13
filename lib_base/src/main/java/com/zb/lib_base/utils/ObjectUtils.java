@@ -2,7 +2,6 @@ package com.zb.lib_base.utils;
 
 import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.vm.BaseViewModel;
 
 import java.util.Map;
 

@@ -17,7 +17,6 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.GlideCircleTransform;
 import com.zb.lib_base.utils.GlideRoundTransform;
 import com.zb.lib_base.utils.GridSpacingItemDecoration;

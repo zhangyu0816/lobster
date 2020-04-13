@@ -2,20 +2,16 @@ package com.zb.module_camera;
 
 import android.os.Bundle;
 
-import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.RouteUtils;
-import com.zb.module_camera.databinding.CameraMainBinding;
-import com.zb.module_camera.vm.CameraViewModel;
+import com.zb.module_camera.databinding.CameraPictureBinding;
+import com.zb.module_camera.vm.MoreViewModel;
 
-@Route(path = RouteUtils.Camera_Main)
-public class MainActivity extends BaseActivity {
-
-    @Autowired(name = "isMore")
-    boolean isMore;
+@Route(path = RouteUtils.Camera_More)
+public class MoreActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,17 +21,14 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public int getRes() {
-        return R.layout.camera_main;
+        return R.layout.camera_more;
     }
 
     @Override
     public void initUI() {
-        CameraViewModel viewModel = new CameraViewModel();
-        viewModel.isMore = isMore;
+        MoreViewModel viewModel = new MoreViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
-        mBinding.setVariable(BR.isMore, isMore);
-        AdapterBinding.viewSize(((CameraMainBinding) mBinding).imagesList, MineApp.W, (int) (MineApp.H * 0.4f));
 
     }
 }

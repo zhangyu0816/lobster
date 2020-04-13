@@ -1,27 +1,27 @@
-package com.zb.module_camera;
+package com.zb.module_camera.vm;
 
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.os.Build;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.zb.lib_base.activity.BaseActivity;
-import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.views.CutImageView;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.module_camera.ImageFile;
+import com.zb.module_camera.R;
 import com.zb.module_camera.adapter.CameraAdapter;
 import com.zb.module_camera.databinding.CameraMainBinding;
+import com.zb.module_camera.databinding.CameraPictureBinding;
+import com.zb.module_camera.iv.PictureVMInterface;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -34,15 +34,14 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.databinding.ViewDataBinding;
 
-public class CameraViewModel extends BaseViewModel implements CameraVMInterface {
+public class PictureViewModel extends BaseViewModel implements PictureVMInterface {
 
     public CameraAdapter adapter;
     private Map<String, List<String>> imageMap = new HashMap<>();
     private List<String> images = new ArrayList<>();
-    private CameraMainBinding mainBinding;
+    private CameraPictureBinding pictureBinding;
     private List<ImageFile> fileList = new ArrayList<>();
     private String columns[] = new String[]{MediaStore.Images.Media.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
     private Cursor cur;
@@ -52,27 +51,25 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
     private int maxCount = 9; // 最大数量
     private List<String> selectPaths = new ArrayList<>();
     private int selectIndex = -1;
-    public boolean isMore = false;
 
     private Map<Integer, CutImageView> tempMap = new HashMap<>();
     private boolean selectMore = false;
 
     @Override
     public void back(View view) {
-        super.back(view);
         activity.finish();
     }
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        mainBinding = (CameraMainBinding) binding;
+        pictureBinding = (CameraPictureBinding) binding;
         setAdapter();
         fileList.add(new ImageFile("所有图片", "", 0));
         imageMap.put("所有图片", new ArrayList<>());
 
-        mainBinding.setTitle(fileList.get(0).getFileName());
-        mainBinding.setShowList(false);
+        pictureBinding.setTitle(fileList.get(0).getFileName());
+        pictureBinding.setShowList(false);
         cur = activity.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null,
                 null);
         buildImagesBucketList();
@@ -96,25 +93,26 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
 
     @Override
     public void selectTitle(View view) {
-        if (mainBinding.getShowList()) {
-            mainBinding.setShowList(false);
+        if (pictureBinding.getShowList()) {
+            pictureBinding.setShowList(false);
         } else {
-            mainBinding.setShowList(true);
+            pictureBinding.setShowList(true);
         }
     }
 
     @Override
     public void selectImage(int position) {
+        super.selectImage(position);
         selectIndex = position;
         adapter.setSelectIndex(position);
         Glide.with(activity).asBitmap().load(images.get(position)).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                mainBinding.ivCut.setImageBitmap(resource);
+                pictureBinding.ivCut.setImageBitmap(resource);
             }
         });
         if (isMore) {
-            mainBinding.cutLayout.removeAllViews();
+            pictureBinding.cutLayout.removeAllViews();
             CutImageView cutImageView;
             if (tempMap.containsKey(position)) {
                 cutImageView = tempMap.get(position);
@@ -122,7 +120,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                 cutImageView = new CutImageView(activity);
             }
             cutImageView.countSize(ObjectUtils.getViewSizeByHeight(0.5f), ObjectUtils.getViewSizeByWidth(1f));
-            mainBinding.cutLayout.addView(cutImageView);
+            pictureBinding.cutLayout.addView(cutImageView);
             Glide.with(activity).asBitmap().load(images.get(position)).into(new SimpleTarget<Bitmap>() {
                 @Override
                 public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
@@ -139,6 +137,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
 
     @Override
     public void selectImageByMore(int position) {
+        super.selectImageByMore(position);
         if (selectIndex != position) {
             selectMore = true;
             selectImage(position);
@@ -175,8 +174,9 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
 
     @Override
     public void selectFileIndex(int position) {
-        mainBinding.setShowList(false);
-        mainBinding.setTitle(fileList.get(position).getFileName());
+        super.selectFileIndex(position);
+        pictureBinding.setShowList(false);
+        pictureBinding.setTitle(fileList.get(position).getFileName());
         images.clear();
         for (int i = 0; i < imageMap.get(fileList.get(position).getFileName()).size(); i++) {
             images.add(imageMap.get(fileList.get(position).getFileName()).get(i));
@@ -214,7 +214,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                 activity.finish();
             }).start();
         } else {
-            Bitmap bitmap = mainBinding.ivCut.getCutBitmap();
+            Bitmap bitmap = pictureBinding.ivCut.getCutBitmap();
             File file = BaseActivity.getImageFile();
             try {
                 BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));

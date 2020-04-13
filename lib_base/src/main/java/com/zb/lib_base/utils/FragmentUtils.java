@@ -46,4 +46,16 @@ public class FragmentUtils {
         Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Mine_Fragment).navigation();
         return fragment;
     }
+
+    // 选择相册
+    public static Fragment getCameraPictureFragment() {
+        Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Camera_Picture_Fragment).navigation();
+        return fragment;
+    }
+
+    // 选择录像
+    public static Fragment getCameraVideoFragment() {
+        Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Camera_Video_Fragment).navigation();
+        return fragment;
+    }
 }

@@ -14,7 +14,6 @@ import com.zb.module_home.HomeAdapter;
 import com.zb.module_home.R;
 import com.zb.module_home.iv.PublishImageVMInterface;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class PublishImageViewModel extends BaseViewModel implements PublishImageVMInterface {
@@ -74,6 +73,6 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     }
 
     private void setPermissions() {
-        ActivityUtils.getCameraMain(activity, true);
+        ActivityUtils.getCameraMore(activity);
     }
 }

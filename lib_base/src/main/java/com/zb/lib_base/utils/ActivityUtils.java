@@ -63,4 +63,9 @@ public class ActivityUtils {
     public static void getCameraMain(AppCompatActivity activity, boolean isMore) {
         ARouter.getInstance().build(RouteUtils.Camera_Main).withBoolean("isMore", isMore).navigation(activity, 1001);
     }
+
+    // 相册多选
+    public static void getCameraMore(AppCompatActivity activity) {
+        ARouter.getInstance().build(RouteUtils.Camera_More).navigation(activity, 1001);
+    }
 }

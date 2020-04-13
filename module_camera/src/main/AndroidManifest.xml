@@ -6,6 +6,7 @@
 
     <application android:theme="@style/CameraTheme">
         <activity android:name=".MainActivity" />
+        <activity android:name=".MoreActivity" />
     </application>
 
 </manifest>
