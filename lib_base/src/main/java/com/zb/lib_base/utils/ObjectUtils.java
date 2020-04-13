@@ -17,6 +17,16 @@ public class ObjectUtils {
         return (int) (MineApp.H * scale);
     }
 
+    // 根据屏幕宽获取尺寸
+    public static int getViewSizeByWidthFromMax(int width) {
+        return (int) (MineApp.W * width / 1080f);
+    }
+
+    // 根据屏幕高获取尺寸
+    public static int getViewSizeByHeightFromMax(int height) {
+        return (int) (MineApp.H * height / 1920f);
+    }
+
     public static int getLogoHeight(float scale) {
         return (int) (getViewSizeByWidth(scale) * 510f / 345f);
     }

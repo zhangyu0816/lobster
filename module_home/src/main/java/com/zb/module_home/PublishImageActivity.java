@@ -37,7 +37,7 @@ public class PublishImageActivity extends HomeBaseActivity {
                 String path = intent.getStringExtra("filePath");
                 if (type == 0) {
                     // 相册
-                    if(isMore){
+                    if (isMore) {
                         viewModel.images.clear();
                         viewModel.images.addAll(Arrays.asList(path.split(",")));
                         viewModel.images.add("add_image_icon");
@@ -47,6 +47,8 @@ public class PublishImageActivity extends HomeBaseActivity {
                     // 视频
                 } else if (type == 2) {
                     // 拍照
+                    viewModel.images.add(viewModel.images.size() - 1, path);
+                    viewModel.adapter.notifyDataSetChanged();
                 }
             }
         };
