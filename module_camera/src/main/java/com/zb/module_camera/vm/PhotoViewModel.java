@@ -39,24 +39,27 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
     private byte[] imageData; // 图片流暂存
     private int cameraPosition = 1;// 前后置摄像头
     private int _position = Camera.CameraInfo.CAMERA_FACING_BACK;
-    private int x = 16, y = 9;
+    private float x = 16f, y = 9f;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         photoBinding = (CameraPhotoBinding) binding;
-
         mBinding.setVariable(BR.sizeIndex, 0);
         mBinding.setVariable(BR.lightIndex, 0);
         mBinding.setVariable(BR.isCreate, false);
+        photoBinding.cameraLayout.setOnTouchListener(this);
+        AdapterBinding.viewSize(photoBinding.cameraLayout, MineApp.W, (int) (MineApp.W * x / y));
+        initCamera();
+    }
 
-        mCamera = Camera.open();
-        preview = new CameraPreview(activity, mCamera, x, y);
+    private void initCamera() {
+        photoBinding.cameraLayout.removeAllViews();
+        mCamera = Camera.open(_position);
+        preview = new CameraPreview(activity, mCamera, (int) x, (int) y);
         mOverCameraView = new OverCameraView(activity);
         photoBinding.cameraLayout.addView(preview);
         photoBinding.cameraLayout.addView(mOverCameraView);
-        photoBinding.cameraLayout.setOnTouchListener(this);
-        AdapterBinding.viewSize(photoBinding.cameraLayout, MineApp.W, (int) (MineApp.W * 16f / 9f));
     }
 
     @Override
@@ -87,23 +90,17 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
 
     @Override
     public void changeSizeIndex(int index) {
-        preview.releaseCamera();
-        photoBinding.cameraLayout.removeAllViews();
-        mCamera = Camera.open(_position);
-        if (index == 0) {
-            x = 16;
-            y = 9;
-            AdapterBinding.viewSize(photoBinding.cameraLayout, MineApp.W, (int) (MineApp.W * 16f / 9f));
-        } else {
-            x = 4;
-            y = 3;
-            AdapterBinding.viewSize(photoBinding.cameraLayout, MineApp.W, (int) (MineApp.W * 4f / 3f));
-        }
-        preview = new CameraPreview(activity, mCamera, x, y);
-        photoBinding.cameraLayout.addView(preview);
-        photoBinding.cameraLayout.addView(mOverCameraView);
-
         mBinding.setVariable(BR.sizeIndex, index);
+        preview.releaseCamera();
+        if (index == 0) {
+            x = 16f;
+            y = 9f;
+        } else {
+            x = 4f;
+            y = 3f;
+        }
+        AdapterBinding.viewSize(photoBinding.cameraLayout, MineApp.W, (int) (MineApp.W * x / y));
+        initCamera();
     }
 
     @Override
@@ -148,11 +145,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
     private void openCamera(int position) {
         preview.releaseCamera();
         _position = position;
-        photoBinding.cameraLayout.removeAllViews();
-        mCamera = Camera.open(position);//打开当前选中的摄像头
-        preview = new CameraPreview(activity, mCamera, x, y);
-        photoBinding.cameraLayout.addView(preview);
-        photoBinding.cameraLayout.addView(mOverCameraView);
+        initCamera();
     }
 
     @Override

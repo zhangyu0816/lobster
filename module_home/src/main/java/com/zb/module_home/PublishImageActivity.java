@@ -35,6 +35,7 @@ public class PublishImageActivity extends HomeBaseActivity {
                 int type = intent.getIntExtra("cameraType", 0);
                 boolean isMore = intent.getBooleanExtra("isMore", false);
                 String path = intent.getStringExtra("filePath");
+                long time = intent.getLongExtra("time", 0);
                 if (type == 0) {
                     // 相册
                     if (isMore) {
@@ -45,6 +46,11 @@ public class PublishImageActivity extends HomeBaseActivity {
                     }
                 } else if (type == 1) {
                     // 视频
+                    viewModel.images.clear();
+                    viewModel.images.add(path);
+                    viewModel.images.add("add_image_icon");
+                    viewModel.adapter.notifyDataSetChanged();
+                    viewModel.videoTime = time;
                 } else if (type == 2) {
                     // 拍照
                     viewModel.images.add(viewModel.images.size() - 1, path);

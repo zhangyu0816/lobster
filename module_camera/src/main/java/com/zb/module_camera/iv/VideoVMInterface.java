@@ -19,4 +19,6 @@ public interface VideoVMInterface {
     void stopRecorder(View view);
 
     void selectIndex(int index);
+
+    void selectVideo(View view);
 }

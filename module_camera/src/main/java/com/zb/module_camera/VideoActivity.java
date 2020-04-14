@@ -25,7 +25,6 @@ public class VideoActivity extends CameraBaseActivity {
         viewModel = new VideoViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
-
     }
 
     private void fitComprehensiveScreen() {

@@ -23,6 +23,16 @@
         <variable
             name="isFinish"
             type="boolean" />
+
+        <variable
+            name="second"
+            type="String" />
+
+        <variable
+            name="videoPath"
+            type="String" />
+
+
     </data>
 
     <RelativeLayout
@@ -86,7 +96,6 @@
                 android:padding="15dp"
                 android:src="@{sizeIndex==0?@drawable/photo_size_9_16:@drawable/photo_size_3_4}" />
 
-
             <ImageView
                 android:id="@+id/camera_id"
                 onClickDelayed="@{viewModel::changeCameraId}"
@@ -98,43 +107,87 @@
                 app:srcCompat="@mipmap/photo_change" />
         </RelativeLayout>
 
-        <View
-            onClickDelayed="@{viewModel::createRecorder}"
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_above="@+id/linearLayout2"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/circle_btn"
-            android:visibility="@{isRecorder?View.GONE:View.VISIBLE}" />
-
-        <RelativeLayout
-            onClickDelayed="@{viewModel::stopRecorder}"
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/linearLayout2"
+            android:layout_above="@+id/btn_relative"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp"
-            android:visibility="@{isRecorder?View.VISIBLE:View.GONE}">
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/btn_bg_black_cc_radius10"
+            android:paddingStart="20dp"
+            android:paddingTop="2dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="2dp"
+            android:text="@{second}"
+            android:textColor="@android:color/white"
+            android:textSize="13sp"
+            android:visibility="@{(isRecorder||(!isRecorder&amp;&amp;isFinish))?View.VISIBLE:View.GONE}" />
+
+        <RelativeLayout
+            android:id="@+id/btn_relative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/linearLayout2">
 
             <View
+                onClickDelayed="@{viewModel::createRecorder}"
                 viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="@drawable/circle_white" />
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/circle_btn"
+                android:visibility="@{isRecorder?View.GONE:View.VISIBLE}" />
 
-            <View
-                viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.06f)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.06f)}"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_centerInParent="true"
-                android:background="@drawable/btn_bg_red_fe4" />
+            <RelativeLayout
+                onClickDelayed="@{viewModel::stopRecorder}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20dp"
+                android:visibility="@{isRecorder?View.VISIBLE:View.GONE}">
+
+                <View
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/circle_white" />
+
+                <View
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.06f)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.06f)}"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/btn_bg_red_fe4" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            onClickDelayed="@{viewModel::selectVideo}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/linearLayout2"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="20dp"
+            android:background="@drawable/btn_bg_white_radius5"
+            android:padding="1dp"
+            android:visibility="@{(videoPath.isEmpty()||isRecorder||(!isRecorder&amp;&amp;isFinish))?View.GONE:View.VISIBLE}">
+
+            <ImageView
+                defaultRes="@{ObjectUtils.getDefaultRes()}"
+                imageUrl="@{videoPath}"
+                isRound="@{true}"
+                roundSize="@{4}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
+                android:scaleType="fitXY"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </RelativeLayout>
 
         <LinearLayout

@@ -1,13 +1,16 @@
 package com.zb.module_camera.vm;
 
+import android.content.Intent;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
+import android.os.Environment;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.model.VideoInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -19,6 +22,8 @@ import com.zb.module_camera.utils.CameraPreview;
 import com.zb.module_camera.utils.OverCameraView;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
 
@@ -27,16 +32,28 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
     private Camera mCamera;
     private CameraPreview preview;
     private boolean isFoucing = false; // 是否正在聚焦
-    private boolean isRecorder = false; // 拍照标记
-    private boolean isFlashing = false; // 是否开启闪光灯
     private OverCameraView mOverCameraView; // 聚焦视图
     private Handler mHandler = new Handler();
     private Runnable mRunnable;
     private int cameraPosition = 1;// 前后置摄像头
     private int _position = Camera.CameraInfo.CAMERA_FACING_BACK;
-    private int x = 16, y = 9;
+    private float x = 16f, y = 9f;
 
+    private List<VideoInfo> videoInfoList = new ArrayList<>();
     private MediaRecorder mRecorder;//音视频录制类
+    private long time = 0;
+
+    private Handler handler = new Handler();
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            time += 100;
+            int s = (int) (time / 1000);
+            int ms = (int) (time - s * 1000) / 10;
+            videoBinding.setSecond("已录制" + (s < 10 ? "0" + s : s + "") + ":" + (ms < 10 ? "0" + ms : ms + "") + "S");
+            handler.postDelayed(this, 100);
+        }
+    };
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -45,31 +62,30 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
         mBinding.setVariable(BR.sizeIndex, 0);
         mBinding.setVariable(BR.isRecorder, false);
         mBinding.setVariable(BR.isFinish, false);
+        videoBinding.setVideoPath("");
+        videoBinding.cameraLayout.setOnTouchListener(this);
+        AdapterBinding.viewSize(videoBinding.cameraLayout, MineApp.W, (int) (MineApp.W * x / y));
+        initCamera();
+        videoInfoList.clear();
+        getVideoFile(videoInfoList, Environment.getExternalStorageDirectory());
+    }
 
-        mCamera = Camera.open();
+    private void initCamera() {
+        videoBinding.cameraLayout.removeAllViews();
+        mCamera = Camera.open(_position);
         mRecorder = new MediaRecorder();
-        preview = new CameraPreview(activity, mCamera, mRecorder, x, y);
+        preview = new CameraPreview(activity, mCamera, mRecorder, (int) x, (int) y);
         mOverCameraView = new OverCameraView(activity);
         videoBinding.cameraLayout.addView(preview);
         videoBinding.cameraLayout.addView(mOverCameraView);
-        videoBinding.cameraLayout.setOnTouchListener(this);
-        AdapterBinding.viewSize(videoBinding.cameraLayout, MineApp.W, (int) (MineApp.W * 16f / 9f));
     }
 
     @Override
     public void cancel(View view) {
-        if (isRecorder || videoBinding.getIsFinish()) {
+        if (videoBinding.getIsRecorder() || videoBinding.getIsFinish()) {
             reset(view);
         } else {
             DataCleanManager.deleteFile(new File(preview.videoPath));
-            try {
-                if (isFlashing) {
-                    Camera.Parameters parameters = mCamera.getParameters();
-                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                    mCamera.setParameters(parameters);
-                }
-            } catch (Exception e) {
-            }
             preview.releaseCamera();
             preview.releaseMediaRecorder();
             activity.finish();
@@ -78,45 +94,40 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
 
     @Override
     public void reset(View view) {
+        mBinding.setVariable(BR.isRecorder, false);
+        mBinding.setVariable(BR.isFinish, false);
         DataCleanManager.deleteFile(new File(preview.videoPath));
         preview.releaseCamera();
         preview.releaseMediaRecorder();
-        videoBinding.cameraLayout.removeAllViews();
-        mCamera = Camera.open(_position);
-        mRecorder = new MediaRecorder();
-        preview = new CameraPreview(activity, mCamera, mRecorder, x, y);
-        videoBinding.cameraLayout.addView(preview);
-        videoBinding.cameraLayout.addView(mOverCameraView);
-        mBinding.setVariable(BR.isRecorder, false);
-        mBinding.setVariable(BR.isFinish, false);
+        initCamera();
     }
 
     @Override
     public void upload(View view) {
-
+        Intent data = new Intent("lobster_camera");
+        data.putExtra("cameraType", 1);
+        data.putExtra("filePath", preview.videoPath);
+        data.putExtra("time", time);
+        activity.sendBroadcast(data);
+        preview.releaseCamera();
+        preview.releaseMediaRecorder();
+        activity.finish();
     }
 
     @Override
     public void changeSizeIndex(int index) {
+        mBinding.setVariable(BR.sizeIndex, index);
         preview.releaseCamera();
         preview.releaseMediaRecorder();
-        videoBinding.cameraLayout.removeAllViews();
-        mCamera = Camera.open(_position);
-        mRecorder = new MediaRecorder();
         if (index == 0) {
-            x = 16;
-            y = 9;
-            AdapterBinding.viewSize(videoBinding.cameraLayout, MineApp.W, (int) (MineApp.W * 16f / 9f));
+            x = 16f;
+            y = 9f;
         } else {
-            x = 4;
-            y = 3;
-            AdapterBinding.viewSize(videoBinding.cameraLayout, MineApp.W, (int) (MineApp.W * 4f / 3f));
+            x = 4f;
+            y = 3f;
         }
-        preview = new CameraPreview(activity, mCamera, mRecorder, x, y);
-        videoBinding.cameraLayout.addView(preview);
-        videoBinding.cameraLayout.addView(mOverCameraView);
-
-        mBinding.setVariable(BR.sizeIndex, index);
+        AdapterBinding.viewSize(videoBinding.cameraLayout, MineApp.W, (int) (MineApp.W * x / y));
+        initCamera();
     }
 
     @Override
@@ -149,28 +160,33 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
         preview.releaseCamera();
         preview.releaseMediaRecorder();
         _position = position;
-        videoBinding.cameraLayout.removeAllViews();
-        mCamera = Camera.open(position);//打开当前选中的摄像头
-        mRecorder = new MediaRecorder();
-        preview = new CameraPreview(activity, mCamera, mRecorder, x, y);
-        videoBinding.cameraLayout.addView(preview);
-        videoBinding.cameraLayout.addView(mOverCameraView);
+        initCamera();
     }
 
     @Override
     public void createRecorder(View view) {
         if (videoBinding.getIsFinish()) return;
-        isRecorder = true;
         mBinding.setVariable(BR.isRecorder, true);
+        mRecorder.setOnInfoListener((mr, what, extra) -> {
+            if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED) {
+                stopRecorder(view);
+                SCToastUtil.showToast(activity, "    视频文件已达到3M，自动停止！     ");
+            } else if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) {
+                stopRecorder(view);
+                SCToastUtil.showToast(activity, "    视频文件已录制15秒，自动停止！     ");
+            }
+        });
         preview.startRecord();
+        time = 0;
+        handler.postDelayed(runnable, 100);
     }
 
     @Override
     public void stopRecorder(View view) {
-        isRecorder = false;
         mBinding.setVariable(BR.isRecorder, false);
         mBinding.setVariable(BR.isFinish, true);
         preview.stopRecord();
+        handler.removeCallbacks(runnable);
     }
 
     @Override
@@ -184,13 +200,18 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
     }
 
     @Override
+    public void selectVideo(View view) {
+
+    }
+
+    @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             if (!isFoucing) {
                 float x = event.getX();
                 float y = event.getY();
                 isFoucing = true;
-                if (mCamera != null && !isRecorder) {
+                if (mCamera != null && !videoBinding.getIsRecorder()) {
                     mOverCameraView.setTouchFoucusRect(mCamera, autoFocusCallback, x, y);
                 }
                 mRunnable = () -> {
@@ -218,4 +239,55 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
         }
     };
 
+    private void getVideoFile(final List<VideoInfo> list, File file) {// 获得视频文件
+        new Thread(() -> {
+            file.listFiles(file1 -> {
+                // sdCard找到视频名称
+                String name = file1.getName();
+                int i = name.indexOf('.');
+                if (i != -1) {
+                    name = name.substring(i);
+                    if (name.equalsIgnoreCase(".mp4")
+                            || name.equalsIgnoreCase(".3gp")
+                            || name.equalsIgnoreCase(".wmv")
+                            || name.equalsIgnoreCase(".ts")
+                            || name.equalsIgnoreCase(".rmvb")
+                            || name.equalsIgnoreCase(".mov")
+                            || name.equalsIgnoreCase(".m4v")
+                            || name.equalsIgnoreCase(".avi")
+                            || name.equalsIgnoreCase(".m3u8")
+                            || name.equalsIgnoreCase(".3gpp")
+                            || name.equalsIgnoreCase(".3gpp2")
+                            || name.equalsIgnoreCase(".mkv")
+                            || name.equalsIgnoreCase(".flv")
+                            || name.equalsIgnoreCase(".divx")
+                            || name.equalsIgnoreCase(".f4v")
+                            || name.equalsIgnoreCase(".rm")
+                            || name.equalsIgnoreCase(".asf")
+                            || name.equalsIgnoreCase(".ram")
+                            || name.equalsIgnoreCase(".mpg")
+                            || name.equalsIgnoreCase(".v8")
+                            || name.equalsIgnoreCase(".swf")
+                            || name.equalsIgnoreCase(".m2v")
+                            || name.equalsIgnoreCase(".asx")
+                            || name.equalsIgnoreCase(".ra")
+                            || name.equalsIgnoreCase(".ndivx")
+                            || name.equalsIgnoreCase(".xvid")) {
+                        VideoInfo vi = new VideoInfo();
+                        vi.setName(file1.getName());
+                        vi.setPath(file1.getAbsolutePath());
+                        list.add(vi);
+                        return true;
+                    }
+                } else if (file1.isDirectory()) {
+                    getVideoFile(list, file1);
+                }
+                return false;
+            });
+            if (list.size() > 0)
+                videoBinding.setVideoPath(list.get(0).getPath());
+            else
+                videoBinding.setVideoPath("");
+        }).start();
+    }
 }

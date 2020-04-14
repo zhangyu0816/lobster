@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public class PublishImageViewModel extends BaseViewModel implements PublishImageVMInterface {
     public HomeAdapter adapter;
     public ArrayList<String> images = new ArrayList<>();
+    public long videoTime = 0;
 
     @Override
     public void setAdapter() {
