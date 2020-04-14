@@ -38,7 +38,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
     private Runnable mRunnable;
     private byte[] imageData; // 图片流暂存
     private int cameraPosition = 1;// 前后置摄像头
-    private int _position = -1;
+    private int _position = Camera.CameraInfo.CAMERA_FACING_BACK;
     private int x = 16, y = 9;
 
     @Override
@@ -72,7 +72,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
                 }
             } catch (Exception e) {
             }
-            cleanCamera();
+            preview.releaseCamera();
             activity.finish();
         }
     }
@@ -87,13 +87,9 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
 
     @Override
     public void changeSizeIndex(int index) {
-        cleanCamera();
+        preview.releaseCamera();
         photoBinding.cameraLayout.removeAllViews();
-        if (_position < 0) {
-            mCamera = Camera.open();
-        } else {
-            mCamera = Camera.open(_position);
-        }
+        mCamera = Camera.open(_position);
         if (index == 0) {
             x = 16;
             y = 9;
@@ -150,7 +146,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
     }
 
     private void openCamera(int position) {
-        cleanCamera();
+        preview.releaseCamera();
         _position = position;
         photoBinding.cameraLayout.removeAllViews();
         mCamera = Camera.open(position);//打开当前选中的摄像头
@@ -166,7 +162,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
         } else if (index == 1) {
             ActivityUtils.getCameraVideo();
         }
-        activity.finish();
+        cancel(null);
     }
 
     @Override
@@ -254,16 +250,4 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
             mHandler.removeCallbacks(mRunnable);
         }
     };
-
-    // 清理相机
-    private void cleanCamera() {
-        if (null != mCamera) {
-            preview.onDestroy();
-            mCamera.setPreviewCallback(null);
-            mCamera.stopPreview();
-            mCamera.lock();
-            mCamera.release();
-            mCamera = null;
-        }
-    }
 }

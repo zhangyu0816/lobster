@@ -3,11 +3,19 @@ package com.zb.module_camera.utils;
 import android.app.Activity;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
+import android.media.MediaRecorder;
+import android.os.Environment;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.zb.lib_base.utils.SCToastUtil;
+
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.SortedSet;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +29,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
      * 预览尺寸集合
      */
     private final SizeMap mPreviewSizes = new SizeMap();
+    private Size mPreviewSize = null;
     /**
      * 图片尺寸集合
      */
@@ -34,51 +43,124 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
      */
     private AspectRatio mAspectRatio;
 
+    private Camera.Parameters parameters;
+
+    private MediaRecorder mRecorder;//音视频录制类
+    private boolean isRecording = false;// 正在拍摄
+    public String videoPath = "";
+
     public CameraPreview(AppCompatActivity context, Camera mCamera, int x, int y) {
         super(context);
         this.context = context;
         this.mCamera = mCamera;
         this.mHolder = getHolder();
         this.mHolder.addCallback(this);
-        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        mDisplayOrientation = context.getWindowManager().getDefaultDisplay().getRotation();
         mAspectRatio = AspectRatio.of(x, y);
+        init();
     }
 
-    public void onDestroy(){
-        mHolder.removeCallback(this);
+    public CameraPreview(AppCompatActivity context, Camera mCamera, MediaRecorder mRecorder, int x, int y) {
+        super(context);
+        this.context = context;
+        this.mCamera = mCamera;
+        this.mRecorder = mRecorder;
+        this.mHolder = getHolder();
+        this.mHolder.addCallback(this);
+        mAspectRatio = AspectRatio.of(x, y);
+        init();
+    }
+
+    private void init() {
+        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        mDisplayOrientation = context.getWindowManager().getDefaultDisplay().getRotation();
+
+        parameters = mCamera.getParameters();
+        // 获取所有支持的预览尺寸
+        mPreviewSizes.clear();
+        for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
+            mPreviewSizes.add(new Size(size.width, size.height));
+        }
+        mPreviewSize = chooseOptimalSize(mPreviewSizes.sizes(mAspectRatio));
+        parameters.setPreviewSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
+        Log.i("previewSize", mPreviewSize.getWidth() + "" + mPreviewSize.getHeight());
+        //设置预览方向
+        mCamera.setDisplayOrientation(90);
+
+        List<String> focusModesList = parameters.getSupportedFocusModes();
+        //增加对聚焦模式的判断
+        if (focusModesList.contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+        } else if (focusModesList.contains(Camera.Parameters.FOCUS_MODE_AUTO)) {
+            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+        }
+        mCamera.setParameters(parameters);
+
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         try {
-            //设置预览方向
-            mCamera.setDisplayOrientation(90);
-            Camera.Parameters parameters = mCamera.getParameters();
-            //获取所有支持的预览尺寸
-            mPreviewSizes.clear();
-            for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
-                mPreviewSizes.add(new Size(size.width, size.height));
+            if (mRecorder != null) {
+                mCamera.setPreviewDisplay(holder);
+                mCamera.unlock();
+                mRecorder.setCamera(mCamera);
+                mRecorder.setOrientationHint(90);
+                // 设置音频采集方式
+                mRecorder.setAudioSource(MediaRecorder.AudioSource.VOICE_RECOGNITION);
+                //设置视频的采集方式
+                mRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+                //设置文件的输出格式
+                mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+
+                mRecorder.setVideoSize(640, 480);
+                mRecorder.setVideoEncodingBitRate(1 * 1024 * 1024);
+                mRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+                mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
+                long maxFileSize = Long.parseLong(3 * 1024 * 1024 + "");
+                mRecorder.setVideoFrameRate(15);
+                mRecorder.setMaxFileSize(maxFileSize);
+                mRecorder.setOnInfoListener((mr, what, extra) -> {
+                    if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED) {
+                        stopRecord();
+                        SCToastUtil.showToast(context, "    录制视频由于已超过设置的最大文件大小，自动停止！     ");
+                    }
+                });
+                String cameraPath = Environment.getExternalStorageDirectory().getPath() + File.separator + "DCIM" + File.separator + "Camera";
+                //相册文件夹
+                File cameraFolder = new File(cameraPath);
+                if (!cameraFolder.exists()) {
+                    cameraFolder.mkdirs();
+                }
+                //保存的图片文件
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+                videoPath = cameraFolder.getAbsolutePath() + File.separator + "Video_" + simpleDateFormat.format(new Date()) + ".mp4";
+                //设置输出文件的路径
+                mRecorder.setOutputFile(videoPath);
+
+                mRecorder.setPreviewDisplay(holder.getSurface());
+            } else {
+
+                //获取所有支持的图片尺寸
+                mPictureSizes.clear();
+                for (Camera.Size size : parameters.getSupportedPictureSizes()) {
+                    mPictureSizes.add(new Size(size.width, size.height));
+                }
+                Size pictureSize = mPictureSizes.sizes(mAspectRatio).last();
+                //设置相机参数
+                parameters.setPictureSize(pictureSize.getWidth(), pictureSize.getHeight());
+                parameters.setPictureFormat(ImageFormat.JPEG);
+                parameters.setRotation(90);
+                mCamera.setParameters(parameters);
+                //把这个预览效果展示在SurfaceView上面
+                mCamera.setPreviewDisplay(holder);
+                //开启预览效果
+                mCamera.startPreview();
+                isPreview = true;
             }
-            //获取所有支持的图片尺寸
-            mPictureSizes.clear();
-            for (Camera.Size size : parameters.getSupportedPictureSizes()) {
-                mPictureSizes.add(new Size(size.width, size.height));
-            }
-            Size previewSize = chooseOptimalSize(mPreviewSizes.sizes(mAspectRatio));
-            Size pictureSize = mPictureSizes.sizes(mAspectRatio).last();
-            //设置相机参数
-            parameters.setPreviewSize(previewSize.getWidth(), previewSize.getHeight());
-            parameters.setPictureSize(pictureSize.getWidth(), pictureSize.getHeight());
-            parameters.setPictureFormat(ImageFormat.JPEG);
-            parameters.setRotation(90);
-            mCamera.setParameters(parameters);
-            //把这个预览效果展示在SurfaceView上面
-            mCamera.setPreviewDisplay(holder);
-            //开启预览效果
-            mCamera.startPreview();
-            isPreview = true;
+
         } catch (IOException e) {
+            releaseCamera();
+            releaseMediaRecorder();
             Log.e("CameraPreview", "相机预览错误: " + e.getMessage());
         }
     }
@@ -107,6 +189,68 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 mCamera.stopPreview();
                 mCamera.release();
             }
+        }
+    }
+
+    // 释放照相机资源
+    public void releaseCamera() {
+        try {
+            if (null != mCamera) {
+                mHolder.removeCallback(this);
+                mCamera.setPreviewCallback(null);
+                mCamera.stopPreview();
+                mCamera.lock();
+                mCamera.release();
+            }
+        } catch (RuntimeException e) {
+        } finally {
+            mCamera = null;
+        }
+    }
+
+    /**
+     * 开始录制
+     */
+    public void startRecord() {
+        try {
+            //准备录制
+            mRecorder.prepare();
+            //开始录制
+            mRecorder.start();
+            isRecording = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 停止录制
+     */
+    public void stopRecord() {
+        try {
+            //停止录制
+            mRecorder.stop();
+            mRecorder.release();
+            mRecorder = null;
+            mCamera.stopPreview();
+            mCamera.release();
+            mCamera = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        isRecording = false;
+    }
+
+    // 释放拍摄资源
+    public void releaseMediaRecorder() {
+        try {
+            if (mRecorder != null) {
+                mRecorder.release();
+            }
+        } catch (RuntimeException e) {
+        } finally {
+            mRecorder = null;
         }
     }
 
@@ -163,4 +307,33 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         return (orientationDegrees == 90 ||
                 orientationDegrees == 270);
     }
+
+//    public Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, double targetRatio) {
+//        final double ASPECT_TOLERANCE = 0.1;
+//        if (sizes == null) {
+//            return null;
+//        }
+//        Camera.Size optimalSize = null;
+//        double minDiff = Double.MAX_VALUE;
+//        int targetHeight = h;
+//        for (Camera.Size size : sizes) {
+//            double ratio = (double) size.width / size.height;
+//            if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE)
+//                continue;
+//            if (Math.abs(size.height - targetHeight) < minDiff) {
+//                optimalSize = size;
+//                minDiff = Math.abs(size.height - targetHeight);
+//            }
+//        }
+//        if (optimalSize == null) {
+//            minDiff = Double.MAX_VALUE;
+//            for (Camera.Size size : sizes) {
+//                if (Math.abs(size.height - targetHeight) < minDiff) {
+//                    optimalSize = size;
+//                    minDiff = Math.abs(size.height - targetHeight);
+//                }
+//            }
+//        }
+//        return optimalSize;
+//    }
 }

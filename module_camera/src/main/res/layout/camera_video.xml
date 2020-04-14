@@ -4,15 +4,138 @@
 
     <data>
 
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.zb.module_camera.vm.VideoViewModel" />
 
+        <variable
+            name="sizeIndex"
+            type="Integer" />
+
+        <variable
+            name="isRecorder"
+            type="boolean" />
+
+        <variable
+            name="isFinish"
+            type="boolean" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/camera_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <RelativeLayout
+            android:id="@+id/top_layout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="22dp"
+            android:visibility="@{(isRecorder||(!isRecorder&amp;&amp;isFinish))?View.VISIBLE:View.GONE}">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:onClick="@{viewModel::reset}"
+                android:padding="15dp"
+                app:srcCompat="@mipmap/back_black_icon" />
+
+            <TextView
+                onClickDelayed="@{viewModel::upload}"
+                android:layout_width="60dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/btn_bg_purple_7a4_radius60"
+                android:gravity="center"
+                android:text="上传"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:visibility="@{isFinish?View.VISIBLE:View.GONE}" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:visibility="@{(isRecorder||isFinish)?View.GONE:View.VISIBLE}">
+
+            <ImageView
+                onClickDelayed="@{viewModel::cancel}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                app:srcCompat="@mipmap/cancel" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/camera_id"
+                android:onClick="@{v->viewModel.changeSizeIndex(sizeIndex==0?1:0)}"
+                android:padding="15dp"
+                android:src="@{sizeIndex==0?@drawable/photo_size_9_16:@drawable/photo_size_3_4}" />
+
+
+            <ImageView
+                android:id="@+id/camera_id"
+                onClickDelayed="@{viewModel::changeCameraId}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:padding="15dp"
+                app:srcCompat="@mipmap/photo_change" />
+        </RelativeLayout>
+
+        <View
+            onClickDelayed="@{viewModel::createRecorder}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_above="@+id/linearLayout2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/circle_btn"
+            android:visibility="@{isRecorder?View.GONE:View.VISIBLE}" />
+
+        <RelativeLayout
+            onClickDelayed="@{viewModel::stopRecorder}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/linearLayout2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:visibility="@{isRecorder?View.VISIBLE:View.GONE}">
+
+            <View
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/circle_white" />
+
+            <View
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.06f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.06f)}"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/btn_bg_red_fe4" />
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout2"
@@ -20,8 +143,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="0dp"
@@ -52,5 +174,5 @@
                 android:textColor="@color/white_cc"
                 android:textSize="16sp" />
         </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 </layout>
