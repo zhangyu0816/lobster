@@ -7,7 +7,6 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.utils.ActivityUtils;
-import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_home.HomeAdapter;
 import com.zb.module_home.R;
@@ -53,11 +52,5 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, O
     @Override
     public void publishDiscover(View view) {
         ActivityUtils.getHomePublishImage();
-    }
-
-    @Override
-    public void clickItem(int position) {
-        super.clickItem(position);
-        SCToastUtil.showToast(activity, position + "");
     }
 }

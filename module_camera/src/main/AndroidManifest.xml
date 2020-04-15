@@ -13,6 +13,7 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".VideoActivity" />
         <activity android:name=".PhotoActivity"/>
+        <activity android:name=".VideosActivity" />
     </application>
 
 </manifest>

@@ -19,7 +19,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        onClickDelayed="@{v->viewModel.clickItem(position)}"
+        onClickDelayed="@{v->viewModel.clickItem(item)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white">

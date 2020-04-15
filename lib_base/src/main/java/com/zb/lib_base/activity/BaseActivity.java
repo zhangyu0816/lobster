@@ -2,6 +2,7 @@ package com.zb.lib_base.activity;
 
 import android.app.AlertDialog;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -113,6 +114,17 @@ public abstract class BaseActivity extends AppCompatActivity {
             randBuffer[i] = numbersAndLetters[randGen.nextInt(71)];
         }
         return new String(randBuffer);
+    }
+
+    public void fitComprehensiveScreen() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().addFlags(View.SYSTEM_UI_FLAG_FULLSCREEN);
+            getWindow().addFlags(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+            getWindow().addFlags(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+            getWindow().addFlags(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            getWindow().setNavigationBarColor(Color.TRANSPARENT);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
     }
 
     //**************** Android M Permission (Android 6.0权限控制代码封装)*****************************************************

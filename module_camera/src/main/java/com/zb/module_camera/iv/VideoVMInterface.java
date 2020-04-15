@@ -4,8 +4,6 @@ import android.view.View;
 
 public interface VideoVMInterface {
 
-    void cancel(View view);
-
     void reset(View view);
 
     void upload(View view);

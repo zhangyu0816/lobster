@@ -2,6 +2,9 @@ package com.zb.lib_base.vm;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.iv.BaseVMInterface;
+import com.zb.lib_base.model.DiscoverInfo;
+import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.SCToastUtil;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,8 +22,8 @@ public class BaseViewModel implements BaseVMInterface {
     }
 
     @Override
-    public void clickItem(int position) {
-
+    public void clickItem(DiscoverInfo discoverInfo) {
+        ActivityUtils.getHomeDiscoverDetail(discoverInfo.getDiscoverId());
     }
 
     /**

@@ -8,6 +8,8 @@ public class RouteUtils {
     public static final String Home_Recommend_Fragment = "/home/RecommendFragment";
     public static final String Home_Video_Fragment = "/home/VideoFragment";
     public static final String Home_Publish_image = "/home/PublishImageActivity";
+    public static final String Home_Member_Detail = "/home/MemberDetailActivity";
+    public static final String Home_Discover_Detail = "/home/DiscoverDetailActivity";
 
     /*********************** 卡片 **************************/
     // 卡片主Fragment
@@ -47,4 +49,6 @@ public class RouteUtils {
     public static final String Camera_Video = "/camera/VideoActivity";
     // 拍照
     public static final String Camera_Photo = "/camera/PhotoActivity";
+    // 选择视频
+    public static final String Camera_Videos = "/camera/VideosActivity";
 }

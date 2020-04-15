@@ -17,7 +17,7 @@ import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.views.CutImageView;
 import com.zb.lib_base.vm.BaseViewModel;
-import com.zb.module_camera.ImageFile;
+import com.zb.module_camera.FileModel;
 import com.zb.module_camera.R;
 import com.zb.module_camera.adapter.CameraAdapter;
 import com.zb.module_camera.databinding.CameraMainBinding;
@@ -42,7 +42,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
     private Map<String, List<String>> imageMap = new HashMap<>();
     private List<String> images = new ArrayList<>();
     private CameraMainBinding mainBinding;
-    private List<ImageFile> fileList = new ArrayList<>();
+    private List<FileModel> fileList = new ArrayList<>();
     private String columns[] = new String[]{MediaStore.Images.Media.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
     private Cursor cur;
     public CameraAdapter fileAdapter;
@@ -67,7 +67,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
         super.setBinding(binding);
         mainBinding = (CameraMainBinding) binding;
         setAdapter();
-        fileList.add(new ImageFile("所有图片", "", 0));
+        fileList.add(new FileModel("所有图片", "", 0));
         imageMap.put("所有图片", new ArrayList<>());
 
         mainBinding.setTitle(fileList.get(0).getFileName());
@@ -255,14 +255,14 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                 String path = cur.getString(photoPathIndex);
                 String fileName = cur.getString(1);
                 boolean hasName = false;
-                for (ImageFile imageFile : fileList) {
-                    if (imageFile.getFileName().equals(fileName)) {
+                for (FileModel fileModel : fileList) {
+                    if (fileModel.getFileName().equals(fileName)) {
                         hasName = true;
                         break;
                     }
                 }
                 if (!hasName) {
-                    fileList.add(new ImageFile(fileName, "", 0));
+                    fileList.add(new FileModel(fileName, "", 0));
                     imageMap.put(fileName, new ArrayList<>());
                 }
 
@@ -281,7 +281,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
         Collections.reverse(images);
         adapter.notifyDataSetChanged();
 
-        for (ImageFile item : fileList) {
+        for (FileModel item : fileList) {
             List<String> temp = imageMap.get(item.getFileName());
             Collections.reverse(temp);
             item.setImage(temp.get(0));

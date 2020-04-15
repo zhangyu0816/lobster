@@ -26,21 +26,10 @@ public class PhotoActivity extends CameraBaseActivity {
         mBinding.setVariable(BR.viewModel, viewModel);
     }
 
-    private void fitComprehensiveScreen() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().addFlags(View.SYSTEM_UI_FLAG_FULLSCREEN);
-            getWindow().addFlags(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-            getWindow().addFlags(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-            getWindow().addFlags(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            getWindow().setNavigationBarColor(Color.TRANSPARENT);
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }
-    }
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            viewModel.cancel(null);
+            viewModel.back(null);
             return true;
         }
         return false;

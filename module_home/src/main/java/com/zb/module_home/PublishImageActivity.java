@@ -32,11 +32,11 @@ public class PublishImageActivity extends HomeBaseActivity {
         cameraReceiver = new BaseReceiver(activity, "lobster_camera") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                int type = intent.getIntExtra("cameraType", 0);
+                viewModel.cameraType = intent.getIntExtra("cameraType", 0);
                 boolean isMore = intent.getBooleanExtra("isMore", false);
                 String path = intent.getStringExtra("filePath");
                 long time = intent.getLongExtra("time", 0);
-                if (type == 0) {
+                if (viewModel.cameraType == 0) {
                     // 相册
                     if (isMore) {
                         viewModel.images.clear();
@@ -44,14 +44,13 @@ public class PublishImageActivity extends HomeBaseActivity {
                         viewModel.images.add("add_image_icon");
                         viewModel.adapter.notifyDataSetChanged();
                     }
-                } else if (type == 1) {
+                } else if (viewModel.cameraType == 1) {
                     // 视频
                     viewModel.images.clear();
                     viewModel.images.add(path);
-                    viewModel.images.add("add_image_icon");
                     viewModel.adapter.notifyDataSetChanged();
                     viewModel.videoTime = time;
-                } else if (type == 2) {
+                } else if (viewModel.cameraType == 2) {
                     // 拍照
                     viewModel.images.add(viewModel.images.size() - 1, path);
                     viewModel.adapter.notifyDataSetChanged();

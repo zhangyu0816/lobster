@@ -63,7 +63,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
     }
 
     @Override
-    public void cancel(View view) {
+    public void back(View view) {
         if (isTakePhoto) {
             reset(view);
         } else {
@@ -155,7 +155,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
         } else if (index == 1) {
             ActivityUtils.getCameraVideo();
         }
-        cancel(null);
+        back(null);
     }
 
     @Override
@@ -204,7 +204,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
                 }
             }
             isTakePhoto = false;
-            cancel(view);
+            back(view);
         }
     }
 

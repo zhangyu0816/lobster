@@ -10,6 +10,17 @@ public class ActivityUtils {
     public static void getHomePublishImage() {
         ARouter.getInstance().build(RouteUtils.Home_Publish_image).navigation();
     }
+
+    // 用户详情
+    public static void getHomeMemberDetail() {
+        ARouter.getInstance().build(RouteUtils.Home_Member_Detail).navigation();
+    }
+
+    // 动态详情
+    public static void getHomeDiscoverDetail(long discoverId) {
+        ARouter.getInstance().build(RouteUtils.Home_Discover_Detail).withLong("discoverId", discoverId).navigation();
+    }
+
     /*********************** 卡片 **************************/
     /*********************** 对话 **************************/
     /*********************** 我的 **************************/
@@ -72,5 +83,10 @@ public class ActivityUtils {
     // 拍照
     public static void getCameraPhoto() {
         ARouter.getInstance().build(RouteUtils.Camera_Photo).navigation();
+    }
+
+    // 拍照
+    public static void getCameraVideos() {
+        ARouter.getInstance().build(RouteUtils.Camera_Videos).navigation();
     }
 }

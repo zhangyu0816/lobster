@@ -3,15 +3,15 @@ package com.zb.module_camera;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
-public class ImageFile extends BaseObservable {
+public class FileModel extends BaseObservable {
     String fileName = "";
     String image = "";
     int size = 0;
 
-    public ImageFile() {
+    public FileModel() {
     }
 
-    public ImageFile(String fileName, String image, int size) {
+    public FileModel(String fileName, String image, int size) {
         setFileName(fileName);
         setImage(image);
         setSize(size);

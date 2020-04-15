@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <variable
+            name="item"
+            type="com.zb.lib_base.model.VideoInfo" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_camera.vm.VideosViewModel" />
+
+        <variable
+            name="isSelect"
+            type="boolean" />
+
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            defaultRes="@{ObjectUtils.getDefaultRes()}"
+            imageUrl="@{item.path}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:onClick="@{v->viewModel.selectVideo(position)}" />
+
+        <ImageView
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@{isSelect ?  @drawable/image_select: @drawable/image_unselect}" />
+    </RelativeLayout>
+</layout>

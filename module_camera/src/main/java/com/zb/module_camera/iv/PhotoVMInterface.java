@@ -3,7 +3,6 @@ package com.zb.module_camera.iv;
 import android.view.View;
 
 public interface PhotoVMInterface {
-    void cancel(View view);
 
     void reset(View view);
 

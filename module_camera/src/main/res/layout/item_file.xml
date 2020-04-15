@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.zb.module_camera.ImageFile" />
+            type="com.zb.module_camera.FileModel" />
 
         <variable
             name="viewModel"

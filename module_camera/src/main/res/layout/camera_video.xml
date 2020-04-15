@@ -81,7 +81,7 @@
             android:visibility="@{(isRecorder||isFinish)?View.GONE:View.VISIBLE}">
 
             <ImageView
-                onClickDelayed="@{viewModel::cancel}"
+                onClickDelayed="@{viewModel::back}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="15dp"

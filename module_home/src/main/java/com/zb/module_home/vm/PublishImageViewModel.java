@@ -20,6 +20,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     public HomeAdapter adapter;
     public ArrayList<String> images = new ArrayList<>();
     public long videoTime = 0;
+    public int cameraType = 0;
 
     @Override
     public void setAdapter() {
@@ -32,11 +33,15 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
         if (position == images.size() - 1) {
             getPermissions();
         } else {
-            ArrayList<String> imageList = new ArrayList<>();
-            for (int i = 0; i < images.size() - 1; i++) {
-                imageList.add(images.get(i));
+            if (cameraType == 1) {
+
+            } else {
+                ArrayList<String> imageList = new ArrayList<>();
+                for (int i = 0; i < images.size() - 1; i++) {
+                    imageList.add(images.get(i));
+                }
+                MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position);
             }
-            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position);
         }
     }
 
@@ -49,7 +54,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     }
 
     @Override
-    public void cancel(View view) {
+    public void back(View view) {
         activity.finish();
     }
 
@@ -75,6 +80,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     }
 
     private void setPermissions() {
-        ActivityUtils.getCameraMain(activity, true);
+        ActivityUtils.getCameraVideos();
+//        ActivityUtils.getCameraMain(activity, true);
     }
 }

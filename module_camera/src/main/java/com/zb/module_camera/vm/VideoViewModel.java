@@ -67,7 +67,7 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
         AdapterBinding.viewSize(videoBinding.cameraLayout, MineApp.W, (int) (MineApp.W * x / y));
         initCamera();
         videoInfoList.clear();
-        getVideoFile(videoInfoList, Environment.getExternalStorageDirectory());
+        getVideoFile(Environment.getExternalStorageDirectory());
     }
 
     private void initCamera() {
@@ -81,7 +81,7 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
     }
 
     @Override
-    public void cancel(View view) {
+    public void back(View view) {
         if (videoBinding.getIsRecorder() || videoBinding.getIsFinish()) {
             reset(view);
         } else {
@@ -196,12 +196,13 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
         } else if (index == 2) {
             ActivityUtils.getCameraPhoto();
         }
-        cancel(null);
+        back(null);
     }
 
     @Override
     public void selectVideo(View view) {
-
+        ActivityUtils.getCameraVideos();
+        back(view);
     }
 
     @Override
@@ -238,10 +239,12 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
             mHandler.removeCallbacks(mRunnable);
         }
     };
+    private Thread mThread = null;
+    private boolean exit = false;
 
-    private void getVideoFile(final List<VideoInfo> list, File file) {// 获得视频文件
-        new Thread(() -> {
-            file.listFiles(file1 -> {
+    private void getVideoFile(File file) {// 获得视频文件
+        mThread = new Thread(() -> file.listFiles(file1 -> {
+            if (!exit) {
                 // sdCard找到视频名称
                 String name = file1.getName();
                 int i = name.indexOf('.');
@@ -276,18 +279,17 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
                         VideoInfo vi = new VideoInfo();
                         vi.setName(file1.getName());
                         vi.setPath(file1.getAbsolutePath());
-                        list.add(vi);
+                        videoInfoList.add(vi);
+                        videoBinding.setVideoPath(videoInfoList.get(0).getPath());
+                        exit = true;
                         return true;
                     }
                 } else if (file1.isDirectory()) {
-                    getVideoFile(list, file1);
+                    getVideoFile(file1);
                 }
-                return false;
-            });
-            if (list.size() > 0)
-                videoBinding.setVideoPath(list.get(0).getPath());
-            else
-                videoBinding.setVideoPath("");
-        }).start();
+            }
+            return false;
+        }));
+        mThread.start();
     }
 }
