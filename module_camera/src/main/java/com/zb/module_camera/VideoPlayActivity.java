@@ -2,29 +2,30 @@ package com.zb.module_camera;
 
 import android.view.KeyEvent;
 
+import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.utils.RouteUtils;
-import com.zb.module_camera.vm.VideoViewModel;
+import com.zb.module_camera.vm.VideoPlayViewModel;
 
-@Route(path = RouteUtils.Camera_Video)
-public class VideoActivity extends CameraBaseActivity {
+@Route(path = RouteUtils.Camera_Video_Play)
+public class VideoPlayActivity extends CameraBaseActivity {
+    private VideoPlayViewModel viewModel;
 
-    private VideoViewModel viewModel;
+    @Autowired(name = "filePath")
+    String filePath;
 
     @Override
     public int getRes() {
-        return R.layout.camera_video;
+        return R.layout.camera_video_play;
     }
 
     @Override
     public void initUI() {
-        fitComprehensiveScreen();
-        viewModel = new VideoViewModel();
-        viewModel.setBinding(mBinding);
+        viewModel = new VideoPlayViewModel();
+        viewModel.filePath = filePath;
         mBinding.setVariable(BR.viewModel, viewModel);
+        viewModel.setBinding(mBinding);
     }
-
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -34,4 +35,5 @@ public class VideoActivity extends CameraBaseActivity {
         }
         return false;
     }
+
 }

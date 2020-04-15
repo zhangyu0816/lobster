@@ -13,28 +13,45 @@ import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_home.HomeAdapter;
 import com.zb.module_home.R;
 import com.zb.module_home.iv.PublishImageVMInterface;
+import com.zb.module_home.windows.SelectorPW;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PublishImageViewModel extends BaseViewModel implements PublishImageVMInterface {
     public HomeAdapter adapter;
     public ArrayList<String> images = new ArrayList<>();
     public long videoTime = 0;
     public int cameraType = 0;
+    private List<String> selectorList = new ArrayList<>();
+
+    public PublishImageViewModel() {
+        selectorList.add("预览");
+        selectorList.add("删除");
+    }
 
     @Override
     public void setAdapter() {
         images.add("add_image_icon");
-        adapter = new HomeAdapter<>(activity, R.layout.item_image, images, this);
+        adapter = new HomeAdapter<>(activity, R.layout.item_home_image, images, this);
     }
 
     @Override
     public void previewImage(int position) {
-        if (position == images.size() - 1) {
-            getPermissions();
+        if (cameraType == 1) {
+            new SelectorPW(activity, mBinding.getRoot(), selectorList, position1 -> {
+                if (position1 == 0) {
+                    ActivityUtils.getCameraVideoPlay(images.get(0));
+                } else {
+                    cameraType = 0;
+                    images.clear();
+                    images.add("add_image_icon");
+                    adapter.notifyDataSetChanged();
+                }
+            });
         } else {
-            if (cameraType == 1) {
-
+            if (position == images.size() - 1) {
+                getPermissions();
             } else {
                 ArrayList<String> imageList = new ArrayList<>();
                 for (int i = 0; i < images.size() - 1; i++) {
@@ -80,7 +97,6 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     }
 
     private void setPermissions() {
-        ActivityUtils.getCameraVideos();
-//        ActivityUtils.getCameraMain(activity, true);
+        ActivityUtils.getCameraMain(activity, true);
     }
 }

@@ -59,4 +59,37 @@ public class ObjectUtils {
     public static String editMax(String content, int max) {
         return content.length() + "/" + max;
     }
+
+    // 是不是视频
+    public static boolean isVideo(String filePath) {
+        if (filePath.contains(".mp4")
+                || filePath.contains(".3gp")
+                || filePath.contains(".wmv")
+                || filePath.contains(".ts")
+                || filePath.contains(".rmvb")
+                || filePath.contains(".mov")
+                || filePath.contains(".m4v")
+                || filePath.contains(".avi")
+                || filePath.contains(".m3u8")
+                || filePath.contains(".3gpp")
+                || filePath.contains(".3gpp2")
+                || filePath.contains(".mkv")
+                || filePath.contains(".flv")
+                || filePath.contains(".divx")
+                || filePath.contains(".f4v")
+                || filePath.contains(".rm")
+                || filePath.contains(".asf")
+                || filePath.contains(".ram")
+                || filePath.contains(".mpg")
+                || filePath.contains(".v8")
+                || filePath.contains(".swf")
+                || filePath.contains(".m2v")
+                || filePath.contains(".asx")
+                || filePath.contains(".ra")
+                || filePath.contains(".ndivx")
+                || filePath.contains(".xvid")) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -88,9 +88,9 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
 
     @Override
     public void setAdapter() {
-        adapter = new CameraAdapter<>(activity, R.layout.item_camera, images, this);
+        adapter = new CameraAdapter<>(activity, R.layout.item_camera_image, images, this);
 
-        fileAdapter = new CameraAdapter<>(activity, R.layout.item_file, fileList, this);
+        fileAdapter = new CameraAdapter<>(activity, R.layout.item_camera_file, fileList, this);
     }
 
     @Override

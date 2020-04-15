@@ -1,9 +1,6 @@
 package com.zb.module_camera;
 
-import android.graphics.Color;
-import android.os.Build;
 import android.view.KeyEvent;
-import android.view.View;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.utils.RouteUtils;

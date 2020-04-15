@@ -26,7 +26,7 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, O
         for (int i = 0; i < 10; i++) {
             discoverInfoList.add(new DiscoverInfo());
         }
-        adapter = new HomeAdapter<>(activity, R.layout.item_video, discoverInfoList, this);
+        adapter = new HomeAdapter<>(activity, R.layout.item_home_video, discoverInfoList, this);
     }
 
     @Override

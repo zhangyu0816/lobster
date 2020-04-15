@@ -14,6 +14,7 @@
         <activity android:name=".VideoActivity" />
         <activity android:name=".PhotoActivity"/>
         <activity android:name=".VideosActivity" />
+        <activity android:name=".VideoPlayActivity" />
     </application>
 
 </manifest>

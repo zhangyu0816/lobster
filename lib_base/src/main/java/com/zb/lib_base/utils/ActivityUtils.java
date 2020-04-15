@@ -85,8 +85,13 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Camera_Photo).navigation();
     }
 
-    // 拍照
+    // 选择视频
     public static void getCameraVideos() {
         ARouter.getInstance().build(RouteUtils.Camera_Videos).navigation();
+    }
+
+    // 视频播放
+    public static void getCameraVideoPlay(String filePath) {
+        ARouter.getInstance().build(RouteUtils.Camera_Video_Play).withString("filePath", filePath).navigation();
     }
 }

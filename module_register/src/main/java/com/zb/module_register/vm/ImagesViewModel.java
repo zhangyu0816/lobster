@@ -36,7 +36,7 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
     @Override
     public void setAdapter() {
         images = MineApp.registerInfo.getImageList();
-        adapter = new RegisterAdapter<>(activity, R.layout.item_images, images, this);
+        adapter = new RegisterAdapter<>(activity, R.layout.item_register_image, images, this);
         callback = new SimpleItemTouchHelperCallback(adapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(((RegisterImagesBinding)mBinding).imagesList);

@@ -24,20 +24,18 @@
 
             <ImageView
                 android:id="@+id/iv_back"
-                app:srcCompat="@mipmap/back_white_icon"
                 onClickDelayed="@{viewModel::back}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="5dp"
-                android:padding="15dp" />
+                android:padding="15dp"
+                app:srcCompat="@mipmap/back_white_icon" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:drawableEnd="@mipmap/arrow_xia"
-                android:drawablePadding="5dp"
                 android:gravity="center"
                 android:text="视频"
                 android:textColor="@android:color/white"
@@ -64,21 +62,36 @@
             android:layout_below="@+id/relativeLayout">
 
             <RelativeLayout
-                android:id="@+id/cut_relative"
-                viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.5f)}"
+                android:id="@+id/video_relative"
+                viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.6f)}"
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidth(1f)}"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:onClick="@{viewModel::play}">
 
-<!--                <com.zb.lib_base.views.CutImageView-->
-<!--                    android:id="@+id/iv_cut"-->
-<!--                    viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.5f)}"-->
-<!--                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(1f)}"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:layout_gravity="center_horizontal" />-->
+                <VideoView
+                    android:id="@+id/video_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
 
+                <ProgressBar
+                    android:id="@+id/progress"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:indeterminateBehavior="repeat"
+                    android:indeterminateDrawable="@mipmap/loading_icon"
+                    android:indeterminateDuration="2000"
+                    android:indeterminateOnly="true"
+                    android:visibility="gone" />
 
+                <ImageView
+                    android:id="@+id/video_play"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    app:srcCompat="@mipmap/video_play_icon" />
             </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -88,7 +101,7 @@
                 recyclerType="@{2}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/cut_relative" />
+                android:layout_below="@+id/video_relative" />
         </RelativeLayout>
     </RelativeLayout>
 </layout>

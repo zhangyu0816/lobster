@@ -27,7 +27,7 @@ public class RecommendViewModel extends BaseViewModel implements RecommendVMInte
         for (int i = 0; i < 10; i++) {
             discoverInfoList.add(new DiscoverInfo());
         }
-        adapter = new HomeAdapter<>(activity, R.layout.item_discover, discoverInfoList, this);
+        adapter = new HomeAdapter<>(activity, R.layout.item_home_discover, discoverInfoList, this);
     }
 
 

@@ -1,13 +1,8 @@
 package com.zb.module_register.windows;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zb.lib_base.app.MineApp;
@@ -23,12 +18,10 @@ import com.zb.module_register.databinding.PwsBirthdayBinding;
 import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
 
 public class BirthdayPW extends BasePopupWindow {
     private PwsBirthdayBinding binding;
-    private View mParentView;
+
     private CallBack mCallBack;
 
     // 配置滑轮
@@ -46,17 +39,9 @@ public class BirthdayPW extends BasePopupWindow {
     private String selectDate = "";
     private String nowDate = "";
 
-    private int uiRes() {
-        return R.layout.pws_birthday;
-    }
-
-    private void setBinding(ViewDataBinding viewDataBinding) {
-        binding = (PwsBirthdayBinding) viewDataBinding;
-    }
 
     public BirthdayPW(AppCompatActivity activity, View parentView, CallBack callBack) {
-        super(activity);
-        mParentView = parentView;
+        super(activity, parentView);
         mCallBack = callBack;
         nowDate = DateUtil.getNow(DateUtil.yyyy_MM_dd);
         selectDate = MineApp.registerInfo.getBirthday();
@@ -79,8 +64,24 @@ public class BirthdayPW extends BasePopupWindow {
         for (int i = 1; i <= 12; i++) {
             monthList.add(i + "月");
         }
-        setBinding(DataBindingUtil.inflate(LayoutInflater.from(activity), uiRes(), null, false));
         initUI();
+    }
+
+    @Override
+    public int getRes() {
+        return R.layout.pws_birthday;
+    }
+
+    @Override
+    public void initUI() {
+        binding = (PwsBirthdayBinding) mBinding;
+        binding.setPw(this);
+        binding.wheelYear.setVisibleItems(7);
+        binding.wheelMonth.setVisibleItems(7);
+        binding.wheelDay.setVisibleItems(7);
+        initData(activity, binding.wheelYear, yearList, yearList.indexOf(mYear + "年"));
+        initData(activity, binding.wheelMonth, monthList, mMonth - 1);
+        setDays(mYear, mMonth, mDay, dayList, binding.wheelDay);
     }
 
     /**
@@ -99,34 +100,6 @@ public class BirthdayPW extends BasePopupWindow {
         initData(activity, wheelView, dayList, defaultIndex);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private void initUI() {
-        View view = binding.getRoot();
-        setWidth(LinearLayout.LayoutParams.FILL_PARENT);
-        setHeight(LinearLayout.LayoutParams.FILL_PARENT);
-        setBackgroundDrawable(new BitmapDrawable());
-        setFocusable(true);
-        setOutsideTouchable(true);
-        setContentView(view);
-        showAtLocation(mParentView, Gravity.CENTER, 0, 0);
-        update();
-
-        view.setOnTouchListener((v, event) -> {
-            if (isShowing()) {
-                dismiss();
-            }
-            return false;
-        });
-
-        binding.setPw(this);
-
-        binding.wheelYear.setVisibleItems(7);
-        binding.wheelMonth.setVisibleItems(7);
-        binding.wheelDay.setVisibleItems(7);
-        initData(activity, binding.wheelYear, yearList, yearList.indexOf(mYear + "年"));
-        initData(activity, binding.wheelMonth, monthList, mMonth - 1);
-        setDays(mYear, mMonth, mDay, dayList, binding.wheelDay);
-    }
 
     public interface CallBack {
         void selectBirthday(String birthday);

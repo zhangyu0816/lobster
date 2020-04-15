@@ -7,4 +7,6 @@ public interface VideosVMInterface {
     void upload(View view);
 
     void selectVideo(int position);
+
+    void play(View view);
 }
