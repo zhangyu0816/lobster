@@ -7,6 +7,8 @@
         <item name="android:splitMotionEvents">false</item>
         <item name="android:windowBackground">@android:color/white</item>
         <item name="colorPrimaryDark">@android:color/white</item>
-        <item name="android:fitsSystemWindows">true</item>
+    </style>
+    <style name="HomeDetailTheme" parent="HomeTheme">
+        <item name="android:windowFullscreen">true</item>
     </style>
 </resources>

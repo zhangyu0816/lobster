@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.zb.lib_base.utils.SCToastUtil;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;

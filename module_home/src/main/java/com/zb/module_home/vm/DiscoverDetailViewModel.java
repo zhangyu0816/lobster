@@ -17,6 +17,7 @@ import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.model.Reward;
 import com.zb.lib_base.utils.ObjectUtils;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_home.BR;
 import com.zb.module_home.HomeAdapter;
@@ -152,4 +153,10 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 //            adapter.notifyItemRangeChanged(0, list.size());
 //        refreshLayout.finishRefresh();
     }
+
+    @Override
+    public void clickEd(View view) {
+        SCToastUtil.showToast(activity,"111111111");
+    }
+
 }
