@@ -7,6 +7,8 @@
 
         <import type="com.zb.module_register.R" />
 
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
         <variable
             name="viewModel"
             type="com.zb.module_register.vm.CodeViewModel" />
@@ -62,16 +64,20 @@
 
                 <TextView
                     android:id="@+id/tv_code1"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.11f)}"
                     android:layout_width="55dp"
                     android:layout_height="80dp"
                     android:background="@drawable/btn_bg_white_radius10"
                     android:gravity="center"
                     android:text=""
                     android:textColor="@color/purple_7a4"
-                    android:textSize="40sp" />
+                    android:textSize="32sp" />
 
                 <TextView
                     android:id="@+id/tv_code2"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.11f)}"
                     android:layout_width="55dp"
                     android:layout_height="80dp"
                     android:layout_marginStart="20dp"
@@ -80,10 +86,12 @@
                     android:gravity="center"
                     android:text=""
                     android:textColor="@color/purple_7a4"
-                    android:textSize="40sp" />
+                    android:textSize="32sp" />
 
                 <TextView
                     android:id="@+id/tv_code3"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.11f)}"
                     android:layout_width="55dp"
                     android:layout_height="80dp"
                     android:layout_marginStart="10dp"
@@ -92,10 +100,12 @@
                     android:gravity="center"
                     android:text=""
                     android:textColor="@color/purple_7a4"
-                    android:textSize="40sp" />
+                    android:textSize="32sp" />
 
                 <TextView
                     android:id="@+id/tv_code4"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.11f)}"
                     android:layout_width="55dp"
                     android:layout_height="80dp"
                     android:layout_marginStart="10dp"
@@ -103,11 +113,13 @@
                     android:gravity="center"
                     android:text=""
                     android:textColor="@color/purple_7a4"
-                    android:textSize="40sp" />
+                    android:textSize="32sp" />
             </LinearLayout>
 
             <EditText
                 android:id="@+id/ed_code"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.8f)}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.11f)}"
                 android:layout_width="280dp"
                 android:layout_height="80dp"
                 android:layout_centerHorizontal="true"

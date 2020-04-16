@@ -25,7 +25,8 @@
         </provider>
 
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".DiscoverDetailActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,7 +37,7 @@
             android:name=".PublishImageActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".MemberDetailActivity" />
-        <activity android:name=".DiscoverDetailActivity" />
+<!--        <activity android:name=".DiscoverDetailActivity" />-->
     </application>
 
 </manifest>

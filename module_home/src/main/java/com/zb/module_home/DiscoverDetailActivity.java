@@ -11,6 +11,8 @@ public class DiscoverDetailActivity extends HomeBaseActivity {
     @Autowired(name = "friendDynId")
     long friendDynId;
 
+    private DiscoverDetailViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.home_discover_detail;
@@ -19,11 +21,9 @@ public class DiscoverDetailActivity extends HomeBaseActivity {
     @Override
     public void initUI() {
         fitComprehensiveScreen();
-        DiscoverDetailViewModel viewModel = new DiscoverDetailViewModel();
+        viewModel = new DiscoverDetailViewModel();
         viewModel.friendDynId = friendDynId;
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
-
-
     }
 }

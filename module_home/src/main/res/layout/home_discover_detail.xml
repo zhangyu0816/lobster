@@ -19,16 +19,15 @@
 
     </data>
 
-    <RelativeLayout
-        android:id="@+id/main_layout"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white">
+        android:layout_height="match_parent">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/coordinatorLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/bottom_layout"
+            android:layout_marginBottom="60dp"
             android:splitMotionEvents="false">
 
             <com.google.android.material.appbar.AppBarLayout
@@ -208,75 +207,86 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_above="@+id/bottom_layout"
-            android:background="@color/black_efe" />
-
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/bottom_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@android:color/white">
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-            <ImageView
-                android:id="@+id/iv_gift"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                app:srcCompat="@mipmap/gift_icon" />
-
-            <EditText
+            <View
+                android:id="@+id/view4"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="15dp"
-                android:layout_toStartOf="@+id/right_layout"
-                android:layout_toEndOf="@+id/iv_gift"
-                android:background="@drawable/btn_bg_black_efe_radius40"
-                android:hint="写点什么..."
-                android:paddingLeft="15dp"
-                android:paddingEnd="15dp"
-                android:singleLine="true"
-                android:text="@={content}"
-                android:textColorHint="#C3BDCD"
-                android:textSize="12sp" />
+                android:layout_height="1px"
+                android:layout_above="@+id/bottom_layout"
+                android:background="@color/black_efe"
+                app:layout_constraintBottom_toTopOf="@+id/bottom_relative" />
 
-            <LinearLayout
-                android:id="@+id/right_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="15dp"
-                android:orientation="horizontal">
+            <RelativeLayout
+                android:id="@+id/bottom_relative"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="parent">
 
-                <TextView
+                <ImageView
+                    android:id="@+id/iv_gift"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    app:srcCompat="@mipmap/gift_icon" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_marginEnd="15dp"
-                    android:drawableStart="@drawable/like_select_icon"
-                    android:drawablePadding="5dp"
-                    android:text='@{String.format("%d",viewModel.discoverInfo.goodNum)}'
-                    android:textColor="@color/black_4d4"
-                    android:textSize="14sp"
-                    tools:text="7" />
+                    android:layout_toStartOf="@+id/right_layout"
+                    android:layout_toEndOf="@+id/iv_gift"
+                    android:background="@drawable/btn_bg_black_efe_radius40"
+                    android:hint="写点什么..."
+                    android:paddingLeft="15dp"
+                    android:paddingEnd="15dp"
+                    android:singleLine="true"
+                    android:text="@={content}"
+                    android:textColor="@color/black_252"
 
-                <TextView
+                    android:textColorHint="#C3BDCD"
+                    android:textCursorDrawable="@drawable/cursor_color_black_252"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:id="@+id/right_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@mipmap/comment_icon"
-                    android:drawablePadding="5dp"
-                    android:text='@{String.format("%d",viewModel.discoverInfo.reviews)}'
-                    android:textColor="@color/black_4d4"
-                    android:textSize="14sp"
-                    tools:text="7" />
-            </LinearLayout>
-        </RelativeLayout>
-    </RelativeLayout>
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="15dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="15dp"
+                        android:drawableStart="@drawable/like_select_icon"
+                        android:drawablePadding="5dp"
+                        android:text='@{String.format("%d",viewModel.discoverInfo.goodNum)}'
+                        android:textColor="@color/black_4d4"
+                        android:textSize="14sp"
+                        tools:text="7" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@mipmap/comment_icon"
+                        android:drawablePadding="5dp"
+                        android:text='@{String.format("%d",viewModel.discoverInfo.reviews)}'
+                        android:textColor="@color/black_4d4"
+                        android:textSize="14sp"
+                        tools:text="7" />
+                </LinearLayout>
+            </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

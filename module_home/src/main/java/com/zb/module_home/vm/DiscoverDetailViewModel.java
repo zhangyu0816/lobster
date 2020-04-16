@@ -152,5 +152,4 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 //            adapter.notifyItemRangeChanged(0, list.size());
 //        refreshLayout.finishRefresh();
     }
-
 }
