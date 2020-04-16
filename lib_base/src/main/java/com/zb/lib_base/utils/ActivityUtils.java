@@ -17,8 +17,8 @@ public class ActivityUtils {
     }
 
     // 动态详情
-    public static void getHomeDiscoverDetail(long discoverId) {
-        ARouter.getInstance().build(RouteUtils.Home_Discover_Detail).withLong("discoverId", discoverId).navigation();
+    public static void getHomeDiscoverDetail(long friendDynId) {
+        ARouter.getInstance().build(RouteUtils.Home_Discover_Detail).withLong("friendDynId", friendDynId).navigation();
     }
 
     /*********************** 卡片 **************************/

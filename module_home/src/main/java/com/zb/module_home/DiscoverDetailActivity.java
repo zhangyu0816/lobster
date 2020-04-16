@@ -8,8 +8,8 @@ import com.zb.module_home.vm.DiscoverDetailViewModel;
 @Route(path = RouteUtils.Home_Discover_Detail)
 public class DiscoverDetailActivity extends HomeBaseActivity {
 
-    @Autowired(name = "discoverId")
-    long discoverId;
+    @Autowired(name = "friendDynId")
+    long friendDynId;
 
     @Override
     public int getRes() {
@@ -20,8 +20,10 @@ public class DiscoverDetailActivity extends HomeBaseActivity {
     public void initUI() {
         fitComprehensiveScreen();
         DiscoverDetailViewModel viewModel = new DiscoverDetailViewModel();
-        viewModel.discoverId = discoverId;
+        viewModel.friendDynId = friendDynId;
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
+
+
     }
 }

@@ -176,32 +176,7 @@ public class VideosViewModel extends BaseViewModel implements VideosVMInterface 
                 int i = name.indexOf('.');
                 if (i != -1) {
                     name = name.substring(i);
-                    if (name.equalsIgnoreCase(".mp4")
-                            || name.equalsIgnoreCase(".3gp")
-                            || name.equalsIgnoreCase(".wmv")
-                            || name.equalsIgnoreCase(".ts")
-                            || name.equalsIgnoreCase(".rmvb")
-                            || name.equalsIgnoreCase(".mov")
-                            || name.equalsIgnoreCase(".m4v")
-                            || name.equalsIgnoreCase(".avi")
-                            || name.equalsIgnoreCase(".m3u8")
-                            || name.equalsIgnoreCase(".3gpp")
-                            || name.equalsIgnoreCase(".3gpp2")
-                            || name.equalsIgnoreCase(".mkv")
-                            || name.equalsIgnoreCase(".flv")
-                            || name.equalsIgnoreCase(".divx")
-                            || name.equalsIgnoreCase(".f4v")
-                            || name.equalsIgnoreCase(".rm")
-                            || name.equalsIgnoreCase(".asf")
-                            || name.equalsIgnoreCase(".ram")
-                            || name.equalsIgnoreCase(".mpg")
-                            || name.equalsIgnoreCase(".v8")
-                            || name.equalsIgnoreCase(".swf")
-                            || name.equalsIgnoreCase(".m2v")
-                            || name.equalsIgnoreCase(".asx")
-                            || name.equalsIgnoreCase(".ra")
-                            || name.equalsIgnoreCase(".ndivx")
-                            || name.equalsIgnoreCase(".xvid")) {
+                    if (name.equalsIgnoreCase(".mp4")) {
                         VideoInfo vi = new VideoInfo();
                         vi.setName(file1.getName());
                         vi.setPath(file1.getAbsolutePath());

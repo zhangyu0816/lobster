@@ -22,4 +22,13 @@ public interface BaseVMInterface {
 
     default void clickItem(DiscoverInfo discoverInfo) {
     }
+
+    default void more(View view) {
+    }
+
+    default void follow(View view) {
+    }
+
+    default void superLike(View view) {
+    }
 }

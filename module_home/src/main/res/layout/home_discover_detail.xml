@@ -1,17 +1,282 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
 
         <variable
             name="viewModel"
             type="com.zb.module_home.vm.DiscoverDetailViewModel" />
 
+        <variable
+            name="content"
+            type="String" />
+
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/bottom_layout"
+            android:splitMotionEvents="false">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:elevation="0dp">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    app:contentInsetStart="0dp"
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <include
+                            android:id="@+id/banner_layout"
+                            isMember="@{false}"
+                            layout="@layout/home_banner_top"
+                            viewModel="@{viewModel}"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/iv_logo"
+                                defaultRes="@{ObjectUtils.getDefaultRes()}"
+                                imageUrl="@{viewModel.discoverInfo.image}"
+                                isCircle="@{true}"
+                                viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
+                                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_margin="15dp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_toEndOf="@+id/iv_logo"
+                                android:background="@{viewModel.discoverInfo==null?@drawable/default_bg:@drawable/empty_bg}"
+                                android:minWidth="60dp"
+                                android:text="@{viewModel.discoverInfo.nick}"
+                                android:textColor="@color/black_252"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                tools:text="默认仓库" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginEnd="15dp"
+                                android:background="@{viewModel.discoverInfo==null?@drawable/default_bg:@drawable/empty_bg}"
+                                android:minWidth="30dp"
+                                android:text="@{viewModel.discoverInfo.createTime.substring(11,16)}"
+                                android:textColor="@color/black_c3b"
+                                android:textSize="12sp"
+                                android:textStyle="bold"
+                                tools:text="20:00" />
+                        </RelativeLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginEnd="15dp"
+                            android:background="@{viewModel.discoverInfo==null?@drawable/default_bg:@drawable/empty_bg}"
+                            android:text="@{viewModel.discoverInfo.text}"
+                            android:textColor="@color/black_827"
+                            android:textSize="14sp"
+                            tools:text="文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职" />
+
+                        <LinearLayout
+                            android:id="@+id/pay_linear"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:orientation="vertical"
+                            android:visibility="@{viewModel.discoverInfo.rewardNum==0?View.GONE:View.VISIBLE}">
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1px"
+                                android:layout_margin="15dp"
+                                android:background="#EFEEF1" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text='@{String.format("%d",viewModel.discoverInfo.rewardNum)}'
+                                    android:textColor="#FE4F71"
+                                    android:textSize="12sp"
+                                    tools:text="7" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="人送礼物"
+                                    android:textColor="@color/black_827"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                adapter="@{viewModel.rewardAdapter}"
+                                gridNum="@{6}"
+                                recyclerType="@{2}"
+                                size="@{10}"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginTop="15dp"
+                                android:layout_marginEnd="15dp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.appcompat.widget.Toolbar>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="22dp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="15dp"
+                        android:text="评论"
+                        android:textColor="@color/black_252"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="22dp"
+                        android:text='@{String.format("(%d)",viewModel.discoverInfo.reviews)}'
+                        android:textColor="@color/black_827"
+                        android:textSize="12sp"
+                        tools:text="(7)" />
+                </LinearLayout>
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                onLoadMoreListener="@{viewModel}"
+                onRefreshListener="@{viewModel}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    adapter="@{viewModel.reviewAdapter}"
+                    recyclerType="@{0}"
+                    size="@{0}"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_above="@+id/bottom_layout"
+            android:background="@color/black_efe" />
+
+        <RelativeLayout
+            android:id="@+id/bottom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/white">
+
+            <ImageView
+                android:id="@+id/iv_gift"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                app:srcCompat="@mipmap/gift_icon" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="15dp"
+                android:layout_toStartOf="@+id/right_layout"
+                android:layout_toEndOf="@+id/iv_gift"
+                android:background="@drawable/btn_bg_black_efe_radius40"
+                android:hint="写点什么..."
+                android:paddingLeft="15dp"
+                android:paddingEnd="15dp"
+                android:singleLine="true"
+                android:text="@={content}"
+                android:textColorHint="#C3BDCD"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:id="@+id/right_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="15dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="15dp"
+                    android:drawableStart="@drawable/like_select_icon"
+                    android:drawablePadding="5dp"
+                    android:text='@{String.format("%d",viewModel.discoverInfo.goodNum)}'
+                    android:textColor="@color/black_4d4"
+                    android:textSize="14sp"
+                    tools:text="7" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@mipmap/comment_icon"
+                    android:drawablePadding="5dp"
+                    android:text='@{String.format("%d",viewModel.discoverInfo.reviews)}'
+                    android:textColor="@color/black_4d4"
+                    android:textSize="14sp"
+                    tools:text="7" />
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
 </layout>

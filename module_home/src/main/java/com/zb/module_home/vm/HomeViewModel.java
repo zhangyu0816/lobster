@@ -24,7 +24,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
     private HomeFragBinding homeFragBinding;
     private ArrayList<Fragment> fragments = new ArrayList<>();
-    private String[] tabNames = new String[]{"关注", "推荐", "小程序"};
+    private String[] tabNames = new String[]{"关注", "推荐", "小视频"};
 
     @Override
     public void setBinding(ViewDataBinding binding) {

@@ -1,5 +1,7 @@
 package com.zb.lib_base.vm;
 
+import android.view.View;
+
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.iv.BaseVMInterface;
 import com.zb.lib_base.model.DiscoverInfo;
@@ -23,8 +25,35 @@ public class BaseViewModel implements BaseVMInterface {
 
     @Override
     public void clickItem(DiscoverInfo discoverInfo) {
-        ActivityUtils.getHomeDiscoverDetail(discoverInfo.getDiscoverId());
+        ActivityUtils.getHomeDiscoverDetail(discoverInfo.getFriendDynId());
     }
+
+    @Override
+    public void back(View view) {
+
+    }
+
+    @Override
+    public void right(View view) {
+
+    }
+
+    @Override
+    public void more(View view) {
+
+    }
+
+    @Override
+    public void follow(View view) {
+
+    }
+
+    @Override
+    public void superLike(View view) {
+
+    }
+
+
 
     /**
      * Android M运行时权限请求封装

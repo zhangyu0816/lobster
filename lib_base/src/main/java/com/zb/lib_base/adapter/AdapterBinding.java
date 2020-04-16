@@ -17,7 +17,6 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.utils.GlideCircleTransform;
 import com.zb.lib_base.utils.GlideRoundTransform;
 import com.zb.lib_base.utils.GridSpacingItemDecoration;
 import com.zb.lib_base.utils.MyDecoration;
@@ -55,8 +54,10 @@ public class AdapterBinding {
         if (recyclerType == 0) {
             // 竖向列表
             view.setLayoutManager(new LinearLayoutManager(view.getContext()));
-            if (view.getItemDecorationCount() == 0) {
-                view.addItemDecoration(new MyDecoration(view.getContext(), LinearLayoutManager.HORIZONTAL, (int) size, view.getContext().getResources().getColor(color)));
+            if(size!=0){
+                if (view.getItemDecorationCount() == 0) {
+                    view.addItemDecoration(new MyDecoration(view.getContext(), LinearLayoutManager.HORIZONTAL, (int) size, view.getContext().getResources().getColor(color)));
+                }
             }
         } else if (recyclerType == 1) {
             // 横向列表
@@ -122,19 +123,22 @@ public class AdapterBinding {
     @BindingAdapter(value = {"imageUrl", "imageRes", "defaultRes", "viewWidthSize", "viewHeightSize", "isCircle", "isRound", "roundSize", "countSize", "cornerType", "scaleType"}, requireAll = false)
     public static void loadImage(ImageView view, String imageUrl, int imageRes, int defaultRes, int widthSize, int heightSize, boolean isCircle, boolean isRound, int roundSize, boolean countSize, int cornerType, int scaleType) {
         RequestOptions cropOptions = new RequestOptions().centerCrop();
+        RequestOptions defaultOptions = new RequestOptions().centerCrop();
         if (isCircle) {
             // 圆图
-            cropOptions.transform(new GlideCircleTransform());
-//            cropOptions.circleCrop();
+            cropOptions.circleCrop();
+            defaultOptions.circleCrop();
         }
         if (isRound) {
             // 圆角图
             if (cornerType == 0) {
                 cropOptions.transform(new GlideRoundTransform(roundSize, 0));
+                defaultOptions.transform(new GlideRoundTransform(roundSize, 0));
             } else {
                 if (scaleType == 0)
                     scaleType = GlideRoundTransform.FIT_CENTER;
                 cropOptions.transform(new GlideRoundTransform(roundSize, 0, cornerType, scaleType));
+                defaultOptions.transform(new GlideRoundTransform(roundSize, 0, cornerType, scaleType));
             }
         }
 
@@ -153,11 +157,12 @@ public class AdapterBinding {
             });
         } else {
             viewSize(view, widthSize, heightSize);
-            RequestBuilder builder;
+            RequestBuilder<android.graphics.drawable.Drawable> builder;
             if (defaultRes == 0) {
                 builder = Glide.with(view.getContext()).asDrawable().apply(cropOptions);
             } else {
-                builder = Glide.with(view.getContext()).asDrawable().thumbnail(Glide.with(view.getContext()).load(defaultRes)).apply(cropOptions);
+                RequestBuilder<android.graphics.drawable.Drawable> thumb = Glide.with(view.getContext()).asDrawable().apply(defaultOptions);
+                builder = Glide.with(view.getContext()).asDrawable().thumbnail(thumb.load(defaultRes)).apply(cropOptions);
             }
 
             if (imageRes != 0) {

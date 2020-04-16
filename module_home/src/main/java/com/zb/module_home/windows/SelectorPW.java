@@ -7,7 +7,6 @@ import com.zb.module_home.BR;
 import com.zb.module_home.HomeAdapter;
 import com.zb.module_home.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +33,7 @@ public class SelectorPW extends BasePopupWindow {
     public void initUI() {
         adapter = new HomeAdapter<>(activity, R.layout.item_selector, selectorList, this);
         mBinding.setVariable(BR.adapter, adapter);
+        mBinding.setVariable(BR.pw, this);
     }
 
     @Override

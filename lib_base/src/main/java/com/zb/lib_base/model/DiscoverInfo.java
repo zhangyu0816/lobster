@@ -6,20 +6,52 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 public class DiscoverInfo extends BaseObservable {
-    long discoverId = 0;
-    String image = "";
-    String content = "";
-    String logo = "";
-    int likeNum = 0;
+    private long friendDynId = 0L;
+    private Long userId = 0L;
+    private String nick = "";// 昵称 艺名//1-16
+    private String image = "";// 头像
+    private String text = "";
+    private String images = "";
+    private int imageSize = 0; // 图片数量
+    private int dycType = 0; // 未知 0文字 1图片 2 图文 3 视频 4 视频_文字 5 视频_图片 6 视频_图片_文字 7  问题 视频_图片 22  问题 视频_图片_文字 23
+    private String videoUrl = ""; // 视频地址
+    private String createTime = "2020-04-16 09:41:00";
+    private int isDoGood = 0; // 是否已经点赞//1已经点赞 0未点赞
+    private int pageviews = 0;// 查看数
+    private int goodNum = 0;// 赞的数量
+    private int reviews = 0;// 评论数
+    private int rewardNum = 0; //打赏数量
+    private int resTime = 0;
+    //提问信息
+    private String questionInfo = "";
+    private long questionUserId = 0L;
 
     @Bindable
-    public long getDiscoverId() {
-        return discoverId;
+    public long getFriendDynId() {
+        return friendDynId;
     }
 
-    public void setDiscoverId(long discoverId) {
-        this.discoverId = discoverId;
-        notifyPropertyChanged(BR.discoverId);
+    public void setFriendDynId(long friendDynId) {
+        this.friendDynId = friendDynId;
+        notifyPropertyChanged(BR.friendDynId);
+    }
+
+    @Bindable public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+        notifyPropertyChanged(BR.userId);
+    }
+
+    @Bindable public String getNick() {
+        return nick;
+    }
+
+    public void setNick(String nick) {
+        this.nick = nick;
+        notifyPropertyChanged(BR.nick);
     }
 
     @Bindable public String getImage() {
@@ -31,30 +63,129 @@ public class DiscoverInfo extends BaseObservable {
         notifyPropertyChanged(BR.image);
     }
 
-    @Bindable public String getContent() {
-        return content;
+    @Bindable public String getText() {
+        return text;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-        notifyPropertyChanged(BR.content);
+    public void setText(String text) {
+        this.text = text;
+        notifyPropertyChanged(BR.text);
     }
 
-    @Bindable public String getLogo() {
-        return logo;
+    @Bindable public String getImages() {
+        return images;
     }
 
-    public void setLogo(String logo) {
-        this.logo = logo;
-        notifyPropertyChanged(BR.logo);
+    public void setImages(String images) {
+        this.images = images;
+        notifyPropertyChanged(BR.images);
     }
 
-    @Bindable public int getLikeNum() {
-        return likeNum;
+    @Bindable public int getImageSize() {
+        return imageSize;
     }
 
-    public void setLikeNum(int likeNum) {
-        this.likeNum = likeNum;
-        notifyPropertyChanged(BR.likeNum);
+    public void setImageSize(int imageSize) {
+        this.imageSize = imageSize;
+        notifyPropertyChanged(BR.imageSize);
+    }
+
+    @Bindable public int getDycType() {
+        return dycType;
+    }
+
+    public void setDycType(int dycType) {
+        this.dycType = dycType;
+        notifyPropertyChanged(BR.dycType);
+    }
+
+    @Bindable public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
+        notifyPropertyChanged(BR.videoUrl);
+    }
+
+    @Bindable public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+        notifyPropertyChanged(BR.createTime);
+    }
+
+    @Bindable public int getIsDoGood() {
+        return isDoGood;
+    }
+
+    public void setIsDoGood(int isDoGood) {
+        this.isDoGood = isDoGood;
+        notifyPropertyChanged(BR.isDoGood);
+    }
+
+    @Bindable public int getPageviews() {
+        return pageviews;
+    }
+
+    public void setPageviews(int pageviews) {
+        this.pageviews = pageviews;
+        notifyPropertyChanged(BR.pageviews);
+    }
+
+    @Bindable public int getGoodNum() {
+        return goodNum;
+    }
+
+    public void setGoodNum(int goodNum) {
+        this.goodNum = goodNum;
+        notifyPropertyChanged(BR.goodNum);
+    }
+
+    @Bindable public int getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(int reviews) {
+        this.reviews = reviews;
+        notifyPropertyChanged(BR.reviews);
+    }
+
+    @Bindable public int getRewardNum() {
+        return rewardNum;
+    }
+
+    public void setRewardNum(int rewardNum) {
+        this.rewardNum = rewardNum;
+        notifyPropertyChanged(BR.rewardNum);
+    }
+
+    @Bindable public int getResTime() {
+        return resTime;
+    }
+
+    public void setResTime(int resTime) {
+        this.resTime = resTime;
+        notifyPropertyChanged(BR.resTime);
+    }
+
+    @Bindable public String getQuestionInfo() {
+        return questionInfo;
+    }
+
+    public void setQuestionInfo(String questionInfo) {
+        this.questionInfo = questionInfo;
+        notifyPropertyChanged(BR.questionInfo);
+    }
+
+    @Bindable public long getQuestionUserId() {
+        return questionUserId;
+    }
+
+    public void setQuestionUserId(long questionUserId) {
+        this.questionUserId = questionUserId;
+        notifyPropertyChanged(BR.questionUserId);
     }
 }
