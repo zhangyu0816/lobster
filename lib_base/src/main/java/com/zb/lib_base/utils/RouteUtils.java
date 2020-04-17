@@ -56,4 +56,8 @@ public class RouteUtils {
     public static final String Camera_Videos = "/camera/VideosActivity";
     // 视频播放
     public static final String Camera_Video_Play = "/camera/VideoPlayActivity";
+
+    /*********************** 漂流瓶 **************************/
+    // 漂流瓶主页
+    public static final String Bottle_Main = "/bottle/MainActivity";
 }

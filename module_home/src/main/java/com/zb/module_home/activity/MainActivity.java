@@ -1,7 +1,7 @@
 package com.zb.module_home.activity;
 
-import com.zb.module_home.fragment.HomeFragment;
 import com.zb.module_home.R;
+import com.zb.module_home.fragment.HomeFragment;
 
 public class MainActivity extends HomeBaseActivity {
 

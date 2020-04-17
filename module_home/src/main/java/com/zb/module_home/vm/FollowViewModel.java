@@ -8,8 +8,8 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
-import com.zb.module_home.adapter.HomeAdapter;
 import com.zb.module_home.R;
+import com.zb.module_home.adapter.HomeAdapter;
 import com.zb.module_home.iv.FollowVMInterface;
 
 import java.util.ArrayList;
@@ -56,6 +56,11 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
     @Override
     public void publishDiscover(View view) {
         ActivityUtils.getHomePublishImage();
+    }
+
+    @Override
+    public void entryBottle(View view) {
+        ActivityUtils.getBottleMain();
     }
 
 }

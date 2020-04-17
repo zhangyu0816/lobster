@@ -1,4 +1,6 @@
-package com.zb.module_camera;
+package com.zb.lib_base.model;
+
+import com.zb.lib_base.BR;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;

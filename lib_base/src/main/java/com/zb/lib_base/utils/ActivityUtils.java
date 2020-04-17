@@ -93,4 +93,11 @@ public class ActivityUtils {
     public static void getCameraVideoPlay(String filePath) {
         ARouter.getInstance().build(RouteUtils.Camera_Video_Play).withString("filePath", filePath).navigation();
     }
+
+    /*********************** 漂流瓶 **************************/
+
+    // 漂流瓶主页
+    public static void getBottleMain() {
+        ARouter.getInstance().build(RouteUtils.Bottle_Main).navigation();
+    }
 }
