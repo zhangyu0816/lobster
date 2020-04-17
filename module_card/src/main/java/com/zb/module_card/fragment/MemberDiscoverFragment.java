@@ -1,8 +1,10 @@
-package com.zb.module_card;
+package com.zb.module_card.fragment;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseFragment;
 import com.zb.lib_base.utils.RouteUtils;
+import com.zb.module_card.BR;
+import com.zb.module_card.R;
 import com.zb.module_card.vm.MemberDiscoverViewModel;
 
 @Route(path = RouteUtils.Card_Member_Discover_Fragment)

@@ -1,4 +1,4 @@
-package com.zb.module_home;
+package com.zb.module_home.activity;
 
 import android.os.Bundle;
 
@@ -7,6 +7,8 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.utils.KeyBroadUtils;
 import com.zb.lib_base.utils.RouteUtils;
+import com.zb.module_home.BR;
+import com.zb.module_home.R;
 import com.zb.module_home.databinding.HomeDiscoverDetailBinding;
 import com.zb.module_home.vm.DiscoverDetailViewModel;
 

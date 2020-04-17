@@ -1,4 +1,7 @@
-package com.zb.module_card;
+package com.zb.module_card.activity;
+
+import com.zb.module_card.fragment.CardFragment;
+import com.zb.module_card.R;
 
 public class MainActivity extends CardBaseActivity {
     @Override

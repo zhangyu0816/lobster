@@ -1,4 +1,7 @@
-package com.zb.module_home;
+package com.zb.module_home.activity;
+
+import com.zb.module_home.fragment.HomeFragment;
+import com.zb.module_home.R;
 
 public class MainActivity extends HomeBaseActivity {
 

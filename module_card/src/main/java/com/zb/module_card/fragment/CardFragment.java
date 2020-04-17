@@ -1,21 +1,23 @@
-package com.zb.module_home;
+package com.zb.module_card.fragment;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseFragment;
 import com.zb.lib_base.utils.RouteUtils;
-import com.zb.module_home.vm.HomeViewModel;
+import com.zb.module_card.BR;
+import com.zb.module_card.R;
+import com.zb.module_card.vm.CardViewModel;
 
-@Route(path = RouteUtils.Home_Fragment)
-public class HomeFragment extends BaseFragment {
+@Route(path = RouteUtils.Card_Fragment)
+public class CardFragment extends BaseFragment {
 
     @Override
     public int getRes() {
-        return R.layout.home_frag;
+        return R.layout.card_frag;
     }
 
     @Override
     public void initUI() {
-        HomeViewModel viewModel = new HomeViewModel();
+        CardViewModel viewModel = new CardViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
     }

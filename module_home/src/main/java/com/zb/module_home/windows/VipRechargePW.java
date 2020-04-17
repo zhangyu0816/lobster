@@ -7,7 +7,7 @@ import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.lib_base.windows.TextPW;
 import com.zb.module_home.BR;
-import com.zb.module_home.HomeAdapter;
+import com.zb.module_home.adapter.HomeAdapter;
 import com.zb.module_home.R;
 
 import java.util.List;

@@ -1,20 +1,22 @@
-package com.zb.module_home;
+package com.zb.module_home.fragment;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseFragment;
 import com.zb.lib_base.utils.RouteUtils;
-import com.zb.module_home.vm.VideoViewModel;
+import com.zb.module_home.BR;
+import com.zb.module_home.R;
+import com.zb.module_home.vm.FollowViewModel;
 
-@Route(path = RouteUtils.Home_Video_Fragment)
-public class VideoFragment extends BaseFragment {
+@Route(path = RouteUtils.Home_Follow_Fragment)
+public class FollowFragment extends BaseFragment {
     @Override
     public int getRes() {
-        return R.layout.home_video;
+        return R.layout.home_follow;
     }
 
     @Override
     public void initUI() {
-        VideoViewModel viewModel = new VideoViewModel();
+        FollowViewModel viewModel = new FollowViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel,viewModel);
         viewModel.setAdapter();

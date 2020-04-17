@@ -1,8 +1,9 @@
-package com.zb.module_card;
+package com.zb.module_card.adapter;
 
 import com.zb.lib_base.adapter.BindingItemAdapter;
 import com.zb.lib_base.adapter.RecyclerHolder;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.module_card.BR;
 
 import java.util.List;
 

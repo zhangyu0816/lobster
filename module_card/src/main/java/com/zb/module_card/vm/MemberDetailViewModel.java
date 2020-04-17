@@ -17,7 +17,7 @@ import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.SelectorPW;
 import com.zb.module_card.BR;
-import com.zb.module_card.CardAdapter;
+import com.zb.module_card.adapter.CardAdapter;
 import com.zb.module_card.R;
 import com.zb.module_card.databinding.CardMemberDetailBinding;
 import com.zb.module_card.iv.MemberDetailVMInterface;

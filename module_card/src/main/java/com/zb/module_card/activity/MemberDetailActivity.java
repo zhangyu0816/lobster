@@ -1,8 +1,10 @@
-package com.zb.module_card;
+package com.zb.module_card.activity;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.utils.RouteUtils;
+import com.zb.module_card.BR;
+import com.zb.module_card.R;
 import com.zb.module_card.vm.MemberDetailViewModel;
 
 @Route(path = RouteUtils.Card_Member_Detail)

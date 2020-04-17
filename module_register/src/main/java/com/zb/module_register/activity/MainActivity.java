@@ -1,9 +1,11 @@
-package com.zb.module_register;
+package com.zb.module_register.activity;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.RouteUtils;
+import com.zb.module_register.BR;
+import com.zb.module_register.R;
 import com.zb.module_register.databinding.RegisterMainBinding;
 import com.zb.module_register.vm.MainViewModel;
 

@@ -1,20 +1,22 @@
-package com.zb.module_home;
+package com.zb.module_home.fragment;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseFragment;
 import com.zb.lib_base.utils.RouteUtils;
-import com.zb.module_home.vm.FollowViewModel;
+import com.zb.module_home.BR;
+import com.zb.module_home.R;
+import com.zb.module_home.vm.RecommendViewModel;
 
-@Route(path = RouteUtils.Home_Follow_Fragment)
-public class FollowFragment extends BaseFragment {
+@Route(path = RouteUtils.Home_Recommend_Fragment)
+public class RecommendFragment extends BaseFragment {
     @Override
     public int getRes() {
-        return R.layout.home_follow;
+        return R.layout.home_recommend;
     }
 
     @Override
     public void initUI() {
-        FollowViewModel viewModel = new FollowViewModel();
+        RecommendViewModel viewModel = new RecommendViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel,viewModel);
         viewModel.setAdapter();

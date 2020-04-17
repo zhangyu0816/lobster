@@ -4,9 +4,9 @@
 
     <application android:theme="@style/HomeTheme">
         <activity
-            android:name=".PublishImageActivity"
+            android:name=".activity.PublishImageActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity android:name=".DiscoverDetailActivity" />
+        <activity android:name=".activity.DiscoverDetailActivity" />
     </application>
 
 </manifest>

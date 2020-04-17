@@ -1,4 +1,4 @@
-package com.zb.module_home;
+package com.zb.module_home.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,6 +6,8 @@ import android.content.Intent;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.utils.RouteUtils;
+import com.zb.module_home.BR;
+import com.zb.module_home.R;
 import com.zb.module_home.vm.PublishImageViewModel;
 
 import java.util.Arrays;

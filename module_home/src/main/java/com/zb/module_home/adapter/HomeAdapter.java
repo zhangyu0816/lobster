@@ -1,9 +1,10 @@
-package com.zb.module_home;
+package com.zb.module_home.adapter;
 
 import com.zb.lib_base.adapter.BindingItemAdapter;
 import com.zb.lib_base.adapter.RecyclerHolder;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BasePopupWindow;
+import com.zb.module_home.BR;
 
 import java.util.List;
 

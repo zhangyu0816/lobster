@@ -1,4 +1,4 @@
-package com.zb.module_register;
+package com.zb.module_register.activity;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,6 +13,8 @@ import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.KeyBroadUtils;
 import com.zb.lib_base.utils.RouteUtils;
+import com.zb.module_register.BR;
+import com.zb.module_register.R;
 import com.zb.module_register.databinding.RegisterCodeBinding;
 import com.zb.module_register.vm.CodeViewModel;
 

@@ -5,7 +5,7 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.vm.BaseViewModel;
-import com.zb.module_card.CardAdapter;
+import com.zb.module_card.adapter.CardAdapter;
 import com.zb.module_card.R;
 import com.zb.module_card.iv.MemberVideoVMInterface;
 

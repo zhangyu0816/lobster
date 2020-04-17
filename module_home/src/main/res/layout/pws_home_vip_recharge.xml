@@ -16,7 +16,7 @@
 
         <variable
             name="adapter"
-            type="com.zb.module_home.HomeAdapter" />
+            type="com.zb.module_home.adapter.HomeAdapter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

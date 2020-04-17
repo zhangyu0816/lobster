@@ -22,7 +22,7 @@ import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.SelectorPW;
 import com.zb.module_home.BR;
-import com.zb.module_home.HomeAdapter;
+import com.zb.module_home.adapter.HomeAdapter;
 import com.zb.module_home.R;
 import com.zb.module_home.databinding.HomeDiscoverDetailBinding;
 import com.zb.module_home.iv.DiscoverDetailVMInterface;
