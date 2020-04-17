@@ -1,5 +1,7 @@
 package com.zb.module_home.iv;
 
-public interface DiscoverDetailVMInterface {
+import android.view.View;
 
+public interface DiscoverDetailVMInterface {
+    void selectGift(View view);
 }

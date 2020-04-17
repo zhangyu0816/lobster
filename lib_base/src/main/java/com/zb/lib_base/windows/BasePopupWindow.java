@@ -59,6 +59,33 @@ public abstract class BasePopupWindow extends PopupWindow {
     public void sure(View view) {
     }
 
+    /**
+     * 选中
+     *
+     * @param position
+     */
     public void selectIndex(int position) {
     }
+
+    /**
+     * 充值
+     *
+     * @param view
+     */
+    public void recharge(View view) {
+    }
+
+    /**
+     * 支付礼物
+     *
+     * @param view
+     */
+    public void payGift(View view) {
+    }
+
+    /**
+     * 充值协议
+     * @param view
+     */
+    public void showRule(View view){}
 }

@@ -122,8 +122,8 @@ public class AdapterBinding {
 
     // 加载图片
     @SuppressLint("CheckResult")
-    @BindingAdapter(value = {"imageUrl", "imageRes", "defaultRes", "viewWidthSize", "viewHeightSize", "isCircle", "isRound", "roundSize", "countSize", "cornerType", "scaleType"}, requireAll = false)
-    public static void loadImage(ImageView view, String imageUrl, int imageRes, int defaultRes, int widthSize, int heightSize, boolean isCircle, boolean isRound, int roundSize, boolean countSize, int cornerType, int scaleType) {
+    @BindingAdapter(value = {"imageUrl", "imageRes", "defaultRes", "viewWidthSize", "viewHeightSize", "isCircle", "isRound", "roundSize", "countSize", "cornerType"}, requireAll = false)
+    public static void loadImage(ImageView view, String imageUrl, int imageRes, int defaultRes, int widthSize, int heightSize, boolean isCircle, boolean isRound, int roundSize, boolean countSize, int cornerType) {
         RequestOptions cropOptions = new RequestOptions().centerCrop();
         RequestOptions defaultOptions = new RequestOptions().centerCrop();
         if (isCircle) {
@@ -137,10 +137,11 @@ public class AdapterBinding {
                 cropOptions.transform(new GlideRoundTransform(roundSize, 0));
                 defaultOptions.transform(new GlideRoundTransform(roundSize, 0));
             } else {
-                if (scaleType == 0)
-                    scaleType = GlideRoundTransform.FIT_CENTER;
-                cropOptions.transform(new GlideRoundTransform(roundSize, 0, cornerType, scaleType));
-                defaultOptions.transform(new GlideRoundTransform(roundSize, 0, cornerType, scaleType));
+                if (cornerType == 6) {
+                    cornerType = GlideRoundTransform.CORNER_TOP;
+                }
+                cropOptions.transform(new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
+                defaultOptions.transform(new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
             }
         }
 

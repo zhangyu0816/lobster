@@ -1,7 +1,13 @@
 package com.zb.module_card.vm;
 
+import android.content.Context;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.VideoView;
 
+import com.app.abby.xbanner.Ads;
+import com.app.abby.xbanner.ImageLoader;
+import com.app.abby.xbanner.XBanner;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.app.MineApp;
@@ -57,7 +63,33 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         initFragments();
 
     }
+    // 显示相册
+    private void showBanner(List<Ads> adList) {
+        detailBinding.bannerLayout.banner.setImageScaleType(ImageView.ScaleType.FIT_XY)
+                .setAds(adList)
+                .setImageLoader(new ImageLoader() {
+                    @Override
+                    public void loadImages(Context context, final Ads ads, ImageView image) {
+                        AdapterBinding.loadImage(image, ads.getSmallImage(), 0,
+                                ObjectUtils.getDefaultRes(), MineApp.W, ObjectUtils.getLogoHeight(1.0f),
+                                false, false, 0, false, 0);
+                    }
 
+                    @Override
+                    public void loadVideoViews(Context context, Ads ads, VideoView videoView) {
+//                        videoView.setMediaController(controller);
+//                        videoView.setVideoURI(Uri.parse(ads.getSmallImage()));
+//                        videoView.start();
+                    }
+                })
+                .setBannerTypes(XBanner.CIRCLE_INDICATOR_TITLE)
+                .setIndicatorGravity(XBanner.INDICATOR_START)
+                .setDelay(3000)
+                .setUpIndicators(R.drawable.banner_circle_pressed, R.drawable.banner_circle_unpressed)
+                .setUpIndicatorSize(20, 20)
+                .isAutoPlay(true)
+                .start();
+    }
     @Override
     public void setAdapter() {
         tagAdapter = new CardAdapter<>(activity, R.layout.item_card_tag, tagList, this);

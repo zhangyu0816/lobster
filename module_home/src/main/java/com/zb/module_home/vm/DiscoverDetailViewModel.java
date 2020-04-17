@@ -14,8 +14,10 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.model.DiscoverInfo;
+import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.model.Reward;
+import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.SelectorPW;
@@ -24,6 +26,7 @@ import com.zb.module_home.HomeAdapter;
 import com.zb.module_home.R;
 import com.zb.module_home.databinding.HomeDiscoverDetailBinding;
 import com.zb.module_home.iv.DiscoverDetailVMInterface;
+import com.zb.module_home.windows.GiftPW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +43,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     public HomeAdapter reviewAdapter;
     private List<Reward> rewardList = new ArrayList<>();
     public HomeAdapter rewardAdapter;
+    private WalletInfo walletInfo = new WalletInfo();
+    private List< GiftInfo > giftInfoList = new ArrayList<>();
 
     public DiscoverDetailViewModel() {
         selectorList.add("超级喜欢");
@@ -52,6 +57,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         for (int i = 0; i < 10; i++) {
             reviewList.add(new Review());
             rewardList.add(new Reward());
+            giftInfoList.add(new GiftInfo());
         }
     }
 
@@ -112,7 +118,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     public void loadImages(Context context, final Ads ads, ImageView image) {
                         AdapterBinding.loadImage(image, ads.getSmallImage(), 0,
                                 ObjectUtils.getDefaultRes(), MineApp.W, ObjectUtils.getLogoHeight(1.0f),
-                                false, false, 0, false, 0, 0);
+                                false, false, 0, false, 0);
                     }
 
                     @Override
@@ -153,4 +159,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 //        refreshLayout.finishRefresh();
     }
 
+    @Override
+    public void selectGift(View view) {
+        new GiftPW( activity, mBinding.getRoot(),  walletInfo,  giftInfoList);
+    }
 }
