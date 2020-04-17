@@ -3,5 +3,5 @@
     android:id="@+id/tab_item_textview"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="bottom"
+    android:gravity="bottom|right"
     android:typeface="sans"/>

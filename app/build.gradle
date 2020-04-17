@@ -56,4 +56,6 @@ dependencies {
     if (isNeedRegisterModule.toBoolean()) {
         api project(':module_register')
     }
+
+    api project(':lib_base')
 }

@@ -8,12 +8,15 @@ public class RouteUtils {
     public static final String Home_Recommend_Fragment = "/home/RecommendFragment";
     public static final String Home_Video_Fragment = "/home/VideoFragment";
     public static final String Home_Publish_image = "/home/PublishImageActivity";
-    public static final String Home_Member_Detail = "/home/MemberDetailActivity";
     public static final String Home_Discover_Detail = "/home/DiscoverDetailActivity";
+
 
     /*********************** 卡片 **************************/
     // 卡片主Fragment
     public static final String Card_Fragment = "/card/CardFragment";
+    public static final String Card_Member_Detail = "/card/MemberDetailActivity";
+    public static final String Card_Member_Discover_Fragment = "/card/MemberDiscoverFragment";
+    public static final String Card_Member_Video_Fragment = "/card/MemberVideoFragment";
 
     /*********************** 对话 **************************/
     // 对话主Fragment

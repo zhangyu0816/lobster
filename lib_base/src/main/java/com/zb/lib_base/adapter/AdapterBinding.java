@@ -12,6 +12,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.library.flowlayout.FlowLayoutManager;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -54,7 +55,7 @@ public class AdapterBinding {
         if (recyclerType == 0) {
             // 竖向列表
             view.setLayoutManager(new LinearLayoutManager(view.getContext()));
-            if(size!=0){
+            if (size != 0) {
                 if (view.getItemDecorationCount() == 0) {
                     view.addItemDecoration(new MyDecoration(view.getContext(), LinearLayoutManager.HORIZONTAL, (int) size, view.getContext().getResources().getColor(color)));
                 }
@@ -73,7 +74,7 @@ public class AdapterBinding {
         } else if (recyclerType == 3) {
             // 九宫格
             view.setLayoutManager(new GridLayoutManager(view.getContext(), gridNum));
-        } else {
+        } else if (recyclerType == 4) {
             // 瀑布流
             StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
             manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
@@ -93,7 +94,8 @@ public class AdapterBinding {
                     }
                 }
             });
-
+        } else if (recyclerType == 5) {
+            view.setLayoutManager(new FlowLayoutManager());
         }
     }
 

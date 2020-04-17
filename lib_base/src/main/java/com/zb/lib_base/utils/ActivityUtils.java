@@ -11,17 +11,16 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Home_Publish_image).navigation();
     }
 
-    // 用户详情
-    public static void getHomeMemberDetail() {
-        ARouter.getInstance().build(RouteUtils.Home_Member_Detail).navigation();
-    }
-
     // 动态详情
     public static void getHomeDiscoverDetail(long friendDynId) {
         ARouter.getInstance().build(RouteUtils.Home_Discover_Detail).withLong("friendDynId", friendDynId).navigation();
     }
 
     /*********************** 卡片 **************************/
+    // 用户详情
+    public static void getCardMemberDetail(long userId) {
+        ARouter.getInstance().build(RouteUtils.Card_Member_Detail).withLong("userId", userId).navigation();
+    }
     /*********************** 对话 **************************/
     /*********************** 我的 **************************/
 

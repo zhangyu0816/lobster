@@ -66,6 +66,5 @@ dependencies {
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
     api project(':lib_base')
     api project(':imagebrowserlib')
-    api project(':xbanner')
     api project(':module_camera')
 }

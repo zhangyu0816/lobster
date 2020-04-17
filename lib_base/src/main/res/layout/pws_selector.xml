@@ -11,7 +11,7 @@
 
         <variable
             name="adapter"
-            type="com.zb.module_home.HomeAdapter" />
+            type="com.zb.lib_base.adapter.BaseAdapter" />
     </data>
 
     <RelativeLayout

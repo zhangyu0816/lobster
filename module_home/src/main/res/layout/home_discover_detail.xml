@@ -70,8 +70,7 @@
                                 viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
-                                android:layout_margin="15dp"
-                                android:onClick="@{viewModel::clickEd}" />
+                                android:layout_margin="15dp"/>
 
                             <TextView
                                 android:layout_width="wrap_content"

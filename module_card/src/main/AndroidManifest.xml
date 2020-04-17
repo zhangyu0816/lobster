@@ -3,7 +3,7 @@
     package="com.zb.module_card">
 
     <application android:theme="@style/CardTheme">
-
+        <activity android:name=".MemberDetailActivity" />
     </application>
 
 </manifest>

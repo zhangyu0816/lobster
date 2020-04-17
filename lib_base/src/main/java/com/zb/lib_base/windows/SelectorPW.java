@@ -1,11 +1,10 @@
-package com.zb.module_home.windows;
+package com.zb.lib_base.windows;
 
 import android.view.View;
 
-import com.zb.lib_base.windows.BasePopupWindow;
-import com.zb.module_home.BR;
-import com.zb.module_home.HomeAdapter;
-import com.zb.module_home.R;
+import com.zb.lib_base.BR;
+import com.zb.lib_base.R;
+import com.zb.lib_base.adapter.BaseAdapter;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SelectorPW extends BasePopupWindow {
 
-    private HomeAdapter adapter;
+    private BaseAdapter adapter;
     private List<String> selectorList;
     private CallBack mCallBack;
 
@@ -31,7 +30,7 @@ public class SelectorPW extends BasePopupWindow {
 
     @Override
     public void initUI() {
-        adapter = new HomeAdapter<>(activity, R.layout.item_selector, selectorList, this);
+        adapter = new BaseAdapter<>(activity, R.layout.item_selector, selectorList, this);
         mBinding.setVariable(BR.adapter, adapter);
         mBinding.setVariable(BR.pw, this);
     }

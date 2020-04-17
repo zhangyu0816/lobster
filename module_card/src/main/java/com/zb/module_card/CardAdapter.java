@@ -1,4 +1,4 @@
-package com.zb.module_home;
+package com.zb.module_card;
 
 import com.zb.lib_base.adapter.BindingItemAdapter;
 import com.zb.lib_base.adapter.RecyclerHolder;
@@ -9,11 +9,11 @@ import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.ViewDataBinding;
 
-public class HomeAdapter<T> extends BindingItemAdapter<T> {
+public class CardAdapter<T> extends BindingItemAdapter<T> {
 
     private BaseViewModel viewModel;
 
-    public HomeAdapter(AppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
+    public CardAdapter(AppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
         super(activity, layoutId, list);
         this.viewModel = viewModel;
     }
@@ -22,8 +22,6 @@ public class HomeAdapter<T> extends BindingItemAdapter<T> {
     protected void onBind(RecyclerHolder<ViewDataBinding> holder, T t, int position) {
         holder.binding.setVariable(BR.item, t);
         holder.binding.setVariable(BR.position, position);
-        holder.binding.setVariable(BR.isLast, position == getItemCount() - 1);
-
         if (viewModel != null) {
             holder.binding.setVariable(BR.viewModel, viewModel);
         }

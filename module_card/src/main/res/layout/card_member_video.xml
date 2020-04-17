@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_card.vm.MemberVideoViewModel" />
+
+    </data>
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        onLoadMoreListener="@{viewModel}"
+        onRefreshListener="@{viewModel}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_efe">
+
+        <androidx.recyclerview.widget.RecyclerView
+            adapter="@{viewModel.adapter}"
+            recyclerType="@{2}"
+            gridNum="@{2}"
+            size="@{7}"
+            includeEdge="@{true}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="7dp"/>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</layout>

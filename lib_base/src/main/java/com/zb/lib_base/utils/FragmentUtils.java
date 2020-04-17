@@ -29,9 +29,23 @@ public class FragmentUtils {
         return fragment;
     }
 
+
+
     // 卡片
     public static Fragment getCardFragment() {
         Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Card_Fragment).navigation();
+        return fragment;
+    }
+
+    // 用户详情 -- 动态
+    public static Fragment getCardMemberDiscoverFragment() {
+        Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Card_Member_Discover_Fragment).navigation();
+        return fragment;
+    }
+
+    // 用户详情 -- 小视频
+    public static Fragment getCardMemberVideoFragment() {
+        Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Card_Member_Video_Fragment).navigation();
         return fragment;
     }
 

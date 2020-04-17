@@ -1,5 +1,6 @@
 package com.zb.lobster.vm;
 
+import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lobster.databinding.AcMainBinding;
@@ -9,8 +10,6 @@ import java.util.ArrayList;
 
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 public class MainViewModel extends BaseViewModel implements MainVMInterface {
@@ -23,7 +22,15 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         super.setBinding(binding);
         mainBinding = (AcMainBinding) binding;
         initFragments();
-        mainBinding.viewPage.setAdapter(new FragmentAdapter(activity.getSupportFragmentManager()));
+    }
+
+    private void initFragments() {
+        fragments.clear();
+        fragments.add(FragmentUtils.getHomeFragment());
+        fragments.add(FragmentUtils.getCardFragment());
+        fragments.add(FragmentUtils.getChatFragment());
+        fragments.add(FragmentUtils.getMineFragment());
+        mainBinding.viewPage.setAdapter(new FragmentAdapter(activity.getSupportFragmentManager(),fragments));
         mainBinding.viewPage.setOffscreenPageLimit(2);
         mainBinding.viewPage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -44,14 +51,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         selectPage(0);
     }
 
-    private void initFragments() {
-        fragments.clear();
-        fragments.add(FragmentUtils.getHomeFragment());
-        fragments.add(FragmentUtils.getCardFragment());
-        fragments.add(FragmentUtils.getChatFragment());
-        fragments.add(FragmentUtils.getMineFragment());
-    }
-
     @Override
     public void selectPage(int index) {
         if (nowIndex == index)
@@ -61,23 +60,4 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         mainBinding.viewPage.setCurrentItem(index);
     }
 
-    /**
-     * 适配器
-     */
-    public class FragmentAdapter extends FragmentStatePagerAdapter {
-        public FragmentAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragments.size();
-        }
-
-    }
 }

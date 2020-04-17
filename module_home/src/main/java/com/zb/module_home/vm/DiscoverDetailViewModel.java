@@ -17,14 +17,13 @@ import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.model.Reward;
 import com.zb.lib_base.utils.ObjectUtils;
-import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.SelectorPW;
 import com.zb.module_home.BR;
 import com.zb.module_home.HomeAdapter;
 import com.zb.module_home.R;
 import com.zb.module_home.databinding.HomeDiscoverDetailBinding;
 import com.zb.module_home.iv.DiscoverDetailVMInterface;
-import com.zb.module_home.windows.SelectorPW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -152,11 +151,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 //            list.addAll(newList);
 //            adapter.notifyItemRangeChanged(0, list.size());
 //        refreshLayout.finishRefresh();
-    }
-
-    @Override
-    public void clickEd(View view) {
-        SCToastUtil.showToast(activity,"111111111");
     }
 
 }

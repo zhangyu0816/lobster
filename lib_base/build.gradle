@@ -41,6 +41,9 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     testImplementation 'junit:junit:4.13'
+
+    api project(':xbanner')
+
     // 路由包
     api 'com.alibaba:arouter-api:1.3.1'
     annotationProcessor "com.alibaba:arouter-compiler:1.1.4"
@@ -56,5 +59,7 @@ dependencies {
     // glide
     api 'com.github.bumptech.glide:glide:4.8.0'
     // TabLayout
-    api 'com.google.android.material:material:1.2.0-alpha05'
+    api 'com.google.android.material:material:1.2.0-alpha06'
+    // 标签
+    api 'com.github.1002326270xc:LayoutManager-FlowLayout:v1.6'
 }
