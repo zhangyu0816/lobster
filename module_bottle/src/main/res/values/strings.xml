@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">漂流瓶</string>
+    <string name="entry_bottle">进入我的漂流瓶</string>
+    <string name="is_out_line">当前没有网络</string>
+    <string name="bottle_reply">立即回复</string>
+    <string name="bottle_throw">立即扔海</string>
 </resources>

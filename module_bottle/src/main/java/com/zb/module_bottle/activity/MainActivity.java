@@ -2,7 +2,9 @@ package com.zb.module_bottle.activity;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.utils.RouteUtils;
+import com.zb.module_bottle.BR;
 import com.zb.module_bottle.R;
+import com.zb.module_bottle.vm.BottleViewModel;
 
 @Route(path = RouteUtils.Bottle_Main)
 public class MainActivity extends BottleBaseActivity {
@@ -14,6 +16,10 @@ public class MainActivity extends BottleBaseActivity {
 
     @Override
     public void initUI() {
-
+        fitComprehensiveScreen();
+        BottleViewModel viewModel = new BottleViewModel();
+        viewModel.setBinding(mBinding);
+        mBinding.setVariable(BR.viewModel, viewModel);
+        mBinding.setVariable(BR.isOutLine, false);
     }
 }

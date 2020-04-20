@@ -39,7 +39,7 @@
                         onClickDelayed="@{viewModel::entryBottle}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
+                        android:layout_margin="5dp"
                         app:srcCompat="@mipmap/drift_bg_icon" />
                 </androidx.appcompat.widget.Toolbar>
             </com.google.android.material.appbar.AppBarLayout>

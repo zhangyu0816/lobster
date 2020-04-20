@@ -10,6 +10,7 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.iv.BaseVMInterface;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.windows.BottleQuestionPW;
 
 import java.util.Objects;
 
@@ -58,6 +59,11 @@ public class BaseViewModel implements BaseVMInterface {
     @Override
     public void superLike(View view) {
 
+    }
+
+    @Override
+    public void question(View view) {
+        new BottleQuestionPW(activity, mBinding.getRoot());
     }
 
     public void initTabLayout(String[] tabNames, TabLayout tabLayout, ViewPager viewPager, int selectColor, int color) {

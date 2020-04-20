@@ -60,4 +60,6 @@ public class RouteUtils {
     /*********************** 漂流瓶 **************************/
     // 漂流瓶主页
     public static final String Bottle_Main = "/bottle/MainActivity";
+    // 漂流操作页
+    public static final String Bottle_Throw = "/bottle/BottleThrowActivity";
 }

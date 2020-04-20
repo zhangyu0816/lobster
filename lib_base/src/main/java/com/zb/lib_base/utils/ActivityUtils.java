@@ -100,4 +100,9 @@ public class ActivityUtils {
     public static void getBottleMain() {
         ARouter.getInstance().build(RouteUtils.Bottle_Main).navigation();
     }
+
+    // 漂流瓶主页
+    public static void getBottleThrow() {
+        ARouter.getInstance().build(RouteUtils.Bottle_Throw).navigation();
+    }
 }

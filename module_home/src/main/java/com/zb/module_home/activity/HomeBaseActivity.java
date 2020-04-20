@@ -12,6 +12,5 @@ public abstract class HomeBaseActivity extends BaseActivity {
         setTheme(R.style.HomeTheme);
         super.onCreate(savedInstanceState);
         StatusBarUtil.statusBarLightMode(this);
-//        StatusBarUtil.setLayoutPadding(this, ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0));
     }
 }

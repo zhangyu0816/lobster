@@ -2,6 +2,7 @@ package com.zb.lib_base.app;
 
 import android.app.Application;
 import android.content.Context;
+import android.graphics.Typeface;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -31,6 +32,7 @@ public class MineApp extends Application {
     public static String PHONE_NUMBER_REG = "^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\\d{8}$";
     public static Map<String, Integer> selectMap = new HashMap<>();
     public static Map<String, CutImageView> cutImageViewMap = new HashMap<>();
+    public static Typeface type;
 
     static {
         //设置全局的Header构建器
@@ -48,7 +50,7 @@ public class MineApp extends Application {
         instance = this;
         W = getApplicationContext().getResources().getDisplayMetrics().widthPixels;
         H = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
-
+        type = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/semibold.ttf");
         initRouter(this);
         initRealm();
         DisplayUtils.init(this);
@@ -74,7 +76,7 @@ public class MineApp extends Application {
     }
 
     // 初始化数据库
-    private void initRealm(){
+    private void initRealm() {
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()

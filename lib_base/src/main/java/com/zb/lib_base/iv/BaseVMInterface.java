@@ -31,4 +31,7 @@ public interface BaseVMInterface {
 
     default void superLike(View view) {
     }
+
+    default void question(View view) {
+    }
 }

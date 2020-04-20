@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_bottle.vm.BottleThrowViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            layout="@layout/bottle_white_back"
+            viewModel="@{viewModel}" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                onClickDelayed="@{viewModel::collectBottle}"
+                android:id="@+id/imageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@mipmap/throw_bottle_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="每天10/10个"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                onClickDelayed="@{viewModel::throwBottle}"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_margin="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_bg_white_radius60"
+                android:gravity="center"
+                android:text="扔一个瓶子"
+                android:textColor="@color/black_252"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                onClickDelayed="@{viewModel::myBottle}"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_margin="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_bg_white_radius60"
+                android:gravity="center"
+                android:text="我的漂流瓶"
+                android:textColor="@color/black_252"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

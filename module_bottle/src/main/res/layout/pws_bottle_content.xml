@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="pw"
+            type="com.zb.lib_base.windows.BasePopupWindow" />
+
+        <variable
+            name="bottleInfo"
+            type="com.zb.lib_base.model.BottleInfo" />
+
+        <variable
+            name="adapter"
+            type="com.zb.module_bottle.adapter.BottleAdapter" />
+
+        <variable
+            name="isWrite"
+            type="boolean" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.5"
+            android:background="@color/black" />
+
+        <LinearLayout
+            viewHeightSize="@{-2}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(980)}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/bottle_content_bg"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="30dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    adapter="@{adapter}"
+                    recyclerType="@{5}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{isWrite?View.GONE:View.VISIBLE}"/>
+
+                <EditText
+                    android:id="@+id/ed_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:gravity="top"
+                    android:minLines="5"
+                    android:maxLines="10"
+                    android:lineSpacingExtra="10dp"
+                    android:maxLength="100"
+                    android:textColor="@color/black_4d4"
+                    android:textCursorDrawable="@drawable/cursor_color_black_4d4"
+                    android:textSize="16sp"
+                    android:hint="在这里写下你想说的话...(100字)"
+                    android:textColorHint="#C3BDCD"
+                    android:visibility="@{isWrite?View.VISIBLE:View.GONE}" />
+            </RelativeLayout>
+
+            <TextView
+                onClickDelayed="@{pw::sure}"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="30dp"
+                android:background="@drawable/gradient_purple_6d5_ae7"
+                android:gravity="center"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:text="@{isWrite?@string/bottle_throw:@string/bottle_reply}"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                onClickDelayed="@{pw::cancel}"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="30dp"
+                android:background="@drawable/btn_bg_black_e5e_radius60"
+                android:gravity="center"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:text="扔回海里"
+                android:textColor="@color/black_4d4"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="@{isWrite?View.GONE:View.VISIBLE}" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

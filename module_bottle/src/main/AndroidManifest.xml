@@ -4,7 +4,7 @@
 
     <application android:theme="@style/BottleTheme">
         <activity android:name=".activity.MainActivity" />
-
+        <activity android:name=".activity.BottleThrowActivity" />
     </application>
 
 </manifest>
