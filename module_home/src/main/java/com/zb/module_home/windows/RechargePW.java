@@ -2,7 +2,7 @@ package com.zb.module_home.windows;
 
 import android.view.View;
 
-import com.zb.lib_base.model.VipInfo;
+import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.lib_base.windows.TextPW;
@@ -14,16 +14,16 @@ import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class VipRechargePW extends BasePopupWindow {
+public class RechargePW extends BasePopupWindow {
     private WalletInfo walletInfo;
-    private List<VipInfo> vipInfoList;
+    private List<RechargeInfo> rechargeInfoList;
     private HomeAdapter adapter;
     private int preIndex = -1;
 
-    public VipRechargePW(AppCompatActivity activity, View parentView, WalletInfo walletInfo, List<VipInfo> vipInfoList) {
+    public RechargePW(AppCompatActivity activity, View parentView, WalletInfo walletInfo, List<RechargeInfo> rechargeInfoList) {
         super(activity, parentView, true);
         this.walletInfo = walletInfo;
-        this.vipInfoList = vipInfoList;
+        this.rechargeInfoList = rechargeInfoList;
         initUI();
     }
 
@@ -34,7 +34,7 @@ public class VipRechargePW extends BasePopupWindow {
 
     @Override
     public void initUI() {
-        adapter = new HomeAdapter<>(activity, R.layout.item_home_vip_info, vipInfoList, this);
+        adapter = new HomeAdapter<>(activity, R.layout.item_home_vip_info, rechargeInfoList, this);
         mBinding.setVariable(BR.pw, this);
         mBinding.setVariable(BR.walletInfo, walletInfo);
         mBinding.setVariable(BR.adapter, adapter);

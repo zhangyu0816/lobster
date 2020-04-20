@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">首页模块</string>
     <string name="gift_price">%.1f虾菇币</string>
+    <string name="give_success">您已成功赠送一个%s！</string>
 </resources>

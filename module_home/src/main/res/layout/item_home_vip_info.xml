@@ -10,7 +10,7 @@
 
         <variable
             name="item"
-            type="com.zb.lib_base.model.VipInfo" />
+            type="com.zb.lib_base.model.RechargeInfo" />
 
         <variable
             name="pw"
@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
-                android:text='@{String.format("%d",item.dayCount)}'
+                android:text='@{String.format("%d",item.rechargeValue)}'
                 android:textColor="@color/black_252"
                 android:textSize="22sp"
                 android:textStyle="bold"

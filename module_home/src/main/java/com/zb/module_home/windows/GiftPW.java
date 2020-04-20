@@ -3,7 +3,7 @@ package com.zb.module_home.windows;
 import android.view.View;
 
 import com.zb.lib_base.model.GiftInfo;
-import com.zb.lib_base.model.VipInfo;
+import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_home.BR;
@@ -52,15 +52,15 @@ public class GiftPW extends BasePopupWindow {
     public void recharge(View view) {
         super.recharge(view);
         dismiss();
-        List<VipInfo> vipInfoList = new ArrayList<>();
+        List<RechargeInfo> rechargeInfoList = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
-            VipInfo vipInfo = new VipInfo();
+            RechargeInfo rechargeInfo = new RechargeInfo();
             if (i < 2) {
-                vipInfo.setPriceDesc("最受欢迎");
+                rechargeInfo.setPriceDesc("最受欢迎");
             }
-            vipInfoList.add(vipInfo);
+            rechargeInfoList.add(rechargeInfo);
         }
-        new VipRechargePW(activity, mBinding.getRoot(), walletInfo, vipInfoList);
+        new RechargePW(activity, mBinding.getRoot(), walletInfo, rechargeInfoList);
     }
 
     @Override
@@ -80,5 +80,6 @@ public class GiftPW extends BasePopupWindow {
     public void payGift(View view) {
         super.payGift(view);
         dismiss();
+        new GiveSuccessPW( activity, mBinding.getRoot(),  giftInfoList.get(preIndex));
     }
 }

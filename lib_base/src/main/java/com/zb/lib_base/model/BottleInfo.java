@@ -10,6 +10,7 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 public class BottleInfo extends BaseObservable {
+    long driftBottleId;//漂流瓶id
     long userId;
     String text = ""; //内容
     int driftBottleType; //漂流瓶状态 .1.漂流中  2.被拾起  3.销毁
@@ -19,6 +20,16 @@ public class BottleInfo extends BaseObservable {
     String nick = "";  //昵称
     String createTime = "2020-04-20 14:44:00";
     private List<BottleMsg> messageList = new ArrayList<>();
+
+    @Bindable
+    public long getDriftBottleId() {
+        return driftBottleId;
+    }
+
+    public void setDriftBottleId(long driftBottleId) {
+        this.driftBottleId = driftBottleId;
+        notifyPropertyChanged(BR.driftBottleId);
+    }
 
     @Bindable
     public long getUserId() {

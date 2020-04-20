@@ -57,7 +57,9 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         for (int i = 0; i < 10; i++) {
             reviewList.add(new Review());
             rewardList.add(new Reward());
-            giftInfoList.add(new GiftInfo());
+            GiftInfo giftInfo = new GiftInfo();
+            giftInfo.setGiftName("礼物"+i);
+            giftInfoList.add(giftInfo);
         }
     }
 

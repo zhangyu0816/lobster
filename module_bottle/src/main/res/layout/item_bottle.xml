@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -13,9 +12,18 @@
             name="item"
             type="com.zb.lib_base.model.BottleInfo" />
 
+        <variable
+            name="viewModel"
+            type="com.zb.module_bottle.vm.BottleListViewModel" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
     </data>
 
     <RelativeLayout
+        onClickDelayed="@{v->viewModel.selectIndex(position)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="15dp">
@@ -24,9 +32,9 @@
             android:id="@+id/iv_image"
             defaultRes="@{ObjectUtils.getDefaultRes()}"
             imageUrl="@{item.headImage}"
+            isCircle="@{true}"
             viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
-            isCircle="@{true}"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginEnd="15dp" />
