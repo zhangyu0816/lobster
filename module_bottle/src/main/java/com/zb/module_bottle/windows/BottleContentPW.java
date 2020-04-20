@@ -22,7 +22,7 @@ public class BottleContentPW extends BasePopupWindow {
     private PwsBottleContentBinding binding;
 
     public BottleContentPW(AppCompatActivity activity, View parentView, BottleInfo bottleInfo, boolean isWrite) {
-        super(activity, parentView);
+        super(activity, parentView, false);
         this.bottleInfo = bottleInfo;
         this.isWrite = isWrite;
         initUI();

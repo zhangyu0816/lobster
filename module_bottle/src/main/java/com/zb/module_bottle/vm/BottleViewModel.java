@@ -11,11 +11,16 @@ import com.zb.module_bottle.iv.BottleVMInterface;
 public class BottleViewModel extends BaseViewModel implements BottleVMInterface {
     @Override
     public void entryBottle(View view) {
-        if(((BottleMainBinding)mBinding).getIsOutLine()){
-            SCToastUtil.showToast(activity,"    当前网络异常，请检查是否连接    ");
+        if (((BottleMainBinding) mBinding).getIsOutLine()) {
+            SCToastUtil.showToast(activity, "    当前网络异常，请检查是否连接    ");
             return;
         }
         ActivityUtils.getBottleThrow();
     }
 
+    @Override
+    public void back(View view) {
+        super.back(view);
+        activity.finish();
+    }
 }

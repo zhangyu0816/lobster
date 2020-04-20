@@ -12,7 +12,7 @@ public class TextPW extends BasePopupWindow {
     private String title = "";
 
     public TextPW(AppCompatActivity activity, View parentView, String title, String content) {
-        super(activity, parentView);
+        super(activity, parentView, true);
         this.title = title;
         this.content = content;
         initUI();

@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class BottleQuestionPW extends BasePopupWindow {
 
     public BottleQuestionPW(AppCompatActivity activity, View parentView) {
-        super(activity, parentView);
+        super(activity, parentView,true);
         initUI();
     }
 

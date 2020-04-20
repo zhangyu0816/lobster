@@ -17,7 +17,7 @@ public class SelectorPW extends BasePopupWindow {
     private CallBack mCallBack;
 
     public SelectorPW(AppCompatActivity activity, View parentView, List<String> selectorList, CallBack callBack) {
-        super(activity, parentView);
+        super(activity, parentView, true);
         this.selectorList = selectorList;
         mCallBack = callBack;
         initUI();

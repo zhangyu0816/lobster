@@ -1,5 +1,6 @@
 package com.zb.lib_base.model;
 
+
 import com.zb.lib_base.BR;
 
 import java.util.ArrayList;
@@ -9,10 +10,25 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 public class BottleInfo extends BaseObservable {
+    long userId;
     String text = ""; //内容
-    int driftBottleType; //漂流瓶状态 .1.漂流中 2.被拾起 3.销毁
+    int driftBottleType; //漂流瓶状态 .1.漂流中  2.被拾起  3.销毁
     long otherUserId; //拾起人id
+    int noReadNum;//未读数量
+    String headImage = "";//头像
+    String nick = "";  //昵称
+    String createTime = "2020-04-20 14:44:00";
     private List<BottleMsg> messageList = new ArrayList<>();
+
+    @Bindable
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+        notifyPropertyChanged(BR.userId);
+    }
 
     @Bindable
     public String getText() {
@@ -42,6 +58,46 @@ public class BottleInfo extends BaseObservable {
     public void setOtherUserId(long otherUserId) {
         this.otherUserId = otherUserId;
         notifyPropertyChanged(BR.otherUserId);
+    }
+
+    @Bindable
+    public int getNoReadNum() {
+        return noReadNum;
+    }
+
+    public void setNoReadNum(int noReadNum) {
+        this.noReadNum = noReadNum;
+        notifyPropertyChanged(BR.noReadNum);
+    }
+
+    @Bindable
+    public String getHeadImage() {
+        return headImage;
+    }
+
+    public void setHeadImage(String headImage) {
+        this.headImage = headImage;
+        notifyPropertyChanged(BR.headImage);
+    }
+
+    @Bindable
+    public String getNick() {
+        return nick;
+    }
+
+    public void setNick(String nick) {
+        this.nick = nick;
+        notifyPropertyChanged(BR.nick);
+    }
+
+    @Bindable
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+        notifyPropertyChanged(BR.createTime);
     }
 
     @Bindable

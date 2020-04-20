@@ -62,4 +62,6 @@ public class RouteUtils {
     public static final String Bottle_Main = "/bottle/MainActivity";
     // 漂流操作页
     public static final String Bottle_Throw = "/bottle/BottleThrowActivity";
+    // 漂流列表
+    public static final String Bottle_List = "/bottle/BottleListActivity";
 }

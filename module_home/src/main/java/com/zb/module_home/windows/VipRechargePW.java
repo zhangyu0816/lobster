@@ -21,7 +21,7 @@ public class VipRechargePW extends BasePopupWindow {
     private int preIndex = -1;
 
     public VipRechargePW(AppCompatActivity activity, View parentView, WalletInfo walletInfo, List<VipInfo> vipInfoList) {
-        super(activity, parentView);
+        super(activity, parentView, true);
         this.walletInfo = walletInfo;
         this.vipInfoList = vipInfoList;
         initUI();

@@ -41,7 +41,7 @@ public class BirthdayPW extends BasePopupWindow {
 
 
     public BirthdayPW(AppCompatActivity activity, View parentView, CallBack callBack) {
-        super(activity, parentView);
+        super(activity, parentView, true);
         mCallBack = callBack;
         nowDate = DateUtil.getNow(DateUtil.yyyy_MM_dd);
         selectDate = MineApp.registerInfo.getBirthday();

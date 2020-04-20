@@ -23,7 +23,7 @@ public class GiftPW extends BasePopupWindow {
     private int preIndex = -1;
 
     public GiftPW(AppCompatActivity activity, View parentView, WalletInfo walletInfo, List<GiftInfo> giftInfoList) {
-        super(activity, parentView);
+        super(activity, parentView, true);
         this.walletInfo = walletInfo;
         this.giftInfoList = giftInfoList;
         initUI();

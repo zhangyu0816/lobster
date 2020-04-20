@@ -18,7 +18,7 @@ public abstract class BasePopupWindow extends PopupWindow {
     public ViewDataBinding mBinding;
 
     @SuppressLint("ClickableViewAccessibility")
-    public BasePopupWindow(AppCompatActivity activity, View parentView) {
+    public BasePopupWindow(AppCompatActivity activity, View parentView, boolean canClick) {
         this.activity = activity;
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(activity), getRes(), null, false);
         View view = mBinding.getRoot();
@@ -30,13 +30,13 @@ public abstract class BasePopupWindow extends PopupWindow {
         setContentView(view);
         showAtLocation(parentView, Gravity.CENTER, 0, 0);
         update();
-
-        view.setOnTouchListener((v, event) -> {
-            if (isShowing()) {
-                dismiss();
-            }
-            return false;
-        });
+        if (canClick)
+            view.setOnTouchListener((v, event) -> {
+                if (isShowing()) {
+                    dismiss();
+                }
+                return false;
+            });
     }
 
     public abstract int getRes();
@@ -85,7 +85,9 @@ public abstract class BasePopupWindow extends PopupWindow {
 
     /**
      * 充值协议
+     *
      * @param view
      */
-    public void showRule(View view){}
+    public void showRule(View view) {
+    }
 }
