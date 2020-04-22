@@ -26,7 +26,6 @@ import com.zb.lib_base.utils.StaggeredDividerItemDecoration;
 import com.zb.lib_base.views.card.CardItemTouchHelperCallback;
 import com.zb.lib_base.views.card.CardLayoutManager;
 import com.zb.lib_base.views.card.OnRecyclerItemClickListener;
-import com.zb.lib_base.views.card.OnSwipeListener;
 
 import java.util.concurrent.TimeUnit;
 
@@ -56,8 +55,8 @@ public class AdapterBinding {
     }
 
     // RecyclerView
-    @BindingAdapter(value = {"adapter", "recyclerType", "size", "color", "gridNum", "includeEdge", "onSwipeListener"}, requireAll = false)
-    public static void setAdapter(RecyclerView view, BindingItemAdapter adapter, int recyclerType, float size, int color, int gridNum, boolean includeEdge, OnSwipeListener<PairInfo> onSwipeListener) {
+    @BindingAdapter(value = {"adapter", "recyclerType", "size", "color", "gridNum", "includeEdge", "cardCallback"}, requireAll = false)
+    public static void setAdapter(RecyclerView view, BindingItemAdapter adapter, int recyclerType, float size, int color, int gridNum, boolean includeEdge, CardItemTouchHelperCallback<PairInfo> cardCallback) {
         view.setAdapter(adapter);
         if (recyclerType == 0) {
             // 竖向列表
@@ -107,8 +106,7 @@ public class AdapterBinding {
         } else if (recyclerType == 6) {
             // 卡片滑动
             view.setItemAnimator(new DefaultItemAnimator());
-            CardItemTouchHelperCallback<PairInfo> cardCallback = new CardItemTouchHelperCallback<PairInfo>(adapter, adapter.getList());
-            cardCallback.setOnSwipedListener(onSwipeListener);
+
             ItemTouchHelper touchHelper = new ItemTouchHelper(cardCallback);
             CardLayoutManager cardLayoutManager = new CardLayoutManager(view, touchHelper);
             view.setLayoutManager(cardLayoutManager);

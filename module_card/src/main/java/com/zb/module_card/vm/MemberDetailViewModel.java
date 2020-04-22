@@ -1,6 +1,7 @@
 package com.zb.module_card.vm;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.VideoView;
@@ -105,12 +106,24 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
 
     @Override
     public void dislike(View view) {
+        activity.finish();
+        Intent data = new Intent("lobster_card");
+        data.putExtra("direction", 0);
+        activity.sendBroadcast(data);
 
     }
 
     @Override
     public void like(View view) {
+        activity.finish();
+        Intent data = new Intent("lobster_card");
+        data.putExtra("direction", 1);
+        activity.sendBroadcast(data);
+    }
 
+    @Override
+    public void superLike(View view) {
+        super.superLike(view);
     }
 
     @Override
@@ -144,10 +157,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
 
     }
 
-    @Override
-    public void superLike(View view) {
-        super.superLike(view);
-    }
+
 
 
 }

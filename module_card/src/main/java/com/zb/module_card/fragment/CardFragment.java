@@ -10,6 +10,8 @@ import com.zb.module_card.vm.CardViewModel;
 @Route(path = RouteUtils.Card_Fragment)
 public class CardFragment extends BaseFragment {
 
+    private CardViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.card_frag;
@@ -17,8 +19,16 @@ public class CardFragment extends BaseFragment {
 
     @Override
     public void initUI() {
-        CardViewModel viewModel = new CardViewModel();
+        viewModel = new CardViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
+
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.cardReceiver.unregisterReceiver();
     }
 }

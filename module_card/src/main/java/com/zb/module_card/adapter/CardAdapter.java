@@ -16,17 +16,12 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
 
     private BaseViewModel viewModel;
     private AppCompatActivity activity;
-    private int selectIndex = -1;
     private int selectImageIndex = 0;
 
     public CardAdapter(AppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
         super(activity, layoutId, list);
         this.activity = activity;
         this.viewModel = viewModel;
-    }
-
-    public void setSelectIndex(int selectIndex) {
-        this.selectIndex = selectIndex;
     }
 
     public int getSelectImageIndex() {

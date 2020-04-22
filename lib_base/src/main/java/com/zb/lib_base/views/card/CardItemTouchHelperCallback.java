@@ -2,12 +2,10 @@ package com.zb.lib_base.views.card;
 
 import android.graphics.Canvas;
 import android.view.View;
-import android.widget.RelativeLayout;
 
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,22 +53,16 @@ public class CardItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        // 移除 onTouchListener,否则触摸滑动会乱了
-        viewHolder.itemView.setOnTouchListener(null);
-        int layoutPosition = viewHolder.getLayoutPosition();
+        swiped(viewHolder.itemView,  direction);
+    }
+
+    public void swiped(View view, int direction) {
+        view.setOnTouchListener(null);
+        int layoutPosition = 0;
         T remove = dataList.remove(layoutPosition);
         adapter.notifyDataSetChanged();
-        if (direction == ItemTouchHelper.UP) {
-            // 当没有数据时回调 mListener
-            if (adapter.getItemCount() <= 3) {
-                if (mListener != null) {
-                    mListener.onSwipedClear();
-                }
-            }
-            return;
-        }
         if (mListener != null) {
-            mListener.onSwiped(viewHolder.itemView, remove, direction == ItemTouchHelper.LEFT ? CardConfig.SWIPED_LEFT : CardConfig.SWIPED_RIGHT);
+            mListener.onSwiped(view, remove, direction == ItemTouchHelper.LEFT ? CardConfig.SWIPED_LEFT : CardConfig.SWIPED_RIGHT);
         }
         // 当没有数据时回调 mListener
         if (adapter.getItemCount() <= 3) {

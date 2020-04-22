@@ -9,6 +9,8 @@
 
         <import type="com.zb.lib_base.utils.DateUtil" />
 
+        <import type="android.view.View" />
+
         <variable
             name="item"
             type="com.zb.lib_base.model.PairInfo" />
@@ -46,7 +48,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            app:radius="10dp"
+            app:all="true"/>
 
         <LinearLayout
             android:layout_width="match_parent"

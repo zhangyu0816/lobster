@@ -6,15 +6,21 @@
 
         <import type="com.zb.lib_base.utils.ObjectUtils" />
 
+        <import type="com.zb.lib_base.model.PairInfo" />
+
         <variable
             name="viewModel"
             type="com.zb.module_card.vm.CardViewModel" />
 
+        <variable
+            name="cardCallback"
+            type="com.zb.lib_base.views.card.CardItemTouchHelperCallback&lt;PairInfo>" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="20dp">
 
         <TextView
             android:id="@+id/textView"
@@ -31,23 +37,43 @@
             android:text="温州市"
             android:textColor="@color/black_252"
             android:textSize="14sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="15dp"
             android:layout_alignParentEnd="true"
+            android:padding="15dp"
             app:srcCompat="@mipmap/exposure_icon" />
 
         <androidx.recyclerview.widget.RecyclerView
             adapter="@{viewModel.adapter}"
-            onSwipeListener="@{viewModel}"
+            cardCallback="@{cardCallback}"
             recyclerType="@{6}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/textView"/>
+            android:layout_below="@+id/textView" />
 
+        <ImageView
+            android:id="@+id/iv_dislike"
+            viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(220)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(200)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:alpha="0"
+            android:background="@mipmap/dislike_icon" />
+
+        <ImageView
+            android:id="@+id/iv_like"
+            viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(220)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(200)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:alpha="0"
+            android:background="@mipmap/like_icon" />
     </RelativeLayout>
 </layout>

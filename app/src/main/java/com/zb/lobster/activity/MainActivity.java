@@ -13,6 +13,7 @@ public class MainActivity extends AppBaseActivity {
 
     @Override
     public void initUI() {
+        fitComprehensiveScreen();
         MainViewModel viewModel = new MainViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);

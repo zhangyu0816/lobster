@@ -1,16 +1,22 @@
 package com.zb.lib_base.views;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.Path;
-import android.os.Build;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class RoundImageView extends androidx.appcompat.widget.AppCompatImageView {
+import com.zb.lib_base.R;
 
-    float width, height;
-    int roundSize = 28;
+public class RoundImageView extends androidx.appcompat.widget.AppCompatImageView {
+    private Path mPath;
+    private RectF mRectF;
+    private float[] rids = new float[8];
+    private PaintFlagsDrawFilter paintFlagsDrawFilter;
 
     public RoundImageView(Context context) {
         this(context, null);
@@ -22,34 +28,46 @@ public class RoundImageView extends androidx.appcompat.widget.AppCompatImageView
 
     public RoundImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        if (Build.VERSION.SDK_INT < 18) {
-            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
-    }
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.RoundImageView);
+        float mRadius = array.getDimension(R.styleable.RoundImageView_radius, 0);
+        boolean all = array.getBoolean(R.styleable.RoundImageView_all, false);
 
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        width = getWidth();
-        height = getHeight();
+        rids[0] = mRadius;
+        rids[1] = mRadius;
+        rids[2] = mRadius;
+        rids[3] = mRadius;
+        if (all) {
+            rids[4] = mRadius;
+            rids[5] = mRadius;
+            rids[6] = mRadius;
+            rids[7] = mRadius;
+        } else {
+            rids[4] = 0f;
+            rids[5] = 0f;
+            rids[6] = 0f;
+            rids[7] = 0f;
+        }
+
+        array.recycle();
+        mPath = new Path();
+        paintFlagsDrawFilter = new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+        setLayerType(View.LAYER_TYPE_HARDWARE, null);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (width > roundSize && height > roundSize) {
-            Path path = new Path();
-            path.moveTo(roundSize, 0);
-            path.lineTo(width - roundSize, 0);
-            path.quadTo(width, 0, width, roundSize);
-            path.lineTo(width, height - roundSize);
-            path.quadTo(width, height, width - roundSize, height);
-            path.lineTo(roundSize, height);
-            path.quadTo(0, height, 0, height - roundSize);
-            path.lineTo(0, roundSize);
-            path.quadTo(0, 0, roundSize, 0);
-            canvas.clipPath(path);
-        }
-
+        mPath.reset();
+        mPath.addRoundRect(mRectF, rids, Path.Direction.CW);
+        canvas.setDrawFilter(paintFlagsDrawFilter);
+        canvas.save();
+        canvas.clipPath(mPath);
         super.onDraw(canvas);
+        canvas.restore();
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        mRectF = new RectF(0, 0, w, h);
     }
 }

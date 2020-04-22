@@ -8,4 +8,8 @@
         <attr name="move" format="boolean" />
         <attr name="disableBlurred" format="boolean" />
     </declare-styleable>
+    <declare-styleable name="RoundImageView">
+        <attr name="radius" format="reference|dimension" />
+        <attr name="all" format="boolean" />
+    </declare-styleable>
 </resources>

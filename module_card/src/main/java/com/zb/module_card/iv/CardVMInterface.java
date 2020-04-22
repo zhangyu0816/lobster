@@ -13,4 +13,6 @@ public interface CardVMInterface {
     void leftBtn(View currentView,CardAdapter adapter, int position);
 
     void rightBtn(View currentView,CardAdapter adapter, int position);
+
+
 }

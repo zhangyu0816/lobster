@@ -1,8 +1,11 @@
 package com.zb.lobster.vm;
 
+import com.zb.lib_base.BR;
 import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.utils.FragmentUtils;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lobster.R;
 import com.zb.lobster.databinding.AcMainBinding;
 import com.zb.lobster.iv.MainVMInterface;
 
@@ -21,6 +24,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mainBinding = (AcMainBinding) binding;
+
+        mBinding.setVariable(BR.guidanceRes, R.mipmap.guidance_left);
         initFragments();
     }
 
@@ -30,8 +35,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         fragments.add(FragmentUtils.getCardFragment());
         fragments.add(FragmentUtils.getChatFragment());
         fragments.add(FragmentUtils.getMineFragment());
-        mainBinding.viewPage.setAdapter(new FragmentAdapter(activity.getSupportFragmentManager(),fragments));
-        mainBinding.viewPage.setOffscreenPageLimit(2);
+        mainBinding.viewPage.setAdapter(new FragmentAdapter(activity.getSupportFragmentManager(), fragments));
         mainBinding.viewPage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -45,6 +49,12 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onPageScrollStateChanged(int state) {
                 mainBinding.setIndex(nowIndex);
+                if (nowIndex == 1) {
+                    if (PreferenceUtil.readIntValue(activity, "showGuidance") == 0) {
+                        mBinding.setVariable(BR.showGuidance, true);
+                    }
+                }
+
             }
         });
 
@@ -58,6 +68,24 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         nowIndex = index;
         mainBinding.setIndex(nowIndex);
         mainBinding.viewPage.setCurrentItem(index);
+    }
+
+    @Override
+    public void chargeGuidance(int guidanceRes) {
+        if (guidanceRes == R.mipmap.guidance_left) {
+            mBinding.setVariable(BR.guidanceRes, R.mipmap.guidance_right);
+        } else if (guidanceRes == R.mipmap.guidance_right) {
+            mBinding.setVariable(BR.guidanceRes, R.mipmap.guidance_info);
+        } else if (guidanceRes == R.mipmap.guidance_info) {
+            mBinding.setVariable(BR.guidanceRes, R.mipmap.guidance_return);
+        } else if (guidanceRes == R.mipmap.guidance_return) {
+            mBinding.setVariable(BR.guidanceRes, R.mipmap.guidance_super);
+        } else if (guidanceRes == R.mipmap.guidance_super) {
+            mBinding.setVariable(BR.guidanceRes, R.mipmap.guidance_exposure);
+        } else if (guidanceRes == R.mipmap.guidance_exposure) {
+            mBinding.setVariable(BR.showGuidance, false);
+            PreferenceUtil.saveIntValue(activity, "showGuidance", 1);
+        }
     }
 
 }

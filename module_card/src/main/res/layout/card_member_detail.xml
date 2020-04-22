@@ -188,7 +188,7 @@
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <ImageView
-            android:id="@+id/imageView6"
+            onClickDelayed="@{viewModel::dislike}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -196,7 +196,7 @@
             app:srcCompat="@mipmap/dislike_icon" />
 
         <ImageView
-            android:id="@+id/imageView7"
+            onClickDelayed="@{viewModel::like}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
