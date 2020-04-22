@@ -41,22 +41,25 @@ public class GlideRoundTransform extends BitmapTransformation {
     public static final int FIT_CENTER = 1;
     public static final int CENTER_CROP = 2;
     public static final int CENTER_INSIDE = 3;
+
     @IntDef({FIT_CENTER, CENTER_CROP, CENTER_INSIDE})
-    public @interface ScaleType {}
+    public @interface ScaleType {
+    }
 
     private float radius;
     private float diameter;
     private float margin;
     private int cornerType;
 
-    private @ScaleType int scaleType;
+    private @ScaleType
+    int scaleType;
 
     public GlideRoundTransform(int dpRadius, int marginDp) {
         this(dpRadius, marginDp, CORNER_ALL, FIT_CENTER);
     }
 
     public GlideRoundTransform(int dpRadius, int marginDp, int cornerType, @ScaleType int scaleType) {
-        this.radius = Resources.getSystem().getDisplayMetrics().density * dpRadius;
+        this.radius = (int) (Resources.getSystem().getDisplayMetrics().density * dpRadius + 0.5f);
         this.diameter = this.radius * 2;
         this.margin = Resources.getSystem().getDisplayMetrics().density * marginDp;
         this.cornerType = cornerType;

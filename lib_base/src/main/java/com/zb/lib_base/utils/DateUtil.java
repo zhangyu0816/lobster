@@ -471,4 +471,25 @@ public class DateUtil {
     public static long getLongFromString(String str) {
         return Long.valueOf(str.replaceAll("[-\\s:]", ""));
     }
+
+    private static String[][] constellations = {{"摩羯座", "水瓶座"}, {"水瓶座", "双鱼座"}, {"双鱼座", "白羊座"}, {"白羊座", "金牛座"}, {"金牛座", "双子座"}, {"双子座", "巨蟹座"}, {"巨蟹座", "狮子座"},
+            {"狮子座", "处女座"}, {"处女座", "天秤座"}, {"天秤座", "天蝎座"}, {"天蝎座", "射手座"}, {"射手座", "摩羯座"}};
+    //星座分割时间
+    private static int[] date = {20, 19, 21, 20, 21, 22, 23, 23, 23, 24, 23, 22};
+
+    /**
+     * 星座生成 传进是日期格式为: yyyy-mm-dd
+     *
+     * @param time
+     */
+    public static String getConstellations(String time) {
+        String[] data = time.split("-");
+        int day = date[Integer.parseInt(data[1]) - 1];
+        String[] cl1 = constellations[Integer.parseInt(data[1]) - 1];
+        if (Integer.parseInt(data[2]) >= day) {
+            return cl1[1];
+        } else {
+            return cl1[0];
+        }
+    }
 }

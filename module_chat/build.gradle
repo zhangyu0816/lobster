@@ -28,6 +28,7 @@ android {
         dataBinding {
             enabled true
         }
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -65,5 +66,5 @@ dependencies {
     testImplementation 'junit:junit:4.13'
     // 需要重新在子模块中再引用一次，否则报错
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
-    api project(':lib_base')
+    implementation project(':lib_base')
 }

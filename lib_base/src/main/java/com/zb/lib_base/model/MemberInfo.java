@@ -6,6 +6,7 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 public class MemberInfo extends BaseObservable {
+
     private long userId; // userId
     private String nick = ""; // 昵称
     private String remark = ""; // 备注
@@ -36,6 +37,26 @@ public class MemberInfo extends BaseObservable {
     private int attentionQuantity;//关注数量
     private int fansQuantity;// 粉丝数量
 
+    private String lastJoinTime = "";
+    private int newDycType; // 最新的动态类型
+    // 未知 0
+    // 文字 1
+    // 图片 2
+    // 图文 3
+    // 视频 4
+    // 视频_文字 5
+    // 视频_图片 6
+    // 视频_图片_文字 7
+    // 专享 8 (未使用)
+    // 专享文字 9 (未使用)
+    // 专享图片 10
+    // 专享图文 11
+    // 专享视频 12 (未使用)
+    // 专享视频文字 13 (未使用)
+    // 专享视频图片 14 (未使用)
+    // 专享视频图文 15 (未使用)
+    private String newDycCreateTime = ""; // 最新创建时间
+
     @Bindable
     public long getUserId() {
         return userId;
@@ -46,7 +67,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.userId);
     }
 
-    @Bindable public String getNick() {
+    @Bindable
+    public String getNick() {
         return nick;
     }
 
@@ -55,7 +77,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.nick);
     }
 
-    @Bindable public String getRemark() {
+    @Bindable
+    public String getRemark() {
         return remark;
     }
 
@@ -64,7 +87,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.remark);
     }
 
-    @Bindable public String getImage() {
+    @Bindable
+    public String getImage() {
         return image;
     }
 
@@ -73,7 +97,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.image);
     }
 
-    @Bindable public String getPersonalitySign() {
+    @Bindable
+    public String getPersonalitySign() {
         return personalitySign;
     }
 
@@ -82,7 +107,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.personalitySign);
     }
 
-    @Bindable public String getBirthday() {
+    @Bindable
+    public String getBirthday() {
         return birthday;
     }
 
@@ -91,7 +117,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.birthday);
     }
 
-    @Bindable public int getSex() {
+    @Bindable
+    public int getSex() {
         return sex;
     }
 
@@ -100,7 +127,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.sex);
     }
 
-    @Bindable public int getHeight() {
+    @Bindable
+    public int getHeight() {
         return height;
     }
 
@@ -109,7 +137,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.height);
     }
 
-    @Bindable public int getConstellation() {
+    @Bindable
+    public int getConstellation() {
         return constellation;
     }
 
@@ -118,7 +147,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.constellation);
     }
 
-    @Bindable public int getAge() {
+    @Bindable
+    public int getAge() {
         return age;
     }
 
@@ -127,7 +157,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.age);
     }
 
-    @Bindable public String getJob() {
+    @Bindable
+    public String getJob() {
         return job;
     }
 
@@ -136,7 +167,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.job);
     }
 
-    @Bindable public long getProvinceId() {
+    @Bindable
+    public long getProvinceId() {
         return provinceId;
     }
 
@@ -145,7 +177,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.provinceId);
     }
 
-    @Bindable public long getCityId() {
+    @Bindable
+    public long getCityId() {
         return cityId;
     }
 
@@ -154,7 +187,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.cityId);
     }
 
-    @Bindable public int getIdAttest() {
+    @Bindable
+    public int getIdAttest() {
         return idAttest;
     }
 
@@ -163,7 +197,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.idAttest);
     }
 
-    @Bindable public String getSingleImage() {
+    @Bindable
+    public String getSingleImage() {
         return singleImage;
     }
 
@@ -172,7 +207,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.singleImage);
     }
 
-    @Bindable public int getRstatus() {
+    @Bindable
+    public int getRstatus() {
         return rstatus;
     }
 
@@ -181,7 +217,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.rstatus);
     }
 
-    @Bindable public int getPopularity() {
+    @Bindable
+    public int getPopularity() {
         return popularity;
     }
 
@@ -190,7 +227,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.popularity);
     }
 
-    @Bindable public int getRentQuantity() {
+    @Bindable
+    public int getRentQuantity() {
         return rentQuantity;
     }
 
@@ -199,7 +237,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.rentQuantity);
     }
 
-    @Bindable public int getMemberType() {
+    @Bindable
+    public int getMemberType() {
         return memberType;
     }
 
@@ -208,7 +247,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.memberType);
     }
 
-    @Bindable public String getMemberExpireTime() {
+    @Bindable
+    public String getMemberExpireTime() {
         return memberExpireTime;
     }
 
@@ -217,7 +257,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.memberExpireTime);
     }
 
-    @Bindable public int getTotalOrderNumber() {
+    @Bindable
+    public int getTotalOrderNumber() {
         return totalOrderNumber;
     }
 
@@ -226,7 +267,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.totalOrderNumber);
     }
 
-    @Bindable public int getSurplusOrderNumber() {
+    @Bindable
+    public int getSurplusOrderNumber() {
         return surplusOrderNumber;
     }
 
@@ -235,7 +277,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.surplusOrderNumber);
     }
 
-    @Bindable public int getTotalLookPrivateNumber() {
+    @Bindable
+    public int getTotalLookPrivateNumber() {
         return totalLookPrivateNumber;
     }
 
@@ -244,7 +287,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.totalLookPrivateNumber);
     }
 
-    @Bindable public int getSurplusLookPrivateNumber() {
+    @Bindable
+    public int getSurplusLookPrivateNumber() {
         return surplusLookPrivateNumber;
     }
 
@@ -253,7 +297,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.surplusLookPrivateNumber);
     }
 
-    @Bindable public String getPublicTag() {
+    @Bindable
+    public String getPublicTag() {
         return publicTag;
     }
 
@@ -262,7 +307,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.publicTag);
     }
 
-    @Bindable public int getAuthType() {
+    @Bindable
+    public int getAuthType() {
         return authType;
     }
 
@@ -271,7 +317,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.authType);
     }
 
-    @Bindable public int getOnlineStatus() {
+    @Bindable
+    public int getOnlineStatus() {
         return onlineStatus;
     }
 
@@ -280,7 +327,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.onlineStatus);
     }
 
-    @Bindable public int getAttentionQuantity() {
+    @Bindable
+    public int getAttentionQuantity() {
         return attentionQuantity;
     }
 
@@ -289,12 +337,43 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.attentionQuantity);
     }
 
-    @Bindable public int getFansQuantity() {
+    @Bindable
+    public int getFansQuantity() {
         return fansQuantity;
     }
 
     public void setFansQuantity(int fansQuantity) {
         this.fansQuantity = fansQuantity;
         notifyPropertyChanged(BR.fansQuantity);
+    }
+
+    @Bindable
+    public String getLastJoinTime() {
+        return lastJoinTime;
+    }
+
+    public void setLastJoinTime(String lastJoinTime) {
+        this.lastJoinTime = lastJoinTime;
+        notifyPropertyChanged(BR.lastJoinTime);
+    }
+
+    @Bindable
+    public int getNewDycType() {
+        return newDycType;
+    }
+
+    public void setNewDycType(int newDycType) {
+        this.newDycType = newDycType;
+        notifyPropertyChanged(BR.newDycType);
+    }
+
+    @Bindable
+    public String getNewDycCreateTime() {
+        return newDycCreateTime;
+    }
+
+    public void setNewDycCreateTime(String newDycCreateTime) {
+        this.newDycCreateTime = newDycCreateTime;
+        notifyPropertyChanged(BR.newDycCreateTime);
     }
 }

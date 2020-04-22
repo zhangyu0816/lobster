@@ -28,6 +28,7 @@ android {
         dataBinding {
             enabled true
         }
+        multiDexEnabled true
     }
 
     buildTypes {

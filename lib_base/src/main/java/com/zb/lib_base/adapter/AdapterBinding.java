@@ -18,10 +18,15 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.model.PairInfo;
 import com.zb.lib_base.utils.GlideRoundTransform;
 import com.zb.lib_base.utils.GridSpacingItemDecoration;
 import com.zb.lib_base.utils.MyDecoration;
 import com.zb.lib_base.utils.StaggeredDividerItemDecoration;
+import com.zb.lib_base.views.card.CardItemTouchHelperCallback;
+import com.zb.lib_base.views.card.CardLayoutManager;
+import com.zb.lib_base.views.card.OnRecyclerItemClickListener;
+import com.zb.lib_base.views.card.OnSwipeListener;
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,7 +34,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.BindingAdapter;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -49,8 +56,8 @@ public class AdapterBinding {
     }
 
     // RecyclerView
-    @BindingAdapter(value = {"adapter", "recyclerType", "size", "color", "gridNum", "includeEdge"}, requireAll = false)
-    public static void setAdapter(RecyclerView view, BindingItemAdapter adapter, int recyclerType, float size, int color, int gridNum, boolean includeEdge) {
+    @BindingAdapter(value = {"adapter", "recyclerType", "size", "color", "gridNum", "includeEdge", "onSwipeListener"}, requireAll = false)
+    public static void setAdapter(RecyclerView view, BindingItemAdapter adapter, int recyclerType, float size, int color, int gridNum, boolean includeEdge, OnSwipeListener<PairInfo> onSwipeListener) {
         view.setAdapter(adapter);
         if (recyclerType == 0) {
             // 竖向列表
@@ -86,7 +93,7 @@ public class AdapterBinding {
             // 防止顶部item出现空白
             view.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                     int[] first = new int[2];
                     manager.findFirstCompletelyVisibleItemPositions(first);
                     if (newState == RecyclerView.SCROLL_STATE_IDLE && (first[0] == 1 || first[1] == 1)) {
@@ -95,7 +102,19 @@ public class AdapterBinding {
                 }
             });
         } else if (recyclerType == 5) {
+            // 横向排列自动换行
             view.setLayoutManager(new FlowLayoutManager());
+        } else if (recyclerType == 6) {
+            // 卡片滑动
+            view.setItemAnimator(new DefaultItemAnimator());
+            CardItemTouchHelperCallback<PairInfo> cardCallback = new CardItemTouchHelperCallback<PairInfo>(adapter, adapter.getList());
+            cardCallback.setOnSwipedListener(onSwipeListener);
+            ItemTouchHelper touchHelper = new ItemTouchHelper(cardCallback);
+            CardLayoutManager cardLayoutManager = new CardLayoutManager(view, touchHelper);
+            view.setLayoutManager(cardLayoutManager);
+            touchHelper.attachToRecyclerView(view);
+            view.addOnItemTouchListener(new OnRecyclerItemClickListener(view, touchHelper) {
+            });
         }
     }
 

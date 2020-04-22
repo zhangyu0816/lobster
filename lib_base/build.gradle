@@ -62,4 +62,5 @@ dependencies {
     api 'com.google.android.material:material:1.2.0-alpha06'
     // 标签
     api 'com.github.1002326270xc:LayoutManager-FlowLayout:v1.6'
+    api 'com.android.support:multidex:1.0.3'
 }

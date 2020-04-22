@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="item"
+            type="String" />
+
+        <variable
+            name="isImageSelect"
+            type="boolean" />
+
+    </data>
+
+
+    <RelativeLayout
+        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
+        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
+        android:layout_width="60dp"
+        android:layout_height="60dp">
+
+        <ImageView
+            imageRes="@{ObjectUtils.getDefaultRes()}"
+            isRound="@{true}"
+            roundSize="@{4}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true" />
+
+        <ImageView
+            defaultRes="@{ObjectUtils.getDefaultRes()}"
+            imageUrl="@{item}"
+            isRound="@{true}"
+            roundSize="@{4}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.11f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.11f)}"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true" />
+
+        <View
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:alpha="0.5"
+            android:background="@drawable/btn_bg_black_radius5"
+            android:visibility="@{!isImageSelect?View.VISIBLE:View.GONE}" />
+    </RelativeLayout>
+</layout>

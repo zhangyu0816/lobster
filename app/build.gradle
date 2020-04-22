@@ -21,6 +21,7 @@ android {
                 arguments = [moduleName: project.getName()]
             }
         }
+        multiDexEnabled true
     }
 
     buildTypes {

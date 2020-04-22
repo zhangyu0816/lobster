@@ -1,6 +1,5 @@
 package com.zb.lib_base.app;
 
-import android.app.Application;
 import android.content.Context;
 import android.graphics.Typeface;
 
@@ -18,10 +17,12 @@ import com.zb.lib_base.views.CutImageView;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
-public class MineApp extends Application {
+public class MineApp extends MultiDexApplication {
     /**
      * 上下文
      */
@@ -54,6 +55,7 @@ public class MineApp extends Application {
         initRouter(this);
         initRealm();
         DisplayUtils.init(this);
+        MultiDex.install(this);
         FitScreen.createDesign(getApplicationContext(), H, W);
     }
 
