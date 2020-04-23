@@ -483,6 +483,9 @@ public class DateUtil {
      * @param time
      */
     public static String getConstellations(String time) {
+        if(time.isEmpty()){
+            return "";
+        }
         String[] data = time.split("-");
         int day = date[Integer.parseInt(data[1]) - 1];
         String[] cl1 = constellations[Integer.parseInt(data[1]) - 1];

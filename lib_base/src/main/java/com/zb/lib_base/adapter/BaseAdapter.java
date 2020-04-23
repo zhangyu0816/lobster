@@ -1,7 +1,6 @@
 package com.zb.lib_base.adapter;
 
 import com.zb.lib_base.BR;
-import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BasePopupWindow;
 
 import java.util.List;
@@ -10,27 +9,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.ViewDataBinding;
 
 public class BaseAdapter<T> extends BindingItemAdapter<T> {
-    private BaseViewModel viewModel;
     private BasePopupWindow pw;
+    private int selectIndex = -1;
 
     public BaseAdapter(AppCompatActivity activity, int layoutId, List<T> list, BasePopupWindow pw) {
         super(activity, layoutId, list);
         this.pw = pw;
     }
 
-//    public BaseAdapter(AppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
-//        super(activity, layoutId, list);
-//        this.viewModel = viewModel;
-//    }
+    public void setSelectIndex(int selectIndex) {
+        this.selectIndex = selectIndex;
+    }
 
     @Override
     protected void onBind(RecyclerHolder<ViewDataBinding> holder, T t, int position) {
         holder.binding.setVariable(BR.item, t);
         holder.binding.setVariable(BR.position, position);
-
-//        if (viewModel != null) {
-//            holder.binding.setVariable(BR.viewModel, viewModel);
-//        }
+        holder.binding.setVariable(BR.isSelect, position == selectIndex);
         if (pw != null) {
             holder.binding.setVariable(BR.pw, pw);
         }

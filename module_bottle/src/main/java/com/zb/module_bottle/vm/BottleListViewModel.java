@@ -6,7 +6,6 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.model.BottleInfo;
-import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_bottle.R;
 import com.zb.module_bottle.adapter.BottleAdapter;
@@ -23,18 +22,12 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
 
     public BottleAdapter adapter;
     private List<BottleInfo> bottleInfoList = new ArrayList<>();
-    private List<VipInfo> vipInfoList = new ArrayList<>();
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         for (int i = 0; i < 10; i++) {
             bottleInfoList.add(new BottleInfo());
-            VipInfo vipInfo = new VipInfo();
-            vipInfo.setPrice((i + 1) * 10);
-            vipInfo.setOriginalPrice((i + 1) * 12);
-            vipInfo.setDayCount((i + 1) * 30);
-            vipInfoList.add(vipInfo);
         }
         setAdapter();
     }
@@ -53,7 +46,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     @Override
     public void selectIndex(int position) {
 
-        new BottleVipPW(activity, mBinding.getRoot(), vipInfoList);
+        new BottleVipPW(activity, mBinding.getRoot());
     }
 
     @Override

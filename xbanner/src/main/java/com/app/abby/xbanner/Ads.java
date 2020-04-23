@@ -12,6 +12,7 @@ public class Ads {
     private String webImage = "";  //网页端图片
     private String outLink = "";    //广告链接的地址
     private String adTitle = "";   //广告标题
+    private int adRes = 0;
 
     @Override
     public String toString() {
@@ -23,6 +24,9 @@ public class Ads {
                 ", outLink='" + outLink + '\'' +
                 ", adTitle='" + adTitle + '\'' +
                 '}';
+    }
+
+    public Ads() {
     }
 
     public Ads(Long adId, String smallImage, String bigImage, String webImage, String outLink, String adTitle) {
@@ -80,5 +84,13 @@ public class Ads {
 
     public void setAdTitle(String adTitle) {
         this.adTitle = adTitle;
+    }
+
+    public int getAdRes() {
+        return adRes;
+    }
+
+    public void setAdRes(int adRes) {
+        this.adRes = adRes;
     }
 }

@@ -2,25 +2,21 @@ package com.zb.module_bottle.windows;
 
 import android.view.View;
 
-import com.zb.lib_base.model.VipInfo;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_bottle.BR;
 import com.zb.module_bottle.R;
 import com.zb.module_bottle.adapter.BottleAdapter;
-
-import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class BottleVipPW extends BasePopupWindow {
 
     private BottleAdapter adapter;
-    private List<VipInfo> vipInfoList;
     private int preIndex = -1;
 
-    public BottleVipPW(AppCompatActivity activity, View parentView, List<VipInfo> vipInfoList) {
+    public BottleVipPW(AppCompatActivity activity, View parentView) {
         super(activity, parentView, true);
-        this.vipInfoList = vipInfoList;
         initUI();
     }
 
@@ -31,7 +27,7 @@ public class BottleVipPW extends BasePopupWindow {
 
     @Override
     public void initUI() {
-        adapter = new BottleAdapter<>(activity, R.layout.item_bottle_vip, vipInfoList, this);
+        adapter = new BottleAdapter<>(activity, R.layout.item_bottle_vip, MineApp.vipInfoList, this);
         mBinding.setVariable(BR.pw, this);
         mBinding.setVariable(BR.adapter, adapter);
     }

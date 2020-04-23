@@ -3,15 +3,15 @@
     android:fillAfter="true"
     android:interpolator="@android:anim/accelerate_interpolator">
     <translate
-        android:duration="800"
-        android:fromXDelta="0%"
+        android:duration="300"
+        android:fromXDelta="-130%"
         android:fromYDelta="0%"
-        android:toXDelta="-130%"
+        android:toXDelta="0%"
         android:toYDelta="0%" />
     <rotate
-        android:duration="800"
-        android:fromDegrees="0"
+        android:duration="300"
+        android:fromDegrees="-30"
         android:pivotX="0%"
         android:pivotY="100%"
-        android:toDegrees="-30" />
+        android:toDegrees="0" />
 </set>

@@ -4,15 +4,19 @@
 
     <data>
 
-        <import type="com.zb.lib_base.utils.ObjectUtils" />
-
         <variable
             name="pw"
             type="com.zb.lib_base.windows.BasePopupWindow" />
 
         <variable
+            name="vipAd"
+            type="com.zb.lib_base.model.VipAd" />
+
+        <variable
             name="adapter"
-            type="com.zb.module_bottle.adapter.BottleAdapter" />
+            type="com.zb.lib_base.adapter.BaseAdapter" />
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
 
     </data>
 
@@ -37,12 +41,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(809)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(900)}"
+            <LinearLayout
+                android:id="@+id/banner_linear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@mipmap/bottle_top_2" />
+                android:background="@{vipAd.topBgRes}"
+                android:orientation="vertical">
+
+                <com.app.abby.xbanner.XBanner
+                    android:id="@+id/banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp" />
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -55,7 +66,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="21dp"
                     android:layout_marginTop="15dp"
-                    android:text="查看漂流瓶主人"
+                    android:text="@{vipAd.title}"
                     android:textColor="@color/black_4d4"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -65,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="21dp"
                     android:layout_marginTop="10dp"
-                    android:text="手滑了？不要错过任何一个缘分！"
+                    android:text="@{vipAd.content}"
                     android:textColor="@color/black_827"
                     android:textSize="12sp" />
 
@@ -87,7 +98,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:gravity="center"
-                    android:text="获取特权立即查看"
+                    android:text="获取特权"
                     android:textColor="@color/black_252"
                     android:textSize="16sp"
                     android:textStyle="bold" />

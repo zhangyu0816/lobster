@@ -19,6 +19,8 @@ import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.app.abby.xbanner.databinding.XbannerBinding;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.IntDef;
+import androidx.databinding.DataBindingUtil;
 import androidx.viewpager.widget.ViewPager;
 
 public class XBanner extends RelativeLayout {
@@ -85,11 +88,9 @@ public class XBanner extends RelativeLayout {
     private int mImageCount;
     private int mBannerType;
     private int mEllipsizeType;
-    private RelativeLayout mBannerParentView;
     private ImageView.ScaleType mScaleType;
     private DisplayMetrics dm;
 
-    private ViewPager mViewPager;
     private XBPagerAdapter mAdapter;
     private ViewPager.PageTransformer mViewPageTransformer;
     private TextView mBannerTitle;
@@ -98,7 +99,6 @@ public class XBanner extends RelativeLayout {
     private List<View> mBannerImages;
     private List<String> mTitles;
     private List<String> mUrls;
-    private LinearLayout mIndicatorContainer;
     private BannerPageListener mBannerPageListner;
     private ImageLoader mImageLoader;
 
@@ -269,9 +269,9 @@ public class XBanner extends RelativeLayout {
             if (mScroller == null) {
                 xbannerScroller = new XBannerScroller(mContext, new DecelerateInterpolator());
                 xbannerScroller.setDuration(600);
-                xScroller.set(mViewPager, xbannerScroller);
+                xScroller.set(binding.viewpager, xbannerScroller);
             } else {
-                xScroller.set(mViewPager, mScroller);
+                xScroller.set(binding.viewpager, mScroller);
             }
 
         } catch (Exception e) {
@@ -284,7 +284,7 @@ public class XBanner extends RelativeLayout {
         try {
             Field xScroller = ViewPager.class.getDeclaredField("mScroller");
             xScroller.setAccessible(true);
-            xScroller.set(mViewPager, null);
+            xScroller.set(binding.viewpager, null);
             xbannerScroller = null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -502,7 +502,7 @@ public class XBanner extends RelativeLayout {
      * Get the viewpager
      */
     public ViewPager getViewPager() {
-        return mViewPager;
+        return binding.viewpager;
     }
 
     private void showIndicators() {
@@ -512,18 +512,18 @@ public class XBanner extends RelativeLayout {
             if (mBannerType == NUM_INDICATOR) {
                 applyIndicatorGravity();
             } else {
-                mIndicatorContainer.setGravity(Gravity.CENTER_VERTICAL | Gravity.END);
+                binding.indicatorContainer.setGravity(Gravity.CENTER_VERTICAL | Gravity.END);
             }
-            mIndicatorContainer.addView(mNumIndicator);
+            binding.indicatorContainer.addView(mNumIndicator);
 
         } else {
             mIndicators.addAll(createIndicators());
             if (mIndicators.size() == 1) {
-                mIndicatorContainer.setVisibility(GONE);
+                binding.indicatorContainer.setVisibility(GONE);
             } else {
-                mIndicatorContainer.setVisibility(VISIBLE);
+                binding.indicatorContainer.setVisibility(VISIBLE);
                 for (int i = 0; i < mIndicators.size(); i++) {
-                    mIndicatorContainer.addView(mIndicators.get(i));
+                    binding.indicatorContainer.addView(mIndicators.get(i));
                 }
             }
         }
@@ -532,11 +532,11 @@ public class XBanner extends RelativeLayout {
 
     private void applyIndicatorGravity() {
         if (mGravity == INDICATOR_START) {
-            mIndicatorContainer.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+            binding.indicatorContainer.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
         } else if (mGravity == INDICATOR_CENTER) {
-            mIndicatorContainer.setGravity(Gravity.CENTER | Gravity.CENTER_VERTICAL);
+            binding.indicatorContainer.setGravity(Gravity.CENTER | Gravity.CENTER_VERTICAL);
         } else if (mGravity == INDICATOR_END) {
-            mIndicatorContainer.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
+            binding.indicatorContainer.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
         }
     }
 
@@ -568,37 +568,41 @@ public class XBanner extends RelativeLayout {
     }
 
     private void initIndicatorContainer() {
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mIndicatorContainer.getLayoutParams();
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) binding.indicatorContainer.getLayoutParams();
         params.height = 40;
     }
 
-    private void bindView() {
-        mBannerParentView = (RelativeLayout) LayoutInflater.from(mContext).inflate(R.layout.xbanner, this, true);
-        mViewPager = (ViewPager) mBannerParentView.findViewById(R.id.viewpager);
-        mIndicatorContainer = (LinearLayout) mBannerParentView.findViewById(R.id.indicator_container);
-        if (mIsTitlebgAlpha) {
-            mIndicatorContainer.setBackgroundColor(Color.TRANSPARENT);
-        }
+    private XbannerBinding binding;
 
+    private void bindView() {
+        binding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.xbanner, this, true);
+        binding.setVariable(BR.position, -1);
+        if (mIsTitlebgAlpha) {
+            binding.indicatorContainer.setBackgroundColor(Color.TRANSPARENT);
+        }
+    }
+
+    public void setBannerBg(int position) {
+        binding.setVariable(BR.position, position);
     }
 
 
     private void initViewPagerAdapter() {
 
         if (mAdapter == null) {
-            mAdapter = new XBPagerAdapter(mBannerPageListner, mImageCount);
+            mAdapter = new XBPagerAdapter(mBannerPageListner, mImageCount, mImageLoader);
         }
-        mViewPager.setAdapter(mAdapter);
+        binding.viewpager.setAdapter(mAdapter);
         mAdapter.setData(mBannerImages);
         if (mImageCount > 1) {
-            mViewPager.setCurrentItem(1);
+            binding.viewpager.setCurrentItem(1);
         } else {
-            mViewPager.setCurrentItem(0);
+            binding.viewpager.setCurrentItem(0);
         }
 
 
         if (mViewPageTransformer != null) {
-            mViewPager.setPageTransformer(false, mViewPageTransformer);
+            binding.viewpager.setPageTransformer(false, mViewPageTransformer);
         }
 
 
@@ -643,7 +647,7 @@ public class XBanner extends RelativeLayout {
             return;
         }
 
-        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        binding.viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -657,7 +661,7 @@ public class XBanner extends RelativeLayout {
             @Override
             public void onPageScrollStateChanged(int state) {
 
-                int current = mViewPager.getCurrentItem();
+                int current = binding.viewpager.getCurrentItem();
 
                 switch (state) {
                     case ViewPager.SCROLL_STATE_DRAGGING:
@@ -668,10 +672,10 @@ public class XBanner extends RelativeLayout {
                             xbannerScroller.setDuration(PAGE_TRANSFORM_DELAY_DRAGGING);
                         }
                         if (current == 0) {
-                            mViewPager.setCurrentItem(mImageCount, false);
+                            binding.viewpager.setCurrentItem(mImageCount, false);
                         }
                         if (current == mImageCount + 1) {
-                            mViewPager.setCurrentItem(1, false);
+                            binding.viewpager.setCurrentItem(1, false);
                         }
                         break;
                     case ViewPager.SCROLL_STATE_IDLE:
@@ -682,9 +686,9 @@ public class XBanner extends RelativeLayout {
                             xbannerScroller.setDuration(pageTransformerDelayIdle);
                         }
                         if (current == mImageCount + 1) {
-                            mViewPager.setCurrentItem(1, false);
+                            binding.viewpager.setCurrentItem(1, false);
                         } else if (current == 0) {
-                            mViewPager.setCurrentItem(mImageCount, false);
+                            binding.viewpager.setCurrentItem(mImageCount, false);
                         }
 
                         break;
@@ -777,7 +781,7 @@ public class XBanner extends RelativeLayout {
     private void startPlay() {
         if (mIsAutoPlay) {
             mIsPlaying = true;
-            mRunnable = new ViewPagerRunnable(mViewPager, mImageCount, mDelayTime);
+            mRunnable = new ViewPagerRunnable(binding.viewpager, mImageCount, mDelayTime);
 
             mHandler.postDelayed(mRunnable, mDelayTime);
         }
@@ -820,40 +824,44 @@ public class XBanner extends RelativeLayout {
                 if (ads.getSmallImage().contains(".mp4"))
                     mBannerImages.add(newVideoViewFroUrl(ads));
                 else
-                    mBannerImages.add(newImageFroUrl(ads));
+                    mBannerImages.add(newImageFroUrl(ads, mImageCount - 1));
 
                 for (int i = 0; i < mUrls.size(); i++) {
                     Ads ads1 = adsList.get(i);
                     if (ads1.getSmallImage().contains(".mp4"))
                         mBannerImages.add(newVideoViewFroUrl(ads1));
                     else
-                        mBannerImages.add(newImageFroUrl(ads1));
+                        mBannerImages.add(newImageFroUrl(ads1, i));
                 }
                 Ads ads2 = adsList.get(0);
                 if (ads2.getSmallImage().contains(".mp4"))
                     mBannerImages.add(newVideoViewFroUrl(ads2));
                 else
-                    mBannerImages.add(newImageFroUrl(ads2));
+                    mBannerImages.add(newImageFroUrl(ads2, 0));
             } else {
                 Ads ads = adsList.get(0);
                 if (ads.getSmallImage().contains(".mp4"))
                     mBannerImages.add(newVideoViewFroUrl(ads));
                 else
-                    mBannerImages.add(newImageFroUrl(ads));
+                    mBannerImages.add(newImageFroUrl(ads, 0));
             }
         }
     }
 
 
-    private ImageView newImageFroUrl(Ads ads) {
+    private ImageView newImageFroUrl(Ads ads, int position) {
+        LinearLayout linearLayout = new LinearLayout(mContext);
         ImageView image = new ImageView(mContext);
         image.setScaleType(mScaleType);
-        mImageLoader.loadImages(mContext, ads, image);
+        linearLayout.addView(image);
+        mImageLoader.loadImages(mContext, ads, image, position);
         return image;
     }
 
     private VideoView newVideoViewFroUrl(Ads ads) {
+        LinearLayout linearLayout = new LinearLayout(mContext);
         VideoView videoView = new VideoView(mContext);
+        linearLayout.addView(videoView);
         mImageLoader.loadVideoViews(mContext, ads, videoView);
         return videoView;
     }
@@ -944,10 +952,6 @@ public class XBanner extends RelativeLayout {
             mIndicators.clear();
         }
 
-        if (mBannerParentView != null) {
-            mBannerParentView.removeAllViews();
-            mBannerParentView = null;
-        }
         mHandler.removeCallbacks(mRunnable);
         mRunnable = null;
 
@@ -957,19 +961,18 @@ public class XBanner extends RelativeLayout {
         mBannerPageListner = null;
         mImageLoader = null;
 
-        mViewPager.setAdapter(null);
+        binding.viewpager.setAdapter(null);
         try {
             Field f = ViewPager.class.getDeclaredField("mOnPageChangeListeners");
             f.setAccessible(true);
-            f.set(mViewPager, null);
+            f.set(binding.viewpager, null);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
-        mViewPager.removeAllViews();
-        mViewPager = null;
+        binding.viewpager.removeAllViews();
         System.gc();
         System.runFinalization();
 

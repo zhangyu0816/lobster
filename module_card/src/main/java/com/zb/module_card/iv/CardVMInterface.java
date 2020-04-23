@@ -10,6 +10,8 @@ public interface CardVMInterface {
 
     void returnView(View view);
 
+    void exposure(View view);
+
     void leftBtn(View currentView,CardAdapter adapter, int position);
 
     void rightBtn(View currentView,CardAdapter adapter, int position);

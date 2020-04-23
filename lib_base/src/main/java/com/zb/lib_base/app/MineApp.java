@@ -10,11 +10,14 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.zb.lib_base.R;
 import com.zb.lib_base.adaptive.FitScreen;
 import com.zb.lib_base.model.RegisterInfo;
+import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.UIUtils;
 import com.zb.lib_base.views.CutImageView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import androidx.multidex.MultiDex;
@@ -34,6 +37,7 @@ public class MineApp extends MultiDexApplication {
     public static Map<String, Integer> selectMap = new HashMap<>();
     public static Map<String, CutImageView> cutImageViewMap = new HashMap<>();
     public static Typeface type;
+    public static List<VipInfo> vipInfoList = new ArrayList<>();
 
     static {
         //设置全局的Header构建器
@@ -57,6 +61,14 @@ public class MineApp extends MultiDexApplication {
         DisplayUtils.init(this);
         MultiDex.install(this);
         FitScreen.createDesign(getApplicationContext(), H, W);
+
+        for (int i = 0; i < 10; i++) {
+            VipInfo vipInfo = new VipInfo();
+            vipInfo.setPrice((i + 1) * 10);
+            vipInfo.setOriginalPrice((i + 1) * 12);
+            vipInfo.setDayCount((i + 1) * 30);
+            vipInfoList.add(vipInfo);
+        }
     }
 
     public static Context getInstance() {

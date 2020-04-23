@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="15dp"
             app:srcCompat="@mipmap/discover_icon" />
 
     </RelativeLayout>

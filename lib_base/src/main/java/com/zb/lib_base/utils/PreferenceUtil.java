@@ -3,7 +3,6 @@ package com.zb.lib_base.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.preference.PreferenceManager;
 
 /**
  * Preferences value read and write

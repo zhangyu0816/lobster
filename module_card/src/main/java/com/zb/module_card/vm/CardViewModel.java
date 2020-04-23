@@ -28,6 +28,7 @@ import com.zb.lib_base.views.card.CardConfig;
 import com.zb.lib_base.views.card.CardItemTouchHelperCallback;
 import com.zb.lib_base.views.card.OnSwipeListener;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;
 import com.zb.module_card.adapter.CardAdapter;
@@ -63,7 +64,10 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     private ObjectAnimator translate = null;
     private ObjectAnimator alphaA = null;
     private int _direction = 0;
-
+    private List<PairInfo> disLikeList = new ArrayList<>();
+    private CardAdapter disListAdapter;
+    private List<String> imageList = new ArrayList<>();
+    private boolean canReturn = false;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -79,13 +83,13 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     currentView.startAnimation(AnimationUtils.loadAnimation(activity,
                             R.anim.view_left_out));
                     startAnimation(cardFragBinding.ivDislike, MineApp.W / 2f + ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 280);
-                    currentView.postDelayed(() -> cardCallback.swiped(currentView, ItemTouchHelper.LEFT), 500);
+                    currentView.postDelayed(() -> cardCallback.swiped(currentView, ItemTouchHelper.LEFT), 800);
                 } else {
                     // 喜欢
                     currentView.startAnimation(AnimationUtils.loadAnimation(activity,
                             R.anim.view_right_out));
                     startAnimation(cardFragBinding.ivLike, 0 - MineApp.W / 2f - ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 280);
-                    currentView.postDelayed(() -> cardCallback.swiped(currentView, ItemTouchHelper.RIGHT), 500);
+                    currentView.postDelayed(() -> cardCallback.swiped(currentView, ItemTouchHelper.RIGHT), 800);
                 }
             }
         };
@@ -100,7 +104,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
         for (int i = 0; i < 5; i++) {
             PairInfo pairInfo = new PairInfo();
-            pairInfo.setNick("组我吧");
+            pairInfo.setNick("组我吧" + i);
             pairInfo.getImageList().add("http://img01.zuwo.la/img/A/YMXXXX919714-206348_YM0000.jpg");
             pairInfo.getImageList().add("http://img01.zuwo.la/img/A/YMXXXX2350392-sgjdwurnll_YM0000.jpg");
             pairInfo.getImageList().add("http://img01.zuwo.la/img/A/YMXXXX919714-206348_YM0000.jpg");
@@ -122,6 +126,9 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         cardCallback = new CardItemTouchHelperCallback<>(adapter, pairInfoList);
         cardCallback.setOnSwipedListener(this);
         mBinding.setVariable(BR.cardCallback, cardCallback);
+
+        disListAdapter = new CardAdapter<>(activity, R.layout.item_card_image, imageList, this);
+        mBinding.setVariable(BR.adapter, disListAdapter);
     }
 
     @Override
@@ -132,7 +139,16 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void returnView(View view) {
+        if (canReturn && disLikeList.size() > 0) {
+            canReturn = false;
+            PairInfo pairInfo = disLikeList.remove(0);
+            setCardAnimationLeftToRight(pairInfo);
+        }
+    }
 
+    @Override
+    public void exposure(View view) {
+        new VipAdPW(activity, mBinding.getRoot());
     }
 
     @Override
@@ -223,6 +239,15 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     @Override
     public void onSwiped(View view, PairInfo pairInfo, int direction) {
         initAnimation();
+        if (direction == 1) {
+            canReturn = true;
+            disLikeList.add(0, pairInfo);
+            if (disLikeList.size() > 10) {
+                disLikeList.remove(disLikeList.size() - 1);
+            }
+
+        }
+
     }
 
     @Override
@@ -241,6 +266,37 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             pairInfoList.add(pairInfo);
         }
         adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * 出现
+     */
+    private void setCardAnimationLeftToRight(PairInfo pairInfo) {
+        mBinding.setVariable(BR.pairInfo, pairInfo);
+        for (String image : pairInfo.getImageList()) {
+            imageList.add(image);
+        }
+        disListAdapter.notifyDataSetChanged();
+
+        cardFragBinding.cardRelative.startAnimation(AnimationUtils.loadAnimation(activity,
+                R.anim.card_left_out));
+
+        cardFragBinding.cardRelative.postDelayed(() -> {
+            cardFragBinding.cardRelative.setAlpha(1f);
+            cardFragBinding.cardRelative.startAnimation(AnimationUtils.loadAnimation(activity,
+                    R.anim.card_left_in));
+
+            cardFragBinding.cardRelative.postDelayed(() -> {
+                cardFragBinding.cardRelative.setAlpha(0f);
+
+                cardFragBinding.cardRelative.postDelayed(() -> {
+                    canReturn = true;
+                    pairInfoList.add(0, pairInfo);
+                    adapter.notifyDataSetChanged();
+                }, 10);
+            }, 300);
+        }, 50);
+
     }
 
 
