@@ -1,11 +1,13 @@
 package com.zb.lib_base.windows;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.app.abby.xbanner.Ads;
+import com.app.abby.xbanner.ImageLoader;
 import com.app.abby.xbanner.XBanner;
 import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
@@ -80,33 +82,30 @@ public class VipAdPW extends BasePopupWindow {
 
         binding.banner.setImageScaleType(ImageView.ScaleType.FIT_XY)
                 .setAds(adsList)
-                .setImageLoader((context, ads, image, position) -> AdapterBinding.loadImage(image, "", ads.getAdRes(),
-                        ObjectUtils.getDefaultRes(), ObjectUtils.getViewSizeByWidthFromMax(900), (int) (ObjectUtils.getViewSizeByWidthFromMax(900) * 579f / 810f),
-                        false, false, 0, false, 0))
+                .setImageLoader(new ImageLoader() {
+                    @Override
+                    public void loadImages(Context context, Ads ads, ImageView image, int position) {
+                        AdapterBinding.loadImage(image, "", ads.getAdRes(),
+                                ObjectUtils.getDefaultRes(), ObjectUtils.getViewSizeByWidthFromMax(900), (int) (ObjectUtils.getViewSizeByWidthFromMax(900) * 579f / 810f),
+                                false, false, 0, false, 0);
+                    }
+
+                    @Override
+                    public void getPosition(int position) {
+                        if (position > vipAdList.size() - 1)
+                            return;
+                        mBinding.setVariable(BR.vipAd, vipAdList.get(position));
+                    }
+                })
                 .setBannerTypes(XBanner.CIRCLE_INDICATOR_TITLE)
                 .setIndicatorGravity(XBanner.INDICATOR_START)
                 .setDelay(5000)
                 .setUpIndicators(R.drawable.banner_circle_pressed, R.drawable.banner_circle_unpressed)
                 .setUpIndicatorSize(20, 20)
                 .isAutoPlay(true)
+                .setShowBg(true)
                 .start();
-
-        handler.sendEmptyMessage(1);
     }
-
-    private int position = 0;
-    private Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(@NonNull Message msg) {
-            if (msg.what == 1) {
-                mBinding.setVariable(BR.vipAd, vipAdList.get(position % 4));
-                binding.banner.setBannerBg(position % 4);
-                position++;
-                binding.banner.postDelayed(() -> handler.sendEmptyMessage(1), 5000);
-            }
-            return false;
-        }
-    });
 
     @Override
     public void selectIndex(int position) {

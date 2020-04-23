@@ -582,15 +582,25 @@ public class XBanner extends RelativeLayout {
         }
     }
 
+    private boolean showBg = false;
+
+    public XBanner setShowBg(boolean showBg) {
+        this.showBg = showBg;
+        return this;
+    }
+
     public void setBannerBg(int position) {
-        binding.setVariable(BR.position, position);
+        if (showBg) {
+            binding.setVariable(BR.position, position - 1);
+            mImageLoader.getPosition(position - 1);
+        }
     }
 
 
     private void initViewPagerAdapter() {
 
         if (mAdapter == null) {
-            mAdapter = new XBPagerAdapter(mBannerPageListner, mImageCount, mImageLoader);
+            mAdapter = new XBPagerAdapter(mBannerPageListner, mImageCount);
         }
         binding.viewpager.setAdapter(mAdapter);
         mAdapter.setData(mBannerImages);
@@ -599,7 +609,7 @@ public class XBanner extends RelativeLayout {
         } else {
             binding.viewpager.setCurrentItem(0);
         }
-
+        setBannerBg(binding.viewpager.getCurrentItem());
 
         if (mViewPageTransformer != null) {
             binding.viewpager.setPageTransformer(false, mViewPageTransformer);
@@ -677,6 +687,7 @@ public class XBanner extends RelativeLayout {
                         if (current == mImageCount + 1) {
                             binding.viewpager.setCurrentItem(1, false);
                         }
+                        setBannerBg(binding.viewpager.getCurrentItem());
                         break;
                     case ViewPager.SCROLL_STATE_IDLE:
                         if (mBannerPageListner != null) {
@@ -690,7 +701,7 @@ public class XBanner extends RelativeLayout {
                         } else if (current == 0) {
                             binding.viewpager.setCurrentItem(mImageCount, false);
                         }
-
+                        setBannerBg(binding.viewpager.getCurrentItem());
                         break;
                     default:
                         break;
@@ -890,7 +901,7 @@ public class XBanner extends RelativeLayout {
     }
 
 
-    private static class ViewPagerRunnable implements Runnable {
+    private class ViewPagerRunnable implements Runnable {
         //avoid memory leak
         private WeakReference<ViewPager> mViewPager;
         int count;
@@ -914,6 +925,7 @@ public class XBanner extends RelativeLayout {
                         mViewPager.get().setCurrentItem(current + 1);
                         mHandler.postDelayed(this, delaytime);
                     }
+                    XBanner.this.setBannerBg(mViewPager.get().getCurrentItem());
                 }
 
             }

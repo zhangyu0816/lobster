@@ -17,14 +17,11 @@ public class XBPagerAdapter extends PagerAdapter {
     XBanner.BannerPageListener mBannerPageListner;
     int mImageCount;
     View view;
-    ImageLoader mImageLoader;
 
-
-    XBPagerAdapter(XBanner.BannerPageListener listener, int imagecount, ImageLoader mImageLoader) {
+    XBPagerAdapter(XBanner.BannerPageListener listener, int imagecount) {
         mData = new ArrayList<>();
         mBannerPageListner = listener;
         mImageCount = imagecount;
-        this.mImageLoader = mImageLoader;
     }
 
     /**
@@ -70,8 +67,6 @@ public class XBPagerAdapter extends PagerAdapter {
             ((ViewGroup) mData.get(position).getParent()).removeView(mData.get(position));
         }
         container.addView(mData.get(position));
-
-        mImageLoader.getPosition(position);
 
         view = mData.get(position);
         view.setOnClickListener(new View.OnClickListener() {
