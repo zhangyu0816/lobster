@@ -36,6 +36,7 @@ public class MemberInfo extends BaseObservable {
     private int onlineStatus = 1;//  0未在线  1在线
     private int attentionQuantity;//关注数量
     private int fansQuantity;// 粉丝数量
+    private int beLikeQuantity;// 粉丝数量
 
     private String lastJoinTime = "";
     private int newDycType; // 最新的动态类型
@@ -375,5 +376,15 @@ public class MemberInfo extends BaseObservable {
     public void setNewDycCreateTime(String newDycCreateTime) {
         this.newDycCreateTime = newDycCreateTime;
         notifyPropertyChanged(BR.newDycCreateTime);
+    }
+
+    @Bindable
+    public int getBeLikeQuantity() {
+        return beLikeQuantity;
+    }
+
+    public void setBeLikeQuantity(int beLikeQuantity) {
+        this.beLikeQuantity = beLikeQuantity;
+        notifyPropertyChanged(BR.beLikeQuantity);
     }
 }

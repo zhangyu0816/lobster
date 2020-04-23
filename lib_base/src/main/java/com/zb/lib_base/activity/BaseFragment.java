@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.alibaba.android.arouter.launcher.ARouter;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,7 +23,7 @@ public abstract class BaseFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = (AppCompatActivity) getActivity();
-
+        ARouter.getInstance().inject(this);
     }
 
     @Nullable

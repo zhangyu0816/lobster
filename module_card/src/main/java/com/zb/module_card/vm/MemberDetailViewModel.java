@@ -83,8 +83,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
 
     private void initFragments() {
         fragments.clear();
-        fragments.add(FragmentUtils.getCardMemberDiscoverFragment());
-        fragments.add(FragmentUtils.getCardMemberVideoFragment());
+        fragments.add(FragmentUtils.getCardMemberDiscoverFragment(userId));
+        fragments.add(FragmentUtils.getCardMemberVideoFragment(userId));
         detailBinding.viewPage.setAdapter(new FragmentAdapter(activity.getSupportFragmentManager(), fragments));
         initTabLayout(new String[]{"动态", "小视频"}, detailBinding.tabLayout, detailBinding.viewPage, R.color.black_4d4, R.color.black_c3b);
     }

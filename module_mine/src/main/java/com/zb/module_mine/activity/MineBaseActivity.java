@@ -1,9 +1,10 @@
-package com.zb.module_mine;
+package com.zb.module_mine.activity;
 
 import android.os.Bundle;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.utils.StatusBarUtil;
+import com.zb.module_mine.R;
 
 public abstract class MineBaseActivity extends BaseActivity {
     @Override
@@ -11,6 +12,5 @@ public abstract class MineBaseActivity extends BaseActivity {
         setTheme(R.style.MineTheme);
         super.onCreate(savedInstanceState);
         StatusBarUtil.statusBarLightMode(this);
-//        StatusBarUtil.setLayoutPadding(this, ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0));
     }
 }

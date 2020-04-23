@@ -30,7 +30,6 @@ public class FragmentUtils {
     }
 
 
-
     // 卡片
     public static Fragment getCardFragment() {
         Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Card_Fragment).navigation();
@@ -38,14 +37,14 @@ public class FragmentUtils {
     }
 
     // 用户详情 -- 动态
-    public static Fragment getCardMemberDiscoverFragment() {
-        Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Card_Member_Discover_Fragment).navigation();
+    public static Fragment getCardMemberDiscoverFragment(long userId) {
+        Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Card_Member_Discover_Fragment).withLong("userId", userId).navigation();
         return fragment;
     }
 
     // 用户详情 -- 小视频
-    public static Fragment getCardMemberVideoFragment() {
-        Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Card_Member_Video_Fragment).navigation();
+    public static Fragment getCardMemberVideoFragment(long userId) {
+        Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Card_Member_Video_Fragment).withLong("userId", userId).navigation();
         return fragment;
     }
 
@@ -58,6 +57,18 @@ public class FragmentUtils {
     // 我的
     public static Fragment getMineFragment() {
         Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Mine_Fragment).navigation();
+        return fragment;
+    }
+
+    // 我的 -- 动态
+    public static Fragment getMineDiscoverFragment(long userId) {
+        Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Mine_Discover_Fragment).withLong("userId", userId).navigation();
+        return fragment;
+    }
+
+    // 我的 -- 小视频
+    public static Fragment getMineVideoFragment(long userId) {
+        Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Mine_Video_Fragment).withLong("userId", userId).navigation();
         return fragment;
     }
 }
