@@ -13,6 +13,10 @@
             name="viewModel"
             type="com.zb.module_mine.vm.MineViewModel" />
 
+        <variable
+            name="hasNewBeLike"
+            type="boolean" />
+
     </data>
 
     <RelativeLayout
@@ -180,15 +184,30 @@
                                 android:gravity="center"
                                 android:orientation="vertical">
 
-                                <TextView
+                                <RelativeLayout
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:singleLine="true"
-                                    android:text='@{String.format("%d",viewModel.memberInfo.beLikeQuantity)}'
-                                    android:textColor="@color/black_252"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold"
-                                    tools:text="3124125" />
+                                    android:layout_height="wrap_content">
+
+                                    <TextView
+                                        android:id="@+id/tv_beLike"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:singleLine="true"
+                                        android:text='@{String.format("%d",viewModel.memberInfo.beLikeQuantity)}'
+                                        android:textColor="@color/black_252"
+                                        android:textSize="18sp"
+                                        android:textStyle="bold"
+                                        tools:text="3124125" />
+
+                                    <TextView
+                                        android:layout_width="5dp"
+                                        android:layout_height="5dp"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_alignEnd="@+id/tv_beLike"
+                                        android:background="@drawable/circle_red"
+                                        android:visibility="@{hasNewBeLike?View.VISIBLE:View.GONE}"/>
+                                </RelativeLayout>
+
 
                                 <TextView
                                     android:layout_width="wrap_content"
@@ -212,6 +231,18 @@
                             android:textSize="14sp"
                             android:textStyle="bold"
                             tools:text="为了减肥了我劳务纠纷另外二九六我来我家 " />
+
+                        <ImageView
+                            onClickDelayed="@{viewModel.openVip}"
+                            viewHeightSize="@{ObjectUtils.getVipBgHeight(0.95f)}"
+                            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.95f)}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/iv_image"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="15dp"
+                            android:background="@mipmap/vip_long_icon"
+                            android:visibility="@{viewModel.memberInfo.memberType==2?View.GONE:View.VISIBLE}" />
                     </RelativeLayout>
                 </androidx.appcompat.widget.Toolbar>
 

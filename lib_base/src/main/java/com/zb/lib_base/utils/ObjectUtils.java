@@ -35,6 +35,10 @@ public class ObjectUtils {
         return (int) (getViewSizeByHeight(scale) * 345f / 510f);
     }
 
+    public static  int getVipBgHeight(float scale){
+        return (int) (getViewSizeByWidth(scale)*254f/1035f);
+    }
+
     // 默认图片
     public static int getDefaultRes() {
         return R.mipmap.empty_icon;
