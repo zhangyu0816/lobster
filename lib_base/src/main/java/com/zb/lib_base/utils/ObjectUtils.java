@@ -27,6 +27,16 @@ public class ObjectUtils {
         return (int) (MineApp.H * height / 1920f);
     }
 
+    // 根据屏幕宽获取尺寸
+    public static int getViewSizeByWidthFromMax750(int width) {
+        return (int) (MineApp.W * width / 750f);
+    }
+
+    // 根据屏幕高获取尺寸
+    public static int getViewSizeByHeightFromMax1334(int width, int height) {
+        return (int) (getViewSizeByWidthFromMax750(width) * (float) height / (float) width);
+    }
+
     public static int getLogoHeight(float scale) {
         return (int) (getViewSizeByWidth(scale) * 510f / 345f);
     }
@@ -42,17 +52,14 @@ public class ObjectUtils {
     public static int getVipIntroHeight() {
         return (int) (MineApp.W * 2111f / 1125f);
     }
+
     public static int getVipIntroBgHeight(float scale) {
         return (int) (getViewSizeByWidth(scale) * 458f / 1035f);
     }
+
     // 默认图片
     public static int getDefaultRes() {
         return R.mipmap.empty_icon;
-    }
-
-    // 上传图片
-    public static int getAddImageRes() {
-        return R.mipmap.add_image_icon;
     }
 
     // 线条颜色

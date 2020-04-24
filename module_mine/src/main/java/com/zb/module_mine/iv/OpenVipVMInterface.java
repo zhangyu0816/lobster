@@ -4,7 +4,7 @@ import android.view.View;
 
 public interface OpenVipVMInterface {
 
-    void getVip(View view);
+    void getVip(int index);
 
     void selectIndex(int index);
 }

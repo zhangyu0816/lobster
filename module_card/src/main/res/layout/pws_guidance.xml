@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="pw"
+            type="com.zb.lib_base.windows.BasePopupWindow" />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:onClick="@{v->pw.selectIndex(position)}"
+        android:paddingTop="20dp">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/btn_bg_black_efe_radius40"
+            android:drawableStart="@mipmap/address_icon"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="温州市"
+            android:textColor="@color/black_252"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:padding="15dp"
+            android:visibility="invisible"
+            app:srcCompat="@mipmap/exposure_icon" />
+
+        <LinearLayout
+            android:id="@+id/card_relative"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/textView"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                viewHeightSize="@{ObjectUtils.getLogoHeight(0.92f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.92f)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <View
+                    viewHeightSize="@{ObjectUtils.getLogoHeight(0.92f)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.92f)}"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true" />
+
+                <ImageView
+                    viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(654,741)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(654)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="@mipmap/guidance_left"
+                    android:visibility="@{position==1?View.VISIBLE:View.GONE}" />
+
+                <ImageView
+                    viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(607,696)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(607)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp"
+                    android:background="@mipmap/guidance_right"
+                    android:visibility="@{position==2?View.VISIBLE:View.GONE}" />
+
+                <ImageView
+                    viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(474,509)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(474)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="44dp"
+                    android:background="@mipmap/guidance_info"
+                    android:visibility="@{position==3?View.VISIBLE:View.GONE}" />
+
+                <ImageView
+                    viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(466,280)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(466)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/iv_super_like"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="-55dp"
+                    android:background="@mipmap/guidance_return"
+                    android:visibility="@{position==4?View.VISIBLE:View.GONE}" />
+
+                <ImageView
+                    android:id="@+id/iv_super_like"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(480,235)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(480)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@mipmap/guidance_super"
+                    android:visibility="@{position==5?View.VISIBLE:View.INVISIBLE}" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <ImageView
+            viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(572,217)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(572)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="10dp"
+            android:background="@mipmap/guidance_exposure"
+            android:visibility="@{position==6?View.VISIBLE:View.GONE}" />
+    </RelativeLayout>
+</layout>

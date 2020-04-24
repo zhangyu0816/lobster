@@ -16,6 +16,7 @@
     </data>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -116,7 +117,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="20dp"
                         android:layout_marginEnd="15dp"
-                        android:text="已开通"
+                        android:text='@{viewModel.memberInfo.memberExpireTime.isEmpty()?"":viewModel.memberInfo.memberExpireTime.substring(0,10)}'
                         android:textColor="@color/white_cc"
                         android:textSize="16sp"
                         android:textStyle="bold"
@@ -134,7 +135,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        onClickDelayed="@{viewModel::getVip}"
+                        onClickDelayed="@{v->viewModel.getVip(0)}"
                         android:layout_width="wrap_content"
                         android:layout_height="38dp"
                         android:layout_below="@+id/tv_nick"
@@ -191,7 +192,7 @@
                     android:layout_marginBottom="15dp" />
 
                 <TextView
-                    onClickDelayed="@{viewModel::getVip}"
+                    onClickDelayed="@{v->viewModel.getVip(1)}"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:background="@drawable/gradient_purple_6d5_ae7"

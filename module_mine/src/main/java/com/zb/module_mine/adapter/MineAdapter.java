@@ -24,6 +24,10 @@ public class MineAdapter<T> extends BindingItemAdapter<T> {
         this.selectIndex = selectIndex;
     }
 
+    public int getSelectIndex() {
+        return selectIndex;
+    }
+
     @Override
     protected void onBind(RecyclerHolder<ViewDataBinding> holder, T t, int position) {
         holder.binding.setVariable(BR.item, t);

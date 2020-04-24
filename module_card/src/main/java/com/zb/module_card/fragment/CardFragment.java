@@ -1,11 +1,13 @@
 package com.zb.module_card.fragment;
 
+
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseFragment;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;
 import com.zb.module_card.vm.CardViewModel;
+import com.zb.module_card.windows.GuidancePW;
 
 @Route(path = RouteUtils.Card_Fragment)
 public class CardFragment extends BaseFragment {
@@ -22,7 +24,6 @@ public class CardFragment extends BaseFragment {
         viewModel = new CardViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
-
 
     }
 
