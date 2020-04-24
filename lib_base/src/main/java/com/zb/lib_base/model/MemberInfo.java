@@ -1,11 +1,14 @@
 package com.zb.lib_base.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.zb.lib_base.BR;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
-public class MemberInfo extends BaseObservable {
+public class MemberInfo extends BaseObservable implements Parcelable {
 
     private long userId; // userId
     private String nick = ""; // 昵称
@@ -57,6 +60,57 @@ public class MemberInfo extends BaseObservable {
     // 专享视频图片 14 (未使用)
     // 专享视频图文 15 (未使用)
     private String newDycCreateTime = ""; // 最新创建时间
+
+    public MemberInfo() {
+    }
+
+    protected MemberInfo(Parcel in) {
+        userId = in.readLong();
+        nick = in.readString();
+        remark = in.readString();
+        image = in.readString();
+        personalitySign = in.readString();
+        birthday = in.readString();
+        sex = in.readInt();
+        height = in.readInt();
+        constellation = in.readInt();
+        age = in.readInt();
+        job = in.readString();
+        provinceId = in.readLong();
+        cityId = in.readLong();
+        idAttest = in.readInt();
+        singleImage = in.readString();
+        rstatus = in.readInt();
+        popularity = in.readInt();
+        rentQuantity = in.readInt();
+        memberType = in.readInt();
+        memberExpireTime = in.readString();
+        totalOrderNumber = in.readInt();
+        surplusOrderNumber = in.readInt();
+        totalLookPrivateNumber = in.readInt();
+        surplusLookPrivateNumber = in.readInt();
+        publicTag = in.readString();
+        authType = in.readInt();
+        onlineStatus = in.readInt();
+        attentionQuantity = in.readInt();
+        fansQuantity = in.readInt();
+        beLikeQuantity = in.readInt();
+        lastJoinTime = in.readString();
+        newDycType = in.readInt();
+        newDycCreateTime = in.readString();
+    }
+
+    public static final Creator<MemberInfo> CREATOR = new Creator<MemberInfo>() {
+        @Override
+        public MemberInfo createFromParcel(Parcel in) {
+            return new MemberInfo(in);
+        }
+
+        @Override
+        public MemberInfo[] newArray(int size) {
+            return new MemberInfo[size];
+        }
+    };
 
     @Bindable
     public long getUserId() {
@@ -386,5 +440,47 @@ public class MemberInfo extends BaseObservable {
     public void setBeLikeQuantity(int beLikeQuantity) {
         this.beLikeQuantity = beLikeQuantity;
         notifyPropertyChanged(BR.beLikeQuantity);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(userId);
+        dest.writeString(nick);
+        dest.writeString(remark);
+        dest.writeString(image);
+        dest.writeString(personalitySign);
+        dest.writeString(birthday);
+        dest.writeInt(sex);
+        dest.writeInt(height);
+        dest.writeInt(constellation);
+        dest.writeInt(age);
+        dest.writeString(job);
+        dest.writeLong(provinceId);
+        dest.writeLong(cityId);
+        dest.writeInt(idAttest);
+        dest.writeString(singleImage);
+        dest.writeInt(rstatus);
+        dest.writeInt(popularity);
+        dest.writeInt(rentQuantity);
+        dest.writeInt(memberType);
+        dest.writeString(memberExpireTime);
+        dest.writeInt(totalOrderNumber);
+        dest.writeInt(surplusOrderNumber);
+        dest.writeInt(totalLookPrivateNumber);
+        dest.writeInt(surplusLookPrivateNumber);
+        dest.writeString(publicTag);
+        dest.writeInt(authType);
+        dest.writeInt(onlineStatus);
+        dest.writeInt(attentionQuantity);
+        dest.writeInt(fansQuantity);
+        dest.writeInt(beLikeQuantity);
+        dest.writeString(lastJoinTime);
+        dest.writeInt(newDycType);
+        dest.writeString(newDycCreateTime);
     }
 }

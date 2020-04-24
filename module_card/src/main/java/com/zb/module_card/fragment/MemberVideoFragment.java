@@ -4,7 +4,6 @@ import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseFragment;
 import com.zb.lib_base.utils.RouteUtils;
-import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;
 import com.zb.module_card.vm.MemberVideoViewModel;

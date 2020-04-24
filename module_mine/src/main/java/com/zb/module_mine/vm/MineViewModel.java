@@ -33,6 +33,6 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
 
     @Override
     public void openVip(View view) {
-
+        ActivityUtils.getMineOpenVip(memberInfo);
     }
 }

@@ -1,8 +1,6 @@
 package com.zb.lib_base.windows;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -21,7 +19,6 @@ import com.zb.lib_base.utils.ObjectUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class VipAdPW extends BasePopupWindow {

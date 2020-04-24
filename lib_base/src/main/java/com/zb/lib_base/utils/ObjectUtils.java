@@ -35,10 +35,16 @@ public class ObjectUtils {
         return (int) (getViewSizeByHeight(scale) * 345f / 510f);
     }
 
-    public static  int getVipBgHeight(float scale){
-        return (int) (getViewSizeByWidth(scale)*254f/1035f);
+    public static int getVipBgHeight(float scale) {
+        return (int) (getViewSizeByWidth(scale) * 254f / 1035f);
     }
 
+    public static int getVipIntroHeight() {
+        return (int) (MineApp.W * 2111f / 1125f);
+    }
+    public static int getVipIntroBgHeight(float scale) {
+        return (int) (getViewSizeByWidth(scale) * 458f / 1035f);
+    }
     // 默认图片
     public static int getDefaultRes() {
         return R.mipmap.empty_icon;

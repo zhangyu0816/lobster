@@ -13,26 +13,22 @@ import androidx.databinding.ViewDataBinding;
 public class MineAdapter<T> extends BindingItemAdapter<T> {
 
     private BaseViewModel viewModel;
-    private int selectImageIndex = 0;
+    private int selectIndex = -1;
 
     public MineAdapter(AppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
         super(activity, layoutId, list);
         this.viewModel = viewModel;
     }
 
-    public int getSelectImageIndex() {
-        return selectImageIndex;
-    }
-
-    public void setSelectImageIndex(int selectImageIndex) {
-        this.selectImageIndex = selectImageIndex;
+    public void setSelectIndex(int selectIndex) {
+        this.selectIndex = selectIndex;
     }
 
     @Override
     protected void onBind(RecyclerHolder<ViewDataBinding> holder, T t, int position) {
-//        holder.binding.setVariable(BR.item, t);
-//        holder.binding.setVariable(BR.position, position);
-
+        holder.binding.setVariable(BR.item, t);
+        holder.binding.setVariable(BR.position, position);
+        holder.binding.setVariable(BR.isSelect,position == selectIndex);
         if (viewModel != null) {
             holder.binding.setVariable(BR.viewModel, viewModel);
         }

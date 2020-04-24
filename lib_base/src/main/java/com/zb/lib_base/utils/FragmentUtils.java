@@ -59,16 +59,4 @@ public class FragmentUtils {
         Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Mine_Fragment).navigation();
         return fragment;
     }
-
-    // 我的 -- 动态
-    public static Fragment getMineDiscoverFragment(long userId) {
-        Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Mine_Discover_Fragment).withLong("userId", userId).navigation();
-        return fragment;
-    }
-
-    // 我的 -- 小视频
-    public static Fragment getMineVideoFragment(long userId) {
-        Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Mine_Video_Fragment).withLong("userId", userId).navigation();
-        return fragment;
-    }
 }

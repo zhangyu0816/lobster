@@ -1,6 +1,7 @@
 package com.zb.lib_base.utils;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.zb.lib_base.model.MemberInfo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,6 +24,10 @@ public class ActivityUtils {
     }
     /*********************** 对话 **************************/
     /*********************** 我的 **************************/
+    // 用户详情
+    public static void getMineOpenVip(MemberInfo memberInfo) {
+        ARouter.getInstance().build(RouteUtils.Mine_Open_Vip).withParcelable("memberInfo", memberInfo).navigation();
+    }
 
 
     /*********************** 注册 **************************/

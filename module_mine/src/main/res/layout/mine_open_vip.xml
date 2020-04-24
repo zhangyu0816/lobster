@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_mine.vm.OpenVipViewModel" />
+
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/gradient_black_bg"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="22dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        onClickDelayed="@{viewModel::back}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        app:srcCompat="@mipmap/back_white_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="我的权益"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp">
+
+                    <ImageView
+                        viewHeightSize="@{ObjectUtils.getVipIntroBgHeight(0.95f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.95f)}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@mipmap/vip_intro_bg_icon" />
+
+                    <RelativeLayout
+                        android:id="@+id/image_relative"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="20dp">
+
+                        <View
+                            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+                            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:background="@drawable/circle_white" />
+
+                        <ImageView
+                            defaultRes="@{ObjectUtils.getDefaultRes()}"
+                            imageUrl="@{viewModel.memberInfo.image}"
+                            isCircle="@{true}"
+                            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
+                            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/tv_nick"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_toStartOf="@+id/tv_open"
+                        android:layout_toEndOf="@+id/image_relative"
+                        android:singleLine="true"
+                        android:text='@{String.format(@string/member_nick,viewModel.memberInfo.nick)}'
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        tools:text="你好！租我吧" />
+
+                    <TextView
+                        android:id="@+id/tv_open"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="15dp"
+                        android:text="已开通"
+                        android:textColor="@color/white_cc"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:visibility="@{viewModel.memberInfo.memberType==2?View.VISIBLE:View.GONE}" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_nick"
+                        android:layout_marginTop="10dp"
+                        android:layout_toEndOf="@+id/image_relative"
+                        android:lineSpacingExtra="3dp"
+                        android:text="开通VIP特权\n专享超值权益"
+                        android:textColor="@color/white_cc"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        onClickDelayed="@{viewModel::getVip}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="38dp"
+                        android:layout_below="@+id/tv_nick"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="15dp"
+                        android:background="@drawable/gradient_yellow_ffc_ff9"
+                        android:gravity="center"
+                        android:paddingStart="25dp"
+                        android:paddingEnd="25dp"
+                        android:text="立即开通"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:visibility="@{viewModel.memberInfo.memberType==2?View.GONE:View.VISIBLE}" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <ImageView
+                viewHeightSize="@{ObjectUtils.getVipIntroHeight()}"
+                viewWidthSize="@{-1}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-30dp"
+                android:background="@mipmap/vip_intro_icon" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@color/black_efe" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="15dp"
+                android:visibility="@{viewModel.memberInfo.memberType==2?View.GONE:View.VISIBLE}">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="VIP套餐"
+                    android:textColor="#827F9AFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <com.zb.lib_base.views.MyRecyclerView
+                    adapter="@{viewModel.adapter}"
+                    recyclerType="@{1}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp" />
+
+                <TextView
+                    onClickDelayed="@{viewModel::getVip}"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/gradient_purple_6d5_ae7"
+                    android:gravity="center"
+                    android:text="获取VIP特权"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

@@ -2,8 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zb.module_mine">
 
-    <application  android:theme="@style/MineTheme">
-
+    <application android:theme="@style/MineTheme">
+        <activity
+            android:name=".activity.OpenVipActivity" />
     </application>
 
 </manifest>
