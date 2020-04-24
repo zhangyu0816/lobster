@@ -34,6 +34,7 @@ import com.zb.module_card.R;
 import com.zb.module_card.adapter.CardAdapter;
 import com.zb.module_card.databinding.CardFragBinding;
 import com.zb.module_card.iv.CardVMInterface;
+import com.zb.module_card.windows.CountUsedPW;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -139,11 +140,12 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void returnView(View view) {
-        if (canReturn && disLikeList.size() > 0) {
-            canReturn = false;
-            PairInfo pairInfo = disLikeList.remove(0);
-            setCardAnimationLeftToRight(pairInfo);
-        }
+//        if (canReturn && disLikeList.size() > 0) {
+//            canReturn = false;
+//            PairInfo pairInfo = disLikeList.remove(0);
+//            setCardAnimationLeftToRight(pairInfo);
+//        }
+        new CountUsedPW( activity, mBinding.getRoot(), 1);
     }
 
     @Override
@@ -193,7 +195,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     @Override
     public void superLike(View view) {
         super.superLike(view);
-
+//        new SuperLikePW(activity, mBinding.getRoot());
+        new CountUsedPW( activity, mBinding.getRoot(), 2);
     }
 
 

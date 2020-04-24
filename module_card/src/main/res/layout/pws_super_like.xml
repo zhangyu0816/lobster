@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="myHead"
+            type="String" />
+
+        <variable
+            name="otherHead"
+            type="String" />
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.5"
+            android:background="@android:color/black" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="55dp"
+            android:layout_marginEnd="55dp"
+            android:paddingBottom="10dp"
+            android:background="@mipmap/pws_super_like">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="60dp"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="-10dp">
+
+                    <View
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/circle_white" />
+
+                    <ImageView
+                        imageUrl="@{otherHead}"
+                        isCircle="@{true}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.24f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.24f)}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="-10dp">
+
+                    <View
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:background="@drawable/circle_white" />
+
+                    <ImageView
+                        imageUrl="@{myHead}"
+                        isCircle="@{true}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.24f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.24f)}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <ImageView
+                imageRes="@{ObjectUtils.getSuperLikeRes()}"
+                isCircle="@{true}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(150)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(150)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_centerHorizontal="true"/>
+        </RelativeLayout>
+    </RelativeLayout>
+</layout>

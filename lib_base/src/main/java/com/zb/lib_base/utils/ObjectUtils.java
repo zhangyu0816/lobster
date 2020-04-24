@@ -61,6 +61,10 @@ public class ObjectUtils {
     public static int getDefaultRes() {
         return R.mipmap.empty_icon;
     }
+    // 超级喜欢
+    public static int getSuperLikeRes() {
+        return R.mipmap.super_like_icon;
+    }
 
     // 线条颜色
     public static int getLineColor() {
