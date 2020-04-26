@@ -8,6 +8,7 @@ import com.app.abby.xbanner.XBanner;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.model.DiscoverInfo;
@@ -15,7 +16,9 @@ import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.model.Reward;
 import com.zb.lib_base.model.WalletInfo;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.ObjectUtils;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.SelectorPW;
 import com.zb.module_home.BR;
@@ -41,23 +44,31 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     private List<Reward> rewardList = new ArrayList<>();
     public HomeAdapter rewardAdapter;
     private WalletInfo walletInfo = new WalletInfo();
-    private List< GiftInfo > giftInfoList = new ArrayList<>();
+    private List<GiftInfo> giftInfoList = new ArrayList<>();
 
     public DiscoverDetailViewModel() {
-        selectorList.add("超级喜欢");
-        selectorList.add("举报");
-        selectorList.add("分享");
+
 
         discoverInfo = new DiscoverInfo();
         discoverInfo.setRewardNum(2);
+        discoverInfo.setUserId(123456l);
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 6; i++) {
             reviewList.add(new Review());
             rewardList.add(new Reward());
             GiftInfo giftInfo = new GiftInfo();
-            giftInfo.setGiftName("礼物"+i);
+            giftInfo.setGiftName("礼物" + i);
             giftInfoList.add(giftInfo);
         }
+        if (discoverInfo.getUserId() == BaseActivity.userId) {
+            selectorList.add("分享");
+            selectorList.add("删除");
+        } else {
+            selectorList.add("超级喜欢");
+            selectorList.add("举报");
+            selectorList.add("分享");
+        }
+
     }
 
     @Override
@@ -85,12 +96,20 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     public void more(View view) {
         super.more(view);
         new SelectorPW(activity, mBinding.getRoot(), selectorList, position -> {
-            if (position == 0) {
+            if (discoverInfo.getUserId() == BaseActivity.userId) {
+                if (position == 0) {
 
-            } else if (position == 1) {
+                } else if (position == 1) {
 
-            } else if (position == 2) {
+                }
+            } else {
+                if (position == 0) {
 
+                } else if (position == 1) {
+
+                } else if (position == 2) {
+
+                }
             }
         });
     }
@@ -148,6 +167,11 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 
     @Override
     public void selectGift(View view) {
-        new GiftPW( activity, mBinding.getRoot(),  walletInfo,  giftInfoList);
+        new GiftPW(activity, mBinding.getRoot(), walletInfo, giftInfoList);
+    }
+
+    @Override
+    public void toRewardList(View view) {
+        ActivityUtils.getHomeRewardList(discoverInfo.getFriendDynId());
     }
 }

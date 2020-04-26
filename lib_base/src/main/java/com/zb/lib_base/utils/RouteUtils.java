@@ -9,6 +9,7 @@ public class RouteUtils {
     public static final String Home_Video_Fragment = "/home/VideoFragment";
     public static final String Home_Publish_image = "/home/PublishImageActivity";
     public static final String Home_Discover_Detail = "/home/DiscoverDetailActivity";
+    public static final String Home_Reward_List = "/home/RewardListActivity";
 
 
     /*********************** 卡片 **************************/

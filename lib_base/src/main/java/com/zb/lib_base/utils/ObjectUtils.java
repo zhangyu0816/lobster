@@ -1,5 +1,7 @@
 package com.zb.lib_base.utils;
 
+import android.graphics.drawable.Drawable;
+
 import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
 
@@ -19,12 +21,12 @@ public class ObjectUtils {
 
     // 根据屏幕宽获取尺寸
     public static int getViewSizeByWidthFromMax(int width) {
-        return (int) (MineApp.W * (float)width / 1080f);
+        return (int) (MineApp.W * (float) width / 1080f);
     }
 
     // 根据屏幕高获取尺寸
     public static int getViewSizeByHeightFromMax(int height) {
-        return (int) (MineApp.H * (float)height / 1920f);
+        return (int) (MineApp.H * (float) height / 1920f);
     }
 
     // 根据屏幕宽获取尺寸
@@ -61,6 +63,7 @@ public class ObjectUtils {
     public static int getDefaultRes() {
         return R.mipmap.empty_icon;
     }
+
     // 超级喜欢
     public static int getSuperLikeRes() {
         return R.mipmap.super_like_icon;
@@ -86,4 +89,14 @@ public class ObjectUtils {
         return filePath.contains(".mp4");
     }
 
+
+    public static Drawable getRanking(int position) {
+        if (position == 0) {
+            return MineApp.getInstance().getResources().getDrawable(R.mipmap.reward_ranking_1);
+        } else if (position == 1) {
+            return MineApp.getInstance().getResources().getDrawable(R.mipmap.reward_ranking_2);
+        } else {
+            return MineApp.getInstance().getResources().getDrawable(R.mipmap.reward_ranking_3);
+        }
+    }
 }

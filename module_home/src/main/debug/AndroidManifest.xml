@@ -36,6 +36,7 @@
             android:name=".activity.PublishImageActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".activity.DiscoverDetailActivity" />
+        <activity android:name=".activity.RewardListActivity" />
     </application>
 
 </manifest>

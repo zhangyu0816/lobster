@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.zb.lib_base.R;
 import com.zb.lib_base.databinding.PwsPerformBinding;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 
 import java.io.File;
@@ -27,6 +28,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public ViewDataBinding mBinding;
     public static AppCompatActivity activity;
+    public static long userId = 123456l;
+    public static String sessionId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +39,17 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         ARouter.getInstance().inject(this);
         initUI();
+//        update();
     }
 
     public abstract int getRes();
 
     public abstract void initUI();
+
+    public void update() {
+        userId = PreferenceUtil.readLongValue(activity, "userId");
+        sessionId = PreferenceUtil.readStringValue(activity, "sessionId");
+    }
 
     @Override
     protected void onDestroy() {

@@ -7,4 +7,6 @@ public interface MineVMInterface {
     void publishDiscover(View view);
 
     void openVip(View view);
+
+    void toMemberDetail(View view);
 }

@@ -25,7 +25,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        mBinding.setVariable(BR.hasNewBeLike,false);
+        mBinding.setVariable(BR.hasNewBeLike, false);
     }
 
     @Override
@@ -36,5 +36,9 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     @Override
     public void openVip(View view) {
         ActivityUtils.getMineOpenVip(memberInfo);
+    }
+
+    @Override
+    public void toMemberDetail(View view) {
     }
 }
