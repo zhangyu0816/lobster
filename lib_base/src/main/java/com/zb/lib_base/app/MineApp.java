@@ -37,7 +37,10 @@ public class MineApp extends MultiDexApplication {
     public static Map<String, Integer> selectMap = new HashMap<>();
     public static Map<String, CutImageView> cutImageViewMap = new HashMap<>();
     public static Typeface type;
+    public static Typeface simplifiedType;
     public static List<VipInfo> vipInfoList = new ArrayList<>();
+    public static String logo="http://img01.zuwo.la/img/A/YMXXXX919714-206348_YM0000.jpg";
+    public static String logo1="http://img01.zuwo.la/img/A/YMXXXX2350392-sgjdwurnll_YM0000.jpg";
 
     static {
         //设置全局的Header构建器
@@ -56,6 +59,7 @@ public class MineApp extends MultiDexApplication {
         W = getApplicationContext().getResources().getDisplayMetrics().widthPixels;
         H = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
         type = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/semibold.ttf");
+        simplifiedType = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/simplified.ttf");
         initRouter(this);
         initRealm();
         DisplayUtils.init(this);

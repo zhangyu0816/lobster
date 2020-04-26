@@ -19,12 +19,12 @@ public class ObjectUtils {
 
     // 根据屏幕宽获取尺寸
     public static int getViewSizeByWidthFromMax(int width) {
-        return (int) (MineApp.W * width / 1080f);
+        return (int) (MineApp.W * (float)width / 1080f);
     }
 
     // 根据屏幕高获取尺寸
     public static int getViewSizeByHeightFromMax(int height) {
-        return (int) (MineApp.H * height / 1920f);
+        return (int) (MineApp.H * (float)height / 1920f);
     }
 
     // 根据屏幕宽获取尺寸

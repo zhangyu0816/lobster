@@ -14,7 +14,7 @@ import io.realm.Realm;
 
 public class MainActivity extends AppBaseActivity {
     private TagDb tagDb;
-
+    private  MainViewModel viewModel;
     @Override
     public int getRes() {
         return R.layout.ac_main;
@@ -24,7 +24,7 @@ public class MainActivity extends AppBaseActivity {
     public void initUI() {
         fitComprehensiveScreen();
         tagDb = new TagDb(Realm.getDefaultInstance());
-        MainViewModel viewModel = new MainViewModel();
+         viewModel = new MainViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
 
@@ -42,5 +42,11 @@ public class MainActivity extends AppBaseActivity {
             } catch (Exception e) {
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.stopAnimator();
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -14,6 +15,11 @@
         <variable
             name="index"
             type="Integer" />
+
+        <variable
+            name="otherHead"
+            type="String" />
+
     </data>
 
     <RelativeLayout
@@ -89,5 +95,79 @@
                 android:textColor="@color/black_3e4"
                 android:textSize="12sp" />
         </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/remind_relative"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/linearLayout2"
+            android:layout_alignParentEnd="true"
+            android:scaleX="0"
+            android:scaleY="0">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/like_remind_bg"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingTop="10dp">
+
+                <View
+                    android:layout_width="1px"
+                    android:layout_height="20dp"
+                    android:visibility="@{otherHead.isEmpty()?View.GONE:View.VISIBLE}" />
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white_cc"
+                    android:textSize="12sp"
+                    tools:text="24小时内有" />
+
+                <TextView
+                    android:id="@+id/tv_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tools:text="99+" />
+
+                <TextView
+                    android:id="@+id/tv_subContent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white_cc"
+                    android:textSize="12sp"
+                    tools:text="人喜欢你啦" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:visibility="@{otherHead.isEmpty()?View.GONE:View.VISIBLE}">
+
+                <View
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.11f)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.11f)}"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/circle_white" />
+
+                <ImageView
+                    defaultRes="@{ObjectUtils.getDefaultRes()}"
+                    imageUrl="@{otherHead}"
+                    isCircle="@{true}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.1f)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.1f)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+        </RelativeLayout>
+
     </RelativeLayout>
 </layout>

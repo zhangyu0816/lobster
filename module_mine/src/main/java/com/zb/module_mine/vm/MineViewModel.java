@@ -2,6 +2,7 @@ package com.zb.module_mine.vm;
 
 import android.view.View;
 
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -18,6 +19,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         memberInfo = new MemberInfo();
         memberInfo.setNick("租我把");
         memberInfo.setMemberType(1);
+        memberInfo.setImage(MineApp.logo);
     }
 
     @Override

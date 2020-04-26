@@ -145,7 +145,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 //            PairInfo pairInfo = disLikeList.remove(0);
 //            setCardAnimationLeftToRight(pairInfo);
 //        }
-        new CountUsedPW( activity, mBinding.getRoot(), 1);
+        new CountUsedPW(activity, mBinding.getRoot(), 1);
     }
 
     @Override
@@ -196,7 +196,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     public void superLike(View view) {
         super.superLike(view);
 //        new SuperLikePW(activity, mBinding.getRoot());
-        new CountUsedPW( activity, mBinding.getRoot(), 2);
+        new CountUsedPW(activity, mBinding.getRoot(), 2);
     }
 
 
@@ -204,6 +204,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     public void onSwiping(View view, float ratio, int direction) {
         if (_direction != direction) {
             _direction = direction;
+            if (animatorSet != null)
+                animatorSet.cancel();
             initAnimation();
         }
 
@@ -220,10 +222,12 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         }
     }
 
+    private AnimatorSet animatorSet;
+
     private void startAnimation(View view, float x, int duration) {
         translate = ObjectAnimator.ofFloat(view, "translationX", 0, x);
         alphaA = ObjectAnimator.ofFloat(view, "alpha", 0, 1);
-        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet = new AnimatorSet();
         animatorSet.setDuration(duration);
         animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
         //播放多条动画

@@ -69,8 +69,8 @@
 
         <ImageView
             android:id="@+id/iv_dislike"
-            viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(220)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(200)}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(200,220)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(200)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -79,8 +79,8 @@
 
         <ImageView
             android:id="@+id/iv_like"
-            viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(220)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(200)}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(200,220)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(200)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
