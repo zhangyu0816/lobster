@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.lib_base.vm.BaseViewModel" />
+
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="showRight"
+            type="boolean" />
+
+    </data>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            onClickDelayed="@{viewModel::back}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:src="@mipmap/back_black_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@{title}"
+            android:textColor="@color/black_252"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            onClickDelayed="@{viewModel::clean}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp"
+            android:drawableStart="@mipmap/clean_icon"
+            android:drawablePadding="3dp"
+            android:gravity="center"
+            android:text="清除消息"
+            android:textColor="@color/black_827"
+            android:textSize="12sp"
+            android:visibility="@{showRight?View.VISIBLE:View.GONE}" />
+    </RelativeLayout>
+</layout>

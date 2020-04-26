@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">我的模块</string>
     <string name="member_nick">你好！%s</string>
+    <string name="gift_news">给你送了 %s x%d</string>
 </resources>

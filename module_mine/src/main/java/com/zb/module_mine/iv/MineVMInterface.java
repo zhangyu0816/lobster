@@ -9,4 +9,6 @@ public interface MineVMInterface {
     void openVip(View view);
 
     void toMemberDetail(View view);
+
+    void toNews(View view);
 }

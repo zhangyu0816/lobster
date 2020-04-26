@@ -29,9 +29,13 @@ public class ActivityUtils {
     }
     /*********************** 对话 **************************/
     /*********************** 我的 **************************/
-    // 用户详情
+    // 会员
     public static void getMineOpenVip(MemberInfo memberInfo) {
         ARouter.getInstance().build(RouteUtils.Mine_Open_Vip).withParcelable("memberInfo", memberInfo).navigation();
+    }
+    // 消息
+    public static void getMineNewsManager() {
+        ARouter.getInstance().build(RouteUtils.Mine_News_Manager).navigation();
     }
 
 

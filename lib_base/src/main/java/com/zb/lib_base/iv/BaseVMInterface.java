@@ -34,4 +34,7 @@ public interface BaseVMInterface {
 
     default void question(View view) {
     }
+
+    default void clean(View view) {
+    }
 }

@@ -32,6 +32,7 @@
 
             <ImageView
                 android:id="@+id/iv_news"
+                onClickDelayed="@{viewModel::toNews}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"

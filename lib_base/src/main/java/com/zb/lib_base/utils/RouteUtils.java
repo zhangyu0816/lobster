@@ -26,8 +26,12 @@ public class RouteUtils {
     /*********************** 我的 **************************/
     // 我的主Fragment
     public static final String Mine_Fragment = "/mine/MineFragment";
-    // 我的 视频
+    // 会员
     public static final String Mine_Open_Vip = "/mine/OpenVipActivity";
+    // 我的消息
+    public static final String Mine_News_Manager = "/mine/NewsManagerActivity";
+    // 礼物消息
+    public static final String Mine_Gift_News = "/mine/GiftNewsActivity";
 
     /*********************** 注册 **************************/
 
