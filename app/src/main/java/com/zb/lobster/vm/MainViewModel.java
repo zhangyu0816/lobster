@@ -1,8 +1,6 @@
 package com.zb.lobster.vm;
 
 import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.RelativeLayout;
 
 import com.zb.lib_base.adapter.FragmentAdapter;

@@ -5,6 +5,16 @@
     <application android:theme="@style/MineTheme">
         <activity
             android:name=".activity.OpenVipActivity" />
+        <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.GiftNewsActivity" />
+        <activity android:name=".activity.NewsManagerActivity" />
+        <activity android:name=".activity.RealNameActivity" />
+        <activity android:name=".activity.WalletActivity" />
+        <activity android:name=".activity.LocationActivity" />
+        <activity android:name=".activity.ModifyPassActivity" />
+        <activity android:name=".activity.NoticeActivity" />
+        <activity android:name=".activity.FeedbackActivity" />
+        <activity android:name=".activity.MineWebActivity" />
     </application>
 
 </manifest>

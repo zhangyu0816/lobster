@@ -33,9 +33,55 @@ public class ActivityUtils {
     public static void getMineOpenVip(MemberInfo memberInfo) {
         ARouter.getInstance().build(RouteUtils.Mine_Open_Vip).withParcelable("memberInfo", memberInfo).navigation();
     }
+
     // 消息
     public static void getMineNewsManager() {
         ARouter.getInstance().build(RouteUtils.Mine_News_Manager).navigation();
+    }
+
+    // 消息
+    public static void getMineGiftNews() {
+        ARouter.getInstance().build(RouteUtils.Mine_Gift_News).navigation();
+    }
+
+    // 设置
+    public static void getMineSetting() {
+        ARouter.getInstance().build(RouteUtils.Mine_Setting).navigation();
+    }
+
+    // 实名认证
+    public static void getMineRealName() {
+        ARouter.getInstance().build(RouteUtils.Mine_Real_Name).navigation();
+    }
+
+    // 我的钱包
+    public static void getMineWallet() {
+        ARouter.getInstance().build(RouteUtils.Mine_Wallet).navigation();
+    }
+
+    // 定位
+    public static void getMineLocation() {
+        ARouter.getInstance().build(RouteUtils.Mine_Location).navigation();
+    }
+
+    // 修改密码
+    public static void getMineModifyPass() {
+        ARouter.getInstance().build(RouteUtils.Mine_Modify_Pass).navigation();
+    }
+
+    // 通知
+    public static void getMineNotice() {
+        ARouter.getInstance().build(RouteUtils.Mine_Notice).navigation();
+    }
+
+    // 反馈
+    public static void getMineFeedback() {
+        ARouter.getInstance().build(RouteUtils.Mine_Feedback).navigation();
+    }
+
+    // 网页
+    public static void getMineWeb(String title, String url) {
+        ARouter.getInstance().build(RouteUtils.Mine_Web).withString("title", title).withString("url", url).navigation();
     }
 
 

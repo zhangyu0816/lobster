@@ -11,4 +11,6 @@ public interface MineVMInterface {
     void toMemberDetail(View view);
 
     void toNews(View view);
+
+    void toSetting(View view);
 }

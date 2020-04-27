@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_mine.vm.RealNameViewModel" />
+
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="step"
+            type="Integer" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/back_black_layout"
+            showRight="@{false}"
+            title="@{title}"
+            viewModel="@{viewModel}" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black_efe"
+            android:orientation="vertical"
+            android:visibility="@{step==1?View.VISIBLE:View.GONE}">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFF5D9"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="此认证照片仅用于认证，不会在您的个人主页"
+                android:textColor="#F7BF00"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/btn_bg_white_radius_top10"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="进行认证"
+                    android:textColor="@color/black_252"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="经过认证的账户会获得更多的匹配"
+                    android:textColor="@color/black_4d4"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@mipmap/real_matching_icon"
+                        android:drawablePadding="10dp"
+                        android:gravity="center_horizontal"
+                        android:text="更多匹配"
+                        android:textColor="@color/black_4d4"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        android:drawableTop="@mipmap/real_name_icon"
+                        android:drawablePadding="10dp"
+                        android:gravity="center_horizontal"
+                        android:text="认证标志"
+                        android:textColor="@color/black_4d4"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@mipmap/real_like_icon"
+                        android:drawablePadding="10dp"
+                        android:gravity="center_horizontal"
+                        android:text="优先推荐"
+                        android:textColor="@color/black_4d4"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                onClickDelayed="@{viewModel::toAuthentication}"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/gradient_purple_bottom10"
+                android:gravity="center"
+                android:text="立即验证"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="@{step==2?View.VISIBLE:View.GONE}">
+
+            <FrameLayout
+                android:id="@+id/camera_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@mipmap/real_bg" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFF5D9"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="5秒后自动拍照，请对准摄像头"
+                android:textColor="#F7BF00"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:scaleX="0"
+                android:scaleY="0"
+                android:text="5"
+                android:textColor="@android:color/holo_orange_light"
+                android:textSize="80sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/btn_linear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="15dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_reset"
+                    onClickDelayed="@{viewModel::reset}"
+                    android:layout_width="100dp"
+                    android:layout_height="38dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@drawable/btn_bg_purple_7a4_radius60"
+                    android:gravity="center"
+                    android:text="重拍"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_upload"
+                    onClickDelayed="@{viewModel::upload}"
+                    android:layout_width="100dp"
+                    android:layout_height="38dp"
+                    android:layout_marginStart="15dp"
+                    android:background="@drawable/btn_bg_purple_7a4_radius60"
+                    android:gravity="center"
+                    android:text="上传"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+</layout>

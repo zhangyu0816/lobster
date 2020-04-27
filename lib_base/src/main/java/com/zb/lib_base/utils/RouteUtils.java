@@ -32,6 +32,22 @@ public class RouteUtils {
     public static final String Mine_News_Manager = "/mine/NewsManagerActivity";
     // 礼物消息
     public static final String Mine_Gift_News = "/mine/GiftNewsActivity";
+    // 设置
+    public static final String Mine_Setting = "/mine/SettingActivity";
+    // 实名认证
+    public static final String Mine_Real_Name = "/mine/RealNameActivity";
+    // 我的钱包
+    public static final String Mine_Wallet = "/mine/WalletActivity";
+    // 定位
+    public static final String Mine_Location = "/mine/LocationActivity";
+    // 修改密码
+    public static final String Mine_Modify_Pass = "/mine/ModifyPassActivity";
+    // 通知
+    public static final String Mine_Notice = "/mine/NoticeActivity";
+    // 反馈
+    public static final String Mine_Feedback = "/mine/FeedbackActivity";
+    // 网页
+    public static final String Mine_Web = "/mine/WebActivity";
 
     /*********************** 注册 **************************/
 

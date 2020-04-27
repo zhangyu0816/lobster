@@ -69,4 +69,5 @@ dependencies {
     if (isNeedCardModule.toBoolean()) {
         implementation project(':module_card')
     }
+    implementation project(':module_camera')
 }
