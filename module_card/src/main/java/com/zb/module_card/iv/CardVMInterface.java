@@ -12,9 +12,10 @@ public interface CardVMInterface {
 
     void exposure(View view);
 
-    void leftBtn(View currentView,CardAdapter adapter, int position);
+    void leftBtn(View currentView, CardAdapter adapter, int position);
 
-    void rightBtn(View currentView,CardAdapter adapter, int position);
+    void rightBtn(View currentView, CardAdapter adapter, int position);
 
+    void selectCity(View view);
 
 }

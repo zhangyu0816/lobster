@@ -1,7 +1,9 @@
 package com.zb.lib_base.vm;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
@@ -62,6 +64,11 @@ public class BaseViewModel implements BaseVMInterface {
     }
 
     @Override
+    public void selectPosition(int position) {
+
+    }
+
+    @Override
     public void question(View view) {
         new BottleQuestionPW(activity, mBinding.getRoot());
     }
@@ -113,6 +120,24 @@ public class BaseViewModel implements BaseVMInterface {
         TextView textView = view.findViewById(R.id.tab_item_textview);
         textView.setText(name);
         return view;
+    }
+
+    private InputMethodManager imm;
+
+    /**
+     * 隐藏键盘
+     */
+    public void hintKeyBoard() {
+        //拿到InputMethodManager
+        imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        //如果window上view获取焦点 && view不为空
+        if (imm.isActive() && activity.getCurrentFocus() != null) {
+            //拿到view的token 不为空
+            if (activity.getCurrentFocus().getWindowToken() != null) {
+                //表示软键盘窗口总是隐藏，除非开始时以SHOW_FORCED显示。
+                imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        }
     }
 
     /**

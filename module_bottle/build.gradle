@@ -36,10 +36,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    sourceSets{
+    sourceSets {
         main {
             // 配置manifest文件地址
-            if (!isNeedHomeModule.toBoolean()) {
+            if (!isNeedBottleModule.toBoolean()) {
                 manifest.srcFile 'src/main/debug/AndroidManifest.xml'
             } else {
                 manifest.srcFile 'src/main/AndroidManifest.xml'

@@ -34,4 +34,6 @@ public interface BaseVMInterface {
 
     default void question(View view) {
     }
+    default void selectPosition(int position) {
+    }
 }

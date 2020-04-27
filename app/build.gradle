@@ -23,7 +23,20 @@ android {
         }
         multiDexEnabled true
     }
-
+    signingConfigs {
+        debug {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file("C:\\Users\\yu\\Documents\\AndroidStudioProjects\\Lobster\\rentme.keystore")
+            storePassword 'android'
+        }
+        release {
+            keyAlias 'rm'
+            keyPassword 'yimi2015yuwei'
+            storeFile file('C:\\Users\\yu\\Documents\\rentme.keystore')
+            storePassword 'yimi2015yuwei'
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false

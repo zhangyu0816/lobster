@@ -171,6 +171,11 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         }
     }
 
+    @Override
+    public void selectCity(View view) {
+        ActivityUtils.getMineLocation();
+    }
+
     // 更新adapterUI
     private void updateAdapterUI(View view, CardAdapter imageAdapter, int preIndex, int selectIndex, List<String> imageList) {
         imageAdapter.setSelectImageIndex(selectIndex);

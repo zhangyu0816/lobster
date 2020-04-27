@@ -11,6 +11,8 @@
 
         <import type="com.zb.lib_base.utils.DateUtil" />
 
+        <import type="com.zb.lib_base.app.MineApp" />
+
         <variable
             name="viewModel"
             type="com.zb.module_card.vm.CardViewModel" />
@@ -35,6 +37,7 @@
 
         <TextView
             android:id="@+id/textView"
+            onClickDelayed="@{viewModel::selectCity}"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
             android:layout_marginStart="15dp"
@@ -45,7 +48,7 @@
             android:gravity="center"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            android:text="温州市"
+            android:text="@{MineApp.cityName}"
             android:textColor="@color/black_252"
             android:textSize="14sp"
             android:textStyle="bold" />

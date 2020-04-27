@@ -6,5 +6,7 @@ public interface PublishImageVMInterface {
 
     void previewImage(int position);
 
+    void selectCity(View view);
+
     void publish(View view);
 }

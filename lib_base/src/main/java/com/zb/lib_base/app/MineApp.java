@@ -39,8 +39,9 @@ public class MineApp extends MultiDexApplication {
     public static Typeface type;
     public static Typeface simplifiedType;
     public static List<VipInfo> vipInfoList = new ArrayList<>();
-    public static String logo="http://img01.zuwo.la/img/A/YMXXXX919714-206348_YM0000.jpg";
-    public static String logo1="http://img01.zuwo.la/img/A/YMXXXX2350392-sgjdwurnll_YM0000.jpg";
+    public static String logo = "http://img01.zuwo.la/img/A/YMXXXX919714-206348_YM0000.jpg";
+    public static String logo1 = "http://img01.zuwo.la/img/A/YMXXXX2350392-sgjdwurnll_YM0000.jpg";
+    public static String cityName = "";
 
     static {
         //设置全局的Header构建器

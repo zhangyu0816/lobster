@@ -5,6 +5,8 @@
 
         <import type="com.zb.lib_base.utils.ObjectUtils" />
 
+        <import type="com.zb.lib_base.app.MineApp" />
+
         <variable
             name="viewModel"
             type="com.zb.module_home.vm.PublishImageViewModel" />
@@ -144,6 +146,7 @@
 
         <TextView
             android:id="@+id/textView4"
+            onClickDelayed="@{viewModel::selectCity}"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
             android:layout_above="@+id/textView3"
@@ -156,7 +159,7 @@
             android:gravity="center"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            android:text="温州市"
+            android:text="@{MineApp.cityName}"
             android:textColor="@color/black_252"
             android:textSize="14sp"
             android:textStyle="bold" />

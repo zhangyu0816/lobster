@@ -66,8 +66,8 @@ dependencies {
     // 需要重新在子模块中再引用一次，否则报错
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
     implementation project(':lib_base')
+    implementation project(':module_camera')
     if (isNeedCardModule.toBoolean()) {
         implementation project(':module_card')
     }
-    implementation project(':module_camera')
 }

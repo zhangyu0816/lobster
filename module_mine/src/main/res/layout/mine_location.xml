@@ -18,48 +18,102 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
 
-        <include
+        <RelativeLayout
             android:id="@+id/include4"
-            layout="@layout/back_black_layout"
-            showRight="@{false}"
-            title="@{title}"
-            viewModel="@{viewModel}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <include
+                layout="@layout/back_black_layout"
+                showRight="@{false}"
+                title="@{title}"
+                viewModel="@{viewModel}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                onClickDelayed="@{viewModel::selectAddress}"
+                android:layout_width="wrap_content"
+                android:layout_height="26dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/gradient_purple_6d5_ae7"
+                android:gravity="center"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="确定"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/linearLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/include4"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="15dp"
-            app:layout_constraintTop_toBottomOf="@+id/include4">
+            android:padding="15dp">
 
             <EditText
+                android:id="@+id/ed_key"
                 android:layout_width="match_parent"
                 android:layout_height="34dp"
                 android:layout_marginStart="15dp"
-                android:layout_marginTop="15dp"
                 android:layout_marginEnd="15dp"
                 android:background="@drawable/btn_bg_black_efe_radius10"
                 android:hint="搜索地址"
-                android:inputType="textPassword"
-                android:maxLength="20"
+                android:imeOptions="actionSearch"
                 android:paddingStart="15dp"
                 android:paddingEnd="15dp"
                 android:singleLine="true"
-                android:text="@={key}"
                 android:textColorHint="@color/black_c3b"
                 android:textCursorDrawable="@drawable/cursor_color_black_252"
                 android:textSize="14sp" />
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/address_list">
+
+                <com.amap.api.maps2d.MapView
+                    android:id="@+id/map_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@mipmap/ic_mark" />
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/address_list"
+                adapter="@{viewModel.adapter}"
+                recyclerType="@{0}"
+                size="@{0}"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_alignParentBottom="true"
+                android:background="@android:color/white" />
+        </RelativeLayout>
+    </LinearLayout>
 </layout>

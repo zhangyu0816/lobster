@@ -63,6 +63,11 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     }
 
     @Override
+    public void selectCity(View view) {
+        ActivityUtils.getMineLocation();
+    }
+
+    @Override
     public void publish(View view) {
         MineApp.selectMap.clear();
         MineApp.cutImageViewMap.clear();
