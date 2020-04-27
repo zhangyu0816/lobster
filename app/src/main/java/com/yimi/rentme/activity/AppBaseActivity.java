@@ -1,4 +1,4 @@
-package com.zb.lobster.activity;
+package com.yimi.rentme.activity;
 
 import android.os.Bundle;
 

@@ -6,6 +6,7 @@ import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.windows.BasePopupWindow;
+import com.zb.lib_base.windows.RechargePW;
 import com.zb.module_home.BR;
 import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;

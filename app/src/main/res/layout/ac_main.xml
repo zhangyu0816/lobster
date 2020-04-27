@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.zb.lobster.vm.MainViewModel" />
+            type="com.yimi.rentme.vm.MainViewModel" />
 
         <variable
             name="index"

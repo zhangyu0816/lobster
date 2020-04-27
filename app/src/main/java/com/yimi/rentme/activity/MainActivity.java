@@ -1,11 +1,11 @@
-package com.zb.lobster.activity;
+package com.yimi.rentme.activity;
 
+import com.yimi.rentme.BR;
+import com.yimi.rentme.R;
+import com.yimi.rentme.vm.MainViewModel;
 import com.zb.lib_base.db.TagDb;
 import com.zb.lib_base.model.Tag;
 import com.zb.lib_base.utils.SimulateNetAPI;
-import com.zb.lobster.BR;
-import com.zb.lobster.R;
-import com.zb.lobster.vm.MainViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,7 +14,7 @@ import io.realm.Realm;
 
 public class MainActivity extends AppBaseActivity {
     private TagDb tagDb;
-    private  MainViewModel viewModel;
+    private MainViewModel viewModel;
     @Override
     public int getRes() {
         return R.layout.ac_main;

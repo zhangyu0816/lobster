@@ -1,17 +1,17 @@
-package com.zb.lobster.vm;
+package com.yimi.rentme.vm;
 
 import android.animation.AnimatorSet;
 import android.widget.RelativeLayout;
 
+import com.yimi.rentme.BR;
+import com.yimi.rentme.databinding.AcMainBinding;
+import com.yimi.rentme.iv.MainVMInterface;
 import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
-import com.zb.lobster.BR;
-import com.zb.lobster.databinding.AcMainBinding;
-import com.zb.lobster.iv.MainVMInterface;
 import com.zb.module_card.windows.GuidancePW;
 
 import java.util.ArrayList;

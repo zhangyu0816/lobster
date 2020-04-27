@@ -1,4 +1,4 @@
-package com.zb.lobster.iv;
+package com.yimi.rentme.iv;
 
 public interface MainVMInterface {
 

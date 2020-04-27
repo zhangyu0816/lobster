@@ -1,14 +1,12 @@
-package com.zb.module_home.windows;
+package com.zb.lib_base.windows;
 
 import android.view.View;
 
+import com.zb.lib_base.BR;
+import com.zb.lib_base.R;
+import com.zb.lib_base.adapter.BaseAdapter;
 import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.WalletInfo;
-import com.zb.lib_base.windows.BasePopupWindow;
-import com.zb.lib_base.windows.TextPW;
-import com.zb.module_home.BR;
-import com.zb.module_home.R;
-import com.zb.module_home.adapter.HomeAdapter;
 
 import java.util.List;
 
@@ -17,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class RechargePW extends BasePopupWindow {
     private WalletInfo walletInfo;
     private List<RechargeInfo> rechargeInfoList;
-    private HomeAdapter adapter;
+    private BaseAdapter adapter;
     private int preIndex = -1;
 
     public RechargePW(AppCompatActivity activity, View parentView, WalletInfo walletInfo, List<RechargeInfo> rechargeInfoList) {
@@ -34,7 +32,7 @@ public class RechargePW extends BasePopupWindow {
 
     @Override
     public void initUI() {
-        adapter = new HomeAdapter<>(activity, R.layout.item_home_vip_info, rechargeInfoList, this);
+        adapter = new BaseAdapter<>(activity, R.layout.item_home_vip_info, rechargeInfoList, this);
         mBinding.setVariable(BR.pw, this);
         mBinding.setVariable(BR.walletInfo, walletInfo);
         mBinding.setVariable(BR.adapter, adapter);

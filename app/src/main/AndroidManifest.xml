@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.zb.lobster">
+    package="com.yimi.rentme">
     <!--region 适配全面屏-->
     <meta-data
         android:name="android.max_aspect"
@@ -28,7 +28,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.zb.lobster"
+            android:authorities="com.yimi.rentme"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
