@@ -48,6 +48,8 @@ public class RouteUtils {
     public static final String Mine_Feedback = "/mine/FeedbackActivity";
     // 网页
     public static final String Mine_Web = "/mine/WebActivity";
+    // 礼物收益
+    public static final String Mine_Gift_Record = "/mine/GiftRecordActivity";
 
     /*********************** 注册 **************************/
 

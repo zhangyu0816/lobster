@@ -15,6 +15,7 @@
         <activity android:name=".activity.NoticeActivity" />
         <activity android:name=".activity.FeedbackActivity" />
         <activity android:name=".activity.MineWebActivity" />
+        <activity android:name=".activity.GiftRecordActivity" />
     </application>
 
 </manifest>

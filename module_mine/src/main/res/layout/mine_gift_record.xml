@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.zb.module_mine.vm.WalletViewModel" />
+            type="com.zb.module_mine.vm.GiftRecordViewModel" />
 
         <variable
             name="title"
@@ -27,7 +27,7 @@
         <View
             android:id="@+id/view5"
             android:layout_width="match_parent"
-            android:layout_height="140dp"
+            android:layout_height="220dp"
             android:background="@drawable/gradient_purple_6d5_ae7_noradius"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,21 +48,20 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <RelativeLayout
-            android:id="@+id/relativeLayout7"
+            android:id="@+id/relativeLayout8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:background="@drawable/btn_bg_white_radius10"
             android:padding="15dp"
-            app:layout_constraintTop_toBottomOf="@+id/include3"
-            tools:layout_editor_absoluteX="15dp">
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            app:layout_constraintTop_toBottomOf="@+id/include3">
 
             <TextView
                 android:id="@+id/tv_bi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="余额（虾菇币）"
-                android:textColor="@color/black_827"
+                android:text="可提现收益（元）"
+                android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
             <TextView
@@ -70,27 +69,94 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_bi"
                 android:layout_marginTop="10dp"
-                android:text='@{String.format("%.2f",viewModel.walletInfo.wallet)}'
-                android:textColor="#7A44F5"
+                android:text='@{String.format("%.2f",viewModel.walletInfo.canWithdrawCreditWallet)}'
+                android:textColor="@android:color/white"
                 android:textSize="35sp"
                 android:textStyle="bold"
                 tools:text="200.00" />
 
             <TextView
-                onClickDelayed="@{viewModel::recharge}"
+                onClickDelayed="@{viewModel::withdraw}"
                 android:layout_width="wrap_content"
                 android:layout_height="38dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/gradient_purple_6d5_ae7"
+                android:background="@drawable/btn_bg_white_radius60"
                 android:gravity="center"
                 android:paddingStart="45dp"
                 android:paddingEnd="45dp"
-                android:text="充值"
-                android:textColor="@android:color/white"
+                android:text="提现"
+                android:textColor="#7A44F5"
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/btn_bg_white_radius10"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout8">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="200.00元"
+                    android:textColor="@color/black_252"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    onClickDelayed="@{viewModel::taxIncome}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:drawableEnd="@mipmap/question_grey"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:text="今日税前收益"
+                    android:textColor="@color/black_827"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="200.00元"
+                    android:textColor="@color/black_252"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    onClickDelayed="@{viewModel::incomeDeposit}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:drawableEnd="@mipmap/question_grey"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:text="收益押金"
+                    android:textColor="@color/black_827"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -100,10 +166,10 @@
             android:layout_marginEnd="15dp"
             android:background="@drawable/btn_bg_white_radius10"
             android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/relativeLayout7">
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
             <RelativeLayout
-                onClickDelayed="@{viewModel::toGiftRecord}"
+                onClickDelayed="@{viewModel::toProfitRecord}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="15dp">
@@ -111,7 +177,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="礼物收益"
+                    android:text="收益明细"
                     android:textColor="@color/black_4d4"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -132,7 +198,7 @@
                 android:background="@color/black_efe" />
 
             <RelativeLayout
-                onClickDelayed="@{viewModel::toGiveRecord}"
+                onClickDelayed="@{viewModel::toBindingZFB}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="15dp">
@@ -140,48 +206,25 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="送礼记录"
+                    android:text="绑定支付宝"
                     android:textColor="@color/black_4d4"
                     android:textSize="16sp"
                     android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:background="@mipmap/arrow_small_right_icon" />
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:background="@color/black_efe" />
-
-            <RelativeLayout
-                onClickDelayed="@{viewModel::toGetRecord}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="15dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="收礼记录"
-                    android:textColor="@color/black_4d4"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="快速提现"
+                    android:drawableEnd="@mipmap/arrow_small_right_icon"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:background="@mipmap/arrow_small_right_icon" />
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:textColor="@color/black_827"
+                    android:drawablePadding="5dp"/>
             </RelativeLayout>
+
+
         </LinearLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

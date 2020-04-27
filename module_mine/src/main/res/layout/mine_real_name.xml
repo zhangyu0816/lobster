@@ -185,7 +185,7 @@
                     android:gravity="center"
                     android:text="重拍"
                     android:textColor="@android:color/white"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -198,7 +198,7 @@
                     android:gravity="center"
                     android:text="上传"
                     android:textColor="@android:color/white"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
 

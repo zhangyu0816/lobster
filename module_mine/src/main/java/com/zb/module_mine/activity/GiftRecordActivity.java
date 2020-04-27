@@ -7,10 +7,10 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.R;
-import com.zb.module_mine.vm.WalletViewModel;
+import com.zb.module_mine.vm.GiftRecordViewModel;
 
-@Route(path = RouteUtils.Mine_Wallet)
-public class WalletActivity extends BaseActivity {
+@Route(path = RouteUtils.Mine_Gift_Record)
+public class GiftRecordActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.MineTheme);
@@ -19,16 +19,16 @@ public class WalletActivity extends BaseActivity {
 
     @Override
     public int getRes() {
-        return R.layout.mine_wallet;
+        return R.layout.mine_gift_record;
     }
 
     @Override
     public void initUI() {
         fitComprehensiveScreen();
-        WalletViewModel viewModel = new WalletViewModel();
+        GiftRecordViewModel viewModel = new GiftRecordViewModel();
         viewModel.setBinding(mBinding);
-        mBinding.setVariable(BR.viewModel, viewModel);
-        mBinding.setVariable(BR.title, "我的钱包");
-        mBinding.setVariable(BR.right, "账单明细");
+        mBinding.setVariable(BR.viewModel,viewModel);
+        mBinding.setVariable(BR.title, "礼物收益");
+        mBinding.setVariable(BR.right, "帮助");
     }
 }

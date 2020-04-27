@@ -84,6 +84,11 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Mine_Web).withString("title", title).withString("url", url).navigation();
     }
 
+    // 礼物收益
+    public static void getMineGiftRecord() {
+        ARouter.getInstance().build(RouteUtils.Mine_Gift_Record).navigation();
+    }
+
 
     /*********************** 注册 **************************/
 
