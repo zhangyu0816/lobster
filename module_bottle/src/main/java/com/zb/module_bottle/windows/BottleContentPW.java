@@ -58,7 +58,7 @@ public class BottleContentPW extends BasePopupWindow {
         dismiss();
         if (isWrite) {
             if (binding.edContent.getText().toString().trim().isEmpty()) {
-                SCToastUtil.showToast(activity, "    漂流瓶内容不能为空    ");
+                SCToastUtil.showToast(activity, "漂流瓶内容不能为空");
                 return;
             }
 

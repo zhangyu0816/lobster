@@ -16,6 +16,10 @@
         <activity android:name=".activity.FeedbackActivity" />
         <activity android:name=".activity.MineWebActivity" />
         <activity android:name=".activity.GiftRecordActivity" />
+        <activity android:name=".activity.EditMemberActivity" />
+        <activity android:name=".activity.SelectJobActivity" />
+        <activity android:name=".activity.EditContentActivity" />
+        <activity android:name=".activity.SelectTagActivity" />
     </application>
 
 </manifest>

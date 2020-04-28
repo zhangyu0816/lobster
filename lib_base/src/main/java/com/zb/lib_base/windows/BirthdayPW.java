@@ -1,19 +1,18 @@
-package com.zb.module_register.windows;
+package com.zb.lib_base.windows;
 
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.databinding.PwsBirthdayBinding;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.widget.OnWheelScrollListener;
 import com.zb.lib_base.utils.widget.WheelView;
 import com.zb.lib_base.utils.widget.adapters.AbstractWheelTextAdapter;
-import com.zb.lib_base.windows.BasePopupWindow;
-import com.zb.module_register.R;
-import com.zb.module_register.databinding.PwsBirthdayBinding;
 
 import java.util.ArrayList;
 
@@ -38,7 +37,6 @@ public class BirthdayPW extends BasePopupWindow {
 
     private String selectDate = "";
     private String nowDate = "";
-
 
     public BirthdayPW(AppCompatActivity activity, View parentView, CallBack callBack) {
         super(activity, parentView, true);

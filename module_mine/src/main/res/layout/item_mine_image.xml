@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <variable
+            name="item"
+            type="String" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_mine.vm.EditMemberViewModel" />
+    </data>
+
+    <RelativeLayout
+        onClickDelayed="@{v->viewModel.selectImage(position)}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+
+        <LinearLayout
+            viewHeightSize="@{ObjectUtils.getLogoHeight(0.31f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.31f)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/btn_bg_black_efe_radius5"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@mipmap/add_icon" />
+
+        </LinearLayout>
+
+        <com.zb.lib_base.views.RoundImageView
+            imageUrl="@{item}"
+            viewHeightSize="@{ObjectUtils.getLogoHeight(0.31f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.31f)}"
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            app:radius="5dp"
+            app:all="true"/>
+    </RelativeLayout>
+
+</layout>

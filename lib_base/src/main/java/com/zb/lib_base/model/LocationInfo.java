@@ -6,10 +6,21 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 public class LocationInfo extends BaseObservable {
+    private String cityName = "";
     private String title = "";
     private String address = "";
     private double latitude = 0;
     private double longitude = 0;
+
+    @Bindable
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+        notifyPropertyChanged(BR.cityName);
+    }
 
     @Bindable
     public String getTitle() {
@@ -21,7 +32,8 @@ public class LocationInfo extends BaseObservable {
         notifyPropertyChanged(BR.title);
     }
 
-    @Bindable public String getAddress() {
+    @Bindable
+    public String getAddress() {
         return address;
     }
 
@@ -30,7 +42,8 @@ public class LocationInfo extends BaseObservable {
         notifyPropertyChanged(BR.address);
     }
 
-    @Bindable public double getLatitude() {
+    @Bindable
+    public double getLatitude() {
         return latitude;
     }
 
@@ -39,7 +52,8 @@ public class LocationInfo extends BaseObservable {
         notifyPropertyChanged(BR.latitude);
     }
 
-    @Bindable public double getLongitude() {
+    @Bindable
+    public double getLongitude() {
         return longitude;
     }
 

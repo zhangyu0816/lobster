@@ -36,7 +36,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    sourceSets{
+    sourceSets {
         main {
             // 配置manifest文件地址
             if (!isNeedHomeModule.toBoolean()) {
@@ -68,7 +68,8 @@ dependencies {
     implementation project(':lib_base')
     implementation project(':imagebrowserlib')
     implementation project(':module_camera')
-    if (isNeedBottleModule.toBoolean()) {
-        implementation project(':module_bottle')
-    }
+    if (!isNeedHomeModule.toBoolean())
+        if (isNeedBottleModule.toBoolean()) {
+            implementation project(':module_bottle')
+        }
 }

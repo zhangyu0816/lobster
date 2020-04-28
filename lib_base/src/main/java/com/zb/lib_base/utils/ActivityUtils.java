@@ -89,6 +89,26 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Mine_Gift_Record).navigation();
     }
 
+    // 编辑个人信息
+    public static void getMineEditMember() {
+        ARouter.getInstance().build(RouteUtils.Mine_Edit_Member).navigation();
+    }
+
+    // 选择工作
+    public static void getMineSelectJob() {
+        ARouter.getInstance().build(RouteUtils.Mine_Select_Job).navigation();
+    }
+
+    // 编辑信息
+    public static void getMineEditContent(int type, int lines, String title, String content, String hint) {
+        ARouter.getInstance().build(RouteUtils.Mine_Edit_Content).withInt("type", type).withInt("lines", lines).withString("title", title).withString("content", content).withString("hint", hint).navigation();
+    }
+
+    // 选择标签
+    public static void getMineSelectTag(String serviceTags) {
+        ARouter.getInstance().build(RouteUtils.Mine_Select_Tag).withString("serviceTags", serviceTags).navigation();
+    }
+
 
     /*********************** 注册 **************************/
 

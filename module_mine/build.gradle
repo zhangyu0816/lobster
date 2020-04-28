@@ -36,7 +36,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    sourceSets{
+    sourceSets {
         main {
             // 配置manifest文件地址
             if (!isNeedMineModule.toBoolean()) {
@@ -67,7 +67,8 @@ dependencies {
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
     implementation project(':lib_base')
     implementation project(':module_camera')
-    if (isNeedCardModule.toBoolean()) {
-        implementation project(':module_card')
-    }
+    if (!isNeedMineModule.toBoolean())
+        if (isNeedCardModule.toBoolean()) {
+            implementation project(':module_card')
+        }
 }

@@ -5,7 +5,6 @@ import android.animation.AnimatorSet;
 import android.os.Build;
 import android.widget.RelativeLayout;
 
-import com.amap.api.location.AMapLocationListener;
 import com.yimi.rentme.BR;
 import com.yimi.rentme.databinding.AcMainBinding;
 import com.yimi.rentme.iv.MainVMInterface;
@@ -85,7 +84,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
         mBinding.setVariable(BR.otherHead, MineApp.logo);
 
-
 //        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mainBinding.remindRelative, "scaleX", 0, 1).setDuration(500);
 //        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mainBinding.remindRelative, "scaleY", 0, 1).setDuration(500);
 //        ObjectAnimator translateY = ObjectAnimator.ofFloat(mainBinding.remindRelative, "translationY", 0, -30, 0, -30, 0, -30, 0).setDuration(500);
@@ -161,4 +159,5 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         PreferenceUtil.saveStringValue(activity, "cityName", "温州市");
         PreferenceUtil.saveStringValue(activity, "address", "浙江省温州市鹿城区望江东路175号靠近温州银行(文化支行)");
     }
+
 }

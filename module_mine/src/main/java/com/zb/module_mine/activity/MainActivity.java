@@ -11,7 +11,6 @@ public class MainActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
-        fitComprehensiveScreen();
         getSupportFragmentManager().beginTransaction().replace(R.id.tv_mine, new MineFragment()).commit();
     }
 }

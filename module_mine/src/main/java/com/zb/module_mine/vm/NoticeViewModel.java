@@ -1,9 +1,7 @@
 package com.zb.module_mine.vm;
 
 import android.view.View;
-import android.widget.CompoundButton;
 
-import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.databinding.MineNoticeBinding;
 import com.zb.module_mine.iv.NoticeVMInterface;

@@ -39,7 +39,8 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     }
 
     @Override
-    public void toMemberDetail(View view) {
+    public void toEditMember(View view) {
+        ActivityUtils.getMineEditMember();
     }
 
     @Override

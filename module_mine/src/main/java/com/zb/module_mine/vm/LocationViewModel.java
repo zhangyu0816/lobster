@@ -2,10 +2,8 @@ package com.zb.module_mine.vm;
 
 import android.Manifest;
 import android.os.Build;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.TextView;
 
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
@@ -14,6 +12,11 @@ import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.services.core.AMapException;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.core.PoiItem;
+import com.amap.api.services.geocoder.GeocodeResult;
+import com.amap.api.services.geocoder.GeocodeSearch;
+import com.amap.api.services.geocoder.RegeocodeAddress;
+import com.amap.api.services.geocoder.RegeocodeQuery;
+import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.help.Inputtips;
 import com.amap.api.services.help.InputtipsQuery;
 import com.amap.api.services.help.Tip;
@@ -24,6 +27,7 @@ import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.model.LocationInfo;
 import com.zb.lib_base.utils.PreferenceUtil;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.R;
 import com.zb.module_mine.adapter.MineAdapter;
@@ -35,7 +39,7 @@ import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
 
-public class LocationViewModel extends BaseViewModel implements LocationVMInterface {
+public class LocationViewModel extends BaseViewModel implements LocationVMInterface, GeocodeSearch.OnGeocodeSearchListener {
     public MineAdapter adapter;
     private List<LocationInfo> locationInfoList = new ArrayList<>();
     private AMap aMap;
@@ -44,10 +48,13 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
     private LatLng myLl;
     private LatLng tagLl;
     private boolean isSearch = false;
+    private GeocodeSearch geocodeSearch;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
+        geocodeSearch = new GeocodeSearch(activity);
+        geocodeSearch.setOnGeocodeSearchListener(this);
         locationBinding = (MineLocationBinding) binding;
         setAdapter();
         initMap();
@@ -144,6 +151,7 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
                     adapter.notifyDataSetChanged();
                     for (PoiItem poi : poiResult.getPois()) {
                         LocationInfo info = new LocationInfo();
+                        info.setCityName(poi.getCityName());
                         info.setTitle(poi.getTitle());
                         info.setAddress(poi.getSnippet());
                         info.setLatitude(poi.getLatLonPoint().getLatitude());
@@ -180,6 +188,7 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
         inputTips.setInputtipsListener((tipList, rCode) -> {
             if (rCode == AMapException.CODE_AMAP_SUCCESS) {
                 if (tipList.size() > 0) {
+                    prePosition = -1;
                     isSearch = true;
                     locationInfoList.clear();
                     adapter.setSelectIndex(-1);
@@ -213,6 +222,26 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
 
     @Override
     public void selectAddress(View view) {
+        if (prePosition == -1) {
+            SCToastUtil.showToast(activity, "请选择地址");
+            return;
+        }
+        LocationInfo info = locationInfoList.get(prePosition);
+        LatLonPoint latLonPoint = new LatLonPoint(info.getLatitude(), info.getLongitude());
+        RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 500f, GeocodeSearch.AMAP);
+        //异步查询
+        geocodeSearch.getFromLocationAsyn(query);
+    }
+
+    @Override
+    public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+        RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
+        LocationInfo info = locationInfoList.get(prePosition);
+        info.setCityName(regeocodeAddress.getCity());
+    }
+
+    @Override
+    public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
 
     }
 }

@@ -50,6 +50,14 @@ public class RouteUtils {
     public static final String Mine_Web = "/mine/WebActivity";
     // 礼物收益
     public static final String Mine_Gift_Record = "/mine/GiftRecordActivity";
+    // 编辑个人信息
+    public static final String Mine_Edit_Member = "/mine/EditMemberActivity";
+    // 选择工作
+    public static final String Mine_Select_Job = "/mine/SelectJobActivity";
+    // 编辑信息
+    public static final String Mine_Edit_Content = "/mine/EditContentActivity";
+    // 选择标签
+    public static final String Mine_Select_Tag = "/mine/SelectTagActivity";
 
     /*********************** 注册 **************************/
 

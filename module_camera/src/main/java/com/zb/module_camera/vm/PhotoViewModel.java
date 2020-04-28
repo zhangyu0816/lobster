@@ -112,7 +112,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
             parameters.setFlashMode(isFlashing ? Camera.Parameters.FLASH_MODE_TORCH : Camera.Parameters.FLASH_MODE_OFF);
             mCamera.setParameters(parameters);
         } catch (Exception e) {
-            SCToastUtil.showToast(activity, "    该设备不支持闪光灯    ");
+            SCToastUtil.showToast(activity, "该设备不支持闪光灯");
         }
     }
 
@@ -220,7 +220,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
                     mOverCameraView.setTouchFoucusRect(mCamera, autoFocusCallback, x, y);
                 }
                 mRunnable = () -> {
-                    SCToastUtil.showToast(activity, "    自动聚焦超时,请调整合适的位置拍摄！    ");
+                    SCToastUtil.showToast(activity, "自动聚焦超时,请调整合适的位置拍摄！");
                     isFoucing = false;
                     mOverCameraView.setFoucuing(false);
                     mOverCameraView.disDrawTouchFocusRect();

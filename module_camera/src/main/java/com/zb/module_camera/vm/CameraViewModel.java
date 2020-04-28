@@ -172,7 +172,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
             }
         } else {
             if (selectCount == maxCount) {
-                SCToastUtil.showToast(activity, "    一次最多可选取" + maxCount + "张图片    ");
+                SCToastUtil.showToast(activity, "一次最多可选取\" + maxCount + \"张图片");
                 return;
             }
             selectCount++;

@@ -14,6 +14,7 @@ public class MemberInfo extends BaseObservable implements Parcelable {
     private String nick = ""; // 昵称
     private String remark = ""; // 备注
     private String image = ""; // 头像
+    private String moreImages = "";     // 多图
     private String personalitySign = "";// 个性签名
     private String birthday = ""; // 生日
     private int sex; // 性别 0女 1男
@@ -23,7 +24,9 @@ public class MemberInfo extends BaseObservable implements Parcelable {
     private String job = ""; // 职业
     private long provinceId; // 省份ID
     private long cityId; // 城市ID
+    private long districtId = 0;
     private int idAttest; // 实名认证 V 0未认证 1认证
+    private String serviceTags = "";
     private String singleImage = ""; // 单张形象图
     private int rstatus; // 1：好友 2：非好友
     private int popularity; // 人气(浏览量)
@@ -69,6 +72,7 @@ public class MemberInfo extends BaseObservable implements Parcelable {
         nick = in.readString();
         remark = in.readString();
         image = in.readString();
+        moreImages = in.readString();
         personalitySign = in.readString();
         birthday = in.readString();
         sex = in.readInt();
@@ -78,7 +82,9 @@ public class MemberInfo extends BaseObservable implements Parcelable {
         job = in.readString();
         provinceId = in.readLong();
         cityId = in.readLong();
+        districtId = in.readLong();
         idAttest = in.readInt();
+        serviceTags = in.readString();
         singleImage = in.readString();
         rstatus = in.readInt();
         popularity = in.readInt();
@@ -150,6 +156,16 @@ public class MemberInfo extends BaseObservable implements Parcelable {
     public void setImage(String image) {
         this.image = image;
         notifyPropertyChanged(BR.image);
+    }
+
+    @Bindable
+    public String getMoreImages() {
+        return moreImages;
+    }
+
+    public void setMoreImages(String moreImages) {
+        this.moreImages = moreImages;
+        notifyPropertyChanged(BR.moreImages);
     }
 
     @Bindable
@@ -243,6 +259,16 @@ public class MemberInfo extends BaseObservable implements Parcelable {
     }
 
     @Bindable
+    public long getDistrictId() {
+        return districtId;
+    }
+
+    public void setDistrictId(long districtId) {
+        this.districtId = districtId;
+        notifyPropertyChanged(BR.districtId);
+    }
+
+    @Bindable
     public int getIdAttest() {
         return idAttest;
     }
@@ -250,6 +276,16 @@ public class MemberInfo extends BaseObservable implements Parcelable {
     public void setIdAttest(int idAttest) {
         this.idAttest = idAttest;
         notifyPropertyChanged(BR.idAttest);
+    }
+
+    @Bindable
+    public String getServiceTags() {
+        return serviceTags;
+    }
+
+    public void setServiceTags(String serviceTags) {
+        this.serviceTags = serviceTags;
+        notifyPropertyChanged(BR.serviceTags);
     }
 
     @Bindable
@@ -453,6 +489,7 @@ public class MemberInfo extends BaseObservable implements Parcelable {
         dest.writeString(nick);
         dest.writeString(remark);
         dest.writeString(image);
+        dest.writeString(moreImages);
         dest.writeString(personalitySign);
         dest.writeString(birthday);
         dest.writeInt(sex);
@@ -462,7 +499,9 @@ public class MemberInfo extends BaseObservable implements Parcelable {
         dest.writeString(job);
         dest.writeLong(provinceId);
         dest.writeLong(cityId);
+        dest.writeLong(districtId);
         dest.writeInt(idAttest);
+        dest.writeString(serviceTags);
         dest.writeString(singleImage);
         dest.writeInt(rstatus);
         dest.writeInt(popularity);

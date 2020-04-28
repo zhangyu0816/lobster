@@ -12,7 +12,7 @@ public class BottleViewModel extends BaseViewModel implements BottleVMInterface 
     @Override
     public void entryBottle(View view) {
         if (((BottleMainBinding) mBinding).getIsOutLine()) {
-            SCToastUtil.showToast(activity, "    当前网络异常，请检查是否连接    ");
+            SCToastUtil.showToast(activity, "当前网络异常，请检查是否连接");
             return;
         }
         ActivityUtils.getBottleThrow();

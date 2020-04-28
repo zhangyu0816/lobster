@@ -126,7 +126,7 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
                     mOverCameraView.setTouchFoucusRect(mCamera, autoFocusCallback, x, y);
                 }
                 mRunnable = () -> {
-                    SCToastUtil.showToast(activity, "    自动聚焦超时,请调整合适的位置拍摄！    ");
+                    SCToastUtil.showToast(activity, "自动聚焦超时,请调整合适的位置拍摄！");
                     isFoucing = false;
                     mOverCameraView.setFoucuing(false);
                     mOverCameraView.disDrawTouchFocusRect();

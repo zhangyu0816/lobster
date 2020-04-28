@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_centerInParent="true"
-            android:background="@drawable/btn_bg_white_radius60"
+            android:background="@drawable/btn_bg_black_252_radius10"
             android:gravity="center"
             android:minWidth="60dp"
             android:orientation="horizontal">
@@ -29,7 +29,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:text="@{content}"
-                android:textColor="@color/black_252"
+                android:textColor="@android:color/white"
                 android:textStyle="bold" />
         </LinearLayout>
 

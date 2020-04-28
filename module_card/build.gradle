@@ -38,7 +38,7 @@ android {
         }
     }
 
-    sourceSets{
+    sourceSets {
         main {
             // 配置manifest文件地址
             if (!isNeedCardModule.toBoolean()) {
@@ -68,7 +68,9 @@ dependencies {
     // 需要重新在子模块中再引用一次，否则报错
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
     implementation project(':lib_base')
-    if (isNeedHomeModule.toBoolean()) {
-        implementation project(':module_home')
+    if (!isNeedCardModule.toBoolean()) {
+        if (isNeedHomeModule.toBoolean()) {
+            implementation project(':module_home')
+        }
     }
 }

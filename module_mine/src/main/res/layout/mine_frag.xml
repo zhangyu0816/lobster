@@ -111,7 +111,7 @@
 
                         <ImageView
                             android:id="@+id/iv_image"
-                            onClickDelayed="@{viewModel::toMemberDetail}"
+                            onClickDelayed="@{viewModel::toEditMember}"
                             defaultRes="@{ObjectUtils.getDefaultRes()}"
                             imageUrl="@{viewModel.memberInfo.image}"
                             isCircle="@{true}"
