@@ -3,8 +3,12 @@ package com.zb.module_mine.vm;
 import android.view.View;
 
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.module_mine.BR;
 import com.zb.module_mine.iv.SettingVMInterface;
+
+import java.io.File;
 
 public class SettingViewModel extends BaseViewModel implements SettingVMInterface {
     @Override
@@ -40,7 +44,8 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
 
     @Override
     public void toCleanCache(View view) {
-
+        DataCleanManager.deleteFile(new File(String.valueOf(activity.getCacheDir())));
+        mBinding.setVariable(BR.cacheSize, DataCleanManager.getCacheSize(new File(String.valueOf(activity.getCacheDir()))));
     }
 
     @Override
