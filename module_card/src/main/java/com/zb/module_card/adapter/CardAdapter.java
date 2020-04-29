@@ -1,5 +1,6 @@
 package com.zb.module_card.adapter;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.adapter.BindingItemAdapter;
 import com.zb.lib_base.adapter.RecyclerHolder;
 import com.zb.lib_base.model.PairInfo;
@@ -9,16 +10,15 @@ import com.zb.module_card.R;
 
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.ViewDataBinding;
 
 public class CardAdapter<T> extends BindingItemAdapter<T> {
 
     private BaseViewModel viewModel;
-    private AppCompatActivity activity;
+    private RxAppCompatActivity activity;
     private int selectImageIndex = 0;
 
-    public CardAdapter(AppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
+    public CardAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
         super(activity, layoutId, list);
         this.activity = activity;
         this.viewModel = viewModel;

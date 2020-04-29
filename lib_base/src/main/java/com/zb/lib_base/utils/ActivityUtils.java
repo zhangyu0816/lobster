@@ -1,9 +1,8 @@
 package com.zb.lib_base.utils;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.model.MemberInfo;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 public class ActivityUtils {
     /*********************** app **************************/
@@ -161,7 +160,7 @@ public class ActivityUtils {
     /*********************** 相册 **************************/
 
     // 相册主页
-    public static void getCameraMain(AppCompatActivity activity, boolean isMore) {
+    public static void getCameraMain(RxAppCompatActivity activity, boolean isMore) {
         ARouter.getInstance().build(RouteUtils.Camera_Main).withBoolean("isMore", isMore).navigation(activity, 1001);
     }
 

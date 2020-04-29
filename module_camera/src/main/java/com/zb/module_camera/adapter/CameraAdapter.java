@@ -1,5 +1,6 @@
 package com.zb.module_camera.adapter;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.adapter.BindingItemAdapter;
 import com.zb.lib_base.adapter.RecyclerHolder;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -7,7 +8,6 @@ import com.zb.module_camera.BR;
 
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.ViewDataBinding;
 
 public class CameraAdapter<T> extends BindingItemAdapter<T> {
@@ -19,7 +19,7 @@ public class CameraAdapter<T> extends BindingItemAdapter<T> {
         notifyDataSetChanged();
     }
 
-    public CameraAdapter(AppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
+    public CameraAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
         super(activity, layoutId, list);
         this.viewModel = viewModel;
     }

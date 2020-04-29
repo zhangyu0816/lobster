@@ -5,7 +5,6 @@ import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.http.HttpTimeException;
 
-import androidx.appcompat.app.AppCompatActivity;
 import rx.Observable;
 import rx.functions.Func1;
 

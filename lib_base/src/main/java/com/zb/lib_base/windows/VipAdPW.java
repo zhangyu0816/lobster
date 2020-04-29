@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import com.app.abby.xbanner.Ads;
 import com.app.abby.xbanner.ImageLoader;
 import com.app.abby.xbanner.XBanner;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
 import com.zb.lib_base.adapter.AdapterBinding;
@@ -19,8 +20,6 @@ import com.zb.lib_base.utils.ObjectUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 public class VipAdPW extends BasePopupWindow {
     private List<VipAd> vipAdList = new ArrayList<>();
     private List<Ads> adsList = new ArrayList<>();
@@ -28,7 +27,7 @@ public class VipAdPW extends BasePopupWindow {
     private int preIndex = -1;
     private PwsVipAdBinding binding;
 
-    public VipAdPW(AppCompatActivity activity, View parentView) {
+    public VipAdPW(RxAppCompatActivity activity, View parentView) {
         super(activity, parentView, true);
         for (int i = 0; i < 4; i++) {
             VipAd vipAd = new VipAd();

@@ -2,10 +2,11 @@ package com.zb.lib_base.utils;
 
 import android.os.Environment;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+
 import java.io.File;
 import java.math.BigDecimal;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 public class DataCleanManager {
     /**
@@ -13,7 +14,7 @@ public class DataCleanManager {
      *
      * @param context
      */
-    public static void cleanInternalCache(AppCompatActivity context) {
+    public static void cleanInternalCache(RxAppCompatActivity context) {
         deleteFilesByDirectory(context.getCacheDir());
     }
 
@@ -22,7 +23,7 @@ public class DataCleanManager {
      *
      * @param context
      */
-    public static void cleanDatabases(AppCompatActivity context) {
+    public static void cleanDatabases(RxAppCompatActivity context) {
         deleteFilesByDirectory(new File("/data/data/"
                 + context.getPackageName() + "/databases"));
     }
@@ -32,7 +33,7 @@ public class DataCleanManager {
      *
      * @param context
      */
-    public static void cleanSharedPreference(AppCompatActivity context) {
+    public static void cleanSharedPreference(RxAppCompatActivity context) {
         deleteFilesByDirectory(new File("/data/data/"
                 + context.getPackageName() + "/shared_prefs"));
     }
@@ -43,7 +44,7 @@ public class DataCleanManager {
      * @param context
      * @param dbName
      */
-    public static void cleanDatabaseByName(AppCompatActivity context, String dbName) {
+    public static void cleanDatabaseByName(RxAppCompatActivity context, String dbName) {
         context.deleteDatabase(dbName);
     }
 
@@ -52,7 +53,7 @@ public class DataCleanManager {
      *
      * @param context
      */
-    public static void cleanFiles(AppCompatActivity context) {
+    public static void cleanFiles(RxAppCompatActivity context) {
         deleteFilesByDirectory(context.getFilesDir());
     }
 
@@ -61,7 +62,7 @@ public class DataCleanManager {
      *
      * @param context
      */
-    public static void cleanExternalCache(AppCompatActivity context) {
+    public static void cleanExternalCache(RxAppCompatActivity context) {
         if (Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
             deleteFilesByDirectory(context.getExternalCacheDir());
@@ -83,7 +84,7 @@ public class DataCleanManager {
      * @param context
      * @param filepath
      */
-    public static void cleanApplicationData(AppCompatActivity context, String... filepath) {
+    public static void cleanApplicationData(RxAppCompatActivity context, String... filepath) {
         cleanInternalCache(context);
         cleanExternalCache(context);
         cleanDatabases(context);

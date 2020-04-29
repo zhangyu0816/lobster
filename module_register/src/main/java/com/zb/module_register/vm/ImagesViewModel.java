@@ -2,13 +2,23 @@ package com.zb.module_register.vm;
 
 import android.Manifest;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.api.registerApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.model.LoginInfo;
+import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
+import com.zb.lib_base.utils.PreferenceUtil;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
+import com.zb.lib_base.utils.uploadImage.PhotoFile;
+import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_register.R;
 import com.zb.module_register.adapter.RegisterAdapter;
@@ -16,6 +26,7 @@ import com.zb.module_register.databinding.RegisterImagesBinding;
 import com.zb.module_register.iv.ImagesVMInterface;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -25,6 +36,7 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
     public int _position = 0;
     public List<String> images = new ArrayList<>();
     private SimpleItemTouchHelperCallback callback;
+    private PhotoManager photoManager;
 
     @Override
     public void back(View view) {
@@ -39,15 +51,63 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
         adapter = new RegisterAdapter<>(activity, R.layout.item_register_image, images, this);
         callback = new SimpleItemTouchHelperCallback(adapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(((RegisterImagesBinding)mBinding).imagesList);
+        touchHelper.attachToRecyclerView(((RegisterImagesBinding) mBinding).imagesList);
         callback.setSort(true);
         callback.setDragFlags(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT);
+
+        photoManager = new PhotoManager(activity, new PhotoManager.OnUpLoadImageListener() {
+            @Override
+            public void onSuccess() {
+                MineApp.registerInfo.setMoreImages(photoManager.jointWebUrl("#"));
+                photoManager.deleteAllFile();
+                register(MineApp.registerInfo);
+            }
+
+            @Override
+            public void onError(PhotoFile file) {
+
+            }
+        });
     }
 
     @Override
     public void complete(View view) {
-        DataCleanManager.deleteFile(activity.getCacheDir());
-        activity.finish();
+        if (MineApp.registerInfo.getImageList().size() == 0) {
+            SCToastUtil.showToast(activity, "请上传至少1张照片");
+            return;
+        }
+        String images = "";
+        for (String image : MineApp.registerInfo.getImageList()) {
+            if (!image.isEmpty()) {
+                images += "#" + image;
+            }
+        }
+        images = images.substring(1);
+        photoManager.addFiles(Arrays.asList(images.split("#")), () -> photoManager.reUploadByUnSuccess());
+    }
+
+    @Override
+    public void register(RegisterInfo registerInfo) {
+        registerApi api = new registerApi(new HttpOnNextListener<LoginInfo>() {
+            @Override
+            public void onNext(LoginInfo o) {
+                SCToastUtil.showToast(activity, "注册成功");
+                PreferenceUtil.saveLongValue(activity, "userId", o.getId());
+                PreferenceUtil.saveStringValue(activity, "sessionId", o.getSessionId());
+                PreferenceUtil.saveStringValue(activity, "userName", o.getUserName());
+                BaseActivity.update();
+                DataCleanManager.deleteFile(activity.getCacheDir());
+                ActivityUtils.getMainActivity();
+                activity.finish();
+            }
+        }, activity)
+                .setUserName(registerInfo.getPhone())
+                .setCaptcha(registerInfo.getCaptcha())
+                .setNick(registerInfo.getName())
+                .setBirthday(registerInfo.getBirthday())
+                .setMoreImages(registerInfo.getMoreImages())
+                .setSex(registerInfo.getSex());
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override
@@ -77,6 +137,6 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
     }
 
     private void setPermissions() {
-        ActivityUtils.getCameraMain(activity,false);
+        ActivityUtils.getCameraMain(activity, false);
     }
 }

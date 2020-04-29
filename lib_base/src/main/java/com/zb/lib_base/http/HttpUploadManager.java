@@ -20,6 +20,7 @@ import rx.schedulers.Schedulers;
 public class HttpUploadManager {
     /*基础url*/
     public static final String SERVER_IMAGE = "http://img.zuwo.la/";
+//    public static final String SERVER_IMAGE = "http://test.yichengshi.cn:8090/";
 
     /*超时设置*/
     private static final int DEFAULT_TIMEOUT = 6;

@@ -7,30 +7,35 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.api.registerCaptchaApi;
+import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.iv.BaseVMInterface;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.windows.BottleQuestionPW;
 
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.ViewDataBinding;
 import androidx.viewpager.widget.ViewPager;
 
 public class BaseViewModel implements BaseVMInterface {
     public ViewDataBinding mBinding;
-    public AppCompatActivity activity;
+    public RxAppCompatActivity activity;
     public boolean isMore = false;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         mBinding = binding;
-        activity = (AppCompatActivity) mBinding.getRoot().getContext();
+        activity = (RxAppCompatActivity) mBinding.getRoot().getContext();
     }
 
     @Override
@@ -151,5 +156,21 @@ public class BaseViewModel implements BaseVMInterface {
         if (activity != null && activity instanceof BaseActivity) {
             ((BaseActivity) activity).performCodeWithPermission(permissionDes, runnable, permissions);
         }
+    }
+
+
+    /********************** 公用网络请求 ***************************/
+
+    @Override
+    public void registerCaptcha() {
+        // 注册验证码
+        registerCaptchaApi api = new registerCaptchaApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                SCToastUtil.showToast(activity, "验证码已发送，请注意查收");
+            }
+        }, activity)
+                .setUserName(MineApp.registerInfo.getPhone());
+        HttpManager.getInstance().doHttpDeal(api);
     }
 }

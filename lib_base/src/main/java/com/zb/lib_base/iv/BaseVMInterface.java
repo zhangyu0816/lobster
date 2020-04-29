@@ -3,6 +3,7 @@ package com.zb.lib_base.iv;
 import android.view.View;
 
 import com.zb.lib_base.model.DiscoverInfo;
+import com.zb.lib_base.model.RegisterInfo;
 
 import androidx.databinding.ViewDataBinding;
 
@@ -34,6 +35,11 @@ public interface BaseVMInterface {
 
     default void question(View view) {
     }
+
     default void selectPosition(int position) {
+    }
+
+    /********************** 公用网络请求 ***************************/
+    default void registerCaptcha() {
     }
 }

@@ -2,24 +2,23 @@ package com.zb.lib_base.windows;
 
 import android.view.View;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 public class TextPW extends BasePopupWindow {
     private String content = "";
     private String title = "";
     private CallBack mCallBack;
 
-    public TextPW(AppCompatActivity activity, View parentView, String title, String content) {
+    public TextPW(RxAppCompatActivity activity, View parentView, String title, String content) {
         super(activity, parentView, true);
         this.title = title;
         this.content = content;
         initUI();
     }
 
-    public TextPW(AppCompatActivity activity, View parentView, String title, String content, CallBack callBack) {
+    public TextPW(RxAppCompatActivity activity, View parentView, String title, String content, CallBack callBack) {
         super(activity, parentView, true);
         this.title = title;
         this.content = content;

@@ -24,10 +24,10 @@ import com.maning.imagebrowserlibrary.transforms.ZoomOutTransformer;
 import com.maning.imagebrowserlibrary.view.CircleIndicator;
 import com.maning.imagebrowserlibrary.view.MNGestureView;
 import com.maning.imagebrowserlibrary.view.MNViewPager;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import java.util.ArrayList;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -35,7 +35,7 @@ import androidx.viewpager.widget.ViewPager;
 /**
  * 图片浏览的页面
  */
-public class MNImageBrowserActivity extends AppCompatActivity {
+public class MNImageBrowserActivity extends RxAppCompatActivity {
 
     private Context context;
 

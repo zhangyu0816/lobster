@@ -5,7 +5,7 @@ import android.os.Build;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
-import androidx.appcompat.app.AppCompatActivity;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 public class KeyBroadUtils {
 
@@ -47,7 +47,7 @@ public class KeyBroadUtils {
     /**
      * 监听软键盘高度和状态
      */
-    public static ViewTreeObserver.OnGlobalLayoutListener observeSoftKeyboard(AppCompatActivity activity, final OnSoftKeyboardChangeListener listener) {
+    public static ViewTreeObserver.OnGlobalLayoutListener observeSoftKeyboard(RxAppCompatActivity activity, final OnSoftKeyboardChangeListener listener) {
         final View decorView = activity.getWindow().getDecorView();
         ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
             int previousKeyboardHeight = -1;
@@ -76,7 +76,7 @@ public class KeyBroadUtils {
         return onGlobalLayoutListener;
     }
 
-    public static void removeSoftKeyboardObserver(AppCompatActivity activity, ViewTreeObserver.OnGlobalLayoutListener listener) {
+    public static void removeSoftKeyboardObserver(RxAppCompatActivity activity, ViewTreeObserver.OnGlobalLayoutListener listener) {
         if (listener == null) return;
         final View decorView = activity.getWindow().getDecorView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

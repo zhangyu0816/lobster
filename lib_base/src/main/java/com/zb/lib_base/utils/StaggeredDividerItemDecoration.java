@@ -4,15 +4,16 @@ import android.graphics.Rect;
 import android.util.TypedValue;
 import android.view.View;
 
-import androidx.appcompat.app.AppCompatActivity;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 public class StaggeredDividerItemDecoration extends RecyclerView.ItemDecoration {
-    private AppCompatActivity context;
+    private RxAppCompatActivity context;
     private int interval;
 
-    public StaggeredDividerItemDecoration(AppCompatActivity context, int interval) {
+    public StaggeredDividerItemDecoration(RxAppCompatActivity context, int interval) {
         this.context = context;
         this.interval = interval;
     }

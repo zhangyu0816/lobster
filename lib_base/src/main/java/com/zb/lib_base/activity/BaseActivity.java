@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 import com.zb.lib_base.databinding.PwsPerformBinding;
 import com.zb.lib_base.utils.PreferenceUtil;
@@ -19,16 +20,15 @@ import java.io.File;
 import java.util.Random;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends RxAppCompatActivity {
 
     public ViewDataBinding mBinding;
-    public static AppCompatActivity activity;
-    public static long userId = 123456l;
+    public static RxAppCompatActivity activity;
+    public static long userId = 0;
     public static String sessionId = "";
 
     @Override
@@ -39,14 +39,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         ARouter.getInstance().inject(this);
         initUI();
-//        update();
+        update();
     }
 
     public abstract int getRes();
 
     public abstract void initUI();
 
-    public void update() {
+    public static void update() {
         userId = PreferenceUtil.readLongValue(activity, "userId");
         sessionId = PreferenceUtil.readStringValue(activity, "sessionId");
     }
@@ -212,7 +212,13 @@ public abstract class BaseActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(BaseActivity.this, permissions, requestCode);
                 build.dismiss();
             });
-            binding.cancel.setOnClickListener(v -> build.dismiss());
+            binding.cancel.setOnClickListener(v -> {
+                if (permissionRunnable != null) {
+                    permissionRunnable.noPermission();
+                    permissionRunnable = null;
+                }
+                build.dismiss();
+            });
         } else {
             // Contact permissions have not been granted yet. Request them directly.
             ActivityCompat.requestPermissions(BaseActivity.this, permissions, requestCode);

@@ -1,23 +1,12 @@
 package com.zb.lib_base.http;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.text.TextUtils;
-import android.util.Log;
-import android.widget.Toast;
-
-import com.zb.lib_base.activity.BaseActivity;
-import com.zb.lib_base.model.BaseResultEntity;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.utils.SCToastUtil;
 
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 
-import androidx.appcompat.app.AppCompatActivity;
 import rx.Subscriber;
 
 /**
@@ -32,7 +21,7 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
     //    回调接口
     private HttpOnNextListener mSubscriberOnNextListener;
     //    弱引用反正内存泄露
-    private WeakReference<AppCompatActivity> mActivity;
+    private WeakReference<RxAppCompatActivity> mActivity;
 
     private String dialogTitle = "正在加载中";
     private CallBack mCallBack;
@@ -48,13 +37,12 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
      * @param context
      * @param showProgressAndCancel     是否需要加载框,是否能取消加载框
      */
-    public ProgressSubscriber(HttpOnNextListener mSubscriberOnNextListener, AppCompatActivity context, boolean showProgressAndCancel,
+    public ProgressSubscriber(HttpOnNextListener mSubscriberOnNextListener, RxAppCompatActivity context, boolean showProgressAndCancel,
                               String dialogTitle, CallBack callBack) {
         this.mSubscriberOnNextListener = mSubscriberOnNextListener;
         this.mActivity = new WeakReference<>(context);
         this.showProgressAndCancel = showProgressAndCancel;
         mCallBack = callBack;
-        setShowProgressAndCancel(showProgressAndCancel);
         setDialogTitle(dialogTitle);
     }
 
@@ -68,6 +56,7 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
      */
     private void dismissProgressDialog() {
         CustomProgressDialog.stopLoading();
+        onCancelProgress();
     }
 
     /**
@@ -95,7 +84,7 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
      */
     @Override
     public void onError(Throwable e) {
-        AppCompatActivity context = mActivity.get();
+        RxAppCompatActivity context = mActivity.get();
         if (context == null) {
             return;
         }
@@ -129,41 +118,8 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
      */
     @Override
     public void onNext(T t) {
-        BaseResultEntity<T> httpResult = (BaseResultEntity<T>) t;
-        Context context = mActivity.get();
-        //未登录
-        if (httpResult.getCode() == HttpTimeException.NOT_LOGIN) {
-
-            try {
-                if (TextUtils.equals("", BaseActivity.sessionId)) {
-                    Intent intent = new Intent(context, Class.forName("com.yimi.rentme.ui.activity.login_register.LoginActivity"));
-                    ((Activity) context).startActivityForResult(intent, HttpTimeException.NOT_LOGIN);
-                } else {
-                    Intent data = new Intent("rentme_logout");
-                    data.putExtra("logoutType", 2);
-                    context.sendBroadcast(data);
-                }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            throw new HttpTimeException(httpResult.getCode());
-        }
-
-        //请求失败
-        if (httpResult.getCode() == HttpTimeException.ERROR ||
-                httpResult.getCode() == HttpTimeException.NOT_BIND_PHONE ||
-                httpResult.getCode() == HttpTimeException.SINGLE_IMAGE ||
-                httpResult.getCode() == HttpTimeException.OPENVIP) {
-            throw new HttpTimeException(httpResult.getMsg());
-        }
-
-        if (httpResult.getCode() == 1) {
-            if (mSubscriberOnNextListener != null) {
-                mSubscriberOnNextListener.onNext(httpResult.getData());
-            }
-        } else {
-            throw new HttpTimeException(httpResult.getCode());
+        if (mSubscriberOnNextListener != null) {
+            mSubscriberOnNextListener.onNext(t);
         }
     }
 
@@ -174,13 +130,5 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
         if (!this.isUnsubscribed()) {
             this.unsubscribe();
         }
-    }
-
-    public boolean isShowProgressAndCancel() {
-        return showProgressAndCancel;
-    }
-
-    public void setShowProgressAndCancel(boolean showProgressAndCancel) {
-        this.showProgressAndCancel = showProgressAndCancel;
     }
 }

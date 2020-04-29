@@ -8,17 +8,18 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
-import androidx.appcompat.app.AppCompatActivity;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 
 public abstract class BasePopupWindow extends PopupWindow {
 
-    public AppCompatActivity activity;
+    public RxAppCompatActivity activity;
     public ViewDataBinding mBinding;
 
     @SuppressLint("ClickableViewAccessibility")
-    public BasePopupWindow(AppCompatActivity activity, View parentView, boolean canClick) {
+    public BasePopupWindow(RxAppCompatActivity activity, View parentView, boolean canClick) {
         this.activity = activity;
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(activity), getRes(), null, false);
         View view = mBinding.getRoot();

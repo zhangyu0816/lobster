@@ -2,6 +2,7 @@ package com.zb.module_home.windows;
 
 import android.view.View;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.WalletInfo;
@@ -14,8 +15,6 @@ import com.zb.module_home.adapter.HomeAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 public class GiftPW extends BasePopupWindow {
 
     private WalletInfo walletInfo;
@@ -23,7 +22,7 @@ public class GiftPW extends BasePopupWindow {
     private List<GiftInfo> giftInfoList;
     private int preIndex = -1;
 
-    public GiftPW(AppCompatActivity activity, View parentView, WalletInfo walletInfo, List<GiftInfo> giftInfoList) {
+    public GiftPW(RxAppCompatActivity activity, View parentView, WalletInfo walletInfo, List<GiftInfo> giftInfoList) {
         super(activity, parentView, true);
         this.walletInfo = walletInfo;
         this.giftInfoList = giftInfoList;

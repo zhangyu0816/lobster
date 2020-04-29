@@ -2,16 +2,16 @@ package com.zb.module_card.windows;
 
 import android.view.View;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 public class CountUsedPW extends BasePopupWindow {
     private int type;
 
-    public CountUsedPW(AppCompatActivity activity, View parentView, int type) {
+    public CountUsedPW(RxAppCompatActivity activity, View parentView, int type) {
         super(activity, parentView, false);
         this.type = type;
         initUI();

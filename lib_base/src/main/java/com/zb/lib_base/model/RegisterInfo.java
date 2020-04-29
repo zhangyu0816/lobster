@@ -14,6 +14,8 @@ public class RegisterInfo extends BaseObservable {
     String phone = "";
     String birthday = "";
     String pass = "";
+    String captcha = "";
+    String moreImages = "";
     List<String> imageList = new ArrayList<>();
 
     @Bindable
@@ -64,6 +66,26 @@ public class RegisterInfo extends BaseObservable {
     public void setPass(String pass) {
         this.pass = pass;
         notifyPropertyChanged(BR.pass);
+    }
+
+    @Bindable
+    public String getCaptcha() {
+        return captcha;
+    }
+
+    public void setCaptcha(String captcha) {
+        this.captcha = captcha;
+        notifyPropertyChanged(BR.captcha);
+    }
+
+    @Bindable
+    public String getMoreImages() {
+        return moreImages;
+    }
+
+    public void setMoreImages(String moreImages) {
+        this.moreImages = moreImages;
+        notifyPropertyChanged(BR.moreImages);
     }
 
     @Bindable

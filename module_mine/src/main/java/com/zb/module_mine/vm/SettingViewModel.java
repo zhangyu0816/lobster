@@ -2,6 +2,7 @@ package com.zb.module_mine.vm;
 
 import android.view.View;
 
+import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -55,11 +56,11 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
 
     @Override
     public void toRule(View view) {
-        ActivityUtils.getMineWeb("隐私政策","");
+        ActivityUtils.getMineWeb("隐私政策", "");
     }
 
     @Override
     public void toAboutUs(View view) {
-        ActivityUtils.getMineWeb("关于我们","");
+        ActivityUtils.getMineWeb("关于我们", HttpManager.BASE_URL + "mobile/yuenar_about_us.html");
     }
 }

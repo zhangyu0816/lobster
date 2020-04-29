@@ -6,23 +6,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 
 public abstract class BaseFragment extends Fragment {
     private View rootView;
-    public AppCompatActivity activity;
+    public RxAppCompatActivity activity;
     public ViewDataBinding mBinding;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = (AppCompatActivity) getActivity();
+        activity = (RxAppCompatActivity) getActivity();
         ARouter.getInstance().inject(this);
     }
 

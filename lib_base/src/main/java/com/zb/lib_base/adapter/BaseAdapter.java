@@ -1,18 +1,18 @@
 package com.zb.lib_base.adapter;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.BR;
 import com.zb.lib_base.windows.BasePopupWindow;
 
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.ViewDataBinding;
 
 public class BaseAdapter<T> extends BindingItemAdapter<T> {
     private BasePopupWindow pw;
     private int selectIndex = -1;
 
-    public BaseAdapter(AppCompatActivity activity, int layoutId, List<T> list, BasePopupWindow pw) {
+    public BaseAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BasePopupWindow pw) {
         super(activity, layoutId, list);
         this.pw = pw;
     }

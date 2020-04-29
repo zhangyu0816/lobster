@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -16,10 +18,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.SortedSet;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
-    private AppCompatActivity context;
+    private RxAppCompatActivity context;
     private Camera mCamera;
     private SurfaceHolder mHolder;
     /**
@@ -45,7 +46,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private MediaRecorder mRecorder;//音视频录制类
     public String videoPath = "";
 
-    public CameraPreview(AppCompatActivity context, Camera mCamera, int x, int y) {
+    public CameraPreview(RxAppCompatActivity context, Camera mCamera, int x, int y) {
         super(context);
         this.context = context;
         this.mCamera = mCamera;
@@ -55,7 +56,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         init();
     }
 
-    public CameraPreview(AppCompatActivity context, Camera mCamera, MediaRecorder mRecorder, int x, int y) {
+    public CameraPreview(RxAppCompatActivity context, Camera mCamera, MediaRecorder mRecorder, int x, int y) {
         super(context);
         this.context = context;
         this.mCamera = mCamera;

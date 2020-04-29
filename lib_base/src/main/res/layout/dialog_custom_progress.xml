@@ -18,14 +18,11 @@
         android:paddingRight="32dp"
         android:paddingTop="20dp">
 
-        <ProgressBar
+        <ImageView
             android:id="@+id/progress"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:indeterminateBehavior="repeat"
-            android:indeterminateDrawable="@mipmap/loading_icon"
-            android:indeterminateDuration="2000"
-            android:indeterminateOnly="true"/>
+            android:background="@mipmap/loading_icon"/>
 
         <TextView
             android:id="@+id/tv_message"

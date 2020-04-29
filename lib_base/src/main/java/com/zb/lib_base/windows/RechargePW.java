@@ -2,6 +2,7 @@ package com.zb.lib_base.windows;
 
 import android.view.View;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
 import com.zb.lib_base.adapter.BaseAdapter;
@@ -10,15 +11,13 @@ import com.zb.lib_base.model.WalletInfo;
 
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 public class RechargePW extends BasePopupWindow {
     private WalletInfo walletInfo;
     private List<RechargeInfo> rechargeInfoList;
     private BaseAdapter adapter;
     private int preIndex = -1;
 
-    public RechargePW(AppCompatActivity activity, View parentView, WalletInfo walletInfo, List<RechargeInfo> rechargeInfoList) {
+    public RechargePW(RxAppCompatActivity activity, View parentView, WalletInfo walletInfo, List<RechargeInfo> rechargeInfoList) {
         super(activity, parentView, true);
         this.walletInfo = walletInfo;
         this.rechargeInfoList = rechargeInfoList;

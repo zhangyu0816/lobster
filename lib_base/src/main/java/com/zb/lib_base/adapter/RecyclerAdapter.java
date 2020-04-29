@@ -3,22 +3,23 @@ package com.zb.lib_base.adapter;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+
 import java.util.List;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class RecyclerAdapter<T, B extends ViewDataBinding> extends RecyclerView.Adapter<RecyclerHolder<B>> {
 
-    private AppCompatActivity mContext;
+    private RxAppCompatActivity mContext;
     private List<T> mList;
     private int layoutId;
 
-   public RecyclerAdapter(AppCompatActivity context, List<T> list, @LayoutRes int layoutId) {
+   public RecyclerAdapter(RxAppCompatActivity context, List<T> list, @LayoutRes int layoutId) {
         this.mContext = context;
         this.mList = list;
         this.layoutId = layoutId;

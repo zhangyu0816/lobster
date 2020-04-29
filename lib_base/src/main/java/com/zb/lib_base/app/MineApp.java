@@ -11,6 +11,7 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.zb.lib_base.R;
 import com.zb.lib_base.adaptive.FitScreen;
+import com.zb.lib_base.log.LogUtil;
 import com.zb.lib_base.model.BaseEntity;
 import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.model.VipInfo;
@@ -87,6 +88,7 @@ public class MineApp extends MultiDexApplication {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+        LogUtil.init();
     }
 
     public static Context getInstance() {

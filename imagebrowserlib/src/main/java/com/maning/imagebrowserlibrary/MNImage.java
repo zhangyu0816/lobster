@@ -7,13 +7,12 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.maning.imagebrowserlibrary.model.ImageBrowserConfig;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import java.util.ArrayList;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 public class MNImage {
-    public static void imageBrowser(final AppCompatActivity mContext, final View view, ArrayList<String> sourceImageList, int index) {
+    public static void imageBrowser(final RxAppCompatActivity mContext, final View view, ArrayList<String> sourceImageList, int index) {
         MNImageBrowser.with(mContext)
                 .setTransformType(ImageBrowserConfig.TransformType.Transform_DepthPage)
                 .setIndicatorType(ImageBrowserConfig.IndicatorType.Indicator_Circle)

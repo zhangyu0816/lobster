@@ -19,6 +19,7 @@ public class PhoneActivity extends RegisterBaseActivity {
     boolean isLogin;
 
     private PhoneViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.register_phone;
@@ -26,7 +27,7 @@ public class PhoneActivity extends RegisterBaseActivity {
 
     @Override
     public void initUI() {
-         viewModel = new PhoneViewModel();
+        viewModel = new PhoneViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.isLogin = isLogin;

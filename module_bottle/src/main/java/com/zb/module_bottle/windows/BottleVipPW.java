@@ -2,20 +2,19 @@ package com.zb.module_bottle.windows;
 
 import android.view.View;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_bottle.BR;
 import com.zb.module_bottle.R;
 import com.zb.module_bottle.adapter.BottleAdapter;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 public class BottleVipPW extends BasePopupWindow {
 
     private BottleAdapter adapter;
     private int preIndex = -1;
 
-    public BottleVipPW(AppCompatActivity activity, View parentView) {
+    public BottleVipPW(RxAppCompatActivity activity, View parentView) {
         super(activity, parentView, true);
         initUI();
     }

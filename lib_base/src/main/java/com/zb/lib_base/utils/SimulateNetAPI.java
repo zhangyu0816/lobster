@@ -1,10 +1,10 @@
 package com.zb.lib_base.utils;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 public class SimulateNetAPI {
     /**
@@ -12,7 +12,7 @@ public class SimulateNetAPI {
      *
      * @return json data
      */
-    public static String getOriginalFundData(AppCompatActivity activity,String fileName) {
+    public static String getOriginalFundData(RxAppCompatActivity activity, String fileName) {
         InputStream input = null;
         try {
             input = activity.getAssets().open(fileName);

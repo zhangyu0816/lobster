@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.PwsBirthdayBinding;
@@ -16,7 +17,6 @@ import com.zb.lib_base.utils.widget.adapters.AbstractWheelTextAdapter;
 
 import java.util.ArrayList;
 
-import androidx.appcompat.app.AppCompatActivity;
 
 public class BirthdayPW extends BasePopupWindow {
     private PwsBirthdayBinding binding;
@@ -38,7 +38,7 @@ public class BirthdayPW extends BasePopupWindow {
     private String selectDate = "";
     private String nowDate = "";
 
-    public BirthdayPW(AppCompatActivity activity, View parentView, CallBack callBack) {
+    public BirthdayPW(RxAppCompatActivity activity, View parentView, CallBack callBack) {
         super(activity, parentView, true);
         mCallBack = callBack;
         nowDate = DateUtil.getNow(DateUtil.yyyy_MM_dd);
@@ -131,7 +131,7 @@ public class BirthdayPW extends BasePopupWindow {
      * @param data
      * @param defaultIndex
      */
-    private void initData(AppCompatActivity activity, WheelView wheelView, final ArrayList<String> data, int defaultIndex) {
+    private void initData(RxAppCompatActivity activity, WheelView wheelView, final ArrayList<String> data, int defaultIndex) {
 
         defaultIndex = defaultIndex == -1 ? 0 : defaultIndex;
 

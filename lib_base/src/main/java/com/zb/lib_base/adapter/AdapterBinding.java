@@ -16,6 +16,7 @@ import com.library.flowlayout.FlowLayoutManager;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.model.PairInfo;
@@ -31,7 +32,6 @@ import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.BindingAdapter;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -87,7 +87,7 @@ public class AdapterBinding {
             view.setItemAnimator(null);
             view.setLayoutManager(manager);
             if (view.getItemDecorationCount() == 0) {
-                view.addItemDecoration(new StaggeredDividerItemDecoration((AppCompatActivity) view.getContext(), (int) size));
+                view.addItemDecoration(new StaggeredDividerItemDecoration((RxAppCompatActivity) view.getContext(), (int) size));
             }
             // 防止顶部item出现空白
             view.addOnScrollListener(new RecyclerView.OnScrollListener() {

@@ -1,5 +1,6 @@
 package com.zb.module_register.adapter;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.adapter.BindingItemAdapter;
 import com.zb.lib_base.adapter.ItemTouchHelperAdapter;
 import com.zb.lib_base.adapter.RecyclerHolder;
@@ -9,13 +10,12 @@ import com.zb.module_register.BR;
 import java.util.Collections;
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.ViewDataBinding;
 
 public class RegisterAdapter<T> extends BindingItemAdapter<T> implements ItemTouchHelperAdapter {
     private BaseViewModel viewModel;
 
-    public RegisterAdapter(AppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
+    public RegisterAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
         super(activity, layoutId, list);
         this.viewModel = viewModel;
     }

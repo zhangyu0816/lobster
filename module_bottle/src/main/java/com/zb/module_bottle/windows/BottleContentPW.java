@@ -2,6 +2,7 @@ package com.zb.module_bottle.windows;
 
 import android.view.View;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -13,15 +14,13 @@ import com.zb.module_bottle.databinding.PwsBottleContentBinding;
 
 import java.util.Arrays;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 public class BottleContentPW extends BasePopupWindow {
     private BottleInfo bottleInfo;
     private BottleAdapter adapter;
     private boolean isWrite = false;
     private PwsBottleContentBinding binding;
 
-    public BottleContentPW(AppCompatActivity activity, View parentView, BottleInfo bottleInfo, boolean isWrite) {
+    public BottleContentPW(RxAppCompatActivity activity, View parentView, BottleInfo bottleInfo, boolean isWrite) {
         super(activity, parentView, false);
         this.bottleInfo = bottleInfo;
         this.isWrite = isWrite;

@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 public class StatusBarUtil {
     /**
@@ -19,7 +19,7 @@ public class StatusBarUtil {
      * @param activity
      */
     @TargetApi(19)
-    public static void transparencyBar(AppCompatActivity activity) {
+    public static void transparencyBar(RxAppCompatActivity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = activity.getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -41,7 +41,7 @@ public class StatusBarUtil {
      * @param activity
      * @param colorId
      */
-    public static void setStatusBarColor(AppCompatActivity activity, int colorId) {
+    public static void setStatusBarColor(RxAppCompatActivity activity, int colorId) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = activity.getWindow();
@@ -66,7 +66,7 @@ public class StatusBarUtil {
      * @param activity
      * @return 1:MIUUI 2:Flyme 3:android6.0
      */
-    public static int statusBarLightMode(AppCompatActivity activity) {
+    public static int statusBarLightMode(RxAppCompatActivity activity) {
         int result = 0;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (MIUISetStatusBarLightMode(activity, true)) {
@@ -125,7 +125,7 @@ public class StatusBarUtil {
      * @param dark     是否把状态栏文字及图标颜色设置为深色
      * @return boolean 成功执行返回true
      */
-    public static boolean MIUISetStatusBarLightMode(AppCompatActivity activity, boolean dark) {
+    public static boolean MIUISetStatusBarLightMode(RxAppCompatActivity activity, boolean dark) {
         boolean result = false;
         Window window = activity.getWindow();
         if (window != null) {
@@ -162,7 +162,7 @@ public class StatusBarUtil {
      * 获取状态栏高度
      * @return
      */
-    public static int getStatusBarHeight(AppCompatActivity context) {
+    public static int getStatusBarHeight(RxAppCompatActivity context) {
         int result = 0;
         int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
@@ -172,7 +172,7 @@ public class StatusBarUtil {
     }
 
     //设置布局距离状态栏高度
-    public static void setLayoutPadding(AppCompatActivity activity, View contentLayout) {
+    public static void setLayoutPadding(RxAppCompatActivity activity, View contentLayout) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             contentLayout
                     .setPadding(contentLayout.getPaddingLeft(), getStatusBarHeight(activity) + contentLayout.getPaddingTop(),

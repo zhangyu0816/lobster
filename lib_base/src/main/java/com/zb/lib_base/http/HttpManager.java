@@ -5,11 +5,13 @@ import android.content.Intent;
 
 import com.google.gson.Gson;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.log.HttpLogger;
 import com.zb.lib_base.model.BaseEntity;
 
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -26,7 +28,7 @@ public class HttpManager {
 //    public static final String BASE_URL = "http://www.zuwo.la/";
     //        public static String BASE_URL = "http://www.zuwo.la:8066/";
 //    public static String BASE_URL = "http://192.168.1.188:8090/";
-    public static String BASE_URL = "http://192.168.1.91:8090/";//敏耀
+    public static String BASE_URL = "http://192.168.1.88:8090/";//敏耀
 
     /*超时设置*/
     private static final int DEFAULT_TIMEOUT = 6;
@@ -40,10 +42,10 @@ public class HttpManager {
         builder.connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         builder.addInterceptor(new CommonInterceptor());
 
-//        // http log
-//        HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor(new HttpLogger());
-//        logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-//        builder.addNetworkInterceptor(logInterceptor);
+        // http log
+        HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor(new HttpLogger());
+        logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        builder.addNetworkInterceptor(logInterceptor);
 
         Retrofit retrofit = new Retrofit.Builder().client(builder.build()).addConverterFactory(GsonConverterFactory
                 .create(new Gson())).addCallAdapterFactory(RxJavaCallAdapterFactory.create()).baseUrl(BASE_URL).build();

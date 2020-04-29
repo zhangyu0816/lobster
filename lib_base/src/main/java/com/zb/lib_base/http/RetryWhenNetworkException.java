@@ -1,7 +1,5 @@
 package com.zb.lib_base.http;
 
-import android.util.Log;
-
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeUnit;

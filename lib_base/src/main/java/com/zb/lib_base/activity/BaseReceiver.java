@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import androidx.appcompat.app.AppCompatActivity;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 
 /**
@@ -15,9 +15,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public abstract class BaseReceiver extends BroadcastReceiver {
 
-    public AppCompatActivity activity;
+    public RxAppCompatActivity activity;
 
-    public BaseReceiver(AppCompatActivity activity, String name) {
+    public BaseReceiver(RxAppCompatActivity activity, String name) {
         this.activity = activity;
         activity.registerReceiver(this, new IntentFilter(name));
     }
