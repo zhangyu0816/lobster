@@ -1,6 +1,9 @@
 package com.zb.lib_base.utils;
 
 public class RouteUtils {
+    /*********************** app **************************/
+    public static final String Main_MainActivity = "/app/MainActivity";
+
     /*********************** 首页 **************************/
     // 首页主fragment
     public static final String Home_Fragment = "/home/HomeFragment";

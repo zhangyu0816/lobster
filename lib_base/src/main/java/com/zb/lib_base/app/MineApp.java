@@ -1,6 +1,8 @@
 package com.zb.lib_base.app;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -9,6 +11,7 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.zb.lib_base.R;
 import com.zb.lib_base.adaptive.FitScreen;
+import com.zb.lib_base.model.BaseEntity;
 import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.utils.DisplayUtils;
@@ -42,6 +45,9 @@ public class MineApp extends MultiDexApplication {
     public static String logo = "http://img01.zuwo.la/img/A/YMXXXX919714-206348_YM0000.jpg";
     public static String logo1 = "http://img01.zuwo.la/img/A/YMXXXX2350392-sgjdwurnll_YM0000.jpg";
     public static String cityName = "";
+    public static String versionName;
+    public static List<BaseEntity> apiList = new ArrayList<>(); // 断线重连
+
 
     static {
         //设置全局的Header构建器
@@ -73,6 +79,13 @@ public class MineApp extends MultiDexApplication {
             vipInfo.setOriginalPrice((i + 1) * 12);
             vipInfo.setDayCount((i + 1) * 30);
             vipInfoList.add(vipInfo);
+        }
+
+        try {
+            PackageInfo packageInfo = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0);
+            versionName = packageInfo.versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
     }
 

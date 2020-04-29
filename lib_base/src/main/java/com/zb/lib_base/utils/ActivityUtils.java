@@ -6,6 +6,12 @@ import com.zb.lib_base.model.MemberInfo;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class ActivityUtils {
+    /*********************** app **************************/
+    // 软件主页
+    public static void getMainActivity() {
+        ARouter.getInstance().build(RouteUtils.Main_MainActivity).navigation();
+    }
+
     /*********************** 首页 **************************/
     // 图文动态
     public static void getHomePublishImage() {

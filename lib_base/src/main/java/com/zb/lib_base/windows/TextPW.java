@@ -10,11 +10,20 @@ import androidx.appcompat.app.AppCompatActivity;
 public class TextPW extends BasePopupWindow {
     private String content = "";
     private String title = "";
+    private CallBack mCallBack;
 
     public TextPW(AppCompatActivity activity, View parentView, String title, String content) {
         super(activity, parentView, true);
         this.title = title;
         this.content = content;
+        initUI();
+    }
+
+    public TextPW(AppCompatActivity activity, View parentView, String title, String content, CallBack callBack) {
+        super(activity, parentView, true);
+        this.title = title;
+        this.content = content;
+        mCallBack = callBack;
         initUI();
     }
 
@@ -33,6 +42,12 @@ public class TextPW extends BasePopupWindow {
     @Override
     public void sure(View view) {
         super.sure(view);
+        if (mCallBack != null)
+            mCallBack.sure();
         dismiss();
+    }
+
+    public interface CallBack {
+        void sure();
     }
 }
