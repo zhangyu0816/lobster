@@ -9,7 +9,7 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 public class MemberInfo extends BaseObservable implements Parcelable {
-
+    private long otherUserId;   //用户id
     private long userId; // userId
     private String nick = ""; // 昵称
     private String remark = ""; // 备注
@@ -43,7 +43,6 @@ public class MemberInfo extends BaseObservable implements Parcelable {
     private int attentionQuantity;//关注数量
     private int fansQuantity;// 粉丝数量
     private int beLikeQuantity;// 粉丝数量
-
     private String lastJoinTime = "";
     private int newDycType; // 最新的动态类型
     // 未知 0
@@ -68,6 +67,7 @@ public class MemberInfo extends BaseObservable implements Parcelable {
     }
 
     protected MemberInfo(Parcel in) {
+        otherUserId = in.readLong();
         userId = in.readLong();
         nick = in.readString();
         remark = in.readString();
@@ -117,6 +117,16 @@ public class MemberInfo extends BaseObservable implements Parcelable {
             return new MemberInfo[size];
         }
     };
+
+    @Bindable
+    public long getOtherUserId() {
+        return otherUserId;
+    }
+
+    public void setOtherUserId(long otherUserId) {
+        this.otherUserId = otherUserId;
+        notifyPropertyChanged(BR.otherUserId);
+    }
 
     @Bindable
     public long getUserId() {
@@ -485,6 +495,7 @@ public class MemberInfo extends BaseObservable implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(otherUserId);
         dest.writeLong(userId);
         dest.writeString(nick);
         dest.writeString(remark);

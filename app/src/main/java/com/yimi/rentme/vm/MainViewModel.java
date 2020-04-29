@@ -10,7 +10,10 @@ import com.yimi.rentme.databinding.AcMainBinding;
 import com.yimi.rentme.iv.MainVMInterface;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.FragmentAdapter;
+import com.zb.lib_base.api.joinPairPoolApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.ObjectUtils;
@@ -106,6 +109,18 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         mainBinding.viewPage.setCurrentItem(index);
     }
 
+    @Override
+    public void joinPairPoolApi(String longitude, String latitude) {
+        // 加入匹配池
+        joinPairPoolApi api = new joinPairPoolApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+
+            }
+        }, activity).setLatitude(latitude).setLongitude(longitude);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
     public void stopAnimator() {
         animatorSet.cancel();
     }
@@ -146,6 +161,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                     PreferenceUtil.saveStringValue(activity, "latitude", latitude);
                     PreferenceUtil.saveStringValue(activity, "cityName", MineApp.cityName);
                     PreferenceUtil.saveStringValue(activity, "address", address);
+                    joinPairPoolApi(longitude, latitude);
                 }
                 aMapLocation.stop();
                 aMapLocation.destroy();

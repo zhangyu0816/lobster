@@ -40,6 +40,7 @@ public interface BaseVMInterface {
     }
 
     /********************** 公用网络请求 ***************************/
-    default void registerCaptcha() {
+
+    default void myInfo() {
     }
 }

@@ -28,7 +28,12 @@ android {
         dataBinding {
             enabled true
         }
-        multiDexEnabled true
+        if (!isNeedCardModule.toBoolean()) {
+            multiDexEnabled true
+            packagingOptions {
+                exclude 'META-INF/rxjava.properties'
+            }
+        }
     }
 
     buildTypes {

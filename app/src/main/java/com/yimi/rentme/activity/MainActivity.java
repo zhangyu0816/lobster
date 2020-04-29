@@ -15,6 +15,7 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.model.BaseEntity;
 import com.zb.lib_base.model.JobInfo;
 import com.zb.lib_base.model.Tag;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.lib_base.utils.SimulateNetAPI;
 import com.zb.lib_base.windows.TextPW;
@@ -38,6 +39,7 @@ public class MainActivity extends AppBaseActivity {
 
     @Override
     public void initUI() {
+        PreferenceUtil.saveIntValue(activity, "loginType", 2);
         fitComprehensiveScreen();
         tagDb = new TagDb(Realm.getDefaultInstance());
         jobInfoDb = new JobInfoDb(Realm.getDefaultInstance());

@@ -5,6 +5,7 @@ import com.yimi.rentme.R;
 import com.yimi.rentme.vm.LoadingViewModel;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.PreferenceUtil;
 
 public class LoadingActivity extends AppBaseActivity {
     @Override
@@ -14,14 +15,10 @@ public class LoadingActivity extends AppBaseActivity {
 
     @Override
     public void initUI() {
+        PreferenceUtil.saveIntValue(activity, "loginType", 1);
         LoadingViewModel viewModel = new LoadingViewModel();
         viewModel.setBinding(mBinding);
-        mBinding.setVariable(BR.viewModel,viewModel);
-        if(BaseActivity.sessionId.isEmpty()){
-            ActivityUtils.getRegisterMain();
-        }else{
-            ActivityUtils.getMainActivity();
-        }
-        finish();
+        mBinding.setVariable(BR.viewModel, viewModel);
+        viewModel.myInfo();
     }
 }

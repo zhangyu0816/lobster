@@ -350,6 +350,7 @@
                 </LinearLayout>
 
                 <TextView
+                    onClickDelayed="@{viewModel::exit}"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_margin="15dp"

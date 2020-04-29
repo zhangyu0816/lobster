@@ -2,7 +2,7 @@ package com.zb.lib_base.utils;
 
 public class RouteUtils {
     /*********************** app **************************/
-    public static final String Main_MainActivity = "/app/MainActivity";
+    public static final String Main_MainActivity = "/main/MainActivity";
 
     /*********************** 首页 **************************/
     // 首页主fragment

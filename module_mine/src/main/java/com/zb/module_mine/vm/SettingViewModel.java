@@ -2,6 +2,7 @@ package com.zb.module_mine.vm;
 
 import android.view.View;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
@@ -62,5 +63,10 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     @Override
     public void toAboutUs(View view) {
         ActivityUtils.getMineWeb("关于我们", HttpManager.BASE_URL + "mobile/yuenar_about_us.html");
+    }
+
+    @Override
+    public void exit(View view) {
+        ARouter.getInstance().destroy();
     }
 }

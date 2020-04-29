@@ -67,7 +67,7 @@ public class CustomProgressDialog extends Dialog implements DialogInterface.OnCa
             sDialog.dismiss();
         }
 
-        if (context == null || !(context instanceof RxAppCompatActivity)) {
+        if (context == null || !(context instanceof RxAppCompatActivity) || !cancelable) {
             return;
         }
         sDialog = new CustomProgressDialog(context, message);

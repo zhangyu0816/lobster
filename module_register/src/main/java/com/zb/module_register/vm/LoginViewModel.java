@@ -4,10 +4,12 @@ import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.loginByPassApi;
+import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.LoginInfo;
+import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -54,17 +56,29 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface {
         loginByPassApi api = new loginByPassApi(new HttpOnNextListener<LoginInfo>() {
             @Override
             public void onNext(LoginInfo o) {
-                SCToastUtil.showToast(activity, "登录成功");
                 PreferenceUtil.saveLongValue(activity, "userId", o.getId());
                 PreferenceUtil.saveStringValue(activity, "sessionId", o.getSessionId());
                 PreferenceUtil.saveStringValue(activity, "userName", o.getUserName());
                 BaseActivity.update();
-                ActivityUtils.getMainActivity();
-                activity.finish();
+                myInfo();
             }
         }, activity)
                 .setUserName(MineApp.registerInfo.getPhone())
                 .setPassWord(loginBinding.getPass());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void myInfo() {
+        myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
+            @Override
+            public void onNext(MineInfo o) {
+                SCToastUtil.showToast(activity, "登录成功");
+                mineInfoDb.saveMineInfo(o);
+                ActivityUtils.getMainActivity();
+                activity.finish();
+            }
+        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

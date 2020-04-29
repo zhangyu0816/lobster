@@ -5,10 +5,14 @@ import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.loginByCaptchaApi;
+import com.zb.lib_base.api.loginCaptchaApi;
+import com.zb.lib_base.api.myInfoApi;
+import com.zb.lib_base.api.registerCaptchaApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.LoginInfo;
+import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -22,7 +26,7 @@ import androidx.databinding.ViewDataBinding;
 
 public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
 
-    private int second = 60;
+    private int second = 120;
     private RegisterCodeBinding bindings;
     private CountDownTimer timer;
     public boolean isLogin = false;
@@ -45,8 +49,12 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
             }
         };
         timer.start();
-        // 注册验证码
-        registerCaptcha();
+        // 验证码
+        if (isLogin) {
+            loginCaptchaApi();
+        } else {
+            registerCaptcha();
+        }
     }
 
     @Override
@@ -70,7 +78,11 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
         timer.start();
         // 注册验证码
         if (getCode)
-            registerCaptcha();
+            if (isLogin) {
+                loginCaptchaApi();
+            } else {
+                registerCaptcha();
+            }
     }
 
     @Override
@@ -95,18 +107,55 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
         loginByCaptchaApi api = new loginByCaptchaApi(new HttpOnNextListener<LoginInfo>() {
             @Override
             public void onNext(LoginInfo o) {
-                SCToastUtil.showToast(activity, "登录成功");
                 PreferenceUtil.saveLongValue(activity, "userId", o.getId());
                 PreferenceUtil.saveStringValue(activity, "sessionId", o.getSessionId());
                 PreferenceUtil.saveStringValue(activity, "userName", o.getUserName());
                 BaseActivity.update();
                 timer.cancel();
-                ActivityUtils.getMainActivity();
-                activity.finish();
+                myInfo();
+
             }
         }, activity)
                 .setUserName(MineApp.registerInfo.getPhone())
                 .setCaptcha(MineApp.registerInfo.getCaptcha());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void myInfo() {
+        myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
+            @Override
+            public void onNext(MineInfo o) {
+                SCToastUtil.showToast(activity, "登录成功");
+                mineInfoDb.saveMineInfo(o);
+                ActivityUtils.getMainActivity();
+                activity.finish();
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void registerCaptcha() {
+        // 注册验证码
+        registerCaptchaApi api = new registerCaptchaApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                SCToastUtil.showToast(activity, "验证码已发送，请注意查收");
+            }
+        }, activity)
+                .setUserName(MineApp.registerInfo.getPhone());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void loginCaptchaApi() {
+        loginCaptchaApi api = new loginCaptchaApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                SCToastUtil.showToast(activity, "验证码已发送，请注意查收");
+            }
+        }, activity).setUserName(MineApp.registerInfo.getPhone());
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

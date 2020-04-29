@@ -36,10 +36,9 @@ public class CodeActivity extends RegisterBaseActivity implements KeyBroadUtils.
     @Override
     public void initUI() {
         viewModel = new CodeViewModel();
+        viewModel.isLogin = isLogin;
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
-        viewModel.isLogin = isLogin;
-
         binding = (RegisterCodeBinding) mBinding;
         array[0] = binding.tvCode1;
         array[1] = binding.tvCode2;

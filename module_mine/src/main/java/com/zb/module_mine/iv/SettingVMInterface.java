@@ -20,4 +20,6 @@ public interface SettingVMInterface {
     void toRule(View view);
 
     void toAboutUs(View view);
+
+    void exit(View view);
 }

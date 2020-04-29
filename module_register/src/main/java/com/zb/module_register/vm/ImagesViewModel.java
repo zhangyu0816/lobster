@@ -6,11 +6,13 @@ import android.util.Log;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.registerApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.LoginInfo;
+import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
@@ -88,25 +90,39 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
 
     @Override
     public void register(RegisterInfo registerInfo) {
+        String[] birthdays = registerInfo.getBirthday().split("/");
+        String birthday = birthdays[2] + "-" + birthdays[1] + "-" + birthdays[0];
         registerApi api = new registerApi(new HttpOnNextListener<LoginInfo>() {
             @Override
             public void onNext(LoginInfo o) {
-                SCToastUtil.showToast(activity, "注册成功");
                 PreferenceUtil.saveLongValue(activity, "userId", o.getId());
                 PreferenceUtil.saveStringValue(activity, "sessionId", o.getSessionId());
                 PreferenceUtil.saveStringValue(activity, "userName", o.getUserName());
                 BaseActivity.update();
                 DataCleanManager.deleteFile(activity.getCacheDir());
-                ActivityUtils.getMainActivity();
-                activity.finish();
+                myInfo();
             }
         }, activity)
                 .setUserName(registerInfo.getPhone())
                 .setCaptcha(registerInfo.getCaptcha())
                 .setNick(registerInfo.getName())
-                .setBirthday(registerInfo.getBirthday())
+                .setBirthday(birthday)
                 .setMoreImages(registerInfo.getMoreImages())
                 .setSex(registerInfo.getSex());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void myInfo() {
+        myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
+            @Override
+            public void onNext(MineInfo o) {
+                SCToastUtil.showToast(activity, "注册成功");
+                mineInfoDb.saveMineInfo(o);
+                ActivityUtils.getMainActivity();
+                activity.finish();
+            }
+        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

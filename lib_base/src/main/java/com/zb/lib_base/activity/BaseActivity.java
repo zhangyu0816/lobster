@@ -38,8 +38,8 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this, getRes());
 
         ARouter.getInstance().inject(this);
-        initUI();
         update();
+        initUI();
     }
 
     public abstract int getRes();

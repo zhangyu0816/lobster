@@ -3,7 +3,11 @@ package com.zb.lib_base.http;
 
 import com.zb.lib_base.model.BaseResultEntity;
 import com.zb.lib_base.model.LoginInfo;
+import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.ResourceUrl;
+
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -59,5 +63,23 @@ public interface HttpService {
     @GET("api/Login_registCaptcha")
     Observable<BaseResultEntity> registerCaptcha(@Query("userName") String userName);
 
+    // 用户注册验证码
+    @GET("api/Login_loginCaptcha")
+    Observable<BaseResultEntity> loginCaptcha(@Query("userName") String userName);
 
+    // 加入匹配池 (提交当前位置)
+    @FormUrlEncoded
+    @POST(" api/Pair_joinPairPool")
+    Observable<BaseResultEntity> joinPairPool(@Field("longitude") String longitude, @Field("latitude") String latitude);
+
+
+    // 我的信息
+    @GET("api/Member_myInfo")
+    Observable<BaseResultEntity<MineInfo>> myInfo();
+
+    /******************************* 首页 **********************************/
+
+    // 预匹配列表
+    @GET("api/Pair_prePairList")
+    Observable<BaseResultEntity<List<MemberInfo>>> prePairList(@Query("sex") int sex, @Query("minAge") int minAge, @Query("maxAge") int maxAge);
 }
