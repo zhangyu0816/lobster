@@ -5,6 +5,7 @@ import com.zb.lib_base.model.BaseResultEntity;
 import com.zb.lib_base.model.LoginInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.model.PairInfo;
 import com.zb.lib_base.model.ResourceUrl;
 
 import java.util.List;
@@ -67,19 +68,28 @@ public interface HttpService {
     @GET("api/Login_loginCaptcha")
     Observable<BaseResultEntity> loginCaptcha(@Query("userName") String userName);
 
-    // 加入匹配池 (提交当前位置)
-    @FormUrlEncoded
-    @POST(" api/Pair_joinPairPool")
-    Observable<BaseResultEntity> joinPairPool(@Field("longitude") String longitude, @Field("latitude") String latitude);
-
 
     // 我的信息
     @GET("api/Member_myInfo")
     Observable<BaseResultEntity<MineInfo>> myInfo();
 
     /******************************* 首页 **********************************/
+    /******************************* 卡片 **********************************/
+    // 加入匹配池 (提交当前位置)
+    @FormUrlEncoded
+    @POST("api/Pair_joinPairPool")
+    Observable<BaseResultEntity> joinPairPool(@Field("longitude") String longitude, @Field("latitude") String latitude);
 
     // 预匹配列表
     @GET("api/Pair_prePairList")
-    Observable<BaseResultEntity<List<MemberInfo>>> prePairList(@Query("sex") int sex, @Query("minAge") int minAge, @Query("maxAge") int maxAge);
+    Observable<BaseResultEntity<List<PairInfo>>> prePairList(@Query("sex") int sex, @Query("minAge") int minAge, @Query("maxAge") int maxAge);
+
+    // 评估
+    @FormUrlEncoded
+    @POST("api/Pair_makeEvaluate")
+    Observable<BaseResultEntity<Integer>> makeEvaluate(@Field("otherUserId") long otherUserId, @Field("likeOtherStatus") int likeOtherStatus);
+
+    // 超级曝光
+    @GET("api/Pair_superExposure")
+    Observable<BaseResultEntity> superExposure();
 }

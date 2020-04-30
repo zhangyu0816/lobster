@@ -2,6 +2,7 @@ package com.zb.module_card.iv;
 
 import android.view.View;
 
+import com.zb.lib_base.model.PairInfo;
 import com.zb.module_card.adapter.CardAdapter;
 
 public interface CardVMInterface {
@@ -10,6 +11,8 @@ public interface CardVMInterface {
 
     void returnView(View view);
 
+    void superLike(PairInfo pairInfo);
+
     void exposure(View view);
 
     void leftBtn(View currentView, CardAdapter adapter, int position);
@@ -17,5 +20,9 @@ public interface CardVMInterface {
     void rightBtn(View currentView, CardAdapter adapter, int position);
 
     void selectCity(View view);
+
+    void prePairList(boolean needProgress);
+
+    void makeEvaluate(PairInfo pairInfo, int likeOtherStatus);
 
 }

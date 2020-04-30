@@ -4,13 +4,13 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.model.BaseEntity;
-import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.model.PairInfo;
 
 import java.util.List;
 
 import rx.Observable;
 
-public class prePairListApi extends BaseEntity<List<MemberInfo>> {
+public class prePairListApi extends BaseEntity<List<PairInfo>> {
     int sex;//性别
     int minAge;//最小年龄
     int maxAge;//最大年龄
@@ -32,7 +32,7 @@ public class prePairListApi extends BaseEntity<List<MemberInfo>> {
 
     public prePairListApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
-        setShowProgress(false);
+        setDialogTitle("加载匹配池信息");
     }
 
     @Override

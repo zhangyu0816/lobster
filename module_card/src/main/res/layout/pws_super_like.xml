@@ -11,6 +11,19 @@
             name="otherHead"
             type="String" />
 
+        <variable
+            name="isPair"
+            type="boolean" />
+
+        <variable
+            name="mySex"
+            type="Integer" />
+
+        <variable
+            name="otherSex"
+            type="Integer" />
+
+
         <import type="com.zb.lib_base.utils.ObjectUtils" />
 
 
@@ -32,8 +45,8 @@
             android:layout_centerInParent="true"
             android:layout_marginStart="55dp"
             android:layout_marginEnd="55dp"
-            android:paddingBottom="10dp"
-            android:background="@mipmap/pws_super_like">
+            android:background="@{isPair?@drawable/pair_success_icon:@drawable/pws_super_like}"
+            android:paddingBottom="10dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -52,7 +65,7 @@
                         viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:background="@drawable/circle_white" />
+                        android:background="@{isPair?(otherSex==0?@drawable/circle_red:@drawable/circle_blue):@drawable/circle_white}" />
 
                     <ImageView
                         imageUrl="@{otherHead}"
@@ -74,7 +87,7 @@
                         viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:background="@drawable/circle_white" />
+                        android:background="@{isPair?(mySex==0?@drawable/circle_red:@drawable/circle_blue):@drawable/circle_white}"  />
 
                     <ImageView
                         imageUrl="@{myHead}"
@@ -94,8 +107,8 @@
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(150)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:layout_centerHorizontal="true"/>
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="40dp" />
         </RelativeLayout>
     </RelativeLayout>
 </layout>
