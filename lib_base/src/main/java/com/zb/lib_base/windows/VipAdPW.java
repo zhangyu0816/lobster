@@ -16,6 +16,7 @@ import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.PwsVipAdBinding;
 import com.zb.lib_base.model.VipAd;
 import com.zb.lib_base.utils.ObjectUtils;
+import com.zb.lib_base.utils.SCToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,6 +120,10 @@ public class VipAdPW extends BasePopupWindow {
     @Override
     public void sure(View view) {
         super.sure(view);
-        dismiss();
+        if (preIndex == -1) {
+            SCToastUtil.showToast(activity, "请选择VIP套餐");
+            return;
+        }
+        submitOpenedMemberOrder(MineApp.vipInfoList.get(preIndex).getMemberOfOpenedProductId());
     }
 }

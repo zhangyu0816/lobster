@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.makeEvaluateApi;
+import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.prePairListApi;
 import com.zb.lib_base.api.superExposureApi;
 import com.zb.lib_base.app.MineApp;
@@ -58,7 +59,6 @@ import io.realm.Realm;
 
 public class CardViewModel extends BaseViewModel implements CardVMInterface, OnSwipeListener<PairInfo> {
     public AreaDb areaDb;
-    private MineInfoDb mineInfoDb;
     private MineInfo mineInfo;
     public CardAdapter adapter;
     private List<PairInfo> pairInfoList = new ArrayList<>();
@@ -73,6 +73,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     });
     public BaseReceiver cardReceiver;
     public BaseReceiver locationReceiver;
+    public BaseReceiver openVipReceiver;
     private boolean isAnimation = true;
     private AnimatorSet animatorSet;
     private ObjectAnimator translate = null;
@@ -87,7 +88,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         areaDb = new AreaDb(Realm.getDefaultInstance());
-        mineInfoDb = new MineInfoDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
         cardFragBinding = (CardFragBinding) binding;
         // 详情页操作后滑动卡片
@@ -117,6 +117,14 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             public void onReceive(Context context, Intent intent) {
                 MineApp.cityName = intent.getStringExtra("cityName");
                 prePairList(true);
+            }
+        };
+
+        // 开通会员
+        openVipReceiver = new BaseReceiver(activity, "lobster_openVip") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                myInfo();
             }
         };
 
@@ -366,9 +374,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 }, 10);
             }, 300);
         }, 50);
-
     }
-
 
     // 省市信息
     private void initArea() {
@@ -421,5 +427,16 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         }
     }
 
+    @Override
+    public void myInfo() {
+        myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
+            @Override
+            public void onNext(MineInfo o) {
+                mineInfo = o;
+                mineInfoDb.saveMineInfo(o);
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
 
 }

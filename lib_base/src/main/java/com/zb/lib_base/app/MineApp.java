@@ -47,6 +47,7 @@ public class MineApp extends MultiDexApplication {
     public static String logo1 = "http://img01.zuwo.la/img/A/YMXXXX2350392-sgjdwurnll_YM0000.jpg";
     public static String cityName = "";
     public static String versionName;
+    public static String WX_PAY_APPID = "wxbdd7128e0a0a08f8";
     public static List<BaseEntity> apiList = new ArrayList<>(); // 断线重连
 
 
@@ -73,14 +74,6 @@ public class MineApp extends MultiDexApplication {
         DisplayUtils.init(this);
         MultiDex.install(this);
         FitScreen.createDesign(getApplicationContext(), H, W);
-
-        for (int i = 0; i < 10; i++) {
-            VipInfo vipInfo = new VipInfo();
-            vipInfo.setPrice((i + 1) * 10);
-            vipInfo.setOriginalPrice((i + 1) * 12);
-            vipInfo.setDayCount((i + 1) * 30);
-            vipInfoList.add(vipInfo);
-        }
 
         try {
             PackageInfo packageInfo = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0);

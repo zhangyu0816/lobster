@@ -8,6 +8,8 @@ import com.zb.module_bottle.vm.BottleListViewModel;
 
 @Route(path = RouteUtils.Bottle_List)
 public class BottleListActivity extends BottleBaseActivity {
+    private BottleListViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.bottle_list;
@@ -16,8 +18,14 @@ public class BottleListActivity extends BottleBaseActivity {
     @Override
     public void initUI() {
         fitComprehensiveScreen();
-        BottleListViewModel viewModel = new BottleListViewModel();
+        viewModel = new BottleListViewModel();
         viewModel.setBinding(mBinding);
-        mBinding.setVariable(BR.viewModel,viewModel);
+        mBinding.setVariable(BR.viewModel, viewModel);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.openVipReceiver.unregisterReceiver();
     }
 }

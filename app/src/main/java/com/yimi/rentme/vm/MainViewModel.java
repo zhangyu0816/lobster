@@ -11,9 +11,12 @@ import com.yimi.rentme.iv.MainVMInterface;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.api.joinPairPoolApi;
+import com.zb.lib_base.api.openedMemberPriceListApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.ObjectUtils;
@@ -22,6 +25,7 @@ import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_card.windows.GuidancePW;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
@@ -47,6 +51,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         if (MineApp.cityName.isEmpty()) {
             getPermissions();
         }
+        openedMemberPriceList();
     }
 
     private void initFragments() {
@@ -118,6 +123,17 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
             }
         }, activity).setLatitude(latitude).setLongitude(longitude);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void openedMemberPriceList() {
+        openedMemberPriceListApi api = new openedMemberPriceListApi(new HttpOnNextListener<List<VipInfo>>() {
+            @Override
+            public void onNext(List<VipInfo> o) {
+                MineApp.vipInfoList.addAll(o);
+            }
+        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

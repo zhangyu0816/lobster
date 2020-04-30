@@ -4,6 +4,7 @@ import android.view.View;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_bottle.BR;
 import com.zb.module_bottle.R;
@@ -34,7 +35,11 @@ public class BottleVipPW extends BasePopupWindow {
     @Override
     public void sure(View view) {
         super.sure(view);
-        dismiss();
+        if (preIndex == -1) {
+            SCToastUtil.showToast(activity, "请选择VIP套餐");
+            return;
+        }
+        submitOpenedMemberOrder(MineApp.vipInfoList.get(preIndex).getMemberOfOpenedProductId());
     }
 
     @Override

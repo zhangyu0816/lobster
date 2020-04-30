@@ -27,7 +27,6 @@ import io.realm.Realm;
 public class BaseViewModel implements BaseVMInterface {
     public ViewDataBinding mBinding;
     public RxAppCompatActivity activity;
-    public boolean isMore = false;
     public MineInfoDb mineInfoDb;
 
     @Override

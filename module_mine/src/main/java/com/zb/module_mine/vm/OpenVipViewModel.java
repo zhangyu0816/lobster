@@ -1,10 +1,23 @@
 package com.zb.module_mine.vm;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 
+import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.api.myInfoApi;
+import com.zb.lib_base.api.payOrderForTranApi;
+import com.zb.lib_base.api.submitOpenedMemberOrderApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.model.OrderTran;
+import com.zb.lib_base.model.VipOrder;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.PaymentPW;
 import com.zb.module_mine.R;
 import com.zb.module_mine.adapter.MineAdapter;
 import com.zb.module_mine.databinding.MineOpenVipBinding;
@@ -14,15 +27,25 @@ import androidx.databinding.ViewDataBinding;
 
 public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterface {
     public MineAdapter adapter;
-    public MemberInfo memberInfo;
     private int preIndex = -1;
     private MineOpenVipBinding vipBinding;
+    public MineInfo mineInfo;
+    public BaseReceiver openVipReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         vipBinding = (MineOpenVipBinding) binding;
+        mineInfo = mineInfoDb.getMineInfo();
         setAdapter();
+
+        // 开通会员
+        openVipReceiver = new BaseReceiver(activity, "lobster_openVip") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                myInfo();
+            }
+        };
     }
 
     @Override
@@ -32,11 +55,14 @@ public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterfac
 
     @Override
     public void getVip(int index) {
-        if (index == 0 && adapter.getSelectIndex() == -1) {
+        if (index == 0 && preIndex == -1) {
             vipBinding.scrollView.scrollTo(0, vipBinding.scrollView.getHeight());
         } else {
-            memberInfo.setMemberExpireTime("2020-08-09");
-            memberInfo.setMemberType(memberInfo.getMemberType() == 1 ? 2 : 1);
+            if (preIndex == -1) {
+                SCToastUtil.showToast(activity, "请选择VIP套餐");
+                return;
+            }
+            submitOpenedMemberOrder();
         }
     }
 
@@ -56,5 +82,44 @@ public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterfac
             adapter.notifyItemChanged(position);
             preIndex = position;
         }
+    }
+
+    @Override
+    public void submitOpenedMemberOrder() {
+        submitOpenedMemberOrderApi api = new submitOpenedMemberOrderApi(new HttpOnNextListener<VipOrder>() {
+            @Override
+            public void onNext(VipOrder o) {
+                payOrderForTran(o.getOrderNumber(), 1);
+            }
+        }, activity)
+                .setMemberOfOpenedProductId(MineApp.vipInfoList.get(preIndex).getMemberOfOpenedProductId());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 获取交易订单号
+     *
+     * @param orderNumber
+     */
+    private void payOrderForTran(String orderNumber, int payType) {
+        payOrderForTranApi api = new payOrderForTranApi(new HttpOnNextListener<OrderTran>() {
+            @Override
+            public void onNext(OrderTran o) {
+                new PaymentPW(activity, mBinding.getRoot(), o, payType);
+            }
+        }, activity).setOrderNumber(orderNumber);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void myInfo() {
+        myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
+            @Override
+            public void onNext(MineInfo o) {
+                mineInfo = o;
+                mineInfoDb.saveMineInfo(o);
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 }

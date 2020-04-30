@@ -2,7 +2,6 @@ package com.zb.lib_base.utils;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import com.zb.lib_base.model.MemberInfo;
 
 public class ActivityUtils {
     /*********************** app **************************/
@@ -35,8 +34,8 @@ public class ActivityUtils {
     /*********************** 对话 **************************/
     /*********************** 我的 **************************/
     // 会员
-    public static void getMineOpenVip(MemberInfo memberInfo) {
-        ARouter.getInstance().build(RouteUtils.Mine_Open_Vip).withParcelable("memberInfo", memberInfo).navigation();
+    public static void getMineOpenVip() {
+        ARouter.getInstance().build(RouteUtils.Mine_Open_Vip).navigation();
     }
 
     // 消息

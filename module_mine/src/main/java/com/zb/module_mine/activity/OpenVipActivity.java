@@ -13,9 +13,7 @@ import com.zb.module_mine.vm.OpenVipViewModel;
 
 @Route(path = RouteUtils.Mine_Open_Vip)
 public class OpenVipActivity extends BaseActivity {
-
-    @Autowired(name = "memberInfo")
-    MemberInfo memberInfo;
+    private OpenVipViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +28,14 @@ public class OpenVipActivity extends BaseActivity {
     @Override
     public void initUI() {
         fitComprehensiveScreen();
-        OpenVipViewModel viewModel = new OpenVipViewModel();
-        viewModel.memberInfo = memberInfo;
+        viewModel = new OpenVipViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.openVipReceiver.unregisterReceiver();
     }
 }

@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
 
+def releaseTime() {
+    return new Date().format("yyyyMMddHHmmss", TimeZone.getTimeZone("UTC"))
+}
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -38,6 +42,13 @@ android {
             keyPassword 'yimi2015yuwei'
             storeFile file('C:\\Users\\yu\\Documents\\rentme.keystore')
             storePassword 'yimi2015yuwei'
+        }
+        android.applicationVariants.all { variant ->
+            variant.outputs.all {
+                if (variant.buildType.name.equals('release')) {
+                    outputFileName = "lobster_${releaseTime()}.apk"
+                }
+            }
         }
     }
     buildTypes {

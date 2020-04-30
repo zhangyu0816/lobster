@@ -1,12 +1,18 @@
 package com.zb.lib_base.http;
 
 
+import com.zb.lib_base.model.AliPay;
 import com.zb.lib_base.model.BaseResultEntity;
+import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.LoginInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.model.OrderTran;
 import com.zb.lib_base.model.PairInfo;
 import com.zb.lib_base.model.ResourceUrl;
+import com.zb.lib_base.model.VipInfo;
+import com.zb.lib_base.model.VipOrder;
+import com.zb.lib_base.model.WXPay;
 
 import java.util.List;
 
@@ -73,6 +79,42 @@ public interface HttpService {
     @GET("api/Member_myInfo")
     Observable<BaseResultEntity<MineInfo>> myInfo();
 
+    /******************************* app **********************************/
+
+    // 会员价格
+    @GET(" api/MemberOrder_openedMemberPriceList")
+    Observable<BaseResultEntity<List<VipInfo>>> openedMemberPriceList();
+
+    // 提交VIP订单 - 需登录
+    @FormUrlEncoded
+    @POST("api/MemberOrder_submitOpenedMemberOrder")
+    Observable<BaseResultEntity<VipOrder>> submitOpenedMemberOrder(@Field("memberOfOpenedProductId") long memberOfOpenedProductId, @Field("productCount") int productCount);
+
+    // 获取交易订单号
+    @FormUrlEncoded
+    @POST("api/MemberOrder_payOrderForTran")
+    Observable<BaseResultEntity<OrderTran>> payOrderForTran(@Field("orderNumber") String orderNumber);
+
+    // 用钱包支付交易
+    @FormUrlEncoded
+    @POST("api/Pay_walletPayTran")
+    Observable<BaseResultEntity> walletPayTran(@Field("tranOrderId") String tranOrderId);
+
+    // 用支付宝支付交易
+    @FormUrlEncoded
+    @POST("api/Pay_alipayFastPayTran")
+    Observable<BaseResultEntity<AliPay>> alipayFastPayTran(@Field("tranOrderId") String tranOrderId);
+
+    // 用微信支付交易
+    @FormUrlEncoded
+    @POST("api/Pay_wxpayAppPayTran")
+    Observable<BaseResultEntity<WXPay>> wxpayAppPayTran(@Field("tranOrderId") String tranOrderId);
+
+    // 三合一接口 （返回关注数量、粉丝数量、喜欢数量、被喜欢数量）
+    @FormUrlEncoded
+    @POST("api/Collect_contactNum")
+    Observable<BaseResultEntity<ContactNum>> contactNum(@Field("otherUserId") long otherUserId);
+
     /******************************* 首页 **********************************/
     /******************************* 卡片 **********************************/
     // 加入匹配池 (提交当前位置)
@@ -92,4 +134,6 @@ public interface HttpService {
     // 超级曝光
     @GET("api/Pair_superExposure")
     Observable<BaseResultEntity> superExposure();
+
+    /******************************* 卡片 **********************************/
 }

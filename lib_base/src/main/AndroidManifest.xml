@@ -25,8 +25,13 @@
 
     <application android:networkSecurityConfig="@xml/network_config">
         <service android:name="com.amap.api.location.APSService" />
+
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="c8965ef31985bf9b79dfe75d1e081832" />
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="55cac14467e58e8bd7000359" />
     </application>
 </manifest>

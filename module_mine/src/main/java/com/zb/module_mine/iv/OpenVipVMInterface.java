@@ -5,4 +5,6 @@ public interface OpenVipVMInterface {
     void getVip(int index);
 
     void selectIndex(int index);
+
+    void submitOpenedMemberOrder();
 }

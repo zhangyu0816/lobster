@@ -56,7 +56,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{viewModel.memberInfo.nick}"
+                    android:text="@{viewModel.mineInfo.nick}"
                     android:textColor="@color/black_252"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="3dp"
                     android:background="@mipmap/vip_icon"
-                    android:visibility="@{viewModel.memberInfo.memberType==2?View.VISIBLE:View.GONE}" />
+                    android:visibility="@{viewModel.mineInfo.memberType==2?View.VISIBLE:View.GONE}" />
             </LinearLayout>
 
             <ImageView
@@ -113,7 +113,7 @@
                             android:id="@+id/iv_image"
                             onClickDelayed="@{viewModel::toEditMember}"
                             defaultRes="@{ObjectUtils.getDefaultRes()}"
-                            imageUrl="@{viewModel.memberInfo.image}"
+                            imageUrl="@{viewModel.mineInfo.image}"
                             isCircle="@{true}"
                             viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.23f)}"
                             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.23f)}"
@@ -139,7 +139,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:singleLine="true"
-                                    android:text='@{String.format("%d",viewModel.memberInfo.attentionQuantity)}'
+                                    android:text='@{String.format("%d",viewModel.contactNum.concernCount)}'
                                     android:textColor="@color/black_252"
                                     android:textSize="18sp"
                                     android:textStyle="bold"
@@ -165,7 +165,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:singleLine="true"
-                                    android:text='@{String.format("%d",viewModel.memberInfo.fansQuantity)}'
+                                    android:text='@{String.format("%d",viewModel.contactNum.fansCount)}'
                                     android:textColor="@color/black_252"
                                     android:textSize="18sp"
                                     android:textStyle="bold"
@@ -196,7 +196,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:singleLine="true"
-                                        android:text='@{String.format("%d",viewModel.memberInfo.beLikeQuantity)}'
+                                        android:text='@{String.format("%d",viewModel.contactNum.beLikeCount)}'
                                         android:textColor="@color/black_252"
                                         android:textSize="18sp"
                                         android:textStyle="bold"
@@ -229,7 +229,7 @@
                             android:layout_marginTop="10dp"
                             android:layout_toEndOf="@+id/iv_image"
                             android:singleLine="true"
-                            android:text="@{viewModel.memberInfo.personalitySign}"
+                            android:text="@{viewModel.mineInfo.personalitySign}"
                             android:textColor="@color/black_4d4"
                             android:textSize="14sp"
                             android:textStyle="bold"
@@ -245,7 +245,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="15dp"
                             android:background="@mipmap/vip_long_icon"
-                            android:visibility="@{viewModel.memberInfo.memberType==2?View.GONE:View.VISIBLE}" />
+                            android:visibility="@{viewModel.mineInfo.memberType==2?View.GONE:View.VISIBLE}" />
                     </RelativeLayout>
                 </androidx.appcompat.widget.Toolbar>
 

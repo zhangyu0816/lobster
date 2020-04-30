@@ -86,7 +86,7 @@
 
                         <ImageView
                             defaultRes="@{ObjectUtils.getDefaultRes()}"
-                            imageUrl="@{viewModel.memberInfo.image}"
+                            imageUrl="@{viewModel.mineInfo.image}"
                             isCircle="@{true}"
                             viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
                             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
@@ -104,7 +104,7 @@
                         android:layout_toStartOf="@+id/tv_open"
                         android:layout_toEndOf="@+id/image_relative"
                         android:singleLine="true"
-                        android:text='@{String.format(@string/member_nick,viewModel.memberInfo.nick)}'
+                        android:text='@{String.format(@string/member_nick,viewModel.mineInfo.nick)}'
                         android:textColor="@android:color/white"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -117,11 +117,11 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="20dp"
                         android:layout_marginEnd="15dp"
-                        android:text='@{viewModel.memberInfo.memberExpireTime.isEmpty()?"":viewModel.memberInfo.memberExpireTime.substring(0,10)}'
+                        android:text='@{viewModel.mineInfo.memberExpireTime.isEmpty()?"":viewModel.mineInfo.memberExpireTime.substring(0,10)}'
                         android:textColor="@color/white_cc"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:visibility="@{viewModel.memberInfo.memberType==2?View.VISIBLE:View.GONE}" />
+                        android:visibility="@{viewModel.mineInfo.memberType==2?View.VISIBLE:View.GONE}" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -150,7 +150,7 @@
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:visibility="@{viewModel.memberInfo.memberType==2?View.GONE:View.VISIBLE}" />
+                        android:visibility="@{viewModel.mineInfo.memberType==2?View.GONE:View.VISIBLE}" />
                 </RelativeLayout>
 
             </LinearLayout>
@@ -173,7 +173,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="15dp"
-                android:visibility="@{viewModel.memberInfo.memberType==2?View.GONE:View.VISIBLE}">
+                android:visibility="@{viewModel.mineInfo.memberType==2?View.GONE:View.VISIBLE}">
 
                 <TextView
                     android:layout_width="wrap_content"

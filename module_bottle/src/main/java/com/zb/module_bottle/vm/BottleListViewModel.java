@@ -1,11 +1,18 @@
 package com.zb.module_bottle.vm;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.api.myInfoApi;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.BottleInfo;
+import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_bottle.R;
 import com.zb.module_bottle.adapter.BottleAdapter;
@@ -22,14 +29,24 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
 
     public BottleAdapter adapter;
     private List<BottleInfo> bottleInfoList = new ArrayList<>();
+    public BaseReceiver openVipReceiver;
+    private MineInfo mineInfo;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
+        mineInfo = mineInfoDb.getMineInfo();
         for (int i = 0; i < 10; i++) {
             bottleInfoList.add(new BottleInfo());
         }
         setAdapter();
+        // 开通会员
+        openVipReceiver = new BaseReceiver(activity, "lobster_openVip") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                myInfo();
+            }
+        };
     }
 
     @Override
@@ -71,5 +88,15 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
         refreshLayout.finishRefresh();
     }
 
-
+    @Override
+    public void myInfo() {
+        myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
+            @Override
+            public void onNext(MineInfo o) {
+                mineInfo = o;
+                mineInfoDb.saveMineInfo(o);
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
 }

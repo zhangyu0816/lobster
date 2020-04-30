@@ -13,4 +13,6 @@ public interface MineVMInterface {
     void toNews(View view);
 
     void toSetting(View view);
+
+    void contactNum();
 }
