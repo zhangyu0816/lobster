@@ -3,7 +3,6 @@ package com.zb.module_card.fragment;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseFragment;
-import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;

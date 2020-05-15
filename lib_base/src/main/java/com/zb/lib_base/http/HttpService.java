@@ -6,7 +6,6 @@ import com.zb.lib_base.model.BaseResultEntity;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.LoginInfo;
-import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.OrderTran;
 import com.zb.lib_base.model.PairInfo;

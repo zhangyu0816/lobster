@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.ObjectUtils;

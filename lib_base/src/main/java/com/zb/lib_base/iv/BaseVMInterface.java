@@ -3,7 +3,6 @@ package com.zb.lib_base.iv;
 import android.view.View;
 
 import com.zb.lib_base.model.DiscoverInfo;
-import com.zb.lib_base.model.RegisterInfo;
 
 import androidx.databinding.ViewDataBinding;
 

@@ -19,7 +19,6 @@ import com.zb.lib_base.api.prePairListApi;
 import com.zb.lib_base.api.superExposureApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
-import com.zb.lib_base.db.MineInfoDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.CityInfo;
@@ -222,22 +221,22 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void prePairList(boolean needProgress) {
-//        prePairListApi api = new prePairListApi(new HttpOnNextListener<List<PairInfo>>() {
-//            @Override
-//            public void onNext(List<PairInfo> o) {
-//                if (needProgress) {
-//                    pairInfoList.clear();
-//                    adapter.notifyDataSetChanged();
-//                }
-//                pairInfoList.addAll(o);
-//                adapter.notifyDataSetChanged();
-//            }
-//        }, activity)
-//                .setSex(mineInfo.getSex() == 0 ? 1 : 0)
-//                .setMaxAge(100)
-//                .setMinAge(0);
-//        api.setShowProgress(needProgress);
-//        HttpManager.getInstance().doHttpDeal(api);
+        prePairListApi api = new prePairListApi(new HttpOnNextListener<List<PairInfo>>() {
+            @Override
+            public void onNext(List<PairInfo> o) {
+                if (needProgress) {
+                    pairInfoList.clear();
+                    adapter.notifyDataSetChanged();
+                }
+                pairInfoList.addAll(o);
+                adapter.notifyDataSetChanged();
+            }
+        }, activity)
+                .setSex(mineInfo.getSex() == 0 ? 1 : 0)
+                .setMaxAge(100)
+                .setMinAge(0);
+        api.setShowProgress(needProgress);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override

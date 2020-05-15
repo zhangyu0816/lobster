@@ -3,8 +3,6 @@ package com.yimi.rentme.activity;
 import com.yimi.rentme.BR;
 import com.yimi.rentme.R;
 import com.yimi.rentme.vm.LoadingViewModel;
-import com.zb.lib_base.activity.BaseActivity;
-import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 
 public class LoadingActivity extends AppBaseActivity {

@@ -9,11 +9,9 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.attentionDynApi;
-import com.zb.lib_base.db.CollectIDDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
-import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -29,7 +27,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
-import io.realm.Realm;
 
 public class FollowViewModel extends BaseViewModel implements FollowVMInterface, OnRefreshListener, OnLoadMoreListener {
     public HomeAdapter adapter;
@@ -70,11 +67,6 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         onRefreshForNet(null);
-    }
-
-    @Override
-    public void publishDiscover(View view) {
-        ActivityUtils.getHomePublishImage();
     }
 
     @Override

@@ -8,17 +8,13 @@ import com.yimi.rentme.BR;
 import com.yimi.rentme.R;
 import com.yimi.rentme.vm.MainViewModel;
 import com.zb.lib_base.activity.BaseReceiver;
-import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.JobInfoDb;
 import com.zb.lib_base.db.TagDb;
-import com.zb.lib_base.http.HttpManager;
-import com.zb.lib_base.model.BaseEntity;
 import com.zb.lib_base.model.JobInfo;
 import com.zb.lib_base.model.Tag;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.lib_base.utils.SimulateNetAPI;
-import com.zb.lib_base.windows.TextPW;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

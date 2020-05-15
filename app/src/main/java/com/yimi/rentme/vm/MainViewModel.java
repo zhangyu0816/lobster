@@ -15,7 +15,6 @@ import com.zb.lib_base.api.openedMemberPriceListApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.FragmentUtils;

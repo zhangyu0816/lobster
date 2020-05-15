@@ -29,7 +29,6 @@ import com.zb.module_home.iv.PublishImageVMInterface;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;

@@ -1,7 +1,6 @@
 package com.zb.lib_base.db;
 
 import com.zb.lib_base.activity.BaseActivity;
-import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.model.MineInfo;
 
 import io.realm.Realm;

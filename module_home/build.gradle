@@ -77,4 +77,8 @@ dependencies {
         if (isNeedBottleModule.toBoolean()) {
             implementation project(':module_bottle')
         }
+    if (!isNeedHomeModule.toBoolean())
+        if (isNeedCardModule.toBoolean()) {
+            implementation project(':module_card')
+        }
 }

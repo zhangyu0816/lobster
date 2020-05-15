@@ -2,7 +2,6 @@ package com.zb.module_register.vm;
 
 import android.Manifest;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;

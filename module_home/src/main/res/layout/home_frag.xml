@@ -22,22 +22,31 @@
             android:layout_marginTop="10dp"
             app:tabBackground="@android:color/transparent"
             app:tabGravity="start"
+            app:tabIndicator="@drawable/indicator"
             app:tabIndicatorColor="@color/purple_7a4"
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorHeight="3dp"
-            app:tabMinWidth="0dp"
             app:tabMaxWidth="0dp"
-            app:tabPaddingBottom="-15dp"
+            app:tabMinWidth="0dp"
             app:tabMode="scrollable"
-            app:tabIndicator="@drawable/indicator"
+            app:tabPaddingBottom="-15dp"
             app:tabRippleColor="@android:color/transparent"
             app:tabSelectedTextColor="@color/black_252"
-            app:tabTextColor="@color/black_827"/>
+            app:tabTextColor="@color/black_827" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_page"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/tab_layout"/>
+            android:layout_below="@+id/tab_layout" />
+
+        <ImageView
+            onClickDelayed="@{viewModel::publishDiscover}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="15dp"
+            app:srcCompat="@mipmap/discover_icon" />
     </RelativeLayout>
 </layout>

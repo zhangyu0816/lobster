@@ -8,8 +8,6 @@ public class RouteUtils {
     // 首页主fragment
     public static final String Home_Fragment = "/home/HomeFragment";
     public static final String Home_Follow_Fragment = "/home/FollowFragment";
-    public static final String Home_Recommend_Fragment = "/home/RecommendFragment";
-    public static final String Home_Video_Fragment = "/home/VideoFragment";
     public static final String Home_Publish_image = "/home/PublishImageActivity";
     public static final String Home_Discover_Detail = "/home/DiscoverDetailActivity";
     public static final String Home_Reward_List = "/home/RewardListActivity";

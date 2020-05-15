@@ -11,7 +11,6 @@ import com.zb.lib_base.api.submitOpenedMemberOrderApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.OrderTran;
 import com.zb.lib_base.model.VipOrder;
