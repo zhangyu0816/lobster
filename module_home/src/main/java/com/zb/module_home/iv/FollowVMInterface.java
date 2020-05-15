@@ -7,4 +7,8 @@ public interface FollowVMInterface {
     void publishDiscover(View view);
 
     void entryBottle(View view);
+
+    void attentionDyn();
+
+    void onRefreshForNet(View view);
 }

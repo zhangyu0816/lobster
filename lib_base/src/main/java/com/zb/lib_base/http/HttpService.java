@@ -4,6 +4,7 @@ package com.zb.lib_base.http;
 import com.zb.lib_base.model.AliPay;
 import com.zb.lib_base.model.BaseResultEntity;
 import com.zb.lib_base.model.ContactNum;
+import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.LoginInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
@@ -15,6 +16,7 @@ import com.zb.lib_base.model.VipOrder;
 import com.zb.lib_base.model.WXPay;
 
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -25,6 +27,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 import rx.Observable;
 
 /**
@@ -116,6 +119,15 @@ public interface HttpService {
     Observable<BaseResultEntity<ContactNum>> contactNum(@Field("otherUserId") long otherUserId);
 
     /******************************* 首页 **********************************/
+
+    // 我关注的人的动态列表
+    @GET("api/Interactive_attentionDyn")
+    Observable<BaseResultEntity<List<DiscoverInfo>>> attentionDyn(@Query("pageNo") int pageNo, @Query("timeSortType") int timeSortType);
+
+    // 动态广场
+    @GET("api/Interactive_dynPiazzaList")
+    Observable<BaseResultEntity<List<DiscoverInfo>>> dynPiazzaList(@QueryMap Map<String, String> map);
+
     /******************************* 卡片 **********************************/
     // 加入匹配池 (提交当前位置)
     @FormUrlEncoded

@@ -15,27 +15,29 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
 
     @Override
     public void myInfo() {
-        if (BaseActivity.sessionId.isEmpty()) {
-            ActivityUtils.getRegisterMain();
-            activity.finish();
-        } else {
-            myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
-                @Override
-                public void onNext(MineInfo o) {
-                    mineInfoDb.saveMineInfo(o);
-                    ActivityUtils.getMainActivity();
-                    activity.finish();
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NOT_LOGIN) {
-                        ActivityUtils.getRegisterMain();
-                        activity.finish();
-                    }
-                }
-            }, activity);
-            HttpManager.getInstance().doHttpDeal(api);
-        }
+        ActivityUtils.getMainActivity();
+        activity.finish();
+//        if (BaseActivity.sessionId.isEmpty()) {
+//            ActivityUtils.getRegisterMain();
+//            activity.finish();
+//        } else {
+//            myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
+//                @Override
+//                public void onNext(MineInfo o) {
+//                    mineInfoDb.saveMineInfo(o);
+//                    ActivityUtils.getMainActivity();
+//                    activity.finish();
+//                }
+//
+//                @Override
+//                public void onError(Throwable e) {
+//                    if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NOT_LOGIN) {
+//                        ActivityUtils.getRegisterMain();
+//                        activity.finish();
+//                    }
+//                }
+//            }, activity);
+//            HttpManager.getInstance().doHttpDeal(api);
+//        }
     }
 }

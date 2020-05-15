@@ -130,7 +130,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"
-                                android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}">
+                                android:visibility="@{viewModel.discoverInfo.otherUserId==BaseActivity.userId?View.GONE:View.VISIBLE}">
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
@@ -170,7 +170,7 @@
                             <RelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.VISIBLE:View.GONE}">
+                                android:visibility="@{viewModel.discoverInfo.otherUserId==BaseActivity.userId?View.VISIBLE:View.GONE}">
 
                                 <LinearLayout
                                     android:id="@+id/rewardNum_linear"
@@ -302,7 +302,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:layout_centerVertical="true"
-                    android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}"
+                    android:visibility="@{viewModel.discoverInfo.otherUserId==BaseActivity.userId?View.GONE:View.VISIBLE}"
                     app:srcCompat="@mipmap/gift_icon" />
 
                 <EditText
@@ -338,7 +338,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="15dp"
-                        android:drawableStart="@drawable/like_select_icon"
+                        android:drawableStart="@{viewModel.collectIDDb.getCollectId(2,viewModel.discoverInfo.friendDynId)?@drawable/like_select_icon:@drawable/like_unselect_icon}"
                         android:drawablePadding="5dp"
                         android:text='@{String.format("%d",viewModel.discoverInfo.goodNum)}'
                         android:textColor="@color/black_4d4"

@@ -11,5 +11,6 @@
     <declare-styleable name="RoundImageView">
         <attr name="radius" format="reference|dimension" />
         <attr name="all" format="boolean" />
+        <attr name="top" format="boolean" />
     </declare-styleable>
 </resources>

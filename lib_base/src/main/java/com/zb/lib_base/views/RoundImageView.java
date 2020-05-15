@@ -31,6 +31,7 @@ public class RoundImageView extends androidx.appcompat.widget.AppCompatImageView
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.RoundImageView);
         float mRadius = array.getDimension(R.styleable.RoundImageView_radius, 0);
         boolean all = array.getBoolean(R.styleable.RoundImageView_all, false);
+        boolean top = array.getBoolean(R.styleable.RoundImageView_top, false);
 
         rids[0] = mRadius;
         rids[1] = mRadius;

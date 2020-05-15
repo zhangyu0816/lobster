@@ -50,7 +50,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 
         discoverInfo = new DiscoverInfo();
         discoverInfo.setRewardNum(2);
-        discoverInfo.setUserId(123456l);
+        discoverInfo.setOtherUserId(123456l);
 
         for (int i = 0; i < 6; i++) {
             reviewList.add(new Review());
@@ -59,7 +59,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             giftInfo.setGiftName("礼物" + i);
             giftInfoList.add(giftInfo);
         }
-        if (discoverInfo.getUserId() == BaseActivity.userId) {
+        if (discoverInfo.getOtherUserId()== BaseActivity.userId) {
             selectorList.add("分享");
             selectorList.add("删除");
         } else {
@@ -95,7 +95,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     public void more(View view) {
         super.more(view);
         new SelectorPW(activity, mBinding.getRoot(), selectorList, position -> {
-            if (discoverInfo.getUserId() == BaseActivity.userId) {
+            if (discoverInfo.getOtherUserId() == BaseActivity.userId) {
                 if (position == 0) {
 
                 } else if (position == 1) {

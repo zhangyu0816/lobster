@@ -10,6 +10,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.db.CollectIDDb;
 import com.zb.lib_base.db.MineInfoDb;
 import com.zb.lib_base.iv.BaseVMInterface;
 import com.zb.lib_base.model.DiscoverInfo;
@@ -28,12 +29,16 @@ public class BaseViewModel implements BaseVMInterface {
     public ViewDataBinding mBinding;
     public RxAppCompatActivity activity;
     public MineInfoDb mineInfoDb;
+    public CollectIDDb collectIDDb;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         mBinding = binding;
         activity = (RxAppCompatActivity) mBinding.getRoot().getContext();
-        mineInfoDb = new MineInfoDb(Realm.getDefaultInstance());
+        if (mineInfoDb == null)
+            mineInfoDb = new MineInfoDb(Realm.getDefaultInstance());
+        if (collectIDDb == null)
+            collectIDDb = new CollectIDDb(Realm.getDefaultInstance());
     }
 
     @Override

@@ -66,6 +66,14 @@ public class AreaDb extends BaseDao {
         return cityInfo == null ? "" : cityInfo.getCityName();
     }
 
+    // 获取城市id
+    public long getCityId(String cityName) {
+        beginTransaction();
+        CityInfo cityInfo = realm.where(CityInfo.class).equalTo("cityName", cityName).findFirst();
+        commitTransaction();
+        return cityInfo == null ? 0 : cityInfo.getCityId();
+    }
+
     // 保存地区信息
     public void saveDistrictInfo(DistrictInfo districtInfo) {
         beginTransaction();

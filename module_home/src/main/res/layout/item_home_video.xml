@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
 
         <variable
             name="viewModel"
@@ -15,18 +18,45 @@
             name="item"
             type="com.zb.lib_base.model.DiscoverInfo" />
 
-
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         onClickDelayed="@{v->viewModel.clickItem(item)}"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white">
+        android:layout_height="wrap_content">
+
+        <com.zb.lib_base.views.RoundImageView
+            android:id="@+id/roundImageView"
+            defaultRes="@{ObjectUtils.getDefaultRes()}"
+            imageUrl='@{item.image.split("#")[0]}'
+            viewHeightSize="@{ObjectUtils.getLogoHeight(0.498f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.498f)}"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            app:all="true"
+            app:radius="5dp" />
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="200dp"
-            android:text="222222222" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="10dp"
+            android:drawableStart="@{viewModel.collectIDDb.getCollectId(2,item.friendDynId)?@drawable/like_red_icon:@drawable/like_white_icon}"
+            android:drawablePadding="5dp"
+            android:text='@{String.format("%d",item.goodNum)}'
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:padding="10dp"
+            android:singleLine="true"
+            android:text="@{item.friendTitle}"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 </layout>

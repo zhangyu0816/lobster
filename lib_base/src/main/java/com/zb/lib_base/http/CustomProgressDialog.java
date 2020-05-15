@@ -1,6 +1,7 @@
 package com.zb.lib_base.http;
 
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -8,6 +9,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,9 +17,6 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 
 import java.lang.ref.WeakReference;
-
-import static android.animation.ValueAnimator.RESTART;
-
 
 public class CustomProgressDialog extends Dialog implements DialogInterface.OnCancelListener {
 
@@ -34,8 +33,9 @@ public class CustomProgressDialog extends Dialog implements DialogInterface.OnCa
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_custom_progress, null);
         TextView tvMessage = (TextView) view.findViewById(R.id.tv_message);
         ImageView progress = view.findViewById(R.id.progress);
-        animator = ObjectAnimator.ofFloat(progress, "rotation", 0, 360).setDuration(1000);
-        animator.setRepeatMode(RESTART);
+        animator = ObjectAnimator.ofFloat(progress, "rotation", 0, 360).setDuration(700);
+        animator.setRepeatMode(ValueAnimator.RESTART);
+        animator.setRepeatCount(Animation.INFINITE);
         if (!TextUtils.isEmpty(message)) {
             tvMessage.setText(message);
         }

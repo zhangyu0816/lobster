@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -14,10 +15,60 @@
         android:layout_height="match_parent">
 
         <View
+            android:id="@+id/view3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:alpha="0.5"
             android:background="@color/black" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:background="@mipmap/qr_code_bg"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/view3"
+            app:layout_constraintEnd_toEndOf="@+id/view3"
+            app:layout_constraintStart_toStartOf="@+id/view3"
+            app:layout_constraintTop_toTopOf="@+id/view3">
+
+            <TextView
+                onClickDelayed="@{v->pw.selectIndex(0)}"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:gravity="center"
+                android:text="钱包支付"
+                android:textColor="@color/black_252"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/black_efe" />
+
+            <TextView
+                onClickDelayed="@{v->pw.selectIndex(1)}"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:gravity="center"
+                android:text="支付宝支付"
+                android:textColor="@color/black_252"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/black_efe" />
+
+            <TextView
+                onClickDelayed="@{v->pw.selectIndex(2)}"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:gravity="center"
+                android:text="微信支付"
+                android:textColor="@color/black_252"
+                android:textSize="16sp" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

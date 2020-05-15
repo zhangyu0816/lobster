@@ -84,12 +84,12 @@ public class MainActivity extends AppBaseActivity {
         systemErrorReceiver = new BaseReceiver(activity, "lobster_systemError") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                new TextPW(activity, mBinding.getRoot(), "断线重连", "网络异常，请重新链接", () -> {
-                    for (BaseEntity baseEntity : MineApp.apiList) {
-                        HttpManager.getInstance().doHttpDeal(baseEntity);
-                    }
-                    MineApp.apiList.clear();
-                });
+//                new TextPW(activity, mBinding.getRoot(), "断线重连", "网络异常，请重新链接", () -> {
+//                    for (BaseEntity baseEntity : MineApp.apiList) {
+//                        HttpManager.getInstance().doHttpDeal(baseEntity);
+//                    }
+//                    MineApp.apiList.clear();
+//                });
             }
         };
     }

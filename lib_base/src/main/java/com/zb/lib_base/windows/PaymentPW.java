@@ -1,5 +1,7 @@
 package com.zb.lib_base.windows;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -9,8 +11,11 @@ import com.alipay.sdk.app.PayTask;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.alipayFastPayTranApi;
+import com.zb.lib_base.api.walletPayTranApi;
 import com.zb.lib_base.api.wxpayAppPayTranApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -22,7 +27,8 @@ import com.zb.lib_base.utils.SCToastUtil;
 
 public class PaymentPW extends BasePopupWindow {
     private OrderTran orderTran;
-    private int payType;
+    private int payType; // 1 开通VIP  2 充值
+    private BaseReceiver paySuccessReceiver;
 
     public PaymentPW(RxAppCompatActivity activity, View parentView, OrderTran orderTran, int payType) {
         super(activity, parentView, true);
@@ -38,7 +44,13 @@ public class PaymentPW extends BasePopupWindow {
 
     @Override
     public void initUI() {
-
+        mBinding.setVariable(BR.pw, this);
+        paySuccessReceiver = new BaseReceiver(activity, "lobster_paySuccess") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                paySuccess();
+            }
+        };
     }
 
     @Override
@@ -46,16 +58,39 @@ public class PaymentPW extends BasePopupWindow {
         super.selectIndex(position);
         if (position == 0) {
             // 钱包支付
-            walletPayTran(orderTran.getTranOrderId(), payType);
+            walletPayTran(orderTran.getTranOrderId());
         } else if (position == 1) {
-            alipayFastPayTran(orderTran.getTranOrderId(), payType);
+            alipayFastPayTran(orderTran.getTranOrderId());
         } else if (position == 2) {
-            wxpayAppPayTran(orderTran.getTranOrderId(), payType);
+            wxpayAppPayTran(orderTran.getTranOrderId());
         }
     }
 
+    private void paySuccess() {
+        if (payType == 1) {
+            activity.sendBroadcast(new Intent("lobster_openVip"));
+        }
+        paySuccessReceiver.unregisterReceiver();
+        dismiss();
+    }
+
+    /**
+     * 钱包支付
+     *
+     * @param tranOrderId
+     */
+    private void walletPayTran(String tranOrderId) {
+        walletPayTranApi api = new walletPayTranApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                paySuccess();
+            }
+        }, activity).setTranOrderId(tranOrderId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
     // 支付宝支付
-    private void alipayFastPayTran(String tranOrderId, int payType) {
+    private void alipayFastPayTran(String tranOrderId) {
         alipayFastPayTranApi api = new alipayFastPayTranApi(new HttpOnNextListener<AliPay>() {
             @Override
             public void onNext(AliPay o) {
@@ -84,22 +119,23 @@ public class PaymentPW extends BasePopupWindow {
                 String resultStatus = payResult.getResultStatus();
                 if (TextUtils.equals(resultStatus, "9000")) {
                     SCToastUtil.showToast(activity, "支付成功");
+                    paySuccess();
                 } else {
                     if (TextUtils.equals(resultStatus, "8000")) {
                         SCToastUtil.showToast(activity, "支付结果确认中");
                     } else {
                         SCToastUtil.showToast(activity, "支付失败");
                     }
+                    paySuccessReceiver.unregisterReceiver();
+                    dismiss();
                 }
-                break;
-            default:
                 break;
         }
         return false;
     });
 
     // 微信支付
-    private void wxpayAppPayTran(String tranOrderId, int payType) {
+    private void wxpayAppPayTran(String tranOrderId) {
         wxpayAppPayTranApi api = new wxpayAppPayTranApi(new HttpOnNextListener<WXPay>() {
             @Override
             public void onNext(WXPay pay) {

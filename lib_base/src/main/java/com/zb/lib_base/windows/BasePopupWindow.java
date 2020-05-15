@@ -1,7 +1,6 @@
 package com.zb.lib_base.windows;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -10,16 +9,12 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import com.zb.lib_base.api.alipayFastPayTranApi;
 import com.zb.lib_base.api.payOrderForTranApi;
 import com.zb.lib_base.api.submitOpenedMemberOrderApi;
-import com.zb.lib_base.api.walletPayTranApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.model.AliPay;
 import com.zb.lib_base.model.OrderTran;
 import com.zb.lib_base.model.VipOrder;
-import com.zb.lib_base.utils.ActivityUtils;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
@@ -135,22 +130,4 @@ public abstract class BasePopupWindow extends PopupWindow {
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    /**
-     * 钱包支付
-     *
-     * @param tranOrderId
-     */
-    public void walletPayTran(String tranOrderId, int payType) {
-        // payType  1:开通会员
-        walletPayTranApi api = new walletPayTranApi(new HttpOnNextListener() {
-            @Override
-            public void onNext(Object o) {
-                if (payType == 1) {
-                    activity.sendBroadcast(new Intent("lobster_openVip"));
-                }
-                dismiss();
-            }
-        }, activity).setTranOrderId(tranOrderId);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
 }
