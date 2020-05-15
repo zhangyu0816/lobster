@@ -42,6 +42,15 @@ public interface HttpService {
     Observable<BaseResultEntity<ResourceUrl>> uploadImages(@Part("isCompre") RequestBody isCompre, @Part("isCutImage") RequestBody isCutImage,
                                                            @Part("fileFileName") RequestBody fileName, @Part("fileContentType") RequestBody fileContentType,
                                                            @Part MultipartBody.Part file);
+    // 上传视频
+    @Multipart
+    @POST("YmUpload_videoFile")
+    Observable<BaseResultEntity<ResourceUrl>> uploadVideo(@Part("fileFileName") RequestBody fileName, @Part MultipartBody.Part file);
+
+    // 上传语音
+    @Multipart
+    @POST("YmUpload_soundFile")
+    Observable<BaseResultEntity<ResourceUrl>> uploadSound(@Part("fileFileName") RequestBody fileName, @Part MultipartBody.Part file);
 
     // 用户注册
     @FormUrlEncoded
@@ -127,6 +136,14 @@ public interface HttpService {
     // 动态广场
     @GET("api/Interactive_dynPiazzaList")
     Observable<BaseResultEntity<List<DiscoverInfo>>> dynPiazzaList(@QueryMap Map<String, String> map);
+
+    // 动态广场
+    @GET("api/Interactive_publishDyn")
+    Observable<BaseResultEntity> publishDyn(@Query("text") String text, @Query("images") String images,
+                                            @Query("videoUrl") String videoUrl, @Query("resTime") int resTime,
+                                            @Query("isSyncPiazza") int isSyncPiazza, @Query("isPrivate") int isPrivate,
+                                            @Query("isAppearance") int isAppearance, @Query("addressInfo") String addressInfo,
+                                            @Query("friendTitle") String friendTitle);
 
     /******************************* 卡片 **********************************/
     // 加入匹配池 (提交当前位置)

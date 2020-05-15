@@ -22,7 +22,7 @@ public class MemberDetailActivity extends CardBaseActivity {
     public void initUI() {
         fitComprehensiveScreen();
         MemberDetailViewModel viewModel = new MemberDetailViewModel();
-        viewModel.userId = userId;
+        viewModel.otherUserId = userId;
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
     }

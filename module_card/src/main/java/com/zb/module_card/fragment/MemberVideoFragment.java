@@ -13,6 +13,8 @@ public class MemberVideoFragment extends BaseFragment {
     @Autowired(name = "userId")
     long userId;
 
+    private MemberVideoViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.card_member_video;
@@ -20,10 +22,16 @@ public class MemberVideoFragment extends BaseFragment {
 
     @Override
     public void initUI() {
-        MemberVideoViewModel viewModel = new MemberVideoViewModel();
-
+        viewModel = new MemberVideoViewModel();
+        viewModel.otherUserId = userId;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setAdapter();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 }

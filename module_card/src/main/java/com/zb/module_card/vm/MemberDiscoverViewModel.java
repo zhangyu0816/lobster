@@ -1,54 +1,117 @@
 package com.zb.module_card.vm;
 
+import android.content.Context;
+import android.content.Intent;
+import android.view.View;
+
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.api.dynPiazzaListApi;
+import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.AreaDb;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_card.R;
 import com.zb.module_card.adapter.CardAdapter;
+import com.zb.module_card.databinding.CardMemberDiscoverBinding;
 import com.zb.module_card.iv.MemberDiscoverVMInterface;
 
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.ViewDataBinding;
+import io.realm.Realm;
 
 public class MemberDiscoverViewModel extends BaseViewModel implements MemberDiscoverVMInterface, OnRefreshListener, OnLoadMoreListener {
 
     public CardAdapter adapter;
-
+    private AreaDb areaDb;
+    private int pageNo = 1;
     private List<DiscoverInfo> discoverInfoList = new ArrayList<>();
+    private CardMemberDiscoverBinding discoverBinding;
+    private BaseReceiver publishReceiver;
+    public long otherUserId;
+
+    @Override
+    public void setBinding(ViewDataBinding binding) {
+        super.setBinding(binding);
+        areaDb = new AreaDb(Realm.getDefaultInstance());
+        discoverBinding = (CardMemberDiscoverBinding) binding;
+        publishReceiver = new BaseReceiver(activity, "lobster_publish") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                onRefreshForNet(null);
+            }
+        };
+    }
+
+    public void onDestroy() {
+        publishReceiver.unregisterReceiver();
+    }
 
     @Override
     public void setAdapter() {
-        for (int i = 0; i < 10; i++) {
-            discoverInfoList.add(new DiscoverInfo());
-        }
         adapter = new CardAdapter<>(activity, R.layout.item_card_discover, discoverInfoList, this);
+        dynPiazzaList();
     }
 
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         // 上拉加载更多
-//            int start = list.size();
-//            list.addAll(newItems);
-//            adapter.notifyItemInserted(start, list.size());
-        discoverInfoList.add(new DiscoverInfo());
-        refreshLayout.finishLoadMore();
-        adapter.notifyDataSetChanged();
+        pageNo++;
+        dynPiazzaList();
     }
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-
-
-        // 下拉刷新
-//            list.clear();
-//            list.addAll(newList);
-//            adapter.notifyItemRangeChanged(0, list.size());
-        refreshLayout.finishRefresh();
+        onRefreshForNet(null);
     }
 
+    @Override
+    public void dynPiazzaList() {
+        dynPiazzaListApi api = new dynPiazzaListApi(new HttpOnNextListener<List<DiscoverInfo>>() {
+            @Override
+            public void onNext(List<DiscoverInfo> o) {
+                discoverBinding.noNetLinear.setVisibility(View.GONE);
+                int start = discoverInfoList.size();
+                discoverInfoList.addAll(o);
+                adapter.notifyItemRangeChanged(start, discoverInfoList.size());
+                discoverBinding.refresh.finishRefresh();
+                discoverBinding.refresh.finishLoadMore();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof SocketTimeoutException || e instanceof ConnectException) {
+                    discoverBinding.noNetLinear.setVisibility(View.VISIBLE);
+                    discoverBinding.refresh.setEnableLoadMore(false);
+                } else if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    discoverBinding.refresh.setEnableLoadMore(false);
+                }
+            }
+        }, activity)
+                .setCityId(areaDb.getCityId(MineApp.cityName))
+                .setDynType(1)
+                .setOtherUserId(otherUserId)
+                .setPageNo(pageNo);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void onRefreshForNet(View view) {
+        // 下拉刷新
+        discoverBinding.refresh.setEnableLoadMore(true);
+        pageNo = 1;
+        discoverInfoList.clear();
+        dynPiazzaList();
+    }
 }

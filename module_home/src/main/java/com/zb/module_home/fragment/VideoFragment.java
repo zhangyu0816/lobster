@@ -9,6 +9,8 @@ import com.zb.module_home.vm.VideoViewModel;
 
 @Route(path = RouteUtils.Home_Video_Fragment)
 public class VideoFragment extends BaseFragment {
+    private VideoViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.home_video;
@@ -16,9 +18,15 @@ public class VideoFragment extends BaseFragment {
 
     @Override
     public void initUI() {
-        VideoViewModel viewModel = new VideoViewModel();
+        viewModel = new VideoViewModel();
         viewModel.setBinding(mBinding);
-        mBinding.setVariable(BR.viewModel,viewModel);
+        mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setAdapter();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 }

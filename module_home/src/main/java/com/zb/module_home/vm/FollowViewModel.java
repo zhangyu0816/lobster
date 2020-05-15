@@ -1,10 +1,13 @@
 package com.zb.module_home.vm;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.attentionDynApi;
 import com.zb.lib_base.db.CollectIDDb;
 import com.zb.lib_base.http.HttpManager;
@@ -33,7 +36,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
     private List<DiscoverInfo> discoverInfoList = new ArrayList<>();
     private int pageNo = 1;
     private HomeFollowBinding followBinding;
-
+    private BaseReceiver publishReceiver;
 
     @Override
     public void setAdapter() {
@@ -45,6 +48,16 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         followBinding = (HomeFollowBinding) binding;
+        publishReceiver = new BaseReceiver(activity, "lobster_publish") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                onRefreshForNet(null);
+            }
+        };
+    }
+
+    public void onDestroy() {
+        publishReceiver.unregisterReceiver();
     }
 
     @Override

@@ -9,6 +9,8 @@ import com.zb.module_home.vm.RecommendViewModel;
 
 @Route(path = RouteUtils.Home_Recommend_Fragment)
 public class RecommendFragment extends BaseFragment {
+    private RecommendViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.home_recommend;
@@ -16,9 +18,15 @@ public class RecommendFragment extends BaseFragment {
 
     @Override
     public void initUI() {
-        RecommendViewModel viewModel = new RecommendViewModel();
+        viewModel = new RecommendViewModel();
         viewModel.setBinding(mBinding);
-        mBinding.setVariable(BR.viewModel,viewModel);
+        mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setAdapter();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 }

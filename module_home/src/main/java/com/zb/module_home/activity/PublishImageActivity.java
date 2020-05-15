@@ -38,6 +38,8 @@ public class PublishImageActivity extends HomeBaseActivity {
                 boolean isMore = intent.getBooleanExtra("isMore", false);
                 String path = intent.getStringExtra("filePath");
                 long time = intent.getLongExtra("time", 0);
+                viewModel.videoUrl = "";
+                viewModel.videoTime = 0;
                 if (viewModel.cameraType == 0) {
                     // 相册
                     if (isMore) {
@@ -52,6 +54,7 @@ public class PublishImageActivity extends HomeBaseActivity {
                     viewModel.images.add(path);
                     viewModel.adapter.notifyDataSetChanged();
                     viewModel.videoTime = time;
+                    viewModel.videoUrl = path;
                 } else if (viewModel.cameraType == 2) {
                     // 拍照
                     viewModel.images.add(viewModel.images.size() - 1, path);

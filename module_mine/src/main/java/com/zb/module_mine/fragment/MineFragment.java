@@ -1,6 +1,7 @@
 package com.zb.module_mine.fragment;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseFragment;
 import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.utils.FragmentUtils;
@@ -37,8 +38,8 @@ public class MineFragment extends BaseFragment {
 
     private void initFragments() {
         fragments.clear();
-        fragments.add(FragmentUtils.getCardMemberDiscoverFragment(10001));
-        fragments.add(FragmentUtils.getCardMemberVideoFragment(10002));
+        fragments.add(FragmentUtils.getCardMemberDiscoverFragment(BaseActivity.userId));
+        fragments.add(FragmentUtils.getCardMemberVideoFragment(BaseActivity.userId));
         binding.viewPage.setAdapter(new FragmentAdapter(getChildFragmentManager(), fragments));
         viewModel.initTabLayout(new String[]{"动态", "小视频"}, binding.tabLayout, binding.viewPage, R.color.black_252, R.color.black_827);
     }

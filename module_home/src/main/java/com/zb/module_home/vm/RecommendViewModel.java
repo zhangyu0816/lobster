@@ -1,10 +1,13 @@
 package com.zb.module_home.vm;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.dynPiazzaListApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
@@ -34,12 +37,23 @@ public class RecommendViewModel extends BaseViewModel implements RecommendVMInte
     private int pageNo = 1;
     private List<DiscoverInfo> discoverInfoList = new ArrayList<>();
     private HomeRecommendBinding recommendBinding;
+    private BaseReceiver publishReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         areaDb = new AreaDb(Realm.getDefaultInstance());
         recommendBinding = (HomeRecommendBinding) binding;
+        publishReceiver = new BaseReceiver(activity, "lobster_publish") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                onRefreshForNet(null);
+            }
+        };
+    }
+
+    public void onDestroy() {
+        publishReceiver.unregisterReceiver();
     }
 
     @Override

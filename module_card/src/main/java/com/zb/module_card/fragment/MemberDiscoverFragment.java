@@ -14,6 +14,8 @@ public class MemberDiscoverFragment extends BaseFragment {
     @Autowired(name = "userId")
     long userId;
 
+    private MemberDiscoverViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.card_member_discover;
@@ -21,10 +23,16 @@ public class MemberDiscoverFragment extends BaseFragment {
 
     @Override
     public void initUI() {
-        MemberDiscoverViewModel viewModel = new MemberDiscoverViewModel();
-
+        viewModel = new MemberDiscoverViewModel();
+        viewModel.otherUserId = userId;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setAdapter();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 }

@@ -28,7 +28,7 @@ import androidx.fragment.app.Fragment;
 
 public class MemberDetailViewModel extends BaseViewModel implements MemberDetailVMInterface {
     private CardMemberDetailBinding detailBinding;
-    public long userId = 0;
+    public long otherUserId = 0;
     public MemberInfo memberInfo;
     public CardAdapter tagAdapter;
     private List<String> tagList = new ArrayList<>();
@@ -83,8 +83,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
 
     private void initFragments() {
         fragments.clear();
-        fragments.add(FragmentUtils.getCardMemberDiscoverFragment(userId));
-        fragments.add(FragmentUtils.getCardMemberVideoFragment(userId));
+        fragments.add(FragmentUtils.getCardMemberDiscoverFragment(otherUserId));
+        fragments.add(FragmentUtils.getCardMemberVideoFragment(otherUserId));
         detailBinding.viewPage.setAdapter(new FragmentAdapter(activity.getSupportFragmentManager(), fragments));
         initTabLayout(new String[]{"动态", "小视频"}, detailBinding.tabLayout, detailBinding.viewPage, R.color.black_4d4, R.color.black_c3b);
     }

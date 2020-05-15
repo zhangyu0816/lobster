@@ -9,6 +9,8 @@ import com.zb.module_home.vm.FollowViewModel;
 
 @Route(path = RouteUtils.Home_Follow_Fragment)
 public class FollowFragment extends BaseFragment {
+    private FollowViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.home_follow;
@@ -16,9 +18,15 @@ public class FollowFragment extends BaseFragment {
 
     @Override
     public void initUI() {
-        FollowViewModel viewModel = new FollowViewModel();
+        viewModel = new FollowViewModel();
         viewModel.setBinding(mBinding);
-        mBinding.setVariable(BR.viewModel,viewModel);
+        mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setAdapter();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 }

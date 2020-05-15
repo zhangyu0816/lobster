@@ -238,8 +238,9 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
         RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
         LocationInfo info = locationInfoList.get(prePosition);
         info.setCityName(regeocodeAddress.getCity());
-
-
+        PreferenceUtil.saveStringValue(activity, "address", info.getAddress());
+        MineApp.cityName = info.getCityName();
+        activity.finish();
     }
 
     @Override
