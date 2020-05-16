@@ -20,6 +20,7 @@ public class RewardListActivity extends HomeBaseActivity {
     @Override
     public void initUI() {
         RewardListViewModel viewModel = new RewardListViewModel();
+        viewModel.friendDynId = friendDynId;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
     }

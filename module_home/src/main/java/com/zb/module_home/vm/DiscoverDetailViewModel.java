@@ -24,6 +24,7 @@ import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.MemberInfo;
@@ -79,7 +80,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         dynDetail();
         giftList();
 
-        rechargeReceiver = new BaseReceiver(activity,"lobster_recharge") {
+        rechargeReceiver = new BaseReceiver(activity, "lobster_recharge") {
             @Override
             public void onReceive(Context context, Intent intent) {
                 walletAndPop();
@@ -217,6 +218,13 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 reviewAdapter.notifyItemRangeChanged(start, reviewList.size());
                 discoverDetailBinding.refresh.finishRefresh();
                 discoverDetailBinding.refresh.finishLoadMore();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    discoverDetailBinding.refresh.setEnableLoadMore(false);
+                }
             }
         }, activity).setFriendDynId(friendDynId).setTimeSortType(1).setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);

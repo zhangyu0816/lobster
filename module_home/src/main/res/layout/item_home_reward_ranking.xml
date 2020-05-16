@@ -24,7 +24,7 @@
         android:orientation="horizontal">
 
         <RelativeLayout
-            android:layout_width="60dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical">
 
@@ -64,8 +64,8 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"
-                android:layout_marginEnd="15dp"/>
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="15dp" />
 
             <TextView
                 android:id="@+id/tv_nick"
@@ -85,21 +85,10 @@
                 android:layout_below="@+id/tv_nick"
                 android:layout_marginTop="5dp"
                 android:layout_toEndOf="@+id/iv_logo"
-                android:text="@{item.nick}"
+                android:text='@{String.format(@string/gift_pay,item.payMoney)}'
                 android:textColor="@color/black_827"
                 android:textSize="14sp"
                 tools:text="香蕉 X5" />
-
-            <ImageView
-                defaultRes="@{ObjectUtils.getDefaultRes()}"
-                imageUrl="@{item.image}"
-                viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="15dp"
-               android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"/>
 
             <View
                 android:layout_width="match_parent"

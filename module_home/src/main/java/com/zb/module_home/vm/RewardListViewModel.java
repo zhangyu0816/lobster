@@ -2,32 +2,39 @@ package com.zb.module_home.vm;
 
 import android.view.View;
 
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.api.seeGiftRewardsApi;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.Reward;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
+import com.zb.module_home.databinding.HomeRewardListBinding;
 import com.zb.module_home.iv.RewardListVMInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
 
 
-public class RewardListViewModel extends BaseViewModel implements RewardListVMInterface {
+public class RewardListViewModel extends BaseViewModel implements RewardListVMInterface, OnRefreshListener, OnLoadMoreListener {
 
     public HomeAdapter adapter;
-    private List<Reward>  rewardList = new ArrayList<>();
+    public long friendDynId;
+    private List<Reward> rewardList = new ArrayList<>();
+    private int pageNo = 1;
+    private HomeRewardListBinding rewardListBinding;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        rewardList.add(new Reward());
-        rewardList.add(new Reward());
-        rewardList.add(new Reward());
-        rewardList.add(new Reward());
-        rewardList.add(new Reward());
-        rewardList.add(new Reward());
+        rewardListBinding = (HomeRewardListBinding) binding;
         setAdapter();
     }
 
@@ -39,6 +46,47 @@ public class RewardListViewModel extends BaseViewModel implements RewardListVMIn
 
     @Override
     public void setAdapter() {
-        adapter = new HomeAdapter<>(activity, R.layout.item_home_reward_ranking,rewardList,this);
+        adapter = new HomeAdapter<>(activity, R.layout.item_home_reward_ranking, rewardList, this);
+        seeGiftRewards();
+    }
+
+    @Override
+    public void seeGiftRewards() {
+        seeGiftRewardsApi api = new seeGiftRewardsApi(new HttpOnNextListener<List<Reward>>() {
+            @Override
+            public void onNext(List<Reward> o) {
+                int start = rewardList.size();
+                rewardList.addAll(o);
+                adapter.notifyItemRangeChanged(start, rewardList.size());
+                rewardListBinding.refresh.finishRefresh();
+                rewardListBinding.refresh.finishLoadMore();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    rewardListBinding.refresh.setEnableLoadMore(false);
+                }
+            }
+        }, activity).setFriendDynId(friendDynId)
+                .setRewardSortType(2)
+                .setPageNo(pageNo);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+        // 上拉加载更多
+        pageNo++;
+        seeGiftRewards();
+    }
+
+    @Override
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        // 下拉刷新
+        rewardListBinding.refresh.setEnableLoadMore(true);
+        pageNo = 1;
+        rewardList.clear();
+        seeGiftRewards();
     }
 }
