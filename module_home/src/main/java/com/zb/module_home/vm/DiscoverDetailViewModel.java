@@ -15,6 +15,7 @@ import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.deleteDynApi;
 import com.zb.lib_base.api.dynDetailApi;
+import com.zb.lib_base.api.dynDoReviewApi;
 import com.zb.lib_base.api.giftListApi;
 import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.otherInfoApi;
@@ -68,6 +69,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     private MineInfo mineInfo;
     private MemberInfo memberInfo;
     private BaseReceiver rechargeReceiver;
+    private long reviewId = 0;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -76,6 +78,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         mineInfo = mineInfoDb.getMineInfo();
         AdapterBinding.viewSize(discoverDetailBinding.bannerLayout.banner, MineApp.W, ObjectUtils.getLogoHeight(1.0f));
         mBinding.setVariable(BR.content, "");
+        mBinding.setVariable(BR.name, "");
         setAdapter();
         dynDetail();
         giftList();
@@ -281,6 +284,29 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void dynDoReview() {
+        if (discoverDetailBinding.getContent().isEmpty()) {
+            SCToastUtil.showToast(activity, "请输入评论内容");
+            return;
+        }
+        dynDoReviewApi api = new dynDoReviewApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                SCToastUtil.showToast(activity, "发布成功");
+                // 下拉刷新
+                onRefresh(discoverDetailBinding.refresh);
+            }
+        }, activity).setFriendDynId(friendDynId).setText(discoverDetailBinding.getContent()).setReviewId(reviewId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void selectReview(Review review) {
+        reviewId = reviewId == review.getReviewId() ? 0 : review.getReviewId();
+        mBinding.setVariable(BR.name, reviewId == 0 ? "" : review.getNick());
     }
 
     @Override

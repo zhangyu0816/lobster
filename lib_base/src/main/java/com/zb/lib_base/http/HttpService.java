@@ -187,6 +187,10 @@ public interface HttpService {
     @GET("api/Interactive_deleteDyn")
     Observable<BaseResultEntity> deleteDyn(@Query("friendDynId") long friendDynId);
 
+    // 给动态评论
+    @GET("api/Interactive_dynDoReview")
+    Observable<BaseResultEntity> dynDoReview(@QueryMap Map<String, String> map);
+
     /******************************* 卡片 **********************************/
     // 加入匹配池 (提交当前位置)
     @FormUrlEncoded

@@ -2,6 +2,8 @@ package com.zb.module_home.iv;
 
 import android.view.View;
 
+import com.zb.lib_base.model.Review;
+
 public interface DiscoverDetailVMInterface {
     void selectGift(View view);
 
@@ -22,4 +24,8 @@ public interface DiscoverDetailVMInterface {
     void deleteDyn();
 
     void walletAndPop();
+
+    void dynDoReview();
+
+    void selectReview(Review review);
 }
