@@ -6,9 +6,20 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 public class GiftInfo extends BaseObservable {
+    private long giftId;
     private String giftName = "";//礼物名称
     private String giftImage = "";//礼物图片
     private double payMoney = 0;//支付金额 [所需的币]
+
+    @Bindable
+    public long getGiftId() {
+        return giftId;
+    }
+
+    public void setGiftId(long giftId) {
+        this.giftId = giftId;
+        notifyPropertyChanged(BR.giftId);
+    }
 
     @Bindable
     public String getGiftName() {
@@ -20,7 +31,8 @@ public class GiftInfo extends BaseObservable {
         notifyPropertyChanged(BR.giftName);
     }
 
-    @Bindable public String getGiftImage() {
+    @Bindable
+    public String getGiftImage() {
         return giftImage;
     }
 
@@ -29,7 +41,8 @@ public class GiftInfo extends BaseObservable {
         notifyPropertyChanged(BR.giftImage);
     }
 
-    @Bindable public double getPayMoney() {
+    @Bindable
+    public double getPayMoney() {
         return payMoney;
     }
 

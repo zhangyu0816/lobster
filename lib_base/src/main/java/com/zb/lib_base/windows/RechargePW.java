@@ -6,6 +6,10 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
 import com.zb.lib_base.adapter.BaseAdapter;
+import com.zb.lib_base.api.rechargeWalletApi;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.model.OrderTran;
 import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.WalletInfo;
 
@@ -65,7 +69,17 @@ public class RechargePW extends BasePopupWindow {
     @Override
     public void recharge(View view) {
         super.recharge(view);
-        dismiss();
-        new TextPW(activity, mBinding.getRoot(), "您已充值成功！", "充值金额50元，获得88个虾菇币，账户余额为128个虾菇币");
+        rechargeWallet();
+    }
+
+    private void rechargeWallet(){
+        rechargeWalletApi api = new rechargeWalletApi(new HttpOnNextListener<OrderTran>() {
+            @Override
+            public void onNext(OrderTran o) {
+                dismiss();
+                new PaymentPW(activity, mBinding.getRoot(), o, 2);
+            }
+        },activity).setMoney(rechargeInfoList.get(preIndex).getPrice());
+        HttpManager.getInstance().doHttpDeal(api);
     }
 }

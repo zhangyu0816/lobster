@@ -5,13 +5,15 @@ import com.zb.lib_base.BR;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
-public class VipOrder extends BaseObservable {
+public class OrderNumber extends BaseObservable {
     String orderNumber = ""; //订单号
     String orderTitle = "";
     int orderStatus;   // 10 代付款  200 支付成功. TranStatusType
     double productPrice;   //产品单价
     int productCount;  //数量
     double totalMoney; //订单总金额
+    String createTime;
+    int isPayed;  //是否已支付  0未支付  调用支付  1.已支付-提示下单成功
 
     @Bindable
     public String getOrderNumber() {
@@ -71,5 +73,25 @@ public class VipOrder extends BaseObservable {
     public void setTotalMoney(double totalMoney) {
         this.totalMoney = totalMoney;
         notifyPropertyChanged(BR.totalMoney);
+    }
+
+    @Bindable
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+        notifyPropertyChanged(BR.createTime);
+    }
+
+    @Bindable
+    public int getIsPayed() {
+        return isPayed;
+    }
+
+    public void setIsPayed(int isPayed) {
+        this.isPayed = isPayed;
+        notifyPropertyChanged(BR.isPayed);
     }
 }

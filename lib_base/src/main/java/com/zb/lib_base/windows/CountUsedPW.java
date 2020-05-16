@@ -1,11 +1,10 @@
-package com.zb.module_card.windows;
+package com.zb.lib_base.windows;
 
 import android.view.View;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import com.zb.lib_base.windows.BasePopupWindow;
-import com.zb.module_card.BR;
-import com.zb.module_card.R;
+import com.zb.lib_base.BR;
+import com.zb.lib_base.R;
 
 
 public class CountUsedPW extends BasePopupWindow {

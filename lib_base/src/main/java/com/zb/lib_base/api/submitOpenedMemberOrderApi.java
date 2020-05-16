@@ -4,11 +4,11 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.model.BaseEntity;
-import com.zb.lib_base.model.VipOrder;
+import com.zb.lib_base.model.OrderNumber;
 
 import rx.Observable;
 
-public class submitOpenedMemberOrderApi extends BaseEntity<VipOrder> {
+public class submitOpenedMemberOrderApi extends BaseEntity<OrderNumber> {
     long memberOfOpenedProductId;
 
     public submitOpenedMemberOrderApi setMemberOfOpenedProductId(long memberOfOpenedProductId) {

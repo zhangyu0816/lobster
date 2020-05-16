@@ -10,7 +10,6 @@ public class Reward extends BaseObservable {
     private String image = "";// 头像
     private String nick = "";// 昵称
     private double payMoney = 0.0;
-    private boolean isFollow = false;
 
     @Bindable
     public long getUserId() {
@@ -22,7 +21,8 @@ public class Reward extends BaseObservable {
         notifyPropertyChanged(BR.userId);
     }
 
-    @Bindable public String getImage() {
+    @Bindable
+    public String getImage() {
         return image;
     }
 
@@ -31,7 +31,8 @@ public class Reward extends BaseObservable {
         notifyPropertyChanged(BR.image);
     }
 
-    @Bindable public String getNick() {
+    @Bindable
+    public String getNick() {
         return nick;
     }
 
@@ -40,20 +41,13 @@ public class Reward extends BaseObservable {
         notifyPropertyChanged(BR.nick);
     }
 
-    @Bindable public double getPayMoney() {
+    @Bindable
+    public double getPayMoney() {
         return payMoney;
     }
 
     public void setPayMoney(double payMoney) {
         this.payMoney = payMoney;
         notifyPropertyChanged(BR.payMoney);
-    }
-
-    public boolean isFollow() {
-        return isFollow;
-    }
-
-    public void setFollow(boolean follow) {
-        isFollow = follow;
     }
 }

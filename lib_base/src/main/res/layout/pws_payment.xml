@@ -4,9 +4,15 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="pw"
             type="com.zb.lib_base.windows.BasePopupWindow" />
+
+        <variable
+            name="payType"
+            type="Integer" />
 
     </data>
 
@@ -39,12 +45,14 @@
                 android:gravity="center"
                 android:text="钱包支付"
                 android:textColor="@color/black_252"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="@{payType==2?View.GONE:View.VISIBLE}" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:background="@color/black_efe" />
+                android:background="@color/black_efe"
+                android:visibility="@{payType==2?View.GONE:View.VISIBLE}" />
 
             <TextView
                 onClickDelayed="@{v->pw.selectIndex(1)}"

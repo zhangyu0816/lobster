@@ -5,14 +5,19 @@ import com.zb.lib_base.model.AliPay;
 import com.zb.lib_base.model.BaseResultEntity;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
+import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.LoginInfo;
+import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.model.OrderNumber;
 import com.zb.lib_base.model.OrderTran;
 import com.zb.lib_base.model.PairInfo;
 import com.zb.lib_base.model.ResourceUrl;
+import com.zb.lib_base.model.Review;
+import com.zb.lib_base.model.Reward;
 import com.zb.lib_base.model.VipInfo;
-import com.zb.lib_base.model.VipOrder;
 import com.zb.lib_base.model.WXPay;
+import com.zb.lib_base.model.WalletInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -41,6 +46,7 @@ public interface HttpService {
     Observable<BaseResultEntity<ResourceUrl>> uploadImages(@Part("isCompre") RequestBody isCompre, @Part("isCutImage") RequestBody isCutImage,
                                                            @Part("fileFileName") RequestBody fileName, @Part("fileContentType") RequestBody fileContentType,
                                                            @Part MultipartBody.Part file);
+
     // 上传视频
     @Multipart
     @POST("YmUpload_videoFile")
@@ -85,10 +91,21 @@ public interface HttpService {
     @GET("api/Login_loginCaptcha")
     Observable<BaseResultEntity> loginCaptcha(@Query("userName") String userName);
 
-
     // 我的信息
     @GET("api/Member_myInfo")
     Observable<BaseResultEntity<MineInfo>> myInfo();
+
+    // 获取他人信息
+    @GET("api/Contact_otherInfo")
+    Observable<BaseResultEntity<MemberInfo>> otherInfo(@Query("otherUserId") long otherUserId);
+
+    // 钱包和受欢迎信息
+    @GET("api/Member_walletAndPop")
+    Observable<BaseResultEntity<WalletInfo>> walletAndPop();
+
+    // 充钱到我的钱包
+    @GET("api/Tran_rechargeWallet")
+    Observable<BaseResultEntity<OrderTran>> rechargeWallet(@Query("money") double money);
 
     /******************************* app **********************************/
 
@@ -99,7 +116,7 @@ public interface HttpService {
     // 提交VIP订单 - 需登录
     @FormUrlEncoded
     @POST("api/MemberOrder_submitOpenedMemberOrder")
-    Observable<BaseResultEntity<VipOrder>> submitOpenedMemberOrder(@Field("memberOfOpenedProductId") long memberOfOpenedProductId, @Field("productCount") int productCount);
+    Observable<BaseResultEntity<OrderNumber>> submitOpenedMemberOrder(@Field("memberOfOpenedProductId") long memberOfOpenedProductId, @Field("productCount") int productCount);
 
     // 获取交易订单号
     @FormUrlEncoded
@@ -136,13 +153,39 @@ public interface HttpService {
     @GET("api/Interactive_dynPiazzaList")
     Observable<BaseResultEntity<List<DiscoverInfo>>> dynPiazzaList(@QueryMap Map<String, String> map);
 
-    // 动态广场
+    // 发布动态
     @GET("api/Interactive_publishDyn")
     Observable<BaseResultEntity> publishDyn(@Query("text") String text, @Query("images") String images,
                                             @Query("videoUrl") String videoUrl, @Query("resTime") int resTime,
                                             @Query("isSyncPiazza") int isSyncPiazza, @Query("isPrivate") int isPrivate,
                                             @Query("isAppearance") int isAppearance, @Query("addressInfo") String addressInfo,
                                             @Query("friendTitle") String friendTitle);
+
+    // 动态详情
+    @GET("api/Interactive_dynDetail")
+    Observable<BaseResultEntity<DiscoverInfo>> dynDetail(@Query("friendDynId") long friendDynId);
+
+    // 打赏礼物
+    @GET("api/Gift_giftList")
+    Observable<BaseResultEntity<List<GiftInfo>>> giftList();
+
+    // 创建订单
+    @GET("api/Gift_submitOrder")
+    Observable<BaseResultEntity<OrderNumber>> submitOrder(@Query("friendDynId") long friendDynId, @Query("giftId") long giftId);
+
+    // 打赏列表
+    @GET("api/Interactive_seeGiftRewards")
+    Observable<BaseResultEntity<List<Reward>>> seeGiftRewards(@Query("friendDynId") long friendDynId, @Query("rewardSortType") int rewardSortType,
+                                                              @Query("pageNo") int pageNo);
+
+    // 查看评论
+    @GET("api/Interactive_seeReviews")
+    Observable<BaseResultEntity<List<Review>>> seeReviews(@Query("friendDynId") long friendDynId, @Query("timeSortType") int timeSortType,
+                                                          @Query("pageNo") int pageNo);
+
+    // 删除动态
+    @GET("api/Interactive_deleteDyn")
+    Observable<BaseResultEntity> deleteDyn(@Query("friendDynId") long friendDynId);
 
     /******************************* 卡片 **********************************/
     // 加入匹配池 (提交当前位置)

@@ -45,6 +45,7 @@ public class PaymentPW extends BasePopupWindow {
     @Override
     public void initUI() {
         mBinding.setVariable(BR.pw, this);
+        mBinding.setVariable(BR.payType, payType);
         paySuccessReceiver = new BaseReceiver(activity, "lobster_paySuccess") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -69,6 +70,8 @@ public class PaymentPW extends BasePopupWindow {
     private void paySuccess() {
         if (payType == 1) {
             activity.sendBroadcast(new Intent("lobster_openVip"));
+        } else if (payType == 2) {
+            activity.sendBroadcast(new Intent("lobster_recharge"));
         }
         paySuccessReceiver.unregisterReceiver();
         dismiss();

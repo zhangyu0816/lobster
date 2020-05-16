@@ -11,6 +11,7 @@ public class WalletInfo extends BaseObservable {
     private double frozenWallet = 0;// 待确认金额(冻结)
     private int popularity = 0; // 人气(浏览量)
     private double canWithdrawCreditWallet = 0; // 可提现金额
+    private int likeMeNum;   //喜欢我的人
 
     @Bindable
     public long getUserId() {
@@ -60,5 +61,15 @@ public class WalletInfo extends BaseObservable {
     public void setCanWithdrawCreditWallet(double canWithdrawCreditWallet) {
         this.canWithdrawCreditWallet = canWithdrawCreditWallet;
         notifyPropertyChanged(BR.canWithdrawCreditWallet);
+    }
+
+    @Bindable
+    public int getLikeMeNum() {
+        return likeMeNum;
+    }
+
+    public void setLikeMeNum(int likeMeNum) {
+        this.likeMeNum = likeMeNum;
+        notifyPropertyChanged(BR.likeMeNum);
     }
 }

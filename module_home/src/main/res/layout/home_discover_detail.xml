@@ -255,6 +255,7 @@
             </com.google.android.material.appbar.AppBarLayout>
 
             <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                android:id="@+id/refresh"
                 onLoadMoreListener="@{viewModel}"
                 onRefreshListener="@{viewModel}"
                 android:layout_width="match_parent"

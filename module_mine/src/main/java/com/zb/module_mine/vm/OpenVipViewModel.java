@@ -12,8 +12,8 @@ import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.model.OrderNumber;
 import com.zb.lib_base.model.OrderTran;
-import com.zb.lib_base.model.VipOrder;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.PaymentPW;
@@ -85,9 +85,9 @@ public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterfac
 
     @Override
     public void submitOpenedMemberOrder() {
-        submitOpenedMemberOrderApi api = new submitOpenedMemberOrderApi(new HttpOnNextListener<VipOrder>() {
+        submitOpenedMemberOrderApi api = new submitOpenedMemberOrderApi(new HttpOnNextListener<OrderNumber>() {
             @Override
-            public void onNext(VipOrder o) {
+            public void onNext(OrderNumber o) {
                 payOrderForTran(o.getOrderNumber(), 1);
             }
         }, activity)

@@ -13,8 +13,8 @@ import com.zb.lib_base.api.payOrderForTranApi;
 import com.zb.lib_base.api.submitOpenedMemberOrderApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.model.OrderNumber;
 import com.zb.lib_base.model.OrderTran;
-import com.zb.lib_base.model.VipOrder;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
@@ -104,9 +104,9 @@ public abstract class BasePopupWindow extends PopupWindow {
      * @param memberOfOpenedProductId
      */
     public void submitOpenedMemberOrder(long memberOfOpenedProductId) {
-        submitOpenedMemberOrderApi api = new submitOpenedMemberOrderApi(new HttpOnNextListener<VipOrder>() {
+        submitOpenedMemberOrderApi api = new submitOpenedMemberOrderApi(new HttpOnNextListener<OrderNumber>() {
             @Override
-            public void onNext(VipOrder o) {
+            public void onNext(OrderNumber o) {
                 payOrderForTran(o.getOrderNumber(), 1);
             }
         }, activity)
@@ -119,7 +119,7 @@ public abstract class BasePopupWindow extends PopupWindow {
      *
      * @param orderNumber
      */
-    private void payOrderForTran(String orderNumber, int payType) {
+    public void payOrderForTran(String orderNumber, int payType) {
         payOrderForTranApi api = new payOrderForTranApi(new HttpOnNextListener<OrderTran>() {
             @Override
             public void onNext(OrderTran o) {

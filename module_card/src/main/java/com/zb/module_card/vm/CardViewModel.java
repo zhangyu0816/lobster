@@ -36,14 +36,14 @@ import com.zb.lib_base.views.card.CardConfig;
 import com.zb.lib_base.views.card.CardItemTouchHelperCallback;
 import com.zb.lib_base.views.card.OnSwipeListener;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.CountUsedPW;
+import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;
 import com.zb.module_card.adapter.CardAdapter;
 import com.zb.module_card.databinding.CardFragBinding;
 import com.zb.module_card.iv.CardVMInterface;
-import com.zb.module_card.windows.CountUsedPW;
-import com.zb.module_card.windows.SuperLikePW;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

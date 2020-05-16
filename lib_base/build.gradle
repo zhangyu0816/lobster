@@ -68,7 +68,7 @@ dependencies {
     // 标签
     api 'com.github.1002326270xc:LayoutManager-FlowLayout:v1.6'
     api 'com.android.support:multidex:1.0.3'
-    // 高德地图
+    // 高德地图  测试时开启
     api files('libs/AMap2DMap_6.0.0_AMapSearch_7.3.0_AMapLocation_4.9.0_20200331.jar')
     //log
     api 'com.squareup.okhttp3:logging-interceptor:3.10.0'

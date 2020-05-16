@@ -1,6 +1,7 @@
 package com.zb.module_home.activity;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -18,6 +19,8 @@ public class DiscoverDetailActivity extends BaseActivity {
     @Autowired(name = "friendDynId")
     long friendDynId;
 
+    private DiscoverDetailViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.HomeDetailTheme);
@@ -31,13 +34,21 @@ public class DiscoverDetailActivity extends BaseActivity {
 
     @Override
     public void initUI() {
-        DiscoverDetailViewModel viewModel = new DiscoverDetailViewModel();
+        viewModel = new DiscoverDetailViewModel();
         viewModel.friendDynId = friendDynId;
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
 
         HomeDiscoverDetailBinding binding = (HomeDiscoverDetailBinding) mBinding;
-        KeyBroadUtils.controlKeyboardLayout(binding.mainLayout,binding.bottomLayout);
+        KeyBroadUtils.controlKeyboardLayout(binding.mainLayout, binding.bottomLayout);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            viewModel.back(null);
+            return true;
+        }
+        return false;
+    }
 }
