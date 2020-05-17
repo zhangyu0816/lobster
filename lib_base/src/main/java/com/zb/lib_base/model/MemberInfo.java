@@ -22,6 +22,7 @@ public class MemberInfo extends BaseObservable {
     private int education;//学历
     private long provinceId;   //省份ID
     private long cityId;     //地区ID
+    private long districtId;   //地区id
     private int rstatus;     //1：好友  2：非好友
     private String remark = "";      //备注
     private int attentionQuantity; //关注数量
@@ -191,6 +192,16 @@ public class MemberInfo extends BaseObservable {
     public void setCityId(long cityId) {
         this.cityId = cityId;
         notifyPropertyChanged(BR.cityId);
+    }
+
+    @Bindable
+    public long getDistrictId() {
+        return districtId;
+    }
+
+    public void setDistrictId(long districtId) {
+        this.districtId = districtId;
+        notifyPropertyChanged(BR.districtId);
     }
 
     @Bindable

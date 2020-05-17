@@ -191,6 +191,18 @@ public interface HttpService {
     @GET("api/Interactive_dynDoReview")
     Observable<BaseResultEntity> dynDoReview(@QueryMap Map<String, String> map);
 
+    // 关注状态
+    @GET("api/Collect_attentionStatus")
+    Observable<BaseResultEntity> attentionStatus(@Query("otherUserId") long otherUserId);
+
+    // 关注他人
+    @GET("api/Collect_attentionOther")
+    Observable<BaseResultEntity> attentionOther(@Query("otherUserId") long otherUserId);
+
+    // 取消关注
+    @GET("api/Collect_cancelAttention")
+    Observable<BaseResultEntity> cancelAttention(@Query("otherUserId") long otherUserId);
+
     /******************************* 卡片 **********************************/
     // 加入匹配池 (提交当前位置)
     @FormUrlEncoded

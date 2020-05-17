@@ -7,4 +7,12 @@ public interface MemberDetailVMInterface {
     void dislike(View view);
 
     void like(View view);
+
+    void otherInfo();
+
+    void attentionStatus();
+
+    void attentionOther();
+
+    void cancelAttention();
 }
