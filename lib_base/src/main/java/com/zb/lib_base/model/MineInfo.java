@@ -20,6 +20,7 @@ public class MineInfo extends RealmObject {
     long provinceId;//省份ID
     long cityId;    //城市ID
     long districtId;   //地区id
+    String serviceTags = "";
 
     public long getUserId() {
         return userId;
@@ -155,5 +156,13 @@ public class MineInfo extends RealmObject {
 
     public void setDistrictId(long districtId) {
         this.districtId = districtId;
+    }
+
+    public String getServiceTags() {
+        return serviceTags;
+    }
+
+    public void setServiceTags(String serviceTags) {
+        this.serviceTags = serviceTags;
     }
 }

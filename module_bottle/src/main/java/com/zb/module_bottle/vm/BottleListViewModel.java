@@ -43,10 +43,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
         super.setBinding(binding);
         mineInfo = mineInfoDb.getMineInfo();
         listBinding = (BottleListBinding) binding;
-        for (int i = 0; i < 10; i++) {
-            bottleInfoList.add(new BottleInfo());
-        }
-        setAdapter();
+
         // 开通会员
         openVipReceiver = new BaseReceiver(activity, "lobster_openVip") {
             @Override
@@ -54,6 +51,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 myInfo();
             }
         };
+        setAdapter();
     }
 
     @Override

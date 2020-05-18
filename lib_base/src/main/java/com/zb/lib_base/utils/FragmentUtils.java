@@ -41,6 +41,18 @@ public class FragmentUtils {
         return fragment;
     }
 
+    // 对话 - 匹配
+    public static Fragment getChatPairFragment() {
+        Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Chat_Pair_Fragment).navigation();
+        return fragment;
+    }
+
+    // 对话 - 列表
+    public static Fragment getChatListFragment() {
+        Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Chat_List_Fragment).navigation();
+        return fragment;
+    }
+
     // 我的
     public static Fragment getMineFragment() {
         Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Mine_Fragment).navigation();

@@ -2,6 +2,9 @@ package com.zb.module_bottle.vm;
 
 import android.view.View;
 
+import com.zb.lib_base.api.findBottleApi;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -11,13 +14,6 @@ import com.zb.module_bottle.windows.BottleContentPW;
 import androidx.databinding.ViewDataBinding;
 
 public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVMInterface {
-    private BottleInfo bottleInfo;
-
-    @Override
-    public void setBinding(ViewDataBinding binding) {
-        super.setBinding(binding);
-        bottleInfo = new BottleInfo();
-    }
 
     @Override
     public void back(View view) {
@@ -27,18 +23,27 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
 
     @Override
     public void collectBottle(View view) {
-        bottleInfo.setText("上两节课而非离开微积分来我家法律文件法律文件法律文件法律文件法律文件法律文件发劳务费我 违法为附件为了看了");
-        new BottleContentPW(activity, mBinding.getRoot(), bottleInfo,false);
+        findBottle();
     }
 
     @Override
     public void throwBottle(View view) {
-        bottleInfo.setText("");
-        new BottleContentPW(activity, mBinding.getRoot(), bottleInfo,true);
+        new BottleContentPW(activity, mBinding.getRoot(), new BottleInfo(), true);
     }
 
     @Override
     public void myBottle(View view) {
         ActivityUtils.getBottleList();
+    }
+
+    @Override
+    public void findBottle() {
+        findBottleApi api = new findBottleApi(new HttpOnNextListener<BottleInfo>() {
+            @Override
+            public void onNext(BottleInfo o) {
+                new BottleContentPW(activity, mBinding.getRoot(), o, false);
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 }

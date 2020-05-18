@@ -9,4 +9,6 @@ public interface BottleThrowVMInterface {
     void throwBottle(View view);
 
     void myBottle(View view);
+
+    void findBottle();
 }

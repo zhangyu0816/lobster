@@ -4,6 +4,7 @@ package com.zb.lib_base.http;
 import com.zb.lib_base.model.AliPay;
 import com.zb.lib_base.model.BaseResultEntity;
 import com.zb.lib_base.model.BottleInfo;
+import com.zb.lib_base.model.ChatMsg;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.GiftInfo;
@@ -224,6 +225,12 @@ public interface HttpService {
     Observable<BaseResultEntity> superExposure();
 
     /******************************* 对话 **********************************/
+
+    // 未读会话列表
+    @GET("api/Contact_thirdChatList")
+    Observable<BaseResultEntity<List<ChatMsg>>> chatList(@Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("isPublicAccount") int isPublicAccount);
+
+
     /******************************* 漂流瓶 **********************************/
 
     // 投掷漂流瓶
@@ -234,4 +241,17 @@ public interface HttpService {
     // 我的漂流瓶列表
     @GET("api/DriftBottle_myBottleList")
     Observable<BaseResultEntity<List<BottleInfo>>> myBottleList(@Query("pageNo") int pageNo);
+
+    // 寻找漂流瓶
+    @GET("api/DriftBottle_findBottle")
+    Observable<BaseResultEntity<BottleInfo>> findBottle();
+
+    // 拾取漂流瓶(包括销毁漂流瓶)
+    @GET("api/DriftBottle_pcikBottle")
+    Observable<BaseResultEntity> pickBottle(@Query("driftBottleId") long driftBottleId, @Query("driftBottleType") int driftBottleType,
+                                                        @Query("otherUserId") long otherUserId);
+
+    // 回复漂流瓶
+    @GET("api/DriftBottle_replyBottle")
+    Observable<BaseResultEntity> replyBottle(@Query("driftBottleId") long driftBottleId, @Query("text") String text);
 }

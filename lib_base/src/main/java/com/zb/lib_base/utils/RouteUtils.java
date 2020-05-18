@@ -25,6 +25,10 @@ public class RouteUtils {
     public static final String Chat_Fragment = "/chat/ChatFragment";
     // 对话页
     public static final String Chat_Activity = "/chat/ChatActivity";
+    // 匹配
+    public static final String Chat_Pair_Fragment = "/chat/ChatPairFragment";
+    // 聊天
+    public static final String Chat_List_Fragment = "/chat/ChatListFragment";
 
     /*********************** 我的 **************************/
     // 我的主Fragment

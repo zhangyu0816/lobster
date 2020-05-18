@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_chat.vm.ChatListViewModel" />
+
+    </data>
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refresh"
+        onRefreshListener="@{viewModel}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_efe">
+
+        <androidx.recyclerview.widget.RecyclerView
+            adapter="@{viewModel.adapter}"
+            recyclerType="@{0}"
+            size="@{1}"
+            color="@{ObjectUtils.getLineColor()}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</layout>

@@ -99,4 +99,18 @@ public class ObjectUtils {
             return MineApp.getInstance().getResources().getDrawable(R.mipmap.reward_ranking_3);
         }
     }
+
+    public static String getStanza(String stanza, int msgType) {
+        //消息类型 1：文字 2：图片 3：语音 4：视频
+        if (msgType == 1)
+            return stanza;
+        else if (msgType == 2)
+            return "[图片]";
+        else if (msgType == 3)
+            return "[语音]";
+        else if (msgType == 4)
+            return "[视频]";
+        else
+            return "[暂不支付该类型消息]";
+    }
 }

@@ -33,13 +33,13 @@ public class EditMemberActivity extends MineBaseActivity {
                 int type = intent.getIntExtra("type", 0);
                 String content = intent.getStringExtra("content");
                 if (type == 1) {
-                    viewModel.memberInfo.setJob(content);
+                    viewModel.mineInfo.setJob(content);
                 } else if (type == 2) {
-                    viewModel.memberInfo.setNick(content);
+                    viewModel.mineInfo.setNick(content);
                 } else if (type == 3) {
-                    viewModel.memberInfo.setPersonalitySign(content);
+                    viewModel.mineInfo.setPersonalitySign(content);
                 }else if(type==4){
-                    viewModel.memberInfo.setServiceTags(content);
+                    viewModel.mineInfo.setServiceTags(content);
                 }
             }
         };

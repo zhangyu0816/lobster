@@ -84,7 +84,7 @@ public class VipAdPW extends BasePopupWindow {
                     public void loadImages(Context context, Ads ads, ImageView image, int position) {
                         AdapterBinding.loadImage(image, "", ads.getAdRes(),
                                 ObjectUtils.getDefaultRes(), ObjectUtils.getViewSizeByWidthFromMax(900), (int) (ObjectUtils.getViewSizeByWidthFromMax(900) * 579f / 810f),
-                                false, false, 0, false, 0);
+                                false, false, 0, false, 0,false);
                     }
 
                     @Override

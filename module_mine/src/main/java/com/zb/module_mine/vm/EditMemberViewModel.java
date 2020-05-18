@@ -8,6 +8,7 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -18,6 +19,7 @@ import com.zb.module_mine.databinding.MineEditMemberBinding;
 import com.zb.module_mine.iv.EditMemberVMInterface;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
@@ -26,13 +28,13 @@ import io.realm.Realm;
 
 public class EditMemberViewModel extends BaseViewModel implements EditMemberVMInterface {
     public MineAdapter adapter;
-    public MemberInfo memberInfo;
     public AreaDb areaDb;
     public List<String> imageList = new ArrayList<>();
     public int _position = 0;
     private SimpleItemTouchHelperCallback callback;
     private MineEditMemberBinding mineEditMemberBinding;
     private List<String> selectorList = new ArrayList<>();
+    public MineInfo mineInfo;
 
     @Override
     public void back(View view) {
@@ -47,14 +49,8 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
         selectorList.add("男");
         mineEditMemberBinding = (MineEditMemberBinding) binding;
         areaDb = new AreaDb(Realm.getDefaultInstance());
-        memberInfo = new MemberInfo();
-        memberInfo.setMemberType(1);
-        imageList.add(MineApp.logo);
-        imageList.add(MineApp.logo1);
-        imageList.add("");
-        imageList.add("");
-        imageList.add("");
-        imageList.add("");
+        mineInfo = mineInfoDb.getMineInfo();
+        imageList.addAll(Arrays.asList(mineInfo.getMoreImages().split("#")));
         setAdapter();
     }
 
@@ -82,12 +78,12 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
 
     @Override
     public void toEditNick(View view) {
-        ActivityUtils.getMineEditContent(2, 1, "编辑昵称", memberInfo.getNick(), "输入你的昵称，昵称不能为空");
+        ActivityUtils.getMineEditContent(2, 1, "编辑昵称", mineInfo.getNick(), "输入你的昵称，昵称不能为空");
     }
 
     @Override
     public void toSelectSex(View view) {
-        new SelectorPW(activity, mBinding.getRoot(), selectorList, position -> memberInfo.setSex(position));
+        new SelectorPW(activity, mBinding.getRoot(), selectorList, position -> mineInfo.setSex(position));
     }
 
     @Override
@@ -97,12 +93,12 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
 
     @Override
     public void toEditSign(View view) {
-        ActivityUtils.getMineEditContent(3, 10, "编辑个性签名", memberInfo.getPersonalitySign(), "编辑个性签名...");
+        ActivityUtils.getMineEditContent(3, 10, "编辑个性签名", mineInfo.getPersonalitySign(), "编辑个性签名...");
     }
 
     @Override
     public void toSelectTag(View view) {
-        ActivityUtils.getMineSelectTag(memberInfo.getServiceTags());
+        ActivityUtils.getMineSelectTag(mineInfo.getServiceTags());
     }
 
     /**

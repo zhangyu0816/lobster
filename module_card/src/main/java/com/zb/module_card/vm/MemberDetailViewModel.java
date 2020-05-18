@@ -201,7 +201,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 .setAds(adList)
                 .setImageLoader((context, ads, image, position) -> AdapterBinding.loadImage(image, ads.getSmallImage(), 0,
                         ObjectUtils.getDefaultRes(), MineApp.W, ObjectUtils.getLogoHeight(1.0f),
-                        false, false, 0, false, 0))
+                        false, false, 0, false, 0,false))
                 .setBannerTypes(XBanner.CIRCLE_INDICATOR_TITLE)
                 .setIndicatorGravity(XBanner.INDICATOR_START)
                 .setDelay(3000)

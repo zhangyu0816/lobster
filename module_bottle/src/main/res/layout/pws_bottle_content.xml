@@ -24,6 +24,9 @@
             name="isWrite"
             type="boolean" />
 
+        <variable
+            name="btnName"
+            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -88,7 +91,7 @@
                 android:gravity="center"
                 android:paddingStart="30dp"
                 android:paddingEnd="30dp"
-                android:text="@{isWrite?@string/bottle_throw:@string/bottle_reply}"
+                android:text="@{btnName}"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />

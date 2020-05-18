@@ -279,7 +279,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         AdapterBinding.loadImage(imageView, imageList.get(selectIndex),
                 0, ObjectUtils.getDefaultRes(), ObjectUtils.getViewSizeByWidth(0.92f),
                 ObjectUtils.getLogoHeight(0.92f), false, false, 0,
-                false, 0);
+                false, 0,false);
         ObjectAnimator animator = ObjectAnimator.ofFloat(view, "rotationY", 0, 1);
         animator.setInterpolator(new CycleInterpolator(1));
         animator.setRepeatCount(1);
