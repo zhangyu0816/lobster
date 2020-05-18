@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.zb.module_chat.vm.ChatViewModel" />
+            type="com.zb.module_chat.vm.ChatFragViewModel" />
 
     </data>
 

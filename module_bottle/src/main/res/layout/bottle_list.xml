@@ -49,6 +49,7 @@
             <com.scwang.smartrefresh.layout.SmartRefreshLayout
                 onLoadMoreListener="@{viewModel}"
                 onRefreshListener="@{viewModel}"
+                android:id="@+id/refresh"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/black_efe"

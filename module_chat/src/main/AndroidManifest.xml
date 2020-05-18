@@ -4,6 +4,7 @@
 
     <application android:theme="@style/ChatTheme">
 
+        <activity android:name=".activity.ChatActivity" />
     </application>
 
 </manifest>

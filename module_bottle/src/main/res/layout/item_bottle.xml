@@ -19,7 +19,6 @@
         <variable
             name="position"
             type="Integer" />
-
     </data>
 
     <RelativeLayout
@@ -32,6 +31,7 @@
             android:id="@+id/iv_image"
             defaultRes="@{ObjectUtils.getDefaultRes()}"
             imageUrl="@{item.headImage}"
+            isBlur="@{viewModel.mineInfo.memberType!=2}"
             isCircle="@{true}"
             viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"

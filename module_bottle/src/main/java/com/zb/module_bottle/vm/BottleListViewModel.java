@@ -8,14 +8,18 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.api.myBottleListApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_bottle.R;
 import com.zb.module_bottle.adapter.BottleAdapter;
+import com.zb.module_bottle.databinding.BottleListBinding;
 import com.zb.module_bottle.iv.BottleListVMInterface;
 import com.zb.module_bottle.windows.BottleVipPW;
 
@@ -30,12 +34,15 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     public BottleAdapter adapter;
     private List<BottleInfo> bottleInfoList = new ArrayList<>();
     public BaseReceiver openVipReceiver;
-    private MineInfo mineInfo;
+    public MineInfo mineInfo;
+    private int pageNo = 1;
+    private BottleListBinding listBinding;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mineInfo = mineInfoDb.getMineInfo();
+        listBinding = (BottleListBinding) binding;
         for (int i = 0; i < 10; i++) {
             bottleInfoList.add(new BottleInfo());
         }
@@ -58,34 +65,54 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     @Override
     public void setAdapter() {
         adapter = new BottleAdapter<>(activity, R.layout.item_bottle, bottleInfoList, this);
+        myBottleList();
     }
 
     @Override
     public void selectIndex(int position) {
-
+        if (mineInfo.getMemberType() == 2) {
+            ActivityUtils.getChatActivity();
+            return;
+        }
         new BottleVipPW(activity, mBinding.getRoot());
+    }
+
+    @Override
+    public void myBottleList() {
+        myBottleListApi api = new myBottleListApi(new HttpOnNextListener<List<BottleInfo>>() {
+            @Override
+            public void onNext(List<BottleInfo> o) {
+                int start = bottleInfoList.size();
+                bottleInfoList.addAll(o);
+                adapter.notifyItemRangeChanged(start, bottleInfoList.size());
+                listBinding.refresh.finishRefresh();
+                listBinding.refresh.finishLoadMore();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    listBinding.refresh.setEnableLoadMore(false);
+                }
+            }
+        }, activity).setPageNo(pageNo);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         // 上拉加载更多
-//            int start = list.size();
-//            list.addAll(newItems);
-//            adapter.notifyItemInserted(start, list.size());
-        bottleInfoList.add(new BottleInfo());
-        refreshLayout.finishLoadMore();
-        adapter.notifyDataSetChanged();
+        pageNo++;
+        myBottleList();
     }
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-
-
         // 下拉刷新
-//            list.clear();
-//            list.addAll(newList);
-//            adapter.notifyItemRangeChanged(0, list.size());
-        refreshLayout.finishRefresh();
+        listBinding.refresh.setEnableLoadMore(true);
+        pageNo = 1;
+        bottleInfoList.clear();
+        myBottleList();
     }
 
     @Override

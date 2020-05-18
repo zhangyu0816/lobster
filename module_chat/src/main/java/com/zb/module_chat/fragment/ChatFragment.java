@@ -1,8 +1,11 @@
-package com.zb.module_chat;
+package com.zb.module_chat.fragment;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseFragment;
 import com.zb.lib_base.utils.RouteUtils;
+import com.zb.module_chat.BR;
+import com.zb.module_chat.R;
+import com.zb.module_chat.vm.ChatFragViewModel;
 import com.zb.module_chat.vm.ChatViewModel;
 
 @Route(path = RouteUtils.Chat_Fragment)
@@ -16,7 +19,7 @@ public class ChatFragment extends BaseFragment {
 
     @Override
     public void initUI() {
-        ChatViewModel viewModel = new ChatViewModel();
+        ChatFragViewModel viewModel = new ChatFragViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel,viewModel);
     }

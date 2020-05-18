@@ -32,6 +32,10 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Card_Member_Detail).withLong("userId", userId).navigation();
     }
     /*********************** 对话 **************************/
+    // 对话页
+    public static void getChatActivity() {
+        ARouter.getInstance().build(RouteUtils.Chat_Activity).navigation();
+    }
     /*********************** 我的 **************************/
     // 会员
     public static void getMineOpenVip() {

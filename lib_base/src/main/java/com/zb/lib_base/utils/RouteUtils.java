@@ -23,6 +23,8 @@ public class RouteUtils {
     /*********************** 对话 **************************/
     // 对话主Fragment
     public static final String Chat_Fragment = "/chat/ChatFragment";
+    // 对话页
+    public static final String Chat_Activity = "/chat/ChatActivity";
 
     /*********************** 我的 **************************/
     // 我的主Fragment

@@ -20,6 +20,7 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.model.PairInfo;
+import com.zb.lib_base.utils.BlurTransformation;
 import com.zb.lib_base.utils.GlideRoundTransform;
 import com.zb.lib_base.utils.GridSpacingItemDecoration;
 import com.zb.lib_base.utils.MyDecoration;
@@ -139,8 +140,8 @@ public class AdapterBinding {
 
     // 加载图片
     @SuppressLint("CheckResult")
-    @BindingAdapter(value = {"imageUrl", "imageRes", "defaultRes", "viewWidthSize", "viewHeightSize", "isCircle", "isRound", "roundSize", "countSize", "cornerType"}, requireAll = false)
-    public static void loadImage(ImageView view, String imageUrl, int imageRes, int defaultRes, int widthSize, int heightSize, boolean isCircle, boolean isRound, int roundSize, boolean countSize, int cornerType) {
+    @BindingAdapter(value = {"imageUrl", "imageRes", "defaultRes", "viewWidthSize", "viewHeightSize", "isCircle", "isRound", "roundSize", "countSize", "cornerType", "isBlur"}, requireAll = false)
+    public static void loadImage(ImageView view, String imageUrl, int imageRes, int defaultRes, int widthSize, int heightSize, boolean isCircle, boolean isRound, int roundSize, boolean countSize, int cornerType, boolean isBlur) {
         RequestOptions cropOptions = new RequestOptions().centerCrop();
         RequestOptions defaultOptions = new RequestOptions().centerCrop();
         if (isCircle) {
@@ -162,6 +163,10 @@ public class AdapterBinding {
             }
         }
 
+        if (isBlur) {
+            cropOptions.transform(new BlurTransformation(14, 8));
+            defaultOptions.transform(new BlurTransformation(14, 8));
+        }
         if (countSize) {
             Glide.with(view.getContext()).asBitmap().load(imageUrl).into(new SimpleTarget<Bitmap>() {
                 @Override

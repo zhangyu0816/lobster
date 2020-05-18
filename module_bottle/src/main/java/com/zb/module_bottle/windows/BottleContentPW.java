@@ -3,7 +3,10 @@ package com.zb.module_bottle.windows;
 import android.view.View;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.zb.lib_base.api.castBottleApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.windows.BasePopupWindow;
@@ -13,6 +16,8 @@ import com.zb.module_bottle.adapter.BottleAdapter;
 import com.zb.module_bottle.databinding.PwsBottleContentBinding;
 
 import java.util.Arrays;
+
+import retrofit2.http.HTTP;
 
 public class BottleContentPW extends BasePopupWindow {
     private BottleInfo bottleInfo;
@@ -54,15 +59,26 @@ public class BottleContentPW extends BasePopupWindow {
     @Override
     public void sure(View view) {
         super.sure(view);
-        dismiss();
         if (isWrite) {
             if (binding.edContent.getText().toString().trim().isEmpty()) {
                 SCToastUtil.showToast(activity, "漂流瓶内容不能为空");
                 return;
             }
-
+            castBottle();
         } else {
 
         }
+    }
+
+    // 创建漂流瓶
+    private void castBottle(){
+        castBottleApi api = new castBottleApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                SCToastUtil.showToast(activity,"扔到海里了");
+                dismiss();
+            }
+        },activity).setText(binding.edContent.getText().toString());
+        HttpManager.getInstance().doHttpDeal(api);
     }
 }

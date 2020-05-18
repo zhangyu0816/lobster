@@ -1,9 +1,10 @@
-package com.zb.module_chat;
+package com.zb.module_chat.activity;
 
 import android.os.Bundle;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.utils.StatusBarUtil;
+import com.zb.module_chat.R;
 
 public abstract class ChatBaseActivity  extends BaseActivity {
     @Override

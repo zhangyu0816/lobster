@@ -3,6 +3,7 @@ package com.zb.lib_base.http;
 
 import com.zb.lib_base.model.AliPay;
 import com.zb.lib_base.model.BaseResultEntity;
+import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.GiftInfo;
@@ -222,5 +223,15 @@ public interface HttpService {
     @GET("api/Pair_superExposure")
     Observable<BaseResultEntity> superExposure();
 
-    /******************************* 卡片 **********************************/
+    /******************************* 对话 **********************************/
+    /******************************* 漂流瓶 **********************************/
+
+    // 投掷漂流瓶
+    @FormUrlEncoded
+    @POST("api/DriftBottle_castBottle")
+    Observable<BaseResultEntity> castBottle(@Field("text") String text);
+
+    // 我的漂流瓶列表
+    @GET("api/DriftBottle_myBottleList")
+    Observable<BaseResultEntity<List<BottleInfo>>> myBottleList(@Query("pageNo") int pageNo);
 }
