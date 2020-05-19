@@ -336,7 +336,8 @@
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:hint="写点什么..."
-                        android:paddingLeft="15dp"
+                        android:imeOptions="actionSend"
+                        android:paddingStart="15dp"
                         android:paddingEnd="15dp"
                         android:singleLine="true"
                         android:text="@={content}"
@@ -356,6 +357,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        onClickDelayed="@{viewModel::dynDoLike}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="15dp"

@@ -142,16 +142,20 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 String myHead = mineInfo.getMoreImages().split("#")[0];
                 String otherHead = memberInfoList.get(_selectIndex).getImage();
                 if (o == 1) {
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfoList.get(_selectIndex).getSex());
+                    if (likeOtherStatus == 0) {
+                        // 不喜欢返回结果  data=1
+                        likeDb.deleteLike(otherUserId);
+                    } else {
+                        likeDb.saveLike(new CollectID(otherUserId));
+                        new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfoList.get(_selectIndex).getSex());
+                    }
+                    adapter.notifyItemChanged(_selectIndex);
+                } else if (o == 2) {
+                    likeDb.saveLike(new CollectID(otherUserId));
+                    adapter.notifyItemChanged(_selectIndex);
                 } else if (o == 3) {
                     new CountUsedPW(activity, mBinding.getRoot(), 2);
                 }
-                if (o == 1 || o == 2) {
-                    likeDb.saveLike(new CollectID(otherUserId));
-                } else {
-                    likeDb.deleteLike(otherUserId);
-                }
-                adapter.notifyItemChanged(_selectIndex);
             }
         }, activity).setOtherUserId(otherUserId).setLikeOtherStatus(likeOtherStatus);
         HttpManager.getInstance().doHttpDeal(api);

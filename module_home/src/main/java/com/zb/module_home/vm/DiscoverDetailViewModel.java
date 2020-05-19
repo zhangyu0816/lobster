@@ -2,8 +2,11 @@ package com.zb.module_home.vm;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.app.abby.xbanner.Ads;
 import com.app.abby.xbanner.XBanner;
@@ -15,6 +18,7 @@ import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.deleteDynApi;
 import com.zb.lib_base.api.dynDetailApi;
+import com.zb.lib_base.api.dynDoLikeApi;
 import com.zb.lib_base.api.dynDoReviewApi;
 import com.zb.lib_base.api.giftListApi;
 import com.zb.lib_base.api.makeEvaluateApi;
@@ -26,6 +30,7 @@ import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
+import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.MemberInfo;
@@ -89,6 +94,14 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 walletAndPop();
             }
         };
+
+        // 发送
+        discoverDetailBinding.edContent.setOnEditorActionListener((v, actionId, event) -> {
+            if(actionId == EditorInfo.IME_ACTION_SEND){
+                dynDoReview();
+            }
+            return false;
+        });
     }
 
     @Override
@@ -268,7 +281,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(Object o) {
                 activity.sendBroadcast(new Intent("lobster_publish"));
-                SCToastUtil.showToast(activity, "删除成功");
+                SCToastUtil.showToastBlack(activity, "删除成功");
                 activity.finish();
             }
         }, activity).setFriendDynId(friendDynId);
@@ -289,17 +302,30 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void dynDoReview() {
         if (discoverDetailBinding.getContent().isEmpty()) {
-            SCToastUtil.showToast(activity, "请输入评论内容");
+            SCToastUtil.showToastBlack(activity, "请输入评论内容");
             return;
         }
         dynDoReviewApi api = new dynDoReviewApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToast(activity, "发布成功");
+                SCToastUtil.showToastBlack(activity, "发布成功");
                 // 下拉刷新
                 onRefresh(discoverDetailBinding.refresh);
             }
         }, activity).setFriendDynId(friendDynId).setText(discoverDetailBinding.getContent()).setReviewId(reviewId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void dynDoLike(View view) {
+        dynDoLikeApi api = new dynDoLikeApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                goodDb.saveGood(new CollectID(friendDynId));
+                int goodNum = discoverInfo.getGoodNum() + 1;
+                discoverInfo.setGoodNum(goodNum);
+            }
+        }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

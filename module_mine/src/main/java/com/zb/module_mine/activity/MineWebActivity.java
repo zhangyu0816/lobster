@@ -64,7 +64,7 @@ public class MineWebActivity extends MineBaseActivity {
                                         String description, String failingUrl) {
                 view.stopLoading();
                 view.clearView();
-                SCToastUtil.showToast(activity, "页面加载失败,请检查您的网络连接 !");
+                SCToastUtil.showToastBlack(activity, "页面加载失败,请检查您的网络连接 !");
                 finish();
             }
 

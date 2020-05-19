@@ -90,7 +90,7 @@ public class GiftPW extends BasePopupWindow {
     public void payGift(View view) {
         super.payGift(view);
         if (walletInfo.getWallet() < giftInfoList.get(preIndex).getPayMoney()) {
-            SCToastUtil.showToast(activity, "钱包余额不足，请先充值");
+            SCToastUtil.showToastBlack(activity, "钱包余额不足，请先充值");
             return;
         }
         submitOrder();

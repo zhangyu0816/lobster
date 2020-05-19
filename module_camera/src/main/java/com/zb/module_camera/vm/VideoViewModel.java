@@ -170,10 +170,10 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
         mRecorder.setOnInfoListener((mr, what, extra) -> {
             if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED) {
                 stopRecorder(view);
-                SCToastUtil.showToast(activity, "视频文件已达到3M，自动停止！");
+                SCToastUtil.showToastBlack(activity, "视频文件已达到3M，自动停止！");
             } else if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) {
                 stopRecorder(view);
-                SCToastUtil.showToast(activity, "视频文件已录制15秒，自动停止！");
+                SCToastUtil.showToastBlack(activity, "视频文件已录制15秒，自动停止！");
             }
         });
         preview.startRecord();
@@ -216,7 +216,7 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
                     mOverCameraView.setTouchFoucusRect(mCamera, autoFocusCallback, x, y);
                 }
                 mRunnable = () -> {
-                    SCToastUtil.showToast(activity, "自动聚焦超时,请调整合适的位置拍摄！");
+                    SCToastUtil.showToastBlack(activity, "自动聚焦超时,请调整合适的位置拍摄！");
                     isFoucing = false;
                     mOverCameraView.setFoucuing(false);
                     mOverCameraView.disDrawTouchFocusRect();

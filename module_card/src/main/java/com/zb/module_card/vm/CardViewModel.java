@@ -191,7 +191,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             superExposureApi api = new superExposureApi(new HttpOnNextListener() {
                 @Override
                 public void onNext(Object o) {
-                    SCToastUtil.showToast(activity, "曝光成功");
+                    SCToastUtil.showToastBlack(activity, "曝光成功");
                 }
             }, activity);
             HttpManager.getInstance().doHttpDeal(api);
@@ -253,19 +253,25 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 String myHead = mineInfo.getMoreImages().split("#")[0];
                 String otherHead = pairInfo.getMoreImages().split("#")[0];
                 if (o == 1) {
+                    // 不喜欢成功  喜欢成功  超级喜欢成功
                     if (likeOtherStatus == 1) {
                         likeDb.saveLike(new CollectID(pairInfo.getOtherUserId()));
                     } else if (likeOtherStatus == 2) {
                         new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), pairInfo.getSex());
                     }
                 } else if (o == 2) {
+                    // 匹配成功
                     likeDb.saveLike(new CollectID(pairInfo.getOtherUserId()));
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), pairInfo.getSex());
                 } else if (o == 3) {
-                    if (likeOtherStatus == 1) {
-                        SCToastUtil.showToast(activity, "今日喜欢次数已用完");
-                    } else if (likeOtherStatus == 2) {
+                    // 喜欢次数用尽
+                    SCToastUtil.showToastBlack(activity, "今日喜欢次数已用完");
+                } else {
+                    // 非会员或超级喜欢次数用尽
+                    if (likeOtherStatus == 2) {
                         new CountUsedPW(activity, mBinding.getRoot(), 2);
+                    } else {
+                        SCToastUtil.showToastBlack(activity, "喜欢吗？赶快成为会员吧");
                     }
                 }
             }

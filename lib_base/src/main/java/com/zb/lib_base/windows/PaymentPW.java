@@ -121,13 +121,13 @@ public class PaymentPW extends BasePopupWindow {
                 PayResult payResult = new PayResult((String) msg.obj);
                 String resultStatus = payResult.getResultStatus();
                 if (TextUtils.equals(resultStatus, "9000")) {
-                    SCToastUtil.showToast(activity, "支付成功");
+                    SCToastUtil.showToastBlack(activity, "支付成功");
                     paySuccess();
                 } else {
                     if (TextUtils.equals(resultStatus, "8000")) {
-                        SCToastUtil.showToast(activity, "支付结果确认中");
+                        SCToastUtil.showToastBlack(activity, "支付结果确认中");
                     } else {
-                        SCToastUtil.showToast(activity, "支付失败");
+                        SCToastUtil.showToastBlack(activity, "支付失败");
                     }
                     paySuccessReceiver.unregisterReceiver();
                     dismiss();

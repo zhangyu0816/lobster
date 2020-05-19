@@ -223,7 +223,7 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
     @Override
     public void selectAddress(View view) {
         if (prePosition == -1) {
-            SCToastUtil.showToast(activity, "请选择地址");
+            SCToastUtil.showToastBlack(activity, "请选择地址");
             return;
         }
         LocationInfo info = locationInfoList.get(prePosition);

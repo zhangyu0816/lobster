@@ -195,6 +195,10 @@ public interface HttpService {
     @GET("api/Interactive_dynDoReview")
     Observable<BaseResultEntity> dynDoReview(@QueryMap Map<String, String> map);
 
+    // 给动态点赞
+    @GET("api/Interactive_dynDoLike")
+    Observable<BaseResultEntity> dynDoLike(@Query("friendDynId") long friendDynId);
+
     // 关注状态
     @GET("api/Collect_attentionStatus")
     Observable<BaseResultEntity> attentionStatus(@Query("otherUserId") long otherUserId);

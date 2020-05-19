@@ -98,7 +98,7 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
             HttpTimeException exception = (HttpTimeException) e;
             switch (exception.getCode()) {
                 case HttpTimeException.ERROR:
-                    SCToastUtil.showToast(context, e.getMessage());
+                    SCToastUtil.showToastBlack(context, e.getMessage());
                     break;
                 default:
                     break;

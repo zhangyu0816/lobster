@@ -99,7 +99,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
             }
         }
         if (images.isEmpty()) {
-            SCToastUtil.showToast(activity, "请上传至少1张照片");
+            SCToastUtil.showToastBlack(activity, "请上传至少1张照片");
             return;
         }
         images = images.substring(1);

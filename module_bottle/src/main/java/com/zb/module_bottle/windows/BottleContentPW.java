@@ -64,7 +64,7 @@ public class BottleContentPW extends BasePopupWindow {
         super.sure(view);
         if (isWrite) {
             if (binding.edContent.getText().toString().trim().isEmpty()) {
-                SCToastUtil.showToast(activity, isReply ? "回复内容不能为空" : "漂流瓶内容不能为空");
+                SCToastUtil.showToastBlack(activity, isReply ? "回复内容不能为空" : "漂流瓶内容不能为空");
                 return;
             }
             if (isReply)
@@ -83,7 +83,7 @@ public class BottleContentPW extends BasePopupWindow {
         castBottleApi api = new castBottleApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToast(activity, "扔到海里了");
+                SCToastUtil.showToastBlack(activity, "扔到海里了");
                 dismiss();
             }
         }, activity).setText(binding.edContent.getText().toString());
@@ -106,7 +106,7 @@ public class BottleContentPW extends BasePopupWindow {
         replyBottleApi api = new replyBottleApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToast(activity, "回信成功");
+                SCToastUtil.showToastBlack(activity, "回信成功");
                 dismiss();
             }
         }, activity).setDriftBottleId(bottleInfo.getDriftBottleId()).setText(binding.edContent.getText().toString());

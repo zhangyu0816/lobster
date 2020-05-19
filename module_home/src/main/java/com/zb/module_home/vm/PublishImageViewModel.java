@@ -97,16 +97,16 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     @Override
     public void publish(View view) {
         if (publicImageBinding.getTitle().isEmpty()) {
-            SCToastUtil.showToast(activity, "请填写动态标题");
+            SCToastUtil.showToastBlack(activity, "请填写动态标题");
             return;
         }
         if (publicImageBinding.getContent().isEmpty()) {
-            SCToastUtil.showToast(activity, "请填写动态内容");
+            SCToastUtil.showToastBlack(activity, "请填写动态内容");
             return;
         }
         if (videoUrl.isEmpty()) {
             if (images.size() == 1) {
-                SCToastUtil.showToast(activity, "请上传照片或视频");
+                SCToastUtil.showToastBlack(activity, "请上传照片或视频");
                 return;
             }
             List<String> imageList = new ArrayList<>();
@@ -136,7 +136,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                 MineApp.cutImageViewMap.clear();
                 DataCleanManager.deleteFile(activity.getCacheDir());
                 activity.sendBroadcast(new Intent("lobster_publish"));
-                SCToastUtil.showToast(activity, "发布成功");
+                SCToastUtil.showToastBlack(activity, "发布成功");
                 activity.finish();
             }
         }, activity)
