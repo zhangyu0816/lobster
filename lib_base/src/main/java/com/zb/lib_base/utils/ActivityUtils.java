@@ -31,11 +31,13 @@ public class ActivityUtils {
     public static void getCardMemberDetail(long userId) {
         ARouter.getInstance().build(RouteUtils.Card_Member_Detail).withLong("userId", userId).navigation();
     }
+
     /*********************** 对话 **************************/
     // 对话页
     public static void getChatActivity() {
         ARouter.getInstance().build(RouteUtils.Chat_Activity).navigation();
     }
+
     /*********************** 我的 **************************/
     // 会员
     public static void getMineOpenVip() {
@@ -115,6 +117,11 @@ public class ActivityUtils {
     // 选择标签
     public static void getMineSelectTag(String serviceTags) {
         ARouter.getInstance().build(RouteUtils.Mine_Select_Tag).withString("serviceTags", serviceTags).navigation();
+    }
+
+    // 选择标签
+    public static void getMineFCL(int position) {
+        ARouter.getInstance().build(RouteUtils.Mine_FCL).withInt("position", position).navigation();
     }
 
 

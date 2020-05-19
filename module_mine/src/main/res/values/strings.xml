@@ -5,4 +5,6 @@
     <string name="sex_0">女</string>
     <string name="sex_1">男</string>
     <string name="select_tag">%s X</string>
+    <string name="be_like_count">喜欢数 %d</string>
+    <string name="fan_count">粉丝数 %d</string>
 </resources>

@@ -1,8 +1,10 @@
 package com.zb.lib_base.model;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class Tag extends RealmObject {
+    @PrimaryKey
     String name = "";
     String tags = "";
 

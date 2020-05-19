@@ -2,7 +2,7 @@ package com.zb.module_chat.vm;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.zb.lib_base.model.ChatMsg;
+import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_chat.R;
 import com.zb.module_chat.adapter.ChatAdapter;
@@ -17,7 +17,7 @@ import androidx.databinding.ViewDataBinding;
 public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterface , OnRefreshListener {
 
     public ChatAdapter adapter;
-    private List<ChatMsg> chatMsgList = new ArrayList<>();
+    private List<ChatList> chatMsgList = new ArrayList<>();
 
     @Override
     public void setBinding(ViewDataBinding binding) {

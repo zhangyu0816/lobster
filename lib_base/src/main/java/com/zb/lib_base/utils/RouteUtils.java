@@ -65,6 +65,8 @@ public class RouteUtils {
     public static final String Mine_Edit_Content = "/mine/EditContentActivity";
     // 选择标签
     public static final String Mine_Select_Tag = "/mine/SelectTagActivity";
+    // 粉丝、关注、被喜欢列表
+    public static final String Mine_FCL = "/mine/FCLActivity";
 
     /*********************** 注册 **************************/
 

@@ -17,8 +17,6 @@
         <variable
             name="viewModel"
             type="com.zb.lib_base.vm.BaseViewModel" />
-
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -93,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:drawableStart="@{viewModel.collectIDDb.getCollectId(2,item.friendDynId)?@drawable/like_red_icon:@drawable/like_grey_icon}"
+                    android:drawableStart="@{viewModel.goodDb.hasGood(item.friendDynId)?@drawable/like_red_icon:@drawable/like_grey_icon}"
                     android:drawablePadding="5dp"
                     android:text='@{String.format("%d",item.goodNum)}'
                     android:textColor="@color/black_827"

@@ -19,9 +19,11 @@ import com.zb.lib_base.api.prePairListApi;
 import com.zb.lib_base.api.superExposureApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
+import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.CityInfo;
+import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DistrictInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.PairInfo;
@@ -58,6 +60,7 @@ import io.realm.Realm;
 
 public class CardViewModel extends BaseViewModel implements CardVMInterface, OnSwipeListener<PairInfo> {
     public AreaDb areaDb;
+    private LikeDb likeDb;
     private MineInfo mineInfo;
     public CardAdapter adapter;
     private List<PairInfo> pairInfoList = new ArrayList<>();
@@ -87,6 +90,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         areaDb = new AreaDb(Realm.getDefaultInstance());
+        likeDb = new LikeDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
         cardFragBinding = (CardFragBinding) binding;
         // 详情页操作后滑动卡片
@@ -249,10 +253,13 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 String myHead = mineInfo.getMoreImages().split("#")[0];
                 String otherHead = pairInfo.getMoreImages().split("#")[0];
                 if (o == 1) {
-                    if (likeOtherStatus == 2) {
+                    if (likeOtherStatus == 1) {
+                        likeDb.saveLike(new CollectID(pairInfo.getOtherUserId()));
+                    } else if (likeOtherStatus == 2) {
                         new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), pairInfo.getSex());
                     }
                 } else if (o == 2) {
+                    likeDb.saveLike(new CollectID(pairInfo.getOtherUserId()));
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), pairInfo.getSex());
                 } else if (o == 3) {
                     if (likeOtherStatus == 1) {
@@ -279,7 +286,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         AdapterBinding.loadImage(imageView, imageList.get(selectIndex),
                 0, ObjectUtils.getDefaultRes(), ObjectUtils.getViewSizeByWidth(0.92f),
                 ObjectUtils.getLogoHeight(0.92f), false, false, 0,
-                false, 0,false);
+                false, 0, false);
         ObjectAnimator animator = ObjectAnimator.ofFloat(view, "rotationY", 0, 1);
         animator.setInterpolator(new CycleInterpolator(1));
         animator.setRepeatCount(1);

@@ -4,8 +4,10 @@ import com.zb.lib_base.BR;
 import com.zb.lib_base.activity.BaseActivity;
 
 import androidx.databinding.Bindable;
+import io.realm.annotations.PrimaryKey;
 
-public class ChatMsg extends NewBaseObservable {
+public class ChatList extends NewBaseObservable {
+    @PrimaryKey
     long userId;//好友userId
     String nick = "";//好友昵称
     String image = "";//好友头像

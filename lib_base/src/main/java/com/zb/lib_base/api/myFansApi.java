@@ -4,21 +4,27 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.model.BaseEntity;
-import com.zb.lib_base.model.ChatList;
+import com.zb.lib_base.model.MemberInfo;
 
 import java.util.List;
 
 import rx.Observable;
 
-public class chatListApi extends BaseEntity<List<ChatList>> {
+public class myFansApi extends BaseEntity<List<MemberInfo>> {
+    int pageNo;
 
-    public chatListApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
+    public myFansApi setPageNo(int pageNo) {
+        this.pageNo = pageNo;
+        return this;
+    }
+
+    public myFansApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
         setShowProgress(false);
     }
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.chatList(1, 1000, 1);
+        return methods.myFans(pageNo);
     }
 }

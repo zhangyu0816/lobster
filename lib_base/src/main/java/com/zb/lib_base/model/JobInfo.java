@@ -1,9 +1,11 @@
 package com.zb.lib_base.model;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class JobInfo extends RealmObject {
     private String jobTitle = "";
+    @PrimaryKey
     private String job = "";
 
     public String getJobTitle() {

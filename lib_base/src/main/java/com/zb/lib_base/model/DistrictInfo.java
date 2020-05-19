@@ -1,9 +1,11 @@
 package com.zb.lib_base.model;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class DistrictInfo extends RealmObject {
     private long cityId = 0;
+    @PrimaryKey
     private long districtId = 0;
     private String districtName = "";
 

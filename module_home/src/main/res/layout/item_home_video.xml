@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_margin="10dp"
-            android:drawableStart="@{viewModel.collectIDDb.getCollectId(2,item.friendDynId)?@drawable/like_red_icon:@drawable/like_white_icon}"
+            android:drawableStart="@{viewModel.goodDb.hasGood(item.friendDynId)?@drawable/like_red_icon:@drawable/like_white_icon}"
             android:drawablePadding="5dp"
             android:text='@{String.format("%d",item.goodNum)}'
             android:textColor="@android:color/white"

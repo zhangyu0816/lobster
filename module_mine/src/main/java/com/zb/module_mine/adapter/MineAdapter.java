@@ -4,15 +4,17 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.adapter.BindingItemAdapter;
 import com.zb.lib_base.adapter.ItemTouchHelperAdapter;
 import com.zb.lib_base.adapter.RecyclerHolder;
+import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.BR;
+import com.zb.module_mine.vm.FCLViewModel;
 
 import java.util.Collections;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
 
-public class MineAdapter<T> extends BindingItemAdapter<T>  implements ItemTouchHelperAdapter {
+public class MineAdapter<T> extends BindingItemAdapter<T> implements ItemTouchHelperAdapter {
 
     private BaseViewModel viewModel;
     private int selectIndex = -1;
@@ -34,9 +36,12 @@ public class MineAdapter<T> extends BindingItemAdapter<T>  implements ItemTouchH
     protected void onBind(RecyclerHolder<ViewDataBinding> holder, T t, int position) {
         holder.binding.setVariable(BR.item, t);
         holder.binding.setVariable(BR.position, position);
-        holder.binding.setVariable(BR.isSelect,position == selectIndex);
+        holder.binding.setVariable(BR.isSelect, position == selectIndex);
         if (viewModel != null) {
             holder.binding.setVariable(BR.viewModel, viewModel);
+        }
+        if (viewModel instanceof FCLViewModel) {
+            ((FCLViewModel) viewModel).getContactNum((MemberInfo) t, position);
         }
         holder.binding.executePendingBindings();
     }

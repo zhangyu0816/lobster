@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <variable
+            name="item"
+            type="com.zb.lib_base.model.MemberInfo" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_mine.vm.FCLViewModel" />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            defaultRes="@{ObjectUtils.getDefaultRes()}"
+            imageUrl="@{item.image}"
+            isCircle="@{true}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="15dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/tv_btn"
+            android:layout_toEndOf="@+id/iv_logo"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@{item.nick}"
+                android:textColor="@color/black_252"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="分为发" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@{String.format(@string/be_like_count,item.beLikeQuantity)}"
+                    android:textColor="@color/black_4d4"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@{String.format(@string/fan_count,item.fansQuantity)}"
+                    android:textColor="@color/black_4d4"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_btn"
+            android:onClick="@{v->viewModel.clickMember(position)}"
+            android:layout_width="86dp"
+            android:layout_height="28dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:background="@{viewModel.position==2?(viewModel.likeDb.hasLike(item.userId)?@drawable/btn_bg_black_efe_radius40: @drawable/btn_bg_purple_7a4_white_radius60):(viewModel.attentionDb.hasAttention(item.userId)?@drawable/btn_bg_black_efe_radius40: @drawable/btn_bg_purple_7a4_white_radius60)}"
+            android:gravity="center"
+            android:text="@{ObjectUtils.textName(viewModel.likeDb, viewModel.attentionDb, item.userId, viewModel.position)}"
+            android:textColor="@{ObjectUtils.textColor(viewModel.likeDb, viewModel.attentionDb, item.userId)}" />
+    </RelativeLayout>
+</layout>

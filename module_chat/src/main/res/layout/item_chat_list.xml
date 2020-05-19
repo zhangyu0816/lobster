@@ -14,7 +14,7 @@
 
         <variable
             name="item"
-            type="com.zb.lib_base.model.ChatMsg" />
+            type="com.zb.lib_base.model.ChatList" />
 
         <variable
             name="position"

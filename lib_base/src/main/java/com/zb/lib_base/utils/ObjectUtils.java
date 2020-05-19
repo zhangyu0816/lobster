@@ -4,6 +4,8 @@ import android.graphics.drawable.Drawable;
 
 import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.AttentionDb;
+import com.zb.lib_base.db.LikeDb;
 
 import java.util.Map;
 
@@ -100,6 +102,16 @@ public class ObjectUtils {
         }
     }
 
+    public static Drawable getNoData(int position) {
+        if (position == 0) {
+            return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_anth_data);
+        } else if (position == 1) {
+            return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_fan_data);
+        } else {
+            return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_belike_data);
+        }
+    }
+
     public static String getStanza(String stanza, int msgType) {
         //消息类型 1：文字 2：图片 3：语音 4：视频
         if (msgType == 1)
@@ -122,5 +134,23 @@ public class ObjectUtils {
             return "已通过";
         else
             return "立即验证";
+    }
+
+    public static int textColor(LikeDb likeDb, AttentionDb attentionDb, long collectId) {
+        if (likeDb.hasLike(collectId) || attentionDb.hasAttention(collectId)) {
+            return R.color.black_827;
+        } else {
+            return R.color.purple_7a4;
+        }
+    }
+
+    public static String textName(LikeDb likeDb, AttentionDb attentionDb, long collectId, int position) {
+        if (position == 2) {
+            return likeDb.hasLike(collectId) ? "已喜欢" : "喜欢Ta";
+        } else if (position == 1) {
+            return attentionDb.hasAttention(collectId) ? "取消关注" : "回粉";
+        } else {
+            return attentionDb.hasAttention(collectId) ? "取消关注" : "关注Ta";
+        }
     }
 }

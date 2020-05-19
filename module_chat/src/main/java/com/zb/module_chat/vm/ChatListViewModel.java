@@ -6,7 +6,7 @@ import com.zb.lib_base.api.chatListApi;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.model.ChatMsg;
+import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_chat.R;
 import com.zb.module_chat.adapter.ChatAdapter;
@@ -22,7 +22,7 @@ import io.realm.Realm;
 
 public class ChatListViewModel extends BaseViewModel implements ChatListVMInterface, OnRefreshListener {
     public ChatAdapter adapter;
-    private List<ChatMsg> chatMsgList = new ArrayList<>();
+    private List<ChatList> chatMsgList = new ArrayList<>();
     private ChatListFragmentBinding mBinding;
     private ChatListDb chatListDb;
 
@@ -48,10 +48,10 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
 
     @Override
     public void chatList() {
-        chatListApi api = new chatListApi(new HttpOnNextListener<List<ChatMsg>>() {
+        chatListApi api = new chatListApi(new HttpOnNextListener<List<ChatList>>() {
             @Override
-            public void onNext(List<ChatMsg> o) {
-                for (ChatMsg chatMsg : o) {
+            public void onNext(List<ChatList> o) {
+                for (ChatList chatMsg : o) {
                     chatListDb.saveChatList(chatMsg);
                 }
                 chatMsgList.clear();

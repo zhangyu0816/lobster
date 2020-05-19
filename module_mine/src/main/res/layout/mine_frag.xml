@@ -129,6 +129,7 @@
                             android:orientation="horizontal">
 
                             <LinearLayout
+                                onClickDelayed="@{v->viewModel.contactNumDetail(0)}"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -155,6 +156,7 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                onClickDelayed="@{v->viewModel.contactNumDetail(1)}"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -181,6 +183,7 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                onClickDelayed="@{v->viewModel.contactNumDetail(2)}"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"

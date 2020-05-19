@@ -14,8 +14,10 @@ import com.zb.lib_base.api.cancelAttentionApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
+import com.zb.lib_base.db.AttentionDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.FragmentUtils;
@@ -45,11 +47,14 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     private List<Fragment> fragments = new ArrayList<>();
     private List<String> selectorList = new ArrayList<>();
     private AreaDb areaDb;
+    private AttentionDb attentionDb;
+
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         areaDb = new AreaDb(Realm.getDefaultInstance());
+        attentionDb = new AttentionDb(Realm.getDefaultInstance());
         selectorList.add("举报");
         selectorList.add("分享");
         detailBinding = (CardMemberDetailBinding) binding;
@@ -133,6 +138,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             public void onNext(Object o) {
                 detailBinding.bannerLayout.tvFollow.setText("取消关注");
                 detailBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                attentionDb.saveAttention(new CollectID(otherUserId));
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
@@ -145,6 +151,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             public void onNext(Object o) {
                 detailBinding.bannerLayout.tvFollow.setText("取消关注");
                 detailBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                attentionDb.saveAttention(new CollectID(otherUserId));
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
@@ -157,6 +164,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             public void onNext(Object o) {
                 detailBinding.bannerLayout.tvFollow.setText("关注");
                 detailBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_4d4));
+                attentionDb.deleteAttention(otherUserId);
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
@@ -201,7 +209,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 .setAds(adList)
                 .setImageLoader((context, ads, image, position) -> AdapterBinding.loadImage(image, ads.getSmallImage(), 0,
                         ObjectUtils.getDefaultRes(), MineApp.W, ObjectUtils.getLogoHeight(1.0f),
-                        false, false, 0, false, 0,false))
+                        false, false, 0, false, 0, false))
                 .setBannerTypes(XBanner.CIRCLE_INDICATOR_TITLE)
                 .setIndicatorGravity(XBanner.INDICATOR_START)
                 .setDelay(3000)

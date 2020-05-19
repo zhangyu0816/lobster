@@ -1,7 +1,7 @@
 package com.zb.lib_base.db;
 
 import com.zb.lib_base.activity.BaseActivity;
-import com.zb.lib_base.model.ChatMsg;
+import com.zb.lib_base.model.ChatList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,17 +16,17 @@ public class ChatListDb extends BaseDao {
     }
 
     // 保存更新会话列表
-    public void saveChatList(ChatMsg chatMsg) {
+    public void saveChatList(ChatList chatList) {
         beginTransaction();
-        realm.insertOrUpdate(chatMsg);
+        realm.insertOrUpdate(chatList);
         commitTransaction();
     }
 
     // 获取会话列表
-    public List<ChatMsg> getChatList() {
+    public List<ChatList> getChatList() {
         beginTransaction();
-        List<ChatMsg> chatMsgList = new ArrayList<>();
-        RealmResults<ChatMsg> results = realm.where(ChatMsg.class).equalTo("mainUserId", BaseActivity.userId).findAll();
+        List<ChatList> chatMsgList = new ArrayList<>();
+        RealmResults<ChatList> results = realm.where(ChatList.class).equalTo("mainUserId", BaseActivity.userId).findAll();
         if (results.size() > 0) {
             chatMsgList.addAll(results);
         }

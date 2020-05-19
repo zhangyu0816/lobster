@@ -1,8 +1,10 @@
 package com.zb.lib_base.model;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class MineInfo extends RealmObject {
+    @PrimaryKey
     long userId;      //userId
     String nick = "";      //昵称
     String image = "";     //头像

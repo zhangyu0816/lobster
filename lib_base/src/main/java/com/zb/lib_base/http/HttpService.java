@@ -4,7 +4,7 @@ package com.zb.lib_base.http;
 import com.zb.lib_base.model.AliPay;
 import com.zb.lib_base.model.BaseResultEntity;
 import com.zb.lib_base.model.BottleInfo;
-import com.zb.lib_base.model.ChatMsg;
+import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.FaceStatus;
@@ -230,7 +230,7 @@ public interface HttpService {
 
     // 未读会话列表
     @GET("api/Contact_thirdChatList")
-    Observable<BaseResultEntity<List<ChatMsg>>> chatList(@Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("isPublicAccount") int isPublicAccount);
+    Observable<BaseResultEntity<List<ChatList>>> chatList(@Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("isPublicAccount") int isPublicAccount);
 
 
     /******************************* 漂流瓶 **********************************/
@@ -282,4 +282,16 @@ public interface HttpService {
     @GET("api/Verify_humanFace")
     Observable<BaseResultEntity> humanFace(@Query("faceVerifyType") int faceVerifyType, @Query("faceImage") String faceImage,
                                            @Query("faceVideo") String faceVideo);
+
+    // 我关注的
+    @GET("api/Collect_myConcerns")
+    Observable<BaseResultEntity<List<MemberInfo>>> myConcerns(@Query("pageNo") int pageNo);
+
+    // 我的粉丝
+    @GET("api/Collect_myFans")
+    Observable<BaseResultEntity<List<MemberInfo>>> myFans(@Query("pageNo") int pageNo);
+
+    // 喜欢我的人列表
+    @GET("api/Pair_likeMeList")
+    Observable<BaseResultEntity<List<MemberInfo>>> likeMeList(@Query("pageNo") int pageNo);
 }

@@ -359,7 +359,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="15dp"
-                        android:drawableStart="@{viewModel.collectIDDb.getCollectId(2,viewModel.discoverInfo.friendDynId)?@drawable/like_select_icon:@drawable/like_unselect_icon}"
+                        android:drawableStart="@{viewModel.goodDb.hasGood(viewModel.discoverInfo.friendDynId)?@drawable/like_select_icon:@drawable/like_unselect_icon}"
                         android:drawablePadding="5dp"
                         android:text='@{String.format("%d",viewModel.discoverInfo.goodNum)}'
                         android:textColor="@color/black_4d4"

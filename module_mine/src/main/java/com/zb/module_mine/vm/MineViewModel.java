@@ -53,6 +53,11 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     }
 
     @Override
+    public void contactNumDetail(int position) {
+        ActivityUtils.getMineFCL(position);
+    }
+
+    @Override
     public void contactNum() {
         contactNumApi api = new contactNumApi(new HttpOnNextListener<ContactNum>() {
             @Override

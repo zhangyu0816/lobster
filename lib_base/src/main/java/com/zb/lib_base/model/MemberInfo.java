@@ -33,6 +33,31 @@ public class MemberInfo extends BaseObservable {
     private int beLikeQuantity;//被喜欢数
     private int memberType;  //1免费用户   2 .会员
     private String serviceTags = "";
+    private String newDycCreateTime = "";  //最新创建时间   3天内的属于新增动态
+    private int idAttest;  //实名认证 V  0未认证  1认证
+    private int newDycType; // 最新的动态类型       配上对应的文字
+    private int attentionStatus; //关注关系  1 关注  0 未关注
+//    未知   0
+//    文字   1
+//    图片   2
+//    图文   3
+//    视频   4
+//    视频_文字  5
+//    视频_图片  6
+//    视频_图片_文字   7
+//    私密   8 (未使用)
+//    私密文字  9  (未使用)
+//    私密图片 10
+//    私密图文 11
+//    私密视频 12 (未使用)
+//    私密视频文字  13 (未使用)
+//    私密视频图片 14 (未使用)
+//    私密视频图文 15 (未使用)
+
+    // 喜欢我的人列表
+    long otherUserId; //对方用户的id
+    int likeOtherStatus;// 0 不喜欢  1 喜欢  2.超级喜欢
+    String headImage = ""; // 头像
 
     @Bindable
     public long getUserId() {
@@ -302,5 +327,75 @@ public class MemberInfo extends BaseObservable {
     public void setServiceTags(String serviceTags) {
         this.serviceTags = serviceTags;
         notifyPropertyChanged(BR.serviceTags);
+    }
+
+    @Bindable
+    public String getNewDycCreateTime() {
+        return newDycCreateTime;
+    }
+
+    public void setNewDycCreateTime(String newDycCreateTime) {
+        this.newDycCreateTime = newDycCreateTime;
+        notifyPropertyChanged(BR.newDycCreateTime);
+    }
+
+    @Bindable
+    public int getIdAttest() {
+        return idAttest;
+    }
+
+    public void setIdAttest(int idAttest) {
+        this.idAttest = idAttest;
+        notifyPropertyChanged(BR.idAttest);
+    }
+
+    @Bindable
+    public int getNewDycType() {
+        return newDycType;
+    }
+
+    public void setNewDycType(int newDycType) {
+        this.newDycType = newDycType;
+        notifyPropertyChanged(BR.newDycType);
+    }
+
+    @Bindable
+    public int getAttentionStatus() {
+        return attentionStatus;
+    }
+
+    public void setAttentionStatus(int attentionStatus) {
+        this.attentionStatus = attentionStatus;
+        notifyPropertyChanged(BR.attentionStatus);
+    }
+
+    @Bindable
+    public long getOtherUserId() {
+        return otherUserId;
+    }
+
+    public void setOtherUserId(long otherUserId) {
+        this.otherUserId = otherUserId;
+        notifyPropertyChanged(BR.otherUserId);
+    }
+
+    @Bindable
+    public int getLikeOtherStatus() {
+        return likeOtherStatus;
+    }
+
+    public void setLikeOtherStatus(int likeOtherStatus) {
+        this.likeOtherStatus = likeOtherStatus;
+        notifyPropertyChanged(BR.likeOtherStatus);
+    }
+
+    @Bindable
+    public String getHeadImage() {
+        return headImage;
+    }
+
+    public void setHeadImage(String headImage) {
+        this.headImage = headImage;
+        notifyPropertyChanged(BR.headImage);
     }
 }
