@@ -5,7 +5,7 @@ import com.zb.lib_base.activity.BaseActivity;
 
 import androidx.databinding.Bindable;
 
-public class ChatMsg extends BaseObservable {
+public class ChatMsg extends NewBaseObservable {
     long userId;//好友userId
     String nick = "";//好友昵称
     String image = "";//好友头像

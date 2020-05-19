@@ -1,7 +1,7 @@
 package com.zb.module_chat.activity;
 
-import com.zb.module_chat.fragment.ChatFragment;
 import com.zb.module_chat.R;
+import com.zb.module_chat.fragment.ChatFragment;
 
 public class MainActivity extends ChatBaseActivity {
     @Override

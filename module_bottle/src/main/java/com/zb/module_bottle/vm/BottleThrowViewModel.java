@@ -11,8 +11,6 @@ import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_bottle.iv.BottleThrowVMInterface;
 import com.zb.module_bottle.windows.BottleContentPW;
 
-import androidx.databinding.ViewDataBinding;
-
 public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVMInterface {
 
     @Override

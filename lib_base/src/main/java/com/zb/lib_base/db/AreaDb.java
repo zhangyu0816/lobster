@@ -39,6 +39,14 @@ public class AreaDb extends BaseDao {
         return provinceInfo == null ? "" : provinceInfo.getProvinceName();
     }
 
+    // 获取省份名称
+    public long getProvinceId(String provinceName) {
+        beginTransaction();
+        ProvinceInfo provinceInfo = realm.where(ProvinceInfo.class).equalTo("provinceName", provinceName).findFirst();
+        commitTransaction();
+        return provinceInfo == null ? 0 : provinceInfo.getProvinceId();
+    }
+
     // 保存城市信息
     public void saveCity(CityInfo cityInfo) {
         beginTransaction();
@@ -99,6 +107,14 @@ public class AreaDb extends BaseDao {
         DistrictInfo districtInfo = realm.where(DistrictInfo.class).equalTo("districtId", districtId).findFirst();
         commitTransaction();
         return districtInfo == null ? "" : districtInfo.getDistrictName();
+    }
+
+    // 获取地区名称
+    public long getDistrictId(String districtName) {
+        beginTransaction();
+        DistrictInfo districtInfo = realm.where(DistrictInfo.class).equalTo("districtName", districtName).findFirst();
+        commitTransaction();
+        return districtInfo == null ? 0 : districtInfo.getDistrictId();
     }
 }
 

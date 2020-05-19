@@ -9,7 +9,6 @@ import com.zb.module_chat.BR;
 import com.zb.module_chat.R;
 import com.zb.module_chat.databinding.ChatFragBinding;
 import com.zb.module_chat.vm.ChatFragViewModel;
-import com.zb.module_chat.vm.ChatViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

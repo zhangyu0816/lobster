@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <import type="android.view.View" />
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
 
         <variable
             name="viewModel"
@@ -16,6 +19,14 @@
         <variable
             name="step"
             type="Integer" />
+
+        <variable
+            name="checkStatus"
+            type="Integer" />
+
+        <variable
+            name="errorMsg"
+            type="String" />
 
     </data>
 
@@ -112,6 +123,16 @@
                         android:textColor="@color/black_4d4"
                         android:textSize="14sp" />
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="@{errorMsg}"
+                    android:textColor="@color/red_fe4"
+                    android:textSize="14sp"
+                    android:visibility="@{errorMsg.isEmpty()?View.GONE:View.VISIBLE}"
+                    tools:text="未通过" />
             </LinearLayout>
 
             <TextView
@@ -121,8 +142,9 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
                 android:background="@drawable/gradient_purple_bottom10"
+                android:clickable="@{checkStatus==-1||checkStatus==2}"
                 android:gravity="center"
-                android:text="立即验证"
+                android:text="@{ObjectUtils.getCheckResult(checkStatus)}"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />

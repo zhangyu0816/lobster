@@ -6,10 +6,10 @@ import androidx.databinding.Observable;
 import androidx.databinding.PropertyChangeRegistry;
 import io.realm.RealmObject;
 
-public class BaseObservable extends RealmObject implements Observable {
+public class NewBaseObservable extends RealmObject implements Observable {
     private transient PropertyChangeRegistry mCallbacks;
 
-    public BaseObservable() {
+    public NewBaseObservable() {
     }
 
     @Override

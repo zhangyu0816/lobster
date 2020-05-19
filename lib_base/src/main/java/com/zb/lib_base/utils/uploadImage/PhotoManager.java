@@ -556,9 +556,11 @@ public class PhotoManager {
         HttpUploadManager.getInstance().doHttpDeal(api);
     }
 
+    @FunctionalInterface
     public interface OnUpLoadImageListener {
         void onSuccess();
 
-        void onError(PhotoFile file);
+        default void onError(PhotoFile file) {
+        }
     }
 }

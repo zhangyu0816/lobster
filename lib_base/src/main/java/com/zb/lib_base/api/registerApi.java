@@ -19,6 +19,9 @@ public class registerApi extends BaseEntity<LoginInfo> {
     String nick;        //昵称
     Integer sex;        //性别
     String birthday;     //生日
+    long provinceId;    //省份ID
+    long cityId;       //城市ID
+    long districtId;       //城市ID
 
     public registerApi setUserName(String userName) {
         this.userName = userName;
@@ -50,6 +53,21 @@ public class registerApi extends BaseEntity<LoginInfo> {
         return this;
     }
 
+    public registerApi setProvinceId(long provinceId) {
+        this.provinceId = provinceId;
+        return this;
+    }
+
+    public registerApi setCityId(long cityId) {
+        this.cityId = cityId;
+        return this;
+    }
+
+    public registerApi setDistrictId(long districtId) {
+        this.districtId = districtId;
+        return this;
+    }
+
     public registerApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
         setDialogTitle("正在提交注册信息");
@@ -57,7 +75,7 @@ public class registerApi extends BaseEntity<LoginInfo> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.register(userName, captcha, moreImages, nick, sex, birthday,
+        return methods.register(userName, captcha, moreImages, nick, sex, birthday, provinceId, cityId, districtId,
                 "Android", Build.VERSION.RELEASE, PreferenceUtil.readStringValue(getRxAppCompatActivity(), "deviceCode"), PreferenceUtil.readStringValue(getRxAppCompatActivity(), "channelId"),
                 2, MineApp.versionName, PreferenceUtil.readStringValue(getRxAppCompatActivity(), "deviceHardwareInfo"));
     }

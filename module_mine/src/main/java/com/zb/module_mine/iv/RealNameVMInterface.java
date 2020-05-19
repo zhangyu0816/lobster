@@ -8,4 +8,8 @@ public interface RealNameVMInterface {
     void reset(View view);
 
     void upload(View view);
+
+    void humanFaceStatus();
+
+    void humanFace(String image);
 }

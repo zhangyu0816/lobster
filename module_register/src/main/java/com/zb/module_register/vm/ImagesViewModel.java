@@ -8,6 +8,7 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.registerApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.LoginInfo;
@@ -18,9 +19,9 @@ import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
-import com.zb.lib_base.utils.uploadImage.PhotoFile;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.SelectorPW;
 import com.zb.module_register.R;
 import com.zb.module_register.adapter.RegisterAdapter;
 import com.zb.module_register.databinding.RegisterImagesBinding;
@@ -31,6 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidx.recyclerview.widget.ItemTouchHelper;
+import io.realm.Realm;
 
 public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface {
     public RegisterAdapter adapter;
@@ -38,6 +40,8 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
     public List<String> images = new ArrayList<>();
     private SimpleItemTouchHelperCallback callback;
     private PhotoManager photoManager;
+    private List<String> selectorList = new ArrayList<>();
+    private AreaDb areaDb;
 
     @Override
     public void back(View view) {
@@ -48,6 +52,7 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
 
     @Override
     public void setAdapter() {
+        areaDb = new AreaDb(Realm.getDefaultInstance());
         images = MineApp.registerInfo.getImageList();
         adapter = new RegisterAdapter<>(activity, R.layout.item_register_image, images, this);
         callback = new SimpleItemTouchHelperCallback(adapter);
@@ -56,32 +61,27 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
         callback.setSort(true);
         callback.setDragFlags(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT);
 
-        photoManager = new PhotoManager(activity, new PhotoManager.OnUpLoadImageListener() {
-            @Override
-            public void onSuccess() {
-                MineApp.registerInfo.setMoreImages(photoManager.jointWebUrl("#"));
-                photoManager.deleteAllFile();
-                register(MineApp.registerInfo);
-            }
-
-            @Override
-            public void onError(PhotoFile file) {
-
-            }
+        photoManager = new PhotoManager(activity, () -> {
+            MineApp.registerInfo.setMoreImages(photoManager.jointWebUrl("#"));
+            photoManager.deleteAllFile();
+            register(MineApp.registerInfo);
         });
+
+        selectorList.add("替换");
+        selectorList.add("删除");
     }
 
     @Override
     public void complete(View view) {
-        if (MineApp.registerInfo.getImageList().size() == 0) {
-            SCToastUtil.showToast(activity, "请上传至少1张照片");
-            return;
-        }
         String images = "";
         for (String image : MineApp.registerInfo.getImageList()) {
             if (!image.isEmpty()) {
                 images += "#" + image;
             }
+        }
+        if (images.isEmpty()) {
+            SCToastUtil.showToast(activity, "请上传至少1张照片");
+            return;
         }
         images = images.substring(1);
         photoManager.addFiles(Arrays.asList(images.split("#")), () -> photoManager.reUploadByUnSuccess());
@@ -107,7 +107,10 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
                 .setNick(registerInfo.getName())
                 .setBirthday(birthday)
                 .setMoreImages(registerInfo.getMoreImages())
-                .setSex(registerInfo.getSex());
+                .setSex(registerInfo.getSex())
+                .setProvinceId(areaDb.getProvinceId(PreferenceUtil.readStringValue(activity,"provinceName")))
+                .setCityId(areaDb.getCityId(MineApp.cityName))
+                .setDistrictId(areaDb.getDistrictId(PreferenceUtil.readStringValue(activity,"districtName")));
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -127,8 +130,21 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
 
     @Override
     public void selectImage(int position) {
-        _position = position;
-        getPermissions();
+        if (images.get(position).isEmpty()) {
+            _position = position;
+            getPermissions();
+        } else {
+            new SelectorPW(activity, mBinding.getRoot(), selectorList, position1 -> {
+                if (position1 == 0) {
+                    _position = position;
+                    getPermissions();
+                } else {
+                    images.set(_position, "");
+                    adapter.notifyItemChanged(_position);
+                }
+            });
+        }
+
     }
 
     /**

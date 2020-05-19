@@ -1,7 +1,6 @@
 package com.zb.module_chat.vm;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.api.chatListApi;
 import com.zb.lib_base.db.ChatListDb;

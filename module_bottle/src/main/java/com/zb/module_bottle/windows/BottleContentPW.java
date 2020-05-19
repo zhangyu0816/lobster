@@ -20,8 +20,6 @@ import com.zb.module_bottle.databinding.PwsBottleContentBinding;
 
 import java.util.Arrays;
 
-import retrofit2.http.HTTP;
-
 public class BottleContentPW extends BasePopupWindow {
     private BottleInfo bottleInfo;
     private BottleAdapter adapter;

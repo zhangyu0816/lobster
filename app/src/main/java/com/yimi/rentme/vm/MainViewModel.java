@@ -47,9 +47,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         initFragments();
         aMapLocation = new AMapLocation(activity);
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
-        if (MineApp.cityName.isEmpty()) {
-            getPermissions();
-        }
+        getPermissions();
         openedMemberPriceList();
     }
 
@@ -114,7 +112,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     }
 
     @Override
-    public void joinPairPoolApi(String longitude, String latitude) {
+    public void joinPairPool(String longitude, String latitude) {
         // 加入匹配池
         joinPairPoolApi api = new joinPairPoolApi(new HttpOnNextListener() {
             @Override
@@ -174,9 +172,11 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
                     PreferenceUtil.saveStringValue(activity, "longitude", longitude);
                     PreferenceUtil.saveStringValue(activity, "latitude", latitude);
+                    PreferenceUtil.saveStringValue(activity, "provinceName", location.getProvince());
                     PreferenceUtil.saveStringValue(activity, "cityName", MineApp.cityName);
+                    PreferenceUtil.saveStringValue(activity, "districtName", location.getDistrict());
                     PreferenceUtil.saveStringValue(activity, "address", address);
-                    joinPairPoolApi(longitude, latitude);
+                    joinPairPool(longitude, latitude);
                 }
                 aMapLocation.stop();
                 aMapLocation.destroy();

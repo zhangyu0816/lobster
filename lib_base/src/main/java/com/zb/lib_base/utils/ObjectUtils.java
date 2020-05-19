@@ -113,4 +113,14 @@ public class ObjectUtils {
         else
             return "[暂不支付该类型消息]";
     }
+
+    public static String getCheckResult(int checkStatus) {
+        //0未审核(无法提交)  //1通过(无法提交)  2未通过(显示不通过原因。备注)
+        if (checkStatus == 0)
+            return "审核中";
+        else if (checkStatus == 1)
+            return "已通过";
+        else
+            return "立即验证";
+    }
 }

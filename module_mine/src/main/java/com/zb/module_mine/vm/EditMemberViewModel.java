@@ -5,12 +5,18 @@ import android.os.Build;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.api.modifyMemberInfoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
-import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.PreferenceUtil;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
+import com.zb.lib_base.utils.uploadImage.PhotoFile;
+import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.SelectorPW;
 import com.zb.module_mine.R;
@@ -34,7 +40,9 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     private SimpleItemTouchHelperCallback callback;
     private MineEditMemberBinding mineEditMemberBinding;
     private List<String> selectorList = new ArrayList<>();
+    private List<String> selectorImageList = new ArrayList<>();
     public MineInfo mineInfo;
+    private PhotoManager photoManager;
 
     @Override
     public void back(View view) {
@@ -47,11 +55,28 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
         super.setBinding(binding);
         selectorList.add("女");
         selectorList.add("男");
+        selectorImageList.add("替换");
+        selectorImageList.add("删除");
         mineEditMemberBinding = (MineEditMemberBinding) binding;
         areaDb = new AreaDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
-        imageList.addAll(Arrays.asList(mineInfo.getMoreImages().split("#")));
+
+        String[] images = mineInfo.getMoreImages().split("#");
+        imageList.addAll(Arrays.asList(images));
+
+        for (int i = imageList.size(); i < 6; i++) {
+            imageList.add("");
+        }
+
         setAdapter();
+        photoManager = new PhotoManager(activity, () -> {
+            for (PhotoFile photoFile : photoManager.getPhotoFiles()) {
+                int i = imageList.indexOf(photoFile.getFilePath());
+                imageList.set(i, photoFile.getWebUrl());
+            }
+
+            modifyMemberInfo();
+        });
     }
 
     @Override
@@ -67,13 +92,36 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
 
     @Override
     public void save(View view) {
-
+        String images = "";
+        for (String image : imageList) {
+            if (!image.isEmpty() && !image.contains("Http")) {
+                images += "#" + image;
+            }
+        }
+        if (images.isEmpty()) {
+            SCToastUtil.showToast(activity, "请上传至少1张照片");
+            return;
+        }
+        images = images.substring(1);
+        photoManager.addFiles(Arrays.asList(images.split("#")), () -> photoManager.reUploadByUnSuccess());
     }
 
     @Override
     public void selectImage(int position) {
-        _position = position;
-        getPermissions();
+        if (imageList.get(position).isEmpty()) {
+            _position = position;
+            getPermissions();
+        } else {
+            new SelectorPW(activity, mBinding.getRoot(), selectorImageList, position1 -> {
+                if (position1 == 0) {
+                    _position = position;
+                    getPermissions();
+                } else {
+                    imageList.set(_position, "");
+                    adapter.notifyItemChanged(_position);
+                }
+            });
+        }
     }
 
     @Override
@@ -99,6 +147,36 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     @Override
     public void toSelectTag(View view) {
         ActivityUtils.getMineSelectTag(mineInfo.getServiceTags());
+    }
+
+    @Override
+    public void modifyMemberInfo() {
+        String images = "";
+        for (String image : imageList) {
+            if (!image.isEmpty()) {
+                images += "#" + image;
+            }
+        }
+        images = images.substring(1);
+        modifyMemberInfoApi api = new modifyMemberInfoApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                SCToastUtil.showToastBlack(activity, "提交个人信息");
+                activity.finish();
+            }
+        }, activity)
+                .setBirthday(mineInfo.getBirthday())
+                .setImage(imageList.get(0))
+                .setMoreImages(images)
+                .setNick(mineInfo.getNick())
+                .setJob(mineInfo.getJob())
+                .setPersonalitySign(mineInfo.getPersonalitySign())
+                .setSex(mineInfo.getSex())
+                .setServiceTags(mineInfo.getServiceTags())
+                .setProvinceId(areaDb.getProvinceId(PreferenceUtil.readStringValue(activity,"provinceName")))
+                .setCityId(areaDb.getCityId(MineApp.cityName))
+                .setDistrictId(areaDb.getDistrictId(PreferenceUtil.readStringValue(activity,"districtName")));
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     /**

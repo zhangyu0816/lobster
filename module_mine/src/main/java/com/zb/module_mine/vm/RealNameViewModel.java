@@ -5,20 +5,33 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.hardware.Camera;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.zb.lib_base.adapter.AdapterBinding;
+import com.zb.lib_base.api.humanFaceApi;
+import com.zb.lib_base.api.humanFaceStatusApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.http.HttpTimeException;
+import com.zb.lib_base.model.FaceStatus;
+import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.SCToastUtil;
+import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_camera.utils.CameraPreview;
 import com.zb.module_camera.utils.OverCameraView;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.databinding.MineRealNameBinding;
 import com.zb.module_mine.iv.RealNameVMInterface;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import androidx.databinding.ViewDataBinding;
 
@@ -34,6 +47,11 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
     private boolean isTakePhoto = false;
     private CountDownTimer timer;
     private AnimatorSet animatorSet;
+    private PhotoManager photoManager;
+    private String cameraPath = "";
+    private File cameraFolder;
+    private String imagePath = "";
+    private File imageFile;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -43,6 +61,17 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
         nameBinding.cameraLayout.setOnTouchListener(this);
         AdapterBinding.viewSize(nameBinding.cameraLayout, MineApp.W, (int) (MineApp.W * 4f / 3f));
         initCamera();
+        humanFaceStatus();
+        photoManager = new PhotoManager(activity, () -> {
+            humanFace(photoManager.jointWebUrl(","));
+        });
+        cameraPath = Environment.getExternalStorageDirectory().getPath() + File.separator + "DCIM" + File.separator + "Camera";
+        cameraFolder = new File(cameraPath);
+        if (!cameraFolder.exists()) {
+            cameraFolder.mkdirs();
+        }
+        imagePath = cameraFolder.getAbsolutePath() + File.separator + "real.jpg";
+        imageFile = new File(imagePath);
     }
 
     private void initCamera() {
@@ -91,6 +120,7 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
         preview.releaseCamera();
         animatorSet.cancel();
         timer.cancel();
+        DataCleanManager.deleteFile(imageFile);
         activity.finish();
     }
 
@@ -111,7 +141,55 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
 
     @Override
     public void upload(View view) {
+        //保存的图片文件
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(imageFile);
+            fos.write(imageData);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                    photoManager.addFileUpload(0, imageFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            isTakePhoto = false;
+        }
+    }
 
+    @Override
+    public void humanFaceStatus() {
+        humanFaceStatusApi api = new humanFaceStatusApi(new HttpOnNextListener<FaceStatus>() {
+            @Override
+            public void onNext(FaceStatus o) {
+                mBinding.setVariable(BR.checkStatus, o.getIsChecked());
+                mBinding.setVariable(BR.errorMsg, o.getMark());
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    mBinding.setVariable(BR.checkStatus, -1);
+                }
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void humanFace(String image) {
+        humanFaceApi api = new humanFaceApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                SCToastUtil.showToastBlack(activity, "人脸认证已提交");
+                back(null);
+            }
+        }, activity).setFaceImage(image);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     // 点击对焦

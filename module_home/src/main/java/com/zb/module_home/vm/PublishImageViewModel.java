@@ -18,7 +18,6 @@ import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
-import com.zb.lib_base.utils.uploadImage.PhotoFile;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.SelectorPW;
@@ -52,17 +51,9 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         publicImageBinding = (HomePublicImageBinding) binding;
-        photoManager = new PhotoManager(activity, new PhotoManager.OnUpLoadImageListener() {
-            @Override
-            public void onSuccess() {
-                publishDyn(photoManager.jointWebUrl(","));
-                photoManager.deleteAllFile();
-            }
-
-            @Override
-            public void onError(PhotoFile file) {
-
-            }
+        photoManager = new PhotoManager(activity, () -> {
+            publishDyn(photoManager.jointWebUrl(","));
+            photoManager.deleteAllFile();
         });
     }
 

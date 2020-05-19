@@ -44,7 +44,6 @@ public class MineApp extends MultiDexApplication {
     public static Typeface simplifiedType;
     public static List<VipInfo> vipInfoList = new ArrayList<>();
     public static String logo = "http://img01.zuwo.la/img/A/YMXXXX919714-206348_YM0000.jpg";
-    public static String logo1 = "http://img01.zuwo.la/img/A/YMXXXX2350392-sgjdwurnll_YM0000.jpg";
     public static String cityName = "";
     public static String versionName;
     public static String WX_PAY_APPID = "wxbdd7128e0a0a08f8";

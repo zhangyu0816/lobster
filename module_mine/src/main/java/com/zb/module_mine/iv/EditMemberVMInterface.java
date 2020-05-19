@@ -16,4 +16,6 @@ public interface EditMemberVMInterface {
     void toEditSign(View view);
 
     void toSelectTag(View view);
+
+    void modifyMemberInfo();
 }

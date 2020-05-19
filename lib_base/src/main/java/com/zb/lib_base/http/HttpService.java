@@ -7,6 +7,7 @@ import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.ChatMsg;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
+import com.zb.lib_base.model.FaceStatus;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.LoginInfo;
 import com.zb.lib_base.model.MemberInfo;
@@ -64,7 +65,8 @@ public interface HttpService {
     @POST("api/Login_regist")
     Observable<BaseResultEntity<LoginInfo>> register(@Field("userName") String userName, @Field("captcha") String captcha,
                                                      @Field("moreImages") String moreImages, @Field("nick") String nick,
-                                                     @Field("sex") int sex, @Field("birthday") String birthday, @Field("device") String device,
+                                                     @Field("sex") int sex, @Field("birthday") String birthday, @Field("provinceId") long provinceId, @Field("cityId") long cityId,
+                                                     @Field("districtId") long districtId, @Field("device") String device,
                                                      @Field("deviceSysVersion") String deviceSysVersion, @Field("deviceCode") String deviceCode,
                                                      @Field("channelId") String channelId, @Field("usePl") int usePl, @Field("appVersion") String appVersion,
                                                      @Field("deviceHardwareInfo") String deviceHardwareInfo);
@@ -249,9 +251,35 @@ public interface HttpService {
     // 拾取漂流瓶(包括销毁漂流瓶)
     @GET("api/DriftBottle_pcikBottle")
     Observable<BaseResultEntity> pickBottle(@Query("driftBottleId") long driftBottleId, @Query("driftBottleType") int driftBottleType,
-                                                        @Query("otherUserId") long otherUserId);
+                                            @Query("otherUserId") long otherUserId);
 
     // 回复漂流瓶
     @GET("api/DriftBottle_replyBottle")
     Observable<BaseResultEntity> replyBottle(@Query("driftBottleId") long driftBottleId, @Query("text") String text);
+
+    /******************************* 我的 **********************************/
+
+    // 修改个人信息
+    @FormUrlEncoded
+    @POST("api/Member_modifyMemberInfo")
+    Observable<BaseResultEntity> modifyMemberInfo(@Field("nick") String nick, @Field("image") String image, @Field("moreImages") String moreImages,
+                                                  @Field("personalitySign") String personalitySign, @Field("birthday") String birthday,
+                                                  @Field("age") int age, @Field("sex") int sex, @Field("constellation") int constellation,
+                                                  @Field("job") String job, @Field("provinceId") long provinceId, @Field("cityId") long cityId,
+                                                  @Field("districtId") long districtId, @Field("singleImage") String singleImage,
+                                                  @Field("serviceTags") String serviceTags);
+
+    // 修改密码
+    @FormUrlEncoded
+    @POST("api/Member_modifyPass")
+    Observable<BaseResultEntity> modifyPass(@Field("oldPassWord") String oldPassWord, @Field("newPassWord") String newPassWord);
+
+    // 人脸认证状态
+    @GET("api/Verify_humanFaceStatus")
+    Observable<BaseResultEntity<FaceStatus>> humanFaceStatus();
+
+    // 人脸认证
+    @GET("api/Verify_humanFace")
+    Observable<BaseResultEntity> humanFace(@Query("faceVerifyType") int faceVerifyType, @Query("faceImage") String faceImage,
+                                           @Query("faceVideo") String faceVideo);
 }
