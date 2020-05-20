@@ -9,6 +9,7 @@ import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.FaceStatus;
 import com.zb.lib_base.model.GiftInfo;
+import com.zb.lib_base.model.GiftRecord;
 import com.zb.lib_base.model.LoginInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
@@ -320,4 +321,8 @@ public interface HttpService {
     // 清除全部未读消息
     @GET("api/Interactive_readNewDynMsgAll")
     Observable<BaseResultEntity> readNewDynMsgAll();
+
+    // 礼物记录列表
+    @GET("api/Gift_giveOrReceiveList")
+    Observable<BaseResultEntity<List<GiftRecord>>> giveOrReceiveList(@Query("pageNo") int pageNo, @Query("friendDynGiftType") int friendDynGiftType);
 }

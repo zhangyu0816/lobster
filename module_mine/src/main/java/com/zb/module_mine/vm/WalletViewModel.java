@@ -57,12 +57,12 @@ public class WalletViewModel extends BaseViewModel implements WalletVMInterface 
 
     @Override
     public void toGiveRecord(View view) {
-
+        ActivityUtils.getMineGRGift(1);
     }
 
     @Override
     public void toGetRecord(View view) {
-
+        ActivityUtils.getMineGRGift(2);
     }
 
     @Override

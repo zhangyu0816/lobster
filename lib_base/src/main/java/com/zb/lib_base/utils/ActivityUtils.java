@@ -119,9 +119,14 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Mine_Select_Tag).withString("serviceTags", serviceTags).navigation();
     }
 
-    // 选择标签
+    // 粉丝、关注、被喜欢列表
     public static void getMineFCL(int position) {
         ARouter.getInstance().build(RouteUtils.Mine_FCL).withInt("position", position).navigation();
+    }
+
+    // 收发礼物记录
+    public static void getMineGRGift(int friendDynGiftType) {
+        ARouter.getInstance().build(RouteUtils.Mine_GRGift).withInt("friendDynGiftType", friendDynGiftType).navigation();
     }
 
 

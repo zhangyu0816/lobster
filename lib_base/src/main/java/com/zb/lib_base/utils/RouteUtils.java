@@ -67,6 +67,8 @@ public class RouteUtils {
     public static final String Mine_Select_Tag = "/mine/SelectTagActivity";
     // 粉丝、关注、被喜欢列表
     public static final String Mine_FCL = "/mine/FCLActivity";
+    // 收发礼物记录
+    public static final String Mine_GRGift = "/mine/GRGiftActivity";
 
     /*********************** 注册 **************************/
 
