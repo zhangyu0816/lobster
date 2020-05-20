@@ -51,9 +51,9 @@
             android:id="@+id/relativeLayout8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="15dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
+            android:padding="15dp"
             app:layout_constraintTop_toBottomOf="@+id/include3">
 
             <TextView
@@ -108,23 +108,35 @@
                 android:orientation="vertical"
                 android:padding="15dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="200.00元"
-                    android:textColor="@color/black_252"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text='@{String.format("%.2f",viewModel.walletInfo.wallet)}'
+                        android:textColor="@color/black_252"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:text="元"
+                        android:textColor="@color/black_827"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <TextView
-                    onClickDelayed="@{viewModel::taxIncome}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:drawableEnd="@mipmap/question_grey"
-                    android:drawablePadding="5dp"
                     android:gravity="center"
-                    android:text="今日税前收益"
+                    android:text="总金额"
                     android:textColor="@color/black_827"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -136,13 +148,28 @@
                 android:orientation="vertical"
                 android:padding="15dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="200.00元"
-                    android:textColor="@color/black_252"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0.00"
+                        android:textColor="@color/black_252"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:text="元"
+                        android:textColor="@color/black_827"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <TextView
                     onClickDelayed="@{viewModel::incomeDeposit}"
@@ -214,14 +241,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="快速提现"
-                    android:drawableEnd="@mipmap/arrow_small_right_icon"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
+                    android:drawableEnd="@mipmap/arrow_small_right_icon"
+                    android:drawablePadding="5dp"
                     android:gravity="center"
-                    android:textSize="14sp"
+                    android:text="快速提现"
                     android:textColor="@color/black_827"
-                    android:drawablePadding="5dp"/>
+                    android:textSize="14sp" />
             </RelativeLayout>
 
 
