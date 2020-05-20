@@ -27,7 +27,11 @@ public interface DiscoverDetailVMInterface {
 
     void dynDoReview();
 
-    void dynDoLike(View view);
+    void dynLike(View view);
+
+    void dynDoLike();
+
+    void dynCancelLike();
 
     void selectReview(Review review);
 }

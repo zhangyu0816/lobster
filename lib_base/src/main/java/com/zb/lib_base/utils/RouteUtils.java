@@ -38,7 +38,7 @@ public class RouteUtils {
     // 我的消息
     public static final String Mine_News_Manager = "/mine/NewsManagerActivity";
     // 礼物消息
-    public static final String Mine_Gift_News = "/mine/GiftNewsActivity";
+    public static final String Mine_News_list = "/mine/NewsListActivity";
     // 设置
     public static final String Mine_Setting = "/mine/SettingActivity";
     // 实名认证

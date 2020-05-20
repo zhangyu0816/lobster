@@ -17,6 +17,7 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.deleteDynApi;
+import com.zb.lib_base.api.dynCancelLikeApi;
 import com.zb.lib_base.api.dynDetailApi;
 import com.zb.lib_base.api.dynDoLikeApi;
 import com.zb.lib_base.api.dynDoReviewApi;
@@ -97,7 +98,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 
         // 发送
         discoverDetailBinding.edContent.setOnEditorActionListener((v, actionId, event) -> {
-            if(actionId == EditorInfo.IME_ACTION_SEND){
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
                 dynDoReview();
             }
             return false;
@@ -256,7 +257,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 String otherHead = memberInfo.getMoreImages().split("#")[0];
                 if (o == 1) {
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex());
-                } else if (o == 3) {
+                } else if (o == 4) {
                     new CountUsedPW(activity, mBinding.getRoot(), 2);
                 }
             }
@@ -317,7 +318,16 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     }
 
     @Override
-    public void dynDoLike(View view) {
+    public void dynLike(View view) {
+        if (goodDb.hasGood(friendDynId)) {
+            dynCancelLike();
+        } else {
+            dynDoLike();
+        }
+    }
+
+    @Override
+    public void dynDoLike() {
         dynDoLikeApi api = new dynDoLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
@@ -328,6 +338,20 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);
     }
+
+    @Override
+    public void dynCancelLike() {
+        dynCancelLikeApi api = new dynCancelLikeApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                goodDb.deleteGood(friendDynId);
+                int goodNum = discoverInfo.getGoodNum() - 1;
+                discoverInfo.setGoodNum(goodNum);
+            }
+        }, activity).setFriendDynId(friendDynId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
 
     @Override
     public void selectReview(Review review) {

@@ -11,4 +11,6 @@ public interface NewsManagerVMInterface {
     void toLikeNews(View view);
 
     void toLobsterNews(View view);
+
+    void newDynMsgAllNum();
 }

@@ -153,4 +153,11 @@ public class ObjectUtils {
             return attentionDb.hasAttention(collectId) ? "取消关注" : "关注Ta";
         }
     }
+
+    public static String count(int count) {
+        if (count < 99)
+            return count + "";
+        else
+            return "···";
+    }
 }

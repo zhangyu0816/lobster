@@ -12,6 +12,8 @@ import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.LoginInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.model.MineNews;
+import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.OrderNumber;
 import com.zb.lib_base.model.OrderTran;
 import com.zb.lib_base.model.PairInfo;
@@ -199,6 +201,10 @@ public interface HttpService {
     @GET("api/Interactive_dynDoLike")
     Observable<BaseResultEntity> dynDoLike(@Query("friendDynId") long friendDynId);
 
+    // 给动态点赞
+    @GET("api/Interactive_dynCancelLike")
+    Observable<BaseResultEntity> dynCancelLike(@Query("friendDynId") long friendDynId);
+
     // 关注状态
     @GET("api/Collect_attentionStatus")
     Observable<BaseResultEntity> attentionStatus(@Query("otherUserId") long otherUserId);
@@ -298,4 +304,20 @@ public interface HttpService {
     // 喜欢我的人列表
     @GET("api/Pair_likeMeList")
     Observable<BaseResultEntity<List<MemberInfo>>> likeMeList(@Query("pageNo") int pageNo);
+
+    // 新消息列表
+    @GET("api/Interactive_dynNewMsgList")
+    Observable<BaseResultEntity<List<MineNews>>> dynNewMsgList(@Query("pageNo") int pageNo, @Query("reviewType") int reviewType);
+
+    // 新消息读完后，请调用这个接口
+    @GET("api/Interactive_readOverMyDynNewMsg")
+    Observable<BaseResultEntity> readOverMyDynNewMsg();
+
+    // 我的新消息数量(礼物、评论、点赞)
+    @GET("api/Interactive_newDynMsgAllNum")
+    Observable<BaseResultEntity<MineNewsCount>> newDynMsgAllNum();
+
+    // 清除全部未读消息
+    @GET("api/Interactive_readNewDynMsgAll")
+    Observable<BaseResultEntity> readNewDynMsgAll();
 }

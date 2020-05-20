@@ -357,7 +357,7 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        onClickDelayed="@{viewModel::dynDoLike}"
+                        onClickDelayed="@{viewModel::dynLike}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="15dp"

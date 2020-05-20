@@ -21,6 +21,7 @@ import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.CountUsedPW;
 import com.zb.lib_base.windows.SuperLikePW;
@@ -151,10 +152,11 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                     }
                     adapter.notifyItemChanged(_selectIndex);
                 } else if (o == 2) {
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), memberInfoList.get(_selectIndex).getSex());
                     likeDb.saveLike(new CollectID(otherUserId));
                     adapter.notifyItemChanged(_selectIndex);
                 } else if (o == 3) {
-                    new CountUsedPW(activity, mBinding.getRoot(), 2);
+                    SCToastUtil.showToastBlack(activity, "今日喜欢次数已用完");
                 }
             }
         }, activity).setOtherUserId(otherUserId).setLikeOtherStatus(likeOtherStatus);

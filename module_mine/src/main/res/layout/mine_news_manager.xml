@@ -5,6 +5,10 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
         <variable
             name="viewModel"
             type="com.zb.module_mine.vm.NewsManagerViewModel" />
@@ -48,9 +52,11 @@
                 android:layout_marginEnd="-7dp"
                 android:background="@drawable/circle_white_red"
                 android:gravity="center"
+                android:text="@{ObjectUtils.count(viewModel.mineNewsCount.friendDynamicGiftNum)}"
                 android:textColor="@android:color/white"
                 android:textSize="10sp"
-                tools:text="99" />
+                android:visibility="@{viewModel.mineNewsCount.friendDynamicGiftNum==0?View.GONE:View.VISIBLE}"
+                tools:text="···" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -100,8 +106,10 @@
                 android:layout_marginEnd="-7dp"
                 android:background="@drawable/circle_white_red"
                 android:gravity="center"
+                android:text="@{ObjectUtils.count(viewModel.mineNewsCount.friendDynamicReviewNum)}"
                 android:textColor="@android:color/white"
                 android:textSize="10sp"
+                android:visibility="@{viewModel.mineNewsCount.friendDynamicReviewNum==0?View.GONE:View.VISIBLE}"
                 tools:text="99" />
 
             <TextView
@@ -152,8 +160,10 @@
                 android:layout_marginEnd="-7dp"
                 android:background="@drawable/circle_white_red"
                 android:gravity="center"
+                android:text="@{ObjectUtils.count(viewModel.mineNewsCount.friendDynamicGoodNum)}"
                 android:textColor="@android:color/white"
                 android:textSize="10sp"
+                android:visibility="@{viewModel.mineNewsCount.friendDynamicGoodNum==0?View.GONE:View.VISIBLE}"
                 tools:text="···" />
 
             <TextView
@@ -233,7 +243,7 @@
                     android:layout_height="wrap_content"
                     android:text="12:88"
                     android:textColor="@color/black_827"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp" />
 
                 <TextView
                     android:layout_width="16dp"

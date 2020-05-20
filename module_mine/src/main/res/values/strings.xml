@@ -7,4 +7,6 @@
     <string name="select_tag">%s X</string>
     <string name="be_like_count">喜欢数 %d</string>
     <string name="fan_count">粉丝数 %d</string>
+    <string name="dyn_text">我的动态：%s</string>
+    <string name="dyn_good">赞了你的动态</string>
 </resources>

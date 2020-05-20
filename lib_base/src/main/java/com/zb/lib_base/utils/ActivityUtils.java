@@ -50,8 +50,8 @@ public class ActivityUtils {
     }
 
     // 消息
-    public static void getMineGiftNews() {
-        ARouter.getInstance().build(RouteUtils.Mine_Gift_News).navigation();
+    public static void getMineNewsList(int reviewType) {
+        ARouter.getInstance().build(RouteUtils.Mine_News_list).withInt("reviewType", reviewType).navigation();
     }
 
     // 设置

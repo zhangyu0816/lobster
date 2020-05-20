@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.zb.module_mine.vm.GiftNewsViewModel" />
+            type="com.zb.module_mine.vm.NewsListViewModel" />
 
         <variable
             name="title"
@@ -30,13 +30,23 @@
             title="@{title}"
             viewModel="@{viewModel}" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            adapter="@{viewModel.adapter}"
-            recyclerType="@{0}"
-            size="@{0}"
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refresh"
+            onLoadMoreListener="@{viewModel}"
+            onRefreshListener="@{viewModel}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/layout" />
+            android:background="@color/black_efe">
+
+            <androidx.recyclerview.widget.RecyclerView
+                adapter="@{viewModel.adapter}"
+                recyclerType="@{0}"
+                size="@{0}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/layout" />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
 
         <ImageView
             android:layout_width="wrap_content"

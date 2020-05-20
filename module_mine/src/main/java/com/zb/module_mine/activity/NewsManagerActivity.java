@@ -8,6 +8,8 @@ import com.zb.module_mine.vm.NewsManagerViewModel;
 
 @Route(path = RouteUtils.Mine_News_Manager)
 public class NewsManagerActivity extends MineBaseActivity {
+    private NewsManagerViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.mine_news_manager;
@@ -15,9 +17,15 @@ public class NewsManagerActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
-        NewsManagerViewModel viewModel = new NewsManagerViewModel();
+        viewModel = new NewsManagerViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
-        mBinding.setVariable(BR.title,"我的消息");
+        mBinding.setVariable(BR.title, "我的消息");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewModel.newDynMsgAllNum();
     }
 }
