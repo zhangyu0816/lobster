@@ -38,6 +38,7 @@
         <activity android:name=".activity.SelectTagActivity" />
         <activity android:name=".activity.FCLActivity" />
         <activity android:name=".activity.GRGiftActivity" />
+        <activity android:name=".activity.TranRecordActivity" />
     </application>
 
 </manifest>

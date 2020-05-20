@@ -1,5 +1,7 @@
 package com.zb.module_mine.vm;
 
+import android.view.View;
+
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -26,6 +28,12 @@ public class GRGiftViewModel extends BaseViewModel implements GRGiftVMInterface,
     public MineAdapter adapter;
     private List<GiftRecord> giftRecordList = new ArrayList<>();
     private MineGiveReceiveGiftBinding mBinding;
+
+    @Override
+    public void back(View view) {
+        super.back(view);
+        activity.finish();
+    }
 
     @Override
     public void setBinding(ViewDataBinding binding) {

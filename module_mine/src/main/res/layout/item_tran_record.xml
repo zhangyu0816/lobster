@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.zb.lib_base.app.MineApp" />
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <variable
+            name="item"
+            type="com.zb.lib_base.model.TranRecord" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/btn_bg_white_radius10"
+        android:padding="15dp">
+
+        <TextView
+            android:id="@+id/tv_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{MineApp.tranTypeMap.get(item.tranType)}"
+            android:textColor="@color/black_252"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="提现" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_type"
+            android:layout_marginTop="10dp"
+            android:text="@{item.createTime}"
+            android:textColor="@color/black_827"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text='@{String.format((item.useType==1?"+":"-")+"%.2f",item.tranMoney)}'
+            android:textColor="@{ObjectUtils.textColor(item.useType)}"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+</layout>

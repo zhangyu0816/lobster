@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_mine.vm.TranRecordViewModel" />
+
+    </data>
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refresh"
+        onLoadMoreListener="@{viewModel}"
+        onRefreshListener="@{viewModel}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_efe">
+
+        <androidx.recyclerview.widget.RecyclerView
+            adapter="@{viewModel.adapter}"
+            recyclerType="@{1}"
+            size="@{0}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="7dp" />
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</layout>

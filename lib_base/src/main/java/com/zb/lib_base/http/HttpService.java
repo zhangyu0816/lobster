@@ -21,6 +21,7 @@ import com.zb.lib_base.model.PairInfo;
 import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.model.Reward;
+import com.zb.lib_base.model.TranRecord;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WXPay;
 import com.zb.lib_base.model.WalletInfo;
@@ -325,4 +326,12 @@ public interface HttpService {
     // 礼物记录列表
     @GET("api/Gift_giveOrReceiveList")
     Observable<BaseResultEntity<List<GiftRecord>>> giveOrReceiveList(@Query("pageNo") int pageNo, @Query("friendDynGiftType") int friendDynGiftType);
+
+    // 交易记录
+    @GET("api/Tran_tranRecords")
+    Observable<BaseResultEntity<List<TranRecord>>> tranRecords(@QueryMap Map<String,String> map);
+
+    // 交易记录
+    @GET("api/Tran_tranSingleRecord")
+    Observable<BaseResultEntity<TranRecord>> tranSingleRecord(@Query("tranOrderId") String tranOrderId);
 }

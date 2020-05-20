@@ -160,4 +160,12 @@ public class ObjectUtils {
         else
             return "···";
     }
+
+    public static int textColor(int useType) {
+        if (useType==1) {
+            return R.color.red_fe4;
+        } else {
+            return R.color.black_4d4;
+        }
+    }
 }

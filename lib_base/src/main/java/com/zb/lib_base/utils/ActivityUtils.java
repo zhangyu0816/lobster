@@ -129,6 +129,11 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Mine_GRGift).withInt("friendDynGiftType", friendDynGiftType).navigation();
     }
 
+    // 交易记录
+    public static void getMineTranRecord(int tranType) {
+        ARouter.getInstance().build(RouteUtils.Mine_Tran_Record).withInt("tranType", tranType).navigation();
+    }
+
 
     /*********************** 注册 **************************/
 

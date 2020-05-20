@@ -3,6 +3,7 @@ package com.zb.module_mine.vm;
 import android.view.View;
 
 import com.zb.lib_base.model.WalletInfo;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.TextPW;
 import com.zb.module_mine.iv.GiftRecordVMInterface;
@@ -37,7 +38,7 @@ public class GiftRecordViewModel extends BaseViewModel implements GiftRecordVMIn
 
     @Override
     public void toProfitRecord(View view) {
-
+        ActivityUtils.getMineTranRecord(31);
     }
 
     @Override

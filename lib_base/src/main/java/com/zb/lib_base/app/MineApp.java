@@ -39,6 +39,7 @@ public class MineApp extends MultiDexApplication {
     public static int H;
     public static String PHONE_NUMBER_REG = "^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\\d{8}$";
     public static Map<String, Integer> selectMap = new HashMap<>();
+    public static Map<Integer, String> tranTypeMap = new HashMap<>();
     public static Map<String, CutImageView> cutImageViewMap = new HashMap<>();
     public static Typeface type;
     public static Typeface simplifiedType;
@@ -58,6 +59,27 @@ public class MineApp extends MultiDexApplication {
         });
         //设置全局的Footer构建器
         SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout) -> new ClassicsFooter(context).setDrawableSize(20));
+
+        tranTypeMap.put(1,"充值");
+        tranTypeMap.put(2,"提现");
+        tranTypeMap.put(3,"订单平台服务费");
+        tranTypeMap.put(4,"个人信息首页置顶");
+        tranTypeMap.put(5,"下级消费分成");
+        tranTypeMap.put(6,"技能服务订单付款");
+        tranTypeMap.put(7,"开通会员");
+        tranTypeMap.put(8,"评论付款");
+        tranTypeMap.put(9,"红包付款");
+        tranTypeMap.put(10,"私密相册");
+        tranTypeMap.put(11,"相册打赏");
+        tranTypeMap.put(12,"好友红包");
+        tranTypeMap.put(13,"视频围观");
+        tranTypeMap.put(14,"付费提问");
+        tranTypeMap.put(15,"视频围观分润");
+        tranTypeMap.put(16,"诚意订单诚意金");
+        tranTypeMap.put(17,"诚意订单定金");
+        tranTypeMap.put(18,"诚意订单收款");
+        tranTypeMap.put(19,"诚意订单退款");
+        tranTypeMap.put(31,"礼物打赏");
     }
 
     @Override

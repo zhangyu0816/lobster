@@ -43,6 +43,7 @@ public class WalletViewModel extends BaseViewModel implements WalletVMInterface 
     @Override
     public void right(View view) {
         super.right(view);
+        ActivityUtils.getMineTranRecord(0);
     }
 
     @Override
