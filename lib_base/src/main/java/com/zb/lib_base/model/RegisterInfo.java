@@ -1,5 +1,6 @@
 package com.zb.lib_base.model;
 
+
 import com.zb.lib_base.BR;
 
 import java.util.ArrayList;
@@ -28,8 +29,7 @@ public class RegisterInfo extends BaseObservable {
         notifyPropertyChanged(BR.name);
     }
 
-    @Bindable
-    public int getSex() {
+    @Bindable public int getSex() {
         return sex;
     }
 
@@ -38,8 +38,7 @@ public class RegisterInfo extends BaseObservable {
         notifyPropertyChanged(BR.sex);
     }
 
-    @Bindable
-    public String getPhone() {
+    @Bindable public String getPhone() {
         return phone;
     }
 
@@ -48,8 +47,7 @@ public class RegisterInfo extends BaseObservable {
         notifyPropertyChanged(BR.phone);
     }
 
-    @Bindable
-    public String getBirthday() {
+    @Bindable public String getBirthday() {
         return birthday;
     }
 
@@ -58,8 +56,7 @@ public class RegisterInfo extends BaseObservable {
         notifyPropertyChanged(BR.birthday);
     }
 
-    @Bindable
-    public String getPass() {
+    @Bindable public String getPass() {
         return pass;
     }
 
@@ -68,8 +65,7 @@ public class RegisterInfo extends BaseObservable {
         notifyPropertyChanged(BR.pass);
     }
 
-    @Bindable
-    public String getCaptcha() {
+    @Bindable public String getCaptcha() {
         return captcha;
     }
 
@@ -78,8 +74,7 @@ public class RegisterInfo extends BaseObservable {
         notifyPropertyChanged(BR.captcha);
     }
 
-    @Bindable
-    public String getMoreImages() {
+    @Bindable public String getMoreImages() {
         return moreImages;
     }
 
@@ -88,8 +83,7 @@ public class RegisterInfo extends BaseObservable {
         notifyPropertyChanged(BR.moreImages);
     }
 
-    @Bindable
-    public List<String> getImageList() {
+    @Bindable public List<String> getImageList() {
         return imageList;
     }
 

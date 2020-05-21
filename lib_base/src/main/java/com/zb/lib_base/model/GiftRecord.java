@@ -1,5 +1,6 @@
 package com.zb.lib_base.model;
 
+
 import com.zb.lib_base.BR;
 
 import androidx.databinding.BaseObservable;
@@ -25,8 +26,7 @@ public class GiftRecord extends BaseObservable {
         notifyPropertyChanged(BR.friendDynamicGiftId);
     }
 
-    @Bindable
-    public String getFriendDynamicText() {
+    @Bindable public String getFriendDynamicText() {
         return friendDynamicText;
     }
 
@@ -35,8 +35,7 @@ public class GiftRecord extends BaseObservable {
         notifyPropertyChanged(BR.friendDynamicText);
     }
 
-    @Bindable
-    public String getGiftName() {
+    @Bindable public String getGiftName() {
         return giftName;
     }
 
@@ -45,8 +44,7 @@ public class GiftRecord extends BaseObservable {
         notifyPropertyChanged(BR.giftName);
     }
 
-    @Bindable
-    public String getGiftImage() {
+    @Bindable public String getGiftImage() {
         return giftImage;
     }
 
@@ -55,8 +53,7 @@ public class GiftRecord extends BaseObservable {
         notifyPropertyChanged(BR.giftImage);
     }
 
-    @Bindable
-    public int getGiftNumber() {
+    @Bindable public int getGiftNumber() {
         return giftNumber;
     }
 
@@ -65,8 +62,7 @@ public class GiftRecord extends BaseObservable {
         notifyPropertyChanged(BR.giftNumber);
     }
 
-    @Bindable
-    public String getNick() {
+    @Bindable public String getNick() {
         return nick;
     }
 
@@ -75,8 +71,7 @@ public class GiftRecord extends BaseObservable {
         notifyPropertyChanged(BR.nick);
     }
 
-    @Bindable
-    public String getImage() {
+    @Bindable public String getImage() {
         return image;
     }
 
@@ -85,8 +80,7 @@ public class GiftRecord extends BaseObservable {
         notifyPropertyChanged(BR.image);
     }
 
-    @Bindable
-    public String getCreateTime() {
+    @Bindable public String getCreateTime() {
         return createTime;
     }
 

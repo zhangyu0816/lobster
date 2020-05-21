@@ -1,5 +1,6 @@
 package com.zb.lib_base.model;
 
+
 import com.zb.lib_base.BR;
 
 import androidx.databinding.BaseObservable;
@@ -25,8 +26,7 @@ public class VipInfo extends BaseObservable {
         notifyPropertyChanged(BR.memberOfOpenedProductId);
     }
 
-    @Bindable
-    public String getTitle() {
+    @Bindable public String getTitle() {
         return title;
     }
 
@@ -35,8 +35,7 @@ public class VipInfo extends BaseObservable {
         notifyPropertyChanged(BR.title);
     }
 
-    @Bindable
-    public double getOriginalPrice() {
+    @Bindable public double getOriginalPrice() {
         return originalPrice;
     }
 
@@ -45,8 +44,7 @@ public class VipInfo extends BaseObservable {
         notifyPropertyChanged(BR.originalPrice);
     }
 
-    @Bindable
-    public double getPrice() {
+    @Bindable public double getPrice() {
         return price;
     }
 
@@ -55,8 +53,7 @@ public class VipInfo extends BaseObservable {
         notifyPropertyChanged(BR.price);
     }
 
-    @Bindable
-    public String getPriceDesc() {
+    @Bindable public String getPriceDesc() {
         return priceDesc;
     }
 
@@ -65,8 +62,7 @@ public class VipInfo extends BaseObservable {
         notifyPropertyChanged(BR.priceDesc);
     }
 
-    @Bindable
-    public int getDayCount() {
+    @Bindable public int getDayCount() {
         return dayCount;
     }
 
@@ -75,8 +71,7 @@ public class VipInfo extends BaseObservable {
         notifyPropertyChanged(BR.dayCount);
     }
 
-    @Bindable
-    public String getImage() {
+    @Bindable public String getImage() {
         return image;
     }
 
@@ -85,8 +80,7 @@ public class VipInfo extends BaseObservable {
         notifyPropertyChanged(BR.image);
     }
 
-    @Bindable
-    public String getSimpleDesc() {
+    @Bindable public String getSimpleDesc() {
         return simpleDesc;
     }
 

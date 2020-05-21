@@ -29,8 +29,7 @@ public class FileModel extends BaseObservable {
         notifyPropertyChanged(BR.fileName);
     }
 
-    @Bindable
-    public String getImage() {
+    @Bindable public String getImage() {
         return image;
     }
 
@@ -39,8 +38,7 @@ public class FileModel extends BaseObservable {
         notifyPropertyChanged(BR.image);
     }
 
-    @Bindable
-    public int getSize() {
+    @Bindable public int getSize() {
         return size;
     }
 

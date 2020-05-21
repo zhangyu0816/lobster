@@ -1,5 +1,6 @@
 package com.zb.lib_base.model;
 
+
 import com.zb.lib_base.BR;
 
 import androidx.databinding.BaseObservable;
@@ -21,8 +22,7 @@ public class VipAd extends BaseObservable {
         notifyPropertyChanged(BR.topRes);
     }
 
-    @Bindable
-    public int getTopBgRes() {
+    @Bindable public int getTopBgRes() {
         return topBgRes;
     }
 
@@ -31,8 +31,7 @@ public class VipAd extends BaseObservable {
         notifyPropertyChanged(BR.topBgRes);
     }
 
-    @Bindable
-    public String getTitle() {
+    @Bindable public String getTitle() {
         return title;
     }
 
@@ -41,8 +40,7 @@ public class VipAd extends BaseObservable {
         notifyPropertyChanged(BR.title);
     }
 
-    @Bindable
-    public String getContent() {
+    @Bindable public String getContent() {
         return content;
     }
 

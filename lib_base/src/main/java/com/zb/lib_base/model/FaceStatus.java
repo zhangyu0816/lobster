@@ -21,8 +21,7 @@ public class FaceStatus extends BaseObservable {
         notifyPropertyChanged(BR.userId);
     }
 
-    @Bindable
-    public int getIsChecked() {
+    @Bindable public int getIsChecked() {
         return isChecked;
     }
 
@@ -31,8 +30,7 @@ public class FaceStatus extends BaseObservable {
         notifyPropertyChanged(BR.isChecked);
     }
 
-    @Bindable
-    public String getMark() {
+    @Bindable public String getMark() {
         return mark;
     }
 

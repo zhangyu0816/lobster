@@ -16,7 +16,7 @@ public class Review extends BaseObservable {
     private long atUserId = 0;
     private String atUserNick = "";
     private String atUserImage = "";
-    private String createTime = "2020-04-16 15:55:00";
+    private String createTime = "";
 
     @Bindable
     public long getReviewId() {
@@ -28,8 +28,7 @@ public class Review extends BaseObservable {
         notifyPropertyChanged(BR.reviewId);
     }
 
-    @Bindable
-    public long getUserId() {
+    @Bindable public long getUserId() {
         return userId;
     }
 
@@ -38,8 +37,7 @@ public class Review extends BaseObservable {
         notifyPropertyChanged(BR.userId);
     }
 
-    @Bindable
-    public String getNick() {
+    @Bindable public String getNick() {
         return nick;
     }
 
@@ -48,8 +46,7 @@ public class Review extends BaseObservable {
         notifyPropertyChanged(BR.nick);
     }
 
-    @Bindable
-    public String getImage() {
+    @Bindable public String getImage() {
         return image;
     }
 
@@ -58,8 +55,7 @@ public class Review extends BaseObservable {
         notifyPropertyChanged(BR.image);
     }
 
-    @Bindable
-    public String getText() {
+    @Bindable public String getText() {
         return text;
     }
 
@@ -68,8 +64,7 @@ public class Review extends BaseObservable {
         notifyPropertyChanged(BR.text);
     }
 
-    @Bindable
-    public long getAtUserId() {
+    @Bindable public long getAtUserId() {
         return atUserId;
     }
 
@@ -78,8 +73,7 @@ public class Review extends BaseObservable {
         notifyPropertyChanged(BR.atUserId);
     }
 
-    @Bindable
-    public String getAtUserNick() {
+    @Bindable public String getAtUserNick() {
         return atUserNick;
     }
 
@@ -88,8 +82,7 @@ public class Review extends BaseObservable {
         notifyPropertyChanged(BR.atUserNick);
     }
 
-    @Bindable
-    public String getAtUserImage() {
+    @Bindable public String getAtUserImage() {
         return atUserImage;
     }
 
@@ -98,8 +91,7 @@ public class Review extends BaseObservable {
         notifyPropertyChanged(BR.atUserImage);
     }
 
-    @Bindable
-    public String getCreateTime() {
+    @Bindable public String getCreateTime() {
         return createTime;
     }
 

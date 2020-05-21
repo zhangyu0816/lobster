@@ -1,5 +1,6 @@
 package com.zb.lib_base.model;
 
+
 import com.zb.lib_base.BR;
 
 import androidx.databinding.BaseObservable;
@@ -21,8 +22,7 @@ public class Reward extends BaseObservable {
         notifyPropertyChanged(BR.userId);
     }
 
-    @Bindable
-    public String getImage() {
+    @Bindable public String getImage() {
         return image;
     }
 
@@ -31,8 +31,7 @@ public class Reward extends BaseObservable {
         notifyPropertyChanged(BR.image);
     }
 
-    @Bindable
-    public String getNick() {
+    @Bindable public String getNick() {
         return nick;
     }
 
@@ -41,8 +40,7 @@ public class Reward extends BaseObservable {
         notifyPropertyChanged(BR.nick);
     }
 
-    @Bindable
-    public double getPayMoney() {
+    @Bindable public double getPayMoney() {
         return payMoney;
     }
 

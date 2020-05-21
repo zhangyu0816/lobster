@@ -1,5 +1,6 @@
 package com.zb.lib_base.model;
 
+
 import com.zb.lib_base.BR;
 
 import androidx.databinding.BaseObservable;
@@ -27,8 +28,7 @@ public class OrderNumber extends BaseObservable {
         notifyPropertyChanged(BR.orderNumber);
     }
 
-    @Bindable
-    public String getOrderTitle() {
+    @Bindable public String getOrderTitle() {
         return orderTitle;
     }
 
@@ -37,8 +37,7 @@ public class OrderNumber extends BaseObservable {
         notifyPropertyChanged(BR.orderTitle);
     }
 
-    @Bindable
-    public int getOrderStatus() {
+    @Bindable public int getOrderStatus() {
         return orderStatus;
     }
 
@@ -47,8 +46,7 @@ public class OrderNumber extends BaseObservable {
         notifyPropertyChanged(BR.orderStatus);
     }
 
-    @Bindable
-    public double getProductPrice() {
+    @Bindable public double getProductPrice() {
         return productPrice;
     }
 
@@ -57,8 +55,7 @@ public class OrderNumber extends BaseObservable {
         notifyPropertyChanged(BR.productPrice);
     }
 
-    @Bindable
-    public int getProductCount() {
+    @Bindable public int getProductCount() {
         return productCount;
     }
 
@@ -67,8 +64,7 @@ public class OrderNumber extends BaseObservable {
         notifyPropertyChanged(BR.productCount);
     }
 
-    @Bindable
-    public double getTotalMoney() {
+    @Bindable public double getTotalMoney() {
         return totalMoney;
     }
 
@@ -77,8 +73,7 @@ public class OrderNumber extends BaseObservable {
         notifyPropertyChanged(BR.totalMoney);
     }
 
-    @Bindable
-    public String getCreateTime() {
+    @Bindable public String getCreateTime() {
         return createTime;
     }
 
@@ -87,8 +82,7 @@ public class OrderNumber extends BaseObservable {
         notifyPropertyChanged(BR.createTime);
     }
 
-    @Bindable
-    public int getIsPayed() {
+    @Bindable public int getIsPayed() {
         return isPayed;
     }
 
@@ -97,8 +91,7 @@ public class OrderNumber extends BaseObservable {
         notifyPropertyChanged(BR.isPayed);
     }
 
-    @Bindable
-    public String getNumber() {
+    @Bindable public String getNumber() {
         return number;
     }
 

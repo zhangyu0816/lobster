@@ -23,8 +23,7 @@ public class WalletInfo extends BaseObservable {
         notifyPropertyChanged(BR.userId);
     }
 
-    @Bindable
-    public double getWallet() {
+    @Bindable public double getWallet() {
         return wallet;
     }
 
@@ -33,8 +32,7 @@ public class WalletInfo extends BaseObservable {
         notifyPropertyChanged(BR.wallet);
     }
 
-    @Bindable
-    public double getFrozenWallet() {
+    @Bindable public double getFrozenWallet() {
         return frozenWallet;
     }
 
@@ -43,8 +41,7 @@ public class WalletInfo extends BaseObservable {
         notifyPropertyChanged(BR.frozenWallet);
     }
 
-    @Bindable
-    public int getPopularity() {
+    @Bindable public int getPopularity() {
         return popularity;
     }
 
@@ -53,8 +50,7 @@ public class WalletInfo extends BaseObservable {
         notifyPropertyChanged(BR.popularity);
     }
 
-    @Bindable
-    public double getCanWithdrawCreditWallet() {
+    @Bindable public double getCanWithdrawCreditWallet() {
         return canWithdrawCreditWallet;
     }
 
@@ -63,8 +59,7 @@ public class WalletInfo extends BaseObservable {
         notifyPropertyChanged(BR.canWithdrawCreditWallet);
     }
 
-    @Bindable
-    public int getLikeMeNum() {
+    @Bindable public int getLikeMeNum() {
         return likeMeNum;
     }
 

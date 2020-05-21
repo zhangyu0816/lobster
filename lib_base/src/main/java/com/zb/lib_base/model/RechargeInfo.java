@@ -1,5 +1,6 @@
 package com.zb.lib_base.model;
 
+
 import com.zb.lib_base.BR;
 
 import androidx.databinding.BaseObservable;
@@ -20,8 +21,7 @@ public class RechargeInfo extends BaseObservable {
         notifyPropertyChanged(BR.price);
     }
 
-    @Bindable
-    public int getRechargeValue() {
+    @Bindable public int getRechargeValue() {
         return rechargeValue;
     }
 
@@ -30,8 +30,7 @@ public class RechargeInfo extends BaseObservable {
         notifyPropertyChanged(BR.rechargeValue);
     }
 
-    @Bindable
-    public String getPriceDesc() {
+    @Bindable public String getPriceDesc() {
         return priceDesc;
     }
 

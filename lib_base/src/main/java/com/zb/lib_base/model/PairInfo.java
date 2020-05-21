@@ -1,5 +1,6 @@
 package com.zb.lib_base.model;
 
+
 import com.zb.lib_base.BR;
 
 import java.util.ArrayList;
@@ -34,8 +35,7 @@ public class PairInfo extends BaseObservable {
         notifyPropertyChanged(BR.userId);
     }
 
-    @Bindable
-    public long getOtherUserId() {
+    @Bindable public long getOtherUserId() {
         return otherUserId;
     }
 
@@ -44,8 +44,7 @@ public class PairInfo extends BaseObservable {
         notifyPropertyChanged(BR.otherUserId);
     }
 
-    @Bindable
-    public String getNick() {
+    @Bindable public String getNick() {
         return nick;
     }
 
@@ -54,8 +53,7 @@ public class PairInfo extends BaseObservable {
         notifyPropertyChanged(BR.nick);
     }
 
-    @Bindable
-    public String getMoreImages() {
+    @Bindable public String getMoreImages() {
         return moreImages;
     }
 
@@ -64,8 +62,7 @@ public class PairInfo extends BaseObservable {
         notifyPropertyChanged(BR.moreImages);
     }
 
-    @Bindable
-    public String getPersonalitySign() {
+    @Bindable public String getPersonalitySign() {
         return personalitySign;
     }
 
@@ -74,8 +71,7 @@ public class PairInfo extends BaseObservable {
         notifyPropertyChanged(BR.personalitySign);
     }
 
-    @Bindable
-    public String getBirthday() {
+    @Bindable public String getBirthday() {
         return birthday;
     }
 
@@ -84,8 +80,7 @@ public class PairInfo extends BaseObservable {
         notifyPropertyChanged(BR.birthday);
     }
 
-    @Bindable
-    public int getAge() {
+    @Bindable public int getAge() {
         return age;
     }
 
@@ -94,8 +89,7 @@ public class PairInfo extends BaseObservable {
         notifyPropertyChanged(BR.age);
     }
 
-    @Bindable
-    public int getSex() {
+    @Bindable public int getSex() {
         return sex;
     }
 
@@ -104,8 +98,7 @@ public class PairInfo extends BaseObservable {
         notifyPropertyChanged(BR.sex);
     }
 
-    @Bindable
-    public int getIdAttest() {
+    @Bindable public int getIdAttest() {
         return idAttest;
     }
 
@@ -114,8 +107,7 @@ public class PairInfo extends BaseObservable {
         notifyPropertyChanged(BR.idAttest);
     }
 
-    @Bindable
-    public long getProvinceId() {
+    @Bindable public long getProvinceId() {
         return provinceId;
     }
 
@@ -124,8 +116,7 @@ public class PairInfo extends BaseObservable {
         notifyPropertyChanged(BR.provinceId);
     }
 
-    @Bindable
-    public long getCityId() {
+    @Bindable public long getCityId() {
         return cityId;
     }
 
@@ -134,8 +125,7 @@ public class PairInfo extends BaseObservable {
         notifyPropertyChanged(BR.cityId);
     }
 
-    @Bindable
-    public long getDistrictId() {
+    @Bindable public long getDistrictId() {
         return districtId;
     }
 
@@ -144,23 +134,21 @@ public class PairInfo extends BaseObservable {
         notifyPropertyChanged(BR.districtId);
     }
 
-    @Bindable
-    public List<String> getImageList() {
-        return imageList;
-    }
-
-    public void setImageList(List<String> imageList) {
-        this.imageList = imageList;
-        notifyPropertyChanged(BR.imageList);
-    }
-
-    @Bindable
-    public String getDistance() {
+    @Bindable public String getDistance() {
         return distance;
     }
 
     public void setDistance(String distance) {
         this.distance = distance;
         notifyPropertyChanged(BR.distance);
+    }
+
+    @Bindable public List<String> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(List<String> imageList) {
+        this.imageList = imageList;
+        notifyPropertyChanged(BR.imageList);
     }
 }

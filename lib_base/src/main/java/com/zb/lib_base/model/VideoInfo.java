@@ -1,5 +1,6 @@
 package com.zb.lib_base.model;
 
+
 import com.zb.lib_base.BR;
 
 import androidx.databinding.BaseObservable;
@@ -19,8 +20,7 @@ public class VideoInfo extends BaseObservable {
         notifyPropertyChanged(BR.path);
     }
 
-    @Bindable
-    public String getName() {
+    @Bindable public String getName() {
         return name;
     }
 

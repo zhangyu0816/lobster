@@ -1,5 +1,6 @@
 package com.zb.lib_base.model;
 
+
 import com.zb.lib_base.BR;
 
 import androidx.databinding.BaseObservable;
@@ -20,8 +21,7 @@ public class MineNewsCount extends BaseObservable {
         notifyPropertyChanged(BR.friendDynamicReviewNum);
     }
 
-    @Bindable
-    public int getFriendDynamicGiftNum() {
+    @Bindable public int getFriendDynamicGiftNum() {
         return friendDynamicGiftNum;
     }
 
@@ -30,8 +30,7 @@ public class MineNewsCount extends BaseObservable {
         notifyPropertyChanged(BR.friendDynamicGiftNum);
     }
 
-    @Bindable
-    public int getFriendDynamicGoodNum() {
+    @Bindable public int getFriendDynamicGoodNum() {
         return friendDynamicGoodNum;
     }
 

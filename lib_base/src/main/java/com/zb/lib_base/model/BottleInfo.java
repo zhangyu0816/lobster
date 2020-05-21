@@ -1,6 +1,7 @@
 package com.zb.lib_base.model;
 
 
+
 import com.zb.lib_base.BR;
 
 import java.util.ArrayList;
@@ -31,8 +32,7 @@ public class BottleInfo extends BaseObservable {
         notifyPropertyChanged(BR.driftBottleId);
     }
 
-    @Bindable
-    public long getUserId() {
+    @Bindable public long getUserId() {
         return userId;
     }
 
@@ -41,8 +41,7 @@ public class BottleInfo extends BaseObservable {
         notifyPropertyChanged(BR.userId);
     }
 
-    @Bindable
-    public String getText() {
+    @Bindable public String getText() {
         return text;
     }
 
@@ -51,8 +50,7 @@ public class BottleInfo extends BaseObservable {
         notifyPropertyChanged(BR.text);
     }
 
-    @Bindable
-    public int getDriftBottleType() {
+    @Bindable public int getDriftBottleType() {
         return driftBottleType;
     }
 
@@ -61,8 +59,7 @@ public class BottleInfo extends BaseObservable {
         notifyPropertyChanged(BR.driftBottleType);
     }
 
-    @Bindable
-    public long getOtherUserId() {
+    @Bindable public long getOtherUserId() {
         return otherUserId;
     }
 
@@ -71,8 +68,7 @@ public class BottleInfo extends BaseObservable {
         notifyPropertyChanged(BR.otherUserId);
     }
 
-    @Bindable
-    public int getNoReadNum() {
+    @Bindable public int getNoReadNum() {
         return noReadNum;
     }
 
@@ -81,8 +77,7 @@ public class BottleInfo extends BaseObservable {
         notifyPropertyChanged(BR.noReadNum);
     }
 
-    @Bindable
-    public String getHeadImage() {
+    @Bindable public String getHeadImage() {
         return headImage;
     }
 
@@ -91,8 +86,7 @@ public class BottleInfo extends BaseObservable {
         notifyPropertyChanged(BR.headImage);
     }
 
-    @Bindable
-    public String getNick() {
+    @Bindable public String getNick() {
         return nick;
     }
 
@@ -101,8 +95,7 @@ public class BottleInfo extends BaseObservable {
         notifyPropertyChanged(BR.nick);
     }
 
-    @Bindable
-    public String getCreateTime() {
+    @Bindable public String getCreateTime() {
         return createTime;
     }
 
@@ -111,8 +104,7 @@ public class BottleInfo extends BaseObservable {
         notifyPropertyChanged(BR.createTime);
     }
 
-    @Bindable
-    public List<BottleMsg> getMessageList() {
+    @Bindable public List<BottleMsg> getMessageList() {
         return messageList;
     }
 

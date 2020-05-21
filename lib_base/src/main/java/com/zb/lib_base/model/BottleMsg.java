@@ -23,8 +23,7 @@ public class BottleMsg extends BaseObservable {
         notifyPropertyChanged(BR.driftBottleId);
     }
 
-    @Bindable
-    public long getUserId() {
+    @Bindable public long getUserId() {
         return userId;
     }
 
@@ -33,8 +32,7 @@ public class BottleMsg extends BaseObservable {
         notifyPropertyChanged(BR.userId);
     }
 
-    @Bindable
-    public long getForUserId() {
+    @Bindable public long getForUserId() {
         return forUserId;
     }
 
@@ -43,8 +41,7 @@ public class BottleMsg extends BaseObservable {
         notifyPropertyChanged(BR.forUserId);
     }
 
-    @Bindable
-    public int getIsRead() {
+    @Bindable public int getIsRead() {
         return isRead;
     }
 
@@ -53,8 +50,7 @@ public class BottleMsg extends BaseObservable {
         notifyPropertyChanged(BR.isRead);
     }
 
-    @Bindable
-    public int getIsPass() {
+    @Bindable public int getIsPass() {
         return isPass;
     }
 
@@ -63,8 +59,7 @@ public class BottleMsg extends BaseObservable {
         notifyPropertyChanged(BR.isPass);
     }
 
-    @Bindable
-    public String getText() {
+    @Bindable public String getText() {
         return text;
     }
 

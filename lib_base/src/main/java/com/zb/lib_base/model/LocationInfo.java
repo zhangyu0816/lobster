@@ -22,8 +22,7 @@ public class LocationInfo extends BaseObservable {
         notifyPropertyChanged(BR.cityName);
     }
 
-    @Bindable
-    public String getTitle() {
+    @Bindable public String getTitle() {
         return title;
     }
 
@@ -32,8 +31,7 @@ public class LocationInfo extends BaseObservable {
         notifyPropertyChanged(BR.title);
     }
 
-    @Bindable
-    public String getAddress() {
+    @Bindable public String getAddress() {
         return address;
     }
 
@@ -42,8 +40,7 @@ public class LocationInfo extends BaseObservable {
         notifyPropertyChanged(BR.address);
     }
 
-    @Bindable
-    public double getLatitude() {
+    @Bindable public double getLatitude() {
         return latitude;
     }
 
@@ -52,8 +49,7 @@ public class LocationInfo extends BaseObservable {
         notifyPropertyChanged(BR.latitude);
     }
 
-    @Bindable
-    public double getLongitude() {
+    @Bindable public double getLongitude() {
         return longitude;
     }
 

@@ -23,8 +23,7 @@ public class OrderTran extends BaseObservable {
         notifyPropertyChanged(BR.tranOrderId);
     }
 
-    @Bindable
-    public String getTranSimpleDesc() {
+    @Bindable public String getTranSimpleDesc() {
         return tranSimpleDesc;
     }
 
@@ -33,8 +32,7 @@ public class OrderTran extends BaseObservable {
         notifyPropertyChanged(BR.tranSimpleDesc);
     }
 
-    @Bindable
-    public String getTranDesc() {
+    @Bindable public String getTranDesc() {
         return tranDesc;
     }
 
@@ -43,8 +41,7 @@ public class OrderTran extends BaseObservable {
         notifyPropertyChanged(BR.tranDesc);
     }
 
-    @Bindable
-    public double getTotalMoney() {
+    @Bindable public double getTotalMoney() {
         return totalMoney;
     }
 
@@ -53,8 +50,7 @@ public class OrderTran extends BaseObservable {
         notifyPropertyChanged(BR.totalMoney);
     }
 
-    @Bindable
-    public String getAlipayNotifyUrl() {
+    @Bindable public String getAlipayNotifyUrl() {
         return alipayNotifyUrl;
     }
 
@@ -63,8 +59,7 @@ public class OrderTran extends BaseObservable {
         notifyPropertyChanged(BR.alipayNotifyUrl);
     }
 
-    @Bindable
-    public int getCanUseWallet() {
+    @Bindable public int getCanUseWallet() {
         return canUseWallet;
     }
 
