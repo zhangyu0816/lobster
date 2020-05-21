@@ -10,7 +10,6 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import java.security.MessageDigest;
 
 import androidx.annotation.NonNull;
-import jp.wasabeef.glide.transformations.internal.FastBlur;
 
 public class BlurTransformation extends BitmapTransformation {
 

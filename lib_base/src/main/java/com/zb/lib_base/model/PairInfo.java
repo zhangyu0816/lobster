@@ -15,14 +15,14 @@ public class PairInfo extends BaseObservable {
     private String nick = ""; //昵称
     private String moreImages = "";//多图
     private String personalitySign = ""; //个性签名
-    private String birthday = "1988-08-16";
+    private String birthday = "";
     private int age;//年龄
     private int sex;//性别  0女  1男
     private int idAttest;//是否实名认证  0未认证  1认证
-    private long provinceId = 11;  //省份id
-    private long cityId = 89;   //地区id
-    private long districtId = 858;
-    private String distance = "1000";
+    private long provinceId = 0;  //省份id
+    private long cityId = 0;   //地区id
+    private long districtId = 0;
+    private String distance = "";
     private List<String> imageList = new ArrayList<>();
 
     @Bindable

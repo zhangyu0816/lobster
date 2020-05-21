@@ -10,6 +10,9 @@ public class CollectID extends RealmObject {
     private long collectId;
     private long userId;
 
+    public CollectID() {
+    }
+
     public CollectID(long collectId) {
         this.collectId = collectId;
         this.userId = BaseActivity.userId;

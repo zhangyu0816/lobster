@@ -40,7 +40,7 @@ import com.zb.lib_base.views.card.OnSwipeListener;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.CountUsedPW;
 import com.zb.lib_base.windows.SuperLikePW;
-import com.zb.lib_base.windows.VipAdPW;
+import com.zb.module_card.windows.VipAdPW;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;
 import com.zb.module_card.adapter.CardAdapter;

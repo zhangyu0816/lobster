@@ -26,6 +26,9 @@ public class ChatList extends RealmObject {
     //租号不可见
 
 
+    public ChatList() {
+    }
+
     public long getUserId() {
         return userId;
     }

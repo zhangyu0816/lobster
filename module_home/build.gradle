@@ -73,6 +73,7 @@ dependencies {
     implementation project(':lib_base')
     implementation project(':imagebrowserlib')
     implementation project(':module_camera')
+    implementation project(':xbanner')
     if (!isNeedHomeModule.toBoolean())
         if (isNeedBottleModule.toBoolean()) {
             implementation project(':module_bottle')

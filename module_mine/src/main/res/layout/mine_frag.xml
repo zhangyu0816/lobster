@@ -239,7 +239,7 @@
                             tools:text="为了减肥了我劳务纠纷另外二九六我来我家 " />
 
                         <ImageView
-                            onClickDelayed="@{viewModel.openVip}"
+                            onClickDelayed="@{viewModel::openVip}"
                             viewHeightSize="@{ObjectUtils.getVipBgHeight(0.95f)}"
                             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.95f)}"
                             android:layout_width="match_parent"

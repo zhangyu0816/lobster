@@ -1,4 +1,4 @@
-package com.zb.lib_base.windows;
+package com.zb.module_card.windows;
 
 import android.content.Context;
 import android.view.View;
@@ -8,15 +8,16 @@ import com.app.abby.xbanner.Ads;
 import com.app.abby.xbanner.ImageLoader;
 import com.app.abby.xbanner.XBanner;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import com.zb.lib_base.BR;
-import com.zb.lib_base.R;
 import com.zb.lib_base.adapter.AdapterBinding;
-import com.zb.lib_base.adapter.BaseAdapter;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.databinding.PwsVipAdBinding;
 import com.zb.lib_base.model.VipAd;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
+import com.zb.lib_base.windows.BasePopupWindow;
+import com.zb.module_card.BR;
+import com.zb.module_card.R;
+import com.zb.module_card.adapter.CardAdapter;
+import com.zb.module_card.databinding.PwsVipAdBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.List;
 public class VipAdPW extends BasePopupWindow {
     private List<VipAd> vipAdList = new ArrayList<>();
     private List<Ads> adsList = new ArrayList<>();
-    private BaseAdapter adapter;
+    private CardAdapter adapter;
     private int preIndex = -1;
     private PwsVipAdBinding binding;
 
@@ -67,7 +68,7 @@ public class VipAdPW extends BasePopupWindow {
 
     @Override
     public void initUI() {
-        adapter = new BaseAdapter<>(activity, R.layout.item_vip_ad, MineApp.vipInfoList, this);
+        adapter = new CardAdapter<>(activity, R.layout.item_vip_ad, MineApp.vipInfoList, this);
         mBinding.setVariable(BR.pw, this);
 
         mBinding.setVariable(BR.adapter, adapter);
