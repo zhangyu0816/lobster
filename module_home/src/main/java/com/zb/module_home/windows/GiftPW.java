@@ -3,14 +3,7 @@ package com.zb.module_home.windows;
 import android.view.View;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import com.zb.lib_base.api.payOrderForTranApi;
-import com.zb.lib_base.api.submitOrderApi;
-import com.zb.lib_base.api.walletPayTranApi;
-import com.zb.lib_base.http.HttpManager;
-import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.GiftInfo;
-import com.zb.lib_base.model.OrderNumber;
-import com.zb.lib_base.model.OrderTran;
 import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -29,13 +22,13 @@ public class GiftPW extends BasePopupWindow {
     private HomeAdapter adapter;
     private List<GiftInfo> giftInfoList;
     private int preIndex = -1;
-    private long friendDynId;
+    private CallBack mCallBack;
 
-    public GiftPW(RxAppCompatActivity activity, View parentView, WalletInfo walletInfo, List<GiftInfo> giftInfoList, long friendDynId) {
+    public GiftPW(RxAppCompatActivity activity, View parentView, WalletInfo walletInfo, List<GiftInfo> giftInfoList, CallBack callBack) {
         super(activity, parentView, true);
         this.walletInfo = walletInfo;
         this.giftInfoList = giftInfoList;
-        this.friendDynId = friendDynId;
+        mCallBack = callBack;
         initUI();
     }
 
@@ -93,47 +86,11 @@ public class GiftPW extends BasePopupWindow {
             SCToastUtil.showToastBlack(activity, "钱包余额不足，请先充值");
             return;
         }
-        submitOrder();
+        mCallBack.selectGiftInfo(giftInfoList.get(preIndex));
+        dismiss();
     }
 
-    private void submitOrder() {
-        submitOrderApi api = new submitOrderApi(new HttpOnNextListener<OrderNumber>() {
-            @Override
-            public void onNext(OrderNumber o) {
-                payOrderForTran(o.getOrderNumber());
-            }
-        }, activity).setFriendDynId(friendDynId).setGiftId(giftInfoList.get(preIndex).getGiftId());
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    /**
-     * 获取交易订单号
-     *
-     * @param orderNumber
-     */
-    private void payOrderForTran(String orderNumber) {
-        payOrderForTranApi api = new payOrderForTranApi(new HttpOnNextListener<OrderTran>() {
-            @Override
-            public void onNext(OrderTran o) {
-                walletPayTran(o.getTranOrderId());
-            }
-        }, activity).setOrderNumber(orderNumber);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    /**
-     * 钱包支付
-     *
-     * @param tranOrderId
-     */
-    private void walletPayTran(String tranOrderId) {
-        walletPayTranApi api = new walletPayTranApi(new HttpOnNextListener() {
-            @Override
-            public void onNext(Object o) {
-                dismiss();
-                new GiveSuccessPW(activity, mBinding.getRoot(), giftInfoList.get(preIndex));
-            }
-        }, activity).setTranOrderId(tranOrderId);
-        HttpManager.getInstance().doHttpDeal(api);
+    public interface CallBack {
+        void selectGiftInfo(GiftInfo giftInfo);
     }
 }

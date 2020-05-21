@@ -11,6 +11,7 @@ import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.BottleInfo;
+import com.zb.lib_base.model.BottleMsg;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_bottle.BR;
@@ -103,9 +104,9 @@ public class BottleContentPW extends BasePopupWindow {
 
     // 回信
     private void replyBottle() {
-        replyBottleApi api = new replyBottleApi(new HttpOnNextListener() {
+        replyBottleApi api = new replyBottleApi(new HttpOnNextListener<BottleMsg>() {
             @Override
-            public void onNext(Object o) {
+            public void onNext(BottleMsg o) {
                 SCToastUtil.showToastBlack(activity, "回信成功");
                 dismiss();
             }

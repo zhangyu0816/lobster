@@ -6,6 +6,7 @@
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.BottleThrowActivity" />
         <activity android:name=".activity.BottleListActivity" />
+        <activity android:name=".activity.BottleChatActivity" />
     </application>
 
 </manifest>

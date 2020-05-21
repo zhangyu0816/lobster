@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import com.app.abby.xbanner.Ads;
 import com.app.abby.xbanner.XBanner;
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.api.attentionOtherApi;
@@ -19,6 +20,7 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.ObjectUtils;
@@ -55,7 +57,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         super.setBinding(binding);
         areaDb = new AreaDb(Realm.getDefaultInstance());
         attentionDb = new AttentionDb(Realm.getDefaultInstance());
-        selectorList.add("举报");
+        if (otherUserId != BaseActivity.userId)
+            selectorList.add("举报");
         selectorList.add("分享");
         detailBinding = (CardMemberDetailBinding) binding;
         mBinding.setVariable(BR.baseInfo, "");
@@ -186,7 +189,11 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         super.more(view);
         new SelectorPW(activity, mBinding.getRoot(), selectorList, position -> {
             if (position == 0) {
+                if (otherUserId != BaseActivity.userId) {
+                    ActivityUtils.getHomeReport(otherUserId);
+                } else {
 
+                }
             } else if (position == 1) {
 
             }

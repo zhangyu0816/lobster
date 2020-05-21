@@ -4,6 +4,7 @@ package com.zb.lib_base.http;
 import com.zb.lib_base.model.AliPay;
 import com.zb.lib_base.model.BaseResultEntity;
 import com.zb.lib_base.model.BottleInfo;
+import com.zb.lib_base.model.BottleMsg;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
@@ -18,6 +19,7 @@ import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.OrderNumber;
 import com.zb.lib_base.model.OrderTran;
 import com.zb.lib_base.model.PairInfo;
+import com.zb.lib_base.model.Report;
 import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.model.Reward;
@@ -115,6 +117,15 @@ public interface HttpService {
     @GET("api/Tran_rechargeWallet")
     Observable<BaseResultEntity<OrderTran>> rechargeWallet(@Query("money") double money);
 
+
+    @GET("api/Complain_comType")
+    Observable<BaseResultEntity<List<Report>>> comType();
+
+    @FormUrlEncoded
+    @POST("api/Complain_comsub")
+    Observable<BaseResultEntity> comsub(@Field("complainTypeId") long complainTypeId, @Field("comUserId") long comUserId, @Field("comText") String comText,
+                                        @Field("images") String images);
+
     /******************************* app **********************************/
 
     // 会员价格
@@ -179,7 +190,8 @@ public interface HttpService {
 
     // 创建订单
     @GET("api/Gift_submitOrder")
-    Observable<BaseResultEntity<OrderNumber>> submitOrder(@Query("friendDynId") long friendDynId, @Query("giftId") long giftId);
+    Observable<BaseResultEntity<OrderNumber>> submitOrder(@Query("friendDynId") long friendDynId, @Query("giftId") long giftId,
+                                                          @Query("giftNum") int giftNum);
 
     // 打赏列表
     @GET("api/Interactive_seeGiftRewards")
@@ -241,6 +253,10 @@ public interface HttpService {
     /******************************* 对话 **********************************/
 
     // 未读会话列表
+    @GET("api/Pair_pairList")
+    Observable<BaseResultEntity<List<ChatList>>> pairList(@Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("isPublicAccount") int isPublicAccount);
+
+    // 未读会话列表
     @GET("api/Contact_thirdChatList")
     Observable<BaseResultEntity<List<ChatList>>> chatList(@Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("isPublicAccount") int isPublicAccount);
 
@@ -256,6 +272,10 @@ public interface HttpService {
     @GET("api/DriftBottle_myBottleList")
     Observable<BaseResultEntity<List<BottleInfo>>> myBottleList(@Query("pageNo") int pageNo);
 
+    // 我的漂流瓶列表
+    @GET("api/DriftBottle_myBottle")
+    Observable<BaseResultEntity<BottleInfo>> myBottle(@Query("driftBottleId") long driftBottleId);
+
     // 寻找漂流瓶
     @GET("api/DriftBottle_findBottle")
     Observable<BaseResultEntity<BottleInfo>> findBottle();
@@ -267,7 +287,7 @@ public interface HttpService {
 
     // 回复漂流瓶
     @GET("api/DriftBottle_replyBottle")
-    Observable<BaseResultEntity> replyBottle(@Query("driftBottleId") long driftBottleId, @Query("text") String text);
+    Observable<BaseResultEntity<BottleMsg>> replyBottle(@Query("driftBottleId") long driftBottleId, @Query("text") String text);
 
     /******************************* 我的 **********************************/
 
@@ -329,7 +349,7 @@ public interface HttpService {
 
     // 交易记录
     @GET("api/Tran_tranRecords")
-    Observable<BaseResultEntity<List<TranRecord>>> tranRecords(@QueryMap Map<String,String> map);
+    Observable<BaseResultEntity<List<TranRecord>>> tranRecords(@QueryMap Map<String, String> map);
 
     // 交易记录
     @GET("api/Tran_tranSingleRecord")

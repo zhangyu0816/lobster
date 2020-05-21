@@ -11,6 +11,7 @@ public class RouteUtils {
     public static final String Home_Publish_image = "/home/PublishImageActivity";
     public static final String Home_Discover_Detail = "/home/DiscoverDetailActivity";
     public static final String Home_Reward_List = "/home/RewardListActivity";
+    public static final String Home_Report = "/home/ReportActivity";
 
 
     /*********************** 卡片 **************************/
@@ -110,4 +111,6 @@ public class RouteUtils {
     public static final String Bottle_Throw = "/bottle/BottleThrowActivity";
     // 漂流列表
     public static final String Bottle_List = "/bottle/BottleListActivity";
+    // 漂流瓶聊天
+    public static final String Bottle_Chat = "/bottle/BottleChatActivity";
 }

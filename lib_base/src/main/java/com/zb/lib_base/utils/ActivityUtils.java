@@ -26,6 +26,11 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Home_Reward_List).withLong("friendDynId", friendDynId).navigation();
     }
 
+    // 礼物列表
+    public static void getHomeReport(long otherUserId) {
+        ARouter.getInstance().build(RouteUtils.Home_Report).withLong("otherUserId", otherUserId).navigation();
+    }
+
     /*********************** 卡片 **************************/
     // 用户详情
     public static void getCardMemberDetail(long userId) {
@@ -34,8 +39,8 @@ public class ActivityUtils {
 
     /*********************** 对话 **************************/
     // 对话页
-    public static void getChatActivity() {
-        ARouter.getInstance().build(RouteUtils.Chat_Activity).navigation();
+    public static void getChatActivity(long otherUserId, int type) {
+        ARouter.getInstance().build(RouteUtils.Chat_Activity).withLong("otherUserId", otherUserId).withInt("type", type).navigation();
     }
 
     /*********************** 我的 **************************/
@@ -219,5 +224,10 @@ public class ActivityUtils {
     // 漂流瓶主页
     public static void getBottleList() {
         ARouter.getInstance().build(RouteUtils.Bottle_List).navigation();
+    }
+
+    // 漂流瓶主页
+    public static void getBottleChat(long driftBottleId, String nick) {
+        ARouter.getInstance().build(RouteUtils.Bottle_Chat).withLong("driftBottleId", driftBottleId).withString("nick", nick).navigation();
     }
 }

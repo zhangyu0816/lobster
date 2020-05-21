@@ -37,6 +37,7 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".activity.DiscoverDetailActivity" />
         <activity android:name=".activity.RewardListActivity" />
+        <activity android:name=".activity.ReportActivity" />
     </application>
 
 </manifest>

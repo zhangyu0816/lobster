@@ -6,11 +6,22 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 public class BottleMsg extends BaseObservable {
+    long driftBottleId;   //所属漂流瓶
     long userId;// 回复者id
     long forUserId;// 对方的userId
     int isRead;//是否读取 1读取 0未读
     int isPass; //是否通过审核 1通过 0不通过
     String text = ""; //回复内容
+
+    @Bindable
+    public long getDriftBottleId() {
+        return driftBottleId;
+    }
+
+    public void setDriftBottleId(long driftBottleId) {
+        this.driftBottleId = driftBottleId;
+        notifyPropertyChanged(BR.driftBottleId);
+    }
 
     @Bindable
     public long getUserId() {
@@ -22,7 +33,8 @@ public class BottleMsg extends BaseObservable {
         notifyPropertyChanged(BR.userId);
     }
 
-    @Bindable public long getForUserId() {
+    @Bindable
+    public long getForUserId() {
         return forUserId;
     }
 
@@ -31,7 +43,8 @@ public class BottleMsg extends BaseObservable {
         notifyPropertyChanged(BR.forUserId);
     }
 
-    @Bindable public int getIsRead() {
+    @Bindable
+    public int getIsRead() {
         return isRead;
     }
 
@@ -40,7 +53,8 @@ public class BottleMsg extends BaseObservable {
         notifyPropertyChanged(BR.isRead);
     }
 
-    @Bindable public int getIsPass() {
+    @Bindable
+    public int getIsPass() {
         return isPass;
     }
 
@@ -49,7 +63,8 @@ public class BottleMsg extends BaseObservable {
         notifyPropertyChanged(BR.isPass);
     }
 
-    @Bindable public String getText() {
+    @Bindable
+    public String getText() {
         return text;
     }
 

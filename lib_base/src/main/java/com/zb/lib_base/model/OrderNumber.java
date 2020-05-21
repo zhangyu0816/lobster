@@ -12,8 +12,10 @@ public class OrderNumber extends BaseObservable {
     double productPrice;   //产品单价
     int productCount;  //数量
     double totalMoney; //订单总金额
-    String createTime;
+    String createTime = "";
     int isPayed;  //是否已支付  0未支付  调用支付  1.已支付-提示下单成功
+
+    String number = "";
 
     @Bindable
     public String getOrderNumber() {
@@ -93,5 +95,15 @@ public class OrderNumber extends BaseObservable {
     public void setIsPayed(int isPayed) {
         this.isPayed = isPayed;
         notifyPropertyChanged(BR.isPayed);
+    }
+
+    @Bindable
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+        notifyPropertyChanged(BR.number);
     }
 }

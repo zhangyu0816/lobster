@@ -13,6 +13,7 @@ import com.app.abby.xbanner.XBanner;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
@@ -53,6 +54,7 @@ import com.zb.module_home.adapter.HomeAdapter;
 import com.zb.module_home.databinding.HomeDiscoverDetailBinding;
 import com.zb.module_home.iv.DiscoverDetailVMInterface;
 import com.zb.module_home.windows.GiftPW;
+import com.zb.module_home.windows.GiftPayPW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,7 +138,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 if (position == 0) {
                     makeEvaluate();
                 } else if (position == 1) {
-
+                    ActivityUtils.getHomeReport(discoverInfo.getOtherUserId());
                 } else if (position == 2) {
 
                 }
@@ -159,7 +161,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void selectGift(View view) {
         if (walletInfo != null && giftInfoList.size() > 0)
-            new GiftPW(activity, mBinding.getRoot(), walletInfo, giftInfoList, friendDynId);
+            new GiftPW(activity, mBinding.getRoot(), walletInfo, giftInfoList, giftInfo ->
+                    new GiftPayPW(activity, mBinding.getRoot(), giftInfo, walletInfo, friendDynId));
     }
 
     @Override
