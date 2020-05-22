@@ -161,11 +161,26 @@ public class ObjectUtils {
             return "···";
     }
 
+    public static String count99(int count) {
+        if (count < 99)
+            return count + "";
+        else
+            return "99+";
+    }
+
     public static int textColor(int useType) {
-        if (useType==1) {
+        if (useType == 1) {
             return R.color.red_fe4;
         } else {
             return R.color.black_4d4;
+        }
+    }
+
+    public static int stanzaTextColor(int chatType) {
+        if (chatType == 3) {
+            return R.color.red_fe4;
+        } else {
+            return R.color.black_827;
         }
     }
 }

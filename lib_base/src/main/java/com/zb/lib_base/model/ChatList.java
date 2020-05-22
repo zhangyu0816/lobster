@@ -24,7 +24,7 @@ public class ChatList extends RealmObject {
     //不能发起预约
     //订单信息  人气  不可见
     //租号不可见
-
+    int chatType=0;// 1 喜欢我  2 漂流瓶  3超级喜欢  4 匹配成功
 
     public ChatList() {
     }
@@ -115,5 +115,13 @@ public class ChatList extends RealmObject {
 
     public void setMainUserId(long mainUserId) {
         this.mainUserId = mainUserId;
+    }
+
+    public int getChatType() {
+        return chatType;
+    }
+
+    public void setChatType(int chatType) {
+        this.chatType = chatType;
     }
 }

@@ -3,9 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <import type="android.view.View" />
 
         <import type="com.zb.lib_base.utils.ObjectUtils" />
+
         <variable
             name="viewModel"
             type="com.zb.module_chat.vm.ChatPairViewModel" />
@@ -26,22 +28,59 @@
         android:layout_height="wrap_content"
         android:padding="15dp">
 
-        <ImageView
-            android:id="@+id/iv_image"
-            defaultRes="@{ObjectUtils.getDefaultRes()}"
-            imageUrl="@{item.image}"
-            isCircle="@{true}"
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="15dp" />
+        <RelativeLayout
+            android:id="@+id/image_relative"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp">
+
+            <ImageView
+                android:id="@+id/iv_image"
+                defaultRes="@{ObjectUtils.getDefaultRes()}"
+                imageUrl="@{item.image}"
+                isCircle="@{true}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@{ObjectUtils.count99(item.noReadNum)}"
+                android:textSize="15sp"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:visibility="@{item.chatType==1?View.VISIBLE:View.GONE}"
+                tools:text="99+" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/iv_image"
+                android:layout_alignBottom="@+id/iv_image"
+                android:layout_marginEnd="-10dp"
+                android:background="@mipmap/be_like_tag"
+                android:visibility="@{item.chatType==1?View.VISIBLE:View.GONE}" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/iv_image"
+                android:layout_alignBottom="@+id/iv_image"
+                android:layout_marginEnd="-10dp"
+                android:background="@mipmap/super_like_tag"
+                android:visibility="@{item.chatType==3?View.VISIBLE:View.GONE}" />
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/tv_nick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/iv_image"
+            android:layout_toEndOf="@+id/image_relative"
             android:text="@{item.nick}"
             android:textColor="@color/black_252"
             android:textSize="16sp"
@@ -52,7 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:text='@{item==null?"":item.creationDate.substring(11,16)}'
+            android:text='@{(item==null||item.creationDate.isEmpty())?"":item.creationDate.substring(11,16)}'
             android:textColor="@color/black_827"
             android:textSize="12sp"
             tools:text="20:02" />
@@ -63,10 +102,10 @@
             android:layout_below="@+id/tv_nick"
             android:layout_marginTop="10dp"
             android:layout_toStartOf="@+id/tv_num"
-            android:layout_toEndOf="@+id/iv_image"
+            android:layout_toEndOf="@+id/image_relative"
             android:singleLine="true"
             android:text='@{ObjectUtils.getStanza(item.stanza,item.msgType)}'
-            android:textColor="@color/black_827"
+            android:textColor="@{ObjectUtils.stanzaTextColor(item.chatType)}"
             android:textSize="14sp"
             tools:text="二五零附近未来房价我了文旅局为了将放了假了来房价未  无法就为了附件为了减肥了就" />
 
@@ -80,10 +119,26 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/circle_red"
             android:gravity="center"
-            android:text='@{String.format("%d",item.noReadNum)}'
+            android:text="@{ObjectUtils.count(item.noReadNum)}"
             android:textColor="@android:color/white"
             android:textSize="9sp"
-            android:visibility="@{item.noReadNum==0?View.GONE:View.VISIBLE}"
+            android:visibility="@{(item.chatType==1||item.chatType==3)?View.GONE:(item.noReadNum==0?View.GONE:View.VISIBLE)}"
             tools:text="99" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_below="@+id/tv_nick"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_bg_red_fe4_radius40"
+            android:gravity="center"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:text="了解Ta"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:visibility="@{item.chatType==3?View.VISIBLE:View.GONE}" />
     </RelativeLayout>
 </layout>

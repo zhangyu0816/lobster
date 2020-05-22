@@ -4,6 +4,11 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.adapter.BindingItemAdapter;
 import com.zb.lib_base.adapter.ItemTouchHelperAdapter;
 import com.zb.lib_base.adapter.RecyclerHolder;
+import com.zb.lib_base.api.contactNumApi;
+import com.zb.lib_base.api.otherInfoApi;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.BR;
@@ -42,6 +47,28 @@ public class MineAdapter<T> extends BindingItemAdapter<T> implements ItemTouchHe
         }
         if (viewModel instanceof FCLViewModel) {
             ((FCLViewModel) viewModel).getContactNum((MemberInfo) t, position);
+        }
+        if (viewModel instanceof FCLViewModel) {
+            if (((FCLViewModel) viewModel).position == 2) {
+                otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
+                    @Override
+                    public void onNext(MemberInfo o) {
+                        ((MemberInfo) t).setPersonalitySign(o.getPersonalitySign());
+                        notifyItemChanged(position);
+                    }
+                }, mContext).setOtherUserId(((MemberInfo) t).getUserId());
+                HttpManager.getInstance().doHttpDeal(api);
+            } else {
+                contactNumApi api = new contactNumApi(new HttpOnNextListener<ContactNum>() {
+                    @Override
+                    public void onNext(ContactNum o) {
+                        ((MemberInfo) t).setBeLikeQuantity(o.getBeLikeCount());
+                        ((MemberInfo) t).setFansQuantity(o.getFansCount());
+                        notifyItemChanged(position);
+                    }
+                },mContext).setOtherUserId(((MemberInfo) t).getUserId());
+                HttpManager.getInstance().doHttpDeal(api);
+            }
         }
         holder.binding.executePendingBindings();
     }

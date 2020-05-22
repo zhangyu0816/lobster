@@ -55,11 +55,6 @@ public class MemberInfo extends BaseObservable {
 //    私密视频图片 14 (未使用)
 //    私密视频图文 15 (未使用)
 
-    // 喜欢我的人列表
-    long otherUserId; //对方用户的id
-    int likeOtherStatus;// 0 不喜欢  1 喜欢  2.超级喜欢
-    String headImage = ""; // 头像
-
     @Bindable
     public long getUserId() {
         return userId;
@@ -338,32 +333,5 @@ public class MemberInfo extends BaseObservable {
     public void setAttentionStatus(int attentionStatus) {
         this.attentionStatus = attentionStatus;
         notifyPropertyChanged(BR.attentionStatus);
-    }
-
-    @Bindable public long getOtherUserId() {
-        return otherUserId;
-    }
-
-    public void setOtherUserId(long otherUserId) {
-        this.otherUserId = otherUserId;
-        notifyPropertyChanged(BR.otherUserId);
-    }
-
-    @Bindable public int getLikeOtherStatus() {
-        return likeOtherStatus;
-    }
-
-    public void setLikeOtherStatus(int likeOtherStatus) {
-        this.likeOtherStatus = likeOtherStatus;
-        notifyPropertyChanged(BR.likeOtherStatus);
-    }
-
-    @Bindable public String getHeadImage() {
-        return headImage;
-    }
-
-    public void setHeadImage(String headImage) {
-        this.headImage = headImage;
-        notifyPropertyChanged(BR.headImage);
     }
 }

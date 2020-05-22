@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class RecyclerAdapter<T, B extends ViewDataBinding> extends RecyclerView.Adapter<RecyclerHolder<B>> {
 
-    private RxAppCompatActivity mContext;
+    public RxAppCompatActivity mContext;
     private List<T> mList;
     private int layoutId;
 

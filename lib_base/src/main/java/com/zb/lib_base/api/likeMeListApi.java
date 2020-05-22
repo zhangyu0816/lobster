@@ -4,17 +4,26 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.model.BaseEntity;
+import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.MemberInfo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import rx.Observable;
 
-public class likeMeListApi extends BaseEntity<List<MemberInfo>> {
+public class likeMeListApi extends BaseEntity<List<LikeMe>> {
     int pageNo;
+    int likeOtherStatus;//1 喜欢  2.超级喜欢 [只有会员可以查看 喜欢我的人 , 不是会员只能查看超级喜欢我的人]
 
     public likeMeListApi setPageNo(int pageNo) {
         this.pageNo = pageNo;
+        return this;
+    }
+
+    public likeMeListApi setLikeOtherStatus(int likeOtherStatus) {
+        this.likeOtherStatus = likeOtherStatus;
         return this;
     }
 
@@ -25,6 +34,10 @@ public class likeMeListApi extends BaseEntity<List<MemberInfo>> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.likeMeList(pageNo);
+        Map<String, String> map = new HashMap<>();
+        if (pageNo > 0)
+            map.put("pageNo", pageNo + "");
+        map.put("likeOtherStatus", likeOtherStatus + "");
+        return methods.likeMeList(map);
     }
 }

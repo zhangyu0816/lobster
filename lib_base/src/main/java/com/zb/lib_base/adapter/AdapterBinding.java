@@ -195,6 +195,10 @@ public class AdapterBinding {
             } else {
                 if (imageUrl != null && imageUrl.equals("add_image_icon")) {
                     builder.load(R.mipmap.add_image_icon).into(view);
+                } else if (imageUrl != null && imageUrl.equals("be_like_logo_icon")) {
+                    builder.load(R.mipmap.be_like_logo_icon).into(view);
+                } else if (imageUrl != null && imageUrl.equals("bottle_logo_icon")) {
+                    builder.load(R.mipmap.bottle_logo_icon).into(view);
                 } else {
                     builder.load(imageUrl).into(view);
                 }

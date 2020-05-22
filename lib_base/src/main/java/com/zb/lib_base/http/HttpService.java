@@ -5,6 +5,7 @@ import com.zb.lib_base.model.AliPay;
 import com.zb.lib_base.model.BaseResultEntity;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.BottleMsg;
+import com.zb.lib_base.model.BottleNoRead;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
@@ -27,6 +28,7 @@ import com.zb.lib_base.model.TranRecord;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WXPay;
 import com.zb.lib_base.model.WalletInfo;
+import com.zb.lib_base.model.LikeMe;
 
 import java.util.List;
 import java.util.Map;
@@ -289,6 +291,10 @@ public interface HttpService {
     @GET("api/DriftBottle_replyBottle")
     Observable<BaseResultEntity<BottleMsg>> replyBottle(@Query("driftBottleId") long driftBottleId, @Query("text") String text);
 
+    // 漂流瓶未读数量
+    @GET("api/DriftBottle_noReadBottleNum")
+    Observable<BaseResultEntity<BottleNoRead>> noReadBottleNum();
+
     /******************************* 我的 **********************************/
 
     // 修改个人信息
@@ -325,7 +331,7 @@ public interface HttpService {
 
     // 喜欢我的人列表
     @GET("api/Pair_likeMeList")
-    Observable<BaseResultEntity<List<MemberInfo>>> likeMeList(@Query("pageNo") int pageNo);
+    Observable<BaseResultEntity<List<LikeMe>>> likeMeList(@QueryMap Map<String,String> map);
 
     // 新消息列表
     @GET("api/Interactive_dynNewMsgList")

@@ -34,4 +34,12 @@ public class ChatListDb extends BaseDao {
         return chatMsgList;
     }
 
+    // 单个用户的最新聊天记录
+    public ChatList getChatMsg(long otherUserId) {
+        beginTransaction();
+        ChatList chatList = realm.where(ChatList.class).equalTo("userId", otherUserId).equalTo("mainUserId", BaseActivity.userId).findFirst();
+        commitTransaction();
+        return chatList;
+    }
+
 }

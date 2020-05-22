@@ -19,6 +19,7 @@ import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.ContactNum;
+import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -209,15 +210,17 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
 
     @Override
     public void likeMeList() {
-        likeMeListApi api = new likeMeListApi(new HttpOnNextListener<List<MemberInfo>>() {
+        likeMeListApi api = new likeMeListApi(new HttpOnNextListener<List<LikeMe>>() {
             @Override
-            public void onNext(List<MemberInfo> o) {
-                for (MemberInfo memberInfo : o) {
-                    memberInfo.setUserId(memberInfo.getOtherUserId());
-                    memberInfo.setImage(memberInfo.getHeadImage());
-                }
+            public void onNext(List<LikeMe> o) {
                 int start = memberInfoList.size();
-                memberInfoList.addAll(o);
+                for (LikeMe likeMe : o) {
+                    MemberInfo memberInfo = new MemberInfo();
+                    memberInfo.setUserId(likeMe.getOtherUserId());
+                    memberInfo.setImage(likeMe.getHeadImage());
+                    memberInfo.setNick(likeMe.getNick());
+                    memberInfoList.add(memberInfo);
+                }
                 adapter.notifyItemRangeChanged(start, memberInfoList.size());
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
@@ -229,7 +232,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                     mBinding.refresh.setEnableLoadMore(false);
                 }
             }
-        }, activity).setPageNo(pageNo);
+        }, activity).setPageNo(pageNo).setLikeOtherStatus(1);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

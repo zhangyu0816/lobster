@@ -4,4 +4,8 @@ public interface ChatPairVMInterface {
     void selectIndex(int position);
 
     void contactNum();
+
+    void noReadBottleNum();
+
+    void likeMeList(int likeOtherStatus);
 }
