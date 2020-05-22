@@ -107,7 +107,11 @@ public class BottleContentPW extends BasePopupWindow {
         replyBottleApi api = new replyBottleApi(new HttpOnNextListener<BottleMsg>() {
             @Override
             public void onNext(BottleMsg o) {
-                SCToastUtil.showToastBlack(activity, "回信成功");
+                if (o == null) {
+                    SCToastUtil.showToastBlack(activity, "此漂流瓶已被销毁");
+                } else {
+                    SCToastUtil.showToastBlack(activity, "回信成功");
+                }
                 dismiss();
             }
         }, activity).setDriftBottleId(bottleInfo.getDriftBottleId()).setText(binding.edContent.getText().toString());

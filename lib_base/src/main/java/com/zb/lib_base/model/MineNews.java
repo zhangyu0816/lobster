@@ -8,7 +8,7 @@ import androidx.databinding.Bindable;
 
 public class MineNews extends BaseObservable {
     long reviewMsgId;//消息id
-    long friendDynamicGiftId;  //赠礼记录id
+
     //动态的信息
     long friendDynamicId;
     String friendDynamicText = "";
@@ -31,6 +31,10 @@ public class MineNews extends BaseObservable {
     int reviewType; //1评论  2.点赞 3.礼物
     String text = ""; //评论的消息
     String createTime = "";  //消息时间
+    long friendDynamicGiftId;  //赠礼记录id
+    long giftNumber;        //数量
+    String giftImage = "";        //礼物图片
+    String giftName = "";        //礼物图片
 
     @Bindable
     public long getReviewMsgId() {
@@ -42,7 +46,8 @@ public class MineNews extends BaseObservable {
         notifyPropertyChanged(BR.reviewMsgId);
     }
 
-    @Bindable public long getFriendDynamicGiftId() {
+    @Bindable
+    public long getFriendDynamicGiftId() {
         return friendDynamicGiftId;
     }
 
@@ -51,7 +56,8 @@ public class MineNews extends BaseObservable {
         notifyPropertyChanged(BR.friendDynamicGiftId);
     }
 
-    @Bindable public long getFriendDynamicId() {
+    @Bindable
+    public long getFriendDynamicId() {
         return friendDynamicId;
     }
 
@@ -60,7 +66,8 @@ public class MineNews extends BaseObservable {
         notifyPropertyChanged(BR.friendDynamicId);
     }
 
-    @Bindable public String getFriendDynamicText() {
+    @Bindable
+    public String getFriendDynamicText() {
         return friendDynamicText;
     }
 
@@ -69,7 +76,8 @@ public class MineNews extends BaseObservable {
         notifyPropertyChanged(BR.friendDynamicText);
     }
 
-    @Bindable public String getFriendDynamicImages() {
+    @Bindable
+    public String getFriendDynamicImages() {
         return friendDynamicImages;
     }
 
@@ -78,7 +86,8 @@ public class MineNews extends BaseObservable {
         notifyPropertyChanged(BR.friendDynamicImages);
     }
 
-    @Bindable public int getFriendDynamicImageSize() {
+    @Bindable
+    public int getFriendDynamicImageSize() {
         return friendDynamicImageSize;
     }
 
@@ -87,7 +96,8 @@ public class MineNews extends BaseObservable {
         notifyPropertyChanged(BR.friendDynamicImageSize);
     }
 
-    @Bindable public String getFriendDynamicVideoUrl() {
+    @Bindable
+    public String getFriendDynamicVideoUrl() {
         return friendDynamicVideoUrl;
     }
 
@@ -96,7 +106,8 @@ public class MineNews extends BaseObservable {
         notifyPropertyChanged(BR.friendDynamicVideoUrl);
     }
 
-    @Bindable public int getFriendDynamicDycType() {
+    @Bindable
+    public int getFriendDynamicDycType() {
         return friendDynamicDycType;
     }
 
@@ -105,7 +116,8 @@ public class MineNews extends BaseObservable {
         notifyPropertyChanged(BR.friendDynamicDycType);
     }
 
-    @Bindable public long getReviewUserId() {
+    @Bindable
+    public long getReviewUserId() {
         return reviewUserId;
     }
 
@@ -114,7 +126,8 @@ public class MineNews extends BaseObservable {
         notifyPropertyChanged(BR.reviewUserId);
     }
 
-    @Bindable public String getReviewUserNick() {
+    @Bindable
+    public String getReviewUserNick() {
         return reviewUserNick;
     }
 
@@ -123,7 +136,8 @@ public class MineNews extends BaseObservable {
         notifyPropertyChanged(BR.reviewUserNick);
     }
 
-    @Bindable public String getReviewUserImage() {
+    @Bindable
+    public String getReviewUserImage() {
         return reviewUserImage;
     }
 
@@ -132,7 +146,8 @@ public class MineNews extends BaseObservable {
         notifyPropertyChanged(BR.reviewUserImage);
     }
 
-    @Bindable public int getReviewType() {
+    @Bindable
+    public int getReviewType() {
         return reviewType;
     }
 
@@ -141,7 +156,8 @@ public class MineNews extends BaseObservable {
         notifyPropertyChanged(BR.reviewType);
     }
 
-    @Bindable public String getText() {
+    @Bindable
+    public String getText() {
         return text;
     }
 
@@ -150,12 +166,43 @@ public class MineNews extends BaseObservable {
         notifyPropertyChanged(BR.text);
     }
 
-    @Bindable public String getCreateTime() {
+    @Bindable
+    public String getCreateTime() {
         return createTime;
     }
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
         notifyPropertyChanged(BR.createTime);
+    }
+
+    @Bindable
+    public long getGiftNumber() {
+        return giftNumber;
+    }
+
+    public void setGiftNumber(long giftNumber) {
+        this.giftNumber = giftNumber;
+        notifyPropertyChanged(BR.giftNumber);
+    }
+
+    @Bindable
+    public String getGiftImage() {
+        return giftImage;
+    }
+
+    public void setGiftImage(String giftImage) {
+        this.giftImage = giftImage;
+        notifyPropertyChanged(BR.giftImage);
+    }
+
+    @Bindable
+    public String getGiftName() {
+        return giftName;
+    }
+
+    public void setGiftName(String giftName) {
+        this.giftName = giftName;
+        notifyPropertyChanged(BR.giftName);
     }
 }

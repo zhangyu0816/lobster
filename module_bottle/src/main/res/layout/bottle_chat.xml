@@ -10,9 +10,15 @@
         <variable
             name="nick"
             type="String" />
+
+        <variable
+            name="content"
+            type="String" />
+
     </data>
 
     <RelativeLayout
+        android:id="@+id/main_relative"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -43,10 +49,49 @@
             adapter="@{viewModel.adapter}"
             recyclerType="@{1}"
             size="@{0}"
+            android:id="@+id/chat_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/relativeLayout3" />
+            android:layout_above="@+id/bottom_layout"
+            android:layout_below="@+id/relativeLayout3"
+            android:background="@color/black_efe" />
 
+        <RelativeLayout
+            android:id="@+id/bottom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
 
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/tv_send"
+                android:background="@null"
+                android:hint="输入文字"
+                android:padding="15dp"
+                android:text="@={content}"
+                android:layout_margin="10dp"
+                android:textColor="@color/black_4d4"
+                android:textColorHint="#C3BDCD"
+                android:textCursorDrawable="@drawable/cursor_color_black_4d4"
+                android:textSize="16sp" />
+
+            <TextView
+                onClickDelayed="@{viewModel::sendBottle}"
+                android:id="@+id/tv_send"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="15dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/btn_bg_purple_7a4_radius60"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:layout_marginStart="5dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="发送"
+                android:textColor="@android:color/white" />
+        </RelativeLayout>
     </RelativeLayout>
 </layout>

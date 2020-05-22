@@ -1,6 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
+
+        <import type="com.zb.lib_base.activity.BaseActivity" />
+
+        <import type="com.zb.lib_base.utils.DisplayUtils" />
+
+        <variable
+            name="item"
+            type="com.zb.lib_base.model.BottleMsg" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_bottle.vm.BottleChatViewModel" />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:visibility="@{item.userId!=BaseActivity.userId?View.VISIBLE:View.GONE}">
+
+            <ImageView
+                android:id="@+id/iv_other_logo"
+                defaultRes="@{ObjectUtils.getDefaultRes()}"
+                imageUrl="@{viewModel.bottleInfo.otherHeadImage}"
+                isCircle="@{true}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="30dp"
+                android:layout_toEndOf="@+id/iv_other_logo"
+                android:background="@drawable/btn_bg_white_radius5"
+                android:minWidth="100dp"
+                android:padding="15dp"
+                android:text="@{item.text}"
+                android:textColor="@color/black_252"
+                android:textSize="14sp"
+                tools:text="色附件为 库文件 未考虑附件为来房价为福建未来房价微了访问了访问访问" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:visibility="@{item.userId==BaseActivity.userId?View.VISIBLE:View.GONE}">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/btn_bg_purple_7a4_radius5"
+                android:minWidth="100dp"
+                android:layout_toStartOf="@+id/iv_mine_logo"
+                android:padding="15dp"
+                android:text="@{item.text}"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                tools:text="色附件为 库文件 " />
+
+            <ImageView
+                android:id="@+id/iv_mine_logo"
+                defaultRes="@{ObjectUtils.getDefaultRes()}"
+                imageUrl="@{viewModel.mineInfo.image}"
+                isCircle="@{true}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+</layout>

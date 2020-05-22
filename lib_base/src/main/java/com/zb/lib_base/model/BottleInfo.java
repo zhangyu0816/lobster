@@ -1,7 +1,6 @@
 package com.zb.lib_base.model;
 
 
-
 import com.zb.lib_base.BR;
 
 import java.util.ArrayList;
@@ -17,8 +16,8 @@ public class BottleInfo extends BaseObservable {
     int driftBottleType; //漂流瓶状态 .1.漂流中  2.被拾起  3.销毁
     long otherUserId; //拾起人id
     int noReadNum;//未读数量
-    String headImage = "";//头像
-    String nick = "";  //昵称
+    String otherHeadImage = "";//头像
+    String otherNick = "";  //昵称
     String createTime = "2020-04-20 14:44:00";
     private List<BottleMsg> messageList = new ArrayList<>();
 
@@ -32,7 +31,8 @@ public class BottleInfo extends BaseObservable {
         notifyPropertyChanged(BR.driftBottleId);
     }
 
-    @Bindable public long getUserId() {
+    @Bindable
+    public long getUserId() {
         return userId;
     }
 
@@ -41,7 +41,8 @@ public class BottleInfo extends BaseObservable {
         notifyPropertyChanged(BR.userId);
     }
 
-    @Bindable public String getText() {
+    @Bindable
+    public String getText() {
         return text;
     }
 
@@ -50,7 +51,8 @@ public class BottleInfo extends BaseObservable {
         notifyPropertyChanged(BR.text);
     }
 
-    @Bindable public int getDriftBottleType() {
+    @Bindable
+    public int getDriftBottleType() {
         return driftBottleType;
     }
 
@@ -59,7 +61,8 @@ public class BottleInfo extends BaseObservable {
         notifyPropertyChanged(BR.driftBottleType);
     }
 
-    @Bindable public long getOtherUserId() {
+    @Bindable
+    public long getOtherUserId() {
         return otherUserId;
     }
 
@@ -68,7 +71,8 @@ public class BottleInfo extends BaseObservable {
         notifyPropertyChanged(BR.otherUserId);
     }
 
-    @Bindable public int getNoReadNum() {
+    @Bindable
+    public int getNoReadNum() {
         return noReadNum;
     }
 
@@ -77,25 +81,28 @@ public class BottleInfo extends BaseObservable {
         notifyPropertyChanged(BR.noReadNum);
     }
 
-    @Bindable public String getHeadImage() {
-        return headImage;
+    @Bindable
+    public String getOtherHeadImage() {
+        return otherHeadImage;
     }
 
-    public void setHeadImage(String headImage) {
-        this.headImage = headImage;
-        notifyPropertyChanged(BR.headImage);
+    public void setOtherHeadImage(String otherHeadImage) {
+        this.otherHeadImage = otherHeadImage;
+        notifyPropertyChanged(BR.otherHeadImage);
     }
 
-    @Bindable public String getNick() {
-        return nick;
+    @Bindable
+    public String getOtherNick() {
+        return otherNick;
     }
 
-    public void setNick(String nick) {
-        this.nick = nick;
-        notifyPropertyChanged(BR.nick);
+    public void setOtherNick(String otherNick) {
+        this.otherNick = otherNick;
+        notifyPropertyChanged(BR.otherNick);
     }
 
-    @Bindable public String getCreateTime() {
+    @Bindable
+    public String getCreateTime() {
         return createTime;
     }
 
@@ -104,7 +111,8 @@ public class BottleInfo extends BaseObservable {
         notifyPropertyChanged(BR.createTime);
     }
 
-    @Bindable public List<BottleMsg> getMessageList() {
+    @Bindable
+    public List<BottleMsg> getMessageList() {
         return messageList;
     }
 
