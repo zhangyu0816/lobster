@@ -39,8 +39,8 @@ public class ActivityUtils {
 
     /*********************** 对话 **************************/
     // 对话页
-    public static void getChatActivity(long otherUserId, int type) {
-        ARouter.getInstance().build(RouteUtils.Chat_Activity).withLong("otherUserId", otherUserId).withInt("type", type).navigation();
+    public static void getChatActivity(long otherUserId) {
+        ARouter.getInstance().build(RouteUtils.Chat_Activity).withLong("otherUserId", otherUserId).navigation();
     }
 
     /*********************** 我的 **************************/

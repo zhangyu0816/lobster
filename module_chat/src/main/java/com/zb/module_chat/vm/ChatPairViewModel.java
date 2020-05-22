@@ -14,6 +14,9 @@ import com.zb.lib_base.model.BottleNoRead;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.LikeMe;
+import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_chat.R;
 import com.zb.module_chat.adapter.ChatAdapter;
@@ -34,11 +37,13 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
     private int pageNo = 0;
     private ChatListDb chatListDb;
     private ChatPairFragmentBinding mBinding;
+    private MineInfo mineInfo;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         chatListDb = new ChatListDb(Realm.getDefaultInstance());
+        mineInfo = mineInfoDb.getMineInfo();
         mBinding = (ChatPairFragmentBinding) binding;
         setAdapter();
     }
@@ -66,7 +71,24 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
 
     @Override
     public void selectIndex(int position) {
-
+        ChatList chatList = chatMsgList.get(position);
+        if (chatList.getChatType() == 1) {
+            // 喜欢我
+            if (mineInfo.getMemberType() == 2) {
+                ActivityUtils.getMineFCL(2);
+                return;
+            }
+            SCToastUtil.showToastBlack(activity, "成为会员后方可查看");
+        } else if (chatList.getChatType() == 2) {
+            // 漂流瓶
+            ActivityUtils.getBottleList();
+        } else if (chatList.getChatType() == 3) {
+            // 超级喜欢
+            ActivityUtils.getCardMemberDetail(chatList.getUserId());
+        } else if (chatList.getChatType() == 4) {
+            // 匹配-聊天
+            ActivityUtils.getChatActivity(chatList.getUserId());
+        }
     }
 
     @Override

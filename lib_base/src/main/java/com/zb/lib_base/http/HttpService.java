@@ -12,6 +12,7 @@ import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.FaceStatus;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.GiftRecord;
+import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.LoginInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
@@ -255,13 +256,16 @@ public interface HttpService {
     /******************************* 对话 **********************************/
 
     // 未读会话列表
-    @GET("api/Pair_pairList")
-    Observable<BaseResultEntity<List<ChatList>>> pairList(@Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("isPublicAccount") int isPublicAccount);
-
-    // 未读会话列表
     @GET("api/Contact_thirdChatList")
     Observable<BaseResultEntity<List<ChatList>>> chatList(@Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("isPublicAccount") int isPublicAccount);
 
+    // 获取阿里百川登录账号
+    @GET("api/Contact_myImAccountInfo")
+    Observable<BaseResultEntity<ImAccount>> myImAccountInfo(@Query("imPlatformType") int imPlatformType);
+
+    // 获取别人阿里百川账号
+    @GET("api/Contact_otherImAccountInfo")
+    Observable<BaseResultEntity<ImAccount>> otherImAccountInfo(@Query("otherUserId") long otherUserId, @Query("imPlatformType") int imPlatformType);
 
     /******************************* 漂流瓶 **********************************/
 

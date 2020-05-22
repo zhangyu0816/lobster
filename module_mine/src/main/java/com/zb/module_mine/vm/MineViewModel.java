@@ -9,6 +9,7 @@ import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.iv.MineVMInterface;
@@ -54,7 +55,15 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
 
     @Override
     public void contactNumDetail(int position) {
-        ActivityUtils.getMineFCL(position);
+        if (position == 2) {
+            if (mineInfo.getMemberType() == 2) {
+                ActivityUtils.getMineFCL(2);
+                return;
+            }
+            SCToastUtil.showToastBlack(activity, "成为会员后方可查看");
+        } else {
+            ActivityUtils.getMineFCL(position);
+        }
     }
 
     @Override

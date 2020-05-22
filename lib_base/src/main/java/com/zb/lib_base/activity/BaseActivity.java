@@ -31,6 +31,11 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     public static long userId = 0;
     public static String sessionId = "";
 
+    public static long systemUserId = 10000;
+    public static long applyUserId = 10001;
+    public static long dynUserId = 10002;
+    public static long questionUserId = 10003;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -6,11 +6,16 @@ import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.alibaba.mobileim.YWAPI;
+import com.alibaba.tcms.LoginStatusManager;
+import com.alibaba.tcms.service.TCMSService;
+import com.alibaba.wxlib.util.SysUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.zb.lib_base.R;
 import com.zb.lib_base.adaptive.FitScreen;
+import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.log.LogUtil;
 import com.zb.lib_base.model.BaseEntity;
 import com.zb.lib_base.model.RegisterInfo;
@@ -49,7 +54,6 @@ public class MineApp extends MultiDexApplication {
     public static String versionName;
     public static String WX_PAY_APPID = "wxbdd7128e0a0a08f8";
     public static List<BaseEntity> apiList = new ArrayList<>(); // 断线重连
-
 
     static {
         //设置全局的Header构建器
@@ -103,6 +107,16 @@ public class MineApp extends MultiDexApplication {
             e.printStackTrace();
         }
         LogUtil.init();
+
+        // 必须首先执行这部分代码, 如果在":TCMSSevice"进程中，无需进行云旺（OpenIM）和app业务的初始化，以节省内存;
+        TCMSService.setEnableForeground(false);
+        SysUtil.setApplication(this);
+        if (SysUtil.isTCMSServiceProcess(this)) {
+            return;
+        }
+        if (SysUtil.isMainProcess()) {
+            YWAPI.init(this, LoginSampleHelper.APP_KEY);
+        }
     }
 
     public static Context getInstance() {

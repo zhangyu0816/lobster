@@ -7,6 +7,7 @@ import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.ChatList;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_chat.R;
 import com.zb.module_chat.adapter.ChatAdapter;
@@ -52,7 +53,8 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
             @Override
             public void onNext(List<ChatList> o) {
                 for (ChatList chatMsg : o) {
-                    chatListDb.saveChatList(chatMsg);
+                    if (chatMsg.getUserId() > 10010)
+                        chatListDb.saveChatList(chatMsg);
                 }
                 chatMsgList.clear();
                 chatMsgList.addAll(chatListDb.getChatList());
@@ -64,6 +66,6 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
 
     @Override
     public void selectIndex(int position) {
-
+        ActivityUtils.getChatActivity(chatMsgList.get(position).getUserId());
     }
 }

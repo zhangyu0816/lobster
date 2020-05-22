@@ -3,6 +3,7 @@ package com.yimi.rentme.vm;
 import android.Manifest;
 import android.animation.AnimatorSet;
 import android.os.Build;
+import android.text.TextUtils;
 import android.widget.RelativeLayout;
 
 import com.yimi.rentme.BR;
@@ -11,10 +12,13 @@ import com.yimi.rentme.iv.MainVMInterface;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.api.joinPairPoolApi;
+import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.openedMemberPriceListApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.imcore.LoginSampleHelper;
+import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.FragmentUtils;
@@ -37,6 +41,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private AnimatorSet animatorSet = new AnimatorSet();
     private AMapLocation aMapLocation;
 
+    private LoginSampleHelper loginHelper;
+
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
@@ -49,6 +55,11 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
         getPermissions();
         openedMemberPriceList();
+        loginHelper = LoginSampleHelper.getInstance();
+        loginHelper.loginOut_Sample();
+
+        if (!TextUtils.equals(BaseActivity.sessionId, ""))
+            myImAccountInfoApi();
     }
 
     private void initFragments() {
@@ -191,4 +202,17 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         PreferenceUtil.saveStringValue(activity, "address", "浙江省温州市鹿城区望江东路175号靠近温州银行(文化支行)");
     }
 
+    /**
+     * 阿里百川登录账号
+     */
+    private void myImAccountInfoApi() {
+        myImAccountInfoApi api = new myImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
+            @Override
+            public void onNext(ImAccount o) {
+                loginHelper.loginOut_Sample();
+                loginHelper.login_Sample(activity, o.getImUserId(), o.getImPassWord());
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
 }

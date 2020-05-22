@@ -76,4 +76,12 @@ dependencies {
         if (isNeedBottleModule.toBoolean()) {
             implementation project(':module_bottle')
         }
+    if (!isNeedChatModule.toBoolean())
+        if (isNeedCardModule.toBoolean()) {
+            implementation project(':module_card')
+        }
+    if (!isNeedChatModule.toBoolean())
+        if (isNeedMineModule.toBoolean()) {
+            implementation project(':module_mine')
+        }
 }
