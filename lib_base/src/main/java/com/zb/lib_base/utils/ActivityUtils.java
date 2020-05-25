@@ -227,7 +227,7 @@ public class ActivityUtils {
     }
 
     // 漂流瓶主页
-    public static void getBottleChat(long driftBottleId, String nick) {
-        ARouter.getInstance().build(RouteUtils.Bottle_Chat).withLong("driftBottleId", driftBottleId).withString("nick", nick).navigation();
+    public static void getBottleChat(long driftBottleId) {
+        ARouter.getInstance().build(RouteUtils.Bottle_Chat).withLong("driftBottleId", driftBottleId).navigation();
     }
 }

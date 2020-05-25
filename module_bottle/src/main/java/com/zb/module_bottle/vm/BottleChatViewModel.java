@@ -15,6 +15,7 @@ import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.module_bottle.BR;
 import com.zb.module_bottle.R;
 import com.zb.module_bottle.adapter.BottleAdapter;
 import com.zb.module_bottle.databinding.BottleChatBinding;
@@ -63,6 +64,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                 bottleMsgList.addAll(o.getMessageList());
                 adapter.notifyDataSetChanged();
                 mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
+                mBinding.setVariable(BR.nick, bottleInfo.getOtherNick());
             }
         }, activity).setDriftBottleId(driftBottleId);
         HttpManager.getInstance().doHttpDeal(api);

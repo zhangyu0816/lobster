@@ -10,8 +10,6 @@
 
         <import type="com.zb.lib_base.activity.BaseActivity" />
 
-        <import type="com.zb.lib_base.utils.DisplayUtils" />
-
         <variable
             name="item"
             type="com.zb.lib_base.model.BottleMsg" />

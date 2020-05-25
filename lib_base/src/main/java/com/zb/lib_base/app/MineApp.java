@@ -7,7 +7,6 @@ import android.graphics.Typeface;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.alibaba.mobileim.YWAPI;
-import com.alibaba.tcms.LoginStatusManager;
 import com.alibaba.tcms.service.TCMSService;
 import com.alibaba.wxlib.util.SysUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;

@@ -18,6 +18,7 @@ public class ChatListDb extends BaseDao {
     // 保存更新会话列表
     public void saveChatList(ChatList chatList) {
         beginTransaction();
+        chatList.setMainUserId(BaseActivity.userId);
         realm.insertOrUpdate(chatList);
         commitTransaction();
     }

@@ -39,7 +39,7 @@ public class BaseDao {
      * @param <E>    返回数据
      * @return
      */
-    public static <E extends RealmModel> List<E> getLimitList(RealmResults<E> data, int offset, int limit) {
+    public <E extends RealmModel> List<E> getLimitList(RealmResults<E> data, int offset, int limit) {
         List<E> obtainList = new ArrayList();
         Realm realm = Realm.getDefaultInstance();
         if (data.size() == 0) {

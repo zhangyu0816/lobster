@@ -12,6 +12,7 @@ import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.FaceStatus;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.GiftRecord;
+import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.LoginInfo;
 import com.zb.lib_base.model.MemberInfo;
@@ -267,6 +268,22 @@ public interface HttpService {
     @GET("api/Contact_otherImAccountInfo")
     Observable<BaseResultEntity<ImAccount>> otherImAccountInfo(@Query("otherUserId") long otherUserId, @Query("imPlatformType") int imPlatformType);
 
+    // 获取历史消息
+    @GET("api/Contact_historyMsgList")
+    Observable<BaseResultEntity<List<HistoryMsg>>> historyMsgList(@Query("otherUserId") long otherUserId, @Query("pageNo") int pageNo);
+
+    // 清空用户消息
+    @GET("api/Contact_readOverHistoryMsg")
+    Observable<BaseResultEntity> readOverHistoryMsg(@Query("otherUserId") long otherUserId, @Query("messageId") long messageId);
+
+    // 第三方消息
+    @GET("api/Contact_thirdHistoryMsgList")
+    Observable<BaseResultEntity<List<HistoryMsg>>> thirdHistoryMsgList(@Query("otherUserId") long otherUserId, @Query("pageNo") int pageNo,
+                                                                       @Query("imPlatformType") int imPlatformType);
+
+    // 获取第三方未读会话
+    @GET("api/Contact_thirdReadChat")
+    Observable<BaseResultEntity> thirdReadChat(@Query("otherUserId") long otherUserId);
     /******************************* 漂流瓶 **********************************/
 
     // 投掷漂流瓶
@@ -335,7 +352,7 @@ public interface HttpService {
 
     // 喜欢我的人列表
     @GET("api/Pair_likeMeList")
-    Observable<BaseResultEntity<List<LikeMe>>> likeMeList(@QueryMap Map<String,String> map);
+    Observable<BaseResultEntity<List<LikeMe>>> likeMeList(@QueryMap Map<String, String> map);
 
     // 新消息列表
     @GET("api/Interactive_dynNewMsgList")

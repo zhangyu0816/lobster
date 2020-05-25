@@ -31,22 +31,34 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="@{nick}"
+                android:text="@{viewModel.memberInfo.nick}"
                 android:textColor="@color/black_252"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </RelativeLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            adapter="@{viewModel.adapter}"
-            recyclerType="@{1}"
-            size="@{0}"
-            android:id="@+id/chat_list"
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refresh"
+            onRefreshListener="@{viewModel}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/bottom_layout"
             android:layout_below="@+id/relativeLayout3"
-            android:background="@color/black_efe" />
+            android:background="@color/black_efe">
+
+            <com.zb.lib_base.views.MyHeaderView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/chat_list"
+                adapter="@{viewModel.adapter}"
+                recyclerType="@{1}"
+                size="@{0}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black_efe" />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
         <RelativeLayout
             android:id="@+id/bottom_layout"
@@ -57,33 +69,33 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="10dp"
                 android:layout_toStartOf="@+id/tv_send"
                 android:background="@null"
                 android:hint="输入文字"
                 android:padding="15dp"
                 android:text="@={content}"
-                android:layout_margin="10dp"
                 android:textColor="@color/black_4d4"
                 android:textColorHint="#C3BDCD"
                 android:textCursorDrawable="@drawable/cursor_color_black_4d4"
                 android:textSize="16sp" />
 
             <TextView
-                onClickDelayed="@{viewModel::sendBottle}"
                 android:id="@+id/tv_send"
+                onClickDelayed="@{viewModel::sendBottle}"
                 android:layout_width="wrap_content"
                 android:layout_height="38dp"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="15dp"
                 android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="15dp"
                 android:background="@drawable/btn_bg_purple_7a4_radius60"
                 android:gravity="center"
-                android:textSize="16sp"
-                android:layout_marginStart="5dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:text="发送"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
         </RelativeLayout>
     </RelativeLayout>
 </layout>

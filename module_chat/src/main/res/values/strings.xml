@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">对话模块</string>
+    <string name="msg_no_type">暂不支付该类型</string>
 </resources>

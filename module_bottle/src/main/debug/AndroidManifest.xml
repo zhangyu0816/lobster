@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/BottleTheme"
         tools:replace="android:theme">
-        <activity android:name=".activity.BottleChatActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,7 +22,7 @@
         </activity>
         <activity android:name=".activity.BottleThrowActivity" />
         <activity android:name=".activity.BottleListActivity" />
-<!--        <activity android:name=".activity.BottleChatActivity" />-->
+        <activity android:name=".activity.BottleChatActivity" />
     </application>
 
 </manifest>
