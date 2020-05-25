@@ -3,9 +3,19 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.zb.module_chat.vm.ChatViewModel" />
+
+        <variable
+            name="content"
+            type="String" />
+
+        <variable
+            name="isVoice"
+            type="boolean" />
 
     </data>
 
@@ -48,7 +58,7 @@
 
             <com.zb.lib_base.views.MyHeaderView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/chat_list"
@@ -60,42 +70,87 @@
                 android:background="@color/black_efe" />
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
+        <ImageView
+            android:id="@+id/audio_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@mipmap/voice_anim_1"
+            android:visibility="gone" />
+
         <RelativeLayout
             android:id="@+id/bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true">
 
-            <EditText
+            <ImageView
+                android:id="@+id/iv_voice_keyboard"
+                android:onClick="@{viewModel::toVoiceKeyboard}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="15dp"
+                android:src="@{isVoice?@drawable/chat_voice_icon:@drawable/chat_keyboard_icon}" />
+
+            <com.zb.lib_base.emojj.EmojiEditText
+                android:id="@+id/ed_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_toStartOf="@+id/tv_send"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_toStartOf="@+id/btn_linear"
+                android:layout_toEndOf="@+id/iv_voice_keyboard"
                 android:background="@null"
                 android:hint="输入文字"
-                android:padding="15dp"
-                android:text="@={content}"
+                android:padding="12dp"
+                android:singleLine="true"
+                android:imeOptions="actionSend"
                 android:textColor="@color/black_4d4"
                 android:textColorHint="#C3BDCD"
                 android:textCursorDrawable="@drawable/cursor_color_black_4d4"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="@{isVoice?View.GONE:View.VISIBLE}" />
 
             <TextView
-                android:id="@+id/tv_send"
-                onClickDelayed="@{viewModel::sendBottle}"
+                android:id="@+id/tv_speak"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_toStartOf="@+id/btn_linear"
+                android:layout_toEndOf="@+id/iv_voice_keyboard"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="按住  说话"
+                android:textColor="#303846"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:visibility="@{isVoice?View.VISIBLE:View.GONE}" />
+
+            <LinearLayout
+                android:id="@+id/btn_linear"
                 android:layout_width="wrap_content"
-                android:layout_height="38dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="15dp"
-                android:background="@drawable/btn_bg_purple_7a4_radius60"
-                android:gravity="center"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:text="发送"
-                android:textColor="@android:color/white"
-                android:textSize="16sp" />
+                android:orientation="horizontal">
+
+                <ImageView
+                    onClickDelayed="@{viewModel::toCamera}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:src="@mipmap/chat_camera_icon" />
+
+                <ImageView
+                    onClickDelayed="@{viewModel::toEmoji}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:src="@mipmap/chat_emoji_icon" />
+
+            </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>
 </layout>

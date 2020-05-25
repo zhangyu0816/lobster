@@ -5,6 +5,8 @@ import android.widget.ImageView;
 
 import com.zb.lib_base.model.HistoryMsg;
 
+import java.io.File;
+
 public interface ChatVMInterface {
 
     void otherInfo();
@@ -18,4 +20,14 @@ public interface ChatVMInterface {
     void toImageVideo(HistoryMsg historyMsg);
 
     void toVoice(ImageView view, HistoryMsg historyMsg, int direction);
+
+    void toVoiceKeyboard(View view);
+
+    void toCamera(View view);
+
+    void toEmoji(View view);
+
+    void stopPlayer();
+
+    void uploadSound(File file,int resTime);
 }

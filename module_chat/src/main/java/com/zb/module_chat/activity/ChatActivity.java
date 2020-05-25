@@ -1,5 +1,6 @@
 package com.zb.module_chat.activity;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,8 @@ public class ChatActivity extends ChatBaseActivity {
     @Autowired(name = "otherUserId")
     long otherUserId;
 
+    private ChatViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.chat_chat;
@@ -25,9 +28,11 @@ public class ChatActivity extends ChatBaseActivity {
 
     @Override
     public void initUI() {
-        ChatViewModel viewModel = new ChatViewModel();
+        viewModel = new ChatViewModel();
         viewModel.otherUserId = otherUserId;
         viewModel.setBinding(mBinding);
+        mBinding.setVariable(BR.isVoice, false);
+        mBinding.setVariable(BR.content, "");
 
 
 //        final View myLayout = getWindow().getDecorView();
@@ -54,5 +59,13 @@ public class ChatActivity extends ChatBaseActivity {
 //                Log.i("","keyboard height = " + realKeyboardHeight);
 //            }
 //        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1001 && resultCode == 1) {
+            viewModel.uploadImage(data.getStringExtra("fileName"));
+        }
     }
 }

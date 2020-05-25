@@ -184,7 +184,7 @@ public class LoginSampleHelper {
                                 Intent intent = new Intent("lobster_newMsg");
                                 intent.putExtra("unreadCount", conversation.getUnreadCount());
                                 intent.putExtra("ymMessage", ymMessage);
-                               MineApp.getInstance().sendBroadcast(intent);
+                                MineApp.getInstance().sendBroadcast(intent);
                             }
                         } else if (data.has("roster")) { // 添加好友
                             MineApp.getInstance().sendBroadcast(new Intent("lobster_updateFriendList"));
@@ -321,60 +321,27 @@ public class LoginSampleHelper {
      * 封装消息
      *
      * @param body
-     * @param msgType
      * @return
      */
-    public static String pack(YWMessageBody body, int msgType) {
+    public static String pack(YWMessageBody body) {
         // 自定义消息的实现可以使用jsonObject实现，或者也可以根据自定义其他格式，只需要个unpack中一致即可
         JSONObject data = new JSONObject();
-        // msgType 1:消息 2:好友申请 3:好友关系
-        if (msgType == 1) {
-            try {
-                JSONObject message = new JSONObject();
-                JSONObject valueBean = new JSONObject();
-                valueBean.put("msgType",
-                        ((CustomMessageBody) body).getMsgType());
-                valueBean.put("stanza", ((CustomMessageBody) body).getStanza());
-                valueBean.put("resLink",
-                        ((CustomMessageBody) body).getResLink());
-                valueBean.put("resTime",
-                        ((CustomMessageBody) body).getResTime());
-                message.put("fromId", ((CustomMessageBody) body).getFromId());
-                message.put("toId", ((CustomMessageBody) body).getToId());
-                message.put("valueBean", valueBean);
-                data.put("message", message);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else if (msgType == 2) {
-            try {
-                JSONObject rosterApply = new JSONObject();
-                JSONObject valueBean = new JSONObject();
-                valueBean.put("status", ((CustomMessageBody) body).getStatus());
-                valueBean.put("askMark",
-                        ((CustomMessageBody) body).getAskMark());
-                rosterApply.put("fromId",
-                        ((CustomMessageBody) body).getFromId());
-                rosterApply.put("toId", ((CustomMessageBody) body).getToId());
-                rosterApply.put("valueBean", valueBean);
-                data.put("rosterApply", rosterApply);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else if (msgType == 3) {
-            try {
-                JSONObject roster = new JSONObject();
-                JSONObject valueBean = new JSONObject();
-                valueBean.put("status", ((CustomMessageBody) body).getStatus());
-                valueBean.put("askMark",
-                        ((CustomMessageBody) body).getAskMark());
-                roster.put("fromId", ((CustomMessageBody) body).getFromId());
-                roster.put("toId", ((CustomMessageBody) body).getToId());
-                roster.put("valueBean", valueBean);
-                data.put("roster", roster);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        try {
+            JSONObject message = new JSONObject();
+            JSONObject valueBean = new JSONObject();
+            valueBean.put("msgType",
+                    ((CustomMessageBody) body).getMsgType());
+            valueBean.put("stanza", ((CustomMessageBody) body).getStanza());
+            valueBean.put("resLink",
+                    ((CustomMessageBody) body).getResLink());
+            valueBean.put("resTime",
+                    ((CustomMessageBody) body).getResTime());
+            message.put("fromId", ((CustomMessageBody) body).getFromId());
+            message.put("toId", ((CustomMessageBody) body).getToId());
+            message.put("valueBean", valueBean);
+            data.put("message", message);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         return data.toString();
     }

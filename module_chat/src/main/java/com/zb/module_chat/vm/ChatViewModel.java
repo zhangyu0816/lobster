@@ -1,17 +1,27 @@
 package com.zb.module_chat.vm;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.graphics.drawable.AnimationDrawable;
+import android.os.Build;
 import android.os.CountDownTimer;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 
+import com.alibaba.mobileim.channel.event.IWxCallback;
 import com.alibaba.mobileim.contact.IYWContact;
 import com.alibaba.mobileim.contact.YWContactFactory;
 import com.alibaba.mobileim.conversation.IYWConversationService;
 import com.alibaba.mobileim.conversation.YWConversation;
+import com.alibaba.mobileim.conversation.YWMessage;
+import com.alibaba.mobileim.conversation.YWMessageBody;
+import com.alibaba.mobileim.conversation.YWMessageChannel;
 import com.maning.imagebrowserlibrary.MNImage;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.historyMsgListApi;
 import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.otherImAccountInfoApi;
@@ -19,30 +29,41 @@ import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.readOverHistoryMsgApi;
 import com.zb.lib_base.api.thirdHistoryMsgListApi;
 import com.zb.lib_base.api.thirdReadChatApi;
+import com.zb.lib_base.api.uploadSoundApi;
+import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.db.ResFileDb;
+import com.zb.lib_base.http.HttpChatUploadManager;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
+import com.zb.lib_base.imcore.CustomMessageBody;
 import com.zb.lib_base.imcore.LoginSampleHelper;
+import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DateUtil;
+import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_chat.BR;
 import com.zb.module_chat.R;
 import com.zb.module_chat.adapter.ChatAdapter;
 import com.zb.module_chat.databinding.ChatChatBinding;
 import com.zb.module_chat.iv.ChatVMInterface;
+import com.zb.module_chat.views.SoundView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnRefreshListener {
     public long otherUserId;
@@ -50,9 +71,11 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     public ChatAdapter adapter;
     public MineInfo mineInfo;
     public ResFileDb resFileDb;
+    private ChatListDb chatListDb;
     private ChatChatBinding mBinding;
     private List<HistoryMsg> historyMsgList = new ArrayList<>();
-    private int pageNo = 0;
+    private RealmResults<HistoryMsg> realmResults;
+    private int pagerNo = 0;
     private int pageSize = 20;
     private HistoryMsgDb historyMsgDb;
     private LoginSampleHelper loginHelper;
@@ -64,17 +87,72 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     private long historyMsgId = 0;
     private boolean updateAll = false;
     private AnimationDrawable drawable; // 语音播放
-    private CountDownTimer timer;
 
+    private PhotoManager photoManager;
+    private SoundView soundView;
+    private ImageView preImageView;
+    private int preDirection;
+
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (ChatChatBinding) binding;
         resFileDb = new ResFileDb(Realm.getDefaultInstance());
         historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
+        chatListDb = new ChatListDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
         loginHelper = LoginSampleHelper.getInstance();
         setAdapter();
+
+        photoManager = new PhotoManager(activity, () ->
+                sendChatMessage(2, "", photoManager.jointWebUrl(","), 0, "【图片】"));
+
+        // 发送
+        mBinding.edContent.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEND) {
+                if (mBinding.getContent().isEmpty()) {
+                    return false;
+                }
+                sendChatMessage(1, mBinding.getContent(), "", 0, "【文字】");
+            }
+            return false;
+        });
+
+        soundView = new SoundView(activity, mBinding.audioBtn, new SoundView.CallBack() {
+            @Override
+            public void sendSoundBack(int resTime, String audioPath) {
+                uploadSound(new File(audioPath), resTime);
+            }
+
+            @Override
+            public void playEndBack(View view) {
+                stopVoiceDrawable();
+            }
+
+            @Override
+            public void soundEnd() {
+                mBinding.tvSpeak.setPressed(false);
+            }
+        });
+
+        mBinding.tvSpeak.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    mBinding.tvSpeak.setPressed(true);
+                    soundView.start();
+                    mBinding.tvSpeak.setText("松开  结束");
+                    stopPlayer();
+                    stopVoiceDrawable();
+                    return true;
+                case MotionEvent.ACTION_UP:
+                    mBinding.audioBtn.setVisibility(View.GONE);
+                    soundView.stop();
+                    mBinding.tvSpeak.setText("按住  说话");
+                    break;
+            }
+            return false;
+        });
     }
 
     @Override
@@ -85,8 +163,10 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
 
     @Override
     public void setAdapter() {
-        historyMsgList.addAll(historyMsgDb.getLimitList(historyMsgDb.getRealmResults(), pageNo * pageSize, pageSize));
+        realmResults = historyMsgDb.getRealmResults();
+        historyMsgList.addAll(historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize));
         adapter = new ChatAdapter<>(activity, R.layout.item_chat, historyMsgList, this);
+        mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
         otherInfo();
     }
 
@@ -96,8 +176,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             mBinding.refresh.finishRefresh();
             return;
         }
-        pageNo++;
-        List<HistoryMsg> tempList = historyMsgDb.getLimitList(historyMsgDb.getRealmResults(), pageNo * pageSize, pageSize);
+        pagerNo++;
+        List<HistoryMsg> tempList = historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize);
         historyMsgList.addAll(0, tempList);
         adapter.notifyItemRangeChanged(0, tempList.size());
         updateAll = tempList.size() == 0;
@@ -165,7 +245,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     historyMsgList.clear();
-                    historyMsgList.addAll(historyMsgDb.getLimitList(historyMsgDb.getRealmResults(), pageNo * pageSize, pageSize));
+                    realmResults = historyMsgDb.getRealmResults();
+                    historyMsgList.addAll(historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize));
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -189,41 +270,94 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         }
     }
 
-    private ImageView preImageView;
-    private int preDirection;
 
     @Override
     public void toVoice(ImageView view, HistoryMsg historyMsg, int direction) {
+
         // direction 0 左  1右
-        if (drawable != null) {
-            preImageView.setImageResource(preDirection == 0 ? R.mipmap.icon_voice_3_left : R.mipmap.icon_voice_3_right);
-            timer.cancel();
-            drawable.stop();
-            drawable = null;
-            timer = null;
-        }
+        stopVoiceDrawable();
         preImageView = view;
         preDirection = direction;
 
         view.setImageResource(direction == 0 ? R.drawable.voice_chat_anim_left : R.drawable.voice_chat_anim_right);
         drawable = (AnimationDrawable) view.getDrawable();
         drawable.start();
-        timer = new CountDownTimer(historyMsg.getResTime(), 100) {
-            @Override
-            public void onTick(long millisUntilFinished) {
 
-            }
+        soundView.soundPlayer(resFileDb.getResFile(historyMsg.getResLink()).getFilePath(), view);
+    }
 
+    private void stopVoiceDrawable() {
+        if (drawable != null) {
+            stopPlayer();
+            preImageView.setImageResource(preDirection == 0 ? R.mipmap.icon_voice_3_left : R.mipmap.icon_voice_3_right);
+            drawable.stop();
+            drawable = null;
+        }
+    }
+
+    @Override
+    public void toVoiceKeyboard(View view) {
+        mBinding.setIsVoice(!mBinding.getIsVoice());
+    }
+
+    @Override
+    public void toCamera(View view) {
+        getPermissions();
+    }
+
+    @Override
+    public void toEmoji(View view) {
+
+    }
+
+    @Override
+    public void stopPlayer() {
+        soundView.stopPlayer();
+    }
+
+    @Override
+    public void uploadSound(File file, int resTime) {
+        uploadSoundApi api = new uploadSoundApi(new HttpOnNextListener<ResourceUrl>() {
             @Override
-            public void onFinish() {
-                view.setImageResource(direction == 0 ? R.mipmap.icon_voice_3_left : R.mipmap.icon_voice_3_right);
-                timer.cancel();
-                drawable.stop();
-                drawable = null;
-                timer = null;
+            public void onNext(ResourceUrl o) {
+                sendChatMessage(3, "", o.getUrl(), resTime,  "【语音】");
+                soundView.setResTime(0);
             }
-        };
-        timer.start();
+        }, activity).setFile(file);
+        HttpChatUploadManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 权限
+     */
+    private void getPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            performCodeWithPermission("虾菇需要访问读外部存储权限", new BaseActivity.PermissionCallback() {
+                @Override
+                public void hasPermission() {
+                    setPermissions();
+                }
+
+                @Override
+                public void noPermission() {
+                }
+            }, Manifest.permission.READ_EXTERNAL_STORAGE);
+        } else {
+            setPermissions();
+        }
+    }
+
+    private void setPermissions() {
+        ActivityUtils.getCameraMain(activity, false);
+    }
+
+    /**
+     * 上传图片
+     *
+     * @param fileName
+     */
+    public void uploadImage(String fileName) {
+        photoManager.addFileUpload(0, new File(fileName));
     }
 
     /**
@@ -292,5 +426,70 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 发送消息
+     *
+     * @param msgType
+     * @param stanza
+     * @param resLink
+     * @param resTime
+     * @param summary
+     */
+    private void sendChatMessage(final int msgType, final String stanza, final String resLink, final int resTime, final String summary) {
+        YWMessageBody body = new CustomMessageBody(msgType, stanza, resLink, resTime, BaseActivity.userId, otherUserId, summary);
+        body.setSummary(body.getSummary());
+        body.setContent(loginHelper.pack(body));
+        final YWMessage message = YWMessageChannel.createCustomMessage(body);
+        checkConversation();
+        conversation.getMessageSender().sendMessage(message, timeOut, new IWxCallback() {
+
+            @Override
+            public void onSuccess(Object... arg0) {
+                updateMySend(message, stanza, msgType, resLink, resTime, summary);
+            }
+
+            @Override
+            public void onProgress(int arg0) {
+
+            }
+
+            @Override
+            public void onError(int arg0, String arg1) {
+
+            }
+        });
+    }
+
+    private void updateMySend(YWMessage message, String stanza, int msgType, String resLink, int resTime, String title) {
+        // 记录我们发出去的消息
+        HistoryMsg historyMsg = new HistoryMsg();
+        historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
+        historyMsg.setId(message.getMsgId());// TODO　需要测试
+        historyMsg.setFromId(BaseActivity.userId);
+        historyMsg.setToId(otherUserId);
+        historyMsg.setMsgType(msgType);
+        historyMsg.setResLink(resLink);
+        historyMsg.setResTime(resTime);
+        historyMsg.setStanza(stanza);
+        historyMsg.setTitle(title);
+        historyMsgList.add(historyMsg);
+        adapter.notifyDataSetChanged();
+        mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
+        historyMsgDb.saveHistoryMsg(historyMsg);
+
+        ChatList chatList = new ChatList();
+        chatList.setUserId(otherUserId);
+        chatList.setNick(memberInfo.getNick());
+        chatList.setImage(memberInfo.getImage());
+        chatList.setCreationDate(historyMsg.getCreationDate());
+        chatList.setStanza(historyMsg.getStanza());
+        chatList.setMsgType(historyMsg.getMsgType());
+        chatList.setNoReadNum(0);
+        chatList.setPublicTag("");
+        chatList.setEffectType(1);
+        chatList.setAuthType(1);
+        chatListDb.saveChatList(chatList);
     }
 }

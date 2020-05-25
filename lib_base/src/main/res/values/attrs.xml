@@ -13,4 +13,8 @@
         <attr name="all" format="boolean" />
         <attr name="top" format="boolean" />
     </declare-styleable>
+    <!-- 表情 -->
+    <declare-styleable name="Emoji">
+        <attr name="emojiSize" format="dimension" />
+    </declare-styleable>
 </resources>
