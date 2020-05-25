@@ -86,10 +86,10 @@
 
             <ImageView
                 android:id="@+id/iv_voice_keyboard"
-                android:onClick="@{viewModel::toVoiceKeyboard}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:onClick="@{viewModel::toVoiceKeyboard}"
                 android:padding="15dp"
                 android:src="@{isVoice?@drawable/chat_voice_icon:@drawable/chat_keyboard_icon}" />
 
@@ -103,9 +103,9 @@
                 android:layout_toEndOf="@+id/iv_voice_keyboard"
                 android:background="@null"
                 android:hint="输入文字"
+                android:imeOptions="actionSend"
                 android:padding="12dp"
                 android:singleLine="true"
-                android:imeOptions="actionSend"
                 android:textColor="@color/black_4d4"
                 android:textColorHint="#C3BDCD"
                 android:textCursorDrawable="@drawable/cursor_color_black_4d4"
@@ -149,8 +149,12 @@
                     android:layout_height="wrap_content"
                     android:padding="15dp"
                     android:src="@mipmap/chat_emoji_icon" />
-
             </LinearLayout>
         </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bottom_layout" />
     </RelativeLayout>
 </layout>
