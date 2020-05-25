@@ -117,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_toEndOf="@+id/type_3_left_linear"
-                android:text='@{String.format("%d’’",item.resTime/1000f)}'
+                android:text='@{String.format("%d’’",item.resTime)}'
                 android:textColor="@color/black_827"
                 android:textSize="16sp"
                 android:visibility="@{item.msgType==3?View.VISIBLE:View.GONE}"
@@ -208,7 +208,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_toStartOf="@+id/type_3_right_linear"
-                android:text='@{String.format("%d’’",item.resTime/1000f)}'
+                android:text='@{String.format("%d’’",item.resTime)}'
                 android:textColor="@color/black_827"
                 android:textSize="16sp"
                 android:visibility="@{item.msgType==3?View.VISIBLE:View.GONE}"

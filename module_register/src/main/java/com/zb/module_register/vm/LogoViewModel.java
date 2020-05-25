@@ -65,6 +65,7 @@ public class LogoViewModel extends BaseViewModel implements LogoVMInterface {
             SCToastUtil.showToast(activity, "请上传头像");
             return;
         }
+        MineApp.registerInfo.getImageList().clear();
         MineApp.registerInfo.getImageList().add(logoBinding.getImageUrl());
         MineApp.registerInfo.getImageList().add("");
         MineApp.registerInfo.getImageList().add("");

@@ -17,6 +17,7 @@ public class NewsManagerActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
+
         viewModel = new NewsManagerViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);

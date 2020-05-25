@@ -98,6 +98,10 @@ public abstract class BasePopupWindow extends PopupWindow {
     public void showRule(View view) {
     }
 
+    public void touch(View view){
+
+    }
+
     /**
      * 提交VIP订单
      *

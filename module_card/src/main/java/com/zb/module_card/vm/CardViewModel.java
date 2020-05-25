@@ -40,12 +40,12 @@ import com.zb.lib_base.views.card.OnSwipeListener;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.CountUsedPW;
 import com.zb.lib_base.windows.SuperLikePW;
-import com.zb.module_card.windows.VipAdPW;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;
 import com.zb.module_card.adapter.CardAdapter;
 import com.zb.module_card.databinding.CardFragBinding;
 import com.zb.module_card.iv.CardVMInterface;
+import com.zb.module_card.windows.VipAdPW;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -220,6 +220,10 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void selectCity(View view) {
+        if (mineInfo.getMemberType() == 1) {
+            SCToastUtil.showToastBlack(activity, "位置漫游服务为VIP用户专享功能");
+            return;
+        }
         ActivityUtils.getMineLocation();
     }
 
@@ -250,7 +254,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             @Override
             public void onNext(Integer o) {
                 // 1喜欢成功 2匹配成功 3喜欢次数用尽
-                String myHead = mineInfo.getMoreImages().split("#")[0];
+                String myHead = mineInfo.getImage();
                 String otherHead = pairInfo.getMoreImages().split("#")[0];
                 if (o == 1) {
                     // 不喜欢成功  喜欢成功  超级喜欢成功

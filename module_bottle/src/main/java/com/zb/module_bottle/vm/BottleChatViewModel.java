@@ -2,16 +2,12 @@ package com.zb.module_bottle.vm;
 
 import android.view.View;
 
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.api.myBottleApi;
-import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.replyBottleApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.BottleMsg;
-import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -24,7 +20,6 @@ import com.zb.module_bottle.iv.BottleChatVMInterface;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
 
 public class BottleChatViewModel extends BaseViewModel implements BottleChatVMInterface {

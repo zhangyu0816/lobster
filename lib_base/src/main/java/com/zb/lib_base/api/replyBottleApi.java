@@ -4,7 +4,6 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.model.BaseEntity;
-import com.zb.lib_base.model.BaseResultEntity;
 import com.zb.lib_base.model.BottleMsg;
 
 import rx.Observable;

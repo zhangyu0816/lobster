@@ -29,7 +29,7 @@ public class BottleContentPW extends BasePopupWindow {
     private PwsBottleContentBinding binding;
 
     public BottleContentPW(RxAppCompatActivity activity, View parentView, BottleInfo bottleInfo, boolean isWrite) {
-        super(activity, parentView, isWrite);
+        super(activity, parentView, true);
         this.bottleInfo = bottleInfo;
         this.isWrite = isWrite;
         initUI();
@@ -74,10 +74,12 @@ public class BottleContentPW extends BasePopupWindow {
                 castBottle();
         } else {
             isReply = true;
+            isWrite = true;
             mBinding.setVariable(BR.isWrite, true);
             mBinding.setVariable(BR.btnName, "立即回复");
         }
     }
+
 
     // 创建漂流瓶
     private void castBottle() {

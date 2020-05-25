@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
-import android.os.CountDownTimer;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -272,15 +271,15 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
 
 
     @Override
-    public void toVoice(ImageView view, HistoryMsg historyMsg, int direction) {
+    public void toVoice(View view, HistoryMsg historyMsg, int direction) {
 
         // direction 0 左  1右
         stopVoiceDrawable();
-        preImageView = view;
+        preImageView = (ImageView) view;
         preDirection = direction;
 
-        view.setImageResource(direction == 0 ? R.drawable.voice_chat_anim_left : R.drawable.voice_chat_anim_right);
-        drawable = (AnimationDrawable) view.getDrawable();
+        preImageView.setImageResource(direction == 0 ? R.drawable.voice_chat_anim_left : R.drawable.voice_chat_anim_right);
+        drawable = (AnimationDrawable) preImageView.getDrawable();
         drawable.start();
 
         soundView.soundPlayer(resFileDb.getResFile(historyMsg.getResLink()).getFilePath(), view);

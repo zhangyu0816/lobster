@@ -28,7 +28,7 @@
         <com.zb.lib_base.views.RoundImageView
             android:id="@+id/roundImageView"
             defaultRes="@{ObjectUtils.getDefaultRes()}"
-            imageUrl='@{item.image.split("#")[0]}'
+            imageUrl='@{item.images.split(",")[0]}'
             viewHeightSize="@{ObjectUtils.getLogoHeight(0.498f)}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.498f)}"
             android:layout_width="match_parent"

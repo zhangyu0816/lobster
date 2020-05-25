@@ -14,6 +14,7 @@ import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.GiftRecord;
 import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.ImAccount;
+import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.LoginInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
@@ -30,7 +31,6 @@ import com.zb.lib_base.model.TranRecord;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WXPay;
 import com.zb.lib_base.model.WalletInfo;
-import com.zb.lib_base.model.LikeMe;
 
 import java.util.List;
 import java.util.Map;

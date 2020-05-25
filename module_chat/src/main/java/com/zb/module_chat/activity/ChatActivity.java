@@ -1,9 +1,6 @@
 package com.zb.module_chat.activity;
 
 import android.content.Intent;
-import android.graphics.Rect;
-import android.util.Log;
-import android.view.View;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -11,8 +8,6 @@ import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_chat.BR;
 import com.zb.module_chat.R;
 import com.zb.module_chat.vm.ChatViewModel;
-
-import java.lang.reflect.Field;
 
 @Route(path = RouteUtils.Chat_Activity)
 public class ChatActivity extends ChatBaseActivity {

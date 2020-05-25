@@ -11,8 +11,6 @@ import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.iv.NewsManagerVMInterface;
 
-import androidx.databinding.ViewDataBinding;
-
 public class NewsManagerViewModel extends BaseViewModel implements NewsManagerVMInterface {
     public MineNewsCount mineNewsCount;
 

@@ -13,6 +13,7 @@ import com.zb.lib_base.api.uploadVideoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
@@ -41,6 +42,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     private List<String> selectorList = new ArrayList<>();
     private HomePublicImageBinding publicImageBinding;
     private PhotoManager photoManager;
+    private MineInfo mineInfo;
 
     public PublishImageViewModel() {
         selectorList.add("预览");
@@ -50,6 +52,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
+        mineInfo = mineInfoDb.getMineInfo();
         publicImageBinding = (HomePublicImageBinding) binding;
         photoManager = new PhotoManager(activity, () -> {
             publishDyn(photoManager.jointWebUrl(","));
@@ -91,6 +94,10 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
 
     @Override
     public void selectCity(View view) {
+        if (mineInfo.getMemberType() == 1) {
+            SCToastUtil.showToastBlack(activity, "位置漫游服务为VIP用户专享功能");
+            return;
+        }
         ActivityUtils.getMineLocation();
     }
 
