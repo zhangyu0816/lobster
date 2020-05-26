@@ -126,7 +126,7 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
         myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
             @Override
             public void onNext(MineInfo o) {
-                SCToastUtil.showToast(activity, "登录成功");
+                SCToastUtil.showToastBlack(activity, "登录成功");
                 mineInfoDb.saveMineInfo(o);
                 ActivityUtils.getMainActivity();
                 activity.finish();

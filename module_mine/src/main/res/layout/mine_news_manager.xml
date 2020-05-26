@@ -17,6 +17,9 @@
             name="title"
             type="String" />
 
+        <variable
+            name="newsDate"
+            type="String" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -241,7 +244,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="12:88"
+                    android:text="@{newsDate}"
                     android:textColor="@color/black_827"
                     android:textSize="12sp" />
 
@@ -251,8 +254,10 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/circle_white_red"
                     android:gravity="center"
+                    android:text="@{ObjectUtils.count(viewModel.mineNewsCount.systemNewsNum)}"
                     android:textColor="@android:color/white"
                     android:textSize="10sp"
+                    android:visibility="@{viewModel.mineNewsCount.systemNewsNum==0?View.GONE:View.VISIBLE}"
                     tools:text="···" />
             </LinearLayout>
 

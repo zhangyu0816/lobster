@@ -119,6 +119,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             @Override
             public void onReceive(Context context, Intent intent) {
                 MineApp.cityName = intent.getStringExtra("cityName");
+                mBinding.setVariable(BR.viewModel, CardViewModel.this);
                 prePairList(true);
             }
         };
@@ -271,11 +272,11 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     // 喜欢次数用尽
                     SCToastUtil.showToastBlack(activity, "今日喜欢次数已用完");
                 } else {
-                    // 非会员或超级喜欢次数用尽
-                    if (likeOtherStatus == 2) {
+                    // 超级喜欢时，非会员或超级喜欢次数用尽
+                    if (mineInfo.getMemberType() == 2) {
                         new CountUsedPW(activity, mBinding.getRoot(), 2);
                     } else {
-                        SCToastUtil.showToastBlack(activity, "喜欢吗？赶快成为会员吧");
+                        SCToastUtil.showToastBlack(activity, "超级喜欢为VIP用户专享功能");
                     }
                 }
             }

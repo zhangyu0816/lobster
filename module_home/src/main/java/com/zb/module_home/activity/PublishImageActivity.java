@@ -68,5 +68,6 @@ public class PublishImageActivity extends HomeBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         cameraReceiver.unregisterReceiver();
+        viewModel.back(null);
     }
 }

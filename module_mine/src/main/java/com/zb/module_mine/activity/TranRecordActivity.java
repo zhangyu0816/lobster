@@ -23,5 +23,6 @@ public class TranRecordActivity extends MineBaseActivity {
         viewModel.tranType = tranType;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
+        mBinding.setVariable(BR.title, tranType == 0 ? "账单明细" : "收益明细");
     }
 }

@@ -101,9 +101,13 @@ public interface HttpService {
     @GET("api/Login_registCaptcha")
     Observable<BaseResultEntity> registerCaptcha(@Query("userName") String userName);
 
-    // 用户注册验证码
+    // 用户登录验证码
     @GET("api/Login_loginCaptcha")
     Observable<BaseResultEntity> loginCaptcha(@Query("userName") String userName);
+
+    // 退出登录
+    @GET("api/Login_loginOut")
+    Observable<BaseResultEntity> loginOut();
 
     // 我的信息
     @GET("api/Member_myInfo")
@@ -121,10 +125,11 @@ public interface HttpService {
     @GET("api/Tran_rechargeWallet")
     Observable<BaseResultEntity<OrderTran>> rechargeWallet(@Query("money") double money);
 
-
+    // 举报类型
     @GET("api/Complain_comType")
     Observable<BaseResultEntity<List<Report>>> comType();
 
+    // 举报
     @FormUrlEncoded
     @POST("api/Complain_comsub")
     Observable<BaseResultEntity> comsub(@Field("complainTypeId") long complainTypeId, @Field("comUserId") long comUserId, @Field("comText") String comText,

@@ -13,4 +13,6 @@ public interface NewsManagerVMInterface {
     void toLobsterNews(View view);
 
     void newDynMsgAllNum();
+
+    void chatList();
 }

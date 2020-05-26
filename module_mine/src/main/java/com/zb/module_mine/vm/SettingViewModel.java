@@ -3,20 +3,36 @@ package com.zb.module_mine.vm;
 import android.view.View;
 
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.api.loginOutApi;
 import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
+import com.zb.lib_base.utils.PreferenceUtil;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.iv.SettingVMInterface;
 
 import java.io.File;
 
+import androidx.databinding.ViewDataBinding;
+
 public class SettingViewModel extends BaseViewModel implements SettingVMInterface {
+    private MineInfo mineInfo;
+
     @Override
     public void back(View view) {
         super.back(view);
         activity.finish();
+    }
+
+    @Override
+    public void setBinding(ViewDataBinding binding) {
+        super.setBinding(binding);
+        mineInfo = mineInfoDb.getMineInfo();
     }
 
     @Override
@@ -31,6 +47,10 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
 
     @Override
     public void toLocation(View view) {
+        if (mineInfo.getMemberType() == 1) {
+            SCToastUtil.showToastBlack(activity, "位置漫游服务为VIP用户专享功能");
+            return;
+        }
         ActivityUtils.getMineLocation();
     }
 
@@ -67,6 +87,21 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
 
     @Override
     public void exit(View view) {
-        ARouter.getInstance().destroy();
+        loginOut();
+    }
+
+    @Override
+    public void loginOut() {
+        loginOutApi api = new loginOutApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                PreferenceUtil.saveStringValue(activity, "sessionId", "");
+                PreferenceUtil.saveLongValue(activity, "userId", 0L);
+                BaseActivity.update();
+                ActivityUtils.getRegisterMain();
+                activity.finish();
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 }

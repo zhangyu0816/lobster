@@ -24,4 +24,41 @@ public class MineInfoDb extends BaseDao {
         return mineInfo;
     }
 
+    public void updateNick(String content, int type) {
+        // type   1：工作  2：昵称
+        beginTransaction();
+        MineInfo mineInfo = realm.where(MineInfo.class).equalTo("userId", BaseActivity.userId).findFirst();
+        if (mineInfo != null) {
+            if (type == 1)
+                mineInfo.setJob(content);
+            else if (type == 2)
+                mineInfo.setNick(content);
+            else if (type == 3)
+                mineInfo.setPersonalitySign(content);
+            else if (type == 4)
+                mineInfo.setServiceTags(content);
+
+        }
+        commitTransaction();
+    }
+
+    public void updateSex(int sex) {
+        beginTransaction();
+        MineInfo mineInfo = realm.where(MineInfo.class).equalTo("userId", BaseActivity.userId).findFirst();
+        if (mineInfo != null) {
+            mineInfo.setSex(sex);
+        }
+        commitTransaction();
+    }
+
+    public void updateImages(String images) {
+        beginTransaction();
+        MineInfo mineInfo = realm.where(MineInfo.class).equalTo("userId", BaseActivity.userId).findFirst();
+        if (mineInfo != null) {
+            mineInfo.setImage(images.split("#")[0]);
+            mineInfo.setMoreImages(images);
+        }
+        commitTransaction();
+    }
+
 }

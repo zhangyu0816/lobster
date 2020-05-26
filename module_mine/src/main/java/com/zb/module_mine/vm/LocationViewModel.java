@@ -1,6 +1,7 @@
 package com.zb.module_mine.vm;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Build;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -24,7 +25,10 @@ import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.AdapterBinding;
+import com.zb.lib_base.api.joinPairPoolApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.LocationInfo;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -240,11 +244,24 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
         info.setCityName(regeocodeAddress.getCity());
         PreferenceUtil.saveStringValue(activity, "address", info.getAddress());
         MineApp.cityName = info.getCityName();
-        activity.finish();
+        joinPairPool(info.getLongitude() + "", info.getLatitude() + "");
+
     }
 
     @Override
     public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
 
+    }
+
+    private void joinPairPool(String longitude, String latitude) {
+        // 加入匹配池
+        joinPairPoolApi api = new joinPairPoolApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                activity.sendBroadcast(new Intent("lobster_location"));
+                activity.finish();
+            }
+        }, activity).setLatitude(latitude).setLongitude(longitude);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 }

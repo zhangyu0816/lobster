@@ -10,6 +10,7 @@ public class MineNewsCount extends BaseObservable {
     int friendDynamicReviewNum; //未读评论数量
     int friendDynamicGiftNum;   //未读收礼数量
     int friendDynamicGoodNum;  //未读点赞数量
+    int systemNewsNum;
 
     @Bindable
     public int getFriendDynamicReviewNum() {
@@ -21,7 +22,8 @@ public class MineNewsCount extends BaseObservable {
         notifyPropertyChanged(BR.friendDynamicReviewNum);
     }
 
-    @Bindable public int getFriendDynamicGiftNum() {
+    @Bindable
+    public int getFriendDynamicGiftNum() {
         return friendDynamicGiftNum;
     }
 
@@ -30,12 +32,23 @@ public class MineNewsCount extends BaseObservable {
         notifyPropertyChanged(BR.friendDynamicGiftNum);
     }
 
-    @Bindable public int getFriendDynamicGoodNum() {
+    @Bindable
+    public int getFriendDynamicGoodNum() {
         return friendDynamicGoodNum;
     }
 
     public void setFriendDynamicGoodNum(int friendDynamicGoodNum) {
         this.friendDynamicGoodNum = friendDynamicGoodNum;
         notifyPropertyChanged(BR.friendDynamicGoodNum);
+    }
+
+    @Bindable
+    public int getSystemNewsNum() {
+        return systemNewsNum;
+    }
+
+    public void setSystemNewsNum(int systemNewsNum) {
+        this.systemNewsNum = systemNewsNum;
+        notifyPropertyChanged(BR.systemNewsNum);
     }
 }

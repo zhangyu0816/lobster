@@ -22,4 +22,6 @@ public interface SettingVMInterface {
     void toAboutUs(View view);
 
     void exit(View view);
+
+    void loginOut();
 }

@@ -31,7 +31,6 @@ public class MineFragment extends BaseFragment {
     public void initUI() {
         viewModel = new MineViewModel();
         viewModel.setBinding(mBinding);
-        mBinding.setVariable(BR.viewModel, viewModel);
         binding = (MineFragBinding) mBinding;
         initFragments();
     }
@@ -42,5 +41,11 @@ public class MineFragment extends BaseFragment {
         fragments.add(FragmentUtils.getCardMemberVideoFragment(BaseActivity.userId));
         binding.viewPage.setAdapter(new FragmentAdapter(getChildFragmentManager(), fragments));
         viewModel.initTabLayout(new String[]{"动态", "小视频"}, binding.tabLayout, binding.viewPage, R.color.black_252, R.color.black_827);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 }

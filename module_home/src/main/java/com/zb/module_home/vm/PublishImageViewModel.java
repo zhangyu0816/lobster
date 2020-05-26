@@ -158,6 +158,9 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
 
     @Override
     public void back(View view) {
+        MineApp.selectMap.clear();
+        MineApp.cutImageViewMap.clear();
+        DataCleanManager.deleteFile(activity.getCacheDir());
         activity.finish();
     }
 

@@ -17,6 +17,9 @@
             name="hasNewBeLike"
             type="boolean" />
 
+        <variable
+            name="newsNum"
+            type="Integer" />
     </data>
 
     <RelativeLayout
@@ -39,12 +42,19 @@
                 android:padding="15dp"
                 app:srcCompat="@mipmap/news_icon" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <TextView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_alignEnd="@+id/iv_news"
-                android:padding="10dp"
-                app:srcCompat="@mipmap/news_num_icon" />
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="7dp"
+                android:background="@drawable/circle_white_red"
+                android:gravity="center"
+                android:text="@{ObjectUtils.count(newsNum)}"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:visibility="@{newsNum==0?View.GONE:View.VISIBLE}"
+                tools:text="···" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -111,10 +121,10 @@
 
                         <ImageView
                             android:id="@+id/iv_image"
-                            onClickDelayed="@{viewModel::toEditMember}"
                             defaultRes="@{ObjectUtils.getDefaultRes()}"
                             imageUrl="@{viewModel.mineInfo.image}"
                             isCircle="@{true}"
+                            onClickDelayed="@{viewModel::toEditMember}"
                             viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.23f)}"
                             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.23f)}"
                             android:layout_width="80dp"
@@ -208,10 +218,10 @@
                                     <TextView
                                         android:layout_width="5dp"
                                         android:layout_height="5dp"
-                                        android:layout_marginTop="5dp"
                                         android:layout_alignEnd="@+id/tv_beLike"
+                                        android:layout_marginTop="5dp"
                                         android:background="@drawable/circle_red"
-                                        android:visibility="@{hasNewBeLike?View.VISIBLE:View.GONE}"/>
+                                        android:visibility="@{hasNewBeLike?View.VISIBLE:View.GONE}" />
                                 </RelativeLayout>
 
 
@@ -229,6 +239,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/num_linear"
+                            android:layout_marginStart="15dp"
                             android:layout_marginTop="10dp"
                             android:layout_toEndOf="@+id/iv_image"
                             android:singleLine="true"

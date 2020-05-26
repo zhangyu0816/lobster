@@ -32,15 +32,9 @@ public class EditMemberActivity extends MineBaseActivity {
             public void onReceive(Context context, Intent intent) {
                 int type = intent.getIntExtra("type", 0);
                 String content = intent.getStringExtra("content");
-                if (type == 1) {
-                    viewModel.mineInfo.setJob(content);
-                } else if (type == 2) {
-                    viewModel.mineInfo.setNick(content);
-                } else if (type == 3) {
-                    viewModel.mineInfo.setPersonalitySign(content);
-                }else if(type==4){
-                    viewModel.mineInfo.setServiceTags(content);
-                }
+                viewModel.mineInfoDb.updateNick(content, type);
+                viewModel.mineInfo = viewModel.mineInfoDb.getMineInfo();
+                mBinding.setVariable(BR.viewModel, viewModel);
             }
         };
     }

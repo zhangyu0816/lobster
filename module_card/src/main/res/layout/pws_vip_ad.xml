@@ -14,7 +14,7 @@
 
         <variable
             name="adapter"
-            type="com.zb.lib_base.adapter.BaseAdapter" />
+            type="com.zb.module_card.adapter.CardAdapter" />
 
         <import type="com.zb.lib_base.utils.ObjectUtils" />
 

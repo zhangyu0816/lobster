@@ -78,7 +78,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 ActivityUtils.getMineFCL(2);
                 return;
             }
-            SCToastUtil.showToastBlack(activity, "成为会员后方可查看");
+            SCToastUtil.showToastBlack(activity, "查看被喜欢的人为VIP用户专享功能");
         } else if (chatList.getChatType() == 2) {
             // 漂流瓶
             ActivityUtils.getBottleList();

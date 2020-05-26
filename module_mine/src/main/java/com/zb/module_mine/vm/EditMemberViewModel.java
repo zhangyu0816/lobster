@@ -1,7 +1,9 @@
 package com.zb.module_mine.vm;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
@@ -29,6 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import io.realm.Realm;
 
@@ -43,6 +46,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     private List<String> selectorImageList = new ArrayList<>();
     public MineInfo mineInfo;
     private PhotoManager photoManager;
+    private String images = "";
 
     @Override
     public void back(View view) {
@@ -70,8 +74,9 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
 
         setAdapter();
         photoManager = new PhotoManager(activity, () -> {
+            Log.i("getPhotoFiles", photoManager.getPhotoFiles().toString());
             for (PhotoFile photoFile : photoManager.getPhotoFiles()) {
-                int i = imageList.indexOf(photoFile.getFilePath());
+                int i = imageList.indexOf(photoFile.getSrcFilePath());
                 imageList.set(i, photoFile.getWebUrl());
             }
 
@@ -93,28 +98,35 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     @Override
     public void save(View view) {
         String images = "";
+        String uploadImages = "";
         for (String image : imageList) {
-            if (!image.isEmpty() && !image.contains("Http")) {
+            if (!image.isEmpty()) {
                 images += "#" + image;
+            }
+            if (!image.isEmpty() && !image.contains("http://") && !image.contains("https://")) {
+                uploadImages += "#" + image;
             }
         }
         if (images.isEmpty()) {
             SCToastUtil.showToastBlack(activity, "请上传至少1张照片");
             return;
         }
-        images = images.substring(1);
-        photoManager.addFiles(Arrays.asList(images.split("#")), () -> photoManager.reUploadByUnSuccess());
+        if (uploadImages.isEmpty()) {
+            modifyMemberInfo();
+        } else {
+            uploadImages = uploadImages.substring(1);
+            photoManager.addFiles(Arrays.asList(uploadImages.split("#")), () -> photoManager.reUploadByUnSuccess());
+        }
     }
 
     @Override
     public void selectImage(int position) {
+        _position = position;
         if (imageList.get(position).isEmpty()) {
-            _position = position;
             getPermissions();
         } else {
             new SelectorPW(activity, mBinding.getRoot(), selectorImageList, position1 -> {
                 if (position1 == 0) {
-                    _position = position;
                     getPermissions();
                 } else {
                     imageList.set(_position, "");
@@ -131,7 +143,11 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
 
     @Override
     public void toSelectSex(View view) {
-        new SelectorPW(activity, mBinding.getRoot(), selectorList, position -> mineInfo.setSex(position));
+        new SelectorPW(activity, mBinding.getRoot(), selectorList, position -> {
+            mineInfoDb.updateSex(position);
+            mineInfo = mineInfoDb.getMineInfo();
+            mBinding.setVariable(BR.viewModel, this);
+        });
     }
 
     @Override
@@ -151,7 +167,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
 
     @Override
     public void modifyMemberInfo() {
-        String images = "";
+        images = "";
         for (String image : imageList) {
             if (!image.isEmpty()) {
                 images += "#" + image;
@@ -162,6 +178,8 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToastBlack(activity, "提交个人信息");
+                mineInfoDb.updateImages(images);
+                activity.sendBroadcast(new Intent("lobster_updateMineInfo"));
                 activity.finish();
             }
         }, activity)
@@ -173,9 +191,9 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
                 .setPersonalitySign(mineInfo.getPersonalitySign())
                 .setSex(mineInfo.getSex())
                 .setServiceTags(mineInfo.getServiceTags())
-                .setProvinceId(areaDb.getProvinceId(PreferenceUtil.readStringValue(activity,"provinceName")))
+                .setProvinceId(areaDb.getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
                 .setCityId(areaDb.getCityId(MineApp.cityName))
-                .setDistrictId(areaDb.getDistrictId(PreferenceUtil.readStringValue(activity,"districtName")));
+                .setDistrictId(areaDb.getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
         HttpManager.getInstance().doHttpDeal(api);
     }
 
