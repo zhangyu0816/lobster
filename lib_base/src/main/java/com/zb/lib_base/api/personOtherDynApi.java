@@ -32,7 +32,7 @@ public class personOtherDynApi extends BaseEntity<List<DiscoverInfo>> {
 
     public personOtherDynApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
-        setDialogTitle("加载动态信息");
+        setShowProgress(false);
     }
 
     @Override

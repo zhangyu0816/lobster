@@ -6,9 +6,15 @@
 
         <import type="android.view.View" />
 
+        <import type="com.zb.lib_base.activity.BaseActivity" />
+
         <variable
             name="viewModel"
             type="com.zb.lib_base.vm.BaseViewModel" />
+
+        <variable
+            name="otherUserId"
+            type="long" />
     </data>
 
     <RelativeLayout
@@ -39,7 +45,6 @@
 
             <TextView
                 android:id="@+id/tv_follow"
-                android:onClick="@{viewModel::follow}"
                 android:layout_width="wrap_content"
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
@@ -47,19 +52,21 @@
                 android:layout_toStartOf="@+id/iv_more"
                 android:background="@drawable/btn_bg_white_radius60"
                 android:gravity="center"
+                android:onClick="@{viewModel::follow}"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:text="关注"
                 android:textColor="@color/black_4d4"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                android:visibility="@{otherUserId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
 
             <ImageView
                 android:id="@+id/iv_more"
-                android:onClick="@{viewModel::more}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:onClick="@{viewModel::more}"
                 android:padding="15dp"
                 app:srcCompat="@mipmap/more_icon" />
         </RelativeLayout>

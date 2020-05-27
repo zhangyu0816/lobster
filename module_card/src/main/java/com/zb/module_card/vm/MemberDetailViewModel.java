@@ -139,9 +139,11 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         attentionStatusApi api = new attentionStatusApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                mBinding.bannerLayout.tvFollow.setText("取消关注");
-                mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
-                attentionDb.saveAttention(new CollectID(otherUserId));
+                if (!o.toString().isEmpty()) {
+                    mBinding.bannerLayout.tvFollow.setText("取消关注");
+                    mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                    attentionDb.saveAttention(new CollectID(otherUserId));
+                }
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);

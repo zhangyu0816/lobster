@@ -55,7 +55,8 @@ public class AdapterBinding {
                 //两秒钟之内只取一个点击事件，防抖操作
                 .throttleFirst(1, TimeUnit.SECONDS)
                 .subscribe(o -> {
-                    listener.onClick(view);
+                    if (listener != null)
+                        listener.onClick(view);
                 });
     }
 
@@ -155,7 +156,7 @@ public class AdapterBinding {
         }
         if (isRound) {
             // 圆角图
-            MultiTransformation<Bitmap> multiTransformation ;
+            MultiTransformation<Bitmap> multiTransformation;
             if (cornerType == 0) {
                 multiTransformation = new MultiTransformation<>(new CenterCrop(), new GlideRoundTransform(roundSize, 0));
                 cropOptions.transform(multiTransformation);

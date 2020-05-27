@@ -14,6 +14,9 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
+import com.zb.lib_base.api.attentionOtherApi;
+import com.zb.lib_base.api.attentionStatusApi;
+import com.zb.lib_base.api.cancelAttentionApi;
 import com.zb.lib_base.api.deleteDynApi;
 import com.zb.lib_base.api.dynCancelLikeApi;
 import com.zb.lib_base.api.dynDetailApi;
@@ -26,6 +29,7 @@ import com.zb.lib_base.api.seeGiftRewardsApi;
 import com.zb.lib_base.api.seeReviewsApi;
 import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.AttentionDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -58,6 +62,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
+import io.realm.Realm;
 
 public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDetailVMInterface, OnRefreshListener, OnLoadMoreListener {
     private HomeDiscoverDetailBinding mBinding;
@@ -76,11 +81,13 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     private MemberInfo memberInfo;
     private BaseReceiver rechargeReceiver;
     private long reviewId = 0;
+    private AttentionDb attentionDb;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (HomeDiscoverDetailBinding) binding;
+        attentionDb = new AttentionDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
         AdapterBinding.viewSize(mBinding.bannerLayout.banner, MineApp.W, ObjectUtils.getLogoHeight(1.0f));
         mBinding.setVariable(BR.content, "");
@@ -126,7 +133,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     public void more(View view) {
         super.more(view);
         new SelectorPW(activity, mBinding.getRoot(), selectorList, position -> {
-            if (discoverInfo.getOtherUserId() == BaseActivity.userId) {
+            if (discoverInfo.getId() == BaseActivity.userId) {
                 if (position == 0) {
 
                 } else if (position == 1) {
@@ -136,7 +143,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 if (position == 0) {
                     makeEvaluate();
                 } else if (position == 1) {
-                    ActivityUtils.getHomeReport(discoverInfo.getOtherUserId());
+                    ActivityUtils.getHomeReport(discoverInfo.getId());
                 } else if (position == 2) {
 
                 }
@@ -148,11 +155,9 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     public void follow(View view) {
         super.follow(view);
         if (mBinding.bannerLayout.tvFollow.getText().toString().equals("关注")) {
-            mBinding.bannerLayout.tvFollow.setText("取消关注");
-            mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+            attentionOther();
         } else {
-            mBinding.bannerLayout.tvFollow.setText("关注");
-            mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_4d4));
+            cancelAttention();
         }
     }
 
@@ -174,7 +179,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(DiscoverInfo o) {
                 discoverInfo = o;
-                if (discoverInfo.getOtherUserId() == BaseActivity.userId) {
+                if (discoverInfo.getId() == BaseActivity.userId) {
                     selectorList.add("分享");
                     selectorList.add("删除");
                 } else {
@@ -196,6 +201,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 showBanner(adsList);
                 otherInfo();
                 walletAndPop();
+                attentionStatus();
                 mBinding.setVariable(BR.viewModel, DiscoverDetailViewModel.this);
             }
         }, activity).setFriendDynId(friendDynId);
@@ -265,7 +271,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     new CountUsedPW(activity, mBinding.getRoot(), 2);
                 }
             }
-        }, activity).setOtherUserId(discoverInfo.getOtherUserId()).setLikeOtherStatus(2);
+        }, activity).setOtherUserId(discoverInfo.getId()).setLikeOtherStatus(2);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -276,7 +282,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             public void onNext(MemberInfo o) {
                 memberInfo = o;
             }
-        }, activity).setOtherUserId(discoverInfo.getOtherUserId());
+        }, activity).setOtherUserId(discoverInfo.getId());
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -361,6 +367,47 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     public void selectReview(Review review) {
         reviewId = reviewId == review.getReviewId() ? 0 : review.getReviewId();
         mBinding.setVariable(BR.name, reviewId == 0 ? "" : review.getNick());
+    }
+
+    @Override
+    public void attentionStatus() {
+        attentionStatusApi api = new attentionStatusApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                if (!o.toString().isEmpty()) {
+                    mBinding.bannerLayout.tvFollow.setText("取消关注");
+                    mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                    attentionDb.saveAttention(new CollectID(discoverInfo.getId()));
+                }
+            }
+        }, activity).setOtherUserId(discoverInfo.getId());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void attentionOther() {
+        attentionOtherApi api = new attentionOtherApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                mBinding.bannerLayout.tvFollow.setText("取消关注");
+                mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                attentionDb.saveAttention(new CollectID(discoverInfo.getId()));
+            }
+        }, activity).setOtherUserId(discoverInfo.getId());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void cancelAttention() {
+        cancelAttentionApi api = new cancelAttentionApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                mBinding.bannerLayout.tvFollow.setText("关注");
+                mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_4d4));
+                attentionDb.deleteAttention(discoverInfo.getId());
+            }
+        }, activity).setOtherUserId(discoverInfo.getId());
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override

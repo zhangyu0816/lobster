@@ -34,4 +34,10 @@ public interface DiscoverDetailVMInterface {
     void dynCancelLike();
 
     void selectReview(Review review);
+
+    void attentionStatus();
+
+    void attentionOther();
+
+    void cancelAttention();
 }

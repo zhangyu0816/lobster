@@ -8,7 +8,7 @@ import androidx.databinding.Bindable;
 public class DiscoverInfo extends BaseObservable {
 
     private long friendDynId = 0L;
-    private long otherUserId = 0L;
+    private long id = 0L; // otherUserId
     private String nick = "";// 昵称 艺名//1-16
     private String image = "";// 头像
     private String text = "";
@@ -36,16 +36,18 @@ public class DiscoverInfo extends BaseObservable {
         notifyPropertyChanged(BR.friendDynId);
     }
 
-    @Bindable public long getOtherUserId() {
-        return otherUserId;
+    @Bindable
+    public long getId() {
+        return id;
     }
 
-    public void setOtherUserId(long otherUserId) {
-        this.otherUserId = otherUserId;
-        notifyPropertyChanged(BR.otherUserId);
+    public void setId(long id) {
+        this.id = id;
+        notifyPropertyChanged(BR.id);
     }
 
-    @Bindable public String getNick() {
+    @Bindable
+    public String getNick() {
         return nick;
     }
 
@@ -54,7 +56,8 @@ public class DiscoverInfo extends BaseObservable {
         notifyPropertyChanged(BR.nick);
     }
 
-    @Bindable public String getImage() {
+    @Bindable
+    public String getImage() {
         return image;
     }
 
@@ -63,7 +66,8 @@ public class DiscoverInfo extends BaseObservable {
         notifyPropertyChanged(BR.image);
     }
 
-    @Bindable public String getText() {
+    @Bindable
+    public String getText() {
         return text;
     }
 
@@ -72,7 +76,8 @@ public class DiscoverInfo extends BaseObservable {
         notifyPropertyChanged(BR.text);
     }
 
-    @Bindable public String getImages() {
+    @Bindable
+    public String getImages() {
         return images;
     }
 
@@ -81,7 +86,8 @@ public class DiscoverInfo extends BaseObservable {
         notifyPropertyChanged(BR.images);
     }
 
-    @Bindable public int getImageSize() {
+    @Bindable
+    public int getImageSize() {
         return imageSize;
     }
 
@@ -90,7 +96,8 @@ public class DiscoverInfo extends BaseObservable {
         notifyPropertyChanged(BR.imageSize);
     }
 
-    @Bindable public int getDycType() {
+    @Bindable
+    public int getDycType() {
         return dycType;
     }
 
@@ -99,7 +106,8 @@ public class DiscoverInfo extends BaseObservable {
         notifyPropertyChanged(BR.dycType);
     }
 
-    @Bindable public String getVideoUrl() {
+    @Bindable
+    public String getVideoUrl() {
         return videoUrl;
     }
 
@@ -108,7 +116,8 @@ public class DiscoverInfo extends BaseObservable {
         notifyPropertyChanged(BR.videoUrl);
     }
 
-    @Bindable public String getCreateTime() {
+    @Bindable
+    public String getCreateTime() {
         return createTime;
     }
 
@@ -117,7 +126,8 @@ public class DiscoverInfo extends BaseObservable {
         notifyPropertyChanged(BR.createTime);
     }
 
-    @Bindable public int getIsDoGood() {
+    @Bindable
+    public int getIsDoGood() {
         return isDoGood;
     }
 
@@ -126,7 +136,8 @@ public class DiscoverInfo extends BaseObservable {
         notifyPropertyChanged(BR.isDoGood);
     }
 
-    @Bindable public int getPageviews() {
+    @Bindable
+    public int getPageviews() {
         return pageviews;
     }
 
@@ -135,7 +146,8 @@ public class DiscoverInfo extends BaseObservable {
         notifyPropertyChanged(BR.pageviews);
     }
 
-    @Bindable public int getGoodNum() {
+    @Bindable
+    public int getGoodNum() {
         return goodNum;
     }
 
@@ -144,7 +156,8 @@ public class DiscoverInfo extends BaseObservable {
         notifyPropertyChanged(BR.goodNum);
     }
 
-    @Bindable public int getReviews() {
+    @Bindable
+    public int getReviews() {
         return reviews;
     }
 
@@ -153,7 +166,8 @@ public class DiscoverInfo extends BaseObservable {
         notifyPropertyChanged(BR.reviews);
     }
 
-    @Bindable public int getRewardNum() {
+    @Bindable
+    public int getRewardNum() {
         return rewardNum;
     }
 
@@ -162,7 +176,8 @@ public class DiscoverInfo extends BaseObservable {
         notifyPropertyChanged(BR.rewardNum);
     }
 
-    @Bindable public int getResTime() {
+    @Bindable
+    public int getResTime() {
         return resTime;
     }
 
@@ -171,7 +186,8 @@ public class DiscoverInfo extends BaseObservable {
         notifyPropertyChanged(BR.resTime);
     }
 
-    @Bindable public int getPrivateRedPageNum() {
+    @Bindable
+    public int getPrivateRedPageNum() {
         return privateRedPageNum;
     }
 
@@ -180,7 +196,8 @@ public class DiscoverInfo extends BaseObservable {
         notifyPropertyChanged(BR.privateRedPageNum);
     }
 
-    @Bindable public String getFriendTitle() {
+    @Bindable
+    public String getFriendTitle() {
         return friendTitle;
     }
 

@@ -13,6 +13,7 @@ import com.zb.lib_base.api.uploadVideoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.http.HttpUploadManager;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.utils.ActivityUtils;
@@ -131,7 +132,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                     publishDyn("");
                 }
             }, activity).setFile(new File(videoUrl));
-            HttpManager.getInstance().doHttpDeal(api);
+            HttpUploadManager.getInstance().doHttpDeal(api);
         }
     }
 

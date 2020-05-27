@@ -51,7 +51,7 @@
             viewHeightSize="@{ObjectUtils.getLogoHeight(0.31f)}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.31f)}"
             isRound="@{true}"
-            roundSize="@{14}"
+            roundSize="@{5}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"

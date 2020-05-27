@@ -28,7 +28,7 @@
             defaultRes="@{ObjectUtils.getDefaultRes()}"
             imageUrl='@{item.videoUrl}'
             isRound="@{true}"
-            roundSize="@{14}"
+            roundSize="@{5}"
             viewHeightSize="@{ObjectUtils.getLogoHeight(0.498f)}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.498f)}"
             android:layout_width="match_parent"

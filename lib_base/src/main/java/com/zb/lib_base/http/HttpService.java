@@ -37,8 +37,6 @@ import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -71,31 +69,28 @@ public interface HttpService {
     Observable<BaseResultEntity<ResourceUrl>> uploadSound(@Part("fileFileName") RequestBody fileName, @Part MultipartBody.Part file);
 
     // 用户注册
-    @FormUrlEncoded
-    @POST("api/Login_regist")
-    Observable<BaseResultEntity<LoginInfo>> register(@Field("userName") String userName, @Field("captcha") String captcha,
-                                                     @Field("moreImages") String moreImages, @Field("nick") String nick,
-                                                     @Field("sex") int sex, @Field("birthday") String birthday, @Field("provinceId") long provinceId, @Field("cityId") long cityId,
-                                                     @Field("districtId") long districtId, @Field("device") String device,
-                                                     @Field("deviceSysVersion") String deviceSysVersion, @Field("deviceCode") String deviceCode,
-                                                     @Field("channelId") String channelId, @Field("usePl") int usePl, @Field("appVersion") String appVersion,
-                                                     @Field("deviceHardwareInfo") String deviceHardwareInfo);
+    @GET("api/Login_regist")
+    Observable<BaseResultEntity<LoginInfo>> register(@Query("userName") String userName, @Query("captcha") String captcha,
+                                                     @Query("moreImages") String moreImages, @Query("nick") String nick,
+                                                     @Query("sex") int sex, @Query("birthday") String birthday, @Query("provinceId") long provinceId, @Query("cityId") long cityId,
+                                                     @Query("districtId") long districtId, @Query("device") String device,
+                                                     @Query("deviceSysVersion") String deviceSysVersion, @Query("deviceCode") String deviceCode,
+                                                     @Query("channelId") String channelId, @Query("usePl") int usePl, @Query("appVersion") String appVersion,
+                                                     @Query("deviceHardwareInfo") String deviceHardwareInfo);
 
     // 根据密码登录
-    @FormUrlEncoded
-    @POST("api/Login_login")
-    Observable<BaseResultEntity<LoginInfo>> loginByPass(@Field("userName") String userName, @Field("passWord") String passWord, @Field("device") String device,
-                                                        @Field("deviceSysVersion") String deviceSysVersion, @Field("deviceCode") String deviceCode,
-                                                        @Field("channelId") String channelId, @Field("usePl") int usePl, @Field("appVersion") String appVersion,
-                                                        @Field("deviceHardwareInfo") String deviceHardwareInfo);
+    @GET("api/Login_login")
+    Observable<BaseResultEntity<LoginInfo>> loginByPass(@Query("userName") String userName, @Query("passWord") String passWord, @Query("device") String device,
+                                                        @Query("deviceSysVersion") String deviceSysVersion, @Query("deviceCode") String deviceCode,
+                                                        @Query("channelId") String channelId, @Query("usePl") int usePl, @Query("appVersion") String appVersion,
+                                                        @Query("deviceHardwareInfo") String deviceHardwareInfo);
 
     // 根据验证码登录
-    @FormUrlEncoded
-    @POST("api/Login_captchaLogin")
-    Observable<BaseResultEntity<LoginInfo>> loginByCaptcha(@Field("userName") String userName, @Field("captcha") String captcha, @Field("device") String device,
-                                                           @Field("deviceSysVersion") String deviceSysVersion, @Field("deviceCode") String deviceCode,
-                                                           @Field("channelId") String channelId, @Field("usePl") int usePl, @Field("appVersion") String appVersion,
-                                                           @Field("deviceHardwareInfo") String deviceHardwareInfo);
+    @GET("api/Login_captchaLogin")
+    Observable<BaseResultEntity<LoginInfo>> loginByCaptcha(@Query("userName") String userName, @Query("captcha") String captcha, @Query("device") String device,
+                                                           @Query("deviceSysVersion") String deviceSysVersion, @Query("deviceCode") String deviceCode,
+                                                           @Query("channelId") String channelId, @Query("usePl") int usePl, @Query("appVersion") String appVersion,
+                                                           @Query("deviceHardwareInfo") String deviceHardwareInfo);
 
     // 用户注册验证码
     @GET("api/Login_registCaptcha")
@@ -130,10 +125,9 @@ public interface HttpService {
     Observable<BaseResultEntity<List<Report>>> comType();
 
     // 举报
-    @FormUrlEncoded
-    @POST("api/Complain_comsub")
-    Observable<BaseResultEntity> comsub(@Field("complainTypeId") long complainTypeId, @Field("comUserId") long comUserId, @Field("comText") String comText,
-                                        @Field("images") String images);
+    @GET("api/Complain_comsub")
+    Observable<BaseResultEntity> comsub(@Query("complainTypeId") long complainTypeId, @Query("comUserId") long comUserId, @Query("comText") String comText,
+                                        @Query("images") String images);
 
     /******************************* app **********************************/
 
@@ -142,34 +136,28 @@ public interface HttpService {
     Observable<BaseResultEntity<List<VipInfo>>> openedMemberPriceList();
 
     // 提交VIP订单 - 需登录
-    @FormUrlEncoded
-    @POST("api/MemberOrder_submitOpenedMemberOrder")
-    Observable<BaseResultEntity<OrderNumber>> submitOpenedMemberOrder(@Field("memberOfOpenedProductId") long memberOfOpenedProductId, @Field("productCount") int productCount);
+    @GET("api/MemberOrder_submitOpenedMemberOrder")
+    Observable<BaseResultEntity<OrderNumber>> submitOpenedMemberOrder(@Query("memberOfOpenedProductId") long memberOfOpenedProductId, @Query("productCount") int productCount);
 
     // 获取交易订单号
-    @FormUrlEncoded
-    @POST("api/MemberOrder_payOrderForTran")
-    Observable<BaseResultEntity<OrderTran>> payOrderForTran(@Field("orderNumber") String orderNumber);
+    @GET("api/MemberOrder_payOrderForTran")
+    Observable<BaseResultEntity<OrderTran>> payOrderForTran(@Query("orderNumber") String orderNumber);
 
     // 用钱包支付交易
-    @FormUrlEncoded
-    @POST("api/Pay_walletPayTran")
-    Observable<BaseResultEntity> walletPayTran(@Field("tranOrderId") String tranOrderId);
+    @GET("api/Pay_walletPayTran")
+    Observable<BaseResultEntity> walletPayTran(@Query("tranOrderId") String tranOrderId);
 
     // 用支付宝支付交易
-    @FormUrlEncoded
-    @POST("api/Pay_alipayFastPayTran")
-    Observable<BaseResultEntity<AliPay>> alipayFastPayTran(@Field("tranOrderId") String tranOrderId);
+    @GET("api/Pay_alipayFastPayTran")
+    Observable<BaseResultEntity<AliPay>> alipayFastPayTran(@Query("tranOrderId") String tranOrderId);
 
     // 用微信支付交易
-    @FormUrlEncoded
-    @POST("api/Pay_wxpayAppPayTran")
-    Observable<BaseResultEntity<WXPay>> wxpayAppPayTran(@Field("tranOrderId") String tranOrderId);
+    @GET("api/Pay_wxpayAppPayTran")
+    Observable<BaseResultEntity<WXPay>> wxpayAppPayTran(@Query("tranOrderId") String tranOrderId);
 
     // 三合一接口 （返回关注数量、粉丝数量、喜欢数量、被喜欢数量）
-    @FormUrlEncoded
-    @POST("api/Collect_contactNum")
-    Observable<BaseResultEntity<ContactNum>> contactNum(@Field("otherUserId") long otherUserId);
+    @GET("api/Collect_contactNum")
+    Observable<BaseResultEntity<ContactNum>> contactNum(@Query("otherUserId") long otherUserId);
 
     /******************************* 首页 **********************************/
 
@@ -248,18 +236,16 @@ public interface HttpService {
 
     /******************************* 卡片 **********************************/
     // 加入匹配池 (提交当前位置)
-    @FormUrlEncoded
-    @POST("api/Pair_joinPairPool")
-    Observable<BaseResultEntity> joinPairPool(@Field("longitude") String longitude, @Field("latitude") String latitude);
+    @GET("api/Pair_joinPairPool")
+    Observable<BaseResultEntity> joinPairPool(@Query("longitude") String longitude, @Query("latitude") String latitude);
 
     // 预匹配列表
     @GET("api/Pair_prePairList")
     Observable<BaseResultEntity<List<PairInfo>>> prePairList(@Query("sex") int sex, @Query("minAge") int minAge, @Query("maxAge") int maxAge);
 
     // 评估
-    @FormUrlEncoded
-    @POST("api/Pair_makeEvaluate")
-    Observable<BaseResultEntity<Integer>> makeEvaluate(@Field("otherUserId") long otherUserId, @Field("likeOtherStatus") int likeOtherStatus);
+    @GET("api/Pair_makeEvaluate")
+    Observable<BaseResultEntity<Integer>> makeEvaluate(@Query("otherUserId") long otherUserId, @Query("likeOtherStatus") int likeOtherStatus);
 
     // 超级曝光
     @GET("api/Pair_superExposure")
@@ -299,9 +285,8 @@ public interface HttpService {
     /******************************* 漂流瓶 **********************************/
 
     // 投掷漂流瓶
-    @FormUrlEncoded
-    @POST("api/DriftBottle_castBottle")
-    Observable<BaseResultEntity> castBottle(@Field("text") String text);
+    @GET("api/DriftBottle_castBottle")
+    Observable<BaseResultEntity> castBottle(@Query("text") String text);
 
     // 我的漂流瓶列表
     @GET("api/DriftBottle_myBottleList")
@@ -331,19 +316,17 @@ public interface HttpService {
     /******************************* 我的 **********************************/
 
     // 修改个人信息
-    @FormUrlEncoded
-    @POST("api/Member_modifyMemberInfo")
-    Observable<BaseResultEntity> modifyMemberInfo(@Field("nick") String nick, @Field("image") String image, @Field("moreImages") String moreImages,
-                                                  @Field("personalitySign") String personalitySign, @Field("birthday") String birthday,
-                                                  @Field("age") int age, @Field("sex") int sex, @Field("constellation") int constellation,
-                                                  @Field("job") String job, @Field("provinceId") long provinceId, @Field("cityId") long cityId,
-                                                  @Field("districtId") long districtId, @Field("singleImage") String singleImage,
-                                                  @Field("serviceTags") String serviceTags);
+    @GET("api/Member_modifyMemberInfo")
+    Observable<BaseResultEntity> modifyMemberInfo(@Query("nick") String nick, @Query("image") String image, @Query("moreImages") String moreImages,
+                                                  @Query("personalitySign") String personalitySign, @Query("birthday") String birthday,
+                                                  @Query("age") int age, @Query("sex") int sex, @Query("constellation") int constellation,
+                                                  @Query("job") String job, @Query("provinceId") long provinceId, @Query("cityId") long cityId,
+                                                  @Query("districtId") long districtId, @Query("singleImage") String singleImage,
+                                                  @Query("serviceTags") String serviceTags);
 
     // 修改密码
-    @FormUrlEncoded
-    @POST("api/Member_modifyPass")
-    Observable<BaseResultEntity> modifyPass(@Field("oldPassWord") String oldPassWord, @Field("newPassWord") String newPassWord);
+    @GET("api/Member_modifyPass")
+    Observable<BaseResultEntity> modifyPass(@Query("oldPassWord") String oldPassWord, @Query("newPassWord") String newPassWord);
 
     // 人脸认证状态
     @GET("api/Verify_humanFaceStatus")
