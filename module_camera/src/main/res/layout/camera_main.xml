@@ -28,6 +28,10 @@
             name="isMore"
             type="boolean" />
 
+        <variable
+            name="showBottom"
+            type="boolean" />
+
     </data>
 
     <RelativeLayout
@@ -148,7 +152,7 @@
             android:layout_alignParentBottom="true"
             android:gravity="center"
             android:orientation="horizontal"
-            android:visibility="@{isMore?View.VISIBLE:View.GONE}">
+            android:visibility="@{showBottom?View.VISIBLE:View.GONE}">
 
             <TextView
                 android:layout_width="0dp"

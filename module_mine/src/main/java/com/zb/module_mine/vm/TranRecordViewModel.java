@@ -80,6 +80,8 @@ public class TranRecordViewModel extends BaseViewModel implements TranRecordVMIn
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     mBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
                 }
             }
         }, activity).setPageNo(pageNo).setTranType(tranType);

@@ -24,8 +24,8 @@ import androidx.databinding.ViewDataBinding;
 
 public class GRGiftViewModel extends BaseViewModel implements GRGiftVMInterface, OnRefreshListener, OnLoadMoreListener {
     public int friendDynGiftType;
-    private int pageNo = 1;
     public MineAdapter adapter;
+    private int pageNo = 1;
     private List<GiftRecord> giftRecordList = new ArrayList<>();
     private MineGiveReceiveGiftBinding mBinding;
 
@@ -64,6 +64,8 @@ public class GRGiftViewModel extends BaseViewModel implements GRGiftVMInterface,
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     mBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
                 }
             }
         }, activity).setPageNo(pageNo).setFriendDynGiftType(friendDynGiftType);

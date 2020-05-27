@@ -27,7 +27,6 @@ public class WalletActivity extends BaseActivity {
         fitComprehensiveScreen();
         WalletViewModel viewModel = new WalletViewModel();
         viewModel.setBinding(mBinding);
-        mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.title, "我的钱包");
         mBinding.setVariable(BR.right, "账单明细");
     }

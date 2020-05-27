@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnimationUtils;
 import android.view.animation.CycleInterpolator;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.zb.lib_base.activity.BaseReceiver;
@@ -33,7 +34,6 @@ import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.SimulateNetAPI;
 import com.zb.lib_base.views.MyRecyclerView;
-import com.zb.lib_base.views.RoundImageView;
 import com.zb.lib_base.views.card.CardConfig;
 import com.zb.lib_base.views.card.CardItemTouchHelperCallback;
 import com.zb.lib_base.views.card.OnSwipeListener;
@@ -51,6 +51,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -237,11 +238,15 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     pairInfoList.clear();
                     adapter.notifyDataSetChanged();
                 }
-                pairInfoList.addAll(o);
+                for(PairInfo pairInfo:o){
+                    pairInfo.setImageList(Arrays.asList(pairInfo.getMoreImages().split("#")));
+                    pairInfoList.add(pairInfo);
+                }
                 adapter.notifyDataSetChanged();
             }
         }, activity)
-                .setSex(mineInfo.getSex() == 0 ? 1 : 0)
+//                .setSex(mineInfo.getSex() == 0 ? 1 : 0)
+                .setSex(1)
                 .setMaxAge(100)
                 .setMinAge(0);
         api.setShowProgress(needProgress);
@@ -290,7 +295,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         imageAdapter.notifyItemChanged(preIndex);
         imageAdapter.notifyItemChanged(selectIndex);
 
-        RoundImageView imageView = view.findViewById(R.id.iv_big_image);
+        ImageView imageView = view.findViewById(R.id.iv_big_image);
         MyRecyclerView imageListView = view.findViewById(R.id.image_list);
 
         Objects.requireNonNull(imageListView.getLayoutManager()).scrollToPosition(selectIndex);

@@ -108,7 +108,6 @@ public class GlideRoundTransform extends BitmapTransformation {
     private void drawRoundRect(Canvas canvas, Paint paint, float width, float height) {
         float right = width - margin;
         float bottom = height - margin;
-
         canvas.drawRoundRect(new RectF(margin, margin, right, bottom), radius, radius, paint);
 
         //把不需要的圆角去掉

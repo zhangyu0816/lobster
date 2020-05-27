@@ -37,6 +37,8 @@ public class MineInfoDb extends BaseDao {
                 mineInfo.setPersonalitySign(content);
             else if (type == 4)
                 mineInfo.setServiceTags(content);
+            else if (type == 5)
+                mineInfo.setBirthday(content);
 
         }
         commitTransaction();

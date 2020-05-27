@@ -186,6 +186,6 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     }
 
     private void setPermissions() {
-        ActivityUtils.getCameraMain(activity, true);
+        ActivityUtils.getCameraMain(activity, true,true);
     }
 }

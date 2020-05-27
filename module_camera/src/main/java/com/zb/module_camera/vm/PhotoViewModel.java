@@ -151,7 +151,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
     @Override
     public void selectIndex(int index) {
         if (index == 0) {
-            ActivityUtils.getCameraMain(activity, true);
+            ActivityUtils.getCameraMain(activity, true,true);
         } else if (index == 1) {
             ActivityUtils.getCameraVideo();
         }

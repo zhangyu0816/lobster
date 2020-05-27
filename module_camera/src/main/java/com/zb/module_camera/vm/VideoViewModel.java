@@ -192,7 +192,7 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
     @Override
     public void selectIndex(int index) {
         if (index == 0) {
-            ActivityUtils.getCameraMain(activity, true);
+            ActivityUtils.getCameraMain(activity, true, true);
         } else if (index == 2) {
             ActivityUtils.getCameraPhoto();
         }

@@ -41,7 +41,7 @@ import androidx.fragment.app.Fragment;
 import io.realm.Realm;
 
 public class MemberDetailViewModel extends BaseViewModel implements MemberDetailVMInterface {
-    private CardMemberDetailBinding detailBinding;
+    private CardMemberDetailBinding mBinding;
     public long otherUserId = 0;
     public MemberInfo memberInfo;
     public CardAdapter tagAdapter;
@@ -60,9 +60,9 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         if (otherUserId != BaseActivity.userId)
             selectorList.add("举报");
         selectorList.add("分享");
-        detailBinding = (CardMemberDetailBinding) binding;
+        mBinding = (CardMemberDetailBinding) binding;
         mBinding.setVariable(BR.baseInfo, "");
-        AdapterBinding.viewSize(detailBinding.bannerLayout.banner, MineApp.W, ObjectUtils.getLogoHeight(1.0f));
+        AdapterBinding.viewSize(mBinding.bannerLayout.banner, MineApp.W, ObjectUtils.getLogoHeight(1.0f));
         setAdapter();
         initFragments();
         otherInfo();
@@ -78,8 +78,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         fragments.clear();
         fragments.add(FragmentUtils.getCardMemberDiscoverFragment(otherUserId));
         fragments.add(FragmentUtils.getCardMemberVideoFragment(otherUserId));
-        detailBinding.viewPage.setAdapter(new FragmentAdapter(activity.getSupportFragmentManager(), fragments));
-        initTabLayout(new String[]{"动态", "小视频"}, detailBinding.tabLayout, detailBinding.viewPage, R.color.black_4d4, R.color.black_c3b);
+        mBinding.viewPage.setAdapter(new FragmentAdapter(activity.getSupportFragmentManager(), fragments));
+        initTabLayout(new String[]{"动态", "小视频"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_4d4, R.color.black_c3b);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     }
                     showBanner(adsList);
                 }
-
+                mBinding.setVariable(BR.viewModel, MemberDetailViewModel.this);
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
@@ -139,8 +139,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         attentionStatusApi api = new attentionStatusApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                detailBinding.bannerLayout.tvFollow.setText("取消关注");
-                detailBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                mBinding.bannerLayout.tvFollow.setText("取消关注");
+                mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
                 attentionDb.saveAttention(new CollectID(otherUserId));
             }
         }, activity).setOtherUserId(otherUserId);
@@ -152,8 +152,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         attentionOtherApi api = new attentionOtherApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                detailBinding.bannerLayout.tvFollow.setText("取消关注");
-                detailBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                mBinding.bannerLayout.tvFollow.setText("取消关注");
+                mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
                 attentionDb.saveAttention(new CollectID(otherUserId));
             }
         }, activity).setOtherUserId(otherUserId);
@@ -165,8 +165,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         cancelAttentionApi api = new cancelAttentionApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                detailBinding.bannerLayout.tvFollow.setText("关注");
-                detailBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_4d4));
+                mBinding.bannerLayout.tvFollow.setText("关注");
+                mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_4d4));
                 attentionDb.deleteAttention(otherUserId);
             }
         }, activity).setOtherUserId(otherUserId);
@@ -203,7 +203,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     @Override
     public void follow(View view) {
         super.follow(view);
-        if (detailBinding.bannerLayout.tvFollow.getText().toString().equals("关注")) {
+        if (mBinding.bannerLayout.tvFollow.getText().toString().equals("关注")) {
             attentionOther();
         } else {
             cancelAttention();
@@ -212,7 +212,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
 
     // 显示相册
     private void showBanner(List<Ads> adList) {
-        detailBinding.bannerLayout.banner.setImageScaleType(ImageView.ScaleType.FIT_XY)
+        mBinding.bannerLayout.banner.setImageScaleType(ImageView.ScaleType.FIT_XY)
                 .setAds(adList)
                 .setImageLoader((context, ads, image, position) -> AdapterBinding.loadImage(image, ads.getSmallImage(), 0,
                         ObjectUtils.getDefaultRes(), MineApp.W, ObjectUtils.getLogoHeight(1.0f),

@@ -20,6 +20,7 @@ import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
 import com.zb.lib_base.utils.uploadImage.PhotoFile;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.BirthdayPW;
 import com.zb.lib_base.windows.SelectorPW;
 import com.zb.module_mine.R;
 import com.zb.module_mine.adapter.MineAdapter;
@@ -151,6 +152,16 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     }
 
     @Override
+    public void toSelectBirthday(View view) {
+        new BirthdayPW(activity, mBinding.getRoot(), birthday -> {
+            String[] birthdays = birthday.split("/");
+            mineInfoDb.updateNick(birthdays[2] + "-" + birthdays[1] + "-" + birthdays[0], 5);
+            mineInfo = mineInfoDb.getMineInfo();
+            mBinding.setVariable(BR.viewModel, this);
+        });
+    }
+
+    @Override
     public void toSelectJob(View view) {
         ActivityUtils.getMineSelectJob();
     }
@@ -218,6 +229,6 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     }
 
     private void setPermissions() {
-        ActivityUtils.getCameraMain(activity, false);
+        ActivityUtils.getCameraMain(activity, false,false);
     }
 }

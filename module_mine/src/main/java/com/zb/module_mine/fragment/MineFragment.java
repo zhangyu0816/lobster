@@ -6,7 +6,6 @@ import com.zb.lib_base.activity.BaseFragment;
 import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.RouteUtils;
-import com.zb.module_mine.BR;
 import com.zb.module_mine.R;
 import com.zb.module_mine.databinding.MineFragBinding;
 import com.zb.module_mine.vm.MineViewModel;

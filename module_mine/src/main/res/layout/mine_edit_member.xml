@@ -33,8 +33,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:padding="15dp"
                 android:layout_marginTop="22dp"
+                android:padding="15dp"
                 android:text="保存"
                 android:textColor="@color/black_252"
                 android:textSize="16sp"
@@ -45,8 +45,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFF5D9"
+            android:ellipsize="marquee"
             android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
             android:padding="8dp"
+            android:singleLine="true"
             android:text="发布的内容必须遵守法律法规和社区规定，请严格遵守，以免违规"
             android:textColor="#F7BF00"
             android:textSize="12sp" />
@@ -154,6 +157,7 @@
                     android:background="@color/black_efe" />
 
                 <RelativeLayout
+                    onClickDelayed="@{viewModel::toSelectBirthday}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="15dp">

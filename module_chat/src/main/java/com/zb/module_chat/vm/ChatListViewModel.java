@@ -6,6 +6,7 @@ import com.zb.lib_base.api.chatListApi;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -60,6 +61,13 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                 chatMsgList.addAll(chatListDb.getChatList());
                 adapter.notifyDataSetChanged();
                 mBinding.refresh.finishRefresh();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    mBinding.refresh.finishRefresh();
+                }
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

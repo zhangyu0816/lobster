@@ -91,6 +91,8 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     listBinding.refresh.setEnableLoadMore(false);
+                    listBinding.refresh.finishRefresh();
+                    listBinding.refresh.finishLoadMore();
                 }
             }
         }, activity).setPageNo(pageNo);

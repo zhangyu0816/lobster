@@ -3,7 +3,6 @@ package com.zb.module_card.activity;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.utils.RouteUtils;
-import com.zb.module_card.BR;
 import com.zb.module_card.R;
 import com.zb.module_card.vm.MemberDetailViewModel;
 
@@ -23,7 +22,6 @@ public class MemberDetailActivity extends CardBaseActivity {
         fitComprehensiveScreen();
         MemberDetailViewModel viewModel = new MemberDetailViewModel();
         viewModel.otherUserId = userId;
-        mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
     }
 }

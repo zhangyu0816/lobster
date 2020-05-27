@@ -9,6 +9,7 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.dynPiazzaListApi;
+import com.zb.lib_base.api.personOtherDynApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.http.HttpManager;
@@ -60,7 +61,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     @Override
     public void setAdapter() {
         adapter = new CardAdapter<>(activity, R.layout.item_card_discover, discoverInfoList, this);
-        dynPiazzaList();
+        getData();
     }
 
 
@@ -68,7 +69,15 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         // 上拉加载更多
         pageNo++;
-        dynPiazzaList();
+        getData();
+    }
+
+    private void getData() {
+        if (otherUserId == 0) {
+            dynPiazzaList();
+        } else {
+            personOtherDyn();
+        }
     }
 
     @Override
@@ -94,13 +103,49 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 if (e instanceof SocketTimeoutException || e instanceof ConnectException) {
                     discoverBinding.noNetLinear.setVisibility(View.VISIBLE);
                     discoverBinding.refresh.setEnableLoadMore(false);
+                    discoverBinding.refresh.finishRefresh();
+                    discoverBinding.refresh.finishLoadMore();
                 } else if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     discoverBinding.refresh.setEnableLoadMore(false);
+                    discoverBinding.refresh.finishRefresh();
+                    discoverBinding.refresh.finishLoadMore();
                 }
             }
         }, activity)
                 .setCityId(areaDb.getCityId(MineApp.cityName))
                 .setDynType(1)
+                .setPageNo(pageNo);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void personOtherDyn() {
+        personOtherDynApi api = new personOtherDynApi(new HttpOnNextListener<List<DiscoverInfo>>() {
+            @Override
+            public void onNext(List<DiscoverInfo> o) {
+                discoverBinding.noNetLinear.setVisibility(View.GONE);
+                int start = discoverInfoList.size();
+                discoverInfoList.addAll(o);
+                adapter.notifyItemRangeChanged(start, discoverInfoList.size());
+                discoverBinding.refresh.finishRefresh();
+                discoverBinding.refresh.finishLoadMore();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof SocketTimeoutException || e instanceof ConnectException) {
+                    discoverBinding.noNetLinear.setVisibility(View.VISIBLE);
+                    discoverBinding.refresh.setEnableLoadMore(false);
+                    discoverBinding.refresh.finishRefresh();
+                    discoverBinding.refresh.finishLoadMore();
+                } else if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    discoverBinding.refresh.setEnableLoadMore(false);
+                    discoverBinding.refresh.finishRefresh();
+                    discoverBinding.refresh.finishLoadMore();
+                }
+            }
+        }, activity)
+                .setDynType(2)
                 .setOtherUserId(otherUserId)
                 .setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
@@ -112,6 +157,6 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
         discoverBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         discoverInfoList.clear();
-        dynPiazzaList();
+        getData();
     }
 }

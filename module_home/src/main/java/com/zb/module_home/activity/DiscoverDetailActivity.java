@@ -8,7 +8,6 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.utils.KeyBroadUtils;
 import com.zb.lib_base.utils.RouteUtils;
-import com.zb.module_home.BR;
 import com.zb.module_home.R;
 import com.zb.module_home.databinding.HomeDiscoverDetailBinding;
 import com.zb.module_home.vm.DiscoverDetailViewModel;
@@ -36,7 +35,6 @@ public class DiscoverDetailActivity extends BaseActivity {
     public void initUI() {
         viewModel = new DiscoverDetailViewModel();
         viewModel.friendDynId = friendDynId;
-        mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
 
         HomeDiscoverDetailBinding binding = (HomeDiscoverDetailBinding) mBinding;

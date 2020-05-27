@@ -92,8 +92,12 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
                 if (e instanceof SocketTimeoutException || e instanceof ConnectException) {
                     followBinding.noNetLinear.setVisibility(View.VISIBLE);
                     followBinding.refresh.setEnableLoadMore(false);
+                    followBinding.refresh.finishRefresh();
+                    followBinding.refresh.finishLoadMore();
                 } else if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     followBinding.refresh.setEnableLoadMore(false);
+                    followBinding.refresh.finishRefresh();
+                    followBinding.refresh.finishLoadMore();
                 }
             }
         }, activity).setPageNo(pageNo).setTimeSortType(1);

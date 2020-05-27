@@ -179,7 +179,13 @@ public interface HttpService {
 
     // 动态广场
     @GET("api/Interactive_dynPiazzaList")
-    Observable<BaseResultEntity<List<DiscoverInfo>>> dynPiazzaList(@QueryMap Map<String, String> map);
+    Observable<BaseResultEntity<List<DiscoverInfo>>> dynPiazzaList(@Query("cityId") long cityId, @Query("pageNo") int pageNo,
+                                                                   @Query("dynType") int dynType);
+
+    // 个人动态
+    @GET("api/Interactive_personOtherDyn")
+    Observable<BaseResultEntity<List<DiscoverInfo>>> personOtherDyn(@Query("otherUserId") long otherUserId, @Query("pageNo") int pageNo,
+                                                                    @Query("timeSortType") int timeSortType, @Query("dycRootType") int dynType);
 
     // 发布动态
     @GET("api/Interactive_publishDyn")
@@ -289,6 +295,7 @@ public interface HttpService {
     // 获取第三方未读会话
     @GET("api/Contact_thirdReadChat")
     Observable<BaseResultEntity> thirdReadChat(@Query("otherUserId") long otherUserId);
+
     /******************************* 漂流瓶 **********************************/
 
     // 投掷漂流瓶

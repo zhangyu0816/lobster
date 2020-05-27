@@ -183,4 +183,12 @@ public class ObjectUtils {
             return R.color.black_827;
         }
     }
+
+    public static int reportTextColor(boolean isSelect) {
+        if (isSelect) {
+            return R.color.purple_7a4;
+        } else {
+            return R.color.black_252;
+        }
+    }
 }

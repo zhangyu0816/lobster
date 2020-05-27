@@ -9,6 +9,7 @@ import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.TextPW;
+import com.zb.module_mine.BR;
 import com.zb.module_mine.iv.GiftRecordVMInterface;
 
 import androidx.databinding.ViewDataBinding;
@@ -59,6 +60,7 @@ public class GiftRecordViewModel extends BaseViewModel implements GiftRecordVMIn
             @Override
             public void onNext(WalletInfo o) {
                 walletInfo = o;
+                mBinding.setVariable(BR.viewModel, GiftRecordViewModel.this);
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

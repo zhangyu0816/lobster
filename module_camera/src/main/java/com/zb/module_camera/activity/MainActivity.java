@@ -15,6 +15,8 @@ public class MainActivity extends CameraBaseActivity {
 
     @Autowired(name = "isMore")
     boolean isMore;
+    @Autowired(name = "showBottom")
+    boolean showBottom;
 
     @Override
     public int getRes() {
@@ -28,6 +30,7 @@ public class MainActivity extends CameraBaseActivity {
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.isMore, isMore);
+        mBinding.setVariable(BR.showBottom, showBottom);
         AdapterBinding.viewSize(((CameraMainBinding) mBinding).imagesList, MineApp.W, (int) (MineApp.H * 0.4f));
 
     }

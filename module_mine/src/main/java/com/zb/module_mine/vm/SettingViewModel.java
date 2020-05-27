@@ -2,7 +2,6 @@ package com.zb.module_mine.vm;
 
 import android.view.View;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.loginOutApi;
 import com.zb.lib_base.http.HttpManager;

@@ -10,33 +10,33 @@ import java.util.List;
 
 import rx.Observable;
 
-public class dynPiazzaListApi extends BaseEntity<List<DiscoverInfo>> {
+public class personOtherDynApi extends BaseEntity<List<DiscoverInfo>> {
+    long otherUserId;
     int pageNo;
-    long cityId;
-    int dynType; //动态类型  1推荐(文字) 2小视频
+    int dynType;
 
-    public dynPiazzaListApi setPageNo(int pageNo) {
+    public personOtherDynApi setOtherUserId(long otherUserId) {
+        this.otherUserId = otherUserId;
+        return this;
+    }
+
+    public personOtherDynApi setPageNo(int pageNo) {
         this.pageNo = pageNo;
         return this;
     }
 
-    public dynPiazzaListApi setCityId(long cityId) {
-        this.cityId = cityId;
-        return this;
-    }
-
-    public dynPiazzaListApi setDynType(int dynType) {
+    public personOtherDynApi setDynType(int dynType) {
         this.dynType = dynType;
         return this;
     }
 
-    public dynPiazzaListApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
+    public personOtherDynApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
         setDialogTitle("加载动态信息");
     }
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.dynPiazzaList(cityId, pageNo, dynType);
+        return methods.personOtherDyn(otherUserId, pageNo, 1, dynType);
     }
 }

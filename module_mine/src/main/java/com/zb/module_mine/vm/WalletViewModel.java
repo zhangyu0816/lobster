@@ -10,6 +10,7 @@ import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.RechargePW;
+import com.zb.module_mine.BR;
 import com.zb.module_mine.iv.WalletVMInterface;
 
 import java.util.ArrayList;
@@ -72,6 +73,7 @@ public class WalletViewModel extends BaseViewModel implements WalletVMInterface 
             @Override
             public void onNext(WalletInfo o) {
                 walletInfo = o;
+                mBinding.setVariable(BR.viewModel, WalletViewModel.this);
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

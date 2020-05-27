@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="item"
+            type="String" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="isLast"
+            type="boolean" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_home.vm.ReportViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            defaultRes="@{ObjectUtils.getDefaultRes()}"
+            imageUrl="@{item}"
+            isRound="@{true}"
+            onClickDelayed="@{v->viewModel.previewImage(position)}"
+            roundSize="@{7}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.3f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.3f)}"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="20dp"
+            android:visibility="@{(position==0&amp;&amp;!isLast&amp;&amp;!ObjectUtils.isVideo(item))?View.VISIBLE:View.GONE}"
+            app:srcCompat="@mipmap/face_icon" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"
+            android:visibility="@{ObjectUtils.isVideo(item)?View.VISIBLE:View.GONE}"
+            app:srcCompat="@mipmap/video_play_icon" />
+
+    </RelativeLayout>
+</layout>

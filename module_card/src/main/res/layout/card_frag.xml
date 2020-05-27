@@ -106,18 +106,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <com.zb.lib_base.views.RoundImageView
+                <ImageView
                     android:id="@+id/iv_big_image"
                     defaultRes="@{ObjectUtils.getDefaultRes()}"
-                    imageUrl="@{pairInfo.imageList.get(0)}"
+                    imageUrl="@{pairInfo.headImage}"
+                    isRound="@{true}"
+                    roundSize="@{10}"
                     viewHeightSize="@{ObjectUtils.getLogoHeight(0.92f)}"
                     viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.92f)}"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_centerInParent="true"
-                    android:scaleType="centerCrop"
-                    app:all="true"
-                    app:radius="10dp" />
+                    android:scaleType="centerCrop" />
 
                 <RelativeLayout
                     android:id="@+id/info_relative"

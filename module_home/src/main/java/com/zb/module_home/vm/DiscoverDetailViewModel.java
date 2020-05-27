@@ -60,15 +60,16 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
 
 public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDetailVMInterface, OnRefreshListener, OnLoadMoreListener {
-    private HomeDiscoverDetailBinding discoverDetailBinding;
+    private HomeDiscoverDetailBinding mBinding;
     public long friendDynId = 0;
     public DiscoverInfo discoverInfo;
+    public HomeAdapter reviewAdapter;
+    public HomeAdapter rewardAdapter;
+
     private List<String> selectorList = new ArrayList<>();
     private List<Review> reviewList = new ArrayList<>();
     private int pageNo = 1;
-    public HomeAdapter reviewAdapter;
     private List<Reward> rewardList = new ArrayList<>();
-    public HomeAdapter rewardAdapter;
     private WalletInfo walletInfo;
     private List<GiftInfo> giftInfoList = new ArrayList<>();
     private MineInfo mineInfo;
@@ -79,9 +80,9 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        discoverDetailBinding = (HomeDiscoverDetailBinding) binding;
+        mBinding = (HomeDiscoverDetailBinding) binding;
         mineInfo = mineInfoDb.getMineInfo();
-        AdapterBinding.viewSize(discoverDetailBinding.bannerLayout.banner, MineApp.W, ObjectUtils.getLogoHeight(1.0f));
+        AdapterBinding.viewSize(mBinding.bannerLayout.banner, MineApp.W, ObjectUtils.getLogoHeight(1.0f));
         mBinding.setVariable(BR.content, "");
         mBinding.setVariable(BR.name, "");
         setAdapter();
@@ -96,7 +97,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         };
 
         // 发送
-        discoverDetailBinding.edContent.setOnEditorActionListener((v, actionId, event) -> {
+        mBinding.edContent.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 dynDoReview();
             }
@@ -146,12 +147,12 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void follow(View view) {
         super.follow(view);
-        if (discoverDetailBinding.bannerLayout.tvFollow.getText().toString().equals("关注")) {
-            discoverDetailBinding.bannerLayout.tvFollow.setText("取消关注");
-            discoverDetailBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+        if (mBinding.bannerLayout.tvFollow.getText().toString().equals("关注")) {
+            mBinding.bannerLayout.tvFollow.setText("取消关注");
+            mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
         } else {
-            discoverDetailBinding.bannerLayout.tvFollow.setText("关注");
-            discoverDetailBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_4d4));
+            mBinding.bannerLayout.tvFollow.setText("关注");
+            mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_4d4));
         }
     }
 
@@ -195,6 +196,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 showBanner(adsList);
                 otherInfo();
                 walletAndPop();
+                mBinding.setVariable(BR.viewModel, DiscoverDetailViewModel.this);
             }
         }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);
@@ -233,14 +235,16 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 int start = reviewList.size();
                 reviewList.addAll(o);
                 reviewAdapter.notifyItemRangeChanged(start, reviewList.size());
-                discoverDetailBinding.refresh.finishRefresh();
-                discoverDetailBinding.refresh.finishLoadMore();
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    discoverDetailBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
                 }
             }
         }, activity).setFriendDynId(friendDynId).setTimeSortType(1).setPageNo(pageNo);
@@ -302,7 +306,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 
     @Override
     public void dynDoReview() {
-        if (discoverDetailBinding.getContent().isEmpty()) {
+        if (mBinding.getContent().isEmpty()) {
             SCToastUtil.showToastBlack(activity, "请输入评论内容");
             return;
         }
@@ -311,9 +315,9 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             public void onNext(Object o) {
                 SCToastUtil.showToastBlack(activity, "发布成功");
                 // 下拉刷新
-                onRefresh(discoverDetailBinding.refresh);
+                onRefresh(mBinding.refresh);
             }
-        }, activity).setFriendDynId(friendDynId).setText(discoverDetailBinding.getContent()).setReviewId(reviewId);
+        }, activity).setFriendDynId(friendDynId).setText(mBinding.getContent()).setReviewId(reviewId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -369,7 +373,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         // 下拉刷新
-        discoverDetailBinding.refresh.setEnableLoadMore(true);
+        mBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         reviewList.clear();
         seeReviews();
@@ -377,7 +381,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 
     // 显示相册
     private void showBanner(List<Ads> adList) {
-        discoverDetailBinding.bannerLayout.banner.setImageScaleType(ImageView.ScaleType.FIT_XY)
+        mBinding.bannerLayout.banner.setImageScaleType(ImageView.ScaleType.FIT_XY)
                 .setAds(adList)
                 .setImageLoader((context, ads, image, position) -> AdapterBinding.loadImage(image, ads.getSmallImage(), 0,
                         ObjectUtils.getDefaultRes(), MineApp.W, ObjectUtils.getLogoHeight(1.0f),

@@ -11,6 +11,8 @@ public interface EditMemberVMInterface {
 
     void toSelectSex(View view);
 
+    void toSelectBirthday(View view);
+
     void toSelectJob(View view);
 
     void toEditSign(View view);

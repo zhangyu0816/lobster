@@ -8,6 +8,8 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -33,6 +35,8 @@ import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.databinding.BindingAdapter;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -151,15 +155,18 @@ public class AdapterBinding {
         }
         if (isRound) {
             // 圆角图
+            MultiTransformation<Bitmap> multiTransformation ;
             if (cornerType == 0) {
-                cropOptions.transform(new GlideRoundTransform(roundSize, 0));
-                defaultOptions.transform(new GlideRoundTransform(roundSize, 0));
+                multiTransformation = new MultiTransformation<>(new CenterCrop(), new GlideRoundTransform(roundSize, 0));
+                cropOptions.transform(multiTransformation);
+                defaultOptions.transform(multiTransformation);
             } else {
                 if (cornerType == 6) {
                     cornerType = GlideRoundTransform.CORNER_TOP;
                 }
-                cropOptions.transform(new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
-                defaultOptions.transform(new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
+                multiTransformation = new MultiTransformation<>(new CenterCrop(), new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
+                cropOptions.transform(multiTransformation);
+                defaultOptions.transform(multiTransformation);
             }
         }
 
@@ -206,6 +213,26 @@ public class AdapterBinding {
                 }
             }
         }
+    }
+
+    // 加载图片
+    @BindingAdapter(value = {"imageUrlRound", "viewWidthSize", "viewHeightSize", "roundSize"}, requireAll = false)
+    public static void roundImageView(ImageView view, String imageUrlRound, int viewWidthSize, int viewHeightSize, int roundSize) {
+        viewSize(view, viewWidthSize, viewHeightSize);
+        //        RequestOptions cropOptions = new RequestOptions().centerCrop();
+        //        RequestOptions defaultOptions = new RequestOptions().centerCrop();
+        //        RequestBuilder<android.graphics.drawable.Drawable> thumb = Glide.with(view.getContext()).asDrawable().apply(defaultOptions);
+        //        Glide.with(view.getContext()).load(imageUrlRound).thumbnail(thumb.load(ObjectUtils.getDefaultRes())).apply(cropOptions).into(view);
+        //        view.setRadius(roundSize);
+        Glide.with(view.getContext()).asBitmap().load(imageUrlRound).into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                RoundedBitmapDrawable roundedDrawable = RoundedBitmapDrawableFactory.create(MineApp.getInstance().getResources(), resource);
+                // 设置图片圆角
+                roundedDrawable.setCornerRadius(roundSize);
+                view.setImageDrawable(roundedDrawable);
+            }
+        });
     }
 
 

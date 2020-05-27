@@ -185,8 +185,8 @@ public class ActivityUtils {
     /*********************** 相册 **************************/
 
     // 相册主页
-    public static void getCameraMain(RxAppCompatActivity activity, boolean isMore) {
-        ARouter.getInstance().build(RouteUtils.Camera_Main).withBoolean("isMore", isMore).navigation(activity, 1001);
+    public static void getCameraMain(RxAppCompatActivity activity, boolean isMore, boolean showBottom) {
+        ARouter.getInstance().build(RouteUtils.Camera_Main).withBoolean("isMore", isMore).withBoolean("showBottom", showBottom).navigation(activity, 1001);
     }
 
     // 拍视频

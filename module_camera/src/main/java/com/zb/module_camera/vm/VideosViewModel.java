@@ -143,7 +143,7 @@ public class VideosViewModel extends BaseViewModel implements VideosVMInterface 
         Intent data = new Intent("lobster_camera");
         data.putExtra("cameraType", 1);
         data.putExtra("filePath", videoInfo.getPath());
-        data.putExtra("time", videosBinding.videoView.getDuration());
+        data.putExtra("time", (long) videosBinding.videoView.getDuration() * 1000);
         activity.sendBroadcast(data);
         activity.finish();
     }

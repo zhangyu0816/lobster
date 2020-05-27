@@ -6,6 +6,8 @@
 
         <import type="com.zb.lib_base.utils.ObjectUtils" />
 
+        <import type="android.view.View" />
+
         <variable
             name="item"
             type="String" />
@@ -33,7 +35,8 @@
             android:layout_centerInParent="true"
             android:background="@drawable/btn_bg_black_efe_radius5"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="@{item.isEmpty()?View.VISIBLE:View.GONE}">
 
             <ImageView
                 android:id="@+id/imageView"
@@ -43,16 +46,16 @@
 
         </LinearLayout>
 
-        <com.zb.lib_base.views.RoundImageView
+        <ImageView
             imageUrl="@{item}"
             viewHeightSize="@{ObjectUtils.getLogoHeight(0.31f)}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.31f)}"
-            android:scaleType="centerCrop"
+            isRound="@{true}"
+            roundSize="@{14}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            app:radius="5dp"
-            app:all="true"/>
+            android:visibility="@{item.isEmpty()?View.GONE:View.VISIBLE}"/>
     </RelativeLayout>
 
 </layout>

@@ -347,7 +347,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     }
 
     private void setPermissions() {
-        ActivityUtils.getCameraMain(activity, false);
+        ActivityUtils.getCameraMain(activity, false,false);
     }
 
     /**

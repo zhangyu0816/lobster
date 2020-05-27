@@ -9,6 +9,7 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.dynPiazzaListApi;
+import com.zb.lib_base.api.personOtherDynApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.http.HttpManager;
@@ -59,14 +60,22 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
     @Override
     public void setAdapter() {
         adapter = new CardAdapter<>(activity, R.layout.item_card_video, discoverInfoList, this);
-        dynPiazzaList();
+        getData();
     }
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         // 上拉加载更多
         pageNo++;
-        dynPiazzaList();
+        getData();
+    }
+
+    private void getData() {
+        if (otherUserId == 0) {
+            dynPiazzaList();
+        } else {
+            personOtherDyn();
+        }
     }
 
     @Override
@@ -92,13 +101,49 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
                 if (e instanceof SocketTimeoutException || e instanceof ConnectException) {
                     videoBinding.noNetLinear.setVisibility(View.VISIBLE);
                     videoBinding.refresh.setEnableLoadMore(false);
+                    videoBinding.refresh.finishRefresh();
+                    videoBinding.refresh.finishLoadMore();
                 } else if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     videoBinding.refresh.setEnableLoadMore(false);
+                    videoBinding.refresh.finishRefresh();
+                    videoBinding.refresh.finishLoadMore();
                 }
             }
         }, activity)
                 .setCityId(areaDb.getCityId(MineApp.cityName))
                 .setDynType(2)
+                .setPageNo(pageNo);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void personOtherDyn() {
+        personOtherDynApi api = new personOtherDynApi(new HttpOnNextListener<List<DiscoverInfo>>() {
+            @Override
+            public void onNext(List<DiscoverInfo> o) {
+                videoBinding.noNetLinear.setVisibility(View.GONE);
+                int start = discoverInfoList.size();
+                discoverInfoList.addAll(o);
+                adapter.notifyItemRangeChanged(start, discoverInfoList.size());
+                videoBinding.refresh.finishRefresh();
+                videoBinding.refresh.finishLoadMore();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof SocketTimeoutException || e instanceof ConnectException) {
+                    videoBinding.noNetLinear.setVisibility(View.VISIBLE);
+                    videoBinding.refresh.setEnableLoadMore(false);
+                    videoBinding.refresh.finishRefresh();
+                    videoBinding.refresh.finishLoadMore();
+                } else if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    videoBinding.refresh.setEnableLoadMore(false);
+                    videoBinding.refresh.finishRefresh();
+                    videoBinding.refresh.finishLoadMore();
+                }
+            }
+        }, activity)
+                .setDynType(3)
                 .setOtherUserId(otherUserId)
                 .setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
@@ -110,6 +155,6 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
         videoBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         discoverInfoList.clear();
-        dynPiazzaList();
+        getData();
     }
 }

@@ -56,7 +56,7 @@ public class LogoViewModel extends BaseViewModel implements LogoVMInterface {
     }
 
     private void setPermissions() {
-        ActivityUtils.getCameraMain(activity, false);
+        ActivityUtils.getCameraMain(activity, false, false);
     }
 
     @Override

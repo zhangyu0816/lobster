@@ -66,6 +66,8 @@ public class RewardListViewModel extends BaseViewModel implements RewardListVMIn
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     rewardListBinding.refresh.setEnableLoadMore(false);
+                    rewardListBinding.refresh.finishRefresh();
+                    rewardListBinding.refresh.finishLoadMore();
                 }
             }
         }, activity).setFriendDynId(friendDynId)

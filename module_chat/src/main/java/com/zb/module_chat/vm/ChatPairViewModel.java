@@ -10,6 +10,7 @@ import com.zb.lib_base.api.noReadBottleNumApi;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.BottleNoRead;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.ContactNum;
@@ -158,6 +159,14 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 if (pageNo == 0) {
                     pageNo++;
                     likeMeList(1);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
                 }
             }
         }, activity).setPageNo(pageNo).setLikeOtherStatus(likeOtherStatus);

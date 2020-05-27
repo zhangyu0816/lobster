@@ -6,5 +6,7 @@ public interface MemberDiscoverVMInterface {
 
     void dynPiazzaList();
 
+    void personOtherDyn();
+
     void onRefreshForNet(View view);
 }
