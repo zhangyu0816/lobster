@@ -4,4 +4,5 @@
     <string name="give_success">您已成功赠送一个%s！</string>
     <string name="gift_pay">%.1f虾菇币</string>
     <string name="at_name">\@ %s</string>
+    <string name="res_time">%d 秒</string>
 </resources>

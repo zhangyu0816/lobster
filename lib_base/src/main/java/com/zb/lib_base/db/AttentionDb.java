@@ -6,7 +6,7 @@ import com.zb.lib_base.model.CollectID;
 import io.realm.Realm;
 
 /**
- * 点赞
+ * 关注
  */
 public class AttentionDb extends BaseDao {
 

@@ -94,8 +94,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         mBinding.setVariable(BR.name, "");
         setAdapter();
         dynDetail();
-        giftList();
-
         rechargeReceiver = new BaseReceiver(activity, "lobster_recharge") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -170,7 +168,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 
     @Override
     public void toRewardList(View view) {
-        ActivityUtils.getHomeRewardList(discoverInfo.getFriendDynId());
+        ActivityUtils.getHomeRewardList(friendDynId);
     }
 
     @Override
@@ -202,6 +200,9 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 otherInfo();
                 walletAndPop();
                 attentionStatus();
+                if (discoverInfo.getId() != BaseActivity.userId)
+                    giftList();
+
                 mBinding.setVariable(BR.viewModel, DiscoverDetailViewModel.this);
             }
         }, activity).setFriendDynId(friendDynId);
@@ -344,6 +345,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 goodDb.saveGood(new CollectID(friendDynId));
                 int goodNum = discoverInfo.getGoodNum() + 1;
                 discoverInfo.setGoodNum(goodNum);
+                mBinding.setViewModel(DiscoverDetailViewModel.this);
             }
         }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);
@@ -357,6 +359,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 goodDb.deleteGood(friendDynId);
                 int goodNum = discoverInfo.getGoodNum() - 1;
                 discoverInfo.setGoodNum(goodNum);
+                mBinding.setViewModel(DiscoverDetailViewModel.this);
             }
         }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);

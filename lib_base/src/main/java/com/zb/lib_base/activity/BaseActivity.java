@@ -83,7 +83,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
      *
      * @return
      */
-    public static File getSurfaceFile() {
+    public static File getVideoFile() {
         File videoPath = new File(activity.getCacheDir(), "videos");
         if (!videoPath.exists()) {
             videoPath.mkdirs();
@@ -103,6 +103,20 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             audioPath.mkdirs();
         }
         File newFile = new File(audioPath, randomString(15) + ".amr");
+        return newFile;
+    }
+
+    /**
+     * 下载文件
+     *
+     * @return
+     */
+    public static File getDownloadFile(String fileType) {
+        File downPath = new File(activity.getCacheDir(), "downFiles");
+        if (!downPath.exists()) {
+            downPath.mkdirs();
+        }
+        File newFile = new File(downPath, randomString(15) + fileType);
         return newFile;
     }
 

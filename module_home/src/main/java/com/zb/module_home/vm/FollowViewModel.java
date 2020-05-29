@@ -111,6 +111,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
         followBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         discoverInfoList.clear();
+        adapter.notifyDataSetChanged();
         attentionDyn();
     }
 

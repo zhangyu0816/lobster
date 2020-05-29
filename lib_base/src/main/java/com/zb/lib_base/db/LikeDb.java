@@ -6,7 +6,7 @@ import com.zb.lib_base.model.CollectID;
 import io.realm.Realm;
 
 /**
- * 点赞
+ * 喜欢对方
  */
 public class LikeDb extends BaseDao {
 

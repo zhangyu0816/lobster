@@ -1,0 +1,344 @@
+package com.zb.module_home.vm;
+
+import android.content.Intent;
+import android.media.MediaPlayer;
+import android.view.View;
+
+import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.adapter.AdapterBinding;
+import com.zb.lib_base.api.attentionOtherApi;
+import com.zb.lib_base.api.attentionStatusApi;
+import com.zb.lib_base.api.cancelAttentionApi;
+import com.zb.lib_base.api.deleteDynApi;
+import com.zb.lib_base.api.dynDetailApi;
+import com.zb.lib_base.api.giftListApi;
+import com.zb.lib_base.api.otherInfoApi;
+import com.zb.lib_base.api.seeGiftRewardsApi;
+import com.zb.lib_base.api.walletAndPopApi;
+import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.AttentionDb;
+import com.zb.lib_base.db.GoodDb;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.model.CollectID;
+import com.zb.lib_base.model.DiscoverInfo;
+import com.zb.lib_base.model.GiftInfo;
+import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.model.Reward;
+import com.zb.lib_base.model.WalletInfo;
+import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DownLoad;
+import com.zb.lib_base.utils.ObjectUtils;
+import com.zb.lib_base.utils.SCToastUtil;
+import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.TextPW;
+import com.zb.module_home.BR;
+import com.zb.module_home.R;
+import com.zb.module_home.adapter.HomeAdapter;
+import com.zb.module_home.databinding.HomeDiscoverVideoBinding;
+import com.zb.module_home.iv.DiscoverVideoVMInterface;
+import com.zb.module_home.windows.GiftPW;
+import com.zb.module_home.windows.GiftPayPW;
+import com.zb.module_home.windows.ReviewPW;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.databinding.ViewDataBinding;
+import io.realm.Realm;
+
+public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVideoVMInterface {
+    public long friendDynId;
+    public DiscoverInfo discoverInfo;
+    public MemberInfo memberInfo;
+    public GoodDb goodDb;
+    public HomeAdapter rewardAdapter;
+    private List<Reward> rewardList = new ArrayList<>();
+    private HomeDiscoverVideoBinding mBinding;
+    private AttentionDb attentionDb;
+    private WalletInfo walletInfo;
+    private List<GiftInfo> giftInfoList = new ArrayList<>();
+
+    @Override
+    public void back(View view) {
+        super.back(view);
+        mBinding.videoView.stopPlayback();//停止播放视频,并且释放
+        mBinding.videoView.suspend();//在任何状态下释放媒体播放器
+        activity.finish();
+    }
+
+    @Override
+    public void setBinding(ViewDataBinding binding) {
+        super.setBinding(binding);
+        mBinding = (HomeDiscoverVideoBinding) binding;
+        attentionDb = new AttentionDb(Realm.getDefaultInstance());
+        goodDb = new GoodDb(Realm.getDefaultInstance());
+        mBinding.setIsPlay(false);
+        mBinding.setIsProgress(false);
+        setAdapter();
+    }
+
+    @Override
+    public void setAdapter() {
+        // 打赏
+        rewardAdapter = new HomeAdapter<>(activity, R.layout.item_discover_video_reward, rewardList, this);
+        mBinding.setGridNum(3);
+        dynDetail();
+    }
+
+    @Override
+    public void follow(View view) {
+        super.follow(view);
+        if (mBinding.tvFollow.getText().toString().equals("关注")) {
+            attentionOther();
+        } else {
+            cancelAttention();
+        }
+    }
+
+    @Override
+    public void videoPlay(View view) {
+        if (mBinding.getIsPlay()) {
+            mBinding.setIsPlay(false);
+            mBinding.videoView.pause();
+        } else {
+            if (discoverInfo == null) return;
+            mBinding.videoView.setVideoPath(discoverInfo.getVideoUrl());
+            mBinding.videoView.start();
+        }
+    }
+
+    @Override
+    public void toMemberDetail(View view) {
+        if (discoverInfo != null)
+            ActivityUtils.getCardMemberDetail(discoverInfo.getId());
+    }
+
+    @Override
+    public void toReviews(View view) {
+        new ReviewPW(activity, mBinding.getRoot(), friendDynId);
+    }
+
+    @Override
+    public void doGood(View view) {
+
+    }
+
+    @Override
+    public void doShare(View view) {
+
+    }
+
+    @Override
+    public void doReward(View view) {
+        new GiftPW(activity, mBinding.getRoot(), walletInfo, giftInfoList, giftInfo ->
+                new GiftPayPW(activity, mBinding.getRoot(), giftInfo, walletInfo, friendDynId));
+    }
+
+    @Override
+    public void toRewards(View view) {
+        ActivityUtils.getHomeRewardList(friendDynId);
+    }
+
+    @Override
+    public void toDelete(View view) {
+        new TextPW(activity, mBinding.getRoot(), "删除动态", "删除后，动态不可找回！", this::deleteDyn);
+    }
+
+    @Override
+    public void deleteDyn() {
+        deleteDynApi api = new deleteDynApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                activity.sendBroadcast(new Intent("lobster_publish"));
+                SCToastUtil.showToastBlack(activity, "删除成功");
+                back(null);
+            }
+        }, activity).setFriendDynId(friendDynId);
+        HttpManager.getInstance().doHttpDeal(api);
+
+    }
+
+    @Override
+    public void dynDetail() {
+        dynDetailApi api = new dynDetailApi(new HttpOnNextListener<DiscoverInfo>() {
+            @Override
+            public void onNext(DiscoverInfo o) {
+                discoverInfo = o;
+                DownLoad.getFilePath(discoverInfo.getVideoUrl(), new DownLoad.CallBack() {
+                    @Override
+                    public void success(String filePath) {
+                        discoverInfo.setVideoUrl(filePath);
+                        mBinding.setIsProgress(false);
+                        initVideo();
+                    }
+
+                    @Override
+                    public void onLoading(long total, long current) {
+                        mBinding.setIsProgress(true);
+                        mBinding.setIsPlay(true);
+                    }
+                });
+                otherInfo();
+                walletAndPop();
+                seeGiftRewards();
+                if (discoverInfo.getId() != BaseActivity.userId)
+                    giftList();
+            }
+        }, activity).setFriendDynId(friendDynId);
+        api.setShowProgress(false);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void otherInfo() {
+        otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
+            @Override
+            public void onNext(MemberInfo o) {
+                memberInfo = o;
+                mBinding.setVariable(BR.viewModel, DiscoverVideoViewModel.this);
+            }
+        }, activity).setOtherUserId(discoverInfo.getId());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void attentionStatus() {
+        attentionStatusApi api = new attentionStatusApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                if (!o.toString().isEmpty()) {
+                    mBinding.tvFollow.setText("取消关注");
+                    mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                    attentionDb.saveAttention(new CollectID(discoverInfo.getId()));
+                }
+            }
+        }, activity).setOtherUserId(discoverInfo.getId());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void attentionOther() {
+        attentionOtherApi api = new attentionOtherApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                mBinding.tvFollow.setText("取消关注");
+                mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                attentionDb.saveAttention(new CollectID(discoverInfo.getId()));
+            }
+        }, activity).setOtherUserId(discoverInfo.getId());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void cancelAttention() {
+        cancelAttentionApi api = new cancelAttentionApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                mBinding.tvFollow.setText("关注");
+                mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_4d4));
+                attentionDb.deleteAttention(discoverInfo.getId());
+            }
+        }, activity).setOtherUserId(discoverInfo.getId());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void seeGiftRewards() {
+        seeGiftRewardsApi api = new seeGiftRewardsApi(new HttpOnNextListener<List<Reward>>() {
+            @Override
+            public void onNext(List<Reward> o) {
+                for (int i = 0; i < Math.min(o.size(), 3); i++) {
+                    rewardList.add(o.get(i));
+                }
+                mBinding.setGridNum(rewardList.size());
+                rewardAdapter.notifyDataSetChanged();
+            }
+        }, activity).setFriendDynId(friendDynId)
+                .setRewardSortType(2)
+                .setPageNo(1);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void walletAndPop() {
+        walletAndPopApi api = new walletAndPopApi(new HttpOnNextListener<WalletInfo>() {
+            @Override
+            public void onNext(WalletInfo o) {
+                walletInfo = o;
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void giftList() {
+        giftListApi api = new giftListApi(new HttpOnNextListener<List<GiftInfo>>() {
+            @Override
+            public void onNext(List<GiftInfo> o) {
+                giftInfoList.addAll(o);
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void initVideo() {
+        //视频加载完成,准备好播放视频的回调
+        mBinding.videoView.setOnPreparedListener(mp -> {
+            mBinding.setIsPlay(false);
+            //尺寸变化回调
+            mp.setOnVideoSizeChangedListener((mp1, width, height) -> changeVideoSize(mp1));
+        });
+        //视频播放完成后的回调
+        mBinding.videoView.setOnCompletionListener(mp -> {
+            mBinding.setIsPlay(false);
+            mBinding.videoView.stopPlayback();//停止播放视频,并且释放
+            mBinding.videoView.suspend();//在任何状态下释放媒体播放器
+        });
+        //异常回调
+        mBinding.videoView.setOnErrorListener((mp, what, extra) -> {
+            return true;//如果方法处理了错误，则为true；否则为false。返回false或根本没有OnErrorListener，将导致调用OnCompletionListener。
+        });
+
+        //信息回调
+        mBinding.videoView.setOnInfoListener((mp, what, extra) -> {
+            if (what == MediaPlayer.MEDIA_INFO_UNKNOWN || what == MediaPlayer.MEDIA_INFO_NOT_SEEKABLE) {
+                SCToastUtil.showToast(activity, "视频播放失败");
+                mBinding.setIsPlay(false);
+                mBinding.videoView.stopPlayback();//停止播放视频,并且释放
+                mBinding.videoView.suspend();//在任何状态下释放媒体播放器
+                return true;
+            } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
+                // 缓冲开始
+                mBinding.setIsPlay(false);
+                return true;
+            } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
+                // 缓冲结束,此接口每次回调完START就回调END,若不加上判断就会出现缓冲图标一闪一闪的卡顿现象
+                if (mp.isPlaying()) {
+                    mBinding.setIsPlay(false);
+                }
+                return true;
+            } else if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
+                mBinding.setIsPlay(true);
+            }
+            return false; //如果方法处理了信息，则为true；如果没有，则为false。返回false或根本没有OnInfoListener，将导致丢弃该信息。
+        });
+        mBinding.videoView.setVideoPath(discoverInfo.getVideoUrl());
+        mBinding.videoView.start();
+    }
+
+    /**
+     * 修改预览View的大小,以用来适配屏幕
+     */
+    private void changeVideoSize(@NonNull MediaPlayer mMediaPlayer) {
+        int width = mMediaPlayer.getVideoWidth();
+        int height = mMediaPlayer.getVideoHeight();
+
+        if (ObjectUtils.getViewSizeByHeight(0.9f) * width / height > MineApp.W) {
+            AdapterBinding.viewSize(mBinding.videoView, MineApp.W, (MineApp.W * height / width));
+        } else {
+            AdapterBinding.viewSize(mBinding.videoView, (ObjectUtils.getViewSizeByHeight(0.9f) * width / height), ObjectUtils.getViewSizeByHeight(0.9f));
+        }
+    }
+}

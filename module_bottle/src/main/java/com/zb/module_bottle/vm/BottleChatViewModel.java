@@ -2,12 +2,20 @@ package com.zb.module_bottle.vm;
 
 import android.view.View;
 
+import com.alibaba.mobileim.contact.IYWContact;
+import com.alibaba.mobileim.contact.YWContactFactory;
+import com.alibaba.mobileim.conversation.IYWConversationService;
+import com.alibaba.mobileim.conversation.YWConversation;
 import com.zb.lib_base.api.myBottleApi;
+import com.zb.lib_base.api.myImAccountInfoApi;
+import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.api.replyBottleApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.BottleMsg;
+import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -30,11 +38,19 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     public MineInfo mineInfo;
     public BottleInfo bottleInfo;
 
+    // 阿里百川
+    private LoginSampleHelper loginHelper;
+    private String otherIMUserId;
+    private YWConversation conversation;
+    private int timeOut = 10 * 1000;
+    private IYWConversationService mConversationService;
+
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (BottleChatBinding) binding;
         mineInfo = mineInfoDb.getMineInfo();
+        loginHelper = LoginSampleHelper.getInstance();
         setAdapter();
     }
 
@@ -50,6 +66,48 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         myBottle();
     }
 
+    /**
+     * 阿里百川登录账号
+     */
+    private void myImAccountInfoApi() {
+        myImAccountInfoApi api = new myImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
+            @Override
+            public void onNext(ImAccount o) {
+                loginHelper.loginOut_Sample();
+                loginHelper.login_Sample(activity, o.getImUserId(), o.getImPassWord());
+                otherImAccountInfoApi();
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 对方的阿里百川账号
+     */
+    private void otherImAccountInfoApi() {
+        otherImAccountInfoApi api = new otherImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
+            @Override
+            public void onNext(ImAccount o) {
+                otherIMUserId = o.getImUserId();
+                mConversationService = loginHelper.getConversationService();
+                conversation = mConversationService.getConversationByUserId(otherIMUserId, LoginSampleHelper.APP_KEY);
+                checkConversation();
+            }
+        }, activity);
+        api.setOtherUserId(bottleInfo.getOtherUserId());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 检查 conversation
+     */
+    private void checkConversation() {
+        if (conversation == null) { // 这里必须判空
+            IYWContact contact = YWContactFactory.createAPPContact(otherIMUserId, LoginSampleHelper.APP_KEY);
+            conversation = mConversationService.getConversationCreater().createConversationIfNotExist(contact);
+        }
+    }
+
     @Override
     public void myBottle() {
         myBottleApi api = new myBottleApi(new HttpOnNextListener<BottleInfo>() {
@@ -60,6 +118,11 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                 adapter.notifyDataSetChanged();
                 mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
                 mBinding.setVariable(BR.nick, bottleInfo.getOtherNick());
+                if (loginHelper.getImCore() == null) {
+                    myImAccountInfoApi();
+                } else {
+                    otherImAccountInfoApi();
+                }
             }
         }, activity).setDriftBottleId(driftBottleId);
         HttpManager.getInstance().doHttpDeal(api);
@@ -85,4 +148,6 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         }, activity).setDriftBottleId(driftBottleId).setText(mBinding.getContent());
         HttpManager.getInstance().doHttpDeal(api);
     }
+
+
 }

@@ -6,7 +6,7 @@ import com.zb.lib_base.model.CollectID;
 import io.realm.Realm;
 
 /**
- * 点赞
+ * 动态点赞
  */
 public class GoodDb extends BaseDao {
 

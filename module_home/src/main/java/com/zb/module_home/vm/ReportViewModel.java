@@ -23,6 +23,7 @@ import com.zb.module_home.adapter.HomeAdapter;
 import com.zb.module_home.databinding.HomeReportBinding;
 import com.zb.module_home.iv.ReportVMInterface;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +46,6 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
         setAdapter();
         photoManager = new PhotoManager(activity, () -> {
             comsub(photoManager.jointWebUrl(","));
-            photoManager.deleteAllFile();
         });
     }
 
@@ -54,7 +54,7 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
         super.back(view);
         MineApp.selectMap.clear();
         MineApp.cutImageViewMap.clear();
-        DataCleanManager.deleteFile(activity.getCacheDir());
+        DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
         activity.finish();
     }
 
@@ -99,6 +99,7 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
     @Override
     public void setAdapter() {
         adapter = new HomeAdapter<>(activity, R.layout.item_report, reportList, this);
+        comType();
         images.add("add_image_icon");
         imageAdapter = new HomeAdapter<>(activity, R.layout.item_report_image, images, this);
     }
@@ -133,6 +134,7 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
         comsubApi api = new comsubApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
+                photoManager.deleteAllFile();
                 SCToastUtil.showToastBlack(activity, "举报信息已提交，我们会审核后进行处理");
                 back(null);
             }

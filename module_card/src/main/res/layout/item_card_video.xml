@@ -20,6 +20,8 @@
 
     <RelativeLayout
         onClickDelayed="@{v->viewModel.clickItem(item)}"
+        viewHeightSize="@{ObjectUtils.getLogoHeight(0.48f)}"
+        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.48f)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -29,8 +31,8 @@
             imageUrl='@{item.videoUrl}'
             isRound="@{true}"
             roundSize="@{5}"
-            viewHeightSize="@{ObjectUtils.getLogoHeight(0.498f)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.498f)}"
+            viewHeightSize="@{ObjectUtils.getLogoHeight(0.48f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.48f)}"
             android:layout_width="match_parent"
             android:layout_height="200dp" />
 

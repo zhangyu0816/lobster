@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="com.zb.lib_base.activity.BaseActivity" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_home.vm.DiscoverVideoViewModel" />
+
+        <variable
+            name="isPlay"
+            type="boolean" />
+
+        <variable
+            name="isProgress"
+            type="boolean" />
+
+        <variable
+            name="gridNum"
+            type="Integer" />
+
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black">
+
+        <VideoView
+            android:id="@+id/video_view"
+            onClickDelayed="@{viewModel::videoPlay}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true" />
+
+        <ImageView
+            onClickDelayed="@{viewModel::videoPlay}"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:visibility="@{isPlay?View.GONE:View.VISIBLE}"
+            app:srcCompat="@mipmap/video_play_icon" />
+
+        <ProgressBar
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateDrawable="@mipmap/loading_icon"
+            android:indeterminateDuration="2000"
+            android:indeterminateOnly="true"
+            android:visibility="@{isProgress?View.VISIBLE:View.GONE}" />
+
+        <RelativeLayout
+            android:id="@+id/top_relative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp">
+
+            <RelativeLayout
+                android:id="@+id/info_relative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:background="@mipmap/video_play_bg">
+
+                <ImageView
+                    android:id="@+id/iv_logo"
+                    defaultRes="@{ObjectUtils.getDefaultRes()}"
+                    imageUrl="@{viewModel.discoverInfo.image}"
+                    isCircle="@{true}"
+                    onClickDelayed="@{viewModel::toMemberDetail}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.08f)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.08f)}"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="15dp" />
+
+                <ImageView
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(30)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(30)}"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignBottom="@+id/iv_logo"
+                    android:layout_marginStart="-10dp"
+                    android:layout_marginBottom="-5dp"
+                    android:layout_toEndOf="@+id/iv_logo"
+                    android:background="@mipmap/vip_small_icon"
+                    android:visibility="@{viewModel.memberInfo.memberType==2?View.VISIBLE:View.GONE}" />
+
+                <TextView
+                    android:id="@+id/tv_nick"
+                    onClickDelayed="@{viewModel::toMemberDetail}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_toEndOf="@+id/iv_logo"
+                    android:text="@{viewModel.discoverInfo.nick}"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    tools:text="大海" />
+
+                <TextView
+                    android:id="@+id/tv_follow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="15dp"
+                    android:layout_toEndOf="@+id/tv_nick"
+                    android:background="@drawable/btn_bg_white_radius60"
+                    android:gravity="center"
+                    android:onClick="@{viewModel::follow}"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:text="关注"
+                    android:textColor="@color/black_4d4"
+                    android:textSize="12sp"
+                    android:visibility="@{viewModel.memberInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                adapter="@{viewModel.rewardAdapter}"
+                gridNum="@{gridNum}"
+                recyclerType="@{3}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.08f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.26f)}"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="15dp" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/top_relative"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:background="@mipmap/video_play_time_ico"
+            android:gravity="center_vertical"
+            android:text="@{String.format(@string/res_time,viewModel.discoverInfo.resTime)}"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toStartOf="@+id/right_linear"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:background="@mipmap/video_play_text_bg"
+                    android:padding="10dp"
+                    android:text="@{viewModel.discoverInfo.text}"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    tools:text="我看了就反胃了了文理科发" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/iv_back"
+                        onClickDelayed="@{viewModel::back}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="15dp"
+                        android:paddingTop="15dp"
+                        android:paddingEnd="15dp"
+                        android:paddingBottom="15dp"
+                        android:src="@mipmap/video_play_back_ico" />
+
+                    <TextView
+                        android:id="@+id/tv_review"
+                        onClickDelayed="@{viewModel::toReviews}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_toEndOf="@+id/iv_back"
+                        android:background="@mipmap/video_play_bg"
+                        android:gravity="center_vertical"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:text="留言评论"
+                        android:textColor="@android:color/white" />
+
+                    <TextView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignEnd="@+id/tv_review"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/circle_yellow"
+                        android:gravity="center"
+                        android:text="@{ObjectUtils.count(viewModel.discoverInfo.reviews)}"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"
+                        android:visibility="@{viewModel.discoverInfo.reviews==0?View.GONE:View.VISIBLE}"
+                        tools:text="···" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/right_linear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical">
+
+                <ImageView
+                    onClickDelayed="@{viewModel::toDelete}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:paddingBottom="15dp"
+                    android:src="@mipmap/video_play_delete"
+                    android:visibility="@{viewModel.memberInfo.userId==BaseActivity.userId?View.VISIBLE:View.GONE}" />
+
+                <ImageView
+                    onClickDelayed="@{viewModel::doGood}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:paddingBottom="15dp"
+                    android:src="@{viewModel.goodDb.hasGood(viewModel.friendDynId)?@drawable/video_play_good_pressed:@drawable/video_play_good_unpressed}"
+                    android:visibility="@{viewModel.memberInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
+
+                <ImageView
+                    onClickDelayed="@{viewModel::doShare}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:paddingBottom="15dp"
+                    android:src="@mipmap/video_play_share" />
+
+                <ImageView
+                    onClickDelayed="@{viewModel::doReward}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:paddingBottom="15dp"
+                    android:src="@mipmap/video_play_reward"
+                    android:visibility="@{viewModel.memberInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+</layout>

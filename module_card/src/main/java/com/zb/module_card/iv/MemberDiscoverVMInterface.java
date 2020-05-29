@@ -8,5 +8,7 @@ public interface MemberDiscoverVMInterface {
 
     void personOtherDyn();
 
+    void otherInfo();
+
     void onRefreshForNet(View view);
 }

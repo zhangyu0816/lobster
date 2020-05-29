@@ -102,6 +102,16 @@ public class ObjectUtils {
         }
     }
 
+    public static int getRewardBgRanking(int position) {
+        if (position == 0) {
+            return R.mipmap.crown_bg_1;
+        } else if (position == 1) {
+            return R.mipmap.crown_bg_2;
+        } else {
+            return R.mipmap.crown_bg_3;
+        }
+    }
+
     public static Drawable getNoData(int position) {
         if (position == 0) {
             return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_anth_data);

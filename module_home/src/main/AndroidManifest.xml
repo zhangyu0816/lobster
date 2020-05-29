@@ -9,6 +9,7 @@
         <activity android:name=".activity.DiscoverDetailActivity" />
         <activity android:name=".activity.RewardListActivity" />
         <activity android:name=".activity.ReportActivity" />
+        <activity android:name=".activity.DiscoverVideoActivity" />
     </application>
 
 </manifest>

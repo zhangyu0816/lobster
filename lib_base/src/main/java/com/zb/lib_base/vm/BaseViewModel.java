@@ -43,7 +43,10 @@ public class BaseViewModel implements BaseVMInterface {
 
     @Override
     public void clickItem(DiscoverInfo discoverInfo) {
-        ActivityUtils.getHomeDiscoverDetail(discoverInfo.getFriendDynId());
+        if (discoverInfo.getVideoUrl().isEmpty())
+            ActivityUtils.getHomeDiscoverDetail(discoverInfo.getFriendDynId());
+        else
+            ActivityUtils.getHomeDiscoverVideo(discoverInfo.getFriendDynId());
     }
 
     @Override

@@ -110,7 +110,8 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
                 }
             }
         }, activity)
-                .setCityId(areaDb.getCityId(MineApp.cityName))
+                .setCityId(0)
+//                .setCityId(areaDb.getCityId(MineApp.cityName))
                 .setDynType(2)
                 .setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
@@ -155,6 +156,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
         videoBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         discoverInfoList.clear();
+        adapter.notifyDataSetChanged();
         getData();
     }
 }

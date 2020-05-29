@@ -32,6 +32,7 @@ public class ReportActivity extends HomeBaseActivity {
         viewModel.otherUserId = otherUserId;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
+        mBinding.setVariable(BR.content, "");
 
         cameraReceiver = new BaseReceiver(activity, "lobster_camera") {
             @Override

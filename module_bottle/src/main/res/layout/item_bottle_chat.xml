@@ -49,12 +49,11 @@
                 android:layout_marginEnd="30dp"
                 android:layout_toEndOf="@+id/iv_other_logo"
                 android:background="@drawable/btn_bg_white_radius5"
-                android:minWidth="100dp"
-                android:padding="15dp"
+                android:padding="10dp"
                 android:text="@{item.text}"
                 android:textColor="@color/black_252"
                 android:textSize="14sp"
-                tools:text="色附件为 库文件 未考虑附件为来房价为福建未来房价微了访问了访问访问" />
+                tools:text="1" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -71,13 +70,12 @@
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="15dp"
                 android:background="@drawable/btn_bg_purple_7a4_radius5"
-                android:minWidth="100dp"
                 android:layout_toStartOf="@+id/iv_mine_logo"
-                android:padding="15dp"
+                android:padding="10dp"
                 android:text="@{item.text}"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
-                tools:text="色附件为 库文件 " />
+                tools:text="1" />
 
             <ImageView
                 android:id="@+id/iv_mine_logo"

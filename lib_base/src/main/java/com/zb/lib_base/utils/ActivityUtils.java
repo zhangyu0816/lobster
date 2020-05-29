@@ -31,6 +31,11 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Home_Report).withLong("otherUserId", otherUserId).navigation();
     }
 
+    // 礼物列表
+    public static void getHomeDiscoverVideo(long friendDynId) {
+        ARouter.getInstance().build(RouteUtils.Home_Discover_Video).withLong("friendDynId", friendDynId).navigation();
+    }
+
     /*********************** 卡片 **************************/
     // 用户详情
     public static void getCardMemberDetail(long userId) {

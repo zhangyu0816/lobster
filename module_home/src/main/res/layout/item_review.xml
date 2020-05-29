@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="item"
+            type="com.zb.lib_base.model.Review" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="pw"
+            type="com.zb.module_home.windows.ReviewPW" />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="@{v->pw.selectReview(item)}">
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            defaultRes="@{ObjectUtils.getDefaultRes()}"
+            imageUrl="@{item.image}"
+            isCircle="@{true}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="15dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_toEndOf="@+id/iv_logo"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@{item==null?@drawable/default_bg:@drawable/empty_bg}"
+                android:minWidth="60dp"
+                android:text="@{item.nick}"
+                android:textColor="@color/black_827"
+                android:textSize="12sp"
+                tools:text="哈哈哈" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:text="回复"
+                    android:textColor="@color/black_252"
+                    android:textSize="14sp"
+                    android:visibility="@{item.atUserId==0?View.GONE:View.VISIBLE}" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@{item==null?@drawable/default_bg:@drawable/empty_bg}"
+                    android:minWidth="60dp"
+                    android:text="@{item.atUserNick}"
+                    android:textColor="#37A0FF"
+                    android:textSize="14sp"
+                    android:visibility="@{item.atUserId==0?View.GONE:View.VISIBLE}"
+                    tools:text="租我吧" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="："
+                    android:textColor="@color/black_252"
+                    android:textSize="14sp"
+                    android:visibility="@{item.atUserId==0?View.GONE:View.VISIBLE}" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@{item==null?@drawable/default_bg:@drawable/empty_bg}"
+                    android:text="@{item.text}"
+                    android:textColor="@color/black_252"
+                    android:textSize="14sp"
+                    tools:text="我惊恐万分较为了解法律文件发我立刻就发为访问额外房间里我 就为了减肥为发" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@{item==null?@drawable/default_bg:@drawable/empty_bg}"
+                android:minWidth="30dp"
+                android:text='@{item==null?"":item.createTime.substring(11,16)}'
+                android:textColor="@color/black_c3b"
+                android:textSize="12sp"
+                tools:text="20:20" />
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

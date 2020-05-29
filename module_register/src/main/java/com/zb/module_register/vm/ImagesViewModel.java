@@ -27,6 +27,7 @@ import com.zb.module_register.adapter.RegisterAdapter;
 import com.zb.module_register.databinding.RegisterImagesBinding;
 import com.zb.module_register.iv.ImagesVMInterface;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -47,6 +48,7 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
     public void back(View view) {
         super.back(view);
         ActivityUtils.getRegisterLogo();
+        DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
         activity.finish();
     }
 
@@ -98,7 +100,7 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
                 PreferenceUtil.saveStringValue(activity, "sessionId", o.getSessionId());
                 PreferenceUtil.saveStringValue(activity, "userName", o.getUserName());
                 BaseActivity.update();
-                DataCleanManager.deleteFile(activity.getCacheDir());
+                DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
                 myInfo();
             }
         }, activity)

@@ -12,6 +12,7 @@ public class RouteUtils {
     public static final String Home_Discover_Detail = "/home/DiscoverDetailActivity";
     public static final String Home_Reward_List = "/home/RewardListActivity";
     public static final String Home_Report = "/home/ReportActivity";
+    public static final String Home_Discover_Video = "/home/DiscoverVideoActivity";
 
 
     /*********************** 卡片 **************************/

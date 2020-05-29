@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <variable
+            name="item"
+            type="com.zb.lib_base.model.Reward" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_home.vm.DiscoverVideoViewModel" />
+
+    </data>
+
+    <RelativeLayout
+        onClickDelayed="@{viewModel::toRewards}"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp">
+
+        <ImageView
+            imageRes="@{ObjectUtils.getRewardBgRanking(position)}"
+            isCircle="@{true}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.08f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.08f)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+
+        <ImageView
+            defaultRes="@{ObjectUtils.getDefaultRes()}"
+            imageUrl="@{item.image}"
+            isCircle="@{true}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.07f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.07f)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+</layout>

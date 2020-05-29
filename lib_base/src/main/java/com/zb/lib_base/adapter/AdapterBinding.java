@@ -5,11 +5,13 @@ import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -26,6 +28,7 @@ import com.zb.lib_base.utils.BlurTransformation;
 import com.zb.lib_base.utils.GlideRoundTransform;
 import com.zb.lib_base.utils.GridSpacingItemDecoration;
 import com.zb.lib_base.utils.MyDecoration;
+import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.StaggeredDividerItemDecoration;
 import com.zb.lib_base.views.card.CardItemTouchHelperCallback;
 import com.zb.lib_base.views.card.CardLayoutManager;
@@ -35,8 +38,6 @@ import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawable;
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.databinding.BindingAdapter;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -92,9 +93,6 @@ public class AdapterBinding {
             manager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
             view.setItemAnimator(null);
             view.setLayoutManager(manager);
-            if (view.getItemDecorationCount() == 0) {
-                view.addItemDecoration(new StaggeredDividerItemDecoration((RxAppCompatActivity) view.getContext(), (int) size));
-            }
             // 防止顶部item出现空白
             view.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
@@ -165,25 +163,31 @@ public class AdapterBinding {
                 if (cornerType == 6) {
                     cornerType = GlideRoundTransform.CORNER_TOP;
                 }
-                multiTransformation = new MultiTransformation<>(new CenterCrop(), new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
-                cropOptions.transform(multiTransformation);
-                defaultOptions.transform(multiTransformation);
+//                multiTransformation = new MultiTransformation<>(new CenterCrop(), new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
+                cropOptions.transform(new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
+                defaultOptions.transform(new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
             }
         }
 
         if (isBlur) {
-            cropOptions.transform(new BlurTransformation(14, 8));
-            defaultOptions.transform(new BlurTransformation(14, 8));
+            MultiTransformation<Bitmap> multiTransformation;
+            if (isCircle) {
+                multiTransformation = new MultiTransformation<>(new BlurTransformation(14, 8), new CircleCrop());
+            } else {
+                multiTransformation = new MultiTransformation<>(new BlurTransformation(14, 8));
+            }
+            cropOptions.transform(multiTransformation);
+            defaultOptions.transform(multiTransformation);
         }
         if (countSize) {
-            Glide.with(view.getContext()).asBitmap().load(imageUrl).into(new SimpleTarget<Bitmap>() {
+            Glide.with(view.getContext()).asBitmap().load(imageUrl).apply(cropOptions).into(new SimpleTarget<Bitmap>() {
                 @Override
                 public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                     if (widthSize == 0) {
-                        viewSize(view, (int) (resource.getWidth() * (float) heightSize / MineApp.H), heightSize);
+                        viewSize(view, (int) ((float) resource.getWidth() * heightSize / (float) resource.getHeight()), heightSize);
                     }
                     if (heightSize == 0) {
-                        viewSize(view, heightSize, (int) (resource.getHeight() * (float) widthSize / MineApp.W));
+                        viewSize(view, widthSize, (int) ((float) resource.getHeight() * widthSize / (float) resource.getWidth()));
                     }
                     view.setImageBitmap(resource);
                 }
@@ -216,25 +220,20 @@ public class AdapterBinding {
         }
     }
 
-    // 加载图片
-    @BindingAdapter(value = {"imageUrlRound", "viewWidthSize", "viewHeightSize", "roundSize"}, requireAll = false)
-    public static void roundImageView(ImageView view, String imageUrlRound, int viewWidthSize, int viewHeightSize, int roundSize) {
-        viewSize(view, viewWidthSize, viewHeightSize);
-        //        RequestOptions cropOptions = new RequestOptions().centerCrop();
-        //        RequestOptions defaultOptions = new RequestOptions().centerCrop();
-        //        RequestBuilder<android.graphics.drawable.Drawable> thumb = Glide.with(view.getContext()).asDrawable().apply(defaultOptions);
-        //        Glide.with(view.getContext()).load(imageUrlRound).thumbnail(thumb.load(ObjectUtils.getDefaultRes())).apply(cropOptions).into(view);
-        //        view.setRadius(roundSize);
-        Glide.with(view.getContext()).asBitmap().load(imageUrlRound).into(new SimpleTarget<Bitmap>() {
+    // 加载视频首图
+    @BindingAdapter(value = {"videoUrl"}, requireAll = false)
+    public static void video(VideoView view, String videoUrl) {
+        Glide.with(view.getContext()).asBitmap().load(videoUrl).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                RoundedBitmapDrawable roundedDrawable = RoundedBitmapDrawableFactory.create(MineApp.getInstance().getResources(), resource);
-                // 设置图片圆角
-                roundedDrawable.setCornerRadius(roundSize);
-                view.setImageDrawable(roundedDrawable);
+                float width = (float) resource.getWidth();
+                float height = (float) resource.getHeight();
+                if (ObjectUtils.getViewSizeByHeight(0.9f) * width / height > MineApp.W) {
+                    viewSize(view, MineApp.W, (int) (MineApp.W * height / width));
+                } else {
+                    viewSize(view, (int) (ObjectUtils.getViewSizeByHeight(0.9f) * width / height), ObjectUtils.getViewSizeByHeight(0.9f));
+                }
             }
         });
     }
-
-
 }

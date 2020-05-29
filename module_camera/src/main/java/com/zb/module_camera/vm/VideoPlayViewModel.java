@@ -15,73 +15,73 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
 
 public class VideoPlayViewModel extends BaseViewModel implements VideoPlayVMInterface {
-    private CameraVideoPlayBinding playBinding;
+    private CameraVideoPlayBinding mBinding;
     public String filePath = "";
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        playBinding = (CameraVideoPlayBinding) binding;
+        mBinding = (CameraVideoPlayBinding) binding;
         initVideo();
     }
 
     @Override
     public void back(View view) {
-        playBinding.videoView.stopPlayback();//停止播放视频,并且释放
-        playBinding.videoView.suspend();//在任何状态下释放媒体播放器
+        mBinding.videoView.stopPlayback();//停止播放视频,并且释放
+        mBinding.videoView.suspend();//在任何状态下释放媒体播放器
         activity.finish();
     }
 
     @Override
     public void play(View view) {
-        if (playBinding.videoPlay.getVisibility() == View.VISIBLE) {
-            playBinding.videoPlay.setVisibility(View.GONE);
-            playBinding.videoView.setVideoPath(filePath);
-            playBinding.videoView.start();
+        if (mBinding.videoPlay.getVisibility() == View.VISIBLE) {
+            mBinding.videoPlay.setVisibility(View.GONE);
+            mBinding.videoView.setVideoPath(filePath);
+            mBinding.videoView.start();
         } else {
-            playBinding.videoView.pause();
-            playBinding.videoPlay.setVisibility(View.VISIBLE);
+            mBinding.videoView.pause();
+            mBinding.videoPlay.setVisibility(View.VISIBLE);
         }
     }
 
     private void initVideo() {
         //视频加载完成,准备好播放视频的回调
-        playBinding.videoView.setOnPreparedListener(mp -> {
-            playBinding.progress.setVisibility(View.GONE);
-            playBinding.videoPlay.setVisibility(View.GONE);
+        mBinding.videoView.setOnPreparedListener(mp -> {
+            mBinding.progress.setVisibility(View.GONE);
+            mBinding.videoPlay.setVisibility(View.GONE);
             //尺寸变化回调
             mp.setOnVideoSizeChangedListener((mp1, width, height) -> changeVideoSize(mp1));
         });
         //视频播放完成后的回调
-        playBinding.videoView.setOnCompletionListener(mp -> {
+        mBinding.videoView.setOnCompletionListener(mp -> {
 
-            playBinding.videoPlay.setVisibility(View.VISIBLE);
-            playBinding.videoView.stopPlayback();//停止播放视频,并且释放
-            playBinding.videoView.suspend();//在任何状态下释放媒体播放器
+            mBinding.videoPlay.setVisibility(View.VISIBLE);
+            mBinding.videoView.stopPlayback();//停止播放视频,并且释放
+            mBinding.videoView.suspend();//在任何状态下释放媒体播放器
         });
         //异常回调
-        playBinding.videoView.setOnErrorListener((mp, what, extra) -> {
+        mBinding.videoView.setOnErrorListener((mp, what, extra) -> {
             return true;//如果方法处理了错误，则为true；否则为false。返回false或根本没有OnErrorListener，将导致调用OnCompletionListener。
         });
 
         //信息回调
-        playBinding.videoView.setOnInfoListener((mp, what, extra) -> {
+        mBinding.videoView.setOnInfoListener((mp, what, extra) -> {
             if (what == MediaPlayer.MEDIA_INFO_UNKNOWN || what == MediaPlayer.MEDIA_INFO_NOT_SEEKABLE) {
                 SCToastUtil.showToast(activity, "视频播放失败");
-                playBinding.videoPlay.setVisibility(View.VISIBLE);
-                playBinding.videoView.stopPlayback();//停止播放视频,并且释放
-                playBinding.videoView.suspend();//在任何状态下释放媒体播放器
+                mBinding.videoPlay.setVisibility(View.VISIBLE);
+                mBinding.videoView.stopPlayback();//停止播放视频,并且释放
+                mBinding.videoView.suspend();//在任何状态下释放媒体播放器
                 return true;
             } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
                 // 缓冲开始
-                playBinding.progress.setVisibility(View.VISIBLE);
-                playBinding.videoPlay.setVisibility(View.GONE);
+                mBinding.progress.setVisibility(View.VISIBLE);
+                mBinding.videoPlay.setVisibility(View.GONE);
                 return true;
             } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
                 // 缓冲结束,此接口每次回调完START就回调END,若不加上判断就会出现缓冲图标一闪一闪的卡顿现象
                 if (mp.isPlaying()) {
-                    playBinding.progress.setVisibility(View.GONE);
-                    playBinding.videoPlay.setVisibility(View.GONE);
+                    mBinding.progress.setVisibility(View.GONE);
+                    mBinding.videoPlay.setVisibility(View.GONE);
                 }
                 return true;
             }
@@ -100,8 +100,8 @@ public class VideoPlayViewModel extends BaseViewModel implements VideoPlayVMInte
             return false; //如果方法处理了信息，则为true；如果没有，则为false。返回false或根本没有OnInfoListener，将导致丢弃该信息。
         });
 
-        playBinding.videoView.setVideoPath(filePath);
-        playBinding.videoView.start();
+        mBinding.videoView.setVideoPath(filePath);
+        mBinding.videoView.start();
     }
 
     /**
@@ -112,9 +112,9 @@ public class VideoPlayViewModel extends BaseViewModel implements VideoPlayVMInte
         int height = mMediaPlayer.getVideoHeight();
 
         if (ObjectUtils.getViewSizeByHeight(0.9f) * width / height > MineApp.W) {
-            AdapterBinding.viewSize(playBinding.videoView, MineApp.W, (MineApp.W * height / width));
+            AdapterBinding.viewSize(mBinding.videoView, MineApp.W, (MineApp.W * height / width));
         } else {
-            AdapterBinding.viewSize(playBinding.videoView, (ObjectUtils.getViewSizeByHeight(0.9f) * width / height), ObjectUtils.getViewSizeByHeight(0.9f));
+            AdapterBinding.viewSize(mBinding.videoView, (ObjectUtils.getViewSizeByHeight(0.9f) * width / height), ObjectUtils.getViewSizeByHeight(0.9f));
         }
     }
 }

@@ -35,6 +35,7 @@ public class VideosViewModel extends BaseViewModel implements VideosVMInterface 
     private VideoInfo videoInfo;
     private Thread mThread;
     private boolean mWorking = true;
+    private int duration = 0;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -48,6 +49,7 @@ public class VideosViewModel extends BaseViewModel implements VideosVMInterface 
     private void initVideo() {
         //视频加载完成,准备好播放视频的回调
         videosBinding.videoView.setOnPreparedListener(mp -> {
+            duration = mp.getDuration();
             videosBinding.progress.setVisibility(View.GONE);
             videosBinding.videoPlay.setVisibility(View.GONE);
             //尺寸变化回调
@@ -143,7 +145,7 @@ public class VideosViewModel extends BaseViewModel implements VideosVMInterface 
         Intent data = new Intent("lobster_camera");
         data.putExtra("cameraType", 1);
         data.putExtra("filePath", videoInfo.getPath());
-        data.putExtra("time", (long) videosBinding.videoView.getDuration() * 1000);
+        data.putExtra("time", (long) duration);
         activity.sendBroadcast(data);
         activity.finish();
     }
