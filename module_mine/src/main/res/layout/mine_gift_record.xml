@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="com.zb.lib_base.app.MineApp" />
+
         <variable
             name="viewModel"
             type="com.zb.module_mine.vm.GiftRecordViewModel" />
@@ -69,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_bi"
                 android:layout_marginTop="10dp"
-                android:text='@{String.format("%.2f",viewModel.walletInfo.canWithdrawCreditWallet)}'
+                android:text='@{String.format("%.2f", MineApp.walletInfo.canWithdrawCreditWallet)}'
                 android:textColor="@android:color/white"
                 android:textSize="35sp"
                 android:textStyle="bold"
@@ -116,7 +118,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text='@{String.format("%.2f",viewModel.walletInfo.wallet)}'
+                        android:text='@{String.format("%.2f", MineApp.walletInfo.wallet)}'
                         android:textColor="@color/black_252"
                         android:textSize="20sp"
                         android:textStyle="bold" />

@@ -1,6 +1,5 @@
 package com.zb.module_home.vm;
 
-import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -12,7 +11,6 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
-import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.attentionOtherApi;
 import com.zb.lib_base.api.attentionStatusApi;
@@ -22,12 +20,10 @@ import com.zb.lib_base.api.dynCancelLikeApi;
 import com.zb.lib_base.api.dynDetailApi;
 import com.zb.lib_base.api.dynDoLikeApi;
 import com.zb.lib_base.api.dynDoReviewApi;
-import com.zb.lib_base.api.giftListApi;
 import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.seeGiftRewardsApi;
 import com.zb.lib_base.api.seeReviewsApi;
-import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AttentionDb;
 import com.zb.lib_base.http.HttpManager;
@@ -35,12 +31,10 @@ import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
-import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.model.Reward;
-import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -75,11 +69,9 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     private List<Review> reviewList = new ArrayList<>();
     private int pageNo = 1;
     private List<Reward> rewardList = new ArrayList<>();
-    private WalletInfo walletInfo;
-    private List<GiftInfo> giftInfoList = new ArrayList<>();
     private MineInfo mineInfo;
     private MemberInfo memberInfo;
-    private BaseReceiver rechargeReceiver;
+
     private long reviewId = 0;
     private AttentionDb attentionDb;
 
@@ -94,13 +86,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         mBinding.setVariable(BR.name, "");
         setAdapter();
         dynDetail();
-        rechargeReceiver = new BaseReceiver(activity, "lobster_recharge") {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                walletAndPop();
-            }
-        };
-
         // 发送
         mBinding.edContent.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEND) {
@@ -123,7 +108,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void back(View view) {
         super.back(view);
-        rechargeReceiver.unregisterReceiver();
         activity.finish();
     }
 
@@ -161,9 +145,9 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 
     @Override
     public void selectGift(View view) {
-        if (walletInfo != null && giftInfoList.size() > 0)
-            new GiftPW(activity, mBinding.getRoot(), walletInfo, giftInfoList, giftInfo ->
-                    new GiftPayPW(activity, mBinding.getRoot(), giftInfo, walletInfo, friendDynId));
+        if (MineApp.walletInfo != null && MineApp.giftInfoList.size() > 0)
+            new GiftPW(activity, mBinding.getRoot(), giftInfo ->
+                    new GiftPayPW(activity, mBinding.getRoot(), giftInfo, friendDynId));
     }
 
     @Override
@@ -189,10 +173,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     selectorList.add("超级喜欢");
                     selectorList.add("举报");
                     selectorList.add("分享");
-                    giftList();
                 }
                 otherInfo();
-                walletAndPop();
                 attentionStatus();
 
                 List<Ads> adsList = new ArrayList<>();
@@ -213,18 +195,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    @Override
-    public void giftList() {
-        giftListApi api = new giftListApi(new HttpOnNextListener<List<GiftInfo>>() {
-            @Override
-            public void onNext(List<GiftInfo> o) {
-                giftInfoList.addAll(o);
-            }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
     public void seeGiftRewards() {
         seeGiftRewardsApi api = new seeGiftRewardsApi(new HttpOnNextListener<List<Reward>>() {
             @Override
@@ -301,17 +271,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 activity.finish();
             }
         }, activity).setFriendDynId(friendDynId);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
-    public void walletAndPop() {
-        walletAndPopApi api = new walletAndPopApi(new HttpOnNextListener<WalletInfo>() {
-            @Override
-            public void onNext(WalletInfo o) {
-                walletInfo = o;
-            }
-        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

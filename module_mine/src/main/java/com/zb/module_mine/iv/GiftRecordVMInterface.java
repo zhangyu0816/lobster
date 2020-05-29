@@ -10,6 +10,4 @@ public interface GiftRecordVMInterface {
     void toBindingZFB(View view);
 
     void incomeDeposit(View view);
-
-    void walletAndPop();
 }

@@ -27,6 +27,7 @@ public class GiftRecordActivity extends BaseActivity {
         fitComprehensiveScreen();
         GiftRecordViewModel viewModel = new GiftRecordViewModel();
         viewModel.setBinding(mBinding);
+        mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.title, "礼物收益");
         mBinding.setVariable(BR.right, "帮助");
     }

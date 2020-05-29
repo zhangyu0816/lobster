@@ -13,8 +13,6 @@ public interface DiscoverDetailVMInterface {
 
     void dynDetail();
 
-    void giftList();
-
     void seeGiftRewards();
 
     void seeReviews();
@@ -24,8 +22,6 @@ public interface DiscoverDetailVMInterface {
     void otherInfo();
 
     void deleteDyn();
-
-    void walletAndPop();
 
     void dynDoReview();
 

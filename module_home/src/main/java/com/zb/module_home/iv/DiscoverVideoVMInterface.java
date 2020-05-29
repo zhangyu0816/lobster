@@ -32,8 +32,4 @@ public interface DiscoverVideoVMInterface {
     void cancelAttention();
 
     void seeGiftRewards();
-
-    void walletAndPop();
-
-    void giftList();
 }

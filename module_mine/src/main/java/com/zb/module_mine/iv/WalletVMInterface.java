@@ -11,6 +11,4 @@ public interface WalletVMInterface {
     void toGiveRecord(View view);
 
     void toGetRecord(View view);
-
-    void walletAndPop();
 }

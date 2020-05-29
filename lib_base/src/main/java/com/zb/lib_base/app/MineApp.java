@@ -16,9 +16,14 @@ import com.zb.lib_base.R;
 import com.zb.lib_base.adaptive.FitScreen;
 import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.log.LogUtil;
+import com.zb.lib_base.model.BankInfo;
 import com.zb.lib_base.model.BaseEntity;
+import com.zb.lib_base.model.GiftInfo;
+import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.RegisterInfo;
+import com.zb.lib_base.model.Report;
 import com.zb.lib_base.model.VipInfo;
+import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.UIUtils;
 import com.zb.lib_base.views.CutImageView;
@@ -47,13 +52,20 @@ public class MineApp extends MultiDexApplication {
     public static Map<String, CutImageView> cutImageViewMap = new HashMap<>();
     public static Typeface type;
     public static Typeface simplifiedType;
-    public static List<VipInfo> vipInfoList = new ArrayList<>();
+
     public static String logo = "http://img01.zuwo.la/img/A/YMXXXX919714-206348_YM0000.jpg";
     public static String cityName = "";
     public static String versionName;
     public static String WX_PAY_APPID = "wxbdd7128e0a0a08f8";
     public static List<BaseEntity> apiList = new ArrayList<>(); // 断线重连
     public static Map<Integer, String> moneyTypeMap = new HashMap<>();
+
+    public static List<VipInfo> vipInfoList = new ArrayList<>();
+    public static List<GiftInfo> giftInfoList = new ArrayList<>();
+    public static List<RechargeInfo> rechargeInfoList = new ArrayList<>();
+    public static List<BankInfo> bankInfoList = new ArrayList<>();
+    public static List<Report> reportList = new ArrayList<>();
+    public static WalletInfo walletInfo;
 
     static {
         //设置全局的Header构建器

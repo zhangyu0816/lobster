@@ -4,7 +4,5 @@ public interface ReportVMInterface {
 
     void previewImage(int position);
 
-    void comType();
-
     void comsub(String images);
 }

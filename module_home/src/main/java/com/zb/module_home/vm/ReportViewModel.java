@@ -7,12 +7,10 @@ import android.view.View;
 
 import com.maning.imagebrowserlibrary.MNImage;
 import com.zb.lib_base.activity.BaseActivity;
-import com.zb.lib_base.api.comTypeApi;
 import com.zb.lib_base.api.comsubApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.model.Report;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -32,7 +30,6 @@ import androidx.databinding.ViewDataBinding;
 public class ReportViewModel extends BaseViewModel implements ReportVMInterface {
     public long otherUserId;
     public HomeAdapter adapter;
-    private List<Report> reportList = new ArrayList<>();
     public HomeAdapter imageAdapter;
     public List<String> images = new ArrayList<>();
     private PhotoManager photoManager;
@@ -98,8 +95,7 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
 
     @Override
     public void setAdapter() {
-        adapter = new HomeAdapter<>(activity, R.layout.item_report, reportList, this);
-        comType();
+        adapter = new HomeAdapter<>(activity, R.layout.item_report, MineApp.reportList, this);
         images.add("add_image_icon");
         imageAdapter = new HomeAdapter<>(activity, R.layout.item_report_image, images, this);
     }
@@ -118,18 +114,6 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
     }
 
     @Override
-    public void comType() {
-        comTypeApi api = new comTypeApi(new HttpOnNextListener<List<Report>>() {
-            @Override
-            public void onNext(List<Report> o) {
-                reportList.addAll(o);
-                adapter.notifyDataSetChanged();
-            }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
     public void comsub(String images) {
         comsubApi api = new comsubApi(new HttpOnNextListener() {
             @Override
@@ -139,7 +123,7 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
                 back(null);
             }
         }, activity)
-                .setComplainTypeId(reportList.get(prePosition).getId())
+                .setComplainTypeId(MineApp.reportList.get(prePosition).getId())
                 .setComText(mBinding.getContent())
                 .setComUserId(otherUserId)
                 .setImages(images);

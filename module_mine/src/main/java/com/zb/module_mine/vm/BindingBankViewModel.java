@@ -2,8 +2,8 @@ package com.zb.module_mine.vm;
 
 import android.view.View;
 
-import com.zb.lib_base.api.bankInfoListApi;
 import com.zb.lib_base.api.bindBankCardApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.BankInfo;
@@ -15,14 +15,10 @@ import com.zb.module_mine.databinding.MineBindingBankBinding;
 import com.zb.module_mine.iv.BindingBankVMInterface;
 import com.zb.module_mine.windows.BankPW;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.databinding.ViewDataBinding;
 
 public class BindingBankViewModel extends BaseViewModel implements BindingBankVMInterface {
     private MineBindingBankBinding mBinding;
-    private List<BankInfo> bankInfoList = new ArrayList<>();
     private BankInfo bankInfo;
 
     @Override
@@ -39,7 +35,6 @@ public class BindingBankViewModel extends BaseViewModel implements BindingBankVM
         mBinding.tvBankTitle.setTestSize(16);
         mBinding.tvBankAddress.setText("开户网点");
         mBinding.tvBankAddress.setTestSize(16);
-        bankInfoList();
     }
 
     @Override
@@ -50,7 +45,7 @@ public class BindingBankViewModel extends BaseViewModel implements BindingBankVM
 
     @Override
     public void selectBank(View view) {
-        new BankPW(activity, mBinding.getRoot(), bankInfoList, bankInfo1 -> {
+        new BankPW(activity, mBinding.getRoot(), MineApp.bankInfoList, bankInfo1 -> {
             bankInfo = bankInfo1;
             mBinding.tvBankName.setText(bankInfo.getBankName());
             mBinding.tvBankName.setTextColor(activity.getResources().getColor(R.color.black_252));
@@ -86,17 +81,6 @@ public class BindingBankViewModel extends BaseViewModel implements BindingBankVM
     @Override
     public void bankList(View view) {
         ActivityUtils.getMineBankList();
-    }
-
-    @Override
-    public void bankInfoList() {
-        bankInfoListApi api = new bankInfoListApi(new HttpOnNextListener<List<BankInfo>>() {
-            @Override
-            public void onNext(List<BankInfo> o) {
-                bankInfoList.addAll(o);
-            }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override

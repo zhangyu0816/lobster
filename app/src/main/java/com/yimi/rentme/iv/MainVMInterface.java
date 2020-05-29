@@ -7,4 +7,14 @@ public interface MainVMInterface {
     void joinPairPool(String longitude, String latitude);
 
     void openedMemberPriceList();
+
+    void giftList();
+
+    void rechargeDiscountList();
+
+    void bankInfoList();
+
+    void comType();
+
+    void walletAndPop();
 }

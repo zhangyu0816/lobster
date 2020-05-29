@@ -2,6 +2,8 @@ package com.yimi.rentme.vm;
 
 import android.Manifest;
 import android.animation.AnimatorSet;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.text.TextUtils;
 import android.widget.RelativeLayout;
@@ -10,16 +12,27 @@ import com.yimi.rentme.BR;
 import com.yimi.rentme.databinding.AcMainBinding;
 import com.yimi.rentme.iv.MainVMInterface;
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.FragmentAdapter;
+import com.zb.lib_base.api.bankInfoListApi;
+import com.zb.lib_base.api.comTypeApi;
+import com.zb.lib_base.api.giftListApi;
 import com.zb.lib_base.api.joinPairPoolApi;
 import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.openedMemberPriceListApi;
+import com.zb.lib_base.api.rechargeDiscountListApi;
+import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.imcore.LoginSampleHelper;
+import com.zb.lib_base.model.BankInfo;
+import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.ImAccount;
+import com.zb.lib_base.model.RechargeInfo;
+import com.zb.lib_base.model.Report;
 import com.zb.lib_base.model.VipInfo;
+import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.ObjectUtils;
@@ -42,6 +55,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private AMapLocation aMapLocation;
 
     private LoginSampleHelper loginHelper;
+    private BaseReceiver rechargeReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -60,6 +74,22 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
         if (!TextUtils.equals(BaseActivity.sessionId, ""))
             myImAccountInfoApi();
+
+        giftList();
+        rechargeDiscountList();
+        bankInfoList();
+        comType();
+        walletAndPop();
+        rechargeReceiver = new BaseReceiver(activity, "lobster_recharge") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                walletAndPop();
+            }
+        };
+    }
+
+    public void onDestroy(){
+        rechargeReceiver.unregisterReceiver();
     }
 
     private void initFragments() {
@@ -145,6 +175,61 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    @Override
+    public void giftList() {
+        giftListApi api = new giftListApi(new HttpOnNextListener<List<GiftInfo>>() {
+            @Override
+            public void onNext(List<GiftInfo> o) {
+                MineApp.giftInfoList.addAll(o);
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void rechargeDiscountList() {
+        rechargeDiscountListApi api = new rechargeDiscountListApi(new HttpOnNextListener<List<RechargeInfo>>() {
+            @Override
+            public void onNext(List<RechargeInfo> o) {
+                MineApp.rechargeInfoList.addAll(o);
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void bankInfoList() {
+        bankInfoListApi api = new bankInfoListApi(new HttpOnNextListener<List<BankInfo>>() {
+            @Override
+            public void onNext(List<BankInfo> o) {
+                MineApp.bankInfoList.addAll(o);
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void comType() {
+        comTypeApi api = new comTypeApi(new HttpOnNextListener<List<Report>>() {
+            @Override
+            public void onNext(List<Report> o) {
+                MineApp.reportList.addAll(o);
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void walletAndPop() {
+        walletAndPopApi api = new walletAndPopApi(new HttpOnNextListener<WalletInfo>() {
+            @Override
+            public void onNext(WalletInfo o) {
+                MineApp.walletInfo = o;
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
     public void stopAnimator() {
         animatorSet.cancel();
     }
@@ -215,4 +300,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
+
+
 }

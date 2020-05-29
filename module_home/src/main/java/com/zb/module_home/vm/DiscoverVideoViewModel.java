@@ -4,17 +4,14 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.view.View;
 
-import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.attentionOtherApi;
 import com.zb.lib_base.api.attentionStatusApi;
 import com.zb.lib_base.api.cancelAttentionApi;
 import com.zb.lib_base.api.deleteDynApi;
 import com.zb.lib_base.api.dynDetailApi;
-import com.zb.lib_base.api.giftListApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.seeGiftRewardsApi;
-import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AttentionDb;
 import com.zb.lib_base.db.GoodDb;
@@ -22,10 +19,8 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
-import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.Reward;
-import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.utils.ObjectUtils;
@@ -57,8 +52,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     private List<Reward> rewardList = new ArrayList<>();
     private HomeDiscoverVideoBinding mBinding;
     private AttentionDb attentionDb;
-    private WalletInfo walletInfo;
-    private List<GiftInfo> giftInfoList = new ArrayList<>();
 
     @Override
     public void back(View view) {
@@ -132,8 +125,8 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
 
     @Override
     public void doReward(View view) {
-        new GiftPW(activity, mBinding.getRoot(), walletInfo, giftInfoList, giftInfo ->
-                new GiftPayPW(activity, mBinding.getRoot(), giftInfo, walletInfo, friendDynId));
+        new GiftPW(activity, mBinding.getRoot(), giftInfo ->
+                new GiftPayPW(activity, mBinding.getRoot(), giftInfo, friendDynId));
     }
 
     @Override
@@ -181,10 +174,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                     }
                 });
                 otherInfo();
-                walletAndPop();
                 seeGiftRewards();
-                if (discoverInfo.getId() != BaseActivity.userId)
-                    giftList();
             }
         }, activity).setFriendDynId(friendDynId);
         api.setShowProgress(false);
@@ -258,28 +248,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
         }, activity).setFriendDynId(friendDynId)
                 .setRewardSortType(2)
                 .setPageNo(1);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
-    public void walletAndPop() {
-        walletAndPopApi api = new walletAndPopApi(new HttpOnNextListener<WalletInfo>() {
-            @Override
-            public void onNext(WalletInfo o) {
-                walletInfo = o;
-            }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
-    public void giftList() {
-        giftListApi api = new giftListApi(new HttpOnNextListener<List<GiftInfo>>() {
-            @Override
-            public void onNext(List<GiftInfo> o) {
-                giftInfoList.addAll(o);
-            }
-        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

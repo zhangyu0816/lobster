@@ -95,6 +95,7 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        viewModel.onDestroy();
         viewModel.stopAnimator();
     }
 

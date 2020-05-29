@@ -2,26 +2,12 @@ package com.zb.module_mine.vm;
 
 import android.view.View;
 
-import com.zb.lib_base.api.walletAndPopApi;
-import com.zb.lib_base.http.HttpManager;
-import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.RechargePW;
-import com.zb.module_mine.BR;
 import com.zb.module_mine.iv.WalletVMInterface;
 
-import androidx.databinding.ViewDataBinding;
-
 public class WalletViewModel extends BaseViewModel implements WalletVMInterface {
-    public WalletInfo walletInfo;
-
-    @Override
-    public void setBinding(ViewDataBinding binding) {
-        super.setBinding(binding);
-        walletAndPop();
-    }
 
     @Override
     public void back(View view) {
@@ -37,7 +23,7 @@ public class WalletViewModel extends BaseViewModel implements WalletVMInterface 
 
     @Override
     public void recharge(View view) {
-        new RechargePW(activity, mBinding.getRoot(), walletInfo);
+        new RechargePW(activity, mBinding.getRoot());
     }
 
     @Override
@@ -53,17 +39,5 @@ public class WalletViewModel extends BaseViewModel implements WalletVMInterface 
     @Override
     public void toGetRecord(View view) {
         ActivityUtils.getMineGRGift(2);
-    }
-
-    @Override
-    public void walletAndPop() {
-        walletAndPopApi api = new walletAndPopApi(new HttpOnNextListener<WalletInfo>() {
-            @Override
-            public void onNext(WalletInfo o) {
-                walletInfo = o;
-                mBinding.setVariable(BR.viewModel, WalletViewModel.this);
-            }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
     }
 }

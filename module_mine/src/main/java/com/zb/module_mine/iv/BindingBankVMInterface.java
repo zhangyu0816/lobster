@@ -10,8 +10,6 @@ public interface BindingBankVMInterface {
 
     void bankList(View view);
 
-    void bankInfoList();
-
     void bindBankCard();
 
 }
