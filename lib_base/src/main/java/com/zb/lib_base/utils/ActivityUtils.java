@@ -145,6 +145,16 @@ public class ActivityUtils {
     }
 
 
+    // 绑定银行卡
+    public static void getMineBindingBank() {
+        ARouter.getInstance().build(RouteUtils.Mine_Binding_Bank).navigation();
+    }
+
+    // 银行卡列表
+    public static void getMineBankList() {
+        ARouter.getInstance().build(RouteUtils.Mine_Bank_List).navigation();
+    }
+
     /*********************** 注册 **************************/
 
     // 注册主页

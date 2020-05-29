@@ -104,6 +104,7 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToastBlack(activity, "发布成功");
+                binding.setContent("");
                 // 下拉刷新
                 onRefresh(binding.refresh);
             }

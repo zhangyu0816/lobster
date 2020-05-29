@@ -53,6 +53,7 @@ public class MineApp extends MultiDexApplication {
     public static String versionName;
     public static String WX_PAY_APPID = "wxbdd7128e0a0a08f8";
     public static List<BaseEntity> apiList = new ArrayList<>(); // 断线重连
+    public static Map<Integer, String> moneyTypeMap = new HashMap<>();
 
     static {
         //设置全局的Header构建器
@@ -63,26 +64,30 @@ public class MineApp extends MultiDexApplication {
         //设置全局的Footer构建器
         SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout) -> new ClassicsFooter(context).setDrawableSize(20));
 
-        tranTypeMap.put(1,"充值");
-        tranTypeMap.put(2,"提现");
-        tranTypeMap.put(3,"订单平台服务费");
-        tranTypeMap.put(4,"个人信息首页置顶");
-        tranTypeMap.put(5,"下级消费分成");
-        tranTypeMap.put(6,"技能服务订单付款");
-        tranTypeMap.put(7,"开通会员");
-        tranTypeMap.put(8,"评论付款");
-        tranTypeMap.put(9,"红包付款");
-        tranTypeMap.put(10,"私密相册");
-        tranTypeMap.put(11,"相册打赏");
-        tranTypeMap.put(12,"好友红包");
-        tranTypeMap.put(13,"视频围观");
-        tranTypeMap.put(14,"付费提问");
-        tranTypeMap.put(15,"视频围观分润");
-        tranTypeMap.put(16,"诚意订单诚意金");
-        tranTypeMap.put(17,"诚意订单定金");
-        tranTypeMap.put(18,"诚意订单收款");
-        tranTypeMap.put(19,"诚意订单退款");
-        tranTypeMap.put(31,"礼物打赏");
+        tranTypeMap.put(1, "充值");
+        tranTypeMap.put(2, "提现");
+        tranTypeMap.put(3, "订单平台服务费");
+        tranTypeMap.put(4, "个人信息首页置顶");
+        tranTypeMap.put(5, "下级消费分成");
+        tranTypeMap.put(6, "技能服务订单付款");
+        tranTypeMap.put(7, "开通会员");
+        tranTypeMap.put(8, "评论付款");
+        tranTypeMap.put(9, "红包付款");
+        tranTypeMap.put(10, "私密相册");
+        tranTypeMap.put(11, "相册打赏");
+        tranTypeMap.put(12, "好友红包");
+        tranTypeMap.put(13, "视频围观");
+        tranTypeMap.put(14, "付费提问");
+        tranTypeMap.put(15, "视频围观分润");
+        tranTypeMap.put(16, "诚意订单诚意金");
+        tranTypeMap.put(17, "诚意订单定金");
+        tranTypeMap.put(18, "诚意订单收款");
+        tranTypeMap.put(19, "诚意订单退款");
+        tranTypeMap.put(31, "礼物打赏");
+
+        moneyTypeMap.put(0, "");
+        moneyTypeMap.put(1, "最受欢迎");
+        moneyTypeMap.put(2, "优惠最大");
     }
 
     @Override

@@ -51,8 +51,8 @@ public class GiftPayPW extends BasePopupWindow {
             SCToastUtil.showToastBlack(activity, "请输入赠送数量");
             return;
         }
-
-        if (Integer.parseInt(binding.getContent()) * giftInfo.getPayMoney() < walletInfo.getWallet()) {
+        double money = Integer.parseInt(binding.getContent()) * giftInfo.getPayMoney();
+        if (money > walletInfo.getWallet()) {
             SCToastUtil.showToastBlack(activity, "钱包余额不足，请先充值");
             return;
         }

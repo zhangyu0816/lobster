@@ -4,7 +4,6 @@ import android.view.View;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.model.GiftInfo;
-import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.windows.BasePopupWindow;
@@ -13,7 +12,6 @@ import com.zb.module_home.BR;
 import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GiftPW extends BasePopupWindow {
@@ -55,15 +53,7 @@ public class GiftPW extends BasePopupWindow {
     public void recharge(View view) {
         super.recharge(view);
         dismiss();
-        List<RechargeInfo> rechargeInfoList = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
-            RechargeInfo rechargeInfo = new RechargeInfo();
-            if (i < 2) {
-                rechargeInfo.setPriceDesc("最受欢迎");
-            }
-            rechargeInfoList.add(rechargeInfo);
-        }
-        new RechargePW(activity, mBinding.getRoot(), walletInfo, rechargeInfoList);
+        new RechargePW(activity, mBinding.getRoot(), walletInfo);
     }
 
     @Override

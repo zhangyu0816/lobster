@@ -11,6 +11,7 @@ import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.vm.FCLViewModel;
 
@@ -22,11 +23,17 @@ import androidx.databinding.ViewDataBinding;
 public class MineAdapter<T> extends BindingItemAdapter<T> implements ItemTouchHelperAdapter {
 
     private BaseViewModel viewModel;
+    private BasePopupWindow pw;
     private int selectIndex = -1;
 
     public MineAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
         super(activity, layoutId, list);
         this.viewModel = viewModel;
+    }
+
+    public MineAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BasePopupWindow pw) {
+        super(activity, layoutId, list);
+        this.pw = pw;
     }
 
     public void setSelectIndex(int selectIndex) {
@@ -44,6 +51,9 @@ public class MineAdapter<T> extends BindingItemAdapter<T> implements ItemTouchHe
         holder.binding.setVariable(BR.isSelect, position == selectIndex);
         if (viewModel != null) {
             holder.binding.setVariable(BR.viewModel, viewModel);
+        }
+        if (pw != null) {
+            holder.binding.setVariable(BR.pw, pw);
         }
         if (viewModel instanceof FCLViewModel) {
             ((FCLViewModel) viewModel).getContactNum((MemberInfo) t, position);
@@ -66,7 +76,7 @@ public class MineAdapter<T> extends BindingItemAdapter<T> implements ItemTouchHe
                         ((MemberInfo) t).setFansQuantity(o.getFansCount());
                         notifyItemChanged(position);
                     }
-                },mContext).setOtherUserId(((MemberInfo) t).getUserId());
+                }, mContext).setOtherUserId(((MemberInfo) t).getUserId());
                 HttpManager.getInstance().doHttpDeal(api);
             }
         }

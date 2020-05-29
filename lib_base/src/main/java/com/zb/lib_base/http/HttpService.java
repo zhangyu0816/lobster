@@ -2,6 +2,7 @@ package com.zb.lib_base.http;
 
 
 import com.zb.lib_base.model.AliPay;
+import com.zb.lib_base.model.BankInfo;
 import com.zb.lib_base.model.BaseResultEntity;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.BottleMsg;
@@ -17,12 +18,14 @@ import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.LoginInfo;
 import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.model.MineBank;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.MineNews;
 import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.OrderNumber;
 import com.zb.lib_base.model.OrderTran;
 import com.zb.lib_base.model.PairInfo;
+import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.Report;
 import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.model.Review;
@@ -118,7 +121,7 @@ public interface HttpService {
 
     // 充钱到我的钱包
     @GET("api/Tran_rechargeWallet")
-    Observable<BaseResultEntity<OrderTran>> rechargeWallet(@Query("money") double money);
+    Observable<BaseResultEntity<OrderTran>> rechargeWallet(@Query("money") double money, @Query("moneyDiscountId") long moneyDiscountId);
 
     // 举报类型
     @GET("api/Complain_comType")
@@ -292,7 +295,7 @@ public interface HttpService {
     @GET("api/DriftBottle_myBottleList")
     Observable<BaseResultEntity<List<BottleInfo>>> myBottleList(@Query("pageNo") int pageNo);
 
-    // 我的漂流瓶列表
+    // 我的漂流瓶
     @GET("api/DriftBottle_myBottle")
     Observable<BaseResultEntity<BottleInfo>> myBottle(@Query("driftBottleId") long driftBottleId);
 
@@ -376,4 +379,25 @@ public interface HttpService {
     // 交易记录
     @GET("api/Tran_tranSingleRecord")
     Observable<BaseResultEntity<TranRecord>> tranSingleRecord(@Query("tranOrderId") String tranOrderId);
+
+    // 所有的银行..包括支付宝
+    @GET("api/Tran_bankInfoList")
+    Observable<BaseResultEntity<List<BankInfo>>> bankInfoList();
+
+    // 绑定银行卡
+    @GET("api/Tran_bindBankCard")
+    Observable<BaseResultEntity> bindBankCard(@Query("bankId") long bankId, @Query("accountNo") String accountNo,
+                                              @Query("openAccountLocation") String openAccountLocation);
+
+    // 我的银行卡
+    @GET("api/Tran_myBankCards")
+    Observable<BaseResultEntity<List<MineBank>>> myBankCards();
+
+    // 删除银行卡
+    @GET("api/Tran_removeBankCard")
+    Observable<BaseResultEntity> removeBankCard(@Query("bankAccountId") long bankAccountId);
+
+    // 充值
+    @GET("api/Tran_rechargeDiscountList")
+    Observable<BaseResultEntity<List<RechargeInfo>>> rechargeDiscountList(@Query("pageNo") int pageNo);
 }

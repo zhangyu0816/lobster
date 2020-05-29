@@ -10,6 +10,7 @@ import com.zb.lib_base.api.myBottleApi;
 import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.api.replyBottleApi;
+import com.zb.lib_base.api.thirdReadChatApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.imcore.LoginSampleHelper;
@@ -66,6 +67,61 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         myBottle();
     }
 
+    @Override
+    public void myBottle() {
+        myBottleApi api = new myBottleApi(new HttpOnNextListener<BottleInfo>() {
+            @Override
+            public void onNext(BottleInfo o) {
+                bottleInfo = o;
+                bottleMsgList.addAll(o.getMessageList());
+                adapter.notifyDataSetChanged();
+                mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
+                mBinding.setVariable(BR.nick, bottleInfo.getOtherNick());
+                if (loginHelper.getImCore() == null) {
+                    myImAccountInfoApi();
+                } else {
+                    otherImAccountInfoApi();
+                }
+                thirdReadChat();
+            }
+        }, activity).setDriftBottleId(driftBottleId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void sendBottle(View view) {
+        if (mBinding.getContent().isEmpty()) {
+            SCToastUtil.showToastBlack(activity, "请输入回复内容");
+            return;
+        }
+        replyBottleApi api = new replyBottleApi(new HttpOnNextListener<BottleMsg>() {
+            @Override
+            public void onNext(BottleMsg o) {
+                if (o == null) {
+                    SCToastUtil.showToastBlack(activity, "此漂流瓶已被销毁");
+                } else {
+                    bottleMsgList.add(o);
+                    adapter.notifyDataSetChanged();
+                    mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
+                }
+            }
+        }, activity).setDriftBottleId(driftBottleId).setText(mBinding.getContent());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 清除未读数量
+     */
+    private void thirdReadChat() {
+        thirdReadChatApi api = new thirdReadChatApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+
+            }
+        }, activity).setOtherUserId(bottleInfo.getOtherUserId());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
     /**
      * 阿里百川登录账号
      */
@@ -107,47 +163,4 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             conversation = mConversationService.getConversationCreater().createConversationIfNotExist(contact);
         }
     }
-
-    @Override
-    public void myBottle() {
-        myBottleApi api = new myBottleApi(new HttpOnNextListener<BottleInfo>() {
-            @Override
-            public void onNext(BottleInfo o) {
-                bottleInfo = o;
-                bottleMsgList.addAll(o.getMessageList());
-                adapter.notifyDataSetChanged();
-                mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
-                mBinding.setVariable(BR.nick, bottleInfo.getOtherNick());
-                if (loginHelper.getImCore() == null) {
-                    myImAccountInfoApi();
-                } else {
-                    otherImAccountInfoApi();
-                }
-            }
-        }, activity).setDriftBottleId(driftBottleId);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
-    public void sendBottle(View view) {
-        if (mBinding.getContent().isEmpty()) {
-            SCToastUtil.showToastBlack(activity, "请输入回复内容");
-            return;
-        }
-        replyBottleApi api = new replyBottleApi(new HttpOnNextListener<BottleMsg>() {
-            @Override
-            public void onNext(BottleMsg o) {
-                if (o == null) {
-                    SCToastUtil.showToastBlack(activity, "此漂流瓶已被销毁");
-                } else {
-                    bottleMsgList.add(o);
-                    adapter.notifyDataSetChanged();
-                    mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
-                }
-            }
-        }, activity).setDriftBottleId(driftBottleId).setText(mBinding.getContent());
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-
 }

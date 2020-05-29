@@ -9,6 +9,8 @@ public interface DiscoverDetailVMInterface {
 
     void toRewardList(View view);
 
+    void toMemberDetail(View view);
+
     void dynDetail();
 
     void giftList();

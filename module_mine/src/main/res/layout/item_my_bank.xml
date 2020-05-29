@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <variable
+            name="item"
+            type="com.zb.lib_base.model.MineBank" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_mine.vm.BankListViewModel" />
+
+    </data>
+
+    <RelativeLayout
+        onClickDelayed="@{v->viewModel.delete(position)}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            defaultRes="@{ObjectUtils.getDefaultRes()}"
+            imageUrl="@{item.bankLogo}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_toEndOf="@+id/iv_logo"
+            android:text="@{item.bankName}"
+            android:textColor="@color/black_252"
+            android:textSize="16sp"
+            tools:text="支付宝" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_name"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/iv_logo"
+            android:text="@{item.accountNo}"
+            android:textColor="@color/black_827"
+            android:textSize="14sp"
+            tools:text="kjwef lwjf lwj flwj flw " />
+    </RelativeLayout>
+</layout>

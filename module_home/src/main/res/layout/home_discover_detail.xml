@@ -68,6 +68,7 @@
                             android:layout_height="wrap_content">
 
                             <ImageView
+                                onClickDelayed="@{viewModel::toMemberDetail}"
                                 android:id="@+id/iv_logo"
                                 defaultRes="@{ObjectUtils.getDefaultRes()}"
                                 imageUrl="@{viewModel.discoverInfo.image}"
@@ -79,6 +80,7 @@
                                 android:layout_margin="15dp" />
 
                             <TextView
+                                onClickDelayed="@{viewModel::toMemberDetail}"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"

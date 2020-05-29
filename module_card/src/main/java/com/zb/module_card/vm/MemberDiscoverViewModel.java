@@ -12,7 +12,6 @@ import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.dynPiazzaListApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.personOtherDynApi;
-import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_mine.vm.BankListViewModel" />
+
+        <variable
+            name="title"
+            type="String" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/back_black_layout"
+            showRight="@{false}"
+            title="@{title}"
+            viewModel="@{viewModel}" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            adapter="@{viewModel.adapter}"
+            color="@{ObjectUtils.getLineColor()}"
+            recyclerType="@{0}"
+            size="@{1}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</layout>

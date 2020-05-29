@@ -23,6 +23,8 @@
         <activity android:name=".activity.FCLActivity" />
         <activity android:name=".activity.GRGiftActivity" />
         <activity android:name=".activity.TranRecordActivity" />
+        <activity android:name=".activity.BindingBankActivity" />
+        <activity android:name=".activity.BankListActivity" />
     </application>
 
 </manifest>

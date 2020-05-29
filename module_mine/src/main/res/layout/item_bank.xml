@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <variable
+            name="item"
+            type="com.zb.lib_base.model.BankInfo" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="pw"
+            type="com.zb.module_mine.windows.BankPW" />
+
+    </data>
+
+    <LinearLayout
+        onClickDelayed="@{v->pw.select(position)}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:padding="15dp">
+
+        <ImageView
+            defaultRes="@{ObjectUtils.getDefaultRes()}"
+            imageUrl="@{item.bankLogo}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="15dp"
+            android:text="@{item.bankName}"
+            android:textColor="@color/black_252"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</layout>

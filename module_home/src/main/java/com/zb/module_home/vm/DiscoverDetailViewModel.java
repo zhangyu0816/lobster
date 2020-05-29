@@ -172,6 +172,11 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     }
 
     @Override
+    public void toMemberDetail(View view) {
+        ActivityUtils.getCardMemberDetail(discoverInfo.getId());
+    }
+
+    @Override
     public void dynDetail() {
         dynDetailApi api = new dynDetailApi(new HttpOnNextListener<DiscoverInfo>() {
             @Override
@@ -184,7 +189,12 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     selectorList.add("超级喜欢");
                     selectorList.add("举报");
                     selectorList.add("分享");
+                    giftList();
                 }
+                otherInfo();
+                walletAndPop();
+                attentionStatus();
+
                 List<Ads> adsList = new ArrayList<>();
                 if (!discoverInfo.getImages().isEmpty()) {
                     String[] images = discoverInfo.getImages().split(",");
@@ -197,12 +207,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     }
                 }
                 showBanner(adsList);
-                otherInfo();
-                walletAndPop();
-                attentionStatus();
-                if (discoverInfo.getId() != BaseActivity.userId)
-                    giftList();
-
                 mBinding.setVariable(BR.viewModel, DiscoverDetailViewModel.this);
             }
         }, activity).setFriendDynId(friendDynId);
@@ -321,6 +325,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToastBlack(activity, "发布成功");
+                mBinding.setContent("");
                 // 下拉刷新
                 onRefresh(mBinding.refresh);
             }

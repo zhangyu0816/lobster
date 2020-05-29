@@ -8,6 +8,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.zb.lib_base.app.MineApp" />
+
         <variable
             name="item"
             type="com.zb.lib_base.model.RechargeInfo" />
@@ -44,9 +46,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
-                android:text='@{String.format("%d",item.rechargeValue)}'
+                android:text='@{String.format("%.1f",item.originalMoney+item.extraGiveMoney)}'
                 android:textColor="@color/black_252"
-                android:textSize="22sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 tools:text="10" />
 
@@ -64,7 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/count_linear"
             android:layout_centerHorizontal="true"
-            android:text='@{String.format("￥%.1f",item.price)}'
+            android:text='@{String.format("￥%.1f",item.originalMoney)}'
             android:textColor="@color/black_827"
             android:textSize="12sp"
             android:textStyle="bold"
@@ -75,10 +77,10 @@
             android:layout_height="24dp"
             android:background="@drawable/btn_bg_red_fe4_radius_top5"
             android:gravity="center"
-            android:text="@{item.priceDesc}"
+            android:text="@{MineApp.moneyTypeMap.get(item.moneyType)}"
             android:textColor="@android:color/white"
             android:textSize="12sp"
-            android:visibility="@{(isSelect&amp;&amp;!item.priceDesc.isEmpty())?View.VISIBLE:View.GONE}"
+            android:visibility="@{(isSelect&amp;&amp;!MineApp.moneyTypeMap.get(item.moneyType).isEmpty())?View.VISIBLE:View.GONE}"
             tools:text="最受欢迎" />
     </RelativeLayout>
 </layout>

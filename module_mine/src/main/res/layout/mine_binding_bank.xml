@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_mine.vm.BindingBankViewModel" />
+
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="name"
+            type="String" />
+
+        <variable
+            name="bankAccount"
+            type="String" />
+
+        <variable
+            name="bankAddress"
+            type="String" />
+
+        <variable
+            name="showAddress"
+            type="boolean" />
+
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_efe">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <include
+                    layout="@layout/back_black_layout"
+                    showRight="@{false}"
+                    title="@{title}"
+                    viewModel="@{viewModel}" />
+
+                <TextView
+                    onClickDelayed="@{viewModel::bankList}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="22dp"
+                    android:padding="15dp"
+                    android:text="卡包"
+                    android:textColor="@color/black_252"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:text="请绑定本人银行卡"
+                android:textColor="@color/black_4d4"
+                android:textSize="12sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:padding="15dp">
+
+                <com.zb.lib_base.views.LineTextView
+                    android:id="@+id/tv_bank"
+                    android:layout_width="74dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/tv_bank_name"
+                    onClickDelayed="@{viewModel::selectBank}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@+id/tv_bank"
+                    android:textColor="@color/black_827"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@mipmap/arrow_small_right_icon" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:background="@color/black_efe"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:padding="15dp"
+                android:visibility="gone">
+
+                <com.zb.lib_base.views.LineTextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="74dp"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="@null"
+                    android:hint="请输入户名"
+                    android:singleLine="true"
+                    android:text="@={name}"
+                    android:textColor="@color/black_252"
+                    android:textColorHint="@color/black_827"
+                    android:textCursorDrawable="@drawable/cursor_color_black_252"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:background="@color/black_efe" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:padding="15dp">
+
+                <com.zb.lib_base.views.LineTextView
+                    android:id="@+id/tv_bank_title"
+                    android:layout_width="74dp"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/ed_bank_account"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="@null"
+                    android:hint="请输入银行卡卡号"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    android:text="@={bankAccount}"
+                    android:textColor="@color/black_252"
+                    android:textColorHint="@color/black_827"
+                    android:textCursorDrawable="@drawable/cursor_color_black_252"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:background="@color/black_efe"
+                android:visibility="@{showAddress?View.VISIBLE:View.GONE}" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:padding="15dp"
+                android:visibility="@{showAddress?View.VISIBLE:View.GONE}">
+
+                <com.zb.lib_base.views.LineTextView
+                    android:id="@+id/tv_bank_address"
+                    android:layout_width="74dp"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="@null"
+                    android:hint="请输入开户银行（xx银行xx支行xx分行)"
+                    android:singleLine="true"
+                    android:text="@={bankAddress}"
+                    android:textColor="@color/black_252"
+                    android:textColorHint="@color/black_827"
+                    android:textCursorDrawable="@drawable/cursor_color_black_252"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <TextView
+                onClickDelayed="@{viewModel::submit}"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_margin="20dp"
+                android:background="@drawable/gradient_purple_6d5_ae7"
+                android:gravity="center"
+                android:text="绑定"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

@@ -73,6 +73,10 @@ public class RouteUtils {
     public static final String Mine_GRGift = "/mine/GRGiftActivity";
     // 交易记录
     public static final String Mine_Tran_Record = "/mine/TranRecordActivity";
+    // 绑定银行卡
+    public static final String Mine_Binding_Bank = "/mine/BindingBankActivity";
+    // 银行卡列表
+    public static final String Mine_Bank_List = "/mine/BankListActivity";
 
     /*********************** 注册 **************************/
 

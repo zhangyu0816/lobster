@@ -10,9 +10,15 @@ import rx.Observable;
 
 public class rechargeWalletApi extends BaseEntity<OrderTran> {
     double money;
+    long moneyDiscountId;
 
     public rechargeWalletApi setMoney(double money) {
         this.money = money;
+        return this;
+    }
+
+    public rechargeWalletApi setMoneyDiscountId(long moneyDiscountId) {
+        this.moneyDiscountId = moneyDiscountId;
         return this;
     }
 
@@ -23,6 +29,6 @@ public class rechargeWalletApi extends BaseEntity<OrderTran> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.rechargeWallet(money);
+        return methods.rechargeWallet(money, moneyDiscountId);
     }
 }
