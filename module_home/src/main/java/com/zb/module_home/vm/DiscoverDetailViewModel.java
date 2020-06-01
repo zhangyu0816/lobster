@@ -147,7 +147,11 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     public void selectGift(View view) {
         if (MineApp.walletInfo != null && MineApp.giftInfoList.size() > 0)
             new GiftPW(activity, mBinding.getRoot(), giftInfo ->
-                    new GiftPayPW(activity, mBinding.getRoot(), giftInfo, friendDynId));
+                    new GiftPayPW(activity, mBinding.getRoot(), giftInfo, friendDynId, () -> {
+                        discoverInfo.setRewardNum(discoverInfo.getRewardNum() + 1);
+                        mBinding.setVariable(BR.viewModel, DiscoverDetailViewModel.this);
+                        seeGiftRewards();
+                    }));
     }
 
     @Override
@@ -199,6 +203,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         seeGiftRewardsApi api = new seeGiftRewardsApi(new HttpOnNextListener<List<Reward>>() {
             @Override
             public void onNext(List<Reward> o) {
+                rewardList.clear();
+                rewardAdapter.notifyDataSetChanged();
                 rewardList.addAll(o);
                 rewardAdapter.notifyDataSetChanged();
             }

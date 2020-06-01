@@ -12,6 +12,7 @@ import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.api.attentionOtherApi;
 import com.zb.lib_base.api.attentionStatusApi;
 import com.zb.lib_base.api.cancelAttentionApi;
+import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
@@ -20,17 +21,20 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.CountUsedPW;
 import com.zb.lib_base.windows.SelectorPW;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;
 import com.zb.module_card.adapter.CardAdapter;
 import com.zb.module_card.databinding.CardMemberDetailBinding;
 import com.zb.module_card.iv.MemberDetailVMInterface;
+import com.zb.module_card.windows.VipAdPW;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,13 +54,14 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     private List<String> selectorList = new ArrayList<>();
     private AreaDb areaDb;
     private AttentionDb attentionDb;
-
+    private MineInfo mineInfo;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         areaDb = new AreaDb(Realm.getDefaultInstance());
         attentionDb = new AttentionDb(Realm.getDefaultInstance());
+        mineInfo = mineInfoDb.getMineInfo();
         if (otherUserId != BaseActivity.userId)
             selectorList.add("举报");
         selectorList.add("分享");
@@ -176,8 +181,39 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     }
 
     @Override
+    public void makeEvaluate() {
+        //  likeOtherStatus  0 不喜欢  1 喜欢  2.超级喜欢 （非会员提示开通会员）
+        makeEvaluateApi api = new makeEvaluateApi(new HttpOnNextListener<Integer>() {
+            @Override
+            public void onNext(Integer o) {
+                // 1喜欢成功 2匹配成功 3喜欢次数用尽
+                if (o == 1) {
+                    // 不喜欢成功  喜欢成功  超级喜欢成功
+                    activity.finish();
+                    Intent data = new Intent("lobster_card");
+                    data.putExtra("direction", 2);
+                    activity.sendBroadcast(data);
+                } else {
+                    // 超级喜欢时，非会员或超级喜欢次数用尽
+                    if (mineInfo.getMemberType() == 2) {
+                        new CountUsedPW(activity, mBinding.getRoot(), 2);
+                    } else {
+                        new VipAdPW(activity, mBinding.getRoot());
+                    }
+                }
+            }
+        }, activity).setOtherUserId(otherUserId).setLikeOtherStatus(2);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
     public void superLike(View view) {
         super.superLike(view);
+        if (mineInfo.getMemberType() == 2) {
+            makeEvaluate();
+        } else {
+            new VipAdPW(activity, mBinding.getRoot());
+        }
     }
 
     @Override

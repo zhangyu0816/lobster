@@ -4,25 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
-import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
-import com.zb.lib_base.api.chatListApi;
 import com.zb.lib_base.api.contactNumApi;
 import com.zb.lib_base.api.newDynMsgAllNumApi;
+import com.zb.lib_base.api.systemChatApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.MineNewsCount;
+import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.iv.MineVMInterface;
-
-import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
 
@@ -113,23 +110,19 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             public void onNext(MineNewsCount o) {
                 newsNum = o.getFriendDynamicGiftNum() + o.getFriendDynamicGoodNum() + o.getFriendDynamicReviewNum();
                 mBinding.setVariable(BR.newsNum, newsNum);
-                chatList();
+                systemChat();
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override
-    public void chatList() {
-        chatListApi api = new chatListApi(new HttpOnNextListener<List<ChatList>>() {
+    public void systemChat() {
+        systemChatApi api = new systemChatApi(new HttpOnNextListener<SystemMsg>() {
             @Override
-            public void onNext(List<ChatList> o) {
-                for (ChatList chatList : o) {
-                    if (chatList.getUserId() == BaseActivity.systemUserId) {
-                        newsNum = newsNum + chatList.getNoReadNum();
-                        mBinding.setVariable(BR.newsNum, newsNum);
-                    }
-                }
+            public void onNext(SystemMsg o) {
+                newsNum += o.getNoReadNum();
+                mBinding.setVariable(BR.newsNum, newsNum);
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

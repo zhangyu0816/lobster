@@ -11,6 +11,7 @@ import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.FaceStatus;
+import com.zb.lib_base.model.FeedbackInfo;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.GiftRecord;
 import com.zb.lib_base.model.HistoryMsg;
@@ -30,6 +31,7 @@ import com.zb.lib_base.model.Report;
 import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.model.Reward;
+import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.model.TranRecord;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WXPay;
@@ -400,4 +402,26 @@ public interface HttpService {
     // 充值
     @GET("api/Tran_rechargeDiscountList")
     Observable<BaseResultEntity<List<RechargeInfo>>> rechargeDiscountList(@Query("pageNo") int pageNo);
+
+    // 反馈列表
+    @GET("api/FeedBack_selfFeedBack")
+    Observable<BaseResultEntity<List<FeedbackInfo>>> selfFeedBack(@Query("pageNumber") int pageNumber);
+
+    // 提交反馈
+    @GET("api/FeedBack_addFeedBack")
+    Observable<BaseResultEntity> addFeedBack(@Query("title") String title, @Query("content") String content, @Query("images") String images);
+
+    // 系统消息未读
+    @GET("api/SystemMsg_chat")
+    Observable<BaseResultEntity<SystemMsg>> systemChat();
+
+    // 系统消息
+    @GET("api/SystemMsg_historyMsgList")
+    Observable<BaseResultEntity<List<SystemMsg>>> systemHistoryMsgList(@Query("pageNo") int pageNo);
+
+    // 清除系统消息
+    @GET("api/SystemMsg_clearHistoryMsg")
+    Observable<BaseResultEntity> clearHistoryMsg(@Query("messageId") long messageId);
+
+
 }

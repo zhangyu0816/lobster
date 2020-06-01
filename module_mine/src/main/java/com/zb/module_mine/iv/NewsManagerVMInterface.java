@@ -14,5 +14,9 @@ public interface NewsManagerVMInterface {
 
     void newDynMsgAllNum();
 
-    void chatList();
+    void systemChat();
+
+    void systemHistoryMsgList();
+
+    void clearHistoryMsg(long messageId);
 }

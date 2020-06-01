@@ -2,6 +2,7 @@ package com.zb.lib_base.utils;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.zb.lib_base.model.FeedbackInfo;
 
 public class ActivityUtils {
     /*********************** app **************************/
@@ -99,6 +100,11 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Mine_Feedback).navigation();
     }
 
+    // 反馈
+    public static void getMineFeedbackDetail(FeedbackInfo feedbackInfo) {
+        ARouter.getInstance().build(RouteUtils.Mine_Feedback_Detail).withParcelable("feedbackInfo", feedbackInfo).navigation();
+    }
+
     // 网页
     public static void getMineWeb(String title, String url) {
         ARouter.getInstance().build(RouteUtils.Mine_Web).withString("title", title).withString("url", url).navigation();
@@ -153,6 +159,11 @@ public class ActivityUtils {
     // 银行卡列表
     public static void getMineBankList() {
         ARouter.getInstance().build(RouteUtils.Mine_Bank_List).navigation();
+    }
+
+    // 系统消息
+    public static void getMineSystemMsg() {
+        ARouter.getInstance().build(RouteUtils.Mine_System_Msg).navigation();
     }
 
     /*********************** 注册 **************************/

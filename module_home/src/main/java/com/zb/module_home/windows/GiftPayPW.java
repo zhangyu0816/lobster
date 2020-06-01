@@ -20,11 +20,13 @@ public class GiftPayPW extends BasePopupWindow {
     private GiftInfo giftInfo;
     private long friendDynId;
     private PwsGiftPayBinding binding;
+    private CallBack callBack;
 
-    public GiftPayPW(RxAppCompatActivity activity, View parentView, GiftInfo giftInfo, long friendDynId) {
+    public GiftPayPW(RxAppCompatActivity activity, View parentView, GiftInfo giftInfo, long friendDynId, CallBack callBack) {
         super(activity, parentView, true);
         this.giftInfo = giftInfo;
         this.friendDynId = friendDynId;
+        this.callBack = callBack;
         initUI();
     }
 
@@ -59,7 +61,13 @@ public class GiftPayPW extends BasePopupWindow {
         submitOrderApi api = new submitOrderApi(new HttpOnNextListener<OrderNumber>() {
             @Override
             public void onNext(OrderNumber o) {
-                walletPayTran(o.getNumber());
+                if (o.getIsPayed() == 0)
+                    walletPayTran(o.getNumber());
+                else {
+                    callBack.paySuccess();
+                    dismiss();
+                    new GiveSuccessPW(activity, mBinding.getRoot(), giftInfo);
+                }
             }
         }, activity).setFriendDynId(friendDynId).setGiftId(giftInfo.getGiftId()).setGiftNum(Integer.parseInt(binding.getContent()));
         HttpManager.getInstance().doHttpDeal(api);
@@ -74,10 +82,15 @@ public class GiftPayPW extends BasePopupWindow {
         walletPayTranApi api = new walletPayTranApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
+                callBack.paySuccess();
                 dismiss();
                 new GiveSuccessPW(activity, mBinding.getRoot(), giftInfo);
             }
         }, activity).setTranOrderId(tranOrderId);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    public interface CallBack {
+        void paySuccess();
     }
 }

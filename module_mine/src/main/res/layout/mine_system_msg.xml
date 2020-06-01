@@ -5,7 +5,7 @@
 
         <variable
             name="viewModel"
-            type="com.zb.module_mine.vm.FeedbackViewModel" />
+            type="com.zb.module_mine.vm.SystemMsgViewModel" />
 
         <variable
             name="title"
@@ -18,28 +18,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <include
-                layout="@layout/back_black_layout"
-                showRight="@{false}"
-                title="@{title}"
-                viewModel="@{viewModel}" />
-
-            <TextView
-                onClickDelayed="@{viewModel::add}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="22dp"
-                android:padding="15dp"
-                android:text="添加"
-                android:textColor="@color/black_252"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
+        <include
+            layout="@layout/back_black_layout"
+            showRight="@{false}"
+            title="@{title}"
+            viewModel="@{viewModel}" />
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/refresh"
@@ -56,6 +39,5 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
     </LinearLayout>
 </layout>

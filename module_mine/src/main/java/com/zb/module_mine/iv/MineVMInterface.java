@@ -20,5 +20,5 @@ public interface MineVMInterface {
 
     void newDynMsgAllNum();
 
-    void chatList();
+    void systemChat();
 }

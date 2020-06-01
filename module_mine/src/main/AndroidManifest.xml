@@ -25,6 +25,8 @@
         <activity android:name=".activity.TranRecordActivity" />
         <activity android:name=".activity.BindingBankActivity" />
         <activity android:name=".activity.BankListActivity" />
+        <activity android:name=".activity.FeedbackDetailActivity" />
+        <activity android:name=".activity.SystemMsgActivity" />
     </application>
 
 </manifest>

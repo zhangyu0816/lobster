@@ -35,12 +35,15 @@ public class RechargePW extends BasePopupWindow {
     public void initUI() {
         binding = (PwsHomeVipRechargeBinding) mBinding;
         adapter = new BaseAdapter<>(activity, R.layout.item_home_vip_info, MineApp.rechargeInfoList, this);
-        if (MineApp.rechargeInfoList.size() < 4) {
-            AdapterBinding.viewSize(binding.walletList, ObjectUtils.getViewSizeByWidth(1.0f), ObjectUtils.getViewSizeByWidth(0.25f));
-        }
+
         mBinding.setVariable(BR.pw, this);
         mBinding.setVariable(BR.walletInfo, MineApp.walletInfo);
         mBinding.setVariable(BR.adapter, adapter);
+        binding.walletList.postDelayed(() -> {
+            if (MineApp.rechargeInfoList.size() < 4) {
+                AdapterBinding.viewSize(binding.walletList, ObjectUtils.getViewSizeByWidth(1.0f), ObjectUtils.getViewSizeByWidth(0.25f));
+            }
+        },200);
     }
 
     @Override

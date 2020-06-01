@@ -9,7 +9,9 @@ import com.zb.lib_base.api.attentionOtherApi;
 import com.zb.lib_base.api.attentionStatusApi;
 import com.zb.lib_base.api.cancelAttentionApi;
 import com.zb.lib_base.api.deleteDynApi;
+import com.zb.lib_base.api.dynCancelLikeApi;
 import com.zb.lib_base.api.dynDetailApi;
+import com.zb.lib_base.api.dynDoLikeApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.seeGiftRewardsApi;
 import com.zb.lib_base.app.MineApp;
@@ -115,7 +117,11 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
 
     @Override
     public void doGood(View view) {
-
+        if (goodDb.hasGood(friendDynId)) {
+            dynCancelLike();
+        } else {
+            dynDoLike();
+        }
     }
 
     @Override
@@ -126,7 +132,11 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     @Override
     public void doReward(View view) {
         new GiftPW(activity, mBinding.getRoot(), giftInfo ->
-                new GiftPayPW(activity, mBinding.getRoot(), giftInfo, friendDynId));
+                new GiftPayPW(activity, mBinding.getRoot(), giftInfo, friendDynId, () -> {
+                    discoverInfo.setRewardNum(discoverInfo.getRewardNum() + 1);
+                    mBinding.setVariable(BR.viewModel, DiscoverVideoViewModel.this);
+                    seeGiftRewards();
+                }));
     }
 
     @Override
@@ -239,6 +249,8 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
         seeGiftRewardsApi api = new seeGiftRewardsApi(new HttpOnNextListener<List<Reward>>() {
             @Override
             public void onNext(List<Reward> o) {
+                rewardList.clear();
+                rewardAdapter.notifyDataSetChanged();
                 for (int i = 0; i < Math.min(o.size(), 3); i++) {
                     rewardList.add(o.get(i));
                 }
@@ -248,6 +260,30 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
         }, activity).setFriendDynId(friendDynId)
                 .setRewardSortType(2)
                 .setPageNo(1);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void dynDoLike() {
+        dynDoLikeApi api = new dynDoLikeApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                goodDb.saveGood(new CollectID(friendDynId));
+                mBinding.setViewModel(DiscoverVideoViewModel.this);
+            }
+        }, activity).setFriendDynId(friendDynId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void dynCancelLike() {
+        dynCancelLikeApi api = new dynCancelLikeApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                goodDb.deleteGood(friendDynId);
+                mBinding.setViewModel(DiscoverVideoViewModel.this);
+            }
+        }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

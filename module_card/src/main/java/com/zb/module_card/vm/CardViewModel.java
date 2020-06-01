@@ -65,6 +65,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     private MineInfo mineInfo;
     public CardAdapter adapter;
     private List<PairInfo> pairInfoList = new ArrayList<>();
+    private PairInfo pairInfo;
     private CardFragBinding cardFragBinding;
     private CardItemTouchHelperCallback<PairInfo> cardCallback;
     private View currentView;
@@ -105,12 +106,21 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                             R.anim.view_left_out));
                     startAnimation(cardFragBinding.ivDislike, MineApp.W / 2f + ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 280);
                     currentView.postDelayed(() -> cardCallback.swiped(currentView, ItemTouchHelper.LEFT), 800);
-                } else {
+                } else if (direction == 1) {
                     // 喜欢
                     currentView.startAnimation(AnimationUtils.loadAnimation(activity,
                             R.anim.view_right_out));
                     startAnimation(cardFragBinding.ivLike, 0 - MineApp.W / 2f - ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 280);
                     currentView.postDelayed(() -> cardCallback.swiped(currentView, ItemTouchHelper.RIGHT), 800);
+                } else {
+                    // 超级喜欢
+                    currentView.startAnimation(AnimationUtils.loadAnimation(activity,
+                            R.anim.view_right_out));
+                    startAnimation(cardFragBinding.ivLike, 0 - MineApp.W / 2f - ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 280);
+                    currentView.postDelayed(() -> cardCallback.swiped(currentView, ItemTouchHelper.RIGHT), 800);
+                    String myHead = mineInfo.getImage();
+                    String otherHead = pairInfo.getMoreImages().split("#")[0];
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), pairInfo.getSex());
                 }
             }
         };
@@ -160,7 +170,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     @Override
     public void selectCard(View currentView, int position) {
         this.currentView = currentView;
-        ActivityUtils.getCardMemberDetail(pairInfoList.get(position).getOtherUserId());
+        pairInfo = pairInfoList.get(position);
+        ActivityUtils.getCardMemberDetail(pairInfo.getOtherUserId());
     }
 
     @Override
@@ -238,7 +249,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     pairInfoList.clear();
                     adapter.notifyDataSetChanged();
                 }
-                for(PairInfo pairInfo:o){
+                for (PairInfo pairInfo : o) {
                     pairInfo.setImageList(Arrays.asList(pairInfo.getMoreImages().split("#")));
                     pairInfoList.add(pairInfo);
                 }
@@ -281,7 +292,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     if (mineInfo.getMemberType() == 2) {
                         new CountUsedPW(activity, mBinding.getRoot(), 2);
                     } else {
-                        SCToastUtil.showToastBlack(activity, "超级喜欢为VIP用户专享功能");
+                        new VipAdPW(activity, mBinding.getRoot());
                     }
                 }
             }

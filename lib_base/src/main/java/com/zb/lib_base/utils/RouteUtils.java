@@ -55,6 +55,8 @@ public class RouteUtils {
     public static final String Mine_Notice = "/mine/NoticeActivity";
     // 反馈
     public static final String Mine_Feedback = "/mine/FeedbackActivity";
+    // 反馈
+    public static final String Mine_Feedback_Detail = "/mine/FeedbackDetailActivity";
     // 网页
     public static final String Mine_Web = "/mine/WebActivity";
     // 礼物收益
@@ -77,6 +79,9 @@ public class RouteUtils {
     public static final String Mine_Binding_Bank = "/mine/BindingBankActivity";
     // 银行卡列表
     public static final String Mine_Bank_List = "/mine/BankListActivity";
+    // 系统消息
+    public static final String Mine_System_Msg = "/mine/SystemMsgActivity";
+
 
     /*********************** 注册 **************************/
 

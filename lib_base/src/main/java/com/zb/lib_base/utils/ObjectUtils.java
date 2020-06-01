@@ -201,4 +201,18 @@ public class ObjectUtils {
             return R.color.black_252;
         }
     }
+    public static int feedbackTextColor(int replyState) {
+        if (replyState==1) {
+            return R.color.black_252;
+        } else {
+            return R.color.red_fe4;
+        }
+    }
+    public static String feedbackText(int replyState) {
+        if (replyState==1) {
+            return "查看回复";
+        } else {
+            return "待处理";
+        }
+    }
 }
