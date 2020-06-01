@@ -5,8 +5,6 @@
 
     <data>
 
-        <import type="com.zb.lib_base.app.MineApp" />
-
         <variable
             name="viewModel"
             type="com.zb.module_mine.vm.GiftRecordViewModel" />
@@ -19,6 +17,9 @@
             name="right"
             type="String" />
 
+        <variable
+            name="walletInfo"
+            type="com.zb.lib_base.model.WalletInfo" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,8 +54,6 @@
             android:id="@+id/relativeLayout8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
             android:padding="15dp"
             app:layout_constraintTop_toBottomOf="@+id/include3">
 
@@ -71,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_bi"
                 android:layout_marginTop="10dp"
-                android:text='@{String.format("%.2f", MineApp.walletInfo.canWithdrawCreditWallet)}'
+                android:text='@{String.format("%.2f", walletInfo.canWithdrawCreditWallet)}'
                 android:textColor="@android:color/white"
                 android:textSize="35sp"
                 android:textStyle="bold"
@@ -118,7 +117,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text='@{String.format("%.2f", MineApp.walletInfo.wallet)}'
+                        android:text='@{String.format("%.2f", walletInfo.wallet)}'
                         android:textColor="@color/black_252"
                         android:textSize="20sp"
                         android:textStyle="bold" />

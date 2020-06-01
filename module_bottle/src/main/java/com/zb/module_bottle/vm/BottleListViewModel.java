@@ -117,6 +117,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
         listBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         bottleInfoList.clear();
+        adapter.notifyDataSetChanged();
         myBottleList();
     }
 

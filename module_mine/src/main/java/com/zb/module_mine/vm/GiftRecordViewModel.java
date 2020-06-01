@@ -2,12 +2,13 @@ package com.zb.module_mine.vm;
 
 import android.view.View;
 
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.iv.GiftRecordVMInterface;
 
 public class GiftRecordViewModel extends BaseViewModel implements GiftRecordVMInterface {
-
 
     @Override
     public void back(View view) {
@@ -22,7 +23,11 @@ public class GiftRecordViewModel extends BaseViewModel implements GiftRecordVMIn
 
     @Override
     public void withdraw(View view) {
-
+        if (MineApp.walletInfo.getCanWithdrawCreditWallet() > 0) {
+            ActivityUtils.getMineWithdraw();
+        } else {
+            SCToastUtil.showToastBlack(activity, "暂无可提现收益");
+        }
     }
 
     @Override

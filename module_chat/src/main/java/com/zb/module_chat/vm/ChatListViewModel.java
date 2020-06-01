@@ -58,6 +58,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                         chatListDb.saveChatList(chatMsg);
                 }
                 chatMsgList.clear();
+                adapter.notifyDataSetChanged();
                 chatMsgList.addAll(chatListDb.getChatList());
                 adapter.notifyDataSetChanged();
                 mBinding.refresh.finishRefresh();

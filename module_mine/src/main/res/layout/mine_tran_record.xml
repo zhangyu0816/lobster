@@ -15,7 +15,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/black_efe"
         android:orientation="vertical">
 
         <include
@@ -29,12 +30,11 @@
             onLoadMoreListener="@{viewModel}"
             onRefreshListener="@{viewModel}"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/black_efe">
+            android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 adapter="@{viewModel.adapter}"
-                recyclerType="@{1}"
+                recyclerType="@{0}"
                 size="@{0}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

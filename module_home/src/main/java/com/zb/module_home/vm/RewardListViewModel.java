@@ -89,6 +89,7 @@ public class RewardListViewModel extends BaseViewModel implements RewardListVMIn
         rewardListBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         rewardList.clear();
+        adapter.notifyDataSetChanged();
         seeGiftRewards();
     }
 }

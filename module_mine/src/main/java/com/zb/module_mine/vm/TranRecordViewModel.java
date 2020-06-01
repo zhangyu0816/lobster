@@ -61,6 +61,7 @@ public class TranRecordViewModel extends BaseViewModel implements TranRecordVMIn
         mBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         tranRecordList.clear();
+        adapter.notifyDataSetChanged();
         tranRecords();
     }
 

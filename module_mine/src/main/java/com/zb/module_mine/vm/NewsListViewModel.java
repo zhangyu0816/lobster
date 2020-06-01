@@ -102,6 +102,7 @@ public class NewsListViewModel extends BaseViewModel implements NewsListVMInterf
         mBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         mineNewsList.clear();
+        adapter.notifyDataSetChanged();
         dynNewMsgList();
     }
 }

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.zb.lib_base.app.MineApp" />
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_mine.vm.WithdrawViewModel" />
+
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="right"
+            type="String" />
+
+        <variable
+            name="money"
+            type="String" />
+
+        <variable
+            name="mineBank"
+            type="com.zb.lib_base.model.MineBank" />
+
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:id="@+id/view5"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:background="@drawable/gradient_purple_6d5_ae7_noradius" />
+
+            <include
+                android:id="@+id/include3"
+                layout="@layout/back_white_layout"
+                right="@{right}"
+                showRight="@{false}"
+                title="@{title}"
+                viewModel="@{viewModel}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp" />
+
+            <RelativeLayout
+                android:id="@+id/relativeLayout8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/include3"
+                android:padding="15dp">
+
+                <TextView
+                    android:id="@+id/tv_bi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="可提现收益（元）"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_bi"
+                    android:layout_marginTop="10dp"
+                    android:text='@{String.format("%.2f", MineApp.walletInfo.canWithdrawCreditWallet)}'
+                    android:textColor="@android:color/white"
+                    android:textSize="35sp"
+                    android:textStyle="bold"
+                    tools:text="200.00" />
+
+                <TextView
+                    onClickDelayed="@{viewModel::addBankCard}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/btn_bg_white_radius60"
+                    android:gravity="center"
+                    android:paddingStart="25dp"
+                    android:paddingEnd="25dp"
+                    android:text="添加银行卡"
+                    android:textColor="#7A44F5"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view5">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="30dp"
+                    android:text="提现（元）"
+                    android:textColor="@color/black_4d4"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/ed_money"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="输入提现金额"
+                    android:padding="15dp"
+                    android:singleLine="true"
+                    android:text="@={money}"
+                    android:textColor="@color/black_252"
+                    android:textColorHint="@color/black_827"
+                    android:textCursorDrawable="@drawable/cursor_color_black_252"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:text="提现银行"
+                    android:textColor="@color/black_4d4"
+                    android:textSize="14sp" />
+
+                <RelativeLayout
+                    onClickDelayed="@{viewModel::selectBank}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:visibility="@{mineBank.id==0?View.GONE:View.VISIBLE}">
+
+                    <ImageView
+                        android:id="@+id/iv_logo"
+                        defaultRes="@{ObjectUtils.getDefaultRes()}"
+                        imageUrl="@{mineBank.bankLogo}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp" />
+
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_toEndOf="@+id/iv_logo"
+                        android:text="@{mineBank.bankName}"
+                        android:textColor="@color/black_252"
+                        android:textSize="16sp"
+                        tools:text="支付宝" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_name"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_toEndOf="@+id/iv_logo"
+                        android:text="@{mineBank.accountNo}"
+                        android:textColor="@color/black_827"
+                        android:textSize="14sp"
+                        tools:text="kjwef lwjf lwj flwj flw " />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    onClickDelayed="@{viewModel::addBankCard}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:visibility="@{mineBank.id==0?View.VISIBLE:View.GONE}">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="您还未添加提现账号"
+                        android:textColor="@color/black_827"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:background="@mipmap/arrow_small_right_icon" />
+                </RelativeLayout>
+
+                <TextView
+                    onClickDelayed="@{viewModel::withdraw}"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_margin="15dp"
+                    android:background="@drawable/gradient_purple_6d5_ae7"
+                    android:gravity="center"
+                    android:text="确认提现"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@+id/ed_money" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+</layout>

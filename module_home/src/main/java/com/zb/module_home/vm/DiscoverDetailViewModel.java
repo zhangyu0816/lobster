@@ -396,6 +396,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         mBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         reviewList.clear();
+        reviewAdapter.notifyDataSetChanged();
         seeReviews();
     }
 

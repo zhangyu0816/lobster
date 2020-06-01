@@ -83,6 +83,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
         mBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         memberInfoList.clear();
+        adapter.notifyDataSetChanged();
         getData();
     }
 

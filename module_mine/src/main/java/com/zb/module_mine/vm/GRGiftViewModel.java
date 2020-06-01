@@ -84,6 +84,7 @@ public class GRGiftViewModel extends BaseViewModel implements GRGiftVMInterface,
         mBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         giftRecordList.clear();
+        adapter.notifyDataSetChanged();
         giveOrReceiveList();
     }
 }

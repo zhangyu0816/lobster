@@ -403,6 +403,10 @@ public interface HttpService {
     @GET("api/Tran_rechargeDiscountList")
     Observable<BaseResultEntity<List<RechargeInfo>>> rechargeDiscountList(@Query("pageNo") int pageNo);
 
+    // 提现
+    @GET("api/Tran_changeCash")
+    Observable<BaseResultEntity<TranRecord>> changeCash(@Query("money") String money, @Query("bankAccountId") long bankAccountId);
+
     // 反馈列表
     @GET("api/FeedBack_selfFeedBack")
     Observable<BaseResultEntity<List<FeedbackInfo>>> selfFeedBack(@Query("pageNumber") int pageNumber);

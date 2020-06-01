@@ -1,5 +1,6 @@
 package com.zb.module_mine.vm;
 
+import android.content.Intent;
 import android.view.View;
 
 import com.zb.lib_base.api.bindBankCardApi;
@@ -80,7 +81,7 @@ public class BindingBankViewModel extends BaseViewModel implements BindingBankVM
 
     @Override
     public void bankList(View view) {
-        ActivityUtils.getMineBankList();
+        ActivityUtils.getMineBankList(false);
     }
 
     @Override
@@ -89,6 +90,7 @@ public class BindingBankViewModel extends BaseViewModel implements BindingBankVM
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToastBlack(activity, "添加成功");
+                activity.sendBroadcast(new Intent("lobster_addBank"));
                 activity.finish();
             }
         }, activity).setBankId(bankInfo.getId()).setAccountNo(mBinding.getBankAccount()).setOpenAccountLocation(mBinding.getBankAddress());

@@ -43,6 +43,7 @@
         <activity android:name=".activity.BankListActivity" />
         <activity android:name=".activity.FeedbackDetailActivity" />
         <activity android:name=".activity.SystemMsgActivity" />
+        <activity android:name=".activity.WithdrawActivity" />
     </application>
 
 </manifest>

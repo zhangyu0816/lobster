@@ -1,11 +1,14 @@
 package com.zb.lib_base.model;
 
+
 import com.zb.lib_base.BR;
+
+import java.io.Serializable;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
-public class MineBank extends BaseObservable {
+public class MineBank extends BaseObservable implements Serializable {
     long id;
     long userId;
     String bankName = ""; //银行名
@@ -14,6 +17,10 @@ public class MineBank extends BaseObservable {
     String accountNo = "";    //银行卡号 Or 支付宝?..百付宝?..
     String accountPerson = "";   //账号所有人的名字
     String openAccountLocation = ""; //开户网点
+
+    public MineBank() {
+    }
+
 
     @Bindable
     public long getId() {
@@ -25,7 +32,8 @@ public class MineBank extends BaseObservable {
         notifyPropertyChanged(BR.id);
     }
 
-    @Bindable public long getUserId() {
+    @Bindable
+    public long getUserId() {
         return userId;
     }
 
@@ -34,7 +42,8 @@ public class MineBank extends BaseObservable {
         notifyPropertyChanged(BR.userId);
     }
 
-    @Bindable public String getBankName() {
+    @Bindable
+    public String getBankName() {
         return bankName;
     }
 
@@ -43,7 +52,8 @@ public class MineBank extends BaseObservable {
         notifyPropertyChanged(BR.bankName);
     }
 
-    @Bindable public String getBankLogo() {
+    @Bindable
+    public String getBankLogo() {
         return bankLogo;
     }
 
@@ -52,7 +62,8 @@ public class MineBank extends BaseObservable {
         notifyPropertyChanged(BR.bankLogo);
     }
 
-    @Bindable public int getBankType() {
+    @Bindable
+    public int getBankType() {
         return bankType;
     }
 
@@ -61,7 +72,8 @@ public class MineBank extends BaseObservable {
         notifyPropertyChanged(BR.bankType);
     }
 
-    @Bindable public String getAccountNo() {
+    @Bindable
+    public String getAccountNo() {
         return accountNo;
     }
 
@@ -70,7 +82,8 @@ public class MineBank extends BaseObservable {
         notifyPropertyChanged(BR.accountNo);
     }
 
-    @Bindable public String getAccountPerson() {
+    @Bindable
+    public String getAccountPerson() {
         return accountPerson;
     }
 
@@ -79,7 +92,8 @@ public class MineBank extends BaseObservable {
         notifyPropertyChanged(BR.accountPerson);
     }
 
-    @Bindable public String getOpenAccountLocation() {
+    @Bindable
+    public String getOpenAccountLocation() {
         return openAccountLocation;
     }
 

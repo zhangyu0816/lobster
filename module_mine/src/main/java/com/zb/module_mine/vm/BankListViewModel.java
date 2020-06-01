@@ -1,5 +1,7 @@
 package com.zb.module_mine.vm;
 
+import android.content.Intent;
+import android.os.Parcelable;
 import android.view.View;
 
 import com.zb.lib_base.api.myBankCardsApi;
@@ -20,6 +22,7 @@ import androidx.databinding.ViewDataBinding;
 
 public class BankListViewModel extends BaseViewModel implements BankListVMInterface {
     public MineAdapter adapter;
+    public boolean isSelect;
     private List<MineBank> mineBankList = new ArrayList<>();
     private List<String> selectorList = new ArrayList<>();
 
@@ -56,7 +59,13 @@ public class BankListViewModel extends BaseViewModel implements BankListVMInterf
 
     @Override
     public void delete(int position) {
-        new SelectorPW(activity, mBinding.getRoot(), selectorList, position1 -> removeBankCard(position));
+        if (isSelect) {
+            Intent data = new Intent("lobster_selectBank");
+            data.putExtra("mineBank", mineBankList.get(position));
+            activity.sendBroadcast(data);
+            activity.finish();
+        } else
+            new SelectorPW(activity, mBinding.getRoot(), selectorList, position1 -> removeBankCard(position));
     }
 
     @Override

@@ -67,6 +67,7 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
         binding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         reviewList.clear();
+        adapter.notifyDataSetChanged();
         seeReviews();
     }
 

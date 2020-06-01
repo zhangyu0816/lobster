@@ -81,6 +81,8 @@ public class RouteUtils {
     public static final String Mine_Bank_List = "/mine/BankListActivity";
     // 系统消息
     public static final String Mine_System_Msg = "/mine/SystemMsgActivity";
+    // 提现
+    public static final String Mine_Withdraw = "/mine/WithdrawActivity";
 
 
     /*********************** 注册 **************************/

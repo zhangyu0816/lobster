@@ -39,16 +39,29 @@
             android:layout_marginTop="10dp"
             android:text="@{item.createTime}"
             android:textColor="@color/black_827"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            tools:text="22222222222" />
+
+        <TextView
+            android:id="@+id/tv_use"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text='@{String.format((item.useType==1?"+":"-")+"%.2f",item.tranMoney)}'
+            android:textColor="@{ObjectUtils.textColor(item.useType)}"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:text="+10" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_use"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:text='@{String.format((item.useType==1?"+":"-")+"%.2f",item.tranMoney)}'
-            android:textColor="@{ObjectUtils.textColor(item.useType)}"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:layout_marginTop="10dp"
+            android:text="@{MineApp.tranStatusMap.get(item.statusType)}"
+            android:textColor="@color/black_827"
+            android:textSize="12sp"
+            tools:text="22222222222" />
     </RelativeLayout>
 </layout>

@@ -67,6 +67,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         mBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         chatMsgList.clear();
+        adapter.notifyDataSetChanged();
         contactNum();
     }
 

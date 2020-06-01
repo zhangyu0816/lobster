@@ -59,6 +59,7 @@ public class MineApp extends MultiDexApplication {
     public static String WX_PAY_APPID = "wxbdd7128e0a0a08f8";
     public static List<BaseEntity> apiList = new ArrayList<>(); // 断线重连
     public static Map<Integer, String> moneyTypeMap = new HashMap<>();
+    public static Map<Integer, String> tranStatusMap = new HashMap<>();
 
     public static List<VipInfo> vipInfoList = new ArrayList<>();
     public static List<GiftInfo> giftInfoList = new ArrayList<>();
@@ -100,6 +101,21 @@ public class MineApp extends MultiDexApplication {
         moneyTypeMap.put(0, "");
         moneyTypeMap.put(1, "最受欢迎");
         moneyTypeMap.put(2, "优惠最大");
+
+        // -10 交易超时 -20交易失败 -30用户取消 -40系统关闭(用户不能再操作) -50 已退款 -60原路退款
+        // 10 ,"待付款" 20 ,"已付款" 30 ,"正在处理" 40,"待卖家发货" 46,"待买家确定收货" 200,"交易成功"
+        tranStatusMap.put(-10, "交易超时");
+        tranStatusMap.put(-20, "交易失败");
+        tranStatusMap.put(-30, "用户取消");
+        tranStatusMap.put(-40, "系统关闭");
+        tranStatusMap.put(-50, "已退款");
+        tranStatusMap.put(-60, "原路退款");
+        tranStatusMap.put(10, "待付款");
+        tranStatusMap.put(20, "已付款");
+        tranStatusMap.put(30, "正在处理");
+        tranStatusMap.put(40, "待卖家发货");
+        tranStatusMap.put(46, "待买家确定收货");
+        tranStatusMap.put(200, "交易成功");
     }
 
     @Override

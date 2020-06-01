@@ -225,6 +225,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onNext(WalletInfo o) {
                 MineApp.walletInfo = o;
+                activity.sendBroadcast(new Intent("lobster_updateWallet"));
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

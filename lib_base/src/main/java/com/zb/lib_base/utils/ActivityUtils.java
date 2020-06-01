@@ -157,13 +157,18 @@ public class ActivityUtils {
     }
 
     // 银行卡列表
-    public static void getMineBankList() {
-        ARouter.getInstance().build(RouteUtils.Mine_Bank_List).navigation();
+    public static void getMineBankList(boolean isSelect) {
+        ARouter.getInstance().build(RouteUtils.Mine_Bank_List).withBoolean("isSelect", isSelect).navigation();
     }
 
     // 系统消息
     public static void getMineSystemMsg() {
         ARouter.getInstance().build(RouteUtils.Mine_System_Msg).navigation();
+    }
+
+    // 提现
+    public static void getMineWithdraw() {
+        ARouter.getInstance().build(RouteUtils.Mine_Withdraw).navigation();
     }
 
     /*********************** 注册 **************************/
