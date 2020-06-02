@@ -57,8 +57,8 @@
                             android:id="@+id/banner_layout"
                             isMember="@{false}"
                             layout="@layout/home_banner_top"
+                            otherUserId="@{viewModel.discoverInfo.userId}"
                             viewModel="@{viewModel}"
-                            otherUserId="@{viewModel.discoverInfo.id}"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -68,11 +68,11 @@
                             android:layout_height="wrap_content">
 
                             <ImageView
-                                onClickDelayed="@{viewModel::toMemberDetail}"
                                 android:id="@+id/iv_logo"
                                 defaultRes="@{ObjectUtils.getDefaultRes()}"
                                 imageUrl="@{viewModel.discoverInfo.image}"
                                 isCircle="@{true}"
+                                onClickDelayed="@{viewModel::toMemberDetail}"
                                 viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
                                 viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
                                 android:layout_width="40dp"
@@ -136,7 +136,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"
-                                android:visibility="@{viewModel.discoverInfo.id==BaseActivity.userId?View.GONE:View.VISIBLE}">
+                                android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}">
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
@@ -176,7 +176,7 @@
                             <RelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:visibility="@{viewModel.discoverInfo.id==BaseActivity.userId?View.VISIBLE:View.GONE}">
+                                android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.VISIBLE:View.GONE}">
 
                                 <LinearLayout
                                     android:id="@+id/rewardNum_linear"
@@ -309,7 +309,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="15dp"
-                    android:visibility="@{viewModel.discoverInfo.id==BaseActivity.userId?View.GONE:View.VISIBLE}"
+                    android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}"
                     app:srcCompat="@mipmap/gift_icon" />
 
                 <LinearLayout

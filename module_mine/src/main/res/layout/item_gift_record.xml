@@ -10,30 +10,40 @@
             name="item"
             type="com.zb.lib_base.model.GiftRecord" />
 
+        <variable
+            name="viewModel"
+            type="com.zb.module_mine.vm.GRGiftViewModel" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
     </data>
 
     <RelativeLayout
+        onClickDelayed="@{v->viewModel.toDiscover(position)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
-        android:background="@drawable/btn_bg_white_radius10">
+        android:background="@drawable/btn_bg_white_radius10"
+        android:padding="15dp">
 
         <ImageView
             android:id="@+id/iv_logo"
             defaultRes="@{ObjectUtils.getDefaultRes()}"
-            imageUrl="@{item.image}"
+            imageUrl="@{item.givingUserHeadImage}"
             isCircle="@{true}"
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
             android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_margin="15dp" />
+            android:layout_height="40dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             android:layout_toStartOf="@+id/iv_gift"
             android:layout_toEndOf="@+id/iv_logo"
@@ -41,15 +51,14 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp">
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/tv_nick"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
-                    android:text="@{item.nick}"
+                    android:text="@{item.givingUserNick}"
                     android:textColor="@color/black_252"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -60,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/tv_nick"
                     android:layout_toEndOf="@+id/tv_nick"
-                    android:text="@{String.format(@string/gift_news,item.giftName,item.giftNumber)}"
+                    android:text="@{String.format(viewModel.friendDynGiftType==1?@string/give_gift_news:@string/get_gift_news,item.giftName,item.giftNumber)}"
                     android:textColor="@color/black_827"
                     android:textSize="12sp"
                     tools:text="香蕉*5" />
@@ -88,12 +97,11 @@
             android:id="@+id/iv_gift"
             defaultRes="@{ObjectUtils.getDefaultRes()}"
             imageUrl="@{item.giftImage}"
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="15dp" />
+            android:layout_centerVertical="true" />
     </RelativeLayout>
 </layout>

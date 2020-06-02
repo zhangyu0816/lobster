@@ -8,7 +8,8 @@ import androidx.databinding.Bindable;
 public class DiscoverInfo extends BaseObservable {
 
     private long friendDynId = 0L;
-    private long id = 0L; // otherUserId
+    private long otherUserId; // otherUserId
+    private long userId;// otherUserId
     private String nick = "";// 昵称 艺名//1-16
     private String image = "";// 头像
     private String text = "";
@@ -37,13 +38,23 @@ public class DiscoverInfo extends BaseObservable {
     }
 
     @Bindable
-    public long getId() {
-        return id;
+    public long getOtherUserId() {
+        return otherUserId;
     }
 
-    public void setId(long id) {
-        this.id = id;
-        notifyPropertyChanged(BR.id);
+    public void setOtherUserId(long otherUserId) {
+        this.otherUserId = otherUserId;
+        notifyPropertyChanged(BR.otherUserId);
+    }
+
+    @Bindable
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+        notifyPropertyChanged(BR.userId);
     }
 
     @Bindable

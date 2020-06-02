@@ -1,5 +1,6 @@
 package com.zb.module_home.windows;
 
+import android.content.Intent;
 import android.view.View;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
@@ -64,6 +65,7 @@ public class GiftPayPW extends BasePopupWindow {
                 if (o.getIsPayed() == 0)
                     walletPayTran(o.getNumber());
                 else {
+                    activity.sendBroadcast(new Intent("lobster_recharge"));
                     callBack.paySuccess();
                     dismiss();
                     new GiveSuccessPW(activity, mBinding.getRoot(), giftInfo);
@@ -82,6 +84,7 @@ public class GiftPayPW extends BasePopupWindow {
         walletPayTranApi api = new walletPayTranApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
+                activity.sendBroadcast(new Intent("lobster_recharge"));
                 callBack.paySuccess();
                 dismiss();
                 new GiveSuccessPW(activity, mBinding.getRoot(), giftInfo);

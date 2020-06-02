@@ -10,6 +10,7 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.GiftRecord;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.R;
 import com.zb.module_mine.adapter.MineAdapter;
@@ -70,6 +71,15 @@ public class GRGiftViewModel extends BaseViewModel implements GRGiftVMInterface,
             }
         }, activity).setPageNo(pageNo).setFriendDynGiftType(friendDynGiftType);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void toDiscover(int position) {
+        GiftRecord giftRecord = giftRecordList.get(position);
+        if (giftRecord.getDycType() < 4)
+            ActivityUtils.getHomeDiscoverDetail(giftRecord.getFriendDynamicId());
+        else
+            ActivityUtils.getHomeDiscoverVideo(giftRecord.getFriendDynamicId());
     }
 
     @Override

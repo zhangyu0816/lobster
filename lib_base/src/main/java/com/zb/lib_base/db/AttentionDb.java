@@ -1,7 +1,7 @@
 package com.zb.lib_base.db;
 
 import com.zb.lib_base.activity.BaseActivity;
-import com.zb.lib_base.model.CollectID;
+import com.zb.lib_base.model.AttentionInfo;
 
 import io.realm.Realm;
 
@@ -14,24 +14,23 @@ public class AttentionDb extends BaseDao {
         super(realm);
     }
 
-    public void saveAttention(CollectID collectID) {
+    public void saveAttention(AttentionInfo attentionInfo) {
         beginTransaction();
-        realm.insertOrUpdate(collectID);
+        realm.insertOrUpdate(attentionInfo);
         commitTransaction();
     }
 
-    public boolean hasAttention(long collectId) {
+    public boolean isAttention(long otherUserId) {
         beginTransaction();
-        CollectID collectID = realm.where(CollectID.class).equalTo("collectId", collectId).equalTo("userId", BaseActivity.userId).findFirst();
+        AttentionInfo attentionInfo = realm.where(AttentionInfo.class).equalTo("otherUserId", otherUserId).equalTo("mainUserId", BaseActivity.userId).findFirst();
         commitTransaction();
-        return collectID != null;
+        return attentionInfo != null && attentionInfo.isAttention();
     }
 
-    public void deleteAttention(long collectId) {
+    public AttentionInfo getAttentionInfo(long otherUserId) {
         beginTransaction();
-        CollectID collectID = realm.where(CollectID.class).equalTo("collectId", collectId).equalTo("userId", BaseActivity.userId).findFirst();
-        if (collectID != null)
-            collectID.deleteFromRealm();
+        AttentionInfo attentionInfo = realm.where(AttentionInfo.class).equalTo("otherUserId", otherUserId).equalTo("mainUserId", BaseActivity.userId).findFirst();
         commitTransaction();
+        return attentionInfo == null ? new AttentionInfo() : attentionInfo;
     }
 }

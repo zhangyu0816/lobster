@@ -146,21 +146,21 @@ public class ObjectUtils {
             return "立即验证";
     }
 
-    public static int textColor(LikeDb likeDb, AttentionDb attentionDb, long collectId) {
-        if (likeDb.hasLike(collectId) || attentionDb.hasAttention(collectId)) {
+    public static int textColor(LikeDb likeDb, AttentionDb attentionDb, long otherUserId) {
+        if (likeDb.hasLike(otherUserId) || attentionDb.isAttention(otherUserId)) {
             return R.color.black_827;
         } else {
             return R.color.purple_7a4;
         }
     }
 
-    public static String textName(LikeDb likeDb, AttentionDb attentionDb, long collectId, int position) {
+    public static String textName(LikeDb likeDb, AttentionDb attentionDb, long otherUserId, int position) {
         if (position == 2) {
-            return likeDb.hasLike(collectId) ? "已喜欢" : "喜欢Ta";
+            return likeDb.hasLike(otherUserId) ? "已喜欢" : "喜欢Ta";
         } else if (position == 1) {
-            return attentionDb.hasAttention(collectId) ? "取消关注" : "回粉";
+            return attentionDb.isAttention(otherUserId) ? "取消关注" : "回粉";
         } else {
-            return attentionDb.hasAttention(collectId) ? "取消关注" : "关注Ta";
+            return attentionDb.isAttention(otherUserId) ? "取消关注" : "关注Ta";
         }
     }
 

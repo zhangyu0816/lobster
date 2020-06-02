@@ -16,10 +16,9 @@ import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
-import com.zb.lib_base.db.AttentionDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.model.CollectID;
+import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
@@ -53,14 +52,12 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     private List<Fragment> fragments = new ArrayList<>();
     private List<String> selectorList = new ArrayList<>();
     private AreaDb areaDb;
-    private AttentionDb attentionDb;
     private MineInfo mineInfo;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         areaDb = new AreaDb(Realm.getDefaultInstance());
-        attentionDb = new AttentionDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
         if (otherUserId != BaseActivity.userId)
             selectorList.add("举报");
@@ -71,7 +68,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         setAdapter();
         initFragments();
         otherInfo();
-        attentionStatus();
     }
 
     @Override
@@ -133,6 +129,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     }
                     showBanner(adsList);
                 }
+                attentionStatus();
                 mBinding.setVariable(BR.viewModel, MemberDetailViewModel.this);
             }
         }, activity).setOtherUserId(otherUserId);
@@ -144,10 +141,10 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         attentionStatusApi api = new attentionStatusApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                if (!o.toString().isEmpty()) {
+                if (o == null) {
                     mBinding.bannerLayout.tvFollow.setText("取消关注");
                     mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
-                    attentionDb.saveAttention(new CollectID(otherUserId));
+                    attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 }
             }
         }, activity).setOtherUserId(otherUserId);
@@ -161,7 +158,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             public void onNext(Object o) {
                 mBinding.bannerLayout.tvFollow.setText("取消关注");
                 mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
-                attentionDb.saveAttention(new CollectID(otherUserId));
+                attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
@@ -174,7 +171,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             public void onNext(Object o) {
                 mBinding.bannerLayout.tvFollow.setText("关注");
                 mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_4d4));
-                attentionDb.deleteAttention(otherUserId);
+                attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);

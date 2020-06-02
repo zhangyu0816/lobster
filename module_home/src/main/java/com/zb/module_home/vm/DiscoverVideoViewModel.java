@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.view.View;
 
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.attentionOtherApi;
 import com.zb.lib_base.api.attentionStatusApi;
@@ -15,10 +16,10 @@ import com.zb.lib_base.api.dynDoLikeApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.seeGiftRewardsApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.db.AttentionDb;
 import com.zb.lib_base.db.GoodDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
@@ -53,7 +54,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     public HomeAdapter rewardAdapter;
     private List<Reward> rewardList = new ArrayList<>();
     private HomeDiscoverVideoBinding mBinding;
-    private AttentionDb attentionDb;
 
     @Override
     public void back(View view) {
@@ -67,7 +67,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (HomeDiscoverVideoBinding) binding;
-        attentionDb = new AttentionDb(Realm.getDefaultInstance());
         goodDb = new GoodDb(Realm.getDefaultInstance());
         mBinding.setIsPlay(false);
         mBinding.setIsProgress(false);
@@ -107,7 +106,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     @Override
     public void toMemberDetail(View view) {
         if (discoverInfo != null)
-            ActivityUtils.getCardMemberDetail(discoverInfo.getId());
+            ActivityUtils.getCardMemberDetail(discoverInfo.getUserId());
     }
 
     @Override
@@ -199,7 +198,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                 memberInfo = o;
                 mBinding.setVariable(BR.viewModel, DiscoverVideoViewModel.this);
             }
-        }, activity).setOtherUserId(discoverInfo.getId());
+        }, activity).setOtherUserId(discoverInfo.getUserId());
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -208,13 +207,13 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
         attentionStatusApi api = new attentionStatusApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                if (!o.toString().isEmpty()) {
+                if (o == null) {
                     mBinding.tvFollow.setText("取消关注");
                     mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
-                    attentionDb.saveAttention(new CollectID(discoverInfo.getId()));
+                    attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 }
             }
-        }, activity).setOtherUserId(discoverInfo.getId());
+        }, activity).setOtherUserId(discoverInfo.getUserId());
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -225,9 +224,9 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             public void onNext(Object o) {
                 mBinding.tvFollow.setText("取消关注");
                 mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
-                attentionDb.saveAttention(new CollectID(discoverInfo.getId()));
+                attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
             }
-        }, activity).setOtherUserId(discoverInfo.getId());
+        }, activity).setOtherUserId(discoverInfo.getUserId());
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -238,9 +237,9 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             public void onNext(Object o) {
                 mBinding.tvFollow.setText("关注");
                 mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_4d4));
-                attentionDb.deleteAttention(discoverInfo.getId());
+                attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
             }
-        }, activity).setOtherUserId(discoverInfo.getId());
+        }, activity).setOtherUserId(discoverInfo.getUserId());
         HttpManager.getInstance().doHttpDeal(api);
     }
 

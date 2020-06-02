@@ -1,7 +1,6 @@
 package com.zb.module_mine.vm;
 
 import android.content.Intent;
-import android.os.Parcelable;
 import android.view.View;
 
 import com.zb.lib_base.api.myBankCardsApi;

@@ -8,13 +8,16 @@ import androidx.databinding.Bindable;
 
 public class GiftRecord extends BaseObservable {
     long friendDynamicGiftId;  //详情id
+    long friendDynamicId;
     String friendDynamicText = ""; //动态内容
     String giftName = "";    //礼物名称
     String giftImage = "";     //礼物图片
     int giftNumber;        //礼物数量
-    String nick = "";
-    String image = "";
+    String givingUserNick = "";
+    String givingUserHeadImage = "";
     String createTime = "";
+    long givingUserId;
+    int dycType;
 
     @Bindable
     public long getFriendDynamicGiftId() {
@@ -26,7 +29,18 @@ public class GiftRecord extends BaseObservable {
         notifyPropertyChanged(BR.friendDynamicGiftId);
     }
 
-    @Bindable public String getFriendDynamicText() {
+    @Bindable
+    public long getFriendDynamicId() {
+        return friendDynamicId;
+    }
+
+    public void setFriendDynamicId(long friendDynamicId) {
+        this.friendDynamicId = friendDynamicId;
+        notifyPropertyChanged(BR.friendDynamicId);
+    }
+
+    @Bindable
+    public String getFriendDynamicText() {
         return friendDynamicText;
     }
 
@@ -35,7 +49,8 @@ public class GiftRecord extends BaseObservable {
         notifyPropertyChanged(BR.friendDynamicText);
     }
 
-    @Bindable public String getGiftName() {
+    @Bindable
+    public String getGiftName() {
         return giftName;
     }
 
@@ -44,7 +59,8 @@ public class GiftRecord extends BaseObservable {
         notifyPropertyChanged(BR.giftName);
     }
 
-    @Bindable public String getGiftImage() {
+    @Bindable
+    public String getGiftImage() {
         return giftImage;
     }
 
@@ -53,7 +69,8 @@ public class GiftRecord extends BaseObservable {
         notifyPropertyChanged(BR.giftImage);
     }
 
-    @Bindable public int getGiftNumber() {
+    @Bindable
+    public int getGiftNumber() {
         return giftNumber;
     }
 
@@ -62,30 +79,53 @@ public class GiftRecord extends BaseObservable {
         notifyPropertyChanged(BR.giftNumber);
     }
 
-    @Bindable public String getNick() {
-        return nick;
+    @Bindable
+    public String getGivingUserNick() {
+        return givingUserNick;
     }
 
-    public void setNick(String nick) {
-        this.nick = nick;
-        notifyPropertyChanged(BR.nick);
+    public void setGivingUserNick(String givingUserNick) {
+        this.givingUserNick = givingUserNick;
+        notifyPropertyChanged(BR.givingUserNick);
     }
 
-    @Bindable public String getImage() {
-        return image;
+    @Bindable
+    public String getGivingUserHeadImage() {
+        return givingUserHeadImage;
     }
 
-    public void setImage(String image) {
-        this.image = image;
-        notifyPropertyChanged(BR.image);
+    public void setGivingUserHeadImage(String givingUserHeadImage) {
+        this.givingUserHeadImage = givingUserHeadImage;
+        notifyPropertyChanged(BR.givingUserHeadImage);
     }
 
-    @Bindable public String getCreateTime() {
+    @Bindable
+    public String getCreateTime() {
         return createTime;
     }
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
         notifyPropertyChanged(BR.createTime);
+    }
+
+    @Bindable
+    public long getGivingUserId() {
+        return givingUserId;
+    }
+
+    public void setGivingUserId(long givingUserId) {
+        this.givingUserId = givingUserId;
+        notifyPropertyChanged(BR.givingUserId);
+    }
+
+    @Bindable
+    public int getDycType() {
+        return dycType;
+    }
+
+    public void setDycType(int dycType) {
+        this.dycType = dycType;
+        notifyPropertyChanged(BR.dycType);
     }
 }

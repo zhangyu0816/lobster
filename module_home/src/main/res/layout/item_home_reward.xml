@@ -24,6 +24,7 @@
         defaultRes="@{ObjectUtils.getDefaultRes()}"
         imageUrl="@{item.image}"
         isCircle="@{true}"
+        onClickDelayed="@{viewModel::toRewardList}"
         viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.08f)}"
         viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.08f)}"
         android:layout_width="40dp"

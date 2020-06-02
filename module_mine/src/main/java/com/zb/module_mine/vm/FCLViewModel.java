@@ -5,6 +5,7 @@ import android.view.View;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.attentionOtherApi;
 import com.zb.lib_base.api.cancelAttentionApi;
 import com.zb.lib_base.api.contactNumApi;
@@ -12,11 +13,11 @@ import com.zb.lib_base.api.likeMeListApi;
 import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.myConcernsApi;
 import com.zb.lib_base.api.myFansApi;
-import com.zb.lib_base.db.AttentionDb;
 import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
+import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.LikeMe;
@@ -43,7 +44,6 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
     private List<MemberInfo> memberInfoList = new ArrayList<>();
     private int pageNo = 1;
     private MineFclBinding mBinding;
-    public AttentionDb attentionDb;
     public LikeDb likeDb;
     private int _selectIndex = -1;
     private MineInfo mineInfo;
@@ -57,7 +57,6 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        attentionDb = new AttentionDb(Realm.getDefaultInstance());
         likeDb = new LikeDb(Realm.getDefaultInstance());
         mBinding = (MineFclBinding) binding;
         mineInfo = mineInfoDb.getMineInfo();
@@ -106,7 +105,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
             makeEvaluate(otherUserId, likeDb.hasLike(otherUserId) ? 0 : 1);
         } else {
             // 我的关注  我的粉丝
-            if (attentionDb.hasAttention(otherUserId)) {
+            if (attentionDb.isAttention(otherUserId)) {
                 cancelAttention(otherUserId);
             } else {
                 attentionOther(otherUserId);
@@ -118,7 +117,8 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
         attentionOtherApi api = new attentionOtherApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                attentionDb.saveAttention(new CollectID(otherUserId));
+                MemberInfo memberInfo = memberInfoList.get(_selectIndex);
+                attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 adapter.notifyItemChanged(_selectIndex);
             }
         }, activity).setOtherUserId(otherUserId);
@@ -129,7 +129,8 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
         cancelAttentionApi api = new cancelAttentionApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                attentionDb.deleteAttention(otherUserId);
+                MemberInfo memberInfo = memberInfoList.get(_selectIndex);
+                attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
                 adapter.notifyItemChanged(_selectIndex);
             }
         }, activity).setOtherUserId(otherUserId);

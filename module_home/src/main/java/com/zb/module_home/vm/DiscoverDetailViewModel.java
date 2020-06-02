@@ -25,10 +25,10 @@ import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.seeGiftRewardsApi;
 import com.zb.lib_base.api.seeReviewsApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.db.AttentionDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
+import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
@@ -56,7 +56,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
-import io.realm.Realm;
 
 public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDetailVMInterface, OnRefreshListener, OnLoadMoreListener {
     private HomeDiscoverDetailBinding mBinding;
@@ -73,13 +72,11 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     private MemberInfo memberInfo;
 
     private long reviewId = 0;
-    private AttentionDb attentionDb;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (HomeDiscoverDetailBinding) binding;
-        attentionDb = new AttentionDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
         AdapterBinding.viewSize(mBinding.bannerLayout.banner, MineApp.W, ObjectUtils.getLogoHeight(1.0f));
         mBinding.setVariable(BR.content, "");
@@ -115,7 +112,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     public void more(View view) {
         super.more(view);
         new SelectorPW(activity, mBinding.getRoot(), selectorList, position -> {
-            if (discoverInfo.getId() == BaseActivity.userId) {
+            if (discoverInfo.getUserId() == BaseActivity.userId) {
                 if (position == 0) {
 
                 } else if (position == 1) {
@@ -125,7 +122,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 if (position == 0) {
                     makeEvaluate();
                 } else if (position == 1) {
-                    ActivityUtils.getHomeReport(discoverInfo.getId());
+                    ActivityUtils.getHomeReport(discoverInfo.getUserId());
                 } else if (position == 2) {
 
                 }
@@ -161,7 +158,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 
     @Override
     public void toMemberDetail(View view) {
-        ActivityUtils.getCardMemberDetail(discoverInfo.getId());
+        ActivityUtils.getCardMemberDetail(discoverInfo.getUserId());
     }
 
     @Override
@@ -170,7 +167,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(DiscoverInfo o) {
                 discoverInfo = o;
-                if (discoverInfo.getId() == BaseActivity.userId) {
+                if (discoverInfo.getUserId() == BaseActivity.userId) {
                     selectorList.add("分享");
                     selectorList.add("删除");
                 } else {
@@ -179,8 +176,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     selectorList.add("分享");
                 }
                 otherInfo();
-                attentionStatus();
-
                 List<Ads> adsList = new ArrayList<>();
                 if (!discoverInfo.getImages().isEmpty()) {
                     String[] images = discoverInfo.getImages().split(",");
@@ -252,7 +247,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     new CountUsedPW(activity, mBinding.getRoot(), 2);
                 }
             }
-        }, activity).setOtherUserId(discoverInfo.getId()).setLikeOtherStatus(2);
+        }, activity).setOtherUserId(discoverInfo.getUserId()).setLikeOtherStatus(2);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -262,8 +257,9 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(MemberInfo o) {
                 memberInfo = o;
+                attentionStatus();
             }
-        }, activity).setOtherUserId(discoverInfo.getId());
+        }, activity).setOtherUserId(discoverInfo.getUserId());
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -347,13 +343,13 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         attentionStatusApi api = new attentionStatusApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                if (!o.toString().isEmpty()) {
+                if (o == null) {
                     mBinding.bannerLayout.tvFollow.setText("取消关注");
                     mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
-                    attentionDb.saveAttention(new CollectID(discoverInfo.getId()));
+                    attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 }
             }
-        }, activity).setOtherUserId(discoverInfo.getId());
+        }, activity).setOtherUserId(discoverInfo.getUserId());
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -364,9 +360,9 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             public void onNext(Object o) {
                 mBinding.bannerLayout.tvFollow.setText("取消关注");
                 mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
-                attentionDb.saveAttention(new CollectID(discoverInfo.getId()));
+                attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
             }
-        }, activity).setOtherUserId(discoverInfo.getId());
+        }, activity).setOtherUserId(discoverInfo.getUserId());
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -377,9 +373,9 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             public void onNext(Object o) {
                 mBinding.bannerLayout.tvFollow.setText("关注");
                 mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_4d4));
-                attentionDb.deleteAttention(discoverInfo.getId());
+                attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
             }
-        }, activity).setOtherUserId(discoverInfo.getId());
+        }, activity).setOtherUserId(discoverInfo.getUserId());
         HttpManager.getInstance().doHttpDeal(api);
     }
 
