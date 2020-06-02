@@ -6,10 +6,9 @@ import android.view.KeyEvent;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseActivity;
-import com.zb.lib_base.utils.KeyBroadUtils;
 import com.zb.lib_base.utils.RouteUtils;
+import com.zb.lib_base.utils.StatusBarUtil;
 import com.zb.module_home.R;
-import com.zb.module_home.databinding.HomeDiscoverDetailBinding;
 import com.zb.module_home.vm.DiscoverDetailViewModel;
 
 @Route(path = RouteUtils.Home_Discover_Detail)
@@ -22,8 +21,9 @@ public class DiscoverDetailActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.HomeDetailTheme);
+//        setTheme(R.style.HomeDetailTheme);
         super.onCreate(savedInstanceState);
+        StatusBarUtil.setStatusBarColor(this, R.color.black_252);
     }
 
     @Override
@@ -36,9 +36,6 @@ public class DiscoverDetailActivity extends BaseActivity {
         viewModel = new DiscoverDetailViewModel();
         viewModel.friendDynId = friendDynId;
         viewModel.setBinding(mBinding);
-
-        HomeDiscoverDetailBinding binding = (HomeDiscoverDetailBinding) mBinding;
-        KeyBroadUtils.controlKeyboardLayout(binding.mainLayout, binding.bottomLayout);
     }
 
     @Override

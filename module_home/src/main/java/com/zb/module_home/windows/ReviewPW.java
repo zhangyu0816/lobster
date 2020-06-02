@@ -26,7 +26,7 @@ import androidx.annotation.NonNull;
 
 public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLoadMoreListener {
 
-    public HomeAdapter adapter;
+    private HomeAdapter adapter;
     private List<Review> reviewList = new ArrayList<>();
     private PwsHomeReviewBinding binding;
     private int pageNo = 1;
@@ -46,12 +46,12 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
 
     @Override
     public void initUI() {
-        mBinding.setVariable(BR.pw, this);
+        adapter = new HomeAdapter<>(activity, R.layout.item_review, reviewList, this);
+        mBinding.setVariable(BR.pw, ReviewPW.this);
         mBinding.setVariable(BR.name, "");
         mBinding.setVariable(BR.content, "");
+        mBinding.setVariable(BR.adapter, adapter);
         binding = (PwsHomeReviewBinding) mBinding;
-        adapter = new HomeAdapter<>(activity, R.layout.item_review, reviewList, this);
-        pageNo = 1;
         seeReviews();
     }
 
@@ -79,6 +79,7 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
                 reviewList.addAll(o);
                 adapter.notifyItemRangeChanged(start, reviewList.size());
                 binding.refresh.finishLoadMore();
+                binding.refresh.finishRefresh();
             }
 
             @Override
@@ -86,6 +87,7 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     binding.refresh.setEnableLoadMore(false);
                     binding.refresh.finishLoadMore();
+                    binding.refresh.finishRefresh();
                 }
             }
         }, activity).setFriendDynId(friendDynId).setTimeSortType(1).setPageNo(pageNo);

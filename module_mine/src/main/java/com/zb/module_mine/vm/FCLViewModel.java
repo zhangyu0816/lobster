@@ -1,11 +1,14 @@
 package com.zb.module_mine.vm;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.attentionOtherApi;
 import com.zb.lib_base.api.cancelAttentionApi;
 import com.zb.lib_base.api.contactNumApi;
@@ -23,6 +26,7 @@ import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.SuperLikePW;
@@ -47,6 +51,8 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
     public LikeDb likeDb;
     private int _selectIndex = -1;
     private MineInfo mineInfo;
+    private int prePosition = -1;
+    private BaseReceiver attentionReceiver;
 
     @Override
     public void back(View view) {
@@ -61,6 +67,13 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
         mBinding = (MineFclBinding) binding;
         mineInfo = mineInfoDb.getMineInfo();
         setAdapter();
+
+        attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                adapter.notifyItemChanged(prePosition);
+            }
+        };
     }
 
     @Override
@@ -84,6 +97,13 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
         memberInfoList.clear();
         adapter.notifyDataSetChanged();
         getData();
+    }
+
+    @Override
+    public void selectPosition(int position) {
+        super.selectPosition(position);
+        prePosition = position;
+        ActivityUtils.getCardMemberDetail(memberInfoList.get(position).getUserId());
     }
 
     private void getData() {
@@ -175,6 +195,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 adapter.notifyItemRangeChanged(start, memberInfoList.size());
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
+                mBinding.setNoData(false);
             }
 
             @Override
@@ -199,6 +220,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 adapter.notifyItemRangeChanged(start, memberInfoList.size());
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
+                mBinding.setNoData(false);
             }
 
             @Override
@@ -229,6 +251,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 adapter.notifyItemRangeChanged(start, memberInfoList.size());
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
+                mBinding.setNoData(false);
             }
 
             @Override

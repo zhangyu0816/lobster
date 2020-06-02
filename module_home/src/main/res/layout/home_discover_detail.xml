@@ -24,7 +24,7 @@
             type="String" />
     </data>
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -281,26 +281,25 @@
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:id="@+id/main_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true">
 
             <View
                 android:id="@+id/view4"
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_gravity="bottom"
-                android:background="@color/black_efe"
-                app:layout_constraintBottom_toTopOf="@+id/bottom_layout" />
+                android:background="@color/black_efe"/>
 
             <RelativeLayout
                 android:id="@+id/bottom_layout"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:background="@android:color/white"
-                app:layout_constraintBottom_toBottomOf="parent">
+                android:background="@android:color/white">
 
                 <ImageView
                     android:id="@+id/iv_gift"
@@ -382,6 +381,6 @@
                         tools:text="7" />
                 </LinearLayout>
             </RelativeLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </FrameLayout>
+        </LinearLayout>
+    </RelativeLayout>
 </layout>

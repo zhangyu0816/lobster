@@ -101,7 +101,6 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
                 }
             }
         }, activity).setPageNo(pageNo).setTimeSortType(1);
-        api.setShowProgress(pageNo == 1);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

@@ -1,8 +1,11 @@
 package com.zb.module_home.vm;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.view.View;
+import android.view.animation.Animation;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.AdapterBinding;
@@ -54,6 +57,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     public HomeAdapter rewardAdapter;
     private List<Reward> rewardList = new ArrayList<>();
     private HomeDiscoverVideoBinding mBinding;
+    private ObjectAnimator animator;
 
     @Override
     public void back(View view) {
@@ -173,11 +177,17 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                     public void success(String filePath) {
                         discoverInfo.setVideoUrl(filePath);
                         mBinding.setIsProgress(false);
+                        if (animator != null)
+                            animator.cancel();
                         initVideo();
                     }
 
                     @Override
                     public void onLoading(long total, long current) {
+                        animator = ObjectAnimator.ofFloat(mBinding.ivProgress, "rotation", 0, 360).setDuration(700);
+                        animator.setRepeatMode(ValueAnimator.RESTART);
+                        animator.setRepeatCount(Animation.INFINITE);
+                        animator.start();
                         mBinding.setIsProgress(true);
                         mBinding.setIsPlay(true);
                     }

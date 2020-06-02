@@ -159,6 +159,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 mBinding.bannerLayout.tvFollow.setText("取消关注");
                 mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
                 attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
+                activity.sendBroadcast(new Intent("lobster_attention"));
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
@@ -172,6 +173,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 mBinding.bannerLayout.tvFollow.setText("关注");
                 mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_4d4));
                 attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
+                activity.sendBroadcast(new Intent("lobster_attention"));
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
