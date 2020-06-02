@@ -62,6 +62,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     @Override
     public void back(View view) {
         super.back(view);
+        activity.sendBroadcast(new Intent("lobster_attention"));
         mBinding.videoView.stopPlayback();//停止播放视频,并且释放
         mBinding.videoView.suspend();//在任何状态下释放媒体播放器
         activity.finish();

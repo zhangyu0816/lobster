@@ -105,6 +105,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void back(View view) {
         super.back(view);
+        activity.sendBroadcast(new Intent("lobster_attention"));
         activity.finish();
     }
 

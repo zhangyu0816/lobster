@@ -34,6 +34,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
     private int pageNo = 1;
     private HomeFollowBinding followBinding;
     private BaseReceiver publishReceiver;
+    private BaseReceiver attentionReceiver;
 
     @Override
     public void setAdapter() {
@@ -51,10 +52,18 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
                 onRefreshForNet(null);
             }
         };
+
+        attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                adapter.notifyDataSetChanged();
+            }
+        };
     }
 
     public void onDestroy() {
         publishReceiver.unregisterReceiver();
+        attentionReceiver.unregisterReceiver();
     }
 
     @Override

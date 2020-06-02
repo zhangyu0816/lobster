@@ -21,7 +21,6 @@ public class DiscoverDetailActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        setTheme(R.style.HomeDetailTheme);
         super.onCreate(savedInstanceState);
         StatusBarUtil.setStatusBarColor(this, R.color.black_252);
     }

@@ -1,6 +1,7 @@
 package com.zb.module_home.activity;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -13,6 +14,8 @@ import com.zb.module_home.vm.DiscoverVideoViewModel;
 public class DiscoverVideoActivity extends BaseActivity {
     @Autowired(name = "friendDynId")
     long friendDynId;
+
+    private DiscoverVideoViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,8 +30,17 @@ public class DiscoverVideoActivity extends BaseActivity {
 
     @Override
     public void initUI() {
-        DiscoverVideoViewModel viewModel = new DiscoverVideoViewModel();
+        viewModel = new DiscoverVideoViewModel();
         viewModel.friendDynId = friendDynId;
         viewModel.setBinding(mBinding);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            viewModel.back(null);
+            return true;
+        }
+        return false;
     }
 }
