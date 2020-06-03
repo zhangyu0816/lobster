@@ -90,8 +90,8 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
             }
         }
 
-        if (mBinding.getNewPass().isEmpty()) {
-            SCToastUtil.showToastBlack(activity, "请输入新密码");
+        if (mBinding.getNewPass().length() < 6) {
+            SCToastUtil.showToastBlack(activity, "请输入至少6位新密码");
             return;
         }
         if (!TextUtils.equals(mBinding.getNewPass(), mBinding.getSurePass())) {
