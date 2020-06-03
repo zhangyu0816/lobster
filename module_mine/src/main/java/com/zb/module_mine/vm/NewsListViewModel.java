@@ -60,6 +60,7 @@ public class NewsListViewModel extends BaseViewModel implements NewsListVMInterf
                 adapter.notifyItemRangeChanged(start, mineNewsList.size());
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
+                mBinding.setNoData(false);
             }
 
             @Override

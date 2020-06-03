@@ -24,5 +24,8 @@ public class ModifyPassActivity extends MineBaseActivity {
         mBinding.setVariable(BR.surePass, "");
         mBinding.setVariable(BR.showNewPass, false);
         mBinding.setVariable(BR.showSurePass, false);
+        mBinding.setVariable(BR.type, 1);
+        mBinding.setVariable(BR.phone, "");
+        mBinding.setVariable(BR.code, "");
     }
 }

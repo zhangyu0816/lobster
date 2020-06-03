@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
 
         <variable
             name="viewModel"
@@ -30,6 +33,23 @@
         <variable
             name="showSurePass"
             type="boolean" />
+
+        <variable
+            name="type"
+            type="Integer" />
+
+        <variable
+            name="phone"
+            type="String" />
+
+        <variable
+            name="code"
+            type="String" />
+
+        <variable
+            name="remark"
+            type="String" />
+
     </data>
 
     <LinearLayout
@@ -42,6 +62,62 @@
             showRight="@{false}"
             title="@{title}"
             viewModel="@{viewModel}" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:visibility="@{type==2?View.VISIBLE:View.GONE}">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="34dp"
+                android:background="@drawable/btn_bg_black_efe_radius10"
+                android:hint="输入手机号"
+                android:inputType="phone"
+                android:maxLength="11"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:singleLine="true"
+                android:text="@={phone}"
+                android:textColorHint="@color/black_c3b"
+                android:textCursorDrawable="@drawable/cursor_color_black_252"
+                android:textSize="14sp" />
+
+            <TextView
+                onClickDelayed="@{viewModel::getCode}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="15dp"
+                android:text="@{remark}"
+                android:textColor="@color/purple_7a4"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="获取验证码" />
+        </RelativeLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="34dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/btn_bg_black_efe_radius10"
+            android:hint="输入验证码"
+            android:inputType="number"
+            android:maxLength="4"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:singleLine="true"
+            android:text="@={code}"
+            android:textColorHint="@color/black_c3b"
+            android:textCursorDrawable="@drawable/cursor_color_black_252"
+            android:textSize="14sp"
+            android:visibility="@{type==2?View.VISIBLE:View.GONE}" />
 
         <EditText
             android:layout_width="match_parent"
@@ -59,7 +135,8 @@
             android:text="@={oldPass}"
             android:textColorHint="@color/black_c3b"
             android:textCursorDrawable="@drawable/cursor_color_black_252"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:visibility="@{type==1?View.VISIBLE:View.GONE}" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -130,6 +207,26 @@
                 android:paddingEnd="15dp"
                 android:src="@{showSurePass?@drawable/eye_open:@drawable/eye_close}" />
         </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="请输入至少由6个数字，字母和符号组成的密码"
+            android:textColor="@color/black_c3b"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            onClickDelayed="@{viewModel::changeType}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:text="@{type==1?@string/pass_by_code:@string/pass_by_pass}"
+            android:textColor="@color/purple_7a4"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="通过输入旧密码修改" />
 
         <TextView
             onClickDelayed="@{viewModel::modify}"

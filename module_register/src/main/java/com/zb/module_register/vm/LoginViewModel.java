@@ -40,6 +40,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface {
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         loginBinding = (RegisterLoginBinding) binding;
+        loginBinding.setPass(PreferenceUtil.readStringValue(activity, "login_pass"));
     }
 
     @Override
@@ -59,6 +60,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface {
                 PreferenceUtil.saveLongValue(activity, "userId", o.getId());
                 PreferenceUtil.saveStringValue(activity, "sessionId", o.getSessionId());
                 PreferenceUtil.saveStringValue(activity, "userName", o.getUserName());
+                PreferenceUtil.saveStringValue(activity, "login_pass", loginBinding.getPass());
                 BaseActivity.update();
                 myInfo();
             }

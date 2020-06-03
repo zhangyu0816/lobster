@@ -53,15 +53,56 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <include
-                            android:id="@+id/banner_layout"
-                            isMember="@{false}"
-                            layout="@layout/home_banner_top"
-                            otherUserId="@{viewModel.discoverInfo.userId}"
-                            viewModel="@{viewModel}"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <com.app.abby.xbanner.XBanner
+                                android:id="@+id/banner"
+                                android:layout_width="match_parent"
+                                android:layout_height="300dp"
+                                android:background="@color/black_efe" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="60dp">
+
+                                <ImageView
+                                    onClickDelayed="@{viewModel::back}"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerVertical="true"
+                                    android:padding="15dp"
+                                    app:srcCompat="@mipmap/back_white_icon" />
+
+                                <TextView
+                                    android:id="@+id/tv_follow"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="24dp"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginEnd="15dp"
+                                    android:layout_toStartOf="@+id/iv_more"
+                                    android:background="@drawable/btn_bg_white_radius60"
+                                    android:gravity="center"
+                                    android:onClick="@{viewModel::follow}"
+                                    android:paddingStart="20dp"
+                                    android:paddingEnd="20dp"
+                                    android:text="关注"
+                                    android:textColor="@color/black_4d4"
+                                    android:textSize="13sp"
+                                    android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
+
+                                <ImageView
+                                    android:id="@+id/iv_more"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
+                                    android:onClick="@{viewModel::more}"
+                                    android:padding="15dp"
+                                    app:srcCompat="@mipmap/more_icon" />
+                            </RelativeLayout>
+                        </RelativeLayout>
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -285,15 +326,15 @@
             android:id="@+id/main_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
 
             <View
                 android:id="@+id/view4"
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_gravity="bottom"
-                android:background="@color/black_efe"/>
+                android:background="@color/black_efe" />
 
             <RelativeLayout
                 android:id="@+id/bottom_layout"
@@ -382,5 +423,7 @@
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
+
+
     </RelativeLayout>
 </layout>

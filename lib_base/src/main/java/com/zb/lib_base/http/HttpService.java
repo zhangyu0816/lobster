@@ -16,6 +16,7 @@ import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.GiftRecord;
 import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.ImAccount;
+import com.zb.lib_base.model.ImageCaptcha;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.LoginInfo;
 import com.zb.lib_base.model.MemberInfo;
@@ -108,6 +109,20 @@ public interface HttpService {
     // 退出登录
     @GET("api/Login_loginOut")
     Observable<BaseResultEntity> loginOut();
+
+    // 图片验证码
+    @GET("api/ImageCaptca_findImageCaptcha")
+    Observable<BaseResultEntity<ImageCaptcha>> findImageCaptcha();
+
+    // 找回密码1.获取验证码 --- 输入用户名,找回密码(获取验证码)
+    @GET("api/Login_findPassCaptcha")
+    Observable<BaseResultEntity> findPassCaptcha(@Query("userName") String userName, @Query("imageCaptchaToken") String imageCaptchaToken,
+                                                 @Query("imageCaptchaCode") String imageCaptchaCode);
+
+    // 找回密码2-修改密码
+    @GET("api/Login_findPassWord")
+    Observable<BaseResultEntity> findPassWord(@Query("userName") String userName, @Query("passWord") String passWord,
+                                              @Query("captcha") String captcha);
 
     // 我的信息
     @GET("api/Member_myInfo")

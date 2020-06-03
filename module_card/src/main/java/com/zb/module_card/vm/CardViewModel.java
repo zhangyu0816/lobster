@@ -257,7 +257,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             }
         }, activity)
 //                .setSex(mineInfo.getSex() == 0 ? 1 : 0)
-                .setSex(1)
+                .setSex(0)
                 .setMaxAge(100)
                 .setMinAge(0);
         api.setShowProgress(needProgress);

@@ -98,8 +98,11 @@ public abstract class BasePopupWindow extends PopupWindow {
     public void showRule(View view) {
     }
 
-    public void touch(View view){
+    public void touch(View view) {
 
+    }
+
+    public void changeImage(View view) {
     }
 
     /**

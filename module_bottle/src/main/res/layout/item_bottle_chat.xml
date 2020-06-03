@@ -37,6 +37,7 @@
                 defaultRes="@{ObjectUtils.getDefaultRes()}"
                 imageUrl="@{viewModel.bottleInfo.otherHeadImage}"
                 isCircle="@{true}"
+                isBlur="@{viewModel.mineInfo.memberType!=2}"
                 viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
                 android:layout_width="40dp"

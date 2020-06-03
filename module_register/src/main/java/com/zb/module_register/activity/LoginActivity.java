@@ -28,7 +28,6 @@ public class LoginActivity extends RegisterBaseActivity {
         viewModel = new LoginViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
-        mBinding.setVariable(BR.pass, "");
         RegisterLoginBinding binding = (RegisterLoginBinding) mBinding;
         binding.setRight("验证码登录");
         // 步骤进度跳

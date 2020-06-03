@@ -64,7 +64,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         selectorList.add("分享");
         mBinding = (CardMemberDetailBinding) binding;
         mBinding.setVariable(BR.baseInfo, "");
-        AdapterBinding.viewSize(mBinding.bannerLayout.banner, MineApp.W, ObjectUtils.getLogoHeight(1.0f));
+        AdapterBinding.viewSize(mBinding.banner, MineApp.W, ObjectUtils.getLogoHeight(1.0f));
         setAdapter();
         initFragments();
         otherInfo();
@@ -142,8 +142,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             @Override
             public void onNext(Object o) {
                 if (o == null) {
-                    mBinding.bannerLayout.tvFollow.setText("取消关注");
-                    mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                    mBinding.tvFollow.setText("取消关注");
+                    mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
                     attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 }
             }
@@ -156,8 +156,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         attentionOtherApi api = new attentionOtherApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                mBinding.bannerLayout.tvFollow.setText("取消关注");
-                mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                mBinding.tvFollow.setText("取消关注");
+                mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
                 attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attention"));
             }
@@ -170,8 +170,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         cancelAttentionApi api = new cancelAttentionApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                mBinding.bannerLayout.tvFollow.setText("关注");
-                mBinding.bannerLayout.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_4d4));
+                mBinding.tvFollow.setText("关注");
+                mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_4d4));
                 attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attention"));
             }
@@ -240,7 +240,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     @Override
     public void follow(View view) {
         super.follow(view);
-        if (mBinding.bannerLayout.tvFollow.getText().toString().equals("关注")) {
+        if (mBinding.tvFollow.getText().toString().equals("关注")) {
             attentionOther();
         } else {
             cancelAttention();
@@ -249,7 +249,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
 
     // 显示相册
     private void showBanner(List<Ads> adList) {
-        mBinding.bannerLayout.banner.setImageScaleType(ImageView.ScaleType.FIT_XY)
+        mBinding.banner.setImageScaleType(ImageView.ScaleType.FIT_XY)
                 .setAds(adList)
                 .setImageLoader((context, ads, image, position) -> AdapterBinding.loadImage(image, ads.getSmallImage(), 0,
                         ObjectUtils.getDefaultRes(), MineApp.W, ObjectUtils.getLogoHeight(1.0f),

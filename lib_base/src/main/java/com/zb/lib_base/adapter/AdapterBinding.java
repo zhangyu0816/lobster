@@ -170,9 +170,9 @@ public class AdapterBinding {
         if (isBlur) {
             MultiTransformation<Bitmap> multiTransformation;
             if (isCircle) {
-                multiTransformation = new MultiTransformation<>(new BlurTransformation(14, 8), new CircleCrop());
+                multiTransformation = new MultiTransformation<>(new BlurTransformation(), new CircleCrop());
             } else {
-                multiTransformation = new MultiTransformation<>(new BlurTransformation(14, 8));
+                multiTransformation = new MultiTransformation<>(new BlurTransformation());
             }
             cropOptions.transform(multiTransformation);
             defaultOptions.transform(multiTransformation);

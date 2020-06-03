@@ -21,6 +21,7 @@ import com.zb.module_bottle.R;
 import com.zb.module_bottle.adapter.BottleAdapter;
 import com.zb.module_bottle.databinding.BottleListBinding;
 import com.zb.module_bottle.iv.BottleListVMInterface;
+import com.zb.module_bottle.windows.BottleVipPW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,11 +68,14 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
 
     @Override
     public void selectIndex(int position) {
-//        if (mineInfo.getMemberType() == 2) {
-            ActivityUtils.getBottleChat(bottleInfoList.get(position).getDriftBottleId());
-//            return;
-//        }
-//        new BottleVipPW(activity, mBinding.getRoot());
+        if (mineInfo.getMemberType() == 2) {
+            BottleInfo bottleInfo = bottleInfoList.get(position);
+            bottleInfo.setNoReadNum(0);
+            adapter.notifyItemChanged(position);
+            ActivityUtils.getBottleChat(bottleInfo.getDriftBottleId());
+            return;
+        }
+        new BottleVipPW(activity, mBinding.getRoot());
     }
 
     @Override
@@ -80,8 +84,8 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
             @Override
             public void onNext(List<BottleInfo> o) {
                 int start = bottleInfoList.size();
-                for(BottleInfo bottleInfo:o){
-                    if(bottleInfo.getOtherHeadImage().isEmpty()){
+                for (BottleInfo bottleInfo : o) {
+                    if (bottleInfo.getOtherHeadImage().isEmpty()) {
                         bottleInfo.setOtherHeadImage(mineInfo.getImage());
                         bottleInfo.setOtherNick(mineInfo.getNick());
                     }

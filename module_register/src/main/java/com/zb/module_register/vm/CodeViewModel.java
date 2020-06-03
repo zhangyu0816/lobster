@@ -27,33 +27,32 @@ import androidx.databinding.ViewDataBinding;
 public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
 
     private int second = 120;
-    private RegisterCodeBinding bindings;
+    private RegisterCodeBinding mBinding;
     private CountDownTimer timer;
     public boolean isLogin = false;
-    private boolean getCode = false;
+    private boolean getCode = true;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        bindings = (RegisterCodeBinding) binding;
-        bindings.setRemark(MineApp.getInstance().getResources().getString(R.string.code_second, second));
+        mBinding = (RegisterCodeBinding) binding;
         timer = new CountDownTimer(second * 1000, 1000) {
             public void onTick(long millisUntilFinished) {
-                bindings.setRemark(MineApp.getInstance().getResources().getString(R.string.code_second, millisUntilFinished / 1000));
+                getCode = false;
+                mBinding.setRemark(MineApp.getInstance().getResources().getString(R.string.code_second, millisUntilFinished / 1000));
             }
 
             public void onFinish() {
-                bindings.setRemark("验证码没收到？重新试试！");
+                mBinding.setRemark("验证码没收到？重新试试！");
                 timer.cancel();
                 getCode = true;
             }
         };
-        timer.start();
         // 验证码
-        if (isLogin) {
-            loginCaptchaApi();
-        } else {
+        if (!isLogin) {
             registerCaptcha();
+        } else {
+            mBinding.setRemark("获取短信验证码");
         }
     }
 
@@ -75,7 +74,6 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
 
     @Override
     public void reset(View view) {
-        timer.start();
         // 注册验证码
         if (getCode)
             if (isLogin) {
@@ -87,11 +85,11 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
 
     @Override
     public void sure(View view) {
-        if (bindings.edCode.getText().toString().length() < 4) {
+        if (mBinding.edCode.getText().toString().length() < 4) {
             SCToastUtil.showToast(activity, "请输入4位有效验证码");
             return;
         }
-        MineApp.registerInfo.setCaptcha(bindings.edCode.getText().toString());
+        MineApp.registerInfo.setCaptcha(mBinding.edCode.getText().toString());
 
         if (isLogin) {
             loginByCaptcha();
@@ -142,6 +140,8 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "验证码已发送，请注意查收");
+                mBinding.setRemark(MineApp.getInstance().getResources().getString(R.string.code_second, second));
+                timer.start();
             }
         }, activity)
                 .setUserName(MineApp.registerInfo.getPhone());
@@ -154,6 +154,8 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "验证码已发送，请注意查收");
+                mBinding.setRemark(MineApp.getInstance().getResources().getString(R.string.code_second, second));
+                timer.start();
             }
         }, activity).setUserName(MineApp.registerInfo.getPhone());
         HttpManager.getInstance().doHttpDeal(api);

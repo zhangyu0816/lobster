@@ -10,4 +10,7 @@
     <string name="fan_count">粉丝数 %d</string>
     <string name="dyn_text">我的动态：%s</string>
     <string name="dyn_good">赞了你的动态</string>
+    <string name="pass_by_pass">通过输入旧密码修改</string>
+    <string name="pass_by_code">通过手机验证码修改</string>
+    <string name="code_second">%ds以后重试</string>
 </resources>
