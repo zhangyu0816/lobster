@@ -18,8 +18,8 @@
             type="boolean" />
 
         <variable
-            name="newsNum"
-            type="Integer" />
+            name="mineNewsCount"
+            type="com.zb.lib_base.model.MineNewsCount" />
     </data>
 
     <RelativeLayout
@@ -50,10 +50,10 @@
                 android:layout_marginEnd="7dp"
                 android:background="@drawable/circle_white_red"
                 android:gravity="center"
-                android:text="@{ObjectUtils.count(newsNum)}"
+                android:text="@{ObjectUtils.count(mineNewsCount.friendDynamicGoodNum+mineNewsCount.friendDynamicReviewNum+mineNewsCount.friendDynamicGiftNum+mineNewsCount.systemNewsNum)}"
                 android:textColor="@android:color/white"
                 android:textSize="10sp"
-                android:visibility="@{newsNum==0?View.GONE:View.VISIBLE}"
+                android:visibility="@{(mineNewsCount.friendDynamicGoodNum+mineNewsCount.friendDynamicReviewNum+mineNewsCount.friendDynamicGiftNum+mineNewsCount.systemNewsNum)==0?View.GONE:View.VISIBLE}"
                 tools:text="···" />
 
             <LinearLayout

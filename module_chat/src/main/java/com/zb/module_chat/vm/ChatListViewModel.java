@@ -1,7 +1,11 @@
 package com.zb.module_chat.vm;
 
+import android.content.Context;
+import android.content.Intent;
+
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.chatListApi;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.http.HttpManager;
@@ -27,6 +31,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
     private List<ChatList> chatMsgList = new ArrayList<>();
     private ChatListFragmentBinding mBinding;
     private ChatListDb chatListDb;
+    private BaseReceiver updateChatReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -34,44 +39,28 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
         chatListDb = new ChatListDb(Realm.getDefaultInstance());
         mBinding = (ChatListFragmentBinding) binding;
         setAdapter();
-    }
-
-    @Override
-    public void setAdapter() {
-        adapter = new ChatAdapter<>(activity, R.layout.item_chat_list, chatMsgList, this);
-        mBinding.refresh.setEnableLoadMore(false);
-        chatList();
-    }
-
-    @Override
-    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        chatList();
-    }
-
-    @Override
-    public void chatList() {
-        chatListApi api = new chatListApi(new HttpOnNextListener<List<ChatList>>() {
+        updateChatReceiver = new BaseReceiver(activity, "lobster_updateChat") {
             @Override
-            public void onNext(List<ChatList> o) {
-                for (ChatList chatMsg : o) {
-                    if (chatMsg.getUserId() > 10010)
-                        chatListDb.saveChatList(chatMsg);
-                }
+            public void onReceive(Context context, Intent intent) {
                 chatMsgList.clear();
                 adapter.notifyDataSetChanged();
                 chatMsgList.addAll(chatListDb.getChatList());
                 adapter.notifyDataSetChanged();
                 mBinding.refresh.finishRefresh();
             }
+        };
+    }
 
-            @Override
-            public void onError(Throwable e) {
-                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    mBinding.refresh.finishRefresh();
-                }
-            }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
+    @Override
+    public void setAdapter() {
+        chatMsgList.addAll(chatListDb.getChatList());
+        adapter = new ChatAdapter<>(activity, R.layout.item_chat_list, chatMsgList, this);
+        mBinding.refresh.setEnableLoadMore(false);
+    }
+
+    @Override
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+        activity.sendBroadcast(new Intent("lobster_chatList"));
     }
 
     @Override

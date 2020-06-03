@@ -10,6 +10,7 @@ import android.graphics.RectF;
 import android.graphics.Region;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -44,7 +45,7 @@ public class CutImageView extends androidx.appcompat.widget.AppCompatImageView {
     /**
      * 截图框外部的默认颜色
      */
-    private final int mDefaultColor = Color.parseColor("#ee000000");
+    private final int mDefaultColor = Color.parseColor("#99000000");
     /**
      * 点击和移动的点
      */
@@ -197,16 +198,27 @@ public class CutImageView extends androidx.appcompat.widget.AppCompatImageView {
         super.onDraw(canvas);
         if (null != mFloatRect) {
             Paint paint = new Paint();
+            if (Build.VERSION.SDK_INT >= 28) {
+                mFloatColor = Color.parseColor("#00000000");
+            }
             paint.setColor(mFloatColor);
             // 绘制截图框外部部分
             canvas.save();
             // Region.Op.XOR 是异并集，这里是获取截图框外部部分
-            canvas.clipRect(mFloatRect, Region.Op.XOR);
+            if (Build.VERSION.SDK_INT >= 28) {
+                canvas.clipRect(mFloatRect);
+            } else {
+                canvas.clipRect(mFloatRect, Region.Op.XOR);
+            }
             canvas.drawColor(mFloatColor);
             canvas.restore();
             canvas.save();
             //Region.Op.INTERSECT 是交集
-            canvas.clipRect(mFloatRect, Region.Op.INTERSECT);
+            if (Build.VERSION.SDK_INT >= 28) {
+                canvas.clipRect(mFloatRect);
+            } else {
+                canvas.clipRect(mFloatRect, Region.Op.INTERSECT);
+            }
             // 绘制截图框部分
             drawFloatRect(canvas);
             canvas.restore();
@@ -218,7 +230,11 @@ public class CutImageView extends androidx.appcompat.widget.AppCompatImageView {
      */
     private void drawFloatRect(Canvas canvas) {
         Paint paint = new Paint();
-        paint.setColor(Color.parseColor("#ffffffff"));
+        if (Build.VERSION.SDK_INT >= 28) {
+            paint.setColor(Color.parseColor("#ff7A44F5"));
+        } else {
+            paint.setColor(Color.parseColor("#ffffffff"));
+        }
         paint.setStyle(Paint.Style.FILL);
 
         int corWidth = 5;
@@ -414,7 +430,7 @@ public class CutImageView extends androidx.appcompat.widget.AppCompatImageView {
             }
             Bitmap dstBitmap = Bitmap.createBitmap(bitmap, (int) left, (int) top, (int) width, (int) height);
             return dstBitmap;
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }

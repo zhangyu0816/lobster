@@ -17,6 +17,7 @@ public class SystemMsgActivity extends MineBaseActivity {
     public void initUI() {
         SystemMsgViewModel viewModel = new SystemMsgViewModel();
         viewModel.setBinding(mBinding);
-        mBinding.setVariable(BR.viewModel,viewModel);
+        mBinding.setVariable(BR.viewModel, viewModel);
+        mBinding.setVariable(BR.title, "系统消息");
     }
 }

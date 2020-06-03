@@ -383,7 +383,7 @@ public interface HttpService {
 
     // 清除全部未读消息
     @GET("api/Interactive_readNewDynMsgAll")
-    Observable<BaseResultEntity> readNewDynMsgAll();
+    Observable<BaseResultEntity> readNewDynMsgAll(@QueryMap Map<String,String> map);
 
     // 礼物记录列表
     @GET("api/Gift_giveOrReceiveList")

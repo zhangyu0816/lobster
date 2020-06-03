@@ -71,6 +71,11 @@ public class ObjectUtils {
         return R.mipmap.super_like_icon;
     }
 
+    // 客服头像
+    public static int getSystemRes() {
+        return R.mipmap.system_tag_icon;
+    }
+
     // 线条颜色
     public static int getLineColor() {
         return R.color.black_efe;
@@ -125,6 +130,22 @@ public class ObjectUtils {
     public static String getStanza(String stanza, int msgType) {
         //消息类型 1：文字 2：图片 3：语音 4：视频
         if (msgType == 1)
+            return stanza;
+        else if (msgType == 2)
+            return "[图片]";
+        else if (msgType == 3)
+            return "[语音]";
+        else if (msgType == 4)
+            return "[视频]";
+        else
+            return "[暂不支付该类型消息]";
+    }
+
+    public static String getSystemStanza(String stanza, int msgType) {
+        //消息类型 1：文字 2：图片 3：语音 4：视频
+        if (msgType == 0) {
+            return "这是官方消息哦~";
+        } else if (msgType == 1)
             return stanza;
         else if (msgType == 2)
             return "[图片]";
@@ -201,15 +222,17 @@ public class ObjectUtils {
             return R.color.black_252;
         }
     }
+
     public static int feedbackTextColor(int replyState) {
-        if (replyState==1) {
+        if (replyState == 1) {
             return R.color.black_252;
         } else {
             return R.color.red_fe4;
         }
     }
+
     public static String feedbackText(int replyState) {
-        if (replyState==1) {
+        if (replyState == 1) {
             return "查看回复";
         } else {
             return "待处理";

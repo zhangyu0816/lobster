@@ -17,4 +17,10 @@ public interface MainVMInterface {
     void comType();
 
     void walletAndPop();
+
+    void newDynMsgAllNum();
+
+    void systemChat();
+
+    void chatList();
 }

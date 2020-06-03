@@ -1,12 +1,15 @@
 package com.zb.module_mine.vm;
 
+import android.content.Intent;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.api.dynNewMsgListApi;
+import com.zb.lib_base.api.readNewDynMsgAllApi;
 import com.zb.lib_base.api.readOverMyDynNewMsgApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -48,6 +51,7 @@ public class NewsListViewModel extends BaseViewModel implements NewsListVMInterf
     public void setAdapter() {
         adapter = new MineAdapter<>(activity, R.layout.item_mine_news_list, mineNewsList, this);
         dynNewMsgList();
+        readNewDynMsgAll();
     }
 
     @Override
@@ -81,13 +85,23 @@ public class NewsListViewModel extends BaseViewModel implements NewsListVMInterf
             ActivityUtils.getHomeDiscoverVideo(mineNews.getFriendDynamicId());
         else
             ActivityUtils.getHomeDiscoverDetail(mineNews.getFriendDynamicId());
+    }
 
-        readOverMyDynNewMsgApi api = new readOverMyDynNewMsgApi(new HttpOnNextListener() {
+    @Override
+    public void readNewDynMsgAll() {
+        readNewDynMsgAllApi api = new readNewDynMsgAllApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-
+                //1评论  2.点赞 3.礼物
+                if (reviewType == 1)
+                    MineApp.mineNewsCount.setFriendDynamicReviewNum(0);
+                else if (reviewType == 2)
+                    MineApp.mineNewsCount.setFriendDynamicGoodNum(0);
+                else
+                    MineApp.mineNewsCount.setFriendDynamicGiftNum(0);
+                activity.sendBroadcast(new Intent("lobster_newsCount"));
             }
-        }, activity);
+        }, activity).setReviewType(reviewType);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

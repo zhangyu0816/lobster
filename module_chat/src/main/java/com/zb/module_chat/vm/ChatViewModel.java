@@ -1,11 +1,14 @@
 package com.zb.module_chat.vm;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
 
@@ -46,6 +49,7 @@ import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
+import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_chat.BR;
@@ -53,7 +57,7 @@ import com.zb.module_chat.R;
 import com.zb.module_chat.adapter.ChatAdapter;
 import com.zb.module_chat.databinding.ChatChatBinding;
 import com.zb.module_chat.iv.ChatVMInterface;
-import com.zb.module_chat.views.SoundView;
+import com.zb.lib_base.views.SoundView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -91,6 +95,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     private SoundView soundView;
     private ImageView preImageView;
     private int preDirection;
+    private ObjectAnimator animator;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -258,31 +263,62 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         ActivityUtils.getCardMemberDetail(otherUserId);
     }
 
+    private ImageView ivPlay;
+    private ImageView ivProgress;
+
     @Override
-    public void toImageVideo(HistoryMsg historyMsg) {
+    public void toImageVideo(View view, HistoryMsg historyMsg, int direction) {
         if (historyMsg.getMsgType() == 2) {
             ArrayList<String> imageList = new ArrayList<>();
             imageList.add(historyMsg.getResLink());
             MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, 0);
         } else {
-            ActivityUtils.getCameraVideoPlay(resFileDb.getResFile(historyMsg.getResLink()).getFilePath());
+            if (direction == 0) {
+                ivPlay = view.findViewById(R.id.iv_play);
+                ivProgress = view.findViewById(R.id.iv_progress);
+            } else {
+                ivPlay = view.findViewById(R.id.iv_play_mine);
+                ivProgress = view.findViewById(R.id.iv_progress_mine);
+            }
+            ivPlay.setVisibility(View.GONE);
+            DownLoad.getFilePath(historyMsg.getResLink(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), new DownLoad.CallBack() {
+                @Override
+                public void success(String filePath) {
+                    ivPlay.setVisibility(View.VISIBLE);
+                    ivProgress.setVisibility(View.GONE);
+                    if (animator != null)
+                        animator.cancel();
+                    ActivityUtils.getCameraVideoPlay(filePath);
+                }
+
+                @Override
+                public void onLoading(long total, long current) {
+                    animator = ObjectAnimator.ofFloat(ivProgress, "rotation", 0, 360).setDuration(700);
+                    animator.setRepeatMode(ValueAnimator.RESTART);
+                    animator.setRepeatCount(Animation.INFINITE);
+                    animator.start();
+                    ivPlay.setVisibility(View.GONE);
+                    ivProgress.setVisibility(View.VISIBLE);
+                }
+            });
         }
     }
 
 
     @Override
     public void toVoice(View view, HistoryMsg historyMsg, int direction) {
+        DownLoad.getFilePath(historyMsg.getResLink(), BaseActivity.getDownloadFile(".amr").getAbsolutePath(), filePath -> {
+            // direction 0 左  1右
+            stopVoiceDrawable();
+            preImageView = (ImageView) view;
+            preDirection = direction;
 
-        // direction 0 左  1右
-        stopVoiceDrawable();
-        preImageView = (ImageView) view;
-        preDirection = direction;
+            preImageView.setImageResource(direction == 0 ? R.drawable.voice_chat_anim_left : R.drawable.voice_chat_anim_right);
+            drawable = (AnimationDrawable) preImageView.getDrawable();
+            drawable.start();
 
-        preImageView.setImageResource(direction == 0 ? R.drawable.voice_chat_anim_left : R.drawable.voice_chat_anim_right);
-        drawable = (AnimationDrawable) preImageView.getDrawable();
-        drawable.start();
-
-        soundView.soundPlayer(resFileDb.getResFile(historyMsg.getResLink()).getFilePath(), view);
+            soundView.soundPlayer(filePath, view);
+        });
     }
 
     private void stopVoiceDrawable() {
@@ -319,7 +355,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         uploadSoundApi api = new uploadSoundApi(new HttpOnNextListener<ResourceUrl>() {
             @Override
             public void onNext(ResourceUrl o) {
-                sendChatMessage(3, "", o.getUrl(), resTime,  "【语音】");
+                sendChatMessage(3, "", o.getUrl(), resTime, "【语音】");
                 soundView.setResTime(0);
             }
         }, activity).setFile(file);
@@ -347,7 +383,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     }
 
     private void setPermissions() {
-        ActivityUtils.getCameraMain(activity, false,false);
+        ActivityUtils.getCameraMain(activity, false, false);
     }
 
     /**

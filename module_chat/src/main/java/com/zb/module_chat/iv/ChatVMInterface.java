@@ -16,7 +16,7 @@ public interface ChatVMInterface {
 
     void toDetail(View view);
 
-    void toImageVideo(HistoryMsg historyMsg);
+    void toImageVideo(View view, HistoryMsg historyMsg, int direction);
 
     void toVoice(View view, HistoryMsg historyMsg, int direction);
 
@@ -28,5 +28,5 @@ public interface ChatVMInterface {
 
     void stopPlayer();
 
-    void uploadSound(File file,int resTime);
+    void uploadSound(File file, int resTime);
 }

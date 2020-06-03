@@ -3,7 +3,6 @@ package com.zb.lib_base.utils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.db.ResFileDb;
 import com.zb.lib_base.http.DownLoadRetrofitHelper;
 import com.zb.lib_base.model.ResFile;
@@ -17,7 +16,7 @@ public class DownLoad {
 
     private static ResFileDb resFileDb;
 
-    public static void getFilePath(String fileUrl, CallBack callBack) {
+    public static void getFilePath(String fileUrl, String filePath, CallBack callBack) {
         if (resFileDb == null)
             resFileDb = new ResFileDb(Realm.getDefaultInstance());
         if (resFileDb.isRead(fileUrl)) {
@@ -26,15 +25,14 @@ public class DownLoad {
                 callBack.success(resFileDb.getResFile(fileUrl).getFilePath());
             } else {
                 resFileDb.deleteResFile(fileUrl);
-                downloadVideo(fileUrl, callBack);
+                downloadVideo(fileUrl, filePath, callBack);
             }
         } else {
-            downloadVideo(fileUrl, callBack);
+            downloadVideo(fileUrl, filePath, callBack);
         }
     }
 
-    private static void downloadVideo(String fileUrl, CallBack callBack) {
-        String filePath = BaseActivity.getDownloadFile(".mp4").getAbsolutePath();
+    private static void downloadVideo(String fileUrl, String filePath, CallBack callBack) {
         DownLoadRetrofitHelper.httpClient.download(fileUrl, filePath, new RequestCallBack<File>() {
 
             @Override

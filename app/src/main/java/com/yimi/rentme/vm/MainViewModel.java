@@ -15,22 +15,30 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.api.bankInfoListApi;
+import com.zb.lib_base.api.chatListApi;
 import com.zb.lib_base.api.comTypeApi;
 import com.zb.lib_base.api.giftListApi;
 import com.zb.lib_base.api.joinPairPoolApi;
 import com.zb.lib_base.api.myImAccountInfoApi;
+import com.zb.lib_base.api.newDynMsgAllNumApi;
 import com.zb.lib_base.api.openedMemberPriceListApi;
 import com.zb.lib_base.api.rechargeDiscountListApi;
+import com.zb.lib_base.api.systemChatApi;
 import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.model.BankInfo;
+import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.ImAccount;
+import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.Report;
+import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.AMapLocation;
@@ -39,6 +47,7 @@ import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_card.windows.GuidancePW;
+import com.zb.module_mine.vm.NewsManagerViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,20 +55,24 @@ import java.util.List;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
+import io.realm.Realm;
 
 public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private ArrayList<Fragment> fragments = new ArrayList<>();
     private AcMainBinding mainBinding;
+    private ChatListDb chatListDb;
+    private int pageNo = 1;
     private int nowIndex = -1;
     private AnimatorSet animatorSet = new AnimatorSet();
     private AMapLocation aMapLocation;
-
     private LoginSampleHelper loginHelper;
     private BaseReceiver rechargeReceiver;
+    private BaseReceiver chatListReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
+        chatListDb = new ChatListDb(Realm.getDefaultInstance());
         mainBinding = (AcMainBinding) binding;
         mainBinding.tvTitle.setTypeface(MineApp.simplifiedType);
         mainBinding.tvContent.setTypeface(MineApp.simplifiedType);
@@ -80,15 +93,24 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         bankInfoList();
         comType();
         walletAndPop();
+        newDynMsgAllNum();
         rechargeReceiver = new BaseReceiver(activity, "lobster_recharge") {
             @Override
             public void onReceive(Context context, Intent intent) {
                 walletAndPop();
             }
         };
+
+        chatListReceiver = new BaseReceiver(activity, "lobster_ chatList") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                pageNo = 1;
+                chatList();
+            }
+        };
     }
 
-    public void onDestroy(){
+    public void onDestroy() {
         rechargeReceiver.unregisterReceiver();
     }
 
@@ -228,6 +250,72 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 activity.sendBroadcast(new Intent("lobster_updateWallet"));
             }
         }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void newDynMsgAllNum() {
+        newDynMsgAllNumApi api = new newDynMsgAllNumApi(new HttpOnNextListener<MineNewsCount>() {
+            @Override
+            public void onNext(MineNewsCount o) {
+                MineApp.mineNewsCount = o;
+                activity.sendBroadcast(new Intent("lobster_newsCount"));
+//                systemChat();
+                chatList();
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void systemChat() {
+        systemChatApi api = new systemChatApi(new HttpOnNextListener<SystemMsg>() {
+            @Override
+            public void onNext(SystemMsg o) {
+                MineApp.mineNewsCount.setSystemNewsNum(o.getNoReadNum());
+                activity.sendBroadcast(new Intent("lobster_newsCount"));
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    MineApp.mineNewsCount.setSystemNewsNum(0);
+                    activity.sendBroadcast(new Intent("lobster_newsCount"));
+                }
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void chatList() {
+        chatListApi api = new chatListApi(new HttpOnNextListener<List<ChatList>>() {
+            @Override
+            public void onNext(List<ChatList> o) {
+                for (ChatList chatMsg : o) {
+                    if (chatMsg.getUserId() == BaseActivity.systemUserId) {
+                        MineApp.mineNewsCount.setContent(chatMsg.getStanza());
+                        MineApp.mineNewsCount.setCreateTime(chatMsg.getCreationDate());
+                        MineApp.mineNewsCount.setMsgType(chatMsg.getMsgType());
+                        MineApp.mineNewsCount.setSystemNewsNum(chatMsg.getNoReadNum());
+                        activity.sendBroadcast(new Intent("lobster_newsCount"));
+                    }
+                    if (chatMsg.getUserId() > 10010)
+                        chatListDb.saveChatList(chatMsg);
+                }
+                pageNo++;
+                chatList();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    if (chatListDb.getChatList().size() > 0) {
+                        activity.sendBroadcast(new Intent("lobster_updateChat"));
+                    }
+                }
+            }
+        }, activity).setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

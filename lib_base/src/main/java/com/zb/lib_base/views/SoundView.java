@@ -1,4 +1,4 @@
-package com.zb.module_chat.views;
+package com.zb.lib_base.views;
 
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
@@ -9,9 +9,9 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.zb.lib_base.R;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.utils.SCToastUtil;
-import com.zb.module_chat.R;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -36,17 +36,25 @@ public class SoundView {
         this.resTime = resTime;
     }
 
+    @FunctionalInterface
     public interface CallBack {
-        void sendSoundBack(int resTime, String audioPath);
+        default void sendSoundBack(int resTime, String audioPath) {
+        }
 
         void playEndBack(View view);
 
-        void soundEnd();
+        default void soundEnd() {
+        }
     }
 
     public SoundView(RxAppCompatActivity context, ImageView audioBtn, CallBack callBack) {
         this.context = context;
         this.audioBtn = audioBtn;
+        this.callBack = callBack;
+    }
+
+    public SoundView(RxAppCompatActivity context, CallBack callBack) {
+        this.context = context;
         this.callBack = callBack;
     }
 

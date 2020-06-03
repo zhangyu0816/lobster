@@ -6,17 +6,29 @@ import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.model.BaseEntity;
 import com.zb.lib_base.model.BaseResultEntity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import rx.Observable;
 
 public class readNewDynMsgAllApi extends BaseEntity<BaseResultEntity> {
+    int reviewType;
+
+    public readNewDynMsgAllApi setReviewType(int reviewType) {
+        this.reviewType = reviewType;
+        return this;
+    }
 
     public readNewDynMsgAllApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
-        setDialogTitle("清除消息");
+        setShowProgress(false);
     }
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.readNewDynMsgAll();
+        Map<String, String> map = new HashMap<>();
+        if (reviewType > 0)
+            map.put("reviewType", reviewType + "");
+        return methods.readNewDynMsgAll(map);
     }
 }

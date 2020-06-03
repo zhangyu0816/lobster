@@ -1,6 +1,7 @@
 package com.zb.module_home.vm;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
@@ -314,6 +315,16 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 int goodNum = discoverInfo.getGoodNum() + 1;
                 discoverInfo.setGoodNum(goodNum);
                 mBinding.setViewModel(DiscoverDetailViewModel.this);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
+                    if (TextUtils.equals(e.getMessage(), "已经赞过了")) {
+                        goodDb.saveGood(new CollectID(friendDynId));
+                        mBinding.setViewModel(DiscoverDetailViewModel.this);
+                    }
+                }
             }
         }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);

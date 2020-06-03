@@ -11,6 +11,12 @@ import java.util.List;
 import rx.Observable;
 
 public class chatListApi extends BaseEntity<List<ChatList>> {
+    int pageNo;
+
+    public chatListApi setPageNo(int pageNo) {
+        this.pageNo = pageNo;
+        return this;
+    }
 
     public chatListApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
@@ -19,6 +25,6 @@ public class chatListApi extends BaseEntity<List<ChatList>> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.chatList(1, 1000, 1);
+        return methods.chatList(pageNo, 10, 1);
     }
 }

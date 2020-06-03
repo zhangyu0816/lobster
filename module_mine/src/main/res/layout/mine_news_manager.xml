@@ -18,8 +18,9 @@
             type="String" />
 
         <variable
-            name="newsDate"
-            type="String" />
+            name="mineNewsCount"
+            type="com.zb.lib_base.model.MineNewsCount" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -55,10 +56,10 @@
                 android:layout_marginEnd="-7dp"
                 android:background="@drawable/circle_white_red"
                 android:gravity="center"
-                android:text="@{ObjectUtils.count(viewModel.mineNewsCount.friendDynamicGiftNum)}"
+                android:text="@{ObjectUtils.count(mineNewsCount.friendDynamicGiftNum)}"
                 android:textColor="@android:color/white"
                 android:textSize="10sp"
-                android:visibility="@{viewModel.mineNewsCount.friendDynamicGiftNum==0?View.GONE:View.VISIBLE}"
+                android:visibility="@{mineNewsCount.friendDynamicGiftNum==0?View.GONE:View.VISIBLE}"
                 tools:text="···" />
 
             <TextView
@@ -109,10 +110,10 @@
                 android:layout_marginEnd="-7dp"
                 android:background="@drawable/circle_white_red"
                 android:gravity="center"
-                android:text="@{ObjectUtils.count(viewModel.mineNewsCount.friendDynamicReviewNum)}"
+                android:text="@{ObjectUtils.count(mineNewsCount.friendDynamicReviewNum)}"
                 android:textColor="@android:color/white"
                 android:textSize="10sp"
-                android:visibility="@{viewModel.mineNewsCount.friendDynamicReviewNum==0?View.GONE:View.VISIBLE}"
+                android:visibility="@{mineNewsCount.friendDynamicReviewNum==0?View.GONE:View.VISIBLE}"
                 tools:text="99" />
 
             <TextView
@@ -163,10 +164,10 @@
                 android:layout_marginEnd="-7dp"
                 android:background="@drawable/circle_white_red"
                 android:gravity="center"
-                android:text="@{ObjectUtils.count(viewModel.mineNewsCount.friendDynamicGoodNum)}"
+                android:text="@{ObjectUtils.count(mineNewsCount.friendDynamicGoodNum)}"
                 android:textColor="@android:color/white"
                 android:textSize="10sp"
-                android:visibility="@{viewModel.mineNewsCount.friendDynamicGoodNum==0?View.GONE:View.VISIBLE}"
+                android:visibility="@{mineNewsCount.friendDynamicGoodNum==0?View.GONE:View.VISIBLE}"
                 tools:text="···" />
 
             <TextView
@@ -206,7 +207,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
-                android:background="@mipmap/gift_tag_icon" />
+                android:background="@mipmap/system_tag_icon" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -227,7 +228,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="这是官方消息哦~"
+                    android:text="@{ObjectUtils.getSystemStanza(mineNewsCount.content, mineNewsCount.msgType)}"
                     android:textColor="@color/black_827"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -244,7 +245,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{newsDate}"
+                    android:text='@{mineNewsCount.createTime.isEmpty()?"":mineNewsCount.createTime.substring(11,16)}'
                     android:textColor="@color/black_827"
                     android:textSize="12sp" />
 
@@ -254,10 +255,10 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/circle_white_red"
                     android:gravity="center"
-                    android:text="@{ObjectUtils.count(viewModel.mineNewsCount.systemNewsNum)}"
+                    android:text="@{ObjectUtils.count(mineNewsCount.systemNewsNum)}"
                     android:textColor="@android:color/white"
                     android:textSize="10sp"
-                    android:visibility="@{viewModel.mineNewsCount.systemNewsNum==0?View.GONE:View.VISIBLE}"
+                    android:visibility="@{mineNewsCount.systemNewsNum==0?View.GONE:View.VISIBLE}"
                     tools:text="···" />
             </LinearLayout>
 

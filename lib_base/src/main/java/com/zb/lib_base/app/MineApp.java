@@ -19,6 +19,7 @@ import com.zb.lib_base.log.LogUtil;
 import com.zb.lib_base.model.BankInfo;
 import com.zb.lib_base.model.BaseEntity;
 import com.zb.lib_base.model.GiftInfo;
+import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.model.Report;
@@ -67,6 +68,7 @@ public class MineApp extends MultiDexApplication {
     public static List<BankInfo> bankInfoList = new ArrayList<>();
     public static List<Report> reportList = new ArrayList<>();
     public static WalletInfo walletInfo;
+    public static MineNewsCount mineNewsCount;
 
     static {
         //设置全局的Header构建器

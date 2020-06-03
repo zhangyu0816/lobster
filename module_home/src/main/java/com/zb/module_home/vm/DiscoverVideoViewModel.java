@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 
@@ -22,6 +23,7 @@ import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.GoodDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
@@ -173,7 +175,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             @Override
             public void onNext(DiscoverInfo o) {
                 discoverInfo = o;
-                DownLoad.getFilePath(discoverInfo.getVideoUrl(), new DownLoad.CallBack() {
+                DownLoad.getFilePath(discoverInfo.getVideoUrl(),BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), new DownLoad.CallBack() {
                     @Override
                     public void success(String filePath) {
                         discoverInfo.setVideoUrl(filePath);
@@ -280,6 +282,16 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             public void onNext(Object o) {
                 goodDb.saveGood(new CollectID(friendDynId));
                 mBinding.setViewModel(DiscoverVideoViewModel.this);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
+                    if (TextUtils.equals(e.getMessage(), "已经赞过了")) {
+                        goodDb.saveGood(new CollectID(friendDynId));
+                        mBinding.setViewModel(DiscoverVideoViewModel.this);
+                    }
+                }
             }
         }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);

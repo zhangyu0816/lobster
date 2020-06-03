@@ -11,6 +11,9 @@ public class MineNewsCount extends BaseObservable {
     int friendDynamicGiftNum;   //未读收礼数量
     int friendDynamicGoodNum;  //未读点赞数量
     int systemNewsNum;
+    String content = "";
+    String createTime = "";
+    int msgType;//消息类型 1：文字 2：图片 3：语音 4：视频
 
     @Bindable
     public int getFriendDynamicReviewNum() {
@@ -50,5 +53,35 @@ public class MineNewsCount extends BaseObservable {
     public void setSystemNewsNum(int systemNewsNum) {
         this.systemNewsNum = systemNewsNum;
         notifyPropertyChanged(BR.systemNewsNum);
+    }
+
+    @Bindable
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+        notifyPropertyChanged(BR.content);
+    }
+
+    @Bindable
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+        notifyPropertyChanged(BR.createTime);
+    }
+
+    @Bindable
+    public int getMsgType() {
+        return msgType;
+    }
+
+    public void setMsgType(int msgType) {
+        this.msgType = msgType;
+        notifyPropertyChanged(BR.msgType);
     }
 }

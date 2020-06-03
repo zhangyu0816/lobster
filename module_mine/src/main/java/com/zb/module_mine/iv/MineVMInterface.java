@@ -17,8 +17,4 @@ public interface MineVMInterface {
     void contactNumDetail(int position);
 
     void contactNum();
-
-    void newDynMsgAllNum();
-
-    void systemChat();
 }

@@ -1,6 +1,9 @@
 package com.zb.module_mine.activity;
 
+import android.view.KeyEvent;
+
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.R;
@@ -17,15 +20,19 @@ public class NewsManagerActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
-
         viewModel = new NewsManagerViewModel();
         viewModel.setBinding(mBinding);
+        mBinding.setVariable(BR.viewModel, viewModel);
+        mBinding.setVariable(BR.mineNewsCount, MineApp.mineNewsCount);
         mBinding.setVariable(BR.title, "我的消息");
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        viewModel.newDynMsgAllNum();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            viewModel.back(null);
+            return true;
+        }
+        return false;
     }
 }

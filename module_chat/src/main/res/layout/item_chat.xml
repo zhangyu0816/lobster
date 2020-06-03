@@ -58,7 +58,7 @@
                 tools:text="色附件为 库文件 未考虑附件为来房价为福建未来房价微了访问了访问访问" />
 
             <RelativeLayout
-                onClickDelayed="@{v->viewModel.toImageVideo(item)}"
+                onClickDelayed="@{v->viewModel.toImageVideo(v,item,0)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
@@ -74,14 +74,23 @@
                     viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.4f)}"
                     android:layout_width="100dp"
                     android:layout_height="200dp"
-                    android:visibility="@{(item.msgType==2&amp;&amp;item.msgType==4)?View.VISIBLE:View.GONE}" />
+                    android:visibility="@{(item.msgType==2||item.msgType==4)?View.VISIBLE:View.GONE}" />
 
                 <ImageView
+                    android:id="@+id/iv_play"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:background="@mipmap/video_play_icon"
                     android:visibility="@{item.msgType==4?View.VISIBLE:View.GONE}" />
+
+                <ImageView
+                    android:id="@+id/iv_progress"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true"
+                    android:background="@mipmap/loading_icon"
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <LinearLayout
@@ -146,7 +155,7 @@
                 tools:text="色附件为 库文件 " />
 
             <RelativeLayout
-                onClickDelayed="@{v->viewModel.toImageVideo(item)}"
+                onClickDelayed="@{v->viewModel.toImageVideo(v,item,1)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="15dp"
@@ -162,14 +171,23 @@
                     viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.4f)}"
                     android:layout_width="100dp"
                     android:layout_height="200dp"
-                    android:visibility="@{(item.msgType==2&amp;&amp;item.msgType==4)?View.VISIBLE:View.GONE}" />
+                    android:visibility="@{(item.msgType==2||item.msgType==4)?View.VISIBLE:View.GONE}" />
 
                 <ImageView
+                    android:id="@+id/iv_play_mine"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:background="@mipmap/video_play_icon"
                     android:visibility="@{item.msgType==4?View.VISIBLE:View.GONE}" />
+
+                <ImageView
+                    android:id="@+id/iv_progress_mine"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true"
+                    android:background="@mipmap/loading_icon"
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <RelativeLayout

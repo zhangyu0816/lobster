@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
 
         <variable
             name="item"
@@ -11,11 +16,119 @@
             name="position"
             type="Integer" />
 
+        <variable
+            name="viewModel"
+            type="com.zb.module_mine.vm.SystemMsgViewModel" />
+
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp">
+
+            <ImageView
+                android:id="@+id/iv_other_logo"
+                imageRes="@{ObjectUtils.getSystemRes()}"
+                isCircle="@{true}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="30dp"
+                android:layout_toEndOf="@+id/iv_other_logo"
+                android:background="@drawable/btn_bg_white_radius5"
+                android:padding="10dp"
+                android:text="@{item.msgType>4?@string/msg_no_type:item.stanza}"
+                android:textColor="@color/black_252"
+                android:textSize="14sp"
+                android:visibility="@{(item.msgType==1||item.msgType>4)?View.VISIBLE:View.GONE}"
+                tools:text="色附件为 库文件 未考虑附件为来房价为福建未来房价微了访问了访问访问" />
+
+            <RelativeLayout
+                onClickDelayed="@{v->viewModel.toImageVideo(v,item)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_toEndOf="@+id/iv_other_logo">
+
+                <ImageView
+                    countSize="@{true}"
+                    defaultRes="@{ObjectUtils.getDefaultRes()}"
+                    imageUrl="@{item.resLink}"
+                    isRound="@{true}"
+                    roundSize="@{20}"
+                    viewHeightSize="@{0}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.4f)}"
+                    android:layout_width="100dp"
+                    android:layout_height="200dp"
+                    android:visibility="@{(item.msgType==2||item.msgType==4)?View.VISIBLE:View.GONE}" />
+
+                <ImageView
+                    android:id="@+id/iv_play"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@mipmap/video_play_icon"
+                    android:visibility="@{item.msgType==4?View.VISIBLE:View.GONE}" />
+
+                <ImageView
+                    android:id="@+id/iv_progress"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true"
+                    android:background="@mipmap/loading_icon"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/type_3_left_linear"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_toEndOf="@+id/iv_other_logo"
+                android:background="@drawable/btn_bg_white_radius5"
+                android:orientation="horizontal"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:visibility="@{item.msgType==3?View.VISIBLE:View.GONE}">
+
+                <ImageView
+                    onClickDelayed="@{v->viewModel.toVoice(v,item,0)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:src="@mipmap/icon_voice_3_left" />
+
+                <TextView
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"
+                    android:layout_marginStart="3dp"
+                    android:background="@drawable/circle_red"
+                    android:visibility="@{viewModel.resFileDb.isRead(item.resLink)?View.GONE:View.VISIBLE}" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@+id/type_3_left_linear"
+                android:text='@{String.format("%d’’",item.resTime)}'
+                android:textColor="@color/black_827"
+                android:textSize="16sp"
+                android:visibility="@{item.msgType==3?View.VISIBLE:View.GONE}"
+                tools:text="6’’" />
+        </RelativeLayout>
+    </RelativeLayout>
 </layout>

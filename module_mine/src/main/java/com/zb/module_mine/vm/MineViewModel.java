@@ -6,14 +6,11 @@ import android.view.View;
 
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.contactNumApi;
-import com.zb.lib_base.api.newDynMsgAllNumApi;
-import com.zb.lib_base.api.systemChatApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.MineInfo;
-import com.zb.lib_base.model.MineNewsCount;
-import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -28,6 +25,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     public MineInfo mineInfo;
     public ContactNum contactNum;
     private BaseReceiver updateMineInfoReceiver;
+    private BaseReceiver newsCountReceiver;
     private int newsNum = 0;
 
     @Override
@@ -43,10 +41,17 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                 mBinding.setVariable(BR.viewModel, MineViewModel.this);
             }
         };
+        newsCountReceiver = new BaseReceiver(activity, "lobster_newsCount") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.setVariable(BR.mineNewsCount, MineApp.mineNewsCount);
+            }
+        };
     }
 
     public void onDestroy() {
         updateMineInfoReceiver.unregisterReceiver();
+        newsCountReceiver.unregisterReceiver();
     }
 
     @Override
@@ -96,35 +101,9 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                 mBinding.setVariable(BR.hasNewBeLike, PreferenceUtil.readIntValue(activity, "beLikeCount") > o.getBeLikeCount());
                 PreferenceUtil.saveIntValue(activity, "beLikeCount", o.getBeLikeCount());
                 mBinding.setVariable(BR.viewModel, MineViewModel.this);
-                newDynMsgAllNum();
 
             }
         }, activity).setOtherUserId(mineInfo.getUserId());
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
-    public void newDynMsgAllNum() {
-        newDynMsgAllNumApi api = new newDynMsgAllNumApi(new HttpOnNextListener<MineNewsCount>() {
-            @Override
-            public void onNext(MineNewsCount o) {
-                newsNum = o.getFriendDynamicGiftNum() + o.getFriendDynamicGoodNum() + o.getFriendDynamicReviewNum();
-                mBinding.setVariable(BR.newsNum, newsNum);
-                systemChat();
-            }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
-    public void systemChat() {
-        systemChatApi api = new systemChatApi(new HttpOnNextListener<SystemMsg>() {
-            @Override
-            public void onNext(SystemMsg o) {
-                newsNum += o.getNoReadNum();
-                mBinding.setVariable(BR.newsNum, newsNum);
-            }
-        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

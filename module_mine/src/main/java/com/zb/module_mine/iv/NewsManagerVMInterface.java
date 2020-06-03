@@ -12,10 +12,6 @@ public interface NewsManagerVMInterface {
 
     void toLobsterNews(View view);
 
-    void newDynMsgAllNum();
-
-    void systemChat();
-
     void systemHistoryMsgList();
 
     void clearHistoryMsg(long messageId);
