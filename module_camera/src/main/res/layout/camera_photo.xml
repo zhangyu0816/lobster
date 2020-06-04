@@ -23,6 +23,14 @@
         <variable
             name="isCreate"
             type="boolean" />
+
+        <variable
+            name="isMore"
+            type="boolean" />
+
+        <variable
+            name="showBottom"
+            type="boolean" />
     </data>
 
     <RelativeLayout
@@ -145,7 +153,8 @@
                 android:onClick="@{v->viewModel.selectIndex(1)}"
                 android:text="拍视频"
                 android:textColor="@color/white_cc"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="@{showBottom?View.VISIBLE:View.GONE}" />
 
             <TextView
                 android:layout_width="0dp"

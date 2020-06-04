@@ -1,9 +1,11 @@
 package com.zb.module_register.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.ObjectUtils;
@@ -16,6 +18,7 @@ import com.zb.module_register.vm.LogoViewModel;
 @Route(path = RouteUtils.Register_Logo)
 public class LogoActivity extends RegisterBaseActivity {
     private LogoViewModel viewModel;
+    private BaseReceiver cameraReceiver;
 
     @Override
     public int getRes() {
@@ -37,6 +40,14 @@ public class LogoActivity extends RegisterBaseActivity {
         AdapterBinding.viewSize(binding.uploadRelative, ObjectUtils.getViewSizeByWidth(0.4f), ObjectUtils.getLogoHeight(0.4f));
 
         mBinding.setVariable(BR.imageUrl, "");
+
+        cameraReceiver = new BaseReceiver(activity, "lobster_camera") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String path = intent.getStringExtra("filePath");
+                mBinding.setVariable(BR.imageUrl, path);
+            }
+        };
     }
 
     @Override
@@ -46,6 +57,12 @@ public class LogoActivity extends RegisterBaseActivity {
             String fileName = data.getStringExtra("fileName");
             mBinding.setVariable(BR.imageUrl, fileName);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cameraReceiver.unregisterReceiver();
     }
 
     @Override

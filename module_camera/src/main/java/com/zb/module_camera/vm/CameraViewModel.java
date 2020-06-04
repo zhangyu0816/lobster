@@ -52,6 +52,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
     private List<String> selectPaths = new ArrayList<>();
     private int selectIndex = -1;
     public boolean isMore = false;
+    public boolean showBottom = false;
 
     private Map<Integer, CutImageView> tempMap = new HashMap<>();
     private boolean selectMore = false;
@@ -98,7 +99,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
         if (index == 1) {
             ActivityUtils.getCameraVideo();
         } else if (index == 2) {
-            ActivityUtils.getCameraPhoto();
+            ActivityUtils.getCameraPhoto(isMore,showBottom);
         }
         activity.finish();
     }

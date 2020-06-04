@@ -1,9 +1,11 @@
 package com.zb.module_register.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.ObjectUtils;
@@ -16,6 +18,7 @@ import com.zb.module_register.vm.ImagesViewModel;
 @Route(path = RouteUtils.Register_Images)
 public class ImagesActivity extends RegisterBaseActivity {
     private ImagesViewModel viewModel;
+    private BaseReceiver cameraReceiver;
 
     @Override
     public int getRes() {
@@ -35,6 +38,26 @@ public class ImagesActivity extends RegisterBaseActivity {
         AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W, 5);
         // 列表宽
         AdapterBinding.viewSize(binding.imagesList, ObjectUtils.getViewSizeByWidth(0.9f), ObjectUtils.getLogoHeight(0.6f));
+
+        cameraReceiver = new BaseReceiver(activity, "lobster_camera") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String path = intent.getStringExtra("filePath");
+                if (viewModel.images.get(viewModel._position).isEmpty()) {
+                    for (int i = 0; i < viewModel.images.size(); i++) {
+                        if (viewModel.images.get(i).isEmpty()) {
+                            viewModel._position = i;
+                            viewModel.images.set(viewModel._position, path);
+                            viewModel.adapter.notifyItemChanged(viewModel._position);
+                            return;
+                        }
+                    }
+                } else {
+                    viewModel.images.set(viewModel._position, path);
+                    viewModel.adapter.notifyItemChanged(viewModel._position);
+                }
+            }
+        };
     }
 
     @Override
@@ -56,6 +79,12 @@ public class ImagesActivity extends RegisterBaseActivity {
                 viewModel.adapter.notifyItemChanged(viewModel._position);
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cameraReceiver.unregisterReceiver();
     }
 
     @Override

@@ -1,9 +1,11 @@
 package com.zb.module_mine.activity;
 
+import android.content.Context;
 import android.content.Intent;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.model.Authentication;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_mine.BR;
@@ -16,6 +18,7 @@ public class AuthenticationActivity extends MineBaseActivity {
     Authentication authentication;
 
     private AuthenticationViewModel viewModel;
+    private BaseReceiver cameraReceiver;
 
     @Override
     public int getRes() {
@@ -29,6 +32,15 @@ public class AuthenticationActivity extends MineBaseActivity {
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.title, "实名认证");
         viewModel.setBinding(mBinding);
+
+        cameraReceiver = new BaseReceiver(activity, "lobster_camera") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String path = intent.getStringExtra("filePath");
+                viewModel.imageList.set(viewModel._position, path);
+                viewModel.adapter.notifyItemChanged(viewModel._position);
+            }
+        };
     }
 
     @Override
@@ -39,5 +51,11 @@ public class AuthenticationActivity extends MineBaseActivity {
             viewModel.imageList.set(viewModel._position, fileName);
             viewModel.adapter.notifyItemChanged(viewModel._position);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cameraReceiver.unregisterReceiver();
     }
 }

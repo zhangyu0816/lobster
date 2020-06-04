@@ -194,7 +194,7 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
         if (index == 0) {
             ActivityUtils.getCameraMain(activity, true, true);
         } else if (index == 2) {
-            ActivityUtils.getCameraPhoto();
+            ActivityUtils.getCameraPhoto(true, true);
         }
         back(null);
     }

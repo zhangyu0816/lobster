@@ -1,10 +1,12 @@
 package com.zb.module_chat.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_chat.BR;
 import com.zb.module_chat.R;
@@ -16,6 +18,7 @@ public class ChatActivity extends ChatBaseActivity {
     long otherUserId;
 
     private ChatViewModel viewModel;
+    private BaseReceiver cameraReceiver;
 
     @Override
     public int getRes() {
@@ -29,7 +32,12 @@ public class ChatActivity extends ChatBaseActivity {
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.isVoice, false);
         mBinding.setVariable(BR.content, "");
-
+        cameraReceiver = new BaseReceiver(activity, "lobster_camera") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                viewModel.uploadImage(intent.getStringExtra("filePath"));
+            }
+        };
 
 //        final View myLayout = getWindow().getDecorView();
 //        binding.mainRelative.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
@@ -63,6 +71,12 @@ public class ChatActivity extends ChatBaseActivity {
         if (requestCode == 1001 && resultCode == 1) {
             viewModel.uploadImage(data.getStringExtra("fileName"));
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cameraReceiver.unregisterReceiver();
     }
 
     @Override

@@ -33,7 +33,7 @@
         <ImageView
             android:id="@+id/iv_logo"
             defaultRes="@{ObjectUtils.getDefaultRes()}"
-            imageUrl="@{viewModel.mineInfo.image}"
+            imageUrl='@{item.images.split(",")[0]}'
             isCircle="@{true}"
             viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"

@@ -27,6 +27,8 @@ import java.util.Date;
 import androidx.databinding.ViewDataBinding;
 
 public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, View.OnTouchListener {
+    public boolean isMore;
+    public boolean showBottom;
     private CameraPhotoBinding photoBinding;
     private Camera mCamera;
     private CameraPreview preview;
@@ -151,7 +153,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
     @Override
     public void selectIndex(int index) {
         if (index == 0) {
-            ActivityUtils.getCameraMain(activity, true,true);
+            ActivityUtils.getCameraMain(activity, isMore, showBottom);
         } else if (index == 1) {
             ActivityUtils.getCameraVideo();
         }

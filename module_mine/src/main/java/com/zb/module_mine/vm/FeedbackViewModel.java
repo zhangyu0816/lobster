@@ -10,7 +10,6 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.FeedbackInfo;
-import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.R;
@@ -26,7 +25,6 @@ import androidx.databinding.ViewDataBinding;
 
 public class FeedbackViewModel extends BaseViewModel implements FeedbackVMInterface, OnRefreshListener, OnLoadMoreListener {
     public MineAdapter adapter;
-    public MineInfo mineInfo;
     private List<FeedbackInfo> feedbackInfoList = new ArrayList<>();
     private int pageNo = 1;
     private MineFeedbackBinding mBinding;
@@ -35,7 +33,6 @@ public class FeedbackViewModel extends BaseViewModel implements FeedbackVMInterf
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (MineFeedbackBinding) binding;
-        mineInfo = mineInfoDb.getMineInfo();
         setAdapter();
     }
 

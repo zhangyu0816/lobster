@@ -174,7 +174,7 @@ public class ActivityUtils {
 
     // 实名认证
     public static void getMineAuthentication(Authentication authentication) {
-        ARouter.getInstance().build(RouteUtils.Mine_Authentication).withParcelable("authentication",authentication).navigation();
+        ARouter.getInstance().build(RouteUtils.Mine_Authentication).withParcelable("authentication", authentication).navigation();
     }
 
     /*********************** 注册 **************************/
@@ -232,8 +232,8 @@ public class ActivityUtils {
     }
 
     // 拍照
-    public static void getCameraPhoto() {
-        ARouter.getInstance().build(RouteUtils.Camera_Photo).navigation();
+    public static void getCameraPhoto(boolean isMore, boolean showBottom) {
+        ARouter.getInstance().build(RouteUtils.Camera_Photo).withBoolean("isMore", isMore).withBoolean("showBottom", showBottom).navigation();
     }
 
     // 选择视频

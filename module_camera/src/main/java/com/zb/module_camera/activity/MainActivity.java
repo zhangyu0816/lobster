@@ -27,6 +27,7 @@ public class MainActivity extends CameraBaseActivity {
     public void initUI() {
         CameraViewModel viewModel = new CameraViewModel();
         viewModel.isMore = isMore;
+        viewModel.showBottom = showBottom;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.isMore, isMore);

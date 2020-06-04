@@ -6,6 +6,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
         <variable
             name="viewModel"
             type="com.zb.module_mine.vm.FeedbackDetailViewModel" />
@@ -98,10 +100,11 @@
                     android:textColor="@color/black_252"
                     android:textSize="14sp" />
 
-                <com.zb.lib_base.views.MyRecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     adapter="@{viewModel.adapter}"
                     gridNum="@{3}"
                     recyclerType="@{2}"
+                    size="@{ObjectUtils.getViewSizeByWidth(0.04f)}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp" />

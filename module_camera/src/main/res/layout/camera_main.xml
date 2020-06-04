@@ -152,7 +152,7 @@
             android:layout_alignParentBottom="true"
             android:gravity="center"
             android:orientation="horizontal"
-            android:visibility="@{showBottom?View.VISIBLE:View.GONE}">
+            android:visibility="@{isMore==showBottom?View.VISIBLE:View.GONE}">
 
             <TextView
                 android:layout_width="0dp"
@@ -171,7 +171,8 @@
                 android:onClick="@{v->viewModel.selectIndex(1)}"
                 android:text="拍视频"
                 android:textColor="@color/white_cc"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="@{showBottom?View.VISIBLE:View.GONE}" />
 
             <TextView
                 android:layout_width="0dp"

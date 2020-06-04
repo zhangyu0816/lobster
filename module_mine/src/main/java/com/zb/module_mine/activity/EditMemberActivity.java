@@ -14,6 +14,7 @@ import com.zb.module_mine.vm.EditMemberViewModel;
 public class EditMemberActivity extends MineBaseActivity {
     private EditMemberViewModel viewModel;
     private BaseReceiver memberReceiver;
+    private BaseReceiver cameraReceiver;
 
     @Override
     public int getRes() {
@@ -35,6 +36,26 @@ public class EditMemberActivity extends MineBaseActivity {
                 viewModel.mineInfoDb.updateNick(content, type);
                 viewModel.mineInfo = viewModel.mineInfoDb.getMineInfo();
                 mBinding.setVariable(BR.viewModel, viewModel);
+            }
+        };
+        cameraReceiver = new BaseReceiver(activity, "lobster_camera") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String fileName = intent.getStringExtra("filePath");
+                // 拍照
+                if (viewModel.imageList.get(viewModel._position).isEmpty()) {
+                    for (int i = 0; i < viewModel.imageList.size(); i++) {
+                        if (viewModel.imageList.get(i).isEmpty()) {
+                            viewModel._position = i;
+                            viewModel.imageList.set(viewModel._position, fileName);
+                            viewModel.adapter.notifyItemChanged(viewModel._position);
+                            return;
+                        }
+                    }
+                } else {
+                    viewModel.imageList.set(viewModel._position, fileName);
+                    viewModel.adapter.notifyItemChanged(viewModel._position);
+                }
             }
         };
     }
@@ -64,5 +85,6 @@ public class EditMemberActivity extends MineBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         memberReceiver.unregisterReceiver();
+        cameraReceiver.unregisterReceiver();
     }
 }

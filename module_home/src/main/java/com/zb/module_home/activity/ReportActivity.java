@@ -37,13 +37,19 @@ public class ReportActivity extends HomeBaseActivity {
         cameraReceiver = new BaseReceiver(activity, "lobster_camera") {
             @Override
             public void onReceive(Context context, Intent intent) {
+                int cameraType = intent.getIntExtra("cameraType", 0);
                 boolean isMore = intent.getBooleanExtra("isMore", false);
                 String path = intent.getStringExtra("filePath");
                 // 相册
-                if (isMore) {
-                    viewModel.images.clear();
-                    viewModel.images.addAll(Arrays.asList(path.split(",")));
-                    viewModel.images.add("add_image_icon");
+                if (cameraType == 0) {
+                    if (isMore) {
+                        viewModel.images.clear();
+                        viewModel.images.addAll(Arrays.asList(path.split(",")));
+                        viewModel.images.add("add_image_icon");
+                        viewModel.imageAdapter.notifyDataSetChanged();
+                    }
+                } else if (cameraType == 2) {
+                    viewModel.images.add(viewModel.images.size() - 1, path);
                     viewModel.imageAdapter.notifyDataSetChanged();
                 }
             }
