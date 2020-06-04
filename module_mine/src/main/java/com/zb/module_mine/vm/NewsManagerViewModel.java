@@ -11,7 +11,6 @@ import com.zb.lib_base.api.systemHistoryMsgListApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;

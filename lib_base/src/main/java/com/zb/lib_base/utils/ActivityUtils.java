@@ -2,6 +2,7 @@ package com.zb.lib_base.utils;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.zb.lib_base.model.Authentication;
 import com.zb.lib_base.model.FeedbackInfo;
 
 public class ActivityUtils {
@@ -169,6 +170,11 @@ public class ActivityUtils {
     // 提现
     public static void getMineWithdraw() {
         ARouter.getInstance().build(RouteUtils.Mine_Withdraw).navigation();
+    }
+
+    // 实名认证
+    public static void getMineAuthentication(Authentication authentication) {
+        ARouter.getInstance().build(RouteUtils.Mine_Authentication).withParcelable("authentication",authentication).navigation();
     }
 
     /*********************** 注册 **************************/

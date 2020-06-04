@@ -83,6 +83,8 @@ public class RouteUtils {
     public static final String Mine_System_Msg = "/mine/SystemMsgActivity";
     // 提现
     public static final String Mine_Withdraw = "/mine/WithdrawActivity";
+    // 实名认证
+    public static final String Mine_Authentication = "/mine/AuthenticationActivity";
 
 
     /*********************** 注册 **************************/

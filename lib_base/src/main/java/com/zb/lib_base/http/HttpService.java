@@ -2,6 +2,7 @@ package com.zb.lib_base.http;
 
 
 import com.zb.lib_base.model.AliPay;
+import com.zb.lib_base.model.Authentication;
 import com.zb.lib_base.model.BankInfo;
 import com.zb.lib_base.model.BaseResultEntity;
 import com.zb.lib_base.model.BottleInfo;
@@ -148,6 +149,16 @@ public interface HttpService {
     @GET("api/Complain_comsub")
     Observable<BaseResultEntity> comsub(@Query("complainTypeId") long complainTypeId, @Query("comUserId") long comUserId, @Query("comText") String comText,
                                         @Query("images") String images);
+
+    // 实名认证信息
+    @GET("api/Verify_realNameVerifyStatus")
+    Observable<BaseResultEntity<Authentication>> realNameVerify();
+
+    // 提交实名信息
+    @GET("api/Verify_upRealNameInfo")
+    Observable<BaseResultEntity> upRealNameInfo(@Query("realName") String realName, @Query("identityNum") String identityNum,
+                                                @Query("personalImage") String personalImage, @Query("idFrontImage") String idFrontImage,
+                                                @Query("idBackImage") String idBackImage, @Query("verifyMethodType") int verifyMethodType);
 
     /******************************* app **********************************/
 

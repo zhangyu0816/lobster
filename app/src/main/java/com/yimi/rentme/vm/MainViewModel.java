@@ -52,7 +52,6 @@ import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_card.windows.GuidancePW;
-import com.zb.module_mine.vm.NewsManagerViewModel;
 
 import java.util.ArrayList;
 import java.util.List;

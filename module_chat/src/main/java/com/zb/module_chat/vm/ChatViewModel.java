@@ -54,13 +54,13 @@ import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
+import com.zb.lib_base.views.SoundView;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_chat.BR;
 import com.zb.module_chat.R;
 import com.zb.module_chat.adapter.ChatAdapter;
 import com.zb.module_chat.databinding.ChatChatBinding;
 import com.zb.module_chat.iv.ChatVMInterface;
-import com.zb.lib_base.views.SoundView;
 
 import java.io.File;
 import java.util.ArrayList;

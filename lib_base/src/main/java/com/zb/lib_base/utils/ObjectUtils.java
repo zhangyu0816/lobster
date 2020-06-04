@@ -238,4 +238,14 @@ public class ObjectUtils {
             return "待处理";
         }
     }
+
+    public static String idCardText(int position) {
+        if (position == 0) {
+            return "身份证正面";
+        } else if (position == 1) {
+            return "身份证反面";
+        } else {
+            return "手持身份证";
+        }
+    }
 }

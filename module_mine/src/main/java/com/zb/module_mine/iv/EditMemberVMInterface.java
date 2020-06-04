@@ -9,8 +9,6 @@ public interface EditMemberVMInterface {
 
     void toEditNick(View view);
 
-    void toSelectSex(View view);
-
     void toSelectBirthday(View view);
 
     void toSelectJob(View view);

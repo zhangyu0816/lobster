@@ -3,7 +3,6 @@ package com.zb.module_mine.vm;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
@@ -43,7 +42,6 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     public int _position = 0;
     private SimpleItemTouchHelperCallback callback;
     private MineEditMemberBinding mineEditMemberBinding;
-    private List<String> selectorList = new ArrayList<>();
     private List<String> selectorImageList = new ArrayList<>();
     public MineInfo mineInfo;
     private PhotoManager photoManager;
@@ -58,8 +56,6 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        selectorList.add("女");
-        selectorList.add("男");
         selectorImageList.add("替换");
         selectorImageList.add("删除");
         mineEditMemberBinding = (MineEditMemberBinding) binding;
@@ -75,7 +71,6 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
 
         setAdapter();
         photoManager = new PhotoManager(activity, () -> {
-            Log.i("getPhotoFiles", photoManager.getPhotoFiles().toString());
             for (PhotoFile photoFile : photoManager.getPhotoFiles()) {
                 int i = imageList.indexOf(photoFile.getSrcFilePath());
                 imageList.set(i, photoFile.getWebUrl());
@@ -140,15 +135,6 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     @Override
     public void toEditNick(View view) {
         ActivityUtils.getMineEditContent(2, 1, "编辑昵称", mineInfo.getNick(), "输入你的昵称，昵称不能为空");
-    }
-
-    @Override
-    public void toSelectSex(View view) {
-        new SelectorPW(activity, mBinding.getRoot(), selectorList, position -> {
-            mineInfoDb.updateSex(position);
-            mineInfo = mineInfoDb.getMineInfo();
-            mBinding.setVariable(BR.viewModel, this);
-        });
     }
 
     @Override
@@ -229,6 +215,6 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     }
 
     private void setPermissions() {
-        ActivityUtils.getCameraMain(activity, false,false);
+        ActivityUtils.getCameraMain(activity, false, false);
     }
 }

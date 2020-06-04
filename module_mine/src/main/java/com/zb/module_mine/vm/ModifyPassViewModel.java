@@ -6,7 +6,6 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.api.findPassCaptchaApi;
 import com.zb.lib_base.api.findPassWordApi;
 import com.zb.lib_base.api.modifyPassApi;

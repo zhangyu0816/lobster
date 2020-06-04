@@ -44,15 +44,6 @@ public class MineInfoDb extends BaseDao {
         commitTransaction();
     }
 
-    public void updateSex(int sex) {
-        beginTransaction();
-        MineInfo mineInfo = realm.where(MineInfo.class).equalTo("userId", BaseActivity.userId).findFirst();
-        if (mineInfo != null) {
-            mineInfo.setSex(sex);
-        }
-        commitTransaction();
-    }
-
     public void updateImages(String images) {
         beginTransaction();
         MineInfo mineInfo = realm.where(MineInfo.class).equalTo("userId", BaseActivity.userId).findFirst();

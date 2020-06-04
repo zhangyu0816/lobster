@@ -14,4 +14,5 @@
     <string name="pass_by_code">通过手机验证码修改</string>
     <string name="code_second">%ds以后重试</string>
     <string name="msg_no_type">暂不支付该类型</string>
+    <string name="authen_fail">失败原因：%s</string>
 </resources>

@@ -30,7 +30,6 @@ import com.zb.module_mine.adapter.MineAdapter;
 import com.zb.module_mine.databinding.MineSystemMsgBinding;
 import com.zb.module_mine.iv.SystemMsgVMInterface;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 

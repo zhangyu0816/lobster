@@ -8,7 +8,6 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.api.dynNewMsgListApi;
 import com.zb.lib_base.api.readNewDynMsgAllApi;
-import com.zb.lib_base.api.readOverMyDynNewMsgApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;

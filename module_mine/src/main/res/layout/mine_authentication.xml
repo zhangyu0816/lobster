@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_mine.vm.AuthenticationViewModel" />
+
+        <variable
+            name="title"
+            type="String" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            layout="@layout/back_black_layout"
+            showRight="@{false}"
+            title="@{title}"
+            viewModel="@{viewModel}" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFF5D9"
+            android:ellipsize="marquee"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:padding="8dp"
+            android:singleLine="true"
+            android:text="@{String.format(@string/authen_fail,viewModel.authentication.mark)}"
+            android:textColor="#F7BF00"
+            android:textSize="12sp"
+            android:visibility="@{viewModel.authentication.mark.isEmpty()?View.GONE:View.VISIBLE}" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.zb.lib_base.views.MyRecyclerView
+                    adapter="@{viewModel.adapter}"
+                    gridNum="@{3}"
+                    recyclerType="@{2}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="20dp"
+                            android:gravity="center"
+                            android:text="真实姓名"
+                            android:textColor="@color/black_252"
+                            android:textSize="16sp" />
+
+                        <EditText
+                            android:id="@+id/et_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="3dp"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:hint="请输入真实姓名"
+                            android:padding="10dp"
+                            android:singleLine="true"
+                            android:text="@={viewModel.authentication.realName}"
+                            android:textColor="@color/black_252"
+                            android:textColorHint="#C3BDCD"
+                            android:textCursorDrawable="@drawable/cursor_color_black_252"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_marginStart="20dp"
+                        android:background="@color/black_efe" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="20dp"
+                            android:gravity="center"
+                            android:text="身份证号"
+                            android:textColor="@color/black_252"
+                            android:textSize="16sp" />
+
+                        <EditText
+                            android:id="@+id/et_identityNum"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="3dp"
+                            android:background="@null"
+                            android:digits="0123456789xX"
+                            android:hint="请输入本人身份证号"
+                            android:inputType="number"
+                            android:maxLength="18"
+                            android:padding="10dp"
+                            android:singleLine="true"
+                            android:text="@={viewModel.authentication.identityNum}"
+                            android:textColor="@color/black_252"
+                            android:textColorHint="#C3BDCD"
+                            android:textCursorDrawable="@drawable/cursor_color_black_252"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    onClickDelayed="@{viewModel::submit}"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:layout_margin="30dp"
+                    android:background="@drawable/gradient_purple_6d5_ae7"
+                    android:gravity="center"
+                    android:text="提交"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+</layout>
