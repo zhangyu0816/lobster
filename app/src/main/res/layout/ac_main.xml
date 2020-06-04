@@ -20,6 +20,11 @@
             name="otherHead"
             type="String" />
 
+        <variable
+            name="unReadCount"
+            type="Integer" />
+
+
     </data>
 
     <RelativeLayout
@@ -41,10 +46,11 @@
         <LinearLayout
             android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
-            android:layout_height="74dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@android:color/white"
             android:gravity="center"
+
             android:orientation="horizontal">
 
             <TextView
@@ -55,6 +61,8 @@
                 android:drawablePadding="5dp"
                 android:gravity="center"
                 android:onClick="@{v->viewModel.selectPage(0)}"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:text="广场"
                 android:textColor="@color/black_3e4"
                 android:textSize="12sp" />
@@ -67,21 +75,48 @@
                 android:drawablePadding="5dp"
                 android:gravity="center"
                 android:onClick="@{v->viewModel.selectPage(1)}"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:text="卡片"
                 android:textColor="@color/black_3e4"
                 android:textSize="12sp" />
 
-            <TextView
+            <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableTop="@{index==2?@drawable/chat_select_icon:@drawable/chat_unselect_icon}"
-                android:drawablePadding="5dp"
-                android:gravity="center"
-                android:onClick="@{v->viewModel.selectPage(2)}"
-                android:text="对话"
-                android:textColor="@color/black_3e4"
-                android:textSize="12sp" />
+
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv_chat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:drawableTop="@{index==2?@drawable/chat_select_icon:@drawable/chat_unselect_icon}"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:onClick="@{v->viewModel.selectPage(2)}"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="对话"
+                    android:textColor="@color/black_3e4"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignEnd="@+id/tv_chat"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="-5dp"
+                    android:background="@drawable/circle_white_red"
+                    android:gravity="center"
+                    android:text="@{ObjectUtils.count(unReadCount)}"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"
+                    android:visibility="@{unReadCount==0?View.GONE:View.VISIBLE}"
+                    tools:text="···" />
+            </RelativeLayout>
+
 
             <TextView
                 android:layout_width="0dp"
@@ -91,6 +126,8 @@
                 android:drawablePadding="5dp"
                 android:gravity="center"
                 android:onClick="@{v->viewModel.selectPage(3)}"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:text="我的"
                 android:textColor="@color/black_3e4"
                 android:textSize="12sp" />

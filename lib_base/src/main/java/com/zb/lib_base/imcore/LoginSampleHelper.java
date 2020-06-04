@@ -3,8 +3,11 @@ package com.zb.lib_base.imcore;
 import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.util.Log;
 
@@ -25,6 +28,7 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.utils.ActivityUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -115,20 +119,20 @@ public class LoginSampleHelper {
 
     private IYWPushListener iywPushListener = new IYWPushListener() {
         @Override
-        public void onPushMessage(IYWContact contact, YWMessage ymMessage) {
-            CustomMessageBody body = (CustomMessageBody) unpack(ymMessage.getContent());
+        public void onPushMessage(IYWContact contact, YWMessage ywMessage) {
+            CustomMessageBody body = (CustomMessageBody) unpack(ywMessage.getContent());
             if (body.getMsgType() == 11 || body.getMsgType() == 12 || body.getMsgType() == 13 || body.getMsgType() == 21)
                 return;
-            if (Long.parseLong(ymMessage.getAuthorUserId()) == BaseActivity.userId) {
+            if (Long.parseLong(ywMessage.getAuthorUserId()) == BaseActivity.userId) {
                 if (body.getMsgType() == 12 || body.getMsgType() == 102 || body.getMsgType() == 112)
                     return;
             }
             if (isBackground()) {
-                sendMsg(ymMessage);
+                sendMsg(ywMessage);
             } else {
                 try {
                     JSONObject data = new JSONObject(
-                            new JSONObject(ymMessage.getContent()).getString("customize"));
+                            new JSONObject(ywMessage.getContent()).getString("customize"));
                     if (data.has("message")) { // 聊天信息
                         appSound();
                         // 单聊消息
@@ -137,14 +141,14 @@ public class LoginSampleHelper {
                         if (conversation != null) {
                             Intent intent = new Intent("lobster_newMsg");
                             intent.putExtra("unreadCount", conversation.getUnreadCount());
-                            intent.putExtra("ymMessage", ymMessage);
+                            intent.putExtra("ywMessage", ywMessage);
                             MineApp.getInstance().sendBroadcast(intent);
                         }
                     }
 //                    else if (data.has("roster")) { // 添加好友
 //                        MineApplication.sContext.sendBroadcast(new Intent("updateFriendList"));
 //                        Intent intent = new Intent("updateFriendStatus");
-//                        intent.putExtra("ymMessage", ymMessage);
+//                        intent.putExtra("ywMessage", ywMessage);
 //                        MineApplication.sContext.sendBroadcast(intent);
 //                    }
                 } catch (JSONException e) {
@@ -162,34 +166,34 @@ public class LoginSampleHelper {
     private IYWP2PPushListener mP2PListener = new IYWP2PPushListener() {
         @Override
         public void onPushMessage(IYWContact contact, List<YWMessage> messages) {
-            for (YWMessage ymMessage : messages) {
-                CustomMessageBody body = (CustomMessageBody) unpack(ymMessage.getContent());
-                if (Long.parseLong(ymMessage.getAuthorUserId()) == BaseActivity.userId) {
+            for (YWMessage ywMessage : messages) {
+                CustomMessageBody body = (CustomMessageBody) unpack(ywMessage.getContent());
+                if (Long.parseLong(ywMessage.getAuthorUserId()) == BaseActivity.userId) {
                     if (body.getMsgType() == 12 || body.getMsgType() == 102 || body.getMsgType() == 112)
                         return;
                 }
                 if (isBackground()) {
-                    sendMsg(ymMessage);
+                    sendMsg(ywMessage);
                 } else {
                     Log.i("addPushListener", this + "");
                     try {
                         JSONObject data = new JSONObject(
-                                new JSONObject(ymMessage.getContent()).getString("customize"));
+                                new JSONObject(ywMessage.getContent()).getString("customize"));
                         if (data.has("message")) { // 聊天信息
                             appSound();
                             // 单聊消息
-                            YWConversation conversation = conversationService.getConversationByConversationId(ymMessage.getAuthorUserId());
+                            YWConversation conversation = conversationService.getConversationByConversationId(ywMessage.getAuthorUserId());
 //                            YWConversation conversation = conversationService.getConversationByUserId(contact.getUserId());
                             if (conversation != null) {
                                 Intent intent = new Intent("lobster_newMsg");
-                                intent.putExtra("unreadCount", conversation.getUnreadCount());
-                                intent.putExtra("ymMessage", ymMessage);
+                                intent.putExtra("unReadCount", conversation.getUnreadCount());
+                                intent.putExtra("ywMessage", ywMessage);
                                 MineApp.getInstance().sendBroadcast(intent);
                             }
                         } else if (data.has("roster")) { // 添加好友
                             MineApp.getInstance().sendBroadcast(new Intent("lobster_updateFriendList"));
                             Intent intent = new Intent("lobster_updateFriendStatus");
-                            intent.putExtra("ymMessage", ymMessage);
+                            intent.putExtra("ywMessage", ywMessage);
                             MineApp.getInstance().sendBroadcast(intent);
                         }
                     } catch (JSONException e) {
@@ -227,12 +231,15 @@ public class LoginSampleHelper {
         });
     }
 
-    private void sendMsg(YWMessage ymMessage) {
+    private static YWMessage mywMessage;
+
+    private void sendMsg(YWMessage ywMessage) {
+        mywMessage = ywMessage;
         NotificationManager notificationManager = (NotificationManager) activity
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         // 通知内容
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(activity);
-        mBuilder.setContentTitle("虾菇通知").setContentText("").setTicker("您有未读消息")
+        mBuilder.setContentTitle("虾菇通知").setContentText(ywMessage.getContent()).setTicker("您有未读消息")
                 // 通知首次出现在通知栏，带上升动画效果的
                 .setWhen(System.currentTimeMillis())
                 // 通知产生的时间，会在通知信息里显示
@@ -245,12 +252,21 @@ public class LoginSampleHelper {
                 .setDefaults(Notification.DEFAULT_ALL)
                 // 向通知添加声音、闪灯和振动效果的最简单、最一致的方式是使用当前的用户默认设置，使用defaults属性，可以组合：
                 .setSmallIcon(R.mipmap.ic_launcher);
-//        Intent intent = new Intent(mContext, ChatForFriendActivity.class);
-//        intent.putExtra("otherUserId", Long.valueOf(ymMessage.getAuthorUserId()));
-//        PendingIntent contentIntent = PendingIntent.getActivity(mContext, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//        // 指定内容意图
-//        mBuilder.setContentIntent(contentIntent);
-//        notificationManager.notify(1, mBuilder.build());
+
+
+        MineApp.getInstance().registerReceiver(new NotificationReceiver(), new IntentFilter("lobster_send"));
+
+        PendingIntent contentIntent = PendingIntent.getActivity(activity, 1, new Intent("lobster_send"), PendingIntent.FLAG_UPDATE_CURRENT);
+        // 指定内容意图
+        mBuilder.setContentIntent(contentIntent);
+        notificationManager.notify(1, mBuilder.build());
+    }
+
+    static class NotificationReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ActivityUtils.getChatActivity(Long.parseLong(mywMessage.getAuthorUserId()));
+        }
     }
 
     private boolean isBackground() {

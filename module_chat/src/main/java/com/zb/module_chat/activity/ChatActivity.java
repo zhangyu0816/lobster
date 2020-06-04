@@ -1,6 +1,7 @@
 package com.zb.module_chat.activity;
 
 import android.content.Intent;
+import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -62,5 +63,14 @@ public class ChatActivity extends ChatBaseActivity {
         if (requestCode == 1001 && resultCode == 1) {
             viewModel.uploadImage(data.getStringExtra("fileName"));
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            viewModel.back(null);
+            return true;
+        }
+        return false;
     }
 }

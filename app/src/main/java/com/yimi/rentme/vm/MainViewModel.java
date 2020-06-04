@@ -8,6 +8,7 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.widget.RelativeLayout;
 
+import com.alibaba.mobileim.conversation.YWMessage;
 import com.yimi.rentme.BR;
 import com.yimi.rentme.databinding.AcMainBinding;
 import com.yimi.rentme.iv.MainVMInterface;
@@ -22,6 +23,7 @@ import com.zb.lib_base.api.joinPairPoolApi;
 import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.newDynMsgAllNumApi;
 import com.zb.lib_base.api.openedMemberPriceListApi;
+import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.rechargeDiscountListApi;
 import com.zb.lib_base.api.systemChatApi;
 import com.zb.lib_base.api.walletAndPopApi;
@@ -30,11 +32,13 @@ import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
+import com.zb.lib_base.imcore.CustomMessageBody;
 import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.model.BankInfo;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.ImAccount;
+import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.Report;
@@ -42,6 +46,7 @@ import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.AMapLocation;
+import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
@@ -68,6 +73,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private LoginSampleHelper loginHelper;
     private BaseReceiver rechargeReceiver;
     private BaseReceiver chatListReceiver;
+    private BaseReceiver newMsgReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -108,10 +114,42 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 chatList();
             }
         };
+
+        newMsgReceiver = new BaseReceiver(activity, "lobster_newMsg") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                int count = intent.getIntExtra("unReadCount", 0);
+
+                YWMessage ywMessage = (YWMessage) intent.getSerializableExtra("ywMessage");
+                CustomMessageBody body = (CustomMessageBody) LoginSampleHelper.unpack(ywMessage.getContent());
+                long otherUserId = body.getFromId() == BaseActivity.userId ? body.getToId() : body.getFromId();
+
+                chatListDb.updateChatMsg(otherUserId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType(), count, new ChatListDb.CallBack() {
+                    @Override
+                    public void success() {
+                        mainBinding.setUnReadCount(chatListDb.getAllUnReadNum());
+                        Intent data = new Intent("lobster_updateChat");
+                        data.putExtra("userId", otherUserId);
+                        activity.sendBroadcast(data);
+                    }
+
+                    @Override
+                    public void fail() {
+                        otherInfo(otherUserId, count, body);
+                    }
+                });
+
+                Intent upMessage = new Intent("lobster_upMessage/friend=" + otherUserId);
+                upMessage.putExtra("ywMessage", ywMessage);
+                activity.sendBroadcast(upMessage);
+            }
+        };
     }
 
     public void onDestroy() {
         rechargeReceiver.unregisterReceiver();
+        chatListReceiver.unregisterReceiver();
+        newMsgReceiver.unregisterReceiver();
     }
 
     private void initFragments() {
@@ -300,8 +338,9 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                         MineApp.mineNewsCount.setSystemNewsNum(chatMsg.getNoReadNum());
                         activity.sendBroadcast(new Intent("lobster_newsCount"));
                     }
-                    if (chatMsg.getUserId() > 10010)
+                    if (chatMsg.getUserId() > 10010) {
                         chatListDb.saveChatList(chatMsg);
+                    }
                 }
                 pageNo++;
                 chatList();
@@ -313,9 +352,36 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                     if (chatListDb.getChatList().size() > 0) {
                         activity.sendBroadcast(new Intent("lobster_updateChat"));
                     }
+                    mainBinding.setUnReadCount(chatListDb.getAllUnReadNum());
                 }
             }
         }, activity).setPageNo(pageNo);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void otherInfo(long otherUserId, int count, CustomMessageBody body) {
+        otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
+            @Override
+            public void onNext(MemberInfo o) {
+                ChatList chatList = new ChatList();
+                chatList.setUserId(otherUserId);
+                chatList.setNick(o.getNick());
+                chatList.setImage(o.getImage());
+                chatList.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
+                chatList.setStanza(body.getStanza());
+                chatList.setMsgType(body.getMsgType());
+                chatList.setNoReadNum(count);
+                chatList.setPublicTag("");
+                chatList.setEffectType(1);
+                chatList.setAuthType(1);
+                chatListDb.saveChatList(chatList);
+                mainBinding.setUnReadCount(chatListDb.getAllUnReadNum());
+                Intent data = new Intent("lobster_updateChat");
+                data.putExtra("userId", otherUserId);
+                activity.sendBroadcast(data);
+            }
+        }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

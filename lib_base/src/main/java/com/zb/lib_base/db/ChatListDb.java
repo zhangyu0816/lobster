@@ -43,4 +43,38 @@ public class ChatListDb extends BaseDao {
         return chatList;
     }
 
+    public void updateChatMsg(long otherUserId, String creationDate, String stanza, int msgType, int noReadNum, CallBack callBack) {
+        beginTransaction();
+        ChatList chatList = realm.where(ChatList.class).equalTo("userId", otherUserId).equalTo("mainUserId", BaseActivity.userId).findFirst();
+        if (chatList == null) {
+            callBack.fail();
+        } else {
+            chatList.setCreationDate(creationDate);
+            chatList.setStanza(stanza);
+            chatList.setMsgType(msgType);
+            chatList.setNoReadNum(noReadNum);
+            callBack.success();
+        }
+        commitTransaction();
+    }
+
+    public interface CallBack {
+        void success();
+
+        void fail();
+    }
+
+    public int getAllUnReadNum() {
+        beginTransaction();
+        int unReadNum = 0;
+        RealmResults<ChatList> results = realm.where(ChatList.class).equalTo("mainUserId", BaseActivity.userId).findAll();
+        if (results.size() > 0) {
+            for (ChatList chatList : results) {
+                unReadNum += chatList.getNoReadNum();
+            }
+        }
+        commitTransaction();
+        return unReadNum;
+    }
+
 }

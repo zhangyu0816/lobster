@@ -1,5 +1,7 @@
 package com.yimi.rentme.iv;
 
+import com.zb.lib_base.imcore.CustomMessageBody;
+
 public interface MainVMInterface {
 
     void selectPage(int index);
@@ -23,4 +25,6 @@ public interface MainVMInterface {
     void systemChat();
 
     void chatList();
+
+    void otherInfo(long otherUserId, int count, CustomMessageBody body);
 }

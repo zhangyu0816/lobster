@@ -42,13 +42,35 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
         updateChatReceiver = new BaseReceiver(activity, "lobster_updateChat") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                chatMsgList.clear();
-                adapter.notifyDataSetChanged();
-                chatMsgList.addAll(chatListDb.getChatList());
-                adapter.notifyDataSetChanged();
-                mBinding.refresh.finishRefresh();
+                long userId = intent.getLongExtra("userId", 0);
+                if (userId == 0) {
+                    chatMsgList.clear();
+                    adapter.notifyDataSetChanged();
+                    chatMsgList.addAll(chatListDb.getChatList());
+                    adapter.notifyDataSetChanged();
+                    mBinding.refresh.finishRefresh();
+                } else {
+                    int position = -1;
+                    for (int i = 0; i < chatMsgList.size(); i++) {
+                        if (chatMsgList.get(i).getUserId() == userId) {
+                            position = i;
+                            break;
+                        }
+                    }
+                    if (position != -1) {
+                        chatMsgList.set(position, chatListDb.getChatMsg(userId));
+                        adapter.notifyItemChanged(position);
+                    } else {
+                        chatMsgList.add(0, chatListDb.getChatMsg(userId));
+                        adapter.notifyDataSetChanged();
+                    }
+                }
             }
         };
+    }
+
+    public void onDestroy() {
+        updateChatReceiver.unregisterReceiver();
     }
 
     @Override

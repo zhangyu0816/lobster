@@ -4,6 +4,8 @@ import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.view.MotionEvent;
@@ -24,6 +26,7 @@ import com.maning.imagebrowserlibrary.MNImage;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.historyMsgListApi;
 import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.otherImAccountInfoApi;
@@ -96,6 +99,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     private ImageView preImageView;
     private int preDirection;
     private ObjectAnimator animator;
+    private BaseReceiver chatReceiver;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -157,11 +161,38 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             }
             return false;
         });
+
+        chatReceiver = new BaseReceiver(activity, "lobster_upMessage/friend=" + otherUserId) {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                YWMessage ywMessage = (YWMessage) intent.getSerializableExtra("ywMessage");
+                CustomMessageBody body = (CustomMessageBody) LoginSampleHelper.unpack(ywMessage.getContent());
+                HistoryMsg historyMsg = new HistoryMsg();
+                historyMsg.setId(ywMessage.getMsgId());
+                historyMsg.setFromId(body.getFromId());
+                historyMsg.setToId(body.getToId());
+                historyMsg.setTitle(body.getSummary());
+                historyMsg.setStanza(body.getStanza());
+                historyMsg.setMsgType(body.getMsgType());
+                historyMsg.setResLink(body.getResLink());
+                historyMsg.setResTime(body.getResTime());
+                historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
+                historyMsg.setMainUserId(BaseActivity.userId);
+                historyMsgList.add(adapter.getItemCount(), historyMsg);
+                adapter.notifyItemChanged(adapter.getItemCount());
+            }
+        };
     }
 
     @Override
     public void back(View view) {
         super.back(view);
+        hintKeyBoard();
+        chatReceiver.unregisterReceiver();
+        try {
+            mConversationService.markReaded(conversation);
+        } catch (Exception e) {
+        }
         activity.finish();
     }
 
@@ -526,5 +557,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         chatList.setEffectType(1);
         chatList.setAuthType(1);
         chatListDb.saveChatList(chatList);
+        Intent data = new Intent("lobster_updateChat");
+        data.putExtra("userId", otherUserId);
+        activity.sendBroadcast(data);
     }
 }
