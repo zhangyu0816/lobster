@@ -73,6 +73,7 @@
                     tools:text="租我吧" />
 
                 <ImageView
+                    onClickDelayed="@{viewModel::openVip}"
                     viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(105)}"
                     viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(183)}"
                     android:layout_width="wrap_content"

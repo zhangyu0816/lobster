@@ -22,9 +22,15 @@ public interface ChatVMInterface {
 
     void toVoiceKeyboard(View view);
 
+    void toKeyboard(View view);
+
     void toCamera(View view);
 
     void toEmoji(View view);
+
+    void addEmoji(int position,int emojiRes);
+
+    void deleteContent(View view);
 
     void stopPlayer();
 

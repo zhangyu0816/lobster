@@ -15,6 +15,6 @@
     </declare-styleable>
     <!-- 表情 -->
     <declare-styleable name="Emoji">
-        <attr name="emojiSize" format="dimension" />
+        <attr name="emojiSize" format="reference|dimension" />
     </declare-styleable>
 </resources>

@@ -9,6 +9,8 @@ import com.zb.module_chat.vm.ChatPairViewModel;
 
 @Route(path = RouteUtils.Chat_Pair_Fragment)
 public class ChatPairFragment extends BaseFragment {
+    private ChatPairViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.chat_pair_fragment;
@@ -16,8 +18,14 @@ public class ChatPairFragment extends BaseFragment {
 
     @Override
     public void initUI() {
-        ChatPairViewModel viewModel = new ChatPairViewModel();
+        viewModel = new ChatPairViewModel();
         viewModel.setBinding(mBinding);
-        mBinding.setVariable(BR.viewModel,viewModel);
+        mBinding.setVariable(BR.viewModel, viewModel);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 }

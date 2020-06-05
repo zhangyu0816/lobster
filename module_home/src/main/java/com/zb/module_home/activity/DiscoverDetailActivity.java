@@ -22,7 +22,7 @@ public class DiscoverDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StatusBarUtil.setStatusBarColor(this, R.color.black_252);
+        StatusBarUtil.statusBarLightModeNotFull(this);
     }
 
     @Override

@@ -76,6 +76,11 @@ public class ObjectUtils {
         return R.mipmap.system_tag_icon;
     }
 
+    // 客服头像
+    public static int getEmojiDeleteRes() {
+        return R.mipmap.emoji_delete;
+    }
+
     // 线条颜色
     public static int getLineColor() {
         return R.color.black_efe;

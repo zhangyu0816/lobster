@@ -100,6 +100,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_toEndOf="@+id/iv_other_logo"
                 android:background="@drawable/btn_bg_white_radius5"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
@@ -113,23 +114,25 @@
                     android:src="@mipmap/icon_voice_3_left" />
 
                 <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="5dp"
-                    android:layout_marginStart="3dp"
-                    android:background="@drawable/circle_red"
-                    android:visibility="@{viewModel.resFileDb.isRead(item.resLink)?View.GONE:View.VISIBLE}" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text='@{String.format("%d’’",item.resTime)}'
+                    android:textColor="@color/black_827"
+                    android:textSize="14sp"
+                    android:visibility="@{item.msgType==3?View.VISIBLE:View.GONE}"
+                    tools:text="6’’" />
+
             </LinearLayout>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
                 android:layout_marginStart="5dp"
                 android:layout_toEndOf="@+id/type_3_left_linear"
-                android:text='@{String.format("%d’’",item.resTime)}'
-                android:textColor="@color/black_827"
-                android:textSize="16sp"
-                android:visibility="@{item.msgType==3?View.VISIBLE:View.GONE}"
-                tools:text="6’’" />
+                android:background="@drawable/circle_red"
+                android:visibility="@{viewModel.resFileDb.isRead(item.resLink)?View.GONE:View.VISIBLE}" />
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -211,24 +214,26 @@
                     android:src="@mipmap/icon_voice_3_right" />
 
                 <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="5dp"
-                    android:layout_marginEnd="3dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
                     android:layout_toStartOf="@+id/iv_voice_right"
-                    android:background="@drawable/circle_red"
-                    android:visibility="@{viewModel.resFileDb.isRead(item.resLink)?View.GONE:View.VISIBLE}" />
+                    android:text='@{String.format("%d’’",item.resTime)}'
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:visibility="@{item.msgType==3?View.VISIBLE:View.GONE}"
+                    tools:text="6’’" />
+
             </RelativeLayout>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
                 android:layout_marginEnd="5dp"
                 android:layout_toStartOf="@+id/type_3_right_linear"
-                android:text='@{String.format("%d’’",item.resTime)}'
-                android:textColor="@color/black_827"
-                android:textSize="16sp"
-                android:visibility="@{item.msgType==3?View.VISIBLE:View.GONE}"
-                tools:text="6’’" />
+                android:background="@drawable/circle_red"
+                android:visibility="@{viewModel.resFileDb.isRead(item.resLink)?View.GONE:View.VISIBLE}" />
+
 
             <ImageView
                 android:id="@+id/iv_mine_logo"

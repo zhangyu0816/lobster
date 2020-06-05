@@ -81,6 +81,21 @@ public class StatusBarUtil {
         return result;
     }
 
+    public static int statusBarLightModeNotFull(RxAppCompatActivity activity) {
+        int result = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (MIUISetStatusBarLightMode(activity, true)) {
+                result = 1;
+            } else if (FlymeSetStatusBarLightMode(activity.getWindow(), true)) {
+                result = 2;
+            } else {
+                activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                result = 3;
+            }
+        }
+        return result;
+    }
+
 
     /**
      * 设置状态栏图标为深色和魅族特定的文字风格
@@ -160,6 +175,7 @@ public class StatusBarUtil {
 
     /**
      * 获取状态栏高度
+     *
      * @return
      */
     public static int getStatusBarHeight(RxAppCompatActivity context) {

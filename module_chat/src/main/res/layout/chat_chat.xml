@@ -5,6 +5,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
         <variable
             name="viewModel"
             type="com.zb.module_chat.vm.ChatViewModel" />
@@ -17,6 +19,9 @@
             name="isVoice"
             type="boolean" />
 
+        <variable
+            name="isEmoji"
+            type="boolean" />
     </data>
 
     <RelativeLayout
@@ -28,7 +33,6 @@
             android:id="@+id/relativeLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
             android:background="@android:color/white">
 
             <ImageView
@@ -79,83 +83,123 @@
             android:background="@mipmap/voice_anim_1"
             android:visibility="gone" />
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/iv_voice_keyboard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:onClick="@{viewModel::toVoiceKeyboard}"
-                android:padding="15dp"
-                android:src="@{isVoice?@drawable/chat_voice_icon:@drawable/chat_keyboard_icon}" />
-
-            <com.zb.lib_base.emojj.EmojiEditText
-                android:id="@+id/ed_content"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_toStartOf="@+id/btn_linear"
-                android:layout_toEndOf="@+id/iv_voice_keyboard"
-                android:background="@null"
-                android:hint="输入文字"
-                android:imeOptions="actionSend"
-                android:padding="12dp"
-                android:singleLine="true"
-                android:textColor="@color/black_4d4"
-                android:textColorHint="#C3BDCD"
-                android:textCursorDrawable="@drawable/cursor_color_black_4d4"
-                android:textSize="16sp"
-                android:visibility="@{isVoice?View.GONE:View.VISIBLE}" />
-
-            <TextView
-                android:id="@+id/tv_speak"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_toStartOf="@+id/btn_linear"
-                android:layout_toEndOf="@+id/iv_voice_keyboard"
-                android:gravity="center"
-                android:padding="12dp"
-                android:text="按住  说话"
-                android:textColor="#303846"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:visibility="@{isVoice?View.VISIBLE:View.GONE}" />
-
-            <LinearLayout
-                android:id="@+id/btn_linear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
 
                 <ImageView
-                    onClickDelayed="@{viewModel::toCamera}"
+                    android:id="@+id/iv_voice_keyboard"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:onClick="@{viewModel::toVoiceKeyboard}"
                     android:padding="15dp"
-                    android:src="@mipmap/chat_camera_icon" />
+                    android:src="@{isVoice?@drawable/chat_keyboard_icon:@drawable/chat_voice_icon}" />
 
-                <ImageView
-                    onClickDelayed="@{viewModel::toEmoji}"
+                <com.zb.lib_base.emojj.EmojiEditText
+                    android:id="@+id/ed_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toStartOf="@+id/btn_linear"
+                    android:layout_toEndOf="@+id/iv_voice_keyboard"
+                    android:background="@drawable/btn_bg_black_efe_radius5"
+                    android:hint="输入文字"
+                    android:imeOptions="actionSend"
+                    android:onClick="@{viewModel::toKeyboard}"
+                    android:padding="12dp"
+                    android:singleLine="true"
+                    android:text="@={content}"
+                    android:textColor="@color/black_4d4"
+                    android:textColorHint="#C3BDCD"
+                    android:textCursorDrawable="@drawable/cursor_color_black_4d4"
+                    android:textSize="16sp"
+                    android:visibility="@{isVoice?View.GONE:View.VISIBLE}" />
+
+                <TextView
+                    android:id="@+id/tv_speak"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toStartOf="@+id/btn_linear"
+                    android:layout_toEndOf="@+id/iv_voice_keyboard"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:text="按住  说话"
+                    android:textColor="#303846"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:visibility="@{isVoice?View.VISIBLE:View.GONE}" />
+
+                <LinearLayout
+                    android:id="@+id/btn_linear"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="15dp"
-                    android:src="@mipmap/chat_emoji_icon" />
-            </LinearLayout>
-        </RelativeLayout>
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/bottom_layout" />
+                    <ImageView
+                        onClickDelayed="@{viewModel::toCamera}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:src="@mipmap/chat_camera_icon" />
+
+                    <ImageView
+                        onClickDelayed="@{viewModel::toEmoji}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:src="@mipmap/chat_emoji_icon" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="@{isEmoji?View.VISIBLE:View.GONE}">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/emoji_list"
+                    adapter="@{viewModel.emojiAdapter}"
+                    gridNum="@{7}"
+                    recyclerType="@{2}"
+                    size="@{10}"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:padding="15dp" />
+
+                <RelativeLayout
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(140)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(140)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/emoji_list"
+                    android:layout_alignParentEnd="true"
+                    android:layout_margin="15dp"
+                    android:background="@drawable/gradient_white"
+                    android:onClick="@{viewModel::deleteContent}">
+
+                    <ImageView
+                        imageRes="@{ObjectUtils.getEmojiDeleteRes()}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(75)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(90)}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"/>
+                </RelativeLayout>
+            </RelativeLayout>
+
+        </LinearLayout>
     </RelativeLayout>
 </layout>

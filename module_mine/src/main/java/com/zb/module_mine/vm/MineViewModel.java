@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.contactNumApi;
+import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -26,6 +27,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     public ContactNum contactNum;
     private BaseReceiver updateMineInfoReceiver;
     private BaseReceiver newsCountReceiver;
+    private BaseReceiver openVipReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -45,11 +47,20 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                 mBinding.setVariable(BR.mineNewsCount, MineApp.mineNewsCount);
             }
         };
+
+        // 开通会员
+        openVipReceiver = new BaseReceiver(activity, "lobster_openVip") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                myInfo();
+            }
+        };
     }
 
     public void onDestroy() {
         updateMineInfoReceiver.unregisterReceiver();
         newsCountReceiver.unregisterReceiver();
+        openVipReceiver.unregisterReceiver();
     }
 
     @Override
@@ -102,6 +113,19 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
 
             }
         }, activity).setOtherUserId(mineInfo.getUserId());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void myInfo() {
+        myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
+            @Override
+            public void onNext(MineInfo o) {
+                mineInfo = o;
+                mineInfoDb.saveMineInfo(o);
+                mBinding.setVariable(BR.viewModel, MineViewModel.this);
+            }
+        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

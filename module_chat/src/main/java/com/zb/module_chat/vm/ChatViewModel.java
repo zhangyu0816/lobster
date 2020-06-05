@@ -8,10 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
+import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.alibaba.mobileim.channel.event.IWxCallback;
@@ -27,6 +30,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.historyMsgListApi;
 import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.otherImAccountInfoApi;
@@ -35,9 +39,11 @@ import com.zb.lib_base.api.readOverHistoryMsgApi;
 import com.zb.lib_base.api.thirdHistoryMsgListApi;
 import com.zb.lib_base.api.thirdReadChatApi;
 import com.zb.lib_base.api.uploadSoundApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.db.ResFileDb;
+import com.zb.lib_base.emojj.EmojiHandler;
 import com.zb.lib_base.http.HttpChatUploadManager;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -53,6 +59,8 @@ import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.DownLoad;
+import com.zb.lib_base.utils.KeyboardStateObserver;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.views.SoundView;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -77,6 +85,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     public ChatAdapter adapter;
     public MineInfo mineInfo;
     public ResFileDb resFileDb;
+    public ChatAdapter emojiAdapter;
+    private List<Integer> emojiList = new ArrayList<>();
     private ChatListDb chatListDb;
     private ChatChatBinding mBinding;
     private List<HistoryMsg> historyMsgList = new ArrayList<>();
@@ -123,6 +133,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                     return false;
                 }
                 sendChatMessage(1, mBinding.getContent(), "", 0, "【文字】");
+                mBinding.setContent("");
             }
             return false;
         });
@@ -182,6 +193,15 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                 adapter.notifyItemChanged(adapter.getItemCount());
             }
         };
+
+        KeyboardStateObserver.getKeyboardStateObserver(activity).
+                setKeyboardVisibilityListener(height -> {
+                    mBinding.setIsVoice(false);
+                    PreferenceUtil.saveIntValue(activity, "keyboardHeight", height);
+                    AdapterBinding.viewSize(mBinding.emojiList, MineApp.W, height);
+                });
+        AdapterBinding.viewSize(mBinding.emojiList, MineApp.W, PreferenceUtil.readIntValue(activity, "keyboardHeight") == 0 ? MineApp.H / 3 : PreferenceUtil.readIntValue(activity, "keyboardHeight"));
+
     }
 
     @Override
@@ -202,6 +222,10 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         historyMsgList.addAll(historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize));
         adapter = new ChatAdapter<>(activity, R.layout.item_chat, historyMsgList, this);
         mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
+        for (int i = 1; i < EmojiHandler.maxEmojiCount; i++) {
+            emojiList.add(EmojiHandler.sCustomizeEmojisMap.get(i));
+        }
+        emojiAdapter = new ChatAdapter<>(activity, R.layout.item_emoji, emojiList, this);
         otherInfo();
     }
 
@@ -225,7 +249,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             @Override
             public void onNext(MemberInfo o) {
                 memberInfo = o;
-                mBinding.setVariable(BR.viewModel, this);
+                mBinding.setVariable(BR.viewModel, ChatViewModel.this);
 
                 if (loginHelper.getImCore() == null) {
                     myImAccountInfoApi();
@@ -363,17 +387,63 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
 
     @Override
     public void toVoiceKeyboard(View view) {
+        hintKeyBoard();
+        mBinding.setIsEmoji(false);
         mBinding.setIsVoice(!mBinding.getIsVoice());
     }
 
     @Override
+    public void toKeyboard(View view) {
+        view.setFocusable(false);
+        view.setFocusableInTouchMode(false);
+
+        mBinding.setIsEmoji(false);
+        view.setFocusable(true);
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.findFocus();
+        view.postDelayed(() -> {
+            InputMethodManager inputManager =
+                    (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.showSoftInput(view, 0);
+        }, 300);
+    }
+
+    @Override
     public void toCamera(View view) {
+        hintKeyBoard();
+        mBinding.setIsEmoji(false);
         getPermissions();
     }
 
     @Override
     public void toEmoji(View view) {
+        if (mBinding.getIsEmoji()) {
+            mBinding.setIsEmoji(false);
+        } else {
+            mBinding.setIsVoice(false);
+            hintKeyBoard();
+            new Handler().postDelayed(() -> {
+                mBinding.edContent.setFocusable(true);
+                mBinding.edContent.setFocusableInTouchMode(true);
+                mBinding.edContent.requestFocus();
+                mBinding.edContent.findFocus();
+                mBinding.setIsEmoji(true);
+            }, 300);
+        }
+    }
 
+    @Override
+    public void addEmoji(int position, int emojiRes) {
+        @SuppressLint("DefaultLocale")
+        String content = mBinding.getContent() + String.format("{f:%d}", position + 1);
+        mBinding.edContent.setText(content);
+        mBinding.edContent.setSelection(content.length());
+    }
+
+    @Override
+    public void deleteContent(View view) {
+        mBinding.edContent.onKeyDown(KeyEvent.KEYCODE_DEL, new KeyEvent(R.id.ed_content, KeyEvent.ACTION_DOWN));
     }
 
     @Override

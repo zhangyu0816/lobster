@@ -76,7 +76,6 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
         cur = activity.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null,
                 null);
         buildImagesBucketList();
-        selectImage(0);
         if (isMore) {
             selectCount = MineApp.selectMap.size();
             for (Map.Entry<String, CutImageView> entry : MineApp.cutImageViewMap.entrySet()) {
@@ -288,5 +287,6 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
             item.setImage(temp.get(0));
             item.setSize(temp.size());
         }
+        selectImage(0);
     }
 }

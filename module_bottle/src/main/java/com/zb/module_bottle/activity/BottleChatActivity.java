@@ -20,7 +20,7 @@ public class BottleChatActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.BottleTheme);
         super.onCreate(savedInstanceState);
-        StatusBarUtil.statusBarLightMode(this);
+        StatusBarUtil.statusBarLightModeNotFull(this);
     }
 
     @Override

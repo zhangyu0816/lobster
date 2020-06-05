@@ -282,13 +282,14 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                         Intent data = new Intent("lobster_card");
                         data.putExtra("direction", 2);
                         activity.sendBroadcast(data);
+                        activity.sendBroadcast(new Intent("lobster_pairList"));
                         new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), pairInfo.getSex());
                     }
                 } else if (o == 2) {
                     // 匹配成功
                     likeDb.saveLike(new CollectID(pairInfo.getOtherUserId()));
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), pairInfo.getSex());
-
+                    activity.sendBroadcast(new Intent("lobster_pairList"));
                 } else if (o == 3) {
                     // 喜欢次数用尽
                     SCToastUtil.showToastBlack(activity, "今日喜欢次数已用完");

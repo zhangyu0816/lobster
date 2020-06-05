@@ -143,7 +143,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
             String[] birthdays = birthday.split("/");
             mineInfoDb.updateNick(birthdays[2] + "-" + birthdays[1] + "-" + birthdays[0], 5);
             mineInfo = mineInfoDb.getMineInfo();
-            mBinding.setVariable(BR.viewModel, this);
+            mBinding.setVariable(BR.viewModel, EditMemberViewModel.this);
         });
     }
 

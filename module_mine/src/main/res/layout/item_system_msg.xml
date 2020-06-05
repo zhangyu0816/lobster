@@ -112,23 +112,25 @@
                     android:src="@mipmap/icon_voice_3_left" />
 
                 <TextView
-                    android:layout_width="5dp"
-                    android:layout_height="5dp"
-                    android:layout_marginStart="3dp"
-                    android:background="@drawable/circle_red"
-                    android:visibility="@{viewModel.resFileDb.isRead(item.resLink)?View.GONE:View.VISIBLE}" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text='@{String.format("%d’’",item.resTime)}'
+                    android:textColor="@color/black_827"
+                    android:textSize="14sp"
+                    android:visibility="@{item.msgType==3?View.VISIBLE:View.GONE}"
+                    tools:text="6’’" />
+
             </LinearLayout>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
                 android:layout_marginStart="5dp"
                 android:layout_toEndOf="@+id/type_3_left_linear"
-                android:text='@{String.format("%d’’",item.resTime)}'
-                android:textColor="@color/black_827"
-                android:textSize="16sp"
-                android:visibility="@{item.msgType==3?View.VISIBLE:View.GONE}"
-                tools:text="6’’" />
+                android:background="@drawable/circle_red"
+                android:visibility="@{viewModel.resFileDb.isRead(item.resLink)?View.GONE:View.VISIBLE}" />
+
         </RelativeLayout>
     </RelativeLayout>
 </layout>

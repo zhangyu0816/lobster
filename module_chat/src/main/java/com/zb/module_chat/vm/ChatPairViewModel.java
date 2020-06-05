@@ -1,9 +1,13 @@
 package com.zb.module_chat.vm;
 
+import android.content.Context;
+import android.content.Intent;
+
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.contactNumApi;
 import com.zb.lib_base.api.likeMeListApi;
 import com.zb.lib_base.api.noReadBottleNumApi;
@@ -39,6 +43,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
     private ChatListDb chatListDb;
     private ChatPairFragmentBinding mBinding;
     private MineInfo mineInfo;
+    private BaseReceiver pairListReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -46,7 +51,17 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         chatListDb = new ChatListDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
         mBinding = (ChatPairFragmentBinding) binding;
+        pairListReceiver = new BaseReceiver(activity, "lobster_pairList") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                onRefresh(mBinding.refresh);
+            }
+        };
         setAdapter();
+    }
+
+    public void onDestroy() {
+        pairListReceiver.unregisterReceiver();
     }
 
     @Override
@@ -180,7 +195,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                     chatList.setImage(likeMe.getHeadImage());
                     chatList.setNick(likeMe.getNick());
                     chatList.setMsgType(chatMsg != null ? chatMsg.getMsgType() : 1);
-                    chatList.setStanza(chatMsg != null ? chatMsg.getStanza() : "匹配于" + (likeMe.getPairTime().isEmpty()?likeMe.getPairTime():likeMe.getPairTime().substring(5, 10)));
+                    chatList.setStanza(chatMsg != null ? chatMsg.getStanza() : "匹配于" + (likeMe.getPairTime().isEmpty() ? likeMe.getPairTime() : likeMe.getPairTime().substring(5, 10)));
                     chatList.setNoReadNum(chatMsg != null ? chatMsg.getNoReadNum() : 0);
                     chatList.setChatType(4);
                     chatList.setCreationDate(chatMsg != null ? chatMsg.getCreationDate() : likeMe.getModifyTime());

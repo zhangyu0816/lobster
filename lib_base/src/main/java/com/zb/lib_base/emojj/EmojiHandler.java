@@ -19,6 +19,7 @@ public final class EmojiHandler {
 
     }
 
+    public static int maxEmojiCount = 88;
     public static final Map<Integer, Integer> sCustomizeEmojisMap = new HashMap<Integer, Integer>();
 
     private static int getPic(String pid) {
@@ -38,7 +39,7 @@ public final class EmojiHandler {
 
     static {
         // Customize
-        for (int i = 1; i < 88; i++) {
+        for (int i = 1; i < maxEmojiCount; i++) {
             sCustomizeEmojisMap.put(i, getPic("emoji_" + i));
         }
     }
