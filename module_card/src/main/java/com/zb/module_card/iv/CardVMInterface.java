@@ -11,7 +11,7 @@ public interface CardVMInterface {
 
     void returnView(View view);
 
-    void superLike(PairInfo pairInfo);
+    void superLike(View currentView, PairInfo pairInfo);
 
     void exposure(View view);
 

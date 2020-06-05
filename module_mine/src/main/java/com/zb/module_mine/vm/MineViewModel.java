@@ -26,13 +26,11 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     public ContactNum contactNum;
     private BaseReceiver updateMineInfoReceiver;
     private BaseReceiver newsCountReceiver;
-    private int newsNum = 0;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mineInfo = mineInfoDb.getMineInfo();
-        contactNum();
 
         updateMineInfoReceiver = new BaseReceiver(activity, "lobster_updateMineInfo") {
             @Override

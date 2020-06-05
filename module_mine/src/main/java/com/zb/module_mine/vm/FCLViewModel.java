@@ -76,6 +76,10 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
         };
     }
 
+    public void onDestroy(){
+        attentionReceiver.unregisterReceiver();
+    }
+
     @Override
     public void setAdapter() {
         adapter = new MineAdapter<>(activity, R.layout.item_mine_member, memberInfoList, this);

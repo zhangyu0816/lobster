@@ -7,7 +7,6 @@ import com.zb.lib_base.model.BankInfo;
 import com.zb.lib_base.model.BaseResultEntity;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.BottleMsg;
-import com.zb.lib_base.model.BottleNoRead;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
@@ -163,7 +162,7 @@ public interface HttpService {
     /******************************* app **********************************/
 
     // 会员价格
-    @GET(" api/MemberOrder_openedMemberPriceList")
+    @GET("api/MemberOrder_openedMemberPriceList")
     Observable<BaseResultEntity<List<VipInfo>>> openedMemberPriceList();
 
     // 提交VIP订单 - 需登录
@@ -274,6 +273,10 @@ public interface HttpService {
     @GET("api/Pair_prePairList")
     Observable<BaseResultEntity<List<PairInfo>>> prePairList(@Query("sex") int sex, @Query("minAge") int minAge, @Query("maxAge") int maxAge);
 
+    // 匹配列表
+    @GET("api/Pair_pairList")
+    Observable<BaseResultEntity<List<LikeMe>>> pairList(@Query("pageNo") int pageNo);
+
     // 评估
     @GET("api/Pair_makeEvaluate")
     Observable<BaseResultEntity<Integer>> makeEvaluate(@Query("otherUserId") long otherUserId, @Query("likeOtherStatus") int likeOtherStatus);
@@ -342,7 +345,7 @@ public interface HttpService {
 
     // 漂流瓶未读数量
     @GET("api/DriftBottle_noReadBottleNum")
-    Observable<BaseResultEntity<BottleNoRead>> noReadBottleNum();
+    Observable<BaseResultEntity<Integer>> noReadBottleNum();
 
     /******************************* 我的 **********************************/
 

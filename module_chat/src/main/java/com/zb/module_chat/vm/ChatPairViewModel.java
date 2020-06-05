@@ -7,11 +7,11 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.contactNumApi;
 import com.zb.lib_base.api.likeMeListApi;
 import com.zb.lib_base.api.noReadBottleNumApi;
+import com.zb.lib_base.api.pairListApi;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
-import com.zb.lib_base.model.BottleNoRead;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.LikeMe;
@@ -35,7 +35,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
 
     public ChatAdapter adapter;
     private List<ChatList> chatMsgList = new ArrayList<>();
-    private int pageNo = 0;
+    private int pageNo = 1;
     private ChatListDb chatListDb;
     private ChatPairFragmentBinding mBinding;
     private MineInfo mineInfo;
@@ -58,7 +58,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         pageNo++;
-        likeMeList(1);
+        pairList();
     }
 
     @Override
@@ -117,50 +117,78 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
 
     @Override
     public void noReadBottleNum() {
-        noReadBottleNumApi api = new noReadBottleNumApi(new HttpOnNextListener<BottleNoRead>() {
+        noReadBottleNumApi api = new noReadBottleNumApi(new HttpOnNextListener<Integer>() {
             @Override
-            public void onNext(BottleNoRead o) {
+            public void onNext(Integer o) {
                 ChatList chatList = new ChatList();
                 chatList.setImage("bottle_logo_icon");
                 chatList.setNick("漂流瓶");
                 chatList.setMsgType(1);
-                chatList.setStanza(o.getNoReadNum() == 0 ? "漂流瓶很安静啊~" : "您有新消息");
-                chatList.setNoReadNum(o.getNoReadNum());
+                chatList.setStanza(o == 0 ? "漂流瓶很安静啊~" : "您有新消息");
+                chatList.setNoReadNum(o);
                 chatList.setChatType(2);
                 chatMsgList.add(chatList);
                 adapter.notifyDataSetChanged();
-                likeMeList(2);
+                likeMeList();
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override
-    public void likeMeList(int likeOtherStatus) {
+    public void likeMeList() {
         likeMeListApi api = new likeMeListApi(new HttpOnNextListener<List<LikeMe>>() {
+            @Override
+            public void onNext(List<LikeMe> o) {
+                int start = chatMsgList.size();
+                for (LikeMe likeMe : o) {
+                    ChatList chatList = new ChatList();
+                    chatList.setUserId(likeMe.getOtherUserId());
+                    chatList.setImage(likeMe.getHeadImage());
+                    chatList.setNick(likeMe.getNick());
+                    chatList.setMsgType(1);
+                    chatList.setStanza("超级喜欢你！");
+                    chatList.setNoReadNum(0);
+                    chatList.setChatType(3);
+                    chatList.setCreationDate(likeMe.getModifyTime());
+                    chatMsgList.add(chatList);
+                }
+                adapter.notifyItemRangeChanged(start, chatMsgList.size());
+                pairList();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    pairList();
+                }
+            }
+        }, activity).setPageNo(0).setLikeOtherStatus(2);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void pairList() {
+        pairListApi api = new pairListApi(new HttpOnNextListener<List<LikeMe>>() {
             @Override
             public void onNext(List<LikeMe> o) {
                 int start = chatMsgList.size();
                 for (LikeMe likeMe : o) {
                     ChatList chatMsg = chatListDb.getChatMsg(likeMe.getOtherUserId());
                     ChatList chatList = new ChatList();
+                    chatList.setUserId(likeMe.getOtherUserId());
                     chatList.setImage(likeMe.getHeadImage());
                     chatList.setNick(likeMe.getNick());
                     chatList.setMsgType(chatMsg != null ? chatMsg.getMsgType() : 1);
-                    chatList.setStanza(likeMe.getLikeOtherStatus() == 2 ? "超级喜欢你！" : (chatMsg != null ? chatMsg.getStanza() : "匹配于" + likeMe.getModifyTime().substring(4, 10)));
+                    chatList.setStanza(chatMsg != null ? chatMsg.getStanza() : "匹配于" + (likeMe.getPairTime().isEmpty()?likeMe.getPairTime():likeMe.getPairTime().substring(5, 10)));
                     chatList.setNoReadNum(chatMsg != null ? chatMsg.getNoReadNum() : 0);
-                    chatList.setChatType(likeMe.getLikeOtherStatus() == 2 ? 3 : 4);
+                    chatList.setChatType(4);
                     chatList.setCreationDate(chatMsg != null ? chatMsg.getCreationDate() : likeMe.getModifyTime());
                     chatMsgList.add(chatList);
                 }
                 adapter.notifyItemRangeChanged(start, chatMsgList.size());
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
-
-                if (pageNo == 0) {
-                    pageNo++;
-                    likeMeList(1);
-                }
             }
 
             @Override
@@ -168,11 +196,10 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     mBinding.refresh.finishRefresh();
                     mBinding.refresh.finishLoadMore();
+                    mBinding.refresh.setEnableLoadMore(false);
                 }
             }
-        }, activity).setPageNo(pageNo).setLikeOtherStatus(likeOtherStatus);
+        }, activity).setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
     }
-
-
 }

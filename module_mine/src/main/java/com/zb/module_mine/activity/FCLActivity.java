@@ -12,6 +12,8 @@ public class FCLActivity extends MineBaseActivity {
     @Autowired(name = "position")
     int position;
 
+    private FCLViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.mine_fcl;
@@ -19,12 +21,18 @@ public class FCLActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
-        FCLViewModel viewModel = new FCLViewModel();
+        viewModel = new FCLViewModel();
         viewModel.position = position;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.position, position);
         mBinding.setVariable(BR.title, position == 0 ? "我的关注" : (position == 1 ? "我的粉丝" : "被喜欢"));
         mBinding.setVariable(BR.noData, true);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 }

@@ -6,12 +6,13 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 public class LikeMe extends BaseObservable {
-    long otherUserId ;//对方用户的id
+    long otherUserId;//对方用户的id
     int likeOtherStatus;// 0 不喜欢  1 喜欢  2.超级喜欢
-    String nick=""; //昵称
-    String headImage="" ;// 头像
+    String nick = ""; //昵称
+    String headImage = "";// 头像
     int idAttest; //实名认证 0未认证  1认证
-    String modifyTime="";
+    String modifyTime = "";
+    String pairTime = "";
 
     @Bindable
     public long getOtherUserId() {
@@ -23,7 +24,8 @@ public class LikeMe extends BaseObservable {
         notifyPropertyChanged(BR.otherUserId);
     }
 
-    @Bindable public int getLikeOtherStatus() {
+    @Bindable
+    public int getLikeOtherStatus() {
         return likeOtherStatus;
     }
 
@@ -32,7 +34,8 @@ public class LikeMe extends BaseObservable {
         notifyPropertyChanged(BR.likeOtherStatus);
     }
 
-    @Bindable public String getNick() {
+    @Bindable
+    public String getNick() {
         return nick;
     }
 
@@ -41,7 +44,8 @@ public class LikeMe extends BaseObservable {
         notifyPropertyChanged(BR.nick);
     }
 
-    @Bindable public String getHeadImage() {
+    @Bindable
+    public String getHeadImage() {
         return headImage;
     }
 
@@ -50,7 +54,8 @@ public class LikeMe extends BaseObservable {
         notifyPropertyChanged(BR.headImage);
     }
 
-    @Bindable public int getIdAttest() {
+    @Bindable
+    public int getIdAttest() {
         return idAttest;
     }
 
@@ -59,12 +64,23 @@ public class LikeMe extends BaseObservable {
         notifyPropertyChanged(BR.idAttest);
     }
 
-    @Bindable public String getModifyTime() {
+    @Bindable
+    public String getModifyTime() {
         return modifyTime;
     }
 
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
         notifyPropertyChanged(BR.modifyTime);
+    }
+
+    @Bindable
+    public String getPairTime() {
+        return pairTime;
+    }
+
+    public void setPairTime(String pairTime) {
+        this.pairTime = pairTime;
+        notifyPropertyChanged(BR.pairTime);
     }
 }

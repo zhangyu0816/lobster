@@ -7,5 +7,7 @@ public interface ChatPairVMInterface {
 
     void noReadBottleNum();
 
-    void likeMeList(int likeOtherStatus);
+    void likeMeList();
+
+    void pairList();
 }

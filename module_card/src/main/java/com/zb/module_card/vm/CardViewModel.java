@@ -190,8 +190,10 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     }
 
     @Override
-    public void superLike(PairInfo pairInfo) {
+    public void superLike(View currentView, PairInfo pairInfo) {
         if (mineInfo.getMemberType() == 2) {
+            this.currentView = currentView;
+            this.pairInfo = pairInfo;
             makeEvaluate(pairInfo, 2);
         } else {
             new VipAdPW(activity, mBinding.getRoot());
@@ -256,8 +258,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 adapter.notifyDataSetChanged();
             }
         }, activity)
-//                .setSex(mineInfo.getSex() == 0 ? 1 : 0)
-                .setSex(0)
+                .setSex(mineInfo.getSex() == 0 ? 1 : 0)
                 .setMaxAge(100)
                 .setMinAge(0);
         api.setShowProgress(needProgress);
@@ -278,12 +279,16 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     if (likeOtherStatus == 1) {
                         likeDb.saveLike(new CollectID(pairInfo.getOtherUserId()));
                     } else if (likeOtherStatus == 2) {
+                        Intent data = new Intent("lobster_card");
+                        data.putExtra("direction", 2);
+                        activity.sendBroadcast(data);
                         new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), pairInfo.getSex());
                     }
                 } else if (o == 2) {
                     // 匹配成功
                     likeDb.saveLike(new CollectID(pairInfo.getOtherUserId()));
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), pairInfo.getSex());
+
                 } else if (o == 3) {
                     // 喜欢次数用尽
                     SCToastUtil.showToastBlack(activity, "今日喜欢次数已用完");

@@ -89,12 +89,12 @@
         </LinearLayout>
 
         <TextView
-            viewHeightSize="@{36}"
+            viewHeightSize="@{-2}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
             android:layout_width="150dp"
             android:layout_height="18dp"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/btn_bg_red_fe4_radius40"
+            android:background="@drawable/btn_bg_red_fe4_radius18"
             android:gravity="center"
             android:text='@{String.format("省%.1f元",item.originalPrice-item.price)}'
             android:textColor="@android:color/white"

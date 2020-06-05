@@ -61,8 +61,8 @@
                     android:layout_marginEnd="-10dp">
 
                     <View
-                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.2f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.2f)}"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         android:background="@{isPair?(otherSex==0?@drawable/circle_red:@drawable/circle_blue):@drawable/circle_white}" />
@@ -70,8 +70,8 @@
                     <ImageView
                         imageUrl="@{otherHead}"
                         isCircle="@{true}"
-                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.24f)}"
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.24f)}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.19f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.19f)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true" />
@@ -83,17 +83,17 @@
                     android:layout_marginStart="-10dp">
 
                     <View
-                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.2f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.2f)}"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:background="@{isPair?(mySex==0?@drawable/circle_red:@drawable/circle_blue):@drawable/circle_white}"  />
+                        android:background="@{mySex==0?@drawable/circle_red:@drawable/circle_blue}"  />
 
                     <ImageView
                         imageUrl="@{myHead}"
                         isCircle="@{true}"
-                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.24f)}"
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.24f)}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.19f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.19f)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true" />
