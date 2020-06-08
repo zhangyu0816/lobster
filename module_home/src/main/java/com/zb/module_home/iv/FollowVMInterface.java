@@ -9,4 +9,6 @@ public interface FollowVMInterface {
     void attentionDyn();
 
     void onRefreshForNet(View view);
+
+    void clickItem(int position);
 }

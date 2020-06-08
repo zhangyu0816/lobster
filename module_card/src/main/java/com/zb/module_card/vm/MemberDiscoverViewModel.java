@@ -12,6 +12,7 @@ import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.dynPiazzaListApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.personOtherDynApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -19,6 +20,7 @@ import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_card.R;
 import com.zb.module_card.adapter.CardAdapter;
@@ -45,6 +47,8 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     public long otherUserId;
     private MineInfo mineInfo;
     private MemberInfo memberInfo;
+    private int prePosition = -1;
+    private BaseReceiver attentionReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -57,10 +61,21 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 onRefreshForNet(null);
             }
         };
+        attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (prePosition == -1) return;
+                int goodNum = intent.getIntExtra("goodNum", 0);
+                discoverInfoList.get(prePosition).setGoodNum(goodNum);
+                adapter.notifyItemChanged(prePosition);
+                prePosition = -1;
+            }
+        };
     }
 
     public void onDestroy() {
         publishReceiver.unregisterReceiver();
+        attentionReceiver.unregisterReceiver();
     }
 
     @Override
@@ -126,8 +141,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 }
             }
         }, activity)
-                .setCityId(0)
-//                .setCityId(areaDb.getCityId(MineApp.cityName))
+                .setCityId(areaDb.getCityId(MineApp.cityName))
                 .setDynType(1)
                 .setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
@@ -195,5 +209,15 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
         discoverInfoList.clear();
         adapter.notifyDataSetChanged();
         getData();
+    }
+
+    @Override
+    public void clickItem(int position) {
+        prePosition = position;
+        DiscoverInfo discoverInfo = discoverInfoList.get(position);
+        if (discoverInfo.getVideoUrl().isEmpty())
+            ActivityUtils.getHomeDiscoverDetail(discoverInfo.getFriendDynId());
+        else
+            ActivityUtils.getHomeDiscoverVideo(discoverInfo.getFriendDynId());
     }
 }

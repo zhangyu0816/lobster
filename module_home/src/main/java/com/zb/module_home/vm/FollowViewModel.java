@@ -32,9 +32,10 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
     public HomeAdapter adapter;
     private List<DiscoverInfo> discoverInfoList = new ArrayList<>();
     private int pageNo = 1;
-    private HomeFollowBinding followBinding;
+    private HomeFollowBinding mBinding;
     private BaseReceiver publishReceiver;
     private BaseReceiver attentionReceiver;
+    private int prePosition = -1;
 
     @Override
     public void setAdapter() {
@@ -45,7 +46,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        followBinding = (HomeFollowBinding) binding;
+        mBinding = (HomeFollowBinding) binding;
         publishReceiver = new BaseReceiver(activity, "lobster_publish") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -56,7 +57,11 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
         attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                adapter.notifyDataSetChanged();
+                if (prePosition == -1) return;
+                int goodNum = intent.getIntExtra("goodNum", 0);
+                discoverInfoList.get(prePosition).setGoodNum(goodNum);
+                adapter.notifyItemChanged(prePosition);
+                prePosition = -1;
             }
         };
     }
@@ -88,25 +93,25 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
         attentionDynApi api = new attentionDynApi(new HttpOnNextListener<List<DiscoverInfo>>() {
             @Override
             public void onNext(List<DiscoverInfo> o) {
-                followBinding.noNetLinear.setVisibility(View.GONE);
+                mBinding.noNetLinear.setVisibility(View.GONE);
                 int start = discoverInfoList.size();
                 discoverInfoList.addAll(o);
                 adapter.notifyItemRangeChanged(start, discoverInfoList.size());
-                followBinding.refresh.finishRefresh();
-                followBinding.refresh.finishLoadMore();
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof SocketTimeoutException || e instanceof ConnectException) {
-                    followBinding.noNetLinear.setVisibility(View.VISIBLE);
-                    followBinding.refresh.setEnableLoadMore(false);
-                    followBinding.refresh.finishRefresh();
-                    followBinding.refresh.finishLoadMore();
+                    mBinding.noNetLinear.setVisibility(View.VISIBLE);
+                    mBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
                 } else if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    followBinding.refresh.setEnableLoadMore(false);
-                    followBinding.refresh.finishRefresh();
-                    followBinding.refresh.finishLoadMore();
+                    mBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
                 }
             }
         }, activity).setPageNo(pageNo).setTimeSortType(1);
@@ -116,11 +121,21 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
     @Override
     public void onRefreshForNet(View view) {
         // 下拉刷新
-        followBinding.refresh.setEnableLoadMore(true);
+        mBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         discoverInfoList.clear();
         adapter.notifyDataSetChanged();
         attentionDyn();
+    }
+
+    @Override
+    public void clickItem(int position) {
+        prePosition = position;
+        DiscoverInfo discoverInfo = discoverInfoList.get(position);
+        if (discoverInfo.getVideoUrl().isEmpty())
+            ActivityUtils.getHomeDiscoverDetail(discoverInfo.getFriendDynId());
+        else
+            ActivityUtils.getHomeDiscoverVideo(discoverInfo.getFriendDynId());
     }
 
 }

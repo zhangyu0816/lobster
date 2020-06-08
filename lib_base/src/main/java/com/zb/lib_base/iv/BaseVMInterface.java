@@ -2,8 +2,6 @@ package com.zb.lib_base.iv;
 
 import android.view.View;
 
-import com.zb.lib_base.model.DiscoverInfo;
-
 import androidx.databinding.ViewDataBinding;
 
 @FunctionalInterface
@@ -18,9 +16,6 @@ public interface BaseVMInterface {
     }
 
     default void right(View view) {
-    }
-
-    default void clickItem(DiscoverInfo discoverInfo) {
     }
 
     default void more(View view) {

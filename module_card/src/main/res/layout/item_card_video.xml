@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.zb.lib_base.vm.BaseViewModel" />
+            type="com.zb.module_card.vm.MemberVideoViewModel" />
 
         <variable
             name="position"
@@ -19,7 +19,7 @@
     </data>
 
     <RelativeLayout
-        onClickDelayed="@{v->viewModel.clickItem(item)}"
+        onClickDelayed="@{v->viewModel.clickItem(position)}"
         viewHeightSize="@{ObjectUtils.getLogoHeight(0.48f)}"
         viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.48f)}"
         android:layout_width="match_parent"

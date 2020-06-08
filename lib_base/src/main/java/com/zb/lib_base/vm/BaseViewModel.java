@@ -14,8 +14,6 @@ import com.zb.lib_base.db.AttentionDb;
 import com.zb.lib_base.db.GoodDb;
 import com.zb.lib_base.db.MineInfoDb;
 import com.zb.lib_base.iv.BaseVMInterface;
-import com.zb.lib_base.model.DiscoverInfo;
-import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.windows.BottleQuestionPW;
 
 import java.util.Objects;
@@ -43,14 +41,6 @@ public class BaseViewModel implements BaseVMInterface {
             goodDb = new GoodDb(Realm.getDefaultInstance());
         if (attentionDb == null)
             attentionDb = new AttentionDb(Realm.getDefaultInstance());
-    }
-
-    @Override
-    public void clickItem(DiscoverInfo discoverInfo) {
-        if (discoverInfo.getVideoUrl().isEmpty())
-            ActivityUtils.getHomeDiscoverDetail(discoverInfo.getFriendDynId());
-        else
-            ActivityUtils.getHomeDiscoverVideo(discoverInfo.getFriendDynId());
     }
 
     @Override

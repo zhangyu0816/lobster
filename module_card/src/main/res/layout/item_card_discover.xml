@@ -15,7 +15,7 @@
 
         <variable
             name="viewModel"
-            type="com.zb.lib_base.vm.BaseViewModel" />
+            type="com.zb.module_card.vm.MemberDiscoverViewModel" />
     </data>
 
     <RelativeLayout
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
-            onClickDelayed="@{v->viewModel.clickItem(item)}"
+            onClickDelayed="@{v->viewModel.clickItem(position)}"
             viewHeightSize="@{-2}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.47f)}"
             android:layout_width="match_parent"

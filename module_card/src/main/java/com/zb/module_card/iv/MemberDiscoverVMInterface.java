@@ -11,4 +11,6 @@ public interface MemberDiscoverVMInterface {
     void otherInfo();
 
     void onRefreshForNet(View view);
+
+    void clickItem(int position);
 }

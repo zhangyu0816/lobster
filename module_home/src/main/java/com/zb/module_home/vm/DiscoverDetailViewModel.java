@@ -73,6 +73,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     private MemberInfo memberInfo;
 
     private long reviewId = 0;
+    private int goodNum = 0;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -106,7 +107,11 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void back(View view) {
         super.back(view);
-        activity.sendBroadcast(new Intent("lobster_attention"));
+        Intent data = new Intent("lobster_attention");
+        if (goodNum > 0) {
+            data.putExtra("goodNum", goodNum);
+        }
+        activity.sendBroadcast(data);
         activity.finish();
     }
 
@@ -312,7 +317,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(Object o) {
                 goodDb.saveGood(new CollectID(friendDynId));
-                int goodNum = discoverInfo.getGoodNum() + 1;
+                goodNum = discoverInfo.getGoodNum() + 1;
                 discoverInfo.setGoodNum(goodNum);
                 mBinding.setViewModel(DiscoverDetailViewModel.this);
             }
@@ -336,7 +341,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(Object o) {
                 goodDb.deleteGood(friendDynId);
-                int goodNum = discoverInfo.getGoodNum() - 1;
+                goodNum = discoverInfo.getGoodNum() - 1;
                 discoverInfo.setGoodNum(goodNum);
                 mBinding.setViewModel(DiscoverDetailViewModel.this);
             }

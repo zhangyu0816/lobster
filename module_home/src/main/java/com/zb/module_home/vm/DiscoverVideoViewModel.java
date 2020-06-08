@@ -60,11 +60,15 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     private List<Reward> rewardList = new ArrayList<>();
     private HomeDiscoverVideoBinding mBinding;
     private ObjectAnimator animator;
-
+    private int goodNum = 0;
     @Override
     public void back(View view) {
         super.back(view);
-        activity.sendBroadcast(new Intent("lobster_attention"));
+        Intent data = new Intent("lobster_attention");
+        if (goodNum > 0) {
+            data.putExtra("goodNum", goodNum);
+        }
+        activity.sendBroadcast(data);
         mBinding.videoView.stopPlayback();//停止播放视频,并且释放
         mBinding.videoView.suspend();//在任何状态下释放媒体播放器
         activity.finish();
@@ -175,7 +179,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             @Override
             public void onNext(DiscoverInfo o) {
                 discoverInfo = o;
-                DownLoad.getFilePath(discoverInfo.getVideoUrl(),BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), new DownLoad.CallBack() {
+                DownLoad.getFilePath(discoverInfo.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), new DownLoad.CallBack() {
                     @Override
                     public void success(String filePath) {
                         discoverInfo.setVideoUrl(filePath);
@@ -281,6 +285,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             @Override
             public void onNext(Object o) {
                 goodDb.saveGood(new CollectID(friendDynId));
+                goodNum = discoverInfo.getGoodNum() + 1;
                 mBinding.setViewModel(DiscoverVideoViewModel.this);
             }
 
@@ -303,6 +308,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             @Override
             public void onNext(Object o) {
                 goodDb.deleteGood(friendDynId);
+                goodNum = discoverInfo.getGoodNum() - 1;
                 mBinding.setViewModel(DiscoverVideoViewModel.this);
             }
         }, activity).setFriendDynId(friendDynId);
@@ -361,10 +367,10 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
         int width = mMediaPlayer.getVideoWidth();
         int height = mMediaPlayer.getVideoHeight();
 
-        if (ObjectUtils.getViewSizeByHeight(0.9f) * width / height > MineApp.W) {
+        if (ObjectUtils.getViewSizeByHeight(1.0f) * width / height > MineApp.W) {
             AdapterBinding.viewSize(mBinding.videoView, MineApp.W, (MineApp.W * height / width));
         } else {
-            AdapterBinding.viewSize(mBinding.videoView, (ObjectUtils.getViewSizeByHeight(0.9f) * width / height), ObjectUtils.getViewSizeByHeight(0.9f));
+            AdapterBinding.viewSize(mBinding.videoView, (ObjectUtils.getViewSizeByHeight(1.0f) * width / height), ObjectUtils.getViewSizeByHeight(1.0f));
         }
     }
 }
