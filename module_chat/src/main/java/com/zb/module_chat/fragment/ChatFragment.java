@@ -43,4 +43,6 @@ public class ChatFragment extends BaseFragment {
         binding.viewPage.setAdapter(new FragmentAdapter(getChildFragmentManager(), fragments));
         viewModel.initTabLayout(new String[]{"所有匹配", "聊天"}, binding.tabLayout, binding.viewPage, R.color.black_252, R.color.black_827);
     }
+
+
 }

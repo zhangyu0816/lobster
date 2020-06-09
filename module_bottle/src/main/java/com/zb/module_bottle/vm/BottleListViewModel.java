@@ -68,14 +68,11 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
 
     @Override
     public void selectIndex(int position) {
-        if (mineInfo.getMemberType() == 2) {
-            BottleInfo bottleInfo = bottleInfoList.get(position);
-            bottleInfo.setNoReadNum(0);
-            adapter.notifyItemChanged(position);
-            ActivityUtils.getBottleChat(bottleInfo.getDriftBottleId());
-            return;
-        }
-        new BottleVipPW(activity, mBinding.getRoot());
+        BottleInfo bottleInfo = bottleInfoList.get(position);
+        bottleInfo.setNoReadNum(0);
+        adapter.notifyItemChanged(position);
+        ActivityUtils.getBottleChat(bottleInfo.getDriftBottleId());
+
     }
 
     @Override

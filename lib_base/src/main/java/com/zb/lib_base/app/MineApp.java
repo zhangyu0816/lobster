@@ -18,6 +18,7 @@ import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.log.LogUtil;
 import com.zb.lib_base.model.BankInfo;
 import com.zb.lib_base.model.BaseEntity;
+import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.RechargeInfo;
@@ -69,6 +70,7 @@ public class MineApp extends MultiDexApplication {
     public static List<Report> reportList = new ArrayList<>();
     public static WalletInfo walletInfo;
     public static MineNewsCount mineNewsCount;
+    public static ContactNum contactNum;
 
     static {
         //设置全局的Header构建器

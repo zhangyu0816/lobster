@@ -57,6 +57,7 @@ import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.utils.KeyboardStateObserver;
@@ -208,6 +209,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     public void back(View view) {
         super.back(view);
         hintKeyBoard();
+        DataCleanManager.deleteFile(new File(activity.getCacheDir(), "videos"));
+        DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
         chatReceiver.unregisterReceiver();
         try {
             mConversationService.markReaded(conversation);

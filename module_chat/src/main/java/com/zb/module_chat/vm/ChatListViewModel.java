@@ -28,6 +28,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
     private ChatListFragmentBinding mBinding;
     private ChatListDb chatListDb;
     private BaseReceiver updateChatReceiver;
+    private BaseReceiver relieveReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -63,10 +64,25 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                 }
             }
         };
+        relieveReceiver = new BaseReceiver(activity, "lobster_relieve") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                long otherUserId = intent.getLongExtra("otherUserId", 0);
+                for (int i = 0; i < chatMsgList.size(); i++) {
+                    if (chatMsgList.get(i).getUserId() == otherUserId) {
+                        adapter.notifyItemRemoved(i);
+                        chatMsgList.remove(i);
+                        chatListDb.deleteChatMsg(otherUserId);
+                        break;
+                    }
+                }
+            }
+        };
     }
 
     public void onDestroy() {
         updateChatReceiver.unregisterReceiver();
+        relieveReceiver.unregisterReceiver();
     }
 
     @Override

@@ -172,12 +172,21 @@ public class ObjectUtils {
             return "立即验证";
     }
 
-    public static int textColor(LikeDb likeDb, AttentionDb attentionDb, long otherUserId) {
-        if (likeDb.hasLike(otherUserId) || attentionDb.isAttention(otherUserId)) {
-            return R.color.black_827;
-        } else {
-            return R.color.purple_7a4;
+    public static int textColor(LikeDb likeDb, AttentionDb attentionDb, long otherUserId,int position) {
+        if (position == 2) {
+            if (likeDb.hasLike(otherUserId)) {
+                return R.color.black_827;
+            } else {
+                return R.color.purple_7a4;
+            }
+        }else{
+            if (attentionDb.isAttention(otherUserId)) {
+                return R.color.black_827;
+            } else {
+                return R.color.purple_7a4;
+            }
         }
+
     }
 
     public static String textName(LikeDb likeDb, AttentionDb attentionDb, long otherUserId, int position) {

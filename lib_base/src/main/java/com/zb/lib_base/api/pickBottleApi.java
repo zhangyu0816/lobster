@@ -11,7 +11,6 @@ import rx.Observable;
 public class pickBottleApi extends BaseEntity<BaseResultEntity> {
     long driftBottleId;//漂流瓶id
     int driftBottleType;//漂流瓶状态 .1.漂流中  2.被拾起  3.销毁
-    long otherUserId;//拾起人id    [可空 状态传2时 必填]
 
     public pickBottleApi setDriftBottleId(long driftBottleId) {
         this.driftBottleId = driftBottleId;
@@ -23,17 +22,12 @@ public class pickBottleApi extends BaseEntity<BaseResultEntity> {
         return this;
     }
 
-    public pickBottleApi setOtherUserId(long otherUserId) {
-        this.otherUserId = otherUserId;
-        return this;
-    }
-
     public pickBottleApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
     }
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.pickBottle(driftBottleId, driftBottleType, otherUserId);
+        return methods.pickBottle(driftBottleId, driftBottleType);
     }
 }

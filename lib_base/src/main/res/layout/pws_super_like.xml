@@ -26,6 +26,8 @@
 
         <import type="com.zb.lib_base.utils.ObjectUtils" />
 
+        <import type="android.view.View" />
+
 
     </data>
 
@@ -52,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="60dp"
+                android:layout_marginTop="30dp"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -61,8 +63,8 @@
                     android:layout_marginEnd="-10dp">
 
                     <View
-                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.2f)}"
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.2f)}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.19f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.19f)}"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         android:background="@{isPair?(otherSex==0?@drawable/circle_red:@drawable/circle_blue):@drawable/circle_white}" />
@@ -70,8 +72,8 @@
                     <ImageView
                         imageUrl="@{otherHead}"
                         isCircle="@{true}"
-                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.19f)}"
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.19f)}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.18f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.18f)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true" />
@@ -83,17 +85,17 @@
                     android:layout_marginStart="-10dp">
 
                     <View
-                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.2f)}"
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.2f)}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.19f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.19f)}"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
-                        android:background="@{mySex==0?@drawable/circle_red:@drawable/circle_blue}"  />
+                        android:background="@{mySex==0?@drawable/circle_red:@drawable/circle_blue}" />
 
                     <ImageView
                         imageUrl="@{myHead}"
                         isCircle="@{true}"
-                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.19f)}"
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.19f)}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.18f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.18f)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true" />
@@ -103,12 +105,13 @@
             <ImageView
                 imageRes="@{ObjectUtils.getSuperLikeRes()}"
                 isCircle="@{true}"
-                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(150)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(150)}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(130)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(130)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="40dp" />
+                android:layout_marginTop="10dp"
+                android:visibility="@{isPair?View.GONE:View.VISIBLE}" />
         </RelativeLayout>
     </RelativeLayout>
 </layout>

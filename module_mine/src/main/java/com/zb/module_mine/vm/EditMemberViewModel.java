@@ -13,6 +13,7 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
@@ -26,6 +27,7 @@ import com.zb.module_mine.adapter.MineAdapter;
 import com.zb.module_mine.databinding.MineEditMemberBinding;
 import com.zb.module_mine.iv.EditMemberVMInterface;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,6 +52,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     @Override
     public void back(View view) {
         super.back(view);
+        DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
         activity.finish();
     }
 

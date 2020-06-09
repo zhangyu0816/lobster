@@ -2,6 +2,7 @@ package com.zb.module_mine.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseReceiver;
@@ -86,5 +87,13 @@ public class EditMemberActivity extends MineBaseActivity {
         super.onDestroy();
         memberReceiver.unregisterReceiver();
         cameraReceiver.unregisterReceiver();
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            viewModel.back(null);
+            return true;
+        }
+        return false;
     }
 }

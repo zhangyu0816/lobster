@@ -281,6 +281,10 @@ public interface HttpService {
     @GET("api/Pair_makeEvaluate")
     Observable<BaseResultEntity<Integer>> makeEvaluate(@Query("otherUserId") long otherUserId, @Query("likeOtherStatus") int likeOtherStatus);
 
+    // 评估
+    @GET("api/Pair_relievePair")
+    Observable<BaseResultEntity> relievePair(@Query("otherUserId") long otherUserId);
+
     // 超级曝光
     @GET("api/Pair_superExposure")
     Observable<BaseResultEntity> superExposure();
@@ -336,8 +340,7 @@ public interface HttpService {
 
     // 拾取漂流瓶(包括销毁漂流瓶)
     @GET("api/DriftBottle_pcikBottle")
-    Observable<BaseResultEntity> pickBottle(@Query("driftBottleId") long driftBottleId, @Query("driftBottleType") int driftBottleType,
-                                            @Query("otherUserId") long otherUserId);
+    Observable<BaseResultEntity> pickBottle(@Query("driftBottleId") long driftBottleId, @Query("driftBottleType") int driftBottleType);
 
     // 回复漂流瓶
     @GET("api/DriftBottle_replyBottle")

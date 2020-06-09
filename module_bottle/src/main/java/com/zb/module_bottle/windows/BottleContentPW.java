@@ -57,7 +57,7 @@ public class BottleContentPW extends BasePopupWindow {
     @Override
     public void cancel(View view) {
         super.cancel(view);
-        pickBottle();
+        pickBottle(1);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class BottleContentPW extends BasePopupWindow {
                 return;
             }
             if (isReply)
-                replyBottle();
+                pickBottle(2);
             else
                 castBottle();
         } else {
@@ -94,13 +94,16 @@ public class BottleContentPW extends BasePopupWindow {
     }
 
     // 扔回海里
-    private void pickBottle() {
+    private void pickBottle(int driftBottleType) {
         pickBottleApi api = new pickBottleApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                dismiss();
+                if (driftBottleType == 2) {
+                    replyBottle();
+                } else
+                    dismiss();
             }
-        }, activity).setDriftBottleId(bottleInfo.getDriftBottleId()).setDriftBottleType(1).setOtherUserId(BaseActivity.userId);
+        }, activity).setDriftBottleId(bottleInfo.getDriftBottleId()).setDriftBottleType(driftBottleType);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -109,11 +112,7 @@ public class BottleContentPW extends BasePopupWindow {
         replyBottleApi api = new replyBottleApi(new HttpOnNextListener<BottleMsg>() {
             @Override
             public void onNext(BottleMsg o) {
-                if (o == null) {
-                    SCToastUtil.showToastBlack(activity, "此漂流瓶已被销毁");
-                } else {
-                    SCToastUtil.showToastBlack(activity, "回信成功");
-                }
+                SCToastUtil.showToastBlack(activity, "回信成功");
                 dismiss();
             }
         }, activity).setDriftBottleId(bottleInfo.getDriftBottleId()).setText(binding.edContent.getText().toString());

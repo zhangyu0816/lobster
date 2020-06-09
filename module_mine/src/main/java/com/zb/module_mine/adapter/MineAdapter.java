@@ -15,6 +15,7 @@ import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.vm.FCLViewModel;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class MineAdapter<T> extends BindingItemAdapter<T> implements ItemTouchHe
     private BaseViewModel viewModel;
     private BasePopupWindow pw;
     private int selectIndex = -1;
+    private List<Long> userIdList = new ArrayList<>();
 
     public MineAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
         super(activity, layoutId, list);
@@ -56,28 +58,29 @@ public class MineAdapter<T> extends BindingItemAdapter<T> implements ItemTouchHe
             holder.binding.setVariable(BR.pw, pw);
         }
         if (viewModel instanceof FCLViewModel) {
-            ((FCLViewModel) viewModel).getContactNum((MemberInfo) t, position);
-        }
-        if (viewModel instanceof FCLViewModel) {
-            if (((FCLViewModel) viewModel).position == 2) {
-                otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
-                    @Override
-                    public void onNext(MemberInfo o) {
-                        ((MemberInfo) t).setPersonalitySign(o.getPersonalitySign());
-                        notifyItemChanged(position);
-                    }
-                }, mContext).setOtherUserId(((MemberInfo) t).getUserId());
-                HttpManager.getInstance().doHttpDeal(api);
-            } else {
-                contactNumApi api = new contactNumApi(new HttpOnNextListener<ContactNum>() {
-                    @Override
-                    public void onNext(ContactNum o) {
-                        ((MemberInfo) t).setBeLikeQuantity(o.getBeLikeCount());
-                        ((MemberInfo) t).setFansQuantity(o.getFansCount());
-                        notifyItemChanged(position);
-                    }
-                }, mContext).setOtherUserId(((MemberInfo) t).getUserId());
-                HttpManager.getInstance().doHttpDeal(api);
+            if (!userIdList.contains(((MemberInfo) t).getUserId())) {
+                if (((FCLViewModel) viewModel).position == 2) {
+                    otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
+                        @Override
+                        public void onNext(MemberInfo o) {
+                            ((MemberInfo) t).setPersonalitySign(o.getPersonalitySign());
+                            userIdList.add(((MemberInfo) t).getUserId());
+                            notifyItemChanged(position);
+                        }
+                    }, mContext).setOtherUserId(((MemberInfo) t).getUserId());
+                    HttpManager.getInstance().doHttpDeal(api);
+                } else {
+                    contactNumApi api = new contactNumApi(new HttpOnNextListener<ContactNum>() {
+                        @Override
+                        public void onNext(ContactNum o) {
+                            ((MemberInfo) t).setBeLikeQuantity(o.getBeLikeCount());
+                            ((MemberInfo) t).setFansQuantity(o.getFansCount());
+                            userIdList.add(((MemberInfo) t).getUserId());
+                            notifyItemChanged(position);
+                        }
+                    }, mContext).setOtherUserId(((MemberInfo) t).getUserId());
+                    HttpManager.getInstance().doHttpDeal(api);
+                }
             }
         }
         holder.binding.executePendingBindings();

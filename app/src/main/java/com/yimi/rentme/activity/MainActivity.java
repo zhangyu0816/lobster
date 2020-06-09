@@ -9,14 +9,18 @@ import com.yimi.rentme.BR;
 import com.yimi.rentme.R;
 import com.yimi.rentme.vm.MainViewModel;
 import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.JobInfoDb;
 import com.zb.lib_base.db.TagDb;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.model.BaseEntity;
 import com.zb.lib_base.model.JobInfo;
 import com.zb.lib_base.model.Tag;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.SimulateNetAPI;
+import com.zb.lib_base.windows.TextPW;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -38,7 +42,6 @@ public class MainActivity extends AppBaseActivity {
     @Override
     public void initUI() {
         PreferenceUtil.saveIntValue(activity, "loginType", 2);
-//        fitComprehensiveScreen();
         tagDb = new TagDb(Realm.getDefaultInstance());
         jobInfoDb = new JobInfoDb(Realm.getDefaultInstance());
         viewModel = new MainViewModel();
@@ -82,12 +85,12 @@ public class MainActivity extends AppBaseActivity {
         systemErrorReceiver = new BaseReceiver(activity, "lobster_systemError") {
             @Override
             public void onReceive(Context context, Intent intent) {
-//                new TextPW(activity, mBinding.getRoot(), "断线重连", "网络异常，请重新链接", () -> {
-//                    for (BaseEntity baseEntity : MineApp.apiList) {
-//                        HttpManager.getInstance().doHttpDeal(baseEntity);
-//                    }
-//                    MineApp.apiList.clear();
-//                });
+                new TextPW(activity, mBinding.getRoot(), "断线重连", "网络异常，请重新链接", () -> {
+                    for (BaseEntity baseEntity : MineApp.apiList) {
+                        HttpManager.getInstance().doHttpDeal(baseEntity);
+                    }
+                    MineApp.apiList.clear();
+                });
             }
         };
     }
@@ -97,6 +100,7 @@ public class MainActivity extends AppBaseActivity {
         super.onDestroy();
         viewModel.onDestroy();
         viewModel.stopAnimator();
+        systemErrorReceiver.unregisterReceiver();
     }
 
     // 监听程序退出

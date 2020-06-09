@@ -2,6 +2,7 @@ package com.zb.module_mine.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -37,7 +38,7 @@ public class FeedbackDetailActivity extends MineBaseActivity {
         cameraReceiver = new BaseReceiver(activity, "lobster_camera") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                int cameraType = intent.getIntExtra("cameraType",0);
+                int cameraType = intent.getIntExtra("cameraType", 0);
                 boolean isMore = intent.getBooleanExtra("isMore", false);
                 String path = intent.getStringExtra("filePath");
                 // 相册
@@ -60,6 +61,14 @@ public class FeedbackDetailActivity extends MineBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         cameraReceiver.unregisterReceiver();
-        viewModel.back(null);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            viewModel.back(null);
+            return true;
+        }
+        return false;
     }
 }

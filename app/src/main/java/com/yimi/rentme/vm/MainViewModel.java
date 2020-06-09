@@ -2,14 +2,15 @@ package com.yimi.rentme.vm;
 
 import android.Manifest;
 import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.text.TextUtils;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.RelativeLayout;
 
 import com.alibaba.mobileim.conversation.YWMessage;
-import com.yimi.rentme.BR;
 import com.yimi.rentme.databinding.AcMainBinding;
 import com.yimi.rentme.iv.MainVMInterface;
 import com.zb.lib_base.activity.BaseActivity;
@@ -18,6 +19,7 @@ import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.api.bankInfoListApi;
 import com.zb.lib_base.api.chatListApi;
 import com.zb.lib_base.api.comTypeApi;
+import com.zb.lib_base.api.contactNumApi;
 import com.zb.lib_base.api.giftListApi;
 import com.zb.lib_base.api.joinPairPoolApi;
 import com.zb.lib_base.api.myImAccountInfoApi;
@@ -36,6 +38,7 @@ import com.zb.lib_base.imcore.CustomMessageBody;
 import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.model.BankInfo;
 import com.zb.lib_base.model.ChatList;
+import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.MemberInfo;
@@ -63,7 +66,7 @@ import io.realm.Realm;
 
 public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private ArrayList<Fragment> fragments = new ArrayList<>();
-    private AcMainBinding mainBinding;
+    private AcMainBinding mBinding;
     private ChatListDb chatListDb;
     private int pageNo = 1;
     private int nowIndex = -1;
@@ -73,20 +76,21 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private BaseReceiver rechargeReceiver;
     private BaseReceiver chatListReceiver;
     private BaseReceiver newMsgReceiver;
+    private BaseReceiver resumeContactNumReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         chatListDb = new ChatListDb(Realm.getDefaultInstance());
-        mainBinding = (AcMainBinding) binding;
-        mainBinding.tvTitle.setTypeface(MineApp.simplifiedType);
-        mainBinding.tvContent.setTypeface(MineApp.simplifiedType);
-        mainBinding.tvSubContent.setTypeface(MineApp.simplifiedType);
+        mBinding = (AcMainBinding) binding;
+        mBinding.tvTitle.setTypeface(MineApp.simplifiedType);
+        mBinding.tvContent.setTypeface(MineApp.simplifiedType);
+        mBinding.tvSubContent.setTypeface(MineApp.simplifiedType);
         initFragments();
         aMapLocation = new AMapLocation(activity);
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
         getPermissions();
-        openedMemberPriceList();
+
         loginHelper = LoginSampleHelper.getInstance();
         loginHelper.loginOut_Sample();
 
@@ -94,11 +98,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             myImAccountInfoApi();
 
         giftList();
-        rechargeDiscountList();
-        bankInfoList();
-        comType();
-        walletAndPop();
-        newDynMsgAllNum();
         rechargeReceiver = new BaseReceiver(activity, "lobster_recharge") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -126,7 +125,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 chatListDb.updateChatMsg(otherUserId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType(), count, new ChatListDb.CallBack() {
                     @Override
                     public void success() {
-                        mainBinding.setUnReadCount(chatListDb.getAllUnReadNum());
+                        mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
                         Intent data = new Intent("lobster_updateChat");
                         data.putExtra("userId", otherUserId);
                         activity.sendBroadcast(data);
@@ -143,12 +142,20 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 activity.sendBroadcast(upMessage);
             }
         };
+
+        resumeContactNumReceiver = new BaseReceiver(activity,"lobster_resumeContactNum") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                contactNum();
+            }
+        };
     }
 
     public void onDestroy() {
         rechargeReceiver.unregisterReceiver();
         chatListReceiver.unregisterReceiver();
         newMsgReceiver.unregisterReceiver();
+        resumeContactNumReceiver.unregisterReceiver();
     }
 
     private void initFragments() {
@@ -157,8 +164,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         fragments.add(FragmentUtils.getCardFragment());
         fragments.add(FragmentUtils.getChatFragment());
         fragments.add(FragmentUtils.getMineFragment());
-        mainBinding.viewPage.setAdapter(new FragmentAdapter(activity.getSupportFragmentManager(), fragments));
-        mainBinding.viewPage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mBinding.viewPage.setAdapter(new FragmentAdapter(activity.getSupportFragmentManager(), fragments));
+        mBinding.viewPage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -170,7 +177,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                mainBinding.setIndex(nowIndex);
+                mBinding.setIndex(nowIndex);
                 if (state == 0 && nowIndex == 1 && PreferenceUtil.readIntValue(activity, "showGuidance") == 0) {
                     new GuidancePW(activity, mBinding.getRoot());
                 }
@@ -178,28 +185,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         });
 
         selectPage(0);
-
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mainBinding.remindRelative.getLayoutParams();
-        params.setMarginEnd(ObjectUtils.getViewSizeByWidthFromMax(220));
-        mainBinding.remindRelative.setLayoutParams(params);
-
-        mainBinding.tvTitle.setText("24小时内有");
-        mainBinding.tvContent.setText("99+");
-        mainBinding.tvSubContent.setText("人喜欢你啦");
-
-        mBinding.setVariable(BR.otherHead, MineApp.logo);
-
-//        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mainBinding.remindRelative, "scaleX", 0, 1).setDuration(500);
-//        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mainBinding.remindRelative, "scaleY", 0, 1).setDuration(500);
-//        ObjectAnimator translateY = ObjectAnimator.ofFloat(mainBinding.remindRelative, "translationY", 0, -30, 0, -30, 0, -30, 0).setDuration(500);
-//        ObjectAnimator scaleXEnd = ObjectAnimator.ofFloat(mainBinding.remindRelative, "scaleX", 1, 0).setDuration(500);
-//        ObjectAnimator scaleYEnd = ObjectAnimator.ofFloat(mainBinding.remindRelative, "scaleY", 1, 0).setDuration(500);
-//
-//        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-//        animatorSet.play(scaleX).with(scaleY).after(5000);
-//        animatorSet.play(translateY).after(scaleY);
-//        animatorSet.play(scaleXEnd).with(scaleYEnd).after(translateY).after(10000);
-//        animatorSet.start();
     }
 
     @Override
@@ -207,8 +192,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         if (nowIndex == index)
             return;
         nowIndex = index;
-        mainBinding.setIndex(nowIndex);
-        mainBinding.viewPage.setCurrentItem(index);
+        mBinding.setIndex(nowIndex);
+        mBinding.viewPage.setCurrentItem(index);
     }
 
     @Override
@@ -240,6 +225,13 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onNext(List<GiftInfo> o) {
                 MineApp.giftInfoList.addAll(o);
+                openedMemberPriceList();
+                rechargeDiscountList();
+                bankInfoList();
+                comType();
+                walletAndPop();
+                newDynMsgAllNum();
+                contactNum();
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
@@ -351,7 +343,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                     if (chatListDb.getChatList().size() > 0) {
                         activity.sendBroadcast(new Intent("lobster_updateChat"));
                     }
-                    mainBinding.setUnReadCount(chatListDb.getAllUnReadNum());
+                    mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
                 }
             }
         }, activity).setPageNo(pageNo);
@@ -375,13 +367,65 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 chatList.setEffectType(1);
                 chatList.setAuthType(1);
                 chatListDb.saveChatList(chatList);
-                mainBinding.setUnReadCount(chatListDb.getAllUnReadNum());
+                mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
                 Intent data = new Intent("lobster_updateChat");
                 data.putExtra("userId", otherUserId);
                 activity.sendBroadcast(data);
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void contactNum() {
+        contactNumApi api = new contactNumApi(new HttpOnNextListener<ContactNum>() {
+            @Override
+            public void onNext(ContactNum o) {
+                MineApp.contactNum = o;
+                activity.sendBroadcast(new Intent("lobster_updateContactNum"));
+                initRemind(o.getBeLikeCount());
+            }
+        }, activity).setOtherUserId(BaseActivity.userId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void initRemind(int beLikeCount) {
+        if (PreferenceUtil.readStringValue(activity, "likeRemark_" + BaseActivity.userId).isEmpty()) {
+            PreferenceUtil.saveStringValue(activity, "likeRemark_" + BaseActivity.userId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm));
+            PreferenceUtil.saveIntValue(activity, "beLikeCount" + BaseActivity.userId, beLikeCount);
+        } else {
+            String lastTime = PreferenceUtil.readStringValue(activity, "likeRemark_" + BaseActivity.userId);
+            if (DateUtil.getDateCount(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm), lastTime, DateUtil.yyyy_MM_dd_HH_mm, 1000f * 3600f * 24f) > 1) {
+                PreferenceUtil.saveStringValue(activity, "likeRemark_" + BaseActivity.userId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm));
+                int count = beLikeCount - PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId);
+                if (count > 0) {
+                    startAnimator("24小时内有", count < 99 ? (count + "") : "99+", "人喜欢你啦", "");
+                }
+                PreferenceUtil.saveIntValue(activity, "beLikeCount" + BaseActivity.userId, beLikeCount);
+            }
+        }
+    }
+
+    public void startAnimator(String title, String content, String subContent, String logo) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBinding.remindRelative.getLayoutParams();
+        params.setMarginEnd(ObjectUtils.getViewSizeByWidthFromMax(220));
+        mBinding.remindRelative.setLayoutParams(params);
+        mBinding.tvTitle.setText(title);
+        mBinding.tvContent.setText(content);
+        mBinding.tvSubContent.setText(subContent);
+        mBinding.setOtherHead(logo);
+
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleX", 0, 1).setDuration(500);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleY", 0, 1).setDuration(500);
+        ObjectAnimator translateY = ObjectAnimator.ofFloat(mBinding.remindRelative, "translationY", 0, -30, 0, -30, 0, -30, 0).setDuration(500);
+        ObjectAnimator scaleXEnd = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleX", 1, 0).setDuration(500);
+        ObjectAnimator scaleYEnd = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleY", 1, 0).setDuration(500);
+
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.play(scaleX).with(scaleY).after(5000);
+        animatorSet.play(translateY).after(scaleY);
+        animatorSet.play(scaleXEnd).with(scaleYEnd).after(translateY).after(10000);
+        animatorSet.start();
     }
 
     public void stopAnimator() {

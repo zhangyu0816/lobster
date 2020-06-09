@@ -43,6 +43,15 @@
                 android:textColor="@color/black_252"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <ImageView
+                onClickDelayed="@{viewModel::toMemberDetail}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@{viewModel.mineInfo.memberType==2?@drawable/look_icon:@drawable/unlook_icon}"
+                android:padding="15dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"/>
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView

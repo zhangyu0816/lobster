@@ -6,5 +6,6 @@ public interface BottleChatVMInterface {
 
     void myBottle();
 
+    void toMemberDetail(View view);
     void sendBottle(View view);
 }

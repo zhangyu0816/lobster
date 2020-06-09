@@ -18,6 +18,7 @@ import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.BottleMsg;
 import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_bottle.BR;
@@ -25,6 +26,7 @@ import com.zb.module_bottle.R;
 import com.zb.module_bottle.adapter.BottleAdapter;
 import com.zb.module_bottle.databinding.BottleChatBinding;
 import com.zb.module_bottle.iv.BottleChatVMInterface;
+import com.zb.module_bottle.windows.BottleVipPW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +88,15 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             }
         }, activity).setDriftBottleId(driftBottleId);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void toMemberDetail(View view) {
+        if (mineInfo.getMemberType() == 2) {
+            ActivityUtils.getCardMemberDetail(bottleInfo.getUserId());
+            return;
+        }
+        new BottleVipPW(activity, mBinding.getRoot());
     }
 
     @Override

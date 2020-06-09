@@ -27,4 +27,6 @@ public interface MainVMInterface {
     void chatList();
 
     void otherInfo(long otherUserId, int count, CustomMessageBody body);
+
+    void contactNum();
 }

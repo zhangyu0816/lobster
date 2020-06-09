@@ -11,6 +11,7 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.Authentication;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.uploadImage.PhotoFile;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
@@ -19,6 +20,7 @@ import com.zb.module_mine.R;
 import com.zb.module_mine.adapter.MineAdapter;
 import com.zb.module_mine.iv.AuthenticationVMInterface;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +52,7 @@ public class AuthenticationViewModel extends BaseViewModel implements Authentica
     @Override
     public void back(View view) {
         super.back(view);
+        DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
         activity.finish();
     }
 

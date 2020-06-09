@@ -6,13 +6,22 @@ import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 public class LikeMe extends BaseObservable {
-    long otherUserId;//对方用户的id
+    long userId;//操作人id
+    long otherUserId;//被喜欢的操作id
     int likeOtherStatus;// 0 不喜欢  1 喜欢  2.超级喜欢
     String nick = ""; //昵称
     String headImage = "";// 头像
     int idAttest; //实名认证 0未认证  1认证
     String modifyTime = "";
     String pairTime = "";
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
 
     @Bindable
     public long getOtherUserId() {

@@ -43,6 +43,16 @@ public class ChatListDb extends BaseDao {
         return chatList;
     }
 
+    public void deleteChatMsg(long otherUserId) {
+        beginTransaction();
+        ChatList chatList = realm.where(ChatList.class).equalTo("userId", otherUserId).equalTo("mainUserId", BaseActivity.userId).findFirst();
+        if (chatList != null) {
+            chatList.deleteFromRealm();
+        }
+        commitTransaction();
+    }
+
+
     public void updateChatMsg(long otherUserId, String creationDate, String stanza, int msgType, int noReadNum, CallBack callBack) {
         beginTransaction();
         ChatList chatList = realm.where(ChatList.class).equalTo("userId", otherUserId).equalTo("mainUserId", BaseActivity.userId).findFirst();

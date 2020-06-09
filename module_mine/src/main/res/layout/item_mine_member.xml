@@ -100,8 +100,9 @@
             android:layout_marginEnd="15dp"
             android:background="@{viewModel.position==2?(viewModel.likeDb.hasLike(item.userId)?@drawable/btn_bg_black_efe_radius40: @drawable/btn_bg_purple_7a4_white_radius60):(viewModel.attentionDb.isAttention(item.userId)?@drawable/btn_bg_black_efe_radius40: @drawable/btn_bg_purple_7a4_white_radius60)}"
             android:gravity="center"
+            android:textStyle="bold"
             android:onClick="@{v->viewModel.clickMember(position)}"
             android:text="@{ObjectUtils.textName(viewModel.likeDb, viewModel.attentionDb, item.userId, viewModel.position)}"
-            android:textColor="@{ObjectUtils.textColor(viewModel.likeDb, viewModel.attentionDb, item.userId)}" />
+            android:textColor="@{ObjectUtils.textColor(viewModel.likeDb, viewModel.attentionDb, item.userId, viewModel.position)}" />
     </RelativeLayout>
 </layout>
