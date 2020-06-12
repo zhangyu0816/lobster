@@ -110,7 +110,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                 ActivityUtils.getMineFCL(2);
                 return;
             }
-            SCToastUtil.showToastBlack(activity, "查看被喜欢的人为VIP用户专享功能");
+            SCToastUtil.showToast(activity, "查看被喜欢的人为VIP用户专享功能", true);
         } else {
             ActivityUtils.getMineFCL(position);
         }

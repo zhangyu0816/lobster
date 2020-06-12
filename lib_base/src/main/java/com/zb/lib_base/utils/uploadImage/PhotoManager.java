@@ -173,7 +173,7 @@ public class PhotoManager {
 
             @Override
             public void onError(Throwable e) {
-                SCToastUtil.showToastBlack(context, "压缩异常");
+                SCToastUtil.showToast(context, "压缩异常", true);
             }
         });
         return this;
@@ -265,7 +265,7 @@ public class PhotoManager {
 
             @Override
             public void onError(Throwable e) {
-                SCToastUtil.showToastBlack(context, "压缩异常");
+                SCToastUtil.showToast(context, "压缩异常", true);
             }
         });
         return this;
@@ -324,7 +324,7 @@ public class PhotoManager {
 
             @Override
             public void onError(Throwable e) {
-                SCToastUtil.showToastBlack(context, "压缩异常");
+                SCToastUtil.showToast(context, "压缩异常", true);
             }
         });
         return this;
@@ -511,7 +511,7 @@ public class PhotoManager {
      */
     public void reUploadByUnSuccess() {
         if (isCompress) {
-            SCToastUtil.showToastBlack(context, "图片正在压缩...");
+            SCToastUtil.showToast(context, "图片正在压缩...", true);
             return;
         }
         for (int i = 0; i < photos.size(); i++) {

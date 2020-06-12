@@ -108,7 +108,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
             }
         }
         if (images.isEmpty()) {
-            SCToastUtil.showToastBlack(activity, "请上传至少1张照片");
+            SCToastUtil.showToast(activity, "请上传至少1张照片", true);
             return;
         }
         if (uploadImages.isEmpty()) {
@@ -178,7 +178,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
         modifyMemberInfoApi api = new modifyMemberInfoApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToastBlack(activity, "提交个人信息");
+                SCToastUtil.showToast(activity, "提交个人信息", true);
                 mineInfoDb.updateImages(images);
                 activity.sendBroadcast(new Intent("lobster_updateMineInfo"));
                 activity.finish();

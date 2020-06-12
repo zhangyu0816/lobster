@@ -82,7 +82,7 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
             }
         }
         if (images.isEmpty()) {
-            SCToastUtil.showToast(activity, "请上传至少1张照片");
+            SCToastUtil.showToast(activity, "请上传至少1张照片", false);
             return;
         }
         images = images.substring(1);
@@ -121,13 +121,14 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
         myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
             @Override
             public void onNext(MineInfo o) {
-                SCToastUtil.showToast(activity, "注册成功");
+                SCToastUtil.showToast(activity, "注册成功", true);
                 mineInfoDb.saveMineInfo(o);
                 if (!MineApp.isLogin)
                     ActivityUtils.getMainActivity();
                 activity.finish();
             }
         }, activity);
+        api.setPosition(1);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

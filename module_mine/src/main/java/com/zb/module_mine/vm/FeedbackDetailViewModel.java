@@ -84,15 +84,15 @@ public class FeedbackDetailViewModel extends BaseViewModel implements FeedbackDe
     @Override
     public void submit(View view) {
         if (feedbackInfo.getTitle().isEmpty()) {
-            SCToastUtil.showToastBlack(activity, "请填写反馈标题");
+            SCToastUtil.showToast(activity, "请填写反馈标题", true);
             return;
         }
         if (feedbackInfo.getContent().isEmpty()) {
-            SCToastUtil.showToastBlack(activity, "请填写反馈内容");
+            SCToastUtil.showToast(activity, "请填写反馈内容", true);
             return;
         }
         if (images.size() == 1) {
-            SCToastUtil.showToastBlack(activity, "请上传图片证据");
+            SCToastUtil.showToast(activity, "请上传图片证据", true);
             return;
         }
 
@@ -110,7 +110,7 @@ public class FeedbackDetailViewModel extends BaseViewModel implements FeedbackDe
         addFeedBackApi api = new addFeedBackApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToastBlack(activity, "提交成功");
+                SCToastUtil.showToast(activity, "提交成功", true);
                 back(null);
             }
         }, activity).setContent(feedbackInfo.getContent()).setImages(images).setTitle(feedbackInfo.getTitle());

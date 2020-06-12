@@ -66,7 +66,7 @@ public class SelectTagViewModel extends BaseViewModel implements SelectTagVMInte
     @Override
     public void submit(View view) {
         if (selectList.size() == 0) {
-            SCToastUtil.showToastBlack(activity, "请选择标签");
+            SCToastUtil.showToast(activity, "请选择标签", true);
             return;
         }
         String tags = "#";
@@ -104,7 +104,7 @@ public class SelectTagViewModel extends BaseViewModel implements SelectTagVMInte
             selectAdapter.notifyDataSetChanged();
         } else {
             if (selectList.size() >= 6) {
-                SCToastUtil.showToastBlack(activity, "最多发布6个标签哦");
+                SCToastUtil.showToast(activity, "最多发布6个标签哦", true);
                 return;
             }
             selectList.add(tagList.get(position));

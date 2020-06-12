@@ -10,7 +10,6 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
-import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_register.iv.MainVMInterface;
 
@@ -18,24 +17,7 @@ import androidx.databinding.ViewDataBinding;
 
 public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
-    // 监听程序退出
-    private long exitTime = 0;
     private AMapLocation aMapLocation;
-
-    @Override
-    public void back(View view) {
-        super.back(view);
-        if (!MineApp.isLogin) {
-            if ((System.currentTimeMillis() - exitTime) > 2000) {
-                SCToastUtil.showToast(activity, "再按一次退出程序");
-                exitTime = System.currentTimeMillis();
-            } else {
-                System.exit(0);
-            }
-        } else {
-            activity.finish();
-        }
-    }
 
     @Override
     public void setBinding(ViewDataBinding binding) {

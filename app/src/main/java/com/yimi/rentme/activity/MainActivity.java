@@ -109,7 +109,7 @@ public class MainActivity extends AppBaseActivity {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK
                 && event.getAction() == KeyEvent.ACTION_DOWN) {
             if ((System.currentTimeMillis() - exitTime) > 2000) {
-                SCToastUtil.showToastBlack(activity, "再按一次退出程序");
+                SCToastUtil.showToast(activity, "再按一次退出程序", true);
                 exitTime = System.currentTimeMillis();
             } else {
                 System.exit(0);

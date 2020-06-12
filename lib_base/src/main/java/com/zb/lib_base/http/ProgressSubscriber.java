@@ -6,6 +6,7 @@ import com.zb.lib_base.utils.SCToastUtil;
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.util.Objects;
 
 import rx.Subscriber;
 
@@ -25,6 +26,7 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
 
     private String dialogTitle = "正在加载中";
     private CallBack mCallBack;
+    private int position = 0;
 
     public interface CallBack {
         void error();
@@ -42,6 +44,16 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
         this.mSubscriberOnNextListener = mSubscriberOnNextListener;
         this.mActivity = new WeakReference<>(context);
         this.showProgressAndCancel = showProgressAndCancel;
+        mCallBack = callBack;
+        setDialogTitle(dialogTitle);
+    }
+
+    public ProgressSubscriber(HttpOnNextListener mSubscriberOnNextListener, RxAppCompatActivity context, boolean showProgressAndCancel,
+                              String dialogTitle, int position, CallBack callBack) {
+        this.mSubscriberOnNextListener = mSubscriberOnNextListener;
+        this.mActivity = new WeakReference<>(context);
+        this.showProgressAndCancel = showProgressAndCancel;
+        this.position = position;
         mCallBack = callBack;
         setDialogTitle(dialogTitle);
     }
@@ -98,7 +110,7 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
             HttpTimeException exception = (HttpTimeException) e;
             switch (exception.getCode()) {
                 case HttpTimeException.ERROR:
-                    SCToastUtil.showToastBlack(context, e.getMessage());
+                    SCToastUtil.showToast(context, Objects.requireNonNull(e.getMessage()), position == 0);
                     break;
                 default:
                     break;

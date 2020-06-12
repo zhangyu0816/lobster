@@ -8,6 +8,7 @@ import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.RouteUtils;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.module_register.BR;
 import com.zb.module_register.R;
 import com.zb.module_register.databinding.RegisterMainBinding;
@@ -15,7 +16,8 @@ import com.zb.module_register.vm.MainViewModel;
 
 @Route(path = RouteUtils.Register_Main)
 public class MainActivity extends RegisterBaseActivity {
-    private MainViewModel viewModel;
+
+    private long exitTime = 0;
 
     @Override
     public int getRes() {
@@ -24,7 +26,7 @@ public class MainActivity extends RegisterBaseActivity {
 
     @Override
     public void initUI() {
-        viewModel = new MainViewModel();
+        MainViewModel viewModel = new MainViewModel();
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
         MineApp.registerInfo.setPhone(PreferenceUtil.readStringValue(activity, "userName"));
@@ -36,7 +38,16 @@ public class MainActivity extends RegisterBaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            viewModel.back(null);
+            if (!MineApp.isLogin) {
+                if ((System.currentTimeMillis() - exitTime) > 2000) {
+                    SCToastUtil.showToast(activity, "再按一次退出程序", false);
+                    exitTime = System.currentTimeMillis();
+                } else {
+                    System.exit(0);
+                }
+            } else {
+                finish();
+            }
             return true;
         }
         return false;

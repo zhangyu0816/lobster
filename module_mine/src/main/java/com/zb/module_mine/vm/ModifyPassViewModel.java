@@ -67,34 +67,34 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
 
         if (mBinding.getType() == 1) {
             if (mBinding.getOldPass().isEmpty()) {
-                SCToastUtil.showToastBlack(activity, "请输入旧密码");
+                SCToastUtil.showToast(activity, "请输入旧密码", true);
                 return;
             }
             if (!TextUtils.equals(mBinding.getOldPass(), PreferenceUtil.readStringValue(activity, "login_pass"))) {
-                SCToastUtil.showToastBlack(activity, "旧密码错误");
+                SCToastUtil.showToast(activity, "旧密码错误", true);
                 return;
             }
         } else {
             if (mBinding.getPhone().isEmpty()) {
-                SCToastUtil.showToastBlack(activity, "请输入手机号");
+                SCToastUtil.showToast(activity, "请输入手机号", true);
                 return;
             }
             if (!mBinding.getPhone().matches(MineApp.PHONE_NUMBER_REG)) {
-                SCToastUtil.showToastBlack(activity, "请输入正确的手机号");
+                SCToastUtil.showToast(activity, "请输入正确的手机号", true);
                 return;
             }
             if (mBinding.getCode().isEmpty()) {
-                SCToastUtil.showToastBlack(activity, "请输入短信验证码");
+                SCToastUtil.showToast(activity, "请输入短信验证码", true);
                 return;
             }
         }
 
         if (mBinding.getNewPass().length() < 6) {
-            SCToastUtil.showToastBlack(activity, "请输入至少6位新密码");
+            SCToastUtil.showToast(activity, "请输入至少6位新密码", true);
             return;
         }
         if (!TextUtils.equals(mBinding.getNewPass(), mBinding.getSurePass())) {
-            SCToastUtil.showToastBlack(activity, "确认密码输入错误");
+            SCToastUtil.showToast(activity, "确认密码输入错误", true);
             return;
         }
 
@@ -103,7 +103,7 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
                 @Override
                 public void onNext(Object o) {
                     PreferenceUtil.saveStringValue(activity, "login_pass", mBinding.getNewPass());
-                    SCToastUtil.showToastBlack(activity, "修改成功");
+                    SCToastUtil.showToast(activity, "修改成功", true);
                     activity.finish();
                 }
             }, activity).setOldPassWord(mBinding.getOldPass()).setNewPassWord(mBinding.getNewPass());
@@ -121,11 +121,11 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
     @Override
     public void getCode(View view) {
         if (mBinding.getPhone().isEmpty()) {
-            SCToastUtil.showToastBlack(activity, "请输入手机号");
+            SCToastUtil.showToast(activity, "请输入手机号", true);
             return;
         }
         if (!mBinding.getPhone().matches(MineApp.PHONE_NUMBER_REG)) {
-            SCToastUtil.showToastBlack(activity, "请输入正确的手机号");
+            SCToastUtil.showToast(activity, "请输入正确的手机号", true);
             return;
         }
         new ImageCaptchaPW(activity, mBinding.getRoot(), new ImageCaptchaPW.CallBack() {
@@ -149,7 +149,7 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
         findPassCaptchaApi api = new findPassCaptchaApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToastBlack(activity, "短信验证码发送成功，请注意查看");
+                SCToastUtil.showToast(activity, "短信验证码发送成功，请注意查看", true);
                 mBinding.setRemark("获取验证码");
                 timer.cancel();
             }
@@ -163,7 +163,7 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
             @Override
             public void onNext(Object o) {
                 PreferenceUtil.saveStringValue(activity, "login_pass", mBinding.getNewPass());
-                SCToastUtil.showToastBlack(activity, "修改成功");
+                SCToastUtil.showToast(activity, "修改成功", true);
                 activity.finish();
             }
         }, activity).setCaptcha(mBinding.getCode()).setUserName(mBinding.getPhone()).setPassWord(mBinding.getNewPass());

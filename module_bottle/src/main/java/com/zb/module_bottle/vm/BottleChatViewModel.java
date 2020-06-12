@@ -110,21 +110,21 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     @Override
     public void sendBottle(View view) {
         if (mBinding.getContent().isEmpty()) {
-            SCToastUtil.showToastBlack(activity, "请输入回复内容");
+            SCToastUtil.showToast(activity, "请输入回复内容", true);
             return;
         }
         replyBottleApi api = new replyBottleApi(new HttpOnNextListener<BottleMsg>() {
             @Override
             public void onNext(BottleMsg o) {
                 if (o == null) {
-                    SCToastUtil.showToastBlack(activity, "此漂流瓶已被销毁");
+                    SCToastUtil.showToast(activity, "此漂流瓶已被销毁", true);
                 } else {
                     bottleCacheDb.saveBottleCache(new BottleCache(driftBottleId, o.getModifyTime(), o.getText()));
                     bottleMsgList.add(o);
                     adapter.notifyDataSetChanged();
                     mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
                     mBinding.setContent("");
-
+                    hintKeyBoard();
                     activity.sendBroadcast(new Intent("lobster_updateBottle"));
                 }
             }

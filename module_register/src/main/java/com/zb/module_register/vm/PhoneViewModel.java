@@ -79,8 +79,12 @@ public class PhoneViewModel extends BaseViewModel implements PhoneVMInterface {
     @Override
     public void next(View view) {
         String phone = ((RegisterPhoneBinding) mBinding).getPhone();
+        if (phone.length() < 11) {
+            return;
+        }
+        hintKeyBoard();
         if (!phone.matches(MineApp.PHONE_NUMBER_REG)) {
-            SCToastUtil.showToast(activity, "手机号不正确");
+            SCToastUtil.showToast(activity, "手机号不正确", false);
             return;
         }
         MineApp.registerInfo.setPhone(phone);

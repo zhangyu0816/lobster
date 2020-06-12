@@ -75,7 +75,7 @@ public class RechargePW extends BasePopupWindow {
     public void recharge(View view) {
         super.recharge(view);
         if (preIndex == -1) {
-            SCToastUtil.showToastBlack(activity, "请选择充值套餐");
+            SCToastUtil.showToast(activity, "请选择充值套餐", true);
             return;
         }
         rechargeWallet();

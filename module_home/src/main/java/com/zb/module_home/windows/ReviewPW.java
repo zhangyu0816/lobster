@@ -112,13 +112,13 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
 
     public void sendReview(View view) {
         if (binding.getContent().isEmpty()) {
-            SCToastUtil.showToastBlack(activity, "请输入评论内容");
+            SCToastUtil.showToast(activity, "请输入评论内容", true);
             return;
         }
         dynDoReviewApi api = new dynDoReviewApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToastBlack(activity, "发布成功");
+                SCToastUtil.showToast(activity, "发布成功", true);
                 binding.setContent("");
                 // 下拉刷新
                 onRefresh(binding.refresh);

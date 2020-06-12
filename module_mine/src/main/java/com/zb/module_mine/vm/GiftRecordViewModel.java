@@ -32,7 +32,7 @@ public class GiftRecordViewModel extends BaseViewModel implements GiftRecordVMIn
         if (MineApp.walletInfo.getCanWithdrawCreditWallet() > 0) {
             realNameVerify();
         } else {
-            SCToastUtil.showToastBlack(activity, "暂无可提现收益");
+            SCToastUtil.showToast(activity, "暂无可提现收益", true);
         }
     }
 

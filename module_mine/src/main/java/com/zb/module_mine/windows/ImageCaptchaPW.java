@@ -49,7 +49,7 @@ public class ImageCaptchaPW extends BasePopupWindow {
     public void sure(View view) {
         super.sure(view);
         if (binding.getCode().length() != 4) {
-            SCToastUtil.showToastBlack(activity, "请输入4位有效验证码");
+            SCToastUtil.showToast(activity, "请输入4位有效验证码", true);
             return;
         }
         callBack.success(imageCaptcha, binding.getCode());

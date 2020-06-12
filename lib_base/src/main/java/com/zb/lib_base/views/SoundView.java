@@ -106,7 +106,7 @@ public class SoundView {
         public boolean handleMessage(Message msg) {
             resTime = msg.what;
             if (msg.what == MAX_DURATION || msg.what > MAX_DURATION) {
-                SCToastUtil.showToastBlack(context, "最长时间为60秒");
+                SCToastUtil.showToast(context, "最长时间为60秒", true);
                 stop();
             }
             return false;
@@ -128,7 +128,7 @@ public class SoundView {
         animationDrawable.stop();
         callBack.soundEnd();
         if (resTime < 1) {
-            SCToastUtil.showToast(context, "语音录制不能少于1秒");
+            SCToastUtil.showToast(context, "语音录制不能少于1秒", true);
             resTime = 0;
         } else
             callBack.sendSoundBack(resTime, audioPath);

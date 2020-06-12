@@ -12,6 +12,7 @@ public class LoadingActivity extends AppBaseActivity {
 
     @Override
     public void initUI() {
+        fitComprehensiveScreen();
         LoadingViewModel viewModel = new LoadingViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);

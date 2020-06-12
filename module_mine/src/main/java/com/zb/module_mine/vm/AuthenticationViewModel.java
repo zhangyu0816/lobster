@@ -74,25 +74,25 @@ public class AuthenticationViewModel extends BaseViewModel implements Authentica
     @Override
     public void submit(View view) {
         if (TextUtils.equals(imageList.get(0), "add_image_icon")) {
-            SCToastUtil.showToastBlack(activity, "请上传身份证正面照片");
+            SCToastUtil.showToast(activity, "请上传身份证正面照片", true);
             return;
         }
         if (TextUtils.equals(imageList.get(1), "add_image_icon")) {
-            SCToastUtil.showToastBlack(activity, "请上传身份证正面照片");
+            SCToastUtil.showToast(activity, "请上传身份证正面照片", true);
             return;
         }
         if (TextUtils.equals(imageList.get(2), "add_image_icon")) {
-            SCToastUtil.showToastBlack(activity, "请上传身份证正面照片");
+            SCToastUtil.showToast(activity, "请上传身份证正面照片", true);
             return;
         }
 
         if (authentication.getRealName().isEmpty()) {
-            SCToastUtil.showToastBlack(activity, "请上传真实姓名");
+            SCToastUtil.showToast(activity, "请上传真实姓名", true);
             return;
         }
 
         if (authentication.getIdentityNum().isEmpty()) {
-            SCToastUtil.showToastBlack(activity, "请上传身份证号");
+            SCToastUtil.showToast(activity, "请上传身份证号", true);
             return;
         }
 
@@ -114,7 +114,7 @@ public class AuthenticationViewModel extends BaseViewModel implements Authentica
         upRealNameInfoApi api = new upRealNameInfoApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToastBlack(activity, "认证信息已提交，请等待审核结果，需1-3个工作日！");
+                SCToastUtil.showToast(activity, "认证信息已提交，请等待审核结果，需1-3个工作日！", true);
                 activity.finish();
             }
         }, activity)

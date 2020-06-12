@@ -72,7 +72,7 @@ public class HttpManager {
      */
     public void doHttpDeal(BaseEntity basePar) {
         ProgressSubscriber subscriber = new ProgressSubscriber(basePar.getListener(), basePar.getRxAppCompatActivity
-                (), basePar.isShowProgress(), basePar.getDialogTitle(), () -> {
+                (), basePar.isShowProgress(), basePar.getDialogTitle(), basePar.getPosition(), () -> {
             MineApp.apiList.add(basePar);
             basePar.getRxAppCompatActivity().sendBroadcast(new Intent("lobster_systemError"));
         });

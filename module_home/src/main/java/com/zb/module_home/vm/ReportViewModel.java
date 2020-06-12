@@ -59,15 +59,15 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
     public void right(View view) {
         super.right(view);
         if (prePosition == -1) {
-            SCToastUtil.showToastBlack(activity, "请选择举报类型");
+            SCToastUtil.showToast(activity, "请选择举报类型", true);
             return;
         }
         if (mBinding.getContent().isEmpty()) {
-            SCToastUtil.showToastBlack(activity, "请填写举报理由");
+            SCToastUtil.showToast(activity, "请填写举报理由", true);
             return;
         }
         if (images.size() == 1) {
-            SCToastUtil.showToastBlack(activity, "请上传图片证据");
+            SCToastUtil.showToast(activity, "请上传图片证据", true);
             return;
         }
 
@@ -119,7 +119,7 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
             @Override
             public void onNext(Object o) {
                 photoManager.deleteAllFile();
-                SCToastUtil.showToastBlack(activity, "举报信息已提交，我们会审核后进行处理");
+                SCToastUtil.showToast(activity, "举报信息已提交，我们会审核后进行处理", true);
                 back(null);
             }
         }, activity)

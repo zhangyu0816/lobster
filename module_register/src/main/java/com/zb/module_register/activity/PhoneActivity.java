@@ -1,5 +1,7 @@
 package com.zb.module_register.activity;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
@@ -33,7 +35,7 @@ public class PhoneActivity extends RegisterBaseActivity {
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.isLogin = isLogin;
         RegisterPhoneBinding binding = (RegisterPhoneBinding) mBinding;
-        binding.setBtnName(isLogin ? "继续" : "获取验证码");
+        binding.setBtnName("获取验证码");
         binding.setRemark(isLogin ? "" : "您的手机号将获取验证码");
         // 步骤进度跳
         AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 5);
@@ -42,10 +44,42 @@ public class PhoneActivity extends RegisterBaseActivity {
         // 按钮向上移
         KeyBroadUtils.controlKeyboardLayout(binding.btnLayout, binding.tvNext);
         // 初始化手机号
-        if (isLogin)
+        if (isLogin) {
+            binding.edPhone.setText(PreferenceUtil.readStringValue(activity, "userName"));
             binding.setPhone(PreferenceUtil.readStringValue(activity, "userName"));
-        else
+        } else {
+            binding.edPhone.setText(MineApp.registerInfo.getPhone());
             binding.setPhone(MineApp.registerInfo.getPhone());
+        }
+        if (!binding.getPhone().isEmpty()) {
+            binding.edPhone.setSelection(binding.getPhone().length() - 1);
+            binding.tvNext.setBackgroundResource(R.drawable.btn_bg_white_radius60);
+            binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_7a4));
+        }
+
+        binding.edPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String content = binding.edPhone.getText().toString();
+                if (content.length() >= 11) {
+                    binding.tvNext.setBackgroundResource(R.drawable.btn_bg_white_radius60);
+                    binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_7a4));
+                } else {
+                    binding.tvNext.setBackgroundResource(R.drawable.btn_bg_purple_af9_radius60);
+                    binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_cab));
+                }
+            }
+        });
     }
 
     @Override

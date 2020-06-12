@@ -118,23 +118,23 @@ public class WithdrawViewModel extends BaseViewModel implements WithdrawVMInterf
     @Override
     public void withdraw(View view) {
         if (MineApp.walletInfo.getCanWithdrawCreditWallet() == 0) {
-            SCToastUtil.showToastBlack(activity, "暂无可提现收益");
+            SCToastUtil.showToast(activity, "暂无可提现收益", true);
             return;
         }
 
         if (mBinding.getMoney().isEmpty()) {
-            SCToastUtil.showToastBlack(activity, "请输入提现金额");
+            SCToastUtil.showToast(activity, "请输入提现金额", true);
             return;
         }
         if (mineBank.getId() == 0) {
-            SCToastUtil.showToastBlack(activity, "请选择提现账号");
+            SCToastUtil.showToast(activity, "请选择提现账号", true);
             return;
         }
 
         changeCashApi api = new changeCashApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToastBlack(activity, "已提交提现信息");
+                SCToastUtil.showToast(activity, "已提交提现信息", true);
                 activity.sendBroadcast(new Intent("lobster_recharge"));
                 activity.finish();
             }

@@ -47,12 +47,12 @@ public class GiftPayPW extends BasePopupWindow {
     public void sure(View view) {
         super.sure(view);
         if (binding.getContent().isEmpty() || Integer.parseInt(binding.getContent()) == 0) {
-            SCToastUtil.showToastBlack(activity, "请输入赠送数量");
+            SCToastUtil.showToast(activity, "请输入赠送数量", true);
             return;
         }
         double money = Integer.parseInt(binding.getContent()) * giftInfo.getPayMoney();
         if (money > MineApp.walletInfo.getWallet()) {
-            SCToastUtil.showToastBlack(activity, "钱包余额不足，请先充值");
+            SCToastUtil.showToast(activity, "钱包余额不足，请先充值", true);
             return;
         }
         submitOrder();

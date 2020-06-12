@@ -32,7 +32,7 @@ public class HttpTimeException extends RuntimeException {
     }
 
     public HttpTimeException(String detailMessage) {
-        super(detailMessage.replace("验证码", "校验码"));
+        super(detailMessage);
     }
 
     /**

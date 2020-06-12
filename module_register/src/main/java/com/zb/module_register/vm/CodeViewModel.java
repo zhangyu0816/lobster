@@ -86,7 +86,6 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
     @Override
     public void sure(View view) {
         if (mBinding.edCode.getText().toString().length() < 4) {
-            SCToastUtil.showToast(activity, "请输入4位有效验证码");
             return;
         }
         MineApp.registerInfo.setCaptcha(mBinding.edCode.getText().toString());
@@ -116,6 +115,7 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
         }, activity)
                 .setUserName(MineApp.registerInfo.getPhone())
                 .setCaptcha(MineApp.registerInfo.getCaptcha());
+        api.setPosition(1);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -124,13 +124,14 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
         myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
             @Override
             public void onNext(MineInfo o) {
-                SCToastUtil.showToastBlack(activity, "登录成功");
+                SCToastUtil.showToast(activity, "登录成功", true);
                 mineInfoDb.saveMineInfo(o);
                 if (!MineApp.isLogin)
                     ActivityUtils.getMainActivity();
                 activity.finish();
             }
         }, activity);
+        api.setPosition(1);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -140,12 +141,13 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
         registerCaptchaApi api = new registerCaptchaApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToast(activity, "验证码已发送，请注意查收");
+                SCToastUtil.showToast(activity, "验证码已发送，请注意查收", false);
                 mBinding.setRemark(MineApp.getInstance().getResources().getString(R.string.code_second, second));
                 timer.start();
             }
         }, activity)
                 .setUserName(MineApp.registerInfo.getPhone());
+        api.setPosition(1);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -154,11 +156,12 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
         loginCaptchaApi api = new loginCaptchaApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToast(activity, "验证码已发送，请注意查收");
+                SCToastUtil.showToast(activity, "验证码已发送，请注意查收", false);
                 mBinding.setRemark(MineApp.getInstance().getResources().getString(R.string.code_second, second));
                 timer.start();
             }
         }, activity).setUserName(MineApp.registerInfo.getPhone());
+        api.setPosition(1);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

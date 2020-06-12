@@ -62,7 +62,7 @@ public class LogoViewModel extends BaseViewModel implements LogoVMInterface {
     @Override
     public void next(View view) {
         if (logoBinding.getImageUrl().isEmpty()) {
-            SCToastUtil.showToast(activity, "请上传头像");
+            SCToastUtil.showToast(activity, "请上传头像", false);
             return;
         }
         MineApp.registerInfo.getImageList().clear();

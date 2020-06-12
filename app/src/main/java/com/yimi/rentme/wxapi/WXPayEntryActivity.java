@@ -57,7 +57,7 @@ public class WXPayEntryActivity extends RxAppCompatActivity implements IWXAPIEve
                     msg = "支付失败！";
                     break;
             }
-            SCToastUtil.showToastBlack(this, msg);
+            SCToastUtil.showToast(this, msg, true);
             finish();
         }
     }

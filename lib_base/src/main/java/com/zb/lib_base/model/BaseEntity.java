@@ -1,12 +1,14 @@
 package com.zb.lib_base.model;
 
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.windows.TextPW;
 
 import rx.Observable;
 import rx.functions.Func1;
@@ -25,6 +27,7 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
 
     private String dialogTitle;
 
+    private int position = 0;
 
     public BaseEntity(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         setListener(listener);
@@ -69,6 +72,14 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
         this.listener = listener;
     }
 
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
     /*
      * 获取当前rx生命周期
      * @return
@@ -82,15 +93,25 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
     public T call(BaseResultEntity<T> httpResult) {
         //未登录
         if (httpResult.getCode() == HttpTimeException.NOT_LOGIN) {
-            getRxAppCompatActivity().sendBroadcast(new Intent("lobster_finishRefresh"));
-            ActivityUtils.getRegisterPhone(true);
-//            if (TextUtils.equals("", BaseActivity.sessionId) && rxAppCompatActivity != null) {
-//                rxAppCompatActivity.sendBroadcast(new Intent("mdc_rule"));
-//            } else {
-//                Intent intent = new Intent("mdc_logout");
-//                intent.putExtra("type", 2);
-//                rxAppCompatActivity.sendBroadcast(intent);
-//            }
+            new TextPW(getRxAppCompatActivity(), getRxAppCompatActivity().getWindow().getDecorView(),
+                    "安全提示", "您的账号已在另一个设备上登录，若不是本人操作，请重新登录且请往设置中修改密码！",
+                    "重新登录", false, new TextPW.CallBack() {
+                @Override
+                public void sure() {
+                    getRxAppCompatActivity().sendBroadcast(new Intent("lobster_finishRefresh"));
+                    ActivityUtils.getRegisterPhone(true);
+                    if (TextUtils.equals(dialogTitle, "loadingNotLogin")) {
+                        getRxAppCompatActivity().finish();
+                    }
+                }
+
+                @Override
+                public void cancel() {
+                    if (TextUtils.equals(dialogTitle, "loadingNotLogin")) {
+                        getRxAppCompatActivity().finish();
+                    }
+                }
+            });
             throw new HttpTimeException(httpResult.getCode());
         }
 

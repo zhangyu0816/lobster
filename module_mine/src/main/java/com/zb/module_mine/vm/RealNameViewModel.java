@@ -185,7 +185,7 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
         humanFaceApi api = new humanFaceApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToastBlack(activity, "人脸认证已提交");
+                SCToastUtil.showToast(activity, "人脸认证已提交", true);
                 back(null);
             }
         }, activity).setFaceImage(image);
@@ -204,7 +204,7 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
                     mOverCameraView.setTouchFoucusRect(mCamera, autoFocusCallback, x, y);
                 }
                 mRunnable = () -> {
-                    SCToastUtil.showToastBlack(activity, "自动聚焦超时,请调整合适的位置拍摄！");
+                    SCToastUtil.showToast(activity, "自动聚焦超时,请调整合适的位置拍摄！", true);
                     isFoucing = false;
                     mOverCameraView.setFoucuing(false);
                     mOverCameraView.disDrawTouchFocusRect();

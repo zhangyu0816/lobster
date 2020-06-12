@@ -135,6 +135,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                 }
                 sendChatMessage(1, mBinding.getContent(), "", 0, "【文字】");
                 mBinding.setContent("");
+                hintKeyBoard();
             }
             return false;
         });

@@ -5,7 +5,6 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -25,14 +24,8 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
                     ActivityUtils.getMainActivity();
                     activity.finish();
                 }
-
-                @Override
-                public void onError(Throwable e) {
-                    if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NOT_LOGIN) {
-                        activity.finish();
-                    }
-                }
             }, activity);
+            api.setDialogTitle("loadingNotLogin");
             HttpManager.getInstance().doHttpDeal(api);
         }
     }

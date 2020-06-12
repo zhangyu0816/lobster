@@ -67,7 +67,7 @@ public class VideoPlayViewModel extends BaseViewModel implements VideoPlayVMInte
         //信息回调
         mBinding.videoView.setOnInfoListener((mp, what, extra) -> {
             if (what == MediaPlayer.MEDIA_INFO_UNKNOWN || what == MediaPlayer.MEDIA_INFO_NOT_SEEKABLE) {
-                SCToastUtil.showToast(activity, "视频播放失败");
+                SCToastUtil.showToast(activity, "视频播放失败", true);
                 mBinding.videoPlay.setVisibility(View.VISIBLE);
                 mBinding.videoView.stopPlayback();//停止播放视频,并且释放
                 mBinding.videoView.suspend();//在任何状态下释放媒体播放器

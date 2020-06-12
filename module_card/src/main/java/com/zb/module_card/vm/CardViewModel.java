@@ -207,7 +207,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             superExposureApi api = new superExposureApi(new HttpOnNextListener() {
                 @Override
                 public void onNext(Object o) {
-                    SCToastUtil.showToastBlack(activity, "曝光成功");
+                    SCToastUtil.showToast(activity, "曝光成功", true);
                 }
             }, activity);
             HttpManager.getInstance().doHttpDeal(api);
@@ -237,7 +237,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     @Override
     public void selectCity(View view) {
         if (mineInfo.getMemberType() == 1) {
-            SCToastUtil.showToastBlack(activity, "位置漫游服务为VIP用户专享功能");
+            SCToastUtil.showToast(activity, "位置漫游服务为VIP用户专享功能", true);
             return;
         }
         ActivityUtils.getMineLocation();
@@ -293,7 +293,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                 } else if (o == 3) {
                     // 喜欢次数用尽
-                    SCToastUtil.showToastBlack(activity, "今日喜欢次数已用完");
+                    SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else {
                     // 超级喜欢时，非会员或超级喜欢次数用尽
                     if (mineInfo.getMemberType() == 2) {

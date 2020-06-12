@@ -110,7 +110,7 @@ public class BirthdayPW extends BasePopupWindow {
         String yearStr = mYear + "";
         int nowYear = Integer.parseInt(nowDate.split("-")[0]);
         if (nowYear - mYear < 18) {
-            SCToastUtil.showToast(activity, "您还未满18岁");
+            SCToastUtil.showToast(activity, "您还未满18岁", true);
             return;
         }
         mMonth = Integer.parseInt(monthList.get(binding.wheelMonth.getCurrentItem()).replace("月", ""));

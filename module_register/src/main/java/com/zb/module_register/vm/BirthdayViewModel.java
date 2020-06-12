@@ -30,7 +30,7 @@ public class BirthdayViewModel extends BaseViewModel implements BirthdayVMInterf
     @Override
     public void next(View view) {
         if (MineApp.registerInfo.getBirthday().isEmpty()) {
-            SCToastUtil.showToast(activity, "请选择生日日期");
+            SCToastUtil.showToast(activity, "请选择生日日期", false);
             return;
         }
         ActivityUtils.getRegisterPhone(false);

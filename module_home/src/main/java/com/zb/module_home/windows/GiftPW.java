@@ -67,7 +67,7 @@ public class GiftPW extends BasePopupWindow {
     public void payGift(View view) {
         super.payGift(view);
         if (MineApp.walletInfo.getWallet() < MineApp.giftInfoList.get(preIndex).getPayMoney()) {
-            SCToastUtil.showToastBlack(activity, "钱包余额不足，请先充值");
+            SCToastUtil.showToast(activity, "钱包余额不足，请先充值", true);
             return;
         }
         mCallBack.selectGiftInfo(MineApp.giftInfoList.get(preIndex));

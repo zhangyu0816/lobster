@@ -126,7 +126,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     @Override
     public void selectCity(View view) {
         if (mineInfo.getMemberType() == 1) {
-            SCToastUtil.showToastBlack(activity, "位置漫游服务为VIP用户专享功能");
+            SCToastUtil.showToast(activity, "位置漫游服务为VIP用户专享功能", true);
             return;
         }
         ActivityUtils.getMineLocation();
@@ -135,16 +135,16 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     @Override
     public void publish(View view) {
         if (publicImageBinding.getTitle().isEmpty()) {
-            SCToastUtil.showToastBlack(activity, "请填写动态标题");
+            SCToastUtil.showToast(activity, "请填写动态标题", true);
             return;
         }
         if (publicImageBinding.getContent().isEmpty()) {
-            SCToastUtil.showToastBlack(activity, "请填写动态内容");
+            SCToastUtil.showToast(activity, "请填写动态内容", true);
             return;
         }
         if (videoUrl.isEmpty()) {
             if (images.size() == 1) {
-                SCToastUtil.showToastBlack(activity, "请上传照片或视频");
+                SCToastUtil.showToast(activity, "请上传照片或视频", true);
                 return;
             }
             List<String> imageList = new ArrayList<>();
@@ -207,7 +207,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
         CustomProgressDialog.stopLoading();
         switch (msg.what) {
             case 0:
-                SCToastUtil.showToast(activity, "压缩视频失败");
+                SCToastUtil.showToast(activity, "压缩视频失败", true);
                 break;
             case 1:
                 photoManager.addFileUpload(0, videoImageFile);
@@ -238,7 +238,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                 DataCleanManager.deleteFile(new File(activity.getCacheDir(), "videos"));
                 DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
                 activity.sendBroadcast(new Intent("lobster_publish"));
-                SCToastUtil.showToastBlack(activity, "发布成功");
+                SCToastUtil.showToast(activity, "发布成功", true);
                 activity.finish();
             }
         }, activity)

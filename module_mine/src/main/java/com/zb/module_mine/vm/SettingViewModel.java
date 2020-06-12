@@ -47,7 +47,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     @Override
     public void toLocation(View view) {
         if (mineInfo.getMemberType() == 1) {
-            SCToastUtil.showToastBlack(activity, "位置漫游服务为VIP用户专享功能");
+            SCToastUtil.showToast(activity, "位置漫游服务为VIP用户专享功能", true);
             return;
         }
         ActivityUtils.getMineLocation();
@@ -96,6 +96,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
             public void onNext(Object o) {
                 PreferenceUtil.saveStringValue(activity, "sessionId", "");
                 PreferenceUtil.saveLongValue(activity, "userId", 0L);
+                PreferenceUtil.saveStringValue(activity, "login_pass", "");
                 BaseActivity.update();
                 ActivityUtils.getRegisterMain();
                 activity.finish();

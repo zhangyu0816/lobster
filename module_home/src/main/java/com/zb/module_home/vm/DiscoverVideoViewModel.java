@@ -166,7 +166,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             @Override
             public void onNext(Object o) {
                 activity.sendBroadcast(new Intent("lobster_publish"));
-                SCToastUtil.showToastBlack(activity, "删除成功");
+                SCToastUtil.showToast(activity, "删除成功", true);
                 back(null);
             }
         }, activity).setFriendDynId(friendDynId);
@@ -337,7 +337,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
         //信息回调
         mBinding.videoView.setOnInfoListener((mp, what, extra) -> {
             if (what == MediaPlayer.MEDIA_INFO_UNKNOWN || what == MediaPlayer.MEDIA_INFO_NOT_SEEKABLE) {
-                SCToastUtil.showToast(activity, "视频播放失败");
+                SCToastUtil.showToast(activity, "视频播放失败", true);
                 mBinding.setIsPlay(false);
                 mBinding.videoView.stopPlayback();//停止播放视频,并且释放
                 mBinding.videoView.suspend();//在任何状态下释放媒体播放器

@@ -14,6 +14,7 @@ import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.module_register.R;
 import com.zb.module_register.databinding.RegisterLoginBinding;
 import com.zb.module_register.iv.LoginVMInterface;
 
@@ -41,12 +42,17 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface {
         super.setBinding(binding);
         loginBinding = (RegisterLoginBinding) binding;
         loginBinding.setPass(PreferenceUtil.readStringValue(activity, "login_pass"));
+        loginBinding.edPass.setText(PreferenceUtil.readStringValue(activity, "login_pass"));
+        if (!loginBinding.getPass().isEmpty()) {
+            loginBinding.edPass.setSelection(loginBinding.getPass().length() - 1);
+            loginBinding.tvNext.setBackgroundResource(R.drawable.btn_bg_white_radius60);
+            loginBinding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_7a4));
+        }
     }
 
     @Override
     public void complete(View view) {
         if (loginBinding.getPass().length() < 6) {
-            SCToastUtil.showToast(activity, "请输入不少于6位的密码");
             return;
         }
         loginByPass();
@@ -67,6 +73,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface {
         }, activity)
                 .setUserName(MineApp.registerInfo.getPhone())
                 .setPassWord(loginBinding.getPass());
+        api.setPosition(1);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -75,13 +82,14 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface {
         myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
             @Override
             public void onNext(MineInfo o) {
-                SCToastUtil.showToastBlack(activity, "登录成功");
+                SCToastUtil.showToast(activity, "登录成功", true);
                 mineInfoDb.saveMineInfo(o);
                 if (!MineApp.isLogin)
                     ActivityUtils.getMainActivity();
                 activity.finish();
             }
         }, activity);
+        api.setPosition(1);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

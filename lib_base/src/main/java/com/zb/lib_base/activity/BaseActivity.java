@@ -269,7 +269,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
                     permissionRunnable = null;
                 }
             } else {
-                SCToastUtil.showToastBlack(activity, "暂无权限执行相关操作！");
+                SCToastUtil.showToast(activity, "暂无权限执行相关操作！", true);
                 if (permissionRunnable != null) {
                     permissionRunnable.noPermission();
                     permissionRunnable = null;

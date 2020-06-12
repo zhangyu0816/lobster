@@ -59,20 +59,20 @@ public class BindingBankViewModel extends BaseViewModel implements BindingBankVM
     @Override
     public void submit(View view) {
         if (bankInfo == null) {
-            SCToastUtil.showToastBlack(activity, "请选择开户行");
+            SCToastUtil.showToast(activity, "请选择开户行", true);
             return;
         }
 //        if (mBinding.getName().isEmpty()) {
-//            SCToastUtil.showToastBlack(activity, "请输入户名");
+//            SCToastUtil.showToast(activity, "请输入户名", true);
 //            return;
 //        }
         if (mBinding.getBankAccount().isEmpty()) {
-            SCToastUtil.showToastBlack(activity, "请输入" + bankInfo.getBankName() + "账号");
+            SCToastUtil.showToast(activity, "请输入" + bankInfo.getBankName() + "账号", true);
             return;
         }
         if (bankInfo.getBankType() == 1) {
             if (mBinding.getBankAddress().isEmpty()) {
-                SCToastUtil.showToastBlack(activity, "请输入开户网点");
+                SCToastUtil.showToast(activity, "请输入开户网点", true);
                 return;
             }
         }
@@ -89,7 +89,7 @@ public class BindingBankViewModel extends BaseViewModel implements BindingBankVM
         bindBankCardApi api = new bindBankCardApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToastBlack(activity, "添加成功");
+                SCToastUtil.showToast(activity, "添加成功", true);
                 activity.sendBroadcast(new Intent("lobster_addBank"));
                 activity.finish();
             }
