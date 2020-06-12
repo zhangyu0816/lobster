@@ -16,6 +16,7 @@ import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.myConcernsApi;
 import com.zb.lib_base.api.myFansApi;
 import com.zb.lib_base.api.relievePairApi;
+import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -53,10 +54,13 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
     private MineInfo mineInfo;
     private int prePosition = -1;
     private BaseReceiver attentionReceiver;
+    private BaseReceiver finishRefreshReceiver;
+    private HistoryMsgDb historyMsgDb;
 
     @Override
     public void back(View view) {
         super.back(view);
+        activity.sendBroadcast(new Intent("lobster_resumeContactNum"));
         activity.finish();
     }
 
@@ -64,10 +68,17 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         likeDb = new LikeDb(Realm.getDefaultInstance());
+        historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         mBinding = (MineFclBinding) binding;
         mineInfo = mineInfoDb.getMineInfo();
         setAdapter();
-
+        finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
+            }
+        };
         attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -77,6 +88,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
     }
 
     public void onDestroy() {
+        finishRefreshReceiver.unregisterReceiver();
         attentionReceiver.unregisterReceiver();
     }
 
@@ -107,7 +119,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
     public void selectPosition(int position) {
         super.selectPosition(position);
         prePosition = position;
-        ActivityUtils.getCardMemberDetail(memberInfoList.get(position).getUserId());
+        ActivityUtils.getCardMemberDetail(memberInfoList.get(position).getUserId(), false);
     }
 
     private void getData() {
@@ -127,7 +139,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
         if (position == 2) {
             // 被喜欢
             if (likeDb.hasLike(otherUserId)) {
-                new TextPW(activity, mBinding.getRoot(), "解除匹配关系", "解除匹配关系后，将对方移除匹配列表及聊天列表。", () -> {
+                new TextPW(activity, mBinding.getRoot(), "解除匹配关系", "解除匹配关系后，将对方移除匹配列表及聊天列表。","解除", () -> {
                     relievePair(otherUserId);
                 });
             } else {
@@ -188,6 +200,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), memberInfoList.get(_selectIndex).getSex());
                     likeDb.saveLike(new CollectID(otherUserId));
                     adapter.notifyItemChanged(_selectIndex);
+                    activity.sendBroadcast(new Intent("lobster_pairList"));
                 } else if (o == 3) {
                     SCToastUtil.showToastBlack(activity, "今日喜欢次数已用完");
                 }
@@ -201,6 +214,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
             @Override
             public void onNext(Object o) {
                 likeDb.deleteLike(otherUserId);
+                historyMsgDb.deleteHistoryMsg(otherUserId);
                 adapter.notifyItemChanged(_selectIndex);
                 Intent data = new Intent("lobster_relieve");
                 data.putExtra("otherUserId", otherUserId);

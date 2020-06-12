@@ -12,6 +12,8 @@ public class TranRecordActivity extends MineBaseActivity {
     @Autowired(name = "tranType")
     int tranType;
 
+    private TranRecordViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.mine_tran_record;
@@ -19,10 +21,16 @@ public class TranRecordActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
-        TranRecordViewModel viewModel = new TranRecordViewModel();
+        viewModel = new TranRecordViewModel();
         viewModel.tranType = tranType;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.title, tranType == 0 ? "账单明细" : "收益明细");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 }

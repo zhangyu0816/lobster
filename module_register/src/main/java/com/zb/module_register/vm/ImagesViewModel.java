@@ -110,9 +110,9 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
                 .setBirthday(birthday)
                 .setMoreImages(registerInfo.getMoreImages())
                 .setSex(registerInfo.getSex())
-                .setProvinceId(areaDb.getProvinceId(PreferenceUtil.readStringValue(activity,"provinceName")))
+                .setProvinceId(areaDb.getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
                 .setCityId(areaDb.getCityId(MineApp.cityName))
-                .setDistrictId(areaDb.getDistrictId(PreferenceUtil.readStringValue(activity,"districtName")));
+                .setDistrictId(areaDb.getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -123,7 +123,8 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
             public void onNext(MineInfo o) {
                 SCToastUtil.showToast(activity, "注册成功");
                 mineInfoDb.saveMineInfo(o);
-                ActivityUtils.getMainActivity();
+                if (!MineApp.isLogin)
+                    ActivityUtils.getMainActivity();
                 activity.finish();
             }
         }, activity);
@@ -170,6 +171,6 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
     }
 
     private void setPermissions() {
-        ActivityUtils.getCameraMain(activity, false,false);
+        ActivityUtils.getCameraMain(activity, false, false);
     }
 }

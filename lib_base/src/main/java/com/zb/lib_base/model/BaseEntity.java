@@ -1,9 +1,12 @@
 package com.zb.lib_base.model;
 
+import android.content.Intent;
+
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.http.HttpTimeException;
+import com.zb.lib_base.utils.ActivityUtils;
 
 import rx.Observable;
 import rx.functions.Func1;
@@ -79,6 +82,8 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
     public T call(BaseResultEntity<T> httpResult) {
         //未登录
         if (httpResult.getCode() == HttpTimeException.NOT_LOGIN) {
+            getRxAppCompatActivity().sendBroadcast(new Intent("lobster_finishRefresh"));
+            ActivityUtils.getRegisterPhone(true);
 //            if (TextUtils.equals("", BaseActivity.sessionId) && rxAppCompatActivity != null) {
 //                rxAppCompatActivity.sendBroadcast(new Intent("mdc_rule"));
 //            } else {

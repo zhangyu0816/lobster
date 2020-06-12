@@ -29,7 +29,6 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
                 @Override
                 public void onError(Throwable e) {
                     if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NOT_LOGIN) {
-                        ActivityUtils.getRegisterMain();
                         activity.finish();
                     }
                 }

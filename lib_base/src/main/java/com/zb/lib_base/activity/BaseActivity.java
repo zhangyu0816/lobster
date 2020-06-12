@@ -35,6 +35,8 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     public static long applyUserId = 10001;
     public static long dynUserId = 10002;
     public static long questionUserId = 10003;
+    public static long likeUserId = 1001;
+    public static long bottleUserId = 1002;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

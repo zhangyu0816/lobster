@@ -16,11 +16,11 @@
         tools:context=".activity.MainActivity">
 
         <TextView
-            onClickDelayed="@{viewModel::back}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="37dp"
+            android:paddingStart="15dp"
+            android:paddingTop="37dp"
+            android:onClick="@{viewModel::back}"
             android:text="退出"
             android:textColor="@android:color/white"
             android:textSize="16sp"

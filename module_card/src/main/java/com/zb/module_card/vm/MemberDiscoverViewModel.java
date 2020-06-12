@@ -42,19 +42,20 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     private AreaDb areaDb;
     private int pageNo = 1;
     private List<DiscoverInfo> discoverInfoList = new ArrayList<>();
-    private CardMemberDiscoverBinding discoverBinding;
+    private CardMemberDiscoverBinding mBinding;
     private BaseReceiver publishReceiver;
     public long otherUserId;
     private MineInfo mineInfo;
     private MemberInfo memberInfo;
     private int prePosition = -1;
     private BaseReceiver attentionReceiver;
+    private BaseReceiver finishRefreshReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         areaDb = new AreaDb(Realm.getDefaultInstance());
-        discoverBinding = (CardMemberDiscoverBinding) binding;
+        mBinding = (CardMemberDiscoverBinding) binding;
         publishReceiver = new BaseReceiver(activity, "lobster_publish") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -71,11 +72,19 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 prePosition = -1;
             }
         };
+        finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
+            }
+        };
     }
 
     public void onDestroy() {
         publishReceiver.unregisterReceiver();
         attentionReceiver.unregisterReceiver();
+        finishRefreshReceiver.unregisterReceiver();
     }
 
     @Override
@@ -119,25 +128,25 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
         dynPiazzaListApi api = new dynPiazzaListApi(new HttpOnNextListener<List<DiscoverInfo>>() {
             @Override
             public void onNext(List<DiscoverInfo> o) {
-                discoverBinding.noNetLinear.setVisibility(View.GONE);
+                mBinding.noNetLinear.setVisibility(View.GONE);
                 int start = discoverInfoList.size();
                 discoverInfoList.addAll(o);
                 adapter.notifyItemRangeChanged(start, discoverInfoList.size());
-                discoverBinding.refresh.finishRefresh();
-                discoverBinding.refresh.finishLoadMore();
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof SocketTimeoutException || e instanceof ConnectException) {
-                    discoverBinding.noNetLinear.setVisibility(View.VISIBLE);
-                    discoverBinding.refresh.setEnableLoadMore(false);
-                    discoverBinding.refresh.finishRefresh();
-                    discoverBinding.refresh.finishLoadMore();
+                    mBinding.noNetLinear.setVisibility(View.VISIBLE);
+                    mBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
                 } else if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    discoverBinding.refresh.setEnableLoadMore(false);
-                    discoverBinding.refresh.finishRefresh();
-                    discoverBinding.refresh.finishLoadMore();
+                    mBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
                 }
             }
         }, activity)
@@ -152,7 +161,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
         personOtherDynApi api = new personOtherDynApi(new HttpOnNextListener<List<DiscoverInfo>>() {
             @Override
             public void onNext(List<DiscoverInfo> o) {
-                discoverBinding.noNetLinear.setVisibility(View.GONE);
+                mBinding.noNetLinear.setVisibility(View.GONE);
                 int start = discoverInfoList.size();
                 for (DiscoverInfo item : o) {
                     if (otherUserId == BaseActivity.userId) {
@@ -165,21 +174,21 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 }
                 discoverInfoList.addAll(o);
                 adapter.notifyItemRangeChanged(start, discoverInfoList.size());
-                discoverBinding.refresh.finishRefresh();
-                discoverBinding.refresh.finishLoadMore();
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof SocketTimeoutException || e instanceof ConnectException) {
-                    discoverBinding.noNetLinear.setVisibility(View.VISIBLE);
-                    discoverBinding.refresh.setEnableLoadMore(false);
-                    discoverBinding.refresh.finishRefresh();
-                    discoverBinding.refresh.finishLoadMore();
+                    mBinding.noNetLinear.setVisibility(View.VISIBLE);
+                    mBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
                 } else if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    discoverBinding.refresh.setEnableLoadMore(false);
-                    discoverBinding.refresh.finishRefresh();
-                    discoverBinding.refresh.finishLoadMore();
+                    mBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
                 }
             }
         }, activity)
@@ -204,7 +213,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     @Override
     public void onRefreshForNet(View view) {
         // 下拉刷新
-        discoverBinding.refresh.setEnableLoadMore(true);
+        mBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         discoverInfoList.clear();
         adapter.notifyDataSetChanged();

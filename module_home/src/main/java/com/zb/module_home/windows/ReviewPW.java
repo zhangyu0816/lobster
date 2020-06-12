@@ -1,11 +1,14 @@
 package com.zb.module_home.windows;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.dynDoReviewApi;
 import com.zb.lib_base.api.seeReviewsApi;
 import com.zb.lib_base.http.HttpManager;
@@ -32,6 +35,7 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
     private int pageNo = 1;
     private long friendDynId;
     private long reviewId;
+    private BaseReceiver finishRefreshReceiver;
 
     public ReviewPW(RxAppCompatActivity activity, View parentView, long friendDynId) {
         super(activity, parentView, false);
@@ -53,6 +57,13 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
         mBinding.setVariable(BR.adapter, adapter);
         binding = (PwsHomeReviewBinding) mBinding;
         seeReviews();
+        finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                binding.refresh.finishRefresh();
+                binding.refresh.finishLoadMore();
+            }
+        };
     }
 
     @Override
@@ -95,6 +106,7 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
     }
 
     public void close(View view) {
+        finishRefreshReceiver.unregisterReceiver();
         dismiss();
     }
 

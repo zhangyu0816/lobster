@@ -1,5 +1,6 @@
 package com.zb.module_bottle.vm;
 
+import android.content.Intent;
 import android.view.View;
 
 import com.alibaba.mobileim.contact.IYWContact;
@@ -11,9 +12,11 @@ import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.api.replyBottleApi;
 import com.zb.lib_base.api.thirdReadChatApi;
+import com.zb.lib_base.db.BottleCacheDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.imcore.LoginSampleHelper;
+import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.BottleMsg;
 import com.zb.lib_base.model.ImAccount;
@@ -32,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
+import io.realm.Realm;
 
 public class BottleChatViewModel extends BaseViewModel implements BottleChatVMInterface {
     public long driftBottleId;
@@ -40,7 +44,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     private BottleChatBinding mBinding;
     public MineInfo mineInfo;
     public BottleInfo bottleInfo;
-
+    private BottleCacheDb bottleCacheDb;
     // 阿里百川
     private LoginSampleHelper loginHelper;
     private String otherIMUserId;
@@ -52,6 +56,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (BottleChatBinding) binding;
+        bottleCacheDb = new BottleCacheDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
         loginHelper = LoginSampleHelper.getInstance();
         setAdapter();
@@ -76,6 +81,8 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             public void onNext(BottleInfo o) {
                 bottleInfo = o;
                 bottleMsgList.addAll(o.getMessageList());
+                BottleMsg bottleMsg = o.getMessageList().get(o.getMessageList().size() - 1);
+                bottleCacheDb.saveBottleCache(new BottleCache(driftBottleId, bottleMsg.getModifyTime(), bottleMsg.getText()));
                 adapter.notifyDataSetChanged();
                 mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
                 mBinding.setVariable(BR.nick, bottleInfo.getOtherNick());
@@ -85,6 +92,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                     otherImAccountInfoApi();
                 }
                 thirdReadChat();
+                activity.sendBroadcast(new Intent("lobster_bottleNum"));
             }
         }, activity).setDriftBottleId(driftBottleId);
         HttpManager.getInstance().doHttpDeal(api);
@@ -93,7 +101,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     @Override
     public void toMemberDetail(View view) {
         if (mineInfo.getMemberType() == 2) {
-            ActivityUtils.getCardMemberDetail(bottleInfo.getUserId());
+            ActivityUtils.getCardMemberDetail(bottleInfo.getUserId(), false);
             return;
         }
         new BottleVipPW(activity, mBinding.getRoot());
@@ -111,9 +119,13 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                 if (o == null) {
                     SCToastUtil.showToastBlack(activity, "此漂流瓶已被销毁");
                 } else {
+                    bottleCacheDb.saveBottleCache(new BottleCache(driftBottleId, o.getModifyTime(), o.getText()));
                     bottleMsgList.add(o);
                     adapter.notifyDataSetChanged();
                     mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
+                    mBinding.setContent("");
+
+                    activity.sendBroadcast(new Intent("lobster_updateBottle"));
                 }
             }
         }, activity).setDriftBottleId(driftBottleId).setText(mBinding.getContent());

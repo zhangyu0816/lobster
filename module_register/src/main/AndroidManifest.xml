@@ -6,7 +6,8 @@
     <application android:theme="@style/RegisterTheme">
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.LoginActivity" />
-        <activity android:name=".activity.PhoneActivity" />
+        <activity android:name=".activity.PhoneActivity"
+            android:launchMode="singleTask"/>
         <activity android:name=".activity.NickNameActivity" />
         <activity android:name=".activity.BirthdayActivity" />
         <activity android:name=".activity.CodeActivity" />

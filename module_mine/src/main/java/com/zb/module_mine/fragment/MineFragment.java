@@ -1,7 +1,5 @@
 package com.zb.module_mine.fragment;
 
-import android.content.Intent;
-
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseFragment;
@@ -51,11 +49,5 @@ public class MineFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         viewModel.onDestroy();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        activity.sendBroadcast(new Intent("lobster_resumeContactNum"));
     }
 }

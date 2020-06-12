@@ -32,4 +32,10 @@ public class FeedbackActivity extends MineBaseActivity {
         super.onResume();
         viewModel.onRefresh(binding.refresh);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
+    }
 }

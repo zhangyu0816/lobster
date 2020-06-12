@@ -1,5 +1,7 @@
 package com.zb.module_mine.activity;
 
+import android.view.KeyEvent;
+
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.RouteUtils;
@@ -11,6 +13,8 @@ import java.io.File;
 
 @Route(path = RouteUtils.Mine_Setting)
 public class SettingActivity extends MineBaseActivity {
+    private SettingViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.mine_setting;
@@ -18,10 +22,19 @@ public class SettingActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
-        SettingViewModel viewModel = new SettingViewModel();
+        viewModel = new SettingViewModel();
         viewModel.setBinding(mBinding);
-        mBinding.setVariable(BR.viewModel,viewModel);
-        mBinding.setVariable(BR.title,"设置");
+        mBinding.setVariable(BR.viewModel, viewModel);
+        mBinding.setVariable(BR.title, "设置");
         mBinding.setVariable(BR.cacheSize, DataCleanManager.getCacheSize(new File(String.valueOf(activity.getCacheDir()))));
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            viewModel.back(null);
+            return true;
+        }
+        return false;
     }
 }

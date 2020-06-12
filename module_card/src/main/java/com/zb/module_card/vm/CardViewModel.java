@@ -99,7 +99,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         cardReceiver = new BaseReceiver(activity, "lobster_card") {
             @Override
             public void onReceive(Context context, Intent intent) {
-
+                if (currentView == null) return;
                 int direction = intent.getIntExtra("direction", 0);
                 if (direction == 0) {
                     // 不喜欢
@@ -172,7 +172,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     public void selectCard(View currentView, int position) {
         this.currentView = currentView;
         pairInfo = pairInfoList.get(position);
-        ActivityUtils.getCardMemberDetail(pairInfo.getOtherUserId());
+        ActivityUtils.getCardMemberDetail(pairInfo.getOtherUserId(), true);
     }
 
     @Override

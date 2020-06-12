@@ -26,6 +26,6 @@ public class BottleListActivity extends BottleBaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        viewModel.openVipReceiver.unregisterReceiver();
+        viewModel.onDestroy();
     }
 }

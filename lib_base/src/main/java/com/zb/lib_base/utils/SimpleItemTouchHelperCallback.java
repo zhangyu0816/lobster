@@ -14,7 +14,8 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     private ItemTouchHelperAdapter mAdapter;
     private boolean sort = false;
     private int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;        //允许上下左右的拖动
-    private int swipeFlags = 0;   //不允许侧滑
+    private int swipeFlags = 0;   //不允许侧滑'
+    private boolean swipeEnabled = false;
 
     private Vibrator vibrator;// 震动
     private boolean isVibrator = false;
@@ -30,6 +31,10 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     public void setSwipeFlags(int swipeFlags) {
         this.swipeFlags = swipeFlags;
+    }
+
+    public void setSwipeEnabled(boolean swipeEnabled) {
+        this.swipeEnabled = swipeEnabled;
     }
 
     /*
@@ -51,11 +56,11 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         super.onSelectedChanged(viewHolder, actionState);
-        if(sort){
-            if(!isVibrator){
+        if (sort) {
+            if (!isVibrator) {
                 vibrator.vibrate(200);
                 isVibrator = true;
-            }else{
+            } else {
                 isVibrator = false;
             }
         }
@@ -87,7 +92,14 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
      * */
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+        mAdapter.onItemDelete(viewHolder.getAdapterPosition());
+    }
 
+    //滑动消失的距离，当滑动小于这个值的时候会删除这个item，否则不会视为删除
+// 返回值作为用户视为拖动的距离
+    @Override
+    public float getSwipeThreshold(RecyclerView.ViewHolder viewHolder) {
+        return 0.3f;
     }
 
     //设置item是否可以拖动
@@ -109,7 +121,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
      * */
     @Override
     public boolean isItemViewSwipeEnabled() {
-        return false;
+        return swipeEnabled;
     }
 
 

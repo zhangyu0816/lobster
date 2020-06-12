@@ -3,7 +3,6 @@ package com.zb.module_bottle.windows;
 import android.view.View;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.castBottleApi;
 import com.zb.lib_base.api.pickBottleApi;
 import com.zb.lib_base.api.replyBottleApi;
@@ -79,7 +78,6 @@ public class BottleContentPW extends BasePopupWindow {
             mBinding.setVariable(BR.btnName, "立即回复");
         }
     }
-
 
     // 创建漂流瓶
     private void castBottle() {

@@ -25,7 +25,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     @Override
     public void back(View view) {
         super.back(view);
-        if (PreferenceUtil.readIntValue(activity, "loginType") == 1) {
+        if (!MineApp.isLogin) {
             if ((System.currentTimeMillis() - exitTime) > 2000) {
                 SCToastUtil.showToast(activity, "再按一次退出程序");
                 exitTime = System.currentTimeMillis();

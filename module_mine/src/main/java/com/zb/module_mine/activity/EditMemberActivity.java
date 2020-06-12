@@ -88,6 +88,7 @@ public class EditMemberActivity extends MineBaseActivity {
         memberReceiver.unregisterReceiver();
         cameraReceiver.unregisterReceiver();
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

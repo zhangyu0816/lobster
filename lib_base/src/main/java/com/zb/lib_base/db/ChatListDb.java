@@ -8,6 +8,7 @@ import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 public class ChatListDb extends BaseDao {
 
@@ -24,10 +25,10 @@ public class ChatListDb extends BaseDao {
     }
 
     // 获取会话列表
-    public List<ChatList> getChatList() {
+    public List<ChatList> getChatList(int chatType) {
         beginTransaction();
         List<ChatList> chatMsgList = new ArrayList<>();
-        RealmResults<ChatList> results = realm.where(ChatList.class).equalTo("mainUserId", BaseActivity.userId).findAll();
+        RealmResults<ChatList> results = realm.where(ChatList.class).equalTo("chatType", chatType).equalTo("mainUserId", BaseActivity.userId).findAllSorted("creationDate", Sort.DESCENDING);
         if (results.size() > 0) {
             chatMsgList.addAll(results);
         }
@@ -36,9 +37,9 @@ public class ChatListDb extends BaseDao {
     }
 
     // 单个用户的最新聊天记录
-    public ChatList getChatMsg(long otherUserId) {
+    public ChatList getChatMsg(long otherUserId, int chatType) {
         beginTransaction();
-        ChatList chatList = realm.where(ChatList.class).equalTo("userId", otherUserId).equalTo("mainUserId", BaseActivity.userId).findFirst();
+        ChatList chatList = realm.where(ChatList.class).equalTo("chatType", chatType).equalTo("userId", otherUserId).equalTo("mainUserId", BaseActivity.userId).findFirst();
         commitTransaction();
         return chatList;
     }
@@ -77,7 +78,7 @@ public class ChatListDb extends BaseDao {
     public int getAllUnReadNum() {
         beginTransaction();
         int unReadNum = 0;
-        RealmResults<ChatList> results = realm.where(ChatList.class).equalTo("mainUserId", BaseActivity.userId).findAll();
+        RealmResults<ChatList> results = realm.where(ChatList.class).notEqualTo("chatType",1).equalTo("mainUserId", BaseActivity.userId).findAll();
         if (results.size() > 0) {
             for (ChatList chatList : results) {
                 unReadNum += chatList.getNoReadNum();

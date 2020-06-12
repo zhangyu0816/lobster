@@ -7,6 +7,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.KeyBroadUtils;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_register.BR;
 import com.zb.module_register.R;
@@ -41,7 +42,10 @@ public class PhoneActivity extends RegisterBaseActivity {
         // 按钮向上移
         KeyBroadUtils.controlKeyboardLayout(binding.btnLayout, binding.tvNext);
         // 初始化手机号
-        binding.setPhone(MineApp.registerInfo.getPhone());
+        if (isLogin)
+            binding.setPhone(PreferenceUtil.readStringValue(activity, "userName"));
+        else
+            binding.setPhone(MineApp.registerInfo.getPhone());
     }
 
     @Override

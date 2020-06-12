@@ -62,7 +62,7 @@ public class GiftRecordViewModel extends BaseViewModel implements GiftRecordVMIn
                     if(o.getIsChecked()==0||o.getIsChecked()==100){
                         new TextPW(activity,mBinding.getRoot(),"实名认证","实名认证还在审核中，请稍后再试！");
                     }else{
-                        new TextPW(activity, mBinding.getRoot(), "实名认证", "你的实名认证审核失败，请前往查看失败原因并重新提交！", () -> ActivityUtils.getMineAuthentication(o));
+                        new TextPW(activity, mBinding.getRoot(), "实名认证", "你的实名认证审核失败，请前往查看失败原因并重新提交！", "重新认证",() -> ActivityUtils.getMineAuthentication(o));
                     }
                 }
             }
@@ -70,7 +70,7 @@ public class GiftRecordViewModel extends BaseViewModel implements GiftRecordVMIn
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    new TextPW(activity, mBinding.getRoot(), "实名认证", "你还未实名认证无法提现,请前往提交实名认证信息！", () -> ActivityUtils.getMineAuthentication(new Authentication()));
+                    new TextPW(activity, mBinding.getRoot(), "实名认证", "你还未实名认证无法提现,请前往提交实名认证信息！","去认证", () -> ActivityUtils.getMineAuthentication(new Authentication()));
                 }
             }
         }, activity);

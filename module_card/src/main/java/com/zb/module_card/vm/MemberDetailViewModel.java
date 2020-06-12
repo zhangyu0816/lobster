@@ -28,6 +28,7 @@ import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.CountUsedPW;
 import com.zb.lib_base.windows.SelectorPW;
+import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;
 import com.zb.module_card.adapter.CardAdapter;
@@ -46,6 +47,7 @@ import io.realm.Realm;
 public class MemberDetailViewModel extends BaseViewModel implements MemberDetailVMInterface {
     private CardMemberDetailBinding mBinding;
     public long otherUserId = 0;
+    public boolean showLike;
     public MemberInfo memberInfo;
     public CardAdapter tagAdapter;
     private List<String> tagList = new ArrayList<>();
@@ -185,11 +187,17 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             public void onNext(Integer o) {
                 // 1喜欢成功 2匹配成功 3喜欢次数用尽
                 if (o == 1) {
-                    // 不喜欢成功  喜欢成功  超级喜欢成功
-                    activity.finish();
-                    Intent data = new Intent("lobster_card");
-                    data.putExtra("direction", 2);
-                    activity.sendBroadcast(data);
+                    if (showLike) {
+                        // 不喜欢成功  喜欢成功  超级喜欢成功
+                        activity.finish();
+                        Intent data = new Intent("lobster_card");
+                        data.putExtra("direction", 2);
+                        activity.sendBroadcast(data);
+                    } else {
+                        String myHead = mineInfo.getImage();
+                        String otherHead = memberInfo.getMoreImages().split("#")[0];
+                        new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex());
+                    }
                 } else {
                     // 超级喜欢时，非会员或超级喜欢次数用尽
                     if (mineInfo.getMemberType() == 2) {

@@ -40,8 +40,8 @@ public class ActivityUtils {
 
     /*********************** 卡片 **************************/
     // 用户详情
-    public static void getCardMemberDetail(long userId) {
-        ARouter.getInstance().build(RouteUtils.Card_Member_Detail).withLong("userId", userId).navigation();
+    public static void getCardMemberDetail(long userId, boolean showLike) {
+        ARouter.getInstance().build(RouteUtils.Card_Member_Detail).withLong("userId", userId).withBoolean("showLike", showLike).navigation();
     }
 
     /*********************** 对话 **************************/

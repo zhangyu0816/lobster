@@ -2,6 +2,7 @@ package com.zb.module_mine.vm;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.view.View;
@@ -13,6 +14,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.clearHistoryMsgApi;
 import com.zb.lib_base.api.systemHistoryMsgListApi;
 import com.zb.lib_base.app.MineApp;
@@ -48,6 +50,7 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
     private int preDirection;
     private SoundView soundView;
     private ObjectAnimator animator;
+    private BaseReceiver finishRefreshReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -56,8 +59,18 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
         resFileDb = new ResFileDb(Realm.getDefaultInstance());
         setAdapter();
         soundView = new SoundView(activity, view -> stopVoiceDrawable());
+        finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
+            }
+        };
     }
 
+    public void onDestroy(){
+        finishRefreshReceiver.unregisterReceiver();
+    }
     @Override
     public void back(View view) {
         super.back(view);

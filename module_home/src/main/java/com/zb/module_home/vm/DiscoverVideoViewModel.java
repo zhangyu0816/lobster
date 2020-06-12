@@ -61,6 +61,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     private HomeDiscoverVideoBinding mBinding;
     private ObjectAnimator animator;
     private int goodNum = 0;
+
     @Override
     public void back(View view) {
         super.back(view);
@@ -117,7 +118,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     @Override
     public void toMemberDetail(View view) {
         if (discoverInfo != null)
-            ActivityUtils.getCardMemberDetail(discoverInfo.getUserId());
+            ActivityUtils.getCardMemberDetail(discoverInfo.getUserId(), false);
     }
 
     @Override
@@ -156,7 +157,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
 
     @Override
     public void toDelete(View view) {
-        new TextPW(activity, mBinding.getRoot(), "删除动态", "删除后，动态不可找回！", this::deleteDyn);
+        new TextPW(activity, mBinding.getRoot(), "删除动态", "删除后，动态不可找回！", "删除", this::deleteDyn);
     }
 
     @Override

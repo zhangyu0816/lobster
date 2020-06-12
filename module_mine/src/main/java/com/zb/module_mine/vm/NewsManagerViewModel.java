@@ -38,6 +38,7 @@ public class NewsManagerViewModel extends BaseViewModel implements NewsManagerVM
     @Override
     public void back(View view) {
         super.back(view);
+        activity.sendBroadcast(new Intent("lobster_resumeContactNum"));
         newsCountReceiver.unregisterReceiver();
         activity.finish();
     }

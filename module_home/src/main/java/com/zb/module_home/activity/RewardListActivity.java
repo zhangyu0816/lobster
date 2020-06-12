@@ -12,6 +12,8 @@ public class RewardListActivity extends HomeBaseActivity {
     @Autowired(name = "friendDynId")
     long friendDynId;
 
+    private RewardListViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.home_reward_list;
@@ -19,9 +21,15 @@ public class RewardListActivity extends HomeBaseActivity {
 
     @Override
     public void initUI() {
-        RewardListViewModel viewModel = new RewardListViewModel();
+        viewModel = new RewardListViewModel();
         viewModel.friendDynId = friendDynId;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 }

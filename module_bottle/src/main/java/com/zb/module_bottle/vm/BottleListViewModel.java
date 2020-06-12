@@ -10,39 +10,51 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.myBottleListApi;
 import com.zb.lib_base.api.myInfoApi;
+import com.zb.lib_base.api.pickBottleApi;
+import com.zb.lib_base.db.BottleCacheDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
+import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.TextPW;
 import com.zb.module_bottle.R;
 import com.zb.module_bottle.adapter.BottleAdapter;
 import com.zb.module_bottle.databinding.BottleListBinding;
 import com.zb.module_bottle.iv.BottleListVMInterface;
-import com.zb.module_bottle.windows.BottleVipPW;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import io.realm.Realm;
 
 public class BottleListViewModel extends BaseViewModel implements BottleListVMInterface, OnRefreshListener, OnLoadMoreListener {
 
     public BottleAdapter adapter;
-    private List<BottleInfo> bottleInfoList = new ArrayList<>();
-    public BaseReceiver openVipReceiver;
     public MineInfo mineInfo;
+    private List<BottleInfo> bottleInfoList = new ArrayList<>();
+    private BaseReceiver openVipReceiver;
+    private BaseReceiver finishRefreshReceiver;
     private int pageNo = 1;
-    private BottleListBinding listBinding;
+    private BottleListBinding mBinding;
+    private SimpleItemTouchHelperCallback callback;
+    private BottleCacheDb bottleCacheDb;
+    private BaseReceiver updateBottleReceiver;
+    private int prePosition = -1;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mineInfo = mineInfoDb.getMineInfo();
-        listBinding = (BottleListBinding) binding;
+        bottleCacheDb = new BottleCacheDb(Realm.getDefaultInstance());
+        mBinding = (BottleListBinding) binding;
 
         // 开通会员
         openVipReceiver = new BaseReceiver(activity, "lobster_openVip") {
@@ -51,7 +63,32 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 myInfo();
             }
         };
+        finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
+            }
+        };
+        updateBottleReceiver = new BaseReceiver(activity, "lobster_updateBottle") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                BottleInfo bottleInfo = bottleInfoList.get(prePosition);
+                BottleCache bottleCache = bottleCacheDb.getBottleCache(bottleInfo.getDriftBottleId());
+                if (bottleCache != null) {
+                    bottleInfo.setText(bottleCache.getText());
+                    bottleInfo.setModifyTime(bottleCache.getModifyTime());
+                }
+                adapter.notifyItemChanged(prePosition);
+            }
+        };
         setAdapter();
+    }
+
+    public void onDestroy() {
+        openVipReceiver.unregisterReceiver();
+        finishRefreshReceiver.unregisterReceiver();
+        updateBottleReceiver.unregisterReceiver();
     }
 
     @Override
@@ -63,11 +100,20 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     @Override
     public void setAdapter() {
         adapter = new BottleAdapter<>(activity, R.layout.item_bottle, bottleInfoList, this);
+        callback = new SimpleItemTouchHelperCallback(adapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(mBinding.bottleList);
+        callback.setSort(false);
+        callback.setSwipeEnabled(true);
+        callback.setSwipeFlags(ItemTouchHelper.START | ItemTouchHelper.END);
+        callback.setDragFlags(0);
+        activity.sendBroadcast(new Intent("lobster_bottleNum"));
         myBottleList();
     }
 
     @Override
     public void selectIndex(int position) {
+        prePosition = position;
         BottleInfo bottleInfo = bottleInfoList.get(position);
         bottleInfo.setNoReadNum(0);
         adapter.notifyItemChanged(position);
@@ -86,22 +132,57 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                         bottleInfo.setOtherHeadImage(mineInfo.getImage());
                         bottleInfo.setOtherNick(mineInfo.getNick());
                     }
+                    BottleCache bottleCache = bottleCacheDb.getBottleCache(bottleInfo.getDriftBottleId());
+                    if (bottleCache != null) {
+                        bottleInfo.setText(bottleCache.getText());
+                        bottleInfo.setModifyTime(bottleCache.getModifyTime());
+                    }
                     bottleInfoList.add(bottleInfo);
                 }
                 adapter.notifyItemRangeChanged(start, bottleInfoList.size());
-                listBinding.refresh.finishRefresh();
-                listBinding.refresh.finishLoadMore();
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    listBinding.refresh.setEnableLoadMore(false);
-                    listBinding.refresh.finishRefresh();
-                    listBinding.refresh.finishLoadMore();
+                    mBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
                 }
             }
         }, activity).setPageNo(pageNo);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void deleteBottle(int position) {
+        new TextPW(activity, mBinding.getRoot(), "销毁漂流瓶", "销毁后，将不会收到对方发送的消息", "销毁", false, new TextPW.CallBack() {
+            @Override
+            public void sure() {
+                pickBottle(position);
+            }
+
+            @Override
+            public void cancel() {
+                adapter.notifyItemChanged(position);
+            }
+        });
+    }
+
+    // 销毁
+    private void pickBottle(int position) {
+        pickBottleApi api = new pickBottleApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                adapter.notifyItemRemoved(position);
+                bottleInfoList.remove(position);
+                bottleCacheDb.deleteBottleCache(bottleInfoList.get(position).getDriftBottleId());
+            }
+        }, activity).setDriftBottleId(bottleInfoList.get(position).getDriftBottleId()).setDriftBottleType(3);
+        api.setShowProgress(true);
+        api.setDialogTitle("销毁漂流瓶");
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -115,7 +196,8 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         // 下拉刷新
-        listBinding.refresh.setEnableLoadMore(true);
+        activity.sendBroadcast(new Intent("lobster_bottleNum"));
+        mBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         bottleInfoList.clear();
         adapter.notifyDataSetChanged();

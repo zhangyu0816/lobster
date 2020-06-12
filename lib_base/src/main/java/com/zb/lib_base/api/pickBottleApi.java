@@ -24,6 +24,7 @@ public class pickBottleApi extends BaseEntity<BaseResultEntity> {
 
     public pickBottleApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
+        setShowProgress(false);
     }
 
     @Override

@@ -7,11 +7,11 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseReceiver;
-import com.zb.lib_base.api.likeMeListApi;
-import com.zb.lib_base.api.noReadBottleNumApi;
 import com.zb.lib_base.api.pairListApi;
-import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.api.relievePairApi;
 import com.zb.lib_base.db.ChatListDb;
+import com.zb.lib_base.db.HistoryMsgDb;
+import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -20,7 +20,9 @@ import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SCToastUtil;
+import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.TextPW;
 import com.zb.module_chat.R;
 import com.zb.module_chat.adapter.ChatAdapter;
 import com.zb.module_chat.databinding.ChatPairFragmentBinding;
@@ -31,24 +33,32 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import io.realm.Realm;
 
 public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterface, OnRefreshListener, OnLoadMoreListener {
 
     public ChatAdapter adapter;
+    private LikeDb likeDb;
     private List<ChatList> chatMsgList = new ArrayList<>();
     private int pageNo = 1;
     private ChatListDb chatListDb;
+    private HistoryMsgDb historyMsgDb;
     private ChatPairFragmentBinding mBinding;
     private MineInfo mineInfo;
     private BaseReceiver pairListReceiver;
     private BaseReceiver updateContactNumReceiver;
     private BaseReceiver relieveReceiver;
+    private BaseReceiver finishRefreshReceiver;
+    private SimpleItemTouchHelperCallback callback;
+    private int prePosition = -1;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
+        likeDb = new LikeDb(Realm.getDefaultInstance());
         chatListDb = new ChatListDb(Realm.getDefaultInstance());
+        historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
         mBinding = (ChatPairFragmentBinding) binding;
         pairListReceiver = new BaseReceiver(activity, "lobster_pairList") {
@@ -60,42 +70,36 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         updateContactNumReceiver = new BaseReceiver(activity, "lobster_updateContactNum") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (MineApp.contactNum.getBeLikeCount() > 0) {
-                    if (chatMsgList.size() > 0) {
-                        ChatList chatList = chatMsgList.get(0);
-                        if (chatList.getChatType() == 1) {
-                            if (chatList.getNoReadNum() != MineApp.contactNum.getBeLikeCount()) {
-                                chatList.setNoReadNum(MineApp.contactNum.getBeLikeCount());
-                                adapter.notifyItemChanged(0);
-                            }
-                        } else {
-                            ChatList chatList1 = new ChatList();
-                            chatList1.setImage("be_like_logo_icon");
-                            chatList1.setNick("查看谁喜欢我");
-                            chatList1.setMsgType(1);
-                            chatList1.setStanza("小姐姐们正在焦急等待你们的回应！");
-                            chatList1.setNoReadNum(MineApp.contactNum.getBeLikeCount());
-                            chatList1.setChatType(1);
-                            chatMsgList.add(0, chatList);
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                }
+                int position = intent.getIntExtra("position", 0);
+                chatMsgList.set(position, chatListDb.getChatList(position + 1).get(0));
+                adapter.notifyItemChanged(position);
             }
         };
         relieveReceiver = new BaseReceiver(activity, "lobster_relieve") {
             @Override
             public void onReceive(Context context, Intent intent) {
                 long otherUserId = intent.getLongExtra("otherUserId", 0);
-                for (int i = 0; i < chatMsgList.size(); i++) {
-                    if (chatMsgList.get(i).getChatType() == 4 && chatMsgList.get(i).getUserId() == otherUserId) {
-                        adapter.notifyItemRemoved(i);
-                        chatMsgList.remove(i);
-                        break;
+                if (prePosition == -1) {
+                    for (int i = 0; i < chatMsgList.size(); i++) {
+                        if (chatMsgList.get(i).getChatType() == 4 && chatMsgList.get(i).getUserId() == otherUserId) {
+                            prePosition = i;
+                            break;
+                        }
                     }
                 }
+                adapter.notifyItemRemoved(prePosition);
+                chatMsgList.remove(prePosition);
+                prePosition = -1;
             }
         };
+        finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
+            }
+        };
+
         setAdapter();
     }
 
@@ -103,12 +107,23 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         pairListReceiver.unregisterReceiver();
         updateContactNumReceiver.unregisterReceiver();
         relieveReceiver.unregisterReceiver();
+        finishRefreshReceiver.unregisterReceiver();
     }
 
     @Override
     public void setAdapter() {
+        chatMsgList.addAll(chatListDb.getChatList(1));
+        chatMsgList.addAll(chatListDb.getChatList(2));
+        chatMsgList.addAll(chatListDb.getChatList(3));
         adapter = new ChatAdapter<>(activity, R.layout.item_chat_pair, chatMsgList, this);
-        contactNum();
+        callback = new SimpleItemTouchHelperCallback(adapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(mBinding.pairList);
+        callback.setSort(false);
+        callback.setSwipeEnabled(true);
+        callback.setSwipeFlags(ItemTouchHelper.START | ItemTouchHelper.END);
+        callback.setDragFlags(0);
+        pairList();
     }
 
     @Override
@@ -124,7 +139,10 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         pageNo = 1;
         chatMsgList.clear();
         adapter.notifyDataSetChanged();
-        contactNum();
+        chatMsgList.addAll(chatListDb.getChatList(1));
+        chatMsgList.addAll(chatListDb.getChatList(2));
+        chatMsgList.addAll(chatListDb.getChatList(3));
+        pairList();
     }
 
     @Override
@@ -142,7 +160,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
             ActivityUtils.getBottleList();
         } else if (chatList.getChatType() == 3) {
             // 超级喜欢
-            ActivityUtils.getCardMemberDetail(chatList.getUserId());
+            ActivityUtils.getCardMemberDetail(chatList.getUserId(), false);
         } else if (chatList.getChatType() == 4) {
             // 匹配-聊天
             ActivityUtils.getChatActivity(chatList.getUserId());
@@ -150,70 +168,37 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
     }
 
     @Override
-    public void contactNum() {
-        if (MineApp.contactNum.getBeLikeCount() > 0) {
-            ChatList chatList = new ChatList();
-            chatList.setImage("be_like_logo_icon");
-            chatList.setNick("查看谁喜欢我");
-            chatList.setMsgType(1);
-            chatList.setStanza("小姐姐们正在焦急等待你们的回应！");
-            chatList.setNoReadNum(MineApp.contactNum.getBeLikeCount());
-            chatList.setChatType(1);
-            chatMsgList.add(chatList);
+    public void deleteItem(int position) {
+        if (chatMsgList.get(position).getChatType() == 4) {
+            new TextPW(activity, mBinding.getRoot(), "解除匹配关系", "解除匹配关系后，将对方移除匹配列表及聊天列表。",
+                    "解除", false, new TextPW.CallBack() {
+                @Override
+                public void sure() {
+                    prePosition = position;
+                    relievePair(chatMsgList.get(position).getUserId());
+                }
+
+                @Override
+                public void cancel() {
+                    adapter.notifyItemChanged(position);
+                }
+            });
+        } else {
+            adapter.notifyItemChanged(position);
         }
-        adapter.notifyDataSetChanged();
-        noReadBottleNum();
     }
 
-    @Override
-    public void noReadBottleNum() {
-        noReadBottleNumApi api = new noReadBottleNumApi(new HttpOnNextListener<Integer>() {
+    private void relievePair(long otherUserId) {
+        relievePairApi api = new relievePairApi(new HttpOnNextListener() {
             @Override
-            public void onNext(Integer o) {
-                ChatList chatList = new ChatList();
-                chatList.setImage("bottle_logo_icon");
-                chatList.setNick("漂流瓶");
-                chatList.setMsgType(1);
-                chatList.setStanza(o == 0 ? "漂流瓶很安静啊~" : "您有新消息");
-                chatList.setNoReadNum(o);
-                chatList.setChatType(2);
-                chatMsgList.add(chatList);
-                adapter.notifyDataSetChanged();
-                likeMeList();
+            public void onNext(Object o) {
+                likeDb.deleteLike(otherUserId);
+                historyMsgDb.deleteHistoryMsg(otherUserId);
+                Intent data = new Intent("lobster_relieve");
+                data.putExtra("otherUserId", otherUserId);
+                activity.sendBroadcast(data);
             }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
-    public void likeMeList() {
-        likeMeListApi api = new likeMeListApi(new HttpOnNextListener<List<LikeMe>>() {
-            @Override
-            public void onNext(List<LikeMe> o) {
-                int start = chatMsgList.size();
-                for (LikeMe likeMe : o) {
-                    ChatList chatList = new ChatList();
-                    chatList.setUserId(likeMe.getUserId());
-                    chatList.setImage(likeMe.getHeadImage());
-                    chatList.setNick(likeMe.getNick());
-                    chatList.setMsgType(1);
-                    chatList.setStanza("超级喜欢你！");
-                    chatList.setNoReadNum(0);
-                    chatList.setChatType(3);
-                    chatList.setCreationDate(likeMe.getModifyTime());
-                    chatMsgList.add(chatList);
-                }
-                adapter.notifyItemRangeChanged(start, chatMsgList.size());
-                pairList();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    pairList();
-                }
-            }
-        }, activity).setPageNo(0).setLikeOtherStatus(2);
+        }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -224,9 +209,9 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
             public void onNext(List<LikeMe> o) {
                 int start = chatMsgList.size();
                 for (LikeMe likeMe : o) {
-                    ChatList chatMsg = chatListDb.getChatMsg(likeMe.getOtherUserId());
+                    ChatList chatMsg = chatListDb.getChatMsg(likeMe.getOtherUserId(), 4);
                     ChatList chatList = new ChatList();
-                    chatList.setUserId(likeMe.getUserId());
+                    chatList.setUserId(likeMe.getOtherUserId());
                     chatList.setImage(likeMe.getHeadImage());
                     chatList.setNick(likeMe.getNick());
                     chatList.setMsgType(chatMsg != null ? chatMsg.getMsgType() : 1);

@@ -24,7 +24,7 @@ public class replyBottleApi extends BaseEntity<BottleMsg> {
 
     public replyBottleApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
-        setDialogTitle("正在回信");
+        setShowProgress(false);
     }
 
     @Override

@@ -55,10 +55,10 @@ public class MineApp extends MultiDexApplication {
     public static Typeface type;
     public static Typeface simplifiedType;
 
-    public static String logo = "http://img01.zuwo.la/img/A/YMXXXX919714-206348_YM0000.jpg";
     public static String cityName = "";
     public static String versionName;
     public static String WX_PAY_APPID = "wxbdd7128e0a0a08f8";
+    public static boolean isLogin = false;
     public static List<BaseEntity> apiList = new ArrayList<>(); // 断线重连
     public static Map<Integer, String> moneyTypeMap = new HashMap<>();
     public static Map<Integer, String> tranStatusMap = new HashMap<>();
@@ -71,6 +71,7 @@ public class MineApp extends MultiDexApplication {
     public static WalletInfo walletInfo;
     public static MineNewsCount mineNewsCount;
     public static ContactNum contactNum;
+    public static int noReadBottleNum = 0;
 
     static {
         //设置全局的Header构建器

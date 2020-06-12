@@ -60,6 +60,7 @@
                     color="@{ObjectUtils.getLineColor()}"
                     recyclerType="@{0}"
                     size="@{1}"
+                    android:id="@+id/bottle_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/white" />

@@ -25,14 +25,13 @@
     <RelativeLayout
         onClickDelayed="@{v->viewModel.selectIndex(position)}"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="15dp">
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:id="@+id/image_relative"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp">
+            android:layout_margin="5dp">
 
             <ImageView
                 android:id="@+id/iv_image"
@@ -49,9 +48,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="@{ObjectUtils.count99(item.noReadNum)}"
-                android:textSize="15sp"
+                android:text="@{item.chatType==1?ObjectUtils.count0_99(item.noReadNum):ObjectUtils.count99(item.noReadNum)}"
                 android:textColor="@android:color/white"
+                android:textSize="15sp"
                 android:textStyle="bold"
                 android:visibility="@{item.chatType==1?View.VISIBLE:View.GONE}"
                 tools:text="99+" />
@@ -75,11 +74,11 @@
                 android:visibility="@{item.chatType==3?View.VISIBLE:View.GONE}" />
         </RelativeLayout>
 
-
         <TextView
             android:id="@+id/tv_nick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:layout_toEndOf="@+id/image_relative"
             android:text="@{item.nick}"
             android:textColor="@color/black_252"
@@ -91,16 +90,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
             android:text='@{(item==null||item.creationDate.isEmpty())?"":item.creationDate.substring(11,16)}'
             android:textColor="@color/black_827"
             android:textSize="12sp"
             tools:text="20:02" />
 
-        <TextView
+        <com.zb.lib_base.emojj.EmojiTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_nick"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="12dp"
             android:layout_toStartOf="@+id/tv_num"
             android:layout_toEndOf="@+id/image_relative"
             android:singleLine="true"
@@ -117,6 +118,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="15dp"
             android:background="@drawable/circle_red"
             android:gravity="center"
             android:text="@{ObjectUtils.count(item.noReadNum)}"
@@ -131,6 +133,7 @@
             android:layout_below="@+id/tv_nick"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="15dp"
             android:background="@drawable/btn_bg_red_fe4_radius40"
             android:gravity="center"
             android:paddingStart="12dp"

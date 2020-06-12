@@ -17,6 +17,7 @@ public class HistoryMsg extends RealmObject {
     String resLink = "";         //资源链接
     int resTime;       //资源时长  秒
     long mainUserId = BaseActivity.userId;
+    long otherUserId = 0;
 
     public long getId() {
         return id;
@@ -96,5 +97,13 @@ public class HistoryMsg extends RealmObject {
 
     public void setMainUserId(long mainUserId) {
         this.mainUserId = mainUserId;
+    }
+
+    public long getOtherUserId() {
+        return otherUserId;
+    }
+
+    public void setOtherUserId(long otherUserId) {
+        this.otherUserId = otherUserId;
     }
 }

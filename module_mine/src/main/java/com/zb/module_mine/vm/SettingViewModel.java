@@ -1,5 +1,6 @@
 package com.zb.module_mine.vm;
 
+import android.content.Intent;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
@@ -23,6 +24,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     @Override
     public void back(View view) {
         super.back(view);
+        activity.sendBroadcast(new Intent("lobster_resumeContactNum"));
         activity.finish();
     }
 

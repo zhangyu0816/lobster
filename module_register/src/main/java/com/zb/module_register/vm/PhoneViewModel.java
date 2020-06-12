@@ -27,6 +27,7 @@ import androidx.databinding.ViewDataBinding;
 public class PhoneViewModel extends BaseViewModel implements PhoneVMInterface {
     public boolean isLogin = false;
     private TelephonyManager tm;
+    private long exitTime = 0;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -37,12 +38,16 @@ public class PhoneViewModel extends BaseViewModel implements PhoneVMInterface {
     @Override
     public void back(View view) {
         super.back(view);
-        if (isLogin) {
-            ActivityUtils.getRegisterMain();
+        if (MineApp.isLogin && isLogin) {
+            activity.finish();
         } else {
-            ActivityUtils.getRegisterBirthday();
+            if (isLogin) {
+                ActivityUtils.getRegisterMain();
+            } else {
+                ActivityUtils.getRegisterBirthday();
+            }
+            activity.finish();
         }
-        activity.finish();
     }
 
     @SuppressLint("HardwareIds")

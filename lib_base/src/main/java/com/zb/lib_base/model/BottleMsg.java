@@ -12,6 +12,7 @@ public class BottleMsg extends BaseObservable {
     int isRead;//是否读取 1读取 0未读
     int isPass; //是否通过审核 1通过 0不通过
     String text = ""; //回复内容
+    String modifyTime = "";
 
     @Bindable
     public long getDriftBottleId() {
@@ -23,7 +24,8 @@ public class BottleMsg extends BaseObservable {
         notifyPropertyChanged(BR.driftBottleId);
     }
 
-    @Bindable public long getUserId() {
+    @Bindable
+    public long getUserId() {
         return userId;
     }
 
@@ -32,7 +34,8 @@ public class BottleMsg extends BaseObservable {
         notifyPropertyChanged(BR.userId);
     }
 
-    @Bindable public long getForUserId() {
+    @Bindable
+    public long getForUserId() {
         return forUserId;
     }
 
@@ -41,7 +44,8 @@ public class BottleMsg extends BaseObservable {
         notifyPropertyChanged(BR.forUserId);
     }
 
-    @Bindable public int getIsRead() {
+    @Bindable
+    public int getIsRead() {
         return isRead;
     }
 
@@ -50,7 +54,8 @@ public class BottleMsg extends BaseObservable {
         notifyPropertyChanged(BR.isRead);
     }
 
-    @Bindable public int getIsPass() {
+    @Bindable
+    public int getIsPass() {
         return isPass;
     }
 
@@ -59,12 +64,23 @@ public class BottleMsg extends BaseObservable {
         notifyPropertyChanged(BR.isPass);
     }
 
-    @Bindable public String getText() {
+    @Bindable
+    public String getText() {
         return text;
     }
 
     public void setText(String text) {
         this.text = text;
         notifyPropertyChanged(BR.text);
+    }
+
+    @Bindable
+    public String getModifyTime() {
+        return modifyTime;
+    }
+
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
+        notifyPropertyChanged(BR.modifyTime);
     }
 }

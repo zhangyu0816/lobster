@@ -18,6 +18,7 @@
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chat_list"
             adapter="@{viewModel.adapter}"
             recyclerType="@{0}"
             size="@{1}"

@@ -1,10 +1,13 @@
 package com.zb.module_home.vm;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.seeGiftRewardsApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -29,13 +32,25 @@ public class RewardListViewModel extends BaseViewModel implements RewardListVMIn
     public long friendDynId;
     private List<Reward> rewardList = new ArrayList<>();
     private int pageNo = 1;
-    private HomeRewardListBinding rewardListBinding;
+    private HomeRewardListBinding mBinding;
+    private BaseReceiver finishRefreshReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        rewardListBinding = (HomeRewardListBinding) binding;
+        mBinding = (HomeRewardListBinding) binding;
         setAdapter();
+        finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
+            }
+        };
+    }
+
+    public void onDestroy(){
+        finishRefreshReceiver.unregisterReceiver();
     }
 
     @Override
@@ -58,16 +73,16 @@ public class RewardListViewModel extends BaseViewModel implements RewardListVMIn
                 int start = rewardList.size();
                 rewardList.addAll(o);
                 adapter.notifyItemRangeChanged(start, rewardList.size());
-                rewardListBinding.refresh.finishRefresh();
-                rewardListBinding.refresh.finishLoadMore();
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    rewardListBinding.refresh.setEnableLoadMore(false);
-                    rewardListBinding.refresh.finishRefresh();
-                    rewardListBinding.refresh.finishLoadMore();
+                    mBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
                 }
             }
         }, activity).setFriendDynId(friendDynId)
@@ -86,7 +101,7 @@ public class RewardListViewModel extends BaseViewModel implements RewardListVMIn
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         // 下拉刷新
-        rewardListBinding.refresh.setEnableLoadMore(true);
+        mBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         rewardList.clear();
         adapter.notifyDataSetChanged();

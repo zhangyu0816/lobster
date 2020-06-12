@@ -60,8 +60,11 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         updateContactNumReceiver = new BaseReceiver(activity, "lobster_updateContactNum") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                mBinding.setVariable(BR.contactNum, MineApp.contactNum);
-                mBinding.setVariable(BR.hasNewBeLike, MineApp.contactNum.getBeLikeCount() > PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId));
+                int position = intent.getIntExtra("position", 0);
+                if (position == 0) {
+                    mBinding.setVariable(BR.contactNum, MineApp.contactNum);
+                    mBinding.setVariable(BR.hasNewBeLike, MineApp.contactNum.getBeLikeCount() > PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId));
+                }
             }
         };
     }

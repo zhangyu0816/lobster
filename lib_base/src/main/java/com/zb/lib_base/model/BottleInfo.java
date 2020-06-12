@@ -18,7 +18,7 @@ public class BottleInfo extends BaseObservable {
     int noReadNum;//未读数量
     String otherHeadImage = "";//头像
     String otherNick = "";  //昵称
-    String createTime = "2020-04-20 14:44:00";
+    String modifyTime = "";
     private List<BottleMsg> messageList = new ArrayList<>();
 
     @Bindable
@@ -102,13 +102,13 @@ public class BottleInfo extends BaseObservable {
     }
 
     @Bindable
-    public String getCreateTime() {
-        return createTime;
+    public String getModifyTime() {
+        return modifyTime;
     }
 
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-        notifyPropertyChanged(BR.createTime);
+    public void setModifyTime(String modifyTime) {
+        this.modifyTime = modifyTime;
+        notifyPropertyChanged(BR.modifyTime);
     }
 
     @Bindable

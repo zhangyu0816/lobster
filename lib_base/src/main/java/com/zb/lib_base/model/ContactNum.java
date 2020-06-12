@@ -12,6 +12,7 @@ public class ContactNum extends BaseObservable {
     int concernCount; //关注数量
     int beLikeCount; //被喜欢数量
     int likeCount; //喜欢数量
+    int beSuperLikeCount;// 被超级喜欢
 
     @Bindable
     public long getUserId() {
@@ -23,7 +24,8 @@ public class ContactNum extends BaseObservable {
         notifyPropertyChanged(BR.userId);
     }
 
-    @Bindable public int getFansCount() {
+    @Bindable
+    public int getFansCount() {
         return fansCount;
     }
 
@@ -32,7 +34,8 @@ public class ContactNum extends BaseObservable {
         notifyPropertyChanged(BR.fansCount);
     }
 
-    @Bindable public int getConcernCount() {
+    @Bindable
+    public int getConcernCount() {
         return concernCount;
     }
 
@@ -41,7 +44,8 @@ public class ContactNum extends BaseObservable {
         notifyPropertyChanged(BR.concernCount);
     }
 
-    @Bindable public int getBeLikeCount() {
+    @Bindable
+    public int getBeLikeCount() {
         return beLikeCount;
     }
 
@@ -50,12 +54,23 @@ public class ContactNum extends BaseObservable {
         notifyPropertyChanged(BR.beLikeCount);
     }
 
-    @Bindable public int getLikeCount() {
+    @Bindable
+    public int getLikeCount() {
         return likeCount;
     }
 
     public void setLikeCount(int likeCount) {
         this.likeCount = likeCount;
         notifyPropertyChanged(BR.likeCount);
+    }
+
+    @Bindable
+    public int getBeSuperLikeCount() {
+        return beSuperLikeCount;
+    }
+
+    public void setBeSuperLikeCount(int beSuperLikeCount) {
+        this.beSuperLikeCount = beSuperLikeCount;
+        notifyPropertyChanged(BR.beSuperLikeCount);
     }
 }

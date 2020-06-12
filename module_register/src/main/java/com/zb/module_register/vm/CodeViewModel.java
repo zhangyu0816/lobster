@@ -126,7 +126,8 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
             public void onNext(MineInfo o) {
                 SCToastUtil.showToastBlack(activity, "登录成功");
                 mineInfoDb.saveMineInfo(o);
-                ActivityUtils.getMainActivity();
+                if (!MineApp.isLogin)
+                    ActivityUtils.getMainActivity();
                 activity.finish();
             }
         }, activity);

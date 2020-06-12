@@ -59,7 +59,7 @@
             android:textSize="12sp"
             tools:text="20:02" />
 
-        <TextView
+        <com.zb.lib_base.emojj.EmojiTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_nick"

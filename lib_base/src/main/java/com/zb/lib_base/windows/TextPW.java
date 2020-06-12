@@ -1,5 +1,6 @@
 package com.zb.lib_base.windows;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
@@ -10,6 +11,7 @@ public class TextPW extends BasePopupWindow {
     private String content = "";
     private String title = "";
     private CallBack mCallBack;
+    private String btnName = "我知道了";
 
     public TextPW(RxAppCompatActivity activity, View parentView, String title, String content) {
         super(activity, parentView, true);
@@ -18,11 +20,30 @@ public class TextPW extends BasePopupWindow {
         initUI();
     }
 
-    public TextPW(RxAppCompatActivity activity, View parentView, String title, String content, CallBack callBack) {
+    public TextPW(RxAppCompatActivity activity, View parentView, String title, String content, String btnName, CallBack callBack) {
         super(activity, parentView, true);
         this.title = title;
         this.content = content;
+        this.btnName = btnName;
         mCallBack = callBack;
+        initUI();
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    public TextPW(RxAppCompatActivity activity, View parentView, String title, String content, String btnName, boolean canClick, CallBack callBack) {
+        super(activity, parentView, canClick);
+        this.title = title;
+        this.content = content;
+        this.btnName = btnName;
+        mCallBack = callBack;
+        mBinding.getRoot().setOnTouchListener((v, event) -> {
+            if (isShowing()) {
+                if (mCallBack != null)
+                    mCallBack.cancel();
+                dismiss();
+            }
+            return false;
+        });
         initUI();
     }
 
@@ -36,6 +57,7 @@ public class TextPW extends BasePopupWindow {
         mBinding.setVariable(BR.pw, this);
         mBinding.setVariable(BR.title, title);
         mBinding.setVariable(BR.content, content);
+        mBinding.setVariable(BR.btnName, btnName);
     }
 
     @Override
@@ -46,7 +68,11 @@ public class TextPW extends BasePopupWindow {
         dismiss();
     }
 
+    @FunctionalInterface
     public interface CallBack {
         void sure();
+
+        default void cancel() {
+        }
     }
 }

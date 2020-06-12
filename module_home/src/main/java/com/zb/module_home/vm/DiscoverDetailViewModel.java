@@ -1,5 +1,6 @@
 package com.zb.module_home.vm;
 
+import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.attentionOtherApi;
 import com.zb.lib_base.api.attentionStatusApi;
@@ -74,6 +76,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 
     private long reviewId = 0;
     private int goodNum = 0;
+    private BaseReceiver finishRefreshReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -92,21 +95,27 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             }
             return false;
         });
+        finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
+            }
+        };
     }
 
     @Override
     public void setAdapter() {
         // 评论
         reviewAdapter = new HomeAdapter<>(activity, R.layout.item_home_review, reviewList, this);
-        seeReviews();
         // 打赏
         rewardAdapter = new HomeAdapter<>(activity, R.layout.item_home_reward, rewardList, this);
-        seeGiftRewards();
     }
 
     @Override
     public void back(View view) {
         super.back(view);
+        finishRefreshReceiver.unregisterReceiver();
         Intent data = new Intent("lobster_attention");
         if (goodNum > 0) {
             data.putExtra("goodNum", goodNum);
@@ -123,7 +132,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 if (position == 0) {
 
                 } else if (position == 1) {
-                    new TextPW(activity, mBinding.getRoot(), "删除动态", "删除后，动态不可找回！", this::deleteDyn);
+                    new TextPW(activity, mBinding.getRoot(), "删除动态", "删除后，动态不可找回！", "删除", this::deleteDyn);
                 }
             } else {
                 if (position == 0) {
@@ -166,7 +175,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 
     @Override
     public void toMemberDetail(View view) {
-        ActivityUtils.getCardMemberDetail(discoverInfo.getUserId());
+        ActivityUtils.getCardMemberDetail(discoverInfo.getUserId(), false);
     }
 
     @Override
@@ -197,6 +206,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 }
                 showBanner(adsList);
                 mBinding.setVariable(BR.viewModel, DiscoverDetailViewModel.this);
+                seeGiftRewards();
+                seeReviews();
             }
         }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);

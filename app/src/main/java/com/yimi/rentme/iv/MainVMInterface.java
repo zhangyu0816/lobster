@@ -26,7 +26,11 @@ public interface MainVMInterface {
 
     void chatList();
 
-    void otherInfo(long otherUserId, int count, CustomMessageBody body);
+    void contactNum(boolean isUpdate);
 
-    void contactNum();
+    void noReadBottleNum(boolean isUpdate);
+
+    void beSuperLikeList();
+
+    void otherInfo(long otherUserId, int count, CustomMessageBody body);
 }

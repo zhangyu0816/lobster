@@ -16,7 +16,6 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.model.BaseEntity;
 import com.zb.lib_base.model.JobInfo;
 import com.zb.lib_base.model.Tag;
-import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.SimulateNetAPI;
@@ -41,7 +40,6 @@ public class MainActivity extends AppBaseActivity {
 
     @Override
     public void initUI() {
-        PreferenceUtil.saveIntValue(activity, "loginType", 2);
         tagDb = new TagDb(Realm.getDefaultInstance());
         jobInfoDb = new JobInfoDb(Realm.getDefaultInstance());
         viewModel = new MainViewModel();
@@ -85,7 +83,7 @@ public class MainActivity extends AppBaseActivity {
         systemErrorReceiver = new BaseReceiver(activity, "lobster_systemError") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                new TextPW(activity, mBinding.getRoot(), "断线重连", "网络异常，请重新链接", () -> {
+                new TextPW(activity, mBinding.getRoot(), "断线重连", "网络异常，请重新链接","重连", () -> {
                     for (BaseEntity baseEntity : MineApp.apiList) {
                         HttpManager.getInstance().doHttpDeal(baseEntity);
                     }

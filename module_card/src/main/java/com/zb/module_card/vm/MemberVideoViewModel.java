@@ -38,16 +38,17 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
     private AreaDb areaDb;
     private int pageNo = 1;
     private List<DiscoverInfo> discoverInfoList = new ArrayList<>();
-    private CardMemberVideoBinding videoBinding;
+    private CardMemberVideoBinding mBinding;
     private BaseReceiver publishReceiver;
     private int prePosition = -1;
     private BaseReceiver attentionReceiver;
+    private BaseReceiver finishRefreshReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         areaDb = new AreaDb(Realm.getDefaultInstance());
-        videoBinding = (CardMemberVideoBinding) binding;
+        mBinding = (CardMemberVideoBinding) binding;
         publishReceiver = new BaseReceiver(activity, "lobster_publish") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -64,11 +65,19 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
                 prePosition = -1;
             }
         };
+        finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
+            }
+        };
     }
 
     public void onDestroy() {
         publishReceiver.unregisterReceiver();
         attentionReceiver.unregisterReceiver();
+        finishRefreshReceiver.unregisterReceiver();
     }
 
     @Override
@@ -102,25 +111,25 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
         dynPiazzaListApi api = new dynPiazzaListApi(new HttpOnNextListener<List<DiscoverInfo>>() {
             @Override
             public void onNext(List<DiscoverInfo> o) {
-                videoBinding.noNetLinear.setVisibility(View.GONE);
+                mBinding.noNetLinear.setVisibility(View.GONE);
                 int start = discoverInfoList.size();
                 discoverInfoList.addAll(o);
                 adapter.notifyItemRangeChanged(start, discoverInfoList.size());
-                videoBinding.refresh.finishRefresh();
-                videoBinding.refresh.finishLoadMore();
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof SocketTimeoutException || e instanceof ConnectException) {
-                    videoBinding.noNetLinear.setVisibility(View.VISIBLE);
-                    videoBinding.refresh.setEnableLoadMore(false);
-                    videoBinding.refresh.finishRefresh();
-                    videoBinding.refresh.finishLoadMore();
+                    mBinding.noNetLinear.setVisibility(View.VISIBLE);
+                    mBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
                 } else if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    videoBinding.refresh.setEnableLoadMore(false);
-                    videoBinding.refresh.finishRefresh();
-                    videoBinding.refresh.finishLoadMore();
+                    mBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
                 }
             }
         }, activity)
@@ -135,25 +144,25 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
         personOtherDynApi api = new personOtherDynApi(new HttpOnNextListener<List<DiscoverInfo>>() {
             @Override
             public void onNext(List<DiscoverInfo> o) {
-                videoBinding.noNetLinear.setVisibility(View.GONE);
+                mBinding.noNetLinear.setVisibility(View.GONE);
                 int start = discoverInfoList.size();
                 discoverInfoList.addAll(o);
                 adapter.notifyItemRangeChanged(start, discoverInfoList.size());
-                videoBinding.refresh.finishRefresh();
-                videoBinding.refresh.finishLoadMore();
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof SocketTimeoutException || e instanceof ConnectException) {
-                    videoBinding.noNetLinear.setVisibility(View.VISIBLE);
-                    videoBinding.refresh.setEnableLoadMore(false);
-                    videoBinding.refresh.finishRefresh();
-                    videoBinding.refresh.finishLoadMore();
+                    mBinding.noNetLinear.setVisibility(View.VISIBLE);
+                    mBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
                 } else if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    videoBinding.refresh.setEnableLoadMore(false);
-                    videoBinding.refresh.finishRefresh();
-                    videoBinding.refresh.finishLoadMore();
+                    mBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
                 }
             }
         }, activity)
@@ -166,7 +175,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
     @Override
     public void onRefreshForNet(View view) {
         // 下拉刷新
-        videoBinding.refresh.setEnableLoadMore(true);
+        mBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         discoverInfoList.clear();
         adapter.notifyDataSetChanged();

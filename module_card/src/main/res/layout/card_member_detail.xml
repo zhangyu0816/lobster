@@ -18,6 +18,11 @@
         <variable
             name="baseInfo"
             type="String" />
+
+        <variable
+            name="showLike"
+            type="boolean" />
+
     </data>
 
     <RelativeLayout
@@ -255,6 +260,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_margin="15dp"
+            android:visibility="@{showLike?View.VISIBLE:View.GONE}"
             app:srcCompat="@mipmap/dislike_icon" />
 
         <ImageView
@@ -264,6 +270,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_margin="15dp"
+            android:visibility="@{showLike?View.VISIBLE:View.GONE}"
             app:srcCompat="@mipmap/like_icon" />
 
     </RelativeLayout>

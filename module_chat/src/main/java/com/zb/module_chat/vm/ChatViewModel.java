@@ -221,7 +221,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
 
     @Override
     public void setAdapter() {
-        realmResults = historyMsgDb.getRealmResults();
+        realmResults = historyMsgDb.getRealmResults(otherUserId);
         historyMsgList.addAll(historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize));
         adapter = new ChatAdapter<>(activity, R.layout.item_chat, historyMsgList, this);
         mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
@@ -272,6 +272,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             @Override
             public void onNext(List<HistoryMsg> o) {
                 for (HistoryMsg historyMsg : o) {
+                    historyMsg.setOtherUserId(otherUserId);
                     historyMsgDb.saveHistoryMsg(historyMsg);
                 }
                 historyMsgId = o.get(o.size() - 1).getId();
@@ -298,6 +299,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             @Override
             public void onNext(List<HistoryMsg> o) {
                 for (HistoryMsg historyMsg : o) {
+                    historyMsg.setOtherUserId(otherUserId);
                     historyMsgDb.saveHistoryMsg(historyMsg);
                 }
                 thirdHistoryMsgList(pageNo + 1);
@@ -307,7 +309,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     historyMsgList.clear();
-                    realmResults = historyMsgDb.getRealmResults();
+                    realmResults = historyMsgDb.getRealmResults(otherUserId);
                     historyMsgList.addAll(historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize));
                     adapter.notifyDataSetChanged();
                 }
@@ -318,7 +320,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
 
     @Override
     public void toDetail(View view) {
-        ActivityUtils.getCardMemberDetail(otherUserId);
+        ActivityUtils.getCardMemberDetail(otherUserId, false);
     }
 
     private ImageView ivPlay;
@@ -613,6 +615,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         historyMsg.setResTime(resTime);
         historyMsg.setStanza(stanza);
         historyMsg.setTitle(title);
+        historyMsg.setOtherUserId(otherUserId);
         historyMsgList.add(historyMsg);
         adapter.notifyDataSetChanged();
         mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
@@ -629,6 +632,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         chatList.setPublicTag("");
         chatList.setEffectType(1);
         chatList.setAuthType(1);
+        chatList.setChatType(4);
         chatListDb.saveChatList(chatList);
         Intent data = new Intent("lobster_updateChat");
         data.putExtra("userId", otherUserId);

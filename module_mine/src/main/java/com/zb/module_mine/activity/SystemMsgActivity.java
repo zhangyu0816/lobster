@@ -8,6 +8,8 @@ import com.zb.module_mine.vm.SystemMsgViewModel;
 
 @Route(path = RouteUtils.Mine_System_Msg)
 public class SystemMsgActivity extends MineBaseActivity {
+    private SystemMsgViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.mine_system_msg;
@@ -15,9 +17,15 @@ public class SystemMsgActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
-        SystemMsgViewModel viewModel = new SystemMsgViewModel();
+        viewModel = new SystemMsgViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.title, "系统消息");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 }

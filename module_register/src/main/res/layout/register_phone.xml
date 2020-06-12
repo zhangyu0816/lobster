@@ -19,8 +19,6 @@
         <variable
             name="remark"
             type="String" />
-
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

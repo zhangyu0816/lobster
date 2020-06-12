@@ -172,14 +172,14 @@ public class ObjectUtils {
             return "立即验证";
     }
 
-    public static int textColor(LikeDb likeDb, AttentionDb attentionDb, long otherUserId,int position) {
+    public static int textColor(LikeDb likeDb, AttentionDb attentionDb, long otherUserId, int position) {
         if (position == 2) {
             if (likeDb.hasLike(otherUserId)) {
                 return R.color.black_827;
             } else {
                 return R.color.purple_7a4;
             }
-        }else{
+        } else {
             if (attentionDb.isAttention(otherUserId)) {
                 return R.color.black_827;
             } else {
@@ -208,6 +208,15 @@ public class ObjectUtils {
 
     public static String count99(int count) {
         if (count < 99)
+            return count + "";
+        else
+            return "99+";
+    }
+
+    public static String count0_99(int count) {
+        if (count == 0) {
+            return "0";
+        } else if (count < 99)
             return count + "";
         else
             return "99+";
