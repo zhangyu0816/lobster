@@ -38,4 +38,6 @@ public interface DiscoverDetailVMInterface {
     void attentionOther();
 
     void cancelAttention();
+
+    void memberInfoConf();
 }

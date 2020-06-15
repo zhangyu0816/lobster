@@ -144,8 +144,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     @Override
     public void toSelectBirthday(View view) {
         new BirthdayPW(activity, mBinding.getRoot(), birthday -> {
-            String[] birthdays = birthday.split("/");
-            mineInfoDb.updateNick(birthdays[2] + "-" + birthdays[1] + "-" + birthdays[0], 5);
+            mineInfoDb.updateContent(birthday, 5);
             mineInfo = mineInfoDb.getMineInfo();
             mBinding.setVariable(BR.viewModel, EditMemberViewModel.this);
         });

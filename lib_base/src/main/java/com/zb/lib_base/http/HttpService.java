@@ -32,6 +32,7 @@ import com.zb.lib_base.model.Report;
 import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.model.Reward;
+import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.model.TranRecord;
 import com.zb.lib_base.model.VipInfo;
@@ -158,6 +159,10 @@ public interface HttpService {
     Observable<BaseResultEntity> upRealNameInfo(@Query("realName") String realName, @Query("identityNum") String identityNum,
                                                 @Query("personalImage") String personalImage, @Query("idFrontImage") String idFrontImage,
                                                 @Query("idBackImage") String idBackImage, @Query("verifyMethodType") int verifyMethodType);
+
+    // 分享
+    @GET("api/Share_memberInfoConf")
+    Observable<BaseResultEntity<ShareInfo>> memberInfoConf();
 
     /******************************* app **********************************/
 

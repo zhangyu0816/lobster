@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 
+import com.umeng.socialize.media.UMImage;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.attentionOtherApi;
@@ -34,6 +35,7 @@ import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.SharePW;
 import com.zb.lib_base.windows.TextPW;
 import com.zb.module_home.BR;
 import com.zb.module_home.R;
@@ -137,7 +139,12 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
 
     @Override
     public void doShare(View view) {
-
+        if (discoverInfo == null) return;
+        String sharedName = discoverInfo.getNick();
+        String content = discoverInfo.getText();
+        String sharedUrl = HttpManager.BASE_URL + "mobile/Dyn_dynDetail?friendDynId=" + friendDynId;
+        UMImage umImage = new UMImage(activity, discoverInfo.getImage().replace("YM0000", "430X430"));
+        new SharePW(activity, mBinding.getRoot(), umImage, sharedName, content, sharedUrl);
     }
 
     @Override

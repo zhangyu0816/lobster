@@ -12,6 +12,7 @@ import com.app.abby.xbanner.XBanner;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.umeng.socialize.media.UMImage;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
@@ -24,6 +25,7 @@ import com.zb.lib_base.api.dynDetailApi;
 import com.zb.lib_base.api.dynDoLikeApi;
 import com.zb.lib_base.api.dynDoReviewApi;
 import com.zb.lib_base.api.makeEvaluateApi;
+import com.zb.lib_base.api.memberInfoConfApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.seeGiftRewardsApi;
 import com.zb.lib_base.api.seeReviewsApi;
@@ -38,12 +40,14 @@ import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.model.Reward;
+import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.CountUsedPW;
 import com.zb.lib_base.windows.SelectorPW;
+import com.zb.lib_base.windows.SharePW;
 import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.TextPW;
 import com.zb.module_home.BR;
@@ -130,7 +134,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         new SelectorPW(activity, mBinding.getRoot(), selectorList, position -> {
             if (discoverInfo.getUserId() == BaseActivity.userId) {
                 if (position == 0) {
-
+                    memberInfoConf();
                 } else if (position == 1) {
                     new TextPW(activity, mBinding.getRoot(), "删除动态", "删除后，动态不可找回！", "删除", this::deleteDyn);
                 }
@@ -140,7 +144,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 } else if (position == 1) {
                     ActivityUtils.getHomeReport(discoverInfo.getUserId());
                 } else if (position == 2) {
-
+                    memberInfoConf();
                 }
             }
         });
@@ -406,6 +410,16 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             }
         }, activity).setOtherUserId(discoverInfo.getUserId());
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void memberInfoConf() {
+        if (discoverInfo == null) return;
+        String sharedName = discoverInfo.getNick();
+        String content = discoverInfo.getText();
+        String sharedUrl = HttpManager.BASE_URL + "mobile/Dyn_dynDetail?friendDynId=" + friendDynId;
+        UMImage umImage = new UMImage(activity, discoverInfo.getImage().replace("YM0000", "430X430"));
+        new SharePW(activity, mBinding.getRoot(), umImage, sharedName, content, sharedUrl);
     }
 
     @Override

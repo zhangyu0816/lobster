@@ -45,16 +45,11 @@ public class BirthdayPW extends BasePopupWindow {
         selectDate = MineApp.registerInfo.getBirthday();
         if (selectDate.isEmpty()) {
             selectDate = nowDate;
-            String[] strs = selectDate.split("-");
-            mYear = Integer.parseInt(strs[0]);
-            mMonth = Integer.parseInt(strs[1]);
-            mDay = Integer.parseInt(strs[2]);
-        } else {
-            String[] strs = selectDate.split("/");
-            mDay = Integer.parseInt(strs[0]);
-            mMonth = Integer.parseInt(strs[1]);
-            mYear = Integer.parseInt(strs[2]);
         }
+        String[] strs = selectDate.split("-");
+        mYear = Integer.parseInt(strs[0]);
+        mMonth = Integer.parseInt(strs[1]);
+        mDay = Integer.parseInt(strs[2]);
         // 配置滑轮
         for (int i = 1960; i <= 2100; i++) {
             yearList.add(i + "年");
@@ -118,8 +113,7 @@ public class BirthdayPW extends BasePopupWindow {
         mDay = Integer.parseInt(dayList.get(binding.wheelDay.getCurrentItem()).replace("日", ""));
         String dayStr = mDay < 10 ? "0" + mDay : mDay + "";
 
-
-        mCallBack.selectBirthday(dayStr + "/" + monthStr + "/" + yearStr);
+        mCallBack.selectBirthday(yearStr + "-" + monthStr + "-" + dayStr);
         dismiss();
     }
 

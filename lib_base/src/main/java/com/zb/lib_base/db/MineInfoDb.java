@@ -24,7 +24,7 @@ public class MineInfoDb extends BaseDao {
         return mineInfo;
     }
 
-    public void updateNick(String content, int type) {
+    public void updateContent(String content, int type) {
         // type   1：工作  2：昵称
         beginTransaction();
         MineInfo mineInfo = realm.where(MineInfo.class).equalTo("userId", BaseActivity.userId).findFirst();

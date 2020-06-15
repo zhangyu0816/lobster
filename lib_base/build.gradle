@@ -79,10 +79,16 @@ dependencies {
     api 'com.alibaba.mobileim:IMCore:2.0.1@aar'
     // 压缩视频
     api files('libs/SmallVideoLib.aar')
-    // 友盟
+    // 阿里
     api files('libs/alipaySDK-20151014.jar')
+    // 友盟
+    api 'com.umeng.sdk:common:1.5.0'
+    api files('libs/SocialSDK_QQ_Full.jar')
     api files('libs/SocialSDK_WeiXin_Full.jar')
     api files('libs/wechat-sdk-android-with-mta-1.1.6.jar')
+    api files('libs/umeng_social_net.jar')
+    api files('libs/umeng_social_api.jar')
+    api files('libs/open_sdk_r5923_lite.jar')
     // 网路请求
     api files('libs/xUtils-2.6.14.jar')
 }

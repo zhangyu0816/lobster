@@ -92,8 +92,6 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
 
     @Override
     public void register(RegisterInfo registerInfo) {
-        String[] birthdays = registerInfo.getBirthday().split("/");
-        String birthday = birthdays[2] + "-" + birthdays[1] + "-" + birthdays[0];
         registerApi api = new registerApi(new HttpOnNextListener<LoginInfo>() {
             @Override
             public void onNext(LoginInfo o) {
@@ -108,7 +106,7 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
                 .setUserName(registerInfo.getPhone())
                 .setCaptcha(registerInfo.getCaptcha())
                 .setNick(registerInfo.getName())
-                .setBirthday(birthday)
+                .setBirthday(registerInfo.getBirthday())
                 .setMoreImages(registerInfo.getMoreImages())
                 .setSex(registerInfo.getSex())
                 .setProvinceId(areaDb.getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))

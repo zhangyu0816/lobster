@@ -16,5 +16,7 @@ public interface MemberDetailVMInterface {
 
     void cancelAttention();
 
-      void makeEvaluate();
+    void makeEvaluate();
+
+    void memberInfoConf();
 }

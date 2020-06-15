@@ -242,7 +242,6 @@ public class PhotoManager {
             @Override
             public void onSuccess(List<File> fileList) {
                 for (int i = 0; i < fileList.size(); i++) {
-                    Log.d("压缩成功", files.get(i).getAbsolutePath() + "/" + fileList.get(i).getAbsolutePath());
                     PhotoFile photoFile = new PhotoFile(files.get(i).getAbsolutePath(), fileList.get(i));
                     photos.add(photoFile);
                     if (instantUpload) {
@@ -310,7 +309,6 @@ public class PhotoManager {
             @Override
             public void onSuccess(List<File> fileList) {
                 for (int i = 0; i < fileList.size(); i++) {
-                    Log.d("压缩成功", files.get(i).getAbsolutePath() + "/" + fileList.get(i).getAbsolutePath());
                     PhotoFile photoFile = new PhotoFile(files.get(i).getAbsolutePath(), fileList.get(i));
                     photos.add(photoFile);
                     if (instantUpload) {

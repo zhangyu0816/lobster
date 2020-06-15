@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import com.app.abby.xbanner.Ads;
 import com.app.abby.xbanner.XBanner;
+import com.umeng.socialize.media.UMImage;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.adapter.FragmentAdapter;
@@ -13,6 +14,7 @@ import com.zb.lib_base.api.attentionOtherApi;
 import com.zb.lib_base.api.attentionStatusApi;
 import com.zb.lib_base.api.cancelAttentionApi;
 import com.zb.lib_base.api.makeEvaluateApi;
+import com.zb.lib_base.api.memberInfoConfApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
@@ -21,6 +23,7 @@ import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.FragmentUtils;
@@ -28,6 +31,7 @@ import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.CountUsedPW;
 import com.zb.lib_base.windows.SelectorPW;
+import com.zb.lib_base.windows.SharePW;
 import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;
@@ -212,6 +216,24 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     }
 
     @Override
+    public void memberInfoConf() {
+        memberInfoConfApi api = new memberInfoConfApi(new HttpOnNextListener<ShareInfo>() {
+            @Override
+            public void onNext(ShareInfo o) {
+                String sharedUrl = HttpManager.BASE_URL + "render/" + otherUserId + ".html?sharetextId="
+                        + o.getSharetextId();
+                String sharedName = o.getText().replace("{userId}", memberInfo.getUserId() + "");
+                sharedName = sharedName.replace("{nick}", memberInfo.getNick());
+                UMImage umImage = new UMImage(activity, memberInfo.getImage().replace("YM0000", "430X430"));
+                String content = memberInfo.getServiceTags().substring(1, memberInfo.getServiceTags().length() - 1);
+                content = "兴趣：" + content.replace("#", ",");
+                new SharePW(activity, mBinding.getRoot(), umImage, sharedName, content, sharedUrl);
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
     public void superLike(View view) {
         super.superLike(view);
         if (mineInfo.getMemberType() == 2) {
@@ -235,10 +257,10 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 if (otherUserId != BaseActivity.userId) {
                     ActivityUtils.getHomeReport(otherUserId);
                 } else {
-
+                    memberInfoConf();
                 }
             } else if (position == 1) {
-
+                memberInfoConf();
             }
         });
     }

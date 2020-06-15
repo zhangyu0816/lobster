@@ -34,7 +34,7 @@ public class EditMemberActivity extends MineBaseActivity {
             public void onReceive(Context context, Intent intent) {
                 int type = intent.getIntExtra("type", 0);
                 String content = intent.getStringExtra("content");
-                viewModel.mineInfoDb.updateNick(content, type);
+                viewModel.mineInfoDb.updateContent(content, type);
                 viewModel.mineInfo = viewModel.mineInfoDb.getMineInfo();
                 mBinding.setVariable(BR.viewModel, viewModel);
             }
