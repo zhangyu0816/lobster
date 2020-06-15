@@ -76,7 +76,7 @@
                 android:onClick="@{v->viewModel.selectPage(1)}"
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp"
-                android:text="卡片"
+                android:text="虾菇"
                 android:textColor="@color/black_3e4"
                 android:textSize="12sp" />
 

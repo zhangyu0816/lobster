@@ -1,5 +1,6 @@
 package com.zb.module_register.vm;
 
+import android.content.Intent;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
@@ -44,7 +45,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface {
         loginBinding.setPass(PreferenceUtil.readStringValue(activity, "login_pass"));
         loginBinding.edPass.setText(PreferenceUtil.readStringValue(activity, "login_pass"));
         if (!loginBinding.getPass().isEmpty()) {
-            loginBinding.edPass.setSelection(loginBinding.getPass().length() - 1);
+            loginBinding.edPass.setSelection(loginBinding.getPass().length());
             loginBinding.tvNext.setBackgroundResource(R.drawable.btn_bg_white_radius60);
             loginBinding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_7a4));
         }
@@ -84,8 +85,10 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface {
             public void onNext(MineInfo o) {
                 SCToastUtil.showToast(activity, "登录成功", true);
                 mineInfoDb.saveMineInfo(o);
-                if (!MineApp.isLogin)
+                if (!MineApp.isLogin) {
                     ActivityUtils.getMainActivity();
+                    activity.sendBroadcast(new Intent("lobster_mainSelect"));
+                }
                 activity.finish();
             }
         }, activity);

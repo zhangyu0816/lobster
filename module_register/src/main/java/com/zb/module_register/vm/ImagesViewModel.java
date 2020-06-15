@@ -1,6 +1,7 @@
 package com.zb.module_register.vm;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Build;
 import android.view.View;
 
@@ -113,6 +114,7 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
                 .setProvinceId(areaDb.getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
                 .setCityId(areaDb.getCityId(MineApp.cityName))
                 .setDistrictId(areaDb.getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
+        api.setPosition(1);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -123,8 +125,11 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
             public void onNext(MineInfo o) {
                 SCToastUtil.showToast(activity, "注册成功", true);
                 mineInfoDb.saveMineInfo(o);
-                if (!MineApp.isLogin)
+                if (!MineApp.isLogin) {
                     ActivityUtils.getMainActivity();
+                    activity.sendBroadcast(new Intent("lobster_mainSelect"));
+                }
+                MineApp.registerInfo = new RegisterInfo();
                 activity.finish();
             }
         }, activity);

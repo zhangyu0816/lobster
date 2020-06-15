@@ -52,7 +52,7 @@ public class PhoneActivity extends RegisterBaseActivity {
             binding.setPhone(MineApp.registerInfo.getPhone());
         }
         if (!binding.getPhone().isEmpty()) {
-            binding.edPhone.setSelection(binding.getPhone().length() - 1);
+            binding.edPhone.setSelection(binding.getPhone().length());
             binding.tvNext.setBackgroundResource(R.drawable.btn_bg_white_radius60);
             binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_7a4));
         }

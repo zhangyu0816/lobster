@@ -32,7 +32,7 @@ public class BirthdayActivity extends RegisterBaseActivity {
         AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W / 3, 5);
 
         binding.setBirthday(MineApp.registerInfo.getBirthday());
-        binding.setTitle("嗨 " + MineApp.registerInfo.getName() + "！您的生日是？");
+        binding.setTitle("嗨 " + MineApp.registerInfo.getName() + "！\n您的生日是？");
     }
 
     @Override

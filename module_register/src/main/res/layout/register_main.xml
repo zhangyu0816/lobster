@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:text="嗨！您的性别为..."
             android:textColor="@android:color/white"
-            android:textSize="20sp"
+            android:textSize="25sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

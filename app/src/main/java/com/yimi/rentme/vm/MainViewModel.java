@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.RelativeLayout;
@@ -81,6 +82,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private BaseReceiver newMsgReceiver;
     private BaseReceiver resumeContactNumReceiver;
     private BaseReceiver bottleNumReceiver;
+    private BaseReceiver mainSelectReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -161,6 +163,17 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 noReadBottleNum(true);
             }
         };
+        mainSelectReceiver = new BaseReceiver(activity, "lobster_mainSelect") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                MineApp.isLogin = true;
+                joinPairPool(PreferenceUtil.readStringValue(activity, "longitude"), PreferenceUtil.readStringValue(activity, "latitude"));
+                selectPage(1);
+                myImAccountInfoApi();
+                walletAndPop();
+                newDynMsgAllNum();
+            }
+        };
     }
 
     public void onDestroy() {
@@ -169,6 +182,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         newMsgReceiver.unregisterReceiver();
         resumeContactNumReceiver.unregisterReceiver();
         bottleNumReceiver.unregisterReceiver();
+        mainSelectReceiver.unregisterReceiver();
     }
 
     private void initFragments() {
@@ -197,7 +211,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             }
         });
 
-        selectPage(0);
+        selectPage(1);
     }
 
     @Override
@@ -381,13 +395,15 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 chatList.setChatType(1);
                 chatListDb.saveChatList(chatList);
                 mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
+                new Handler().postDelayed(() -> {
+                    Intent data = new Intent("lobster_updateContactNum");
+                    data.putExtra("chatType", 1);
+                    data.putExtra("isUpdate", isUpdate);
+                    activity.sendBroadcast(data);
+                }, 500);
                 if (!isUpdate) {
                     noReadBottleNum(false);
                     initRemind(o.getBeLikeCount());
-                } else {
-                    Intent data = new Intent("lobster_updateContactNum");
-                    data.putExtra("position", 0);
-                    activity.sendBroadcast(data);
                 }
             }
         }, activity).setOtherUserId(BaseActivity.userId);
@@ -410,14 +426,16 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 chatList.setChatType(2);
                 chatListDb.saveChatList(chatList);
                 mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
+                new Handler().postDelayed(() -> {
+                    Intent data = new Intent("lobster_updateContactNum");
+                    data.putExtra("chatType", 2);
+                    data.putExtra("isUpdate", isUpdate);
+                    activity.sendBroadcast(data);
+                }, 500);
+
                 if (!isUpdate) {
                     beSuperLikeList();
-                } else {
-                    Intent data = new Intent("lobster_updateContactNum");
-                    data.putExtra("position", 1);
-                    activity.sendBroadcast(data);
                 }
-
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
@@ -439,8 +457,25 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                     chatList.setChatType(3);
                     chatList.setCreationDate(likeMe.getModifyTime());
                     chatListDb.saveChatList(chatList);
+                    new Handler().postDelayed(() -> {
+                        Intent data = new Intent("lobster_updateContactNum");
+                        data.putExtra("chatType", 3);
+                        data.putExtra("isUpdate", false);
+                        activity.sendBroadcast(data);
+                    }, 500);
                 }
+            }
 
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    new Handler().postDelayed(() -> {
+                        Intent data = new Intent("lobster_updateContactNum");
+                        data.putExtra("chatType", 3);
+                        data.putExtra("isUpdate", false);
+                        activity.sendBroadcast(data);
+                    }, 500);
+                }
             }
         }, activity).setPageNo(0).setLikeOtherStatus(2);
         HttpManager.getInstance().doHttpDeal(api);

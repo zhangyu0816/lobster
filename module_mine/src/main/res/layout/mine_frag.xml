@@ -25,6 +25,9 @@
             name="contactNum"
             type="com.zb.lib_base.model.ContactNum" />
 
+        <variable
+            name="mineInfo"
+            type="com.zb.lib_base.model.MineInfo" />
 
     </data>
 
@@ -72,7 +75,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{viewModel.mineInfo.nick}"
+                    android:text="@{mineInfo.nick}"
                     android:textColor="@color/black_252"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -86,7 +89,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="3dp"
                     android:background="@mipmap/vip_icon"
-                    android:visibility="@{viewModel.mineInfo.memberType==2?View.VISIBLE:View.GONE}" />
+                    android:visibility="@{mineInfo.memberType==2?View.VISIBLE:View.GONE}" />
             </LinearLayout>
 
             <ImageView
@@ -129,7 +132,7 @@
                         <ImageView
                             android:id="@+id/iv_image"
                             defaultRes="@{ObjectUtils.getDefaultRes()}"
-                            imageUrl="@{viewModel.mineInfo.image}"
+                            imageUrl="@{mineInfo.image}"
                             isCircle="@{true}"
                             onClickDelayed="@{viewModel::toEditMember}"
                             viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.23f)}"
@@ -250,7 +253,7 @@
                             android:layout_marginTop="10dp"
                             android:layout_toEndOf="@+id/iv_image"
                             android:singleLine="true"
-                            android:text="@{viewModel.mineInfo.personalitySign}"
+                            android:text="@{mineInfo.personalitySign}"
                             android:textColor="@color/black_4d4"
                             android:textSize="14sp"
                             android:textStyle="bold"
@@ -266,7 +269,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="15dp"
                             android:background="@mipmap/vip_long_icon"
-                            android:visibility="@{viewModel.mineInfo.memberType==2?View.GONE:View.VISIBLE}" />
+                            android:visibility="@{mineInfo.memberType==2?View.GONE:View.VISIBLE}" />
                     </RelativeLayout>
                 </androidx.appcompat.widget.Toolbar>
 

@@ -1,5 +1,6 @@
 package com.zb.module_register.vm;
 
+import android.content.Intent;
 import android.os.CountDownTimer;
 import android.view.View;
 
@@ -126,8 +127,10 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
             public void onNext(MineInfo o) {
                 SCToastUtil.showToast(activity, "登录成功", true);
                 mineInfoDb.saveMineInfo(o);
-                if (!MineApp.isLogin)
+                if (!MineApp.isLogin) {
                     ActivityUtils.getMainActivity();
+                    activity.sendBroadcast(new Intent("lobster_mainSelect"));
+                }
                 activity.finish();
             }
         }, activity);

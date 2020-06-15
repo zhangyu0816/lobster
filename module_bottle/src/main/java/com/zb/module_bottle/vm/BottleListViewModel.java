@@ -179,6 +179,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 adapter.notifyItemRemoved(position);
                 bottleInfoList.remove(position);
                 bottleCacheDb.deleteBottleCache(bottleInfoList.get(position).getDriftBottleId());
+                activity.sendBroadcast(new Intent("lobster_bottleNum"));
             }
         }, activity).setDriftBottleId(bottleInfoList.get(position).getDriftBottleId()).setDriftBottleType(3);
         api.setShowProgress(true);

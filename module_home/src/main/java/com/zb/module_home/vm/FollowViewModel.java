@@ -36,6 +36,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
     private BaseReceiver publishReceiver;
     private BaseReceiver attentionReceiver;
     private BaseReceiver finishRefreshReceiver;
+    private BaseReceiver mainSelectReceiver;
     private int prePosition = -1;
 
     @Override
@@ -72,12 +73,19 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
                 mBinding.refresh.finishLoadMore();
             }
         };
+        mainSelectReceiver = new BaseReceiver(activity, "lobster_mainSelect") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                onRefreshForNet(null);
+            }
+        };
     }
 
     public void onDestroy() {
         publishReceiver.unregisterReceiver();
         attentionReceiver.unregisterReceiver();
         finishRefreshReceiver.unregisterReceiver();
+        mainSelectReceiver.unregisterReceiver();
     }
 
     @Override

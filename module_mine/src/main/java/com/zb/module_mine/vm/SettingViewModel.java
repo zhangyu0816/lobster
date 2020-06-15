@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.loginOutApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.MineInfo;
@@ -98,6 +99,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
                 PreferenceUtil.saveLongValue(activity, "userId", 0L);
                 PreferenceUtil.saveStringValue(activity, "login_pass", "");
                 BaseActivity.update();
+                MineApp.isLogin = false;
                 ActivityUtils.getRegisterMain();
                 activity.finish();
             }

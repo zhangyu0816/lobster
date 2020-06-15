@@ -99,6 +99,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
     }
 
     public void onDestroy() {
+        chatMsgList.clear();
         updateChatReceiver.unregisterReceiver();
         relieveReceiver.unregisterReceiver();
     }

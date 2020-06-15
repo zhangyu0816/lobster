@@ -50,6 +50,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     private int prePosition = -1;
     private BaseReceiver attentionReceiver;
     private BaseReceiver finishRefreshReceiver;
+    private BaseReceiver mainSelectReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -79,12 +80,23 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 mBinding.refresh.finishLoadMore();
             }
         };
+        mainSelectReceiver = new BaseReceiver(activity, "lobster_mainSelect") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.refresh.setEnableLoadMore(true);
+                pageNo = 1;
+                discoverInfoList.clear();
+                adapter.notifyDataSetChanged();
+                personOtherDyn();
+            }
+        };
     }
 
     public void onDestroy() {
         publishReceiver.unregisterReceiver();
         attentionReceiver.unregisterReceiver();
         finishRefreshReceiver.unregisterReceiver();
+        mainSelectReceiver.unregisterReceiver();
     }
 
     @Override
@@ -93,7 +105,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
         if (otherUserId == 0)
             getData();
         else {
-            if (otherUserId == BaseActivity.userId) {
+            if (otherUserId == 1) {
                 mineInfo = mineInfoDb.getMineInfo();
                 getData();
             } else {
@@ -164,7 +176,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 mBinding.noNetLinear.setVisibility(View.GONE);
                 int start = discoverInfoList.size();
                 for (DiscoverInfo item : o) {
-                    if (otherUserId == BaseActivity.userId) {
+                    if (otherUserId == 1) {
                         item.setNick(mineInfo.getNick());
                         item.setImage(mineInfo.getImage());
                     } else {
@@ -193,7 +205,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
             }
         }, activity)
                 .setDynType(2)
-                .setOtherUserId(otherUserId)
+                .setOtherUserId(otherUserId == 1 ? BaseActivity.userId : otherUserId)
                 .setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
     }

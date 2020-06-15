@@ -6,46 +6,63 @@ import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.BR;
+import com.zb.module_mine.R;
+import com.zb.module_mine.databinding.MineFragBinding;
 import com.zb.module_mine.iv.MineVMInterface;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.databinding.ViewDataBinding;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 public class MineViewModel extends BaseViewModel implements MineVMInterface {
 
-    public MineInfo mineInfo;
+    public FragmentManager fm;
+    private MineInfo mineInfo;
+    private MineFragBinding mBinding;
     private BaseReceiver updateMineInfoReceiver;
     private BaseReceiver newsCountReceiver;
     private BaseReceiver openVipReceiver;
     private BaseReceiver updateContactNumReceiver;
+    private BaseReceiver mainSelectReceiver;
+    private List<Fragment> fragments = new ArrayList<>();
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mineInfo = mineInfoDb.getMineInfo();
-        mBinding.setVariable(BR.contactNum, MineApp.contactNum);
-        mBinding.setVariable(BR.hasNewBeLike, MineApp.contactNum.getBeLikeCount() > PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId));
-        mBinding.setVariable(BR.viewModel, MineViewModel.this);
+
+        mBinding = (MineFragBinding) binding;
+        mBinding.setMineNewsCount(MineApp.mineNewsCount);
+        mBinding.setContactNum(MineApp.contactNum);
+        mBinding.setHasNewBeLike(MineApp.contactNum.getBeLikeCount() > PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId));
+        mBinding.setMineInfo(mineInfo);
+
         updateMineInfoReceiver = new BaseReceiver(activity, "lobster_updateMineInfo") {
             @Override
             public void onReceive(Context context, Intent intent) {
                 mineInfo = mineInfoDb.getMineInfo();
-                mBinding.setVariable(BR.viewModel, MineViewModel.this);
+                mBinding.setMineInfo(mineInfo);
             }
         };
         newsCountReceiver = new BaseReceiver(activity, "lobster_newsCount") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                mBinding.setVariable(BR.mineNewsCount, MineApp.mineNewsCount);
+                mBinding.setMineNewsCount(MineApp.mineNewsCount);
             }
         };
 
@@ -60,13 +77,22 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         updateContactNumReceiver = new BaseReceiver(activity, "lobster_updateContactNum") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                int position = intent.getIntExtra("position", 0);
-                if (position == 0) {
-                    mBinding.setVariable(BR.contactNum, MineApp.contactNum);
-                    mBinding.setVariable(BR.hasNewBeLike, MineApp.contactNum.getBeLikeCount() > PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId));
+                int chatType = intent.getIntExtra("chatType", 0);
+                if (chatType == 1) {
+                    mBinding.setContactNum(MineApp.contactNum);
+                    mBinding.setHasNewBeLike(MineApp.contactNum.getBeLikeCount() > PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId));
                 }
             }
         };
+
+        mainSelectReceiver = new BaseReceiver(activity, "lobster_mainSelect") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mineInfo = mineInfoDb.getMineInfo();
+                mBinding.setMineInfo(mineInfo);
+            }
+        };
+        initFragments();
     }
 
     public void onDestroy() {
@@ -74,6 +100,15 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         newsCountReceiver.unregisterReceiver();
         openVipReceiver.unregisterReceiver();
         updateContactNumReceiver.unregisterReceiver();
+        mainSelectReceiver.unregisterReceiver();
+    }
+
+    private void initFragments() {
+        fragments.clear();
+        fragments.add(FragmentUtils.getCardMemberDiscoverFragment(1));
+        fragments.add(FragmentUtils.getCardMemberVideoFragment(1));
+        mBinding.viewPage.setAdapter(new FragmentAdapter(fm, fragments));
+        initTabLayout(new String[]{"动态", "小视频"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827);
     }
 
     @Override
@@ -123,7 +158,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             public void onNext(MineInfo o) {
                 mineInfo = o;
                 mineInfoDb.saveMineInfo(o);
-                mBinding.setVariable(BR.viewModel, MineViewModel.this);
+                mBinding.setMineInfo(mineInfo);
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

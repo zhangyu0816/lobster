@@ -78,6 +78,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     public BaseReceiver cardReceiver;
     public BaseReceiver locationReceiver;
     public BaseReceiver openVipReceiver;
+    public BaseReceiver mainSelectReceiver;
     private boolean isAnimation = true;
     private AnimatorSet animatorSet;
     private ObjectAnimator translate = null;
@@ -143,7 +144,13 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 myInfo();
             }
         };
-
+        mainSelectReceiver = new BaseReceiver(activity, "lobster_mainSelect") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mineInfo = mineInfoDb.getMineInfo();
+                prePairList(true);
+            }
+        };
         RelativeLayout.LayoutParams paramsS = (RelativeLayout.LayoutParams) cardFragBinding.ivDislike.getLayoutParams();
         paramsS.setMarginStart(0 - ObjectUtils.getViewSizeByWidthFromMax(200));
         cardFragBinding.ivDislike.setLayoutParams(paramsS);

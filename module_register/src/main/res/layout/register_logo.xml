@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:text="请选择您的照片哦"
             android:textColor="@android:color/white"
-            android:textSize="20sp"
+            android:textSize="25sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -47,7 +47,7 @@
             android:alpha="0.8"
             android:text="第一张照片将会当成头像和首图"
             android:textColor="@android:color/white"
-            android:textSize="14sp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />

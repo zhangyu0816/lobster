@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="下一步，您叫什么名字？"
             android:textColor="@android:color/white"
-            android:textSize="20sp"
+            android:textSize="25sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -48,7 +48,9 @@
             android:gravity="center"
             android:padding="15dp"
             android:text="@={nick}"
+            android:maxLength="10"
             android:textColor="@android:color/white"
+            android:textColorHint="@color/black_c3b"
             android:textCursorDrawable="@drawable/cursor_color_white"
             android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@+id/textView" />

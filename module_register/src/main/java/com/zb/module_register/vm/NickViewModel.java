@@ -22,8 +22,8 @@ public class NickViewModel extends BaseViewModel implements NickVMInterface {
     public void next(View view) {
         hintKeyBoard();
         String nick = ((RegisterNickBinding) mBinding).getNick();
-        if(nick.isEmpty()){
-            SCToastUtil.showToast(activity,"请填写昵称", false);
+        if (nick.isEmpty()) {
+            SCToastUtil.showToast(activity, "请填写名字", false);
             return;
         }
         MineApp.registerInfo.setName(nick);

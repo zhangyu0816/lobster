@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -33,8 +34,13 @@
             android:layout_height="wrap_content"
             android:text="@{title}"
             android:textColor="@android:color/white"
-            android:textSize="20sp"
+            android:textSize="25sp"
+            android:lineSpacingExtra="10dp"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp"
+            android:gravity="center"
             android:textStyle="bold"
+            tools:text="嗨 爱上了附件为了文件法律文件发我 文科积分网络发来我看就"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

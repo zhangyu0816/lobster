@@ -40,8 +40,8 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
 
     public ChatAdapter adapter;
     private LikeDb likeDb;
-    private List<ChatList> chatMsgList = new ArrayList<>();
-    private int pageNo = 1;
+    public List<ChatList> chatMsgList = new ArrayList<>();
+    public int pageNo = 1;
     private ChatListDb chatListDb;
     private HistoryMsgDb historyMsgDb;
     private ChatPairFragmentBinding mBinding;
@@ -70,9 +70,23 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         updateContactNumReceiver = new BaseReceiver(activity, "lobster_updateContactNum") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                int position = intent.getIntExtra("position", 0);
-                chatMsgList.set(position, chatListDb.getChatList(position + 1).get(0));
-                adapter.notifyItemChanged(position);
+                int chatType = intent.getIntExtra("chatType", 0);
+                boolean isUpdate = intent.getBooleanExtra("isUpdate", false);
+                if (isUpdate) {
+                    chatMsgList.set(chatType - 1, chatListDb.getChatList(chatType).get(0));
+                    adapter.notifyItemChanged(chatType - 1);
+                } else {
+                    if (chatType == 1) {
+                        chatMsgList.clear();
+                        adapter.notifyDataSetChanged();
+                    }
+                    chatMsgList.addAll(chatListDb.getChatList(chatType));
+                    adapter.notifyItemChanged(chatType - 1);
+                    if (chatType == 3) {
+                        pairList();
+                    }
+
+                }
             }
         };
         relieveReceiver = new BaseReceiver(activity, "lobster_relieve") {
@@ -112,9 +126,6 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
 
     @Override
     public void setAdapter() {
-        chatMsgList.addAll(chatListDb.getChatList(1));
-        chatMsgList.addAll(chatListDb.getChatList(2));
-        chatMsgList.addAll(chatListDb.getChatList(3));
         adapter = new ChatAdapter<>(activity, R.layout.item_chat_pair, chatMsgList, this);
         callback = new SimpleItemTouchHelperCallback(adapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
@@ -123,7 +134,6 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         callback.setSwipeEnabled(true);
         callback.setSwipeFlags(ItemTouchHelper.START | ItemTouchHelper.END);
         callback.setDragFlags(0);
-        pairList();
     }
 
     @Override

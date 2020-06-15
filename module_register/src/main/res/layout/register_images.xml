@@ -26,7 +26,7 @@
             android:gravity="center"
             android:text="眼光不错！\n一般来说照片越多越好"
             android:textColor="@android:color/white"
-            android:textSize="20sp"
+            android:textSize="25sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

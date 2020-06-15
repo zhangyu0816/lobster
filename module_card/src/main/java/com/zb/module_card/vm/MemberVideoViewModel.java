@@ -43,6 +43,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
     private int prePosition = -1;
     private BaseReceiver attentionReceiver;
     private BaseReceiver finishRefreshReceiver;
+    private BaseReceiver mainSelectReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -72,12 +73,23 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
                 mBinding.refresh.finishLoadMore();
             }
         };
+        mainSelectReceiver = new BaseReceiver(activity, "lobster_mainSelect") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.refresh.setEnableLoadMore(true);
+                pageNo = 1;
+                discoverInfoList.clear();
+                adapter.notifyDataSetChanged();
+                personOtherDyn();
+            }
+        };
     }
 
     public void onDestroy() {
         publishReceiver.unregisterReceiver();
         attentionReceiver.unregisterReceiver();
         finishRefreshReceiver.unregisterReceiver();
+        mainSelectReceiver.unregisterReceiver();
     }
 
     @Override
