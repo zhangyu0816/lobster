@@ -36,10 +36,12 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
     private long friendDynId;
     private long reviewId;
     private BaseReceiver finishRefreshReceiver;
+    private CallBack callBack;
 
-    public ReviewPW(RxAppCompatActivity activity, View parentView, long friendDynId) {
+    public ReviewPW(RxAppCompatActivity activity, View parentView, long friendDynId, CallBack callBack) {
         super(activity, parentView, false);
         this.friendDynId = friendDynId;
+        this.callBack = callBack;
         initUI();
     }
 
@@ -120,6 +122,7 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "发布成功", true);
                 binding.setContent("");
+                callBack.success();
                 // 下拉刷新
                 onRefresh(binding.refresh);
             }
@@ -132,5 +135,8 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
         mBinding.setVariable(BR.name, reviewId == 0 ? "" : review.getNick());
     }
 
+    public interface CallBack {
+        void success();
+    }
 
 }

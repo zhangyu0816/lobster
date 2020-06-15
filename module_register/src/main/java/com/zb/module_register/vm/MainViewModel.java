@@ -7,6 +7,7 @@ import android.view.View;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
@@ -23,6 +24,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         aMapLocation = new AMapLocation(activity);
+        MineApp.registerInfo = new RegisterInfo();
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
         if (MineApp.cityName.isEmpty()) {
             getPermissions();

@@ -309,6 +309,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "发布成功", true);
+                discoverInfo.setReviews(discoverInfo.getReviews() + 1);
+                mBinding.setViewModel(DiscoverDetailViewModel.this);
                 mBinding.setContent("");
                 // 下拉刷新
                 onRefresh(mBinding.refresh);
@@ -380,6 +382,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     mBinding.tvFollow.setText("取消关注");
                     mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
                     attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
+                } else {
+                    attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
                 }
             }
         }, activity).setOtherUserId(discoverInfo.getUserId());

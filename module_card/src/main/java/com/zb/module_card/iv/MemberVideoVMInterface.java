@@ -10,4 +10,10 @@ public interface MemberVideoVMInterface {
     void onRefreshForNet(View view);
 
     void clickItem(int position);
+
+    void doLike(int position);
+
+    void dynDoLike();
+
+    void dynCancelLike();
 }

@@ -27,6 +27,13 @@ public class AttentionDb extends BaseDao {
         return attentionInfo != null && attentionInfo.isAttention();
     }
 
+    public boolean hasAttention(long otherUserId) {
+        beginTransaction();
+        AttentionInfo attentionInfo = realm.where(AttentionInfo.class).equalTo("otherUserId", otherUserId).equalTo("mainUserId", BaseActivity.userId).findFirst();
+        commitTransaction();
+        return attentionInfo != null;
+    }
+
     public AttentionInfo getAttentionInfo(long otherUserId) {
         beginTransaction();
         AttentionInfo attentionInfo = realm.where(AttentionInfo.class).equalTo("otherUserId", otherUserId).equalTo("mainUserId", BaseActivity.userId).findFirst();

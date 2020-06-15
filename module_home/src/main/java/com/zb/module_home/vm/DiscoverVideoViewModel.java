@@ -125,7 +125,10 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
 
     @Override
     public void toReviews(View view) {
-        new ReviewPW(activity, mBinding.getRoot(), friendDynId);
+        new ReviewPW(activity, mBinding.getRoot(), friendDynId,()->{
+            discoverInfo.setReviews(discoverInfo.getReviews() + 1);
+            mBinding.setViewModel(DiscoverVideoViewModel.this);
+        });
     }
 
     @Override
@@ -236,6 +239,8 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                     mBinding.tvFollow.setText("取消关注");
                     mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
                     attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
+                }else{
+                    attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
                 }
             }
         }, activity).setOtherUserId(discoverInfo.getUserId());

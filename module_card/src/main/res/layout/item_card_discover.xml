@@ -106,6 +106,7 @@
                         android:textSize="12sp" />
 
                     <TextView
+                        android:onClick="@{v->viewModel.doLike(position)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"

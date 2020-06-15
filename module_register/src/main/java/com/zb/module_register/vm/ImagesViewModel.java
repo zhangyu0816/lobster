@@ -127,7 +127,6 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
                     ActivityUtils.getMainActivity();
                     activity.sendBroadcast(new Intent("lobster_mainSelect"));
                 }
-                MineApp.registerInfo = new RegisterInfo();
                 activity.finish();
             }
         }, activity);

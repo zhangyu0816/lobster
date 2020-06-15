@@ -1,11 +1,15 @@
 package com.zb.module_home.adapter;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.BindingItemAdapter;
 import com.zb.lib_base.adapter.RecyclerHolder;
+import com.zb.lib_base.model.AttentionInfo;
+import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_home.BR;
+import com.zb.module_home.vm.FollowViewModel;
 
 import java.util.List;
 

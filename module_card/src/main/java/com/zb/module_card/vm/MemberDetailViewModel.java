@@ -151,6 +151,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     mBinding.tvFollow.setText("取消关注");
                     mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
                     attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
+                } else {
+                    attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
                 }
             }
         }, activity).setOtherUserId(otherUserId);

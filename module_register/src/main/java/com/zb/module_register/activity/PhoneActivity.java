@@ -45,8 +45,13 @@ public class PhoneActivity extends RegisterBaseActivity {
         KeyBroadUtils.controlKeyboardLayout(binding.btnLayout, binding.tvNext);
         // 初始化手机号
         if (isLogin) {
-            binding.edPhone.setText(PreferenceUtil.readStringValue(activity, "userName"));
-            binding.setPhone(PreferenceUtil.readStringValue(activity, "userName"));
+            if(MineApp.registerInfo.getPhone().isEmpty()){
+                binding.edPhone.setText(PreferenceUtil.readStringValue(activity, "userName"));
+                binding.setPhone(PreferenceUtil.readStringValue(activity, "userName"));
+            }else{
+                binding.edPhone.setText(MineApp.registerInfo.getPhone());
+                binding.setPhone(MineApp.registerInfo.getPhone());
+            }
         } else {
             binding.edPhone.setText(MineApp.registerInfo.getPhone());
             binding.setPhone(MineApp.registerInfo.getPhone());

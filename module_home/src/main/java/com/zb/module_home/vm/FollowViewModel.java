@@ -2,6 +2,7 @@ package com.zb.module_home.vm;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -9,9 +10,12 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.attentionDynApi;
+import com.zb.lib_base.api.dynCancelLikeApi;
+import com.zb.lib_base.api.dynDoLikeApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
+import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -38,6 +42,8 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
     private BaseReceiver finishRefreshReceiver;
     private BaseReceiver mainSelectReceiver;
     private int prePosition = -1;
+    private long friendDynId = 0;
+    private DiscoverInfo discoverInfo;
 
     @Override
     public void setAdapter() {
@@ -61,8 +67,10 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
             public void onReceive(Context context, Intent intent) {
                 if (prePosition == -1) return;
                 int goodNum = intent.getIntExtra("goodNum", 0);
-                discoverInfoList.get(prePosition).setGoodNum(goodNum);
-                adapter.notifyItemChanged(prePosition);
+                if (goodNum != 0) {
+                    discoverInfoList.get(prePosition).setGoodNum(goodNum);
+                    adapter.notifyItemChanged(prePosition);
+                }
                 prePosition = -1;
             }
         };
@@ -155,4 +163,54 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
             ActivityUtils.getHomeDiscoverVideo(discoverInfo.getFriendDynId());
     }
 
+    @Override
+    public void doLike(int position) {
+        prePosition = position;
+        discoverInfo = discoverInfoList.get(position);
+        friendDynId = discoverInfo.getFriendDynId();
+        if (goodDb.hasGood(friendDynId)) {
+            dynCancelLike();
+        } else {
+            dynDoLike();
+        }
+    }
+
+    @Override
+    public void dynDoLike() {
+        dynDoLikeApi api = new dynDoLikeApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                goodDb.saveGood(new CollectID(friendDynId));
+                discoverInfo.setGoodNum(discoverInfo.getGoodNum() + 1);
+                adapter.notifyItemChanged(prePosition);
+                prePosition = -1;
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
+                    if (TextUtils.equals(e.getMessage(), "已经赞过了")) {
+                        goodDb.saveGood(new CollectID(friendDynId));
+                        adapter.notifyItemChanged(prePosition);
+                        prePosition = -1;
+                    }
+                }
+            }
+        }, activity).setFriendDynId(friendDynId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void dynCancelLike() {
+        dynCancelLikeApi api = new dynCancelLikeApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                goodDb.deleteGood(friendDynId);
+                discoverInfo.setGoodNum(discoverInfo.getGoodNum() - 1);
+                adapter.notifyItemChanged(prePosition);
+                prePosition = -1;
+            }
+        }, activity).setFriendDynId(friendDynId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
 }
