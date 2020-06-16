@@ -1,9 +1,11 @@
 package com.zb.module_mine.vm;
 
+import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.hardware.Camera;
+import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
@@ -11,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.humanFaceApi;
 import com.zb.lib_base.api.humanFaceStatusApi;
@@ -36,7 +39,7 @@ import java.io.IOException;
 import androidx.databinding.ViewDataBinding;
 
 public class RealNameViewModel extends BaseViewModel implements RealNameVMInterface, View.OnTouchListener {
-    private MineRealNameBinding nameBinding;
+    private MineRealNameBinding mBinding;
     private Camera mCamera;
     private CameraPreview preview;
     private OverCameraView mOverCameraView; // 聚焦视图
@@ -57,10 +60,10 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        nameBinding = (MineRealNameBinding) binding;
-        nameBinding.cameraLayout.setOnTouchListener(this);
-        AdapterBinding.viewSize(nameBinding.cameraLayout, MineApp.W, (int) (MineApp.W * 4f / 3f));
-        initCamera();
+        mBinding = (MineRealNameBinding) binding;
+        mBinding.cameraLayout.setOnTouchListener(this);
+        AdapterBinding.viewSize(mBinding.cameraLayout, MineApp.W, (int) (MineApp.W * 4f / 3f));
+        getPermissions();
         humanFaceStatus();
         photoManager = new PhotoManager(activity, () -> {
             humanFace(photoManager.jointWebUrl(","));
@@ -74,17 +77,43 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
         imageFile = new File(imagePath);
     }
 
+    /**
+     * 权限
+     */
+    private void getPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            performCodeWithPermission( "虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
+                        @Override
+                        public void hasPermission() {
+                            setPermissions();
+                        }
+
+                        @Override
+                        public void noPermission() {
+                            back(null);
+                        }
+                    }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO);
+        } else {
+            setPermissions();
+        }
+    }
+
+    private void setPermissions() {
+        initCamera();
+    }
+
     private void initCamera() {
-        nameBinding.cameraLayout.removeAllViews();
+        mBinding.cameraLayout.removeAllViews();
         mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
         preview = new CameraPreview(activity, mCamera, 4, 3);
         mOverCameraView = new OverCameraView(activity);
-        nameBinding.cameraLayout.addView(preview);
-        nameBinding.cameraLayout.addView(mOverCameraView);
+        mBinding.cameraLayout.addView(preview);
+        mBinding.cameraLayout.addView(mOverCameraView);
 
         animatorSet = new AnimatorSet();
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(nameBinding.tvTime, "scaleX", 0, 1).setDuration(700);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(nameBinding.tvTime, "scaleY", 0, 1).setDuration(700);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mBinding.tvTime, "scaleX", 0, 1).setDuration(700);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mBinding.tvTime, "scaleY", 0, 1).setDuration(700);
         animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
         animatorSet.play(scaleX).with(scaleY);
 
@@ -92,16 +121,16 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
         timer = new CountDownTimer(5000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                nameBinding.tvTime.setText(millisUntilFinished / 1000 + "");
+                mBinding.tvTime.setText(millisUntilFinished / 1000 + "");
                 animatorSet.start();
             }
 
             @Override
             public void onFinish() {
                 isTakePhoto = true;
-                nameBinding.tvTime.setScaleX(0);
-                nameBinding.tvTime.setScaleY(0);
-                nameBinding.btnLinear.setVisibility(View.VISIBLE);
+                mBinding.tvTime.setScaleX(0);
+                mBinding.tvTime.setScaleY(0);
+                mBinding.btnLinear.setVisibility(View.VISIBLE);
                 //调用相机拍照
                 mCamera.takePicture(null, null, null, (data, camera1) -> {
                     imageData = data;
@@ -117,9 +146,12 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
     @Override
     public void back(View view) {
         super.back(view);
-        preview.releaseCamera();
-        animatorSet.cancel();
-        timer.cancel();
+        if (preview != null)
+            preview.releaseCamera();
+        if (animatorSet != null)
+            animatorSet.cancel();
+        if (timer != null)
+            timer.cancel();
         DataCleanManager.deleteFile(imageFile);
         activity.finish();
     }
@@ -135,7 +167,7 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
         mCamera.startPreview();
         imageData = null;
         isTakePhoto = false;
-        nameBinding.btnLinear.setVisibility(View.GONE);
+        mBinding.btnLinear.setVisibility(View.GONE);
         timer.start();
     }
 

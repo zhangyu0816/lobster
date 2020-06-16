@@ -40,7 +40,7 @@ public class LogoViewModel extends BaseViewModel implements LogoVMInterface {
      */
     private void getPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission("虾菇需要访问读外部存储权限", new BaseActivity.PermissionCallback() {
+            performCodeWithPermission( "虾菇需要访问读外部存储权限", new BaseActivity.PermissionCallback() {
                 @Override
                 public void hasPermission() {
                     setPermissions();

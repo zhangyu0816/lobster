@@ -1,5 +1,6 @@
 package com.zb.lib_base.activity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -200,6 +201,9 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         return flag;
     }
 
+    private boolean isClose = false;
+
+    @SuppressLint("ClickableViewAccessibility")
     private void requestPermission(String permissionDes, final int requestCode, final String[] permissions) {
         if (shouldShowRequestPermissionRationale(permissions)) {
             //如果用户之前拒绝过此权限，再提示一次准备授权相关权限
@@ -208,37 +212,38 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             PwsPerformBinding binding = DataBindingUtil.inflate(getLayoutInflater(), R.layout.pws_perform, null, false);
 
             View view = binding.getRoot();
-            //把自定义的布局设置到dialog中，注意，布局设置一定要在show之前。从第二个参数分别填充内容与边框之间左、上、右、下、的像素
             build.setView(view, 0, 0, 0, 0);
-            //一定要先show出来再设置dialog的参数，不然就不会改变dialog的大小了
             build.show();
-            //得到当前显示设备的宽度，单位是像素
             int width = getWindowManager().getDefaultDisplay().getWidth();
-            //得到这个dialog界面的参数对象
             WindowManager.LayoutParams params = build.getWindow().getAttributes();
-            //设置dialog的界面宽度
             params.width = width - (width / 6);
-            //设置dialog高度为包裹内容
             params.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            //设置dialog的重心
             params.gravity = Gravity.CENTER;
-            //dialog.getWindow().setLayout(width-(width/6), LayoutParams.WRAP_CONTENT);
-            //用这个方法设置dialog大小也可以，但是这个方法不能设置重心之类的参数，推荐用Attributes设置
-            //最后把这个参数对象设置进去，即与dialog绑定
             build.getWindow().setAttributes(params);
 
             binding.setContent(permissionDes);
 
-            binding.sure.setOnClickListener(v -> {
+
+            binding.tvSure.setOnClickListener(v -> {
+                isClose = false;
                 ActivityCompat.requestPermissions(BaseActivity.this, permissions, requestCode);
                 build.dismiss();
             });
-            binding.cancel.setOnClickListener(v -> {
+            binding.tvCancel.setOnClickListener(v -> {
+                isClose = true;
+                build.dismiss();
+            });
+            view.setOnTouchListener((v, event) -> {
+                isClose = true;
+                build.dismiss();
+                return false;
+            });
+            build.setOnDismissListener(dialog -> {
                 if (permissionRunnable != null) {
                     permissionRunnable.noPermission();
                     permissionRunnable = null;
+                    isClose = false;
                 }
-                build.dismiss();
             });
         } else {
             // Contact permissions have not been granted yet. Request them directly.

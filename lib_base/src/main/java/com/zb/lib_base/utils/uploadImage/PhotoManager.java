@@ -3,7 +3,6 @@ package com.zb.lib_base.utils.uploadImage;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.api.uploadImagesApi;

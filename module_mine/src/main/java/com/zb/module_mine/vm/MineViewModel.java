@@ -48,8 +48,10 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
 
         mBinding = (MineFragBinding) binding;
         mBinding.setMineNewsCount(MineApp.mineNewsCount);
-        mBinding.setContactNum(MineApp.contactNum);
-        mBinding.setHasNewBeLike(MineApp.contactNum.getBeLikeCount() > PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId));
+        if (MineApp.contactNum != null) {
+            mBinding.setContactNum(MineApp.contactNum);
+            mBinding.setHasNewBeLike(MineApp.contactNum.getBeLikeCount() > PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId));
+        }
         mBinding.setMineInfo(mineInfo);
 
         updateMineInfoReceiver = new BaseReceiver(activity, "lobster_updateMineInfo") {
