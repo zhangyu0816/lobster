@@ -20,7 +20,6 @@ public class VideoActivity extends CameraBaseActivity {
 
     @Override
     public void initUI() {
-        fitComprehensiveScreen();
         viewModel = new VideoViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);

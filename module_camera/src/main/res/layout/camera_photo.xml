@@ -46,7 +46,6 @@
             android:id="@+id/top_layout"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginTop="22dp"
             android:visibility="@{isCreate?View.VISIBLE:View.GONE}">
 
             <ImageView
@@ -74,21 +73,21 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
             android:visibility="@{isCreate?View.GONE:View.VISIBLE}">
 
             <ImageView
                 onClickDelayed="@{viewModel::back}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:padding="15dp"
                 app:srcCompat="@mipmap/cancel" />
 
             <ImageView
+                android:id="@+id/camera_size"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/camera_light"
+                android:layout_centerInParent="true"
                 android:onClick="@{v->viewModel.changeSizeIndex(sizeIndex==0?1:0)}"
                 android:padding="15dp"
                 android:src="@{sizeIndex==0?@drawable/photo_size_9_16:@drawable/photo_size_3_4}" />
@@ -98,7 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/camera_id"
+                android:layout_toEndOf="@+id/camera_size"
                 android:onClick="@{v->viewModel.changeLightIndex(lightIndex==0?1:0)}"
                 android:padding="15dp"
                 android:src="@{lightIndex==0?@drawable/photo_light_close:@drawable/photo_light_open}" />
@@ -108,7 +107,7 @@
                 onClickDelayed="@{viewModel::changeCameraId}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@+id/camera_light"
                 android:layout_centerVertical="true"
                 android:padding="15dp"
                 app:srcCompat="@mipmap/photo_change" />
@@ -162,6 +161,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="拍照"
+                android:textStyle="bold"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
         </LinearLayout>

@@ -21,7 +21,7 @@ public class BirthdayViewModel extends BaseViewModel implements BirthdayVMInterf
 
     @Override
     public void selectBirthday(View view) {
-        new BirthdayPW(activity, ((RegisterBirthdayBinding) mBinding).tvNext, birthday -> {
+        new BirthdayPW(activity, ((RegisterBirthdayBinding) mBinding).tvNext, MineApp.registerInfo.getBirthday(), birthday -> {
             MineApp.registerInfo.setBirthday(birthday);
             ((RegisterBirthdayBinding) mBinding).setBirthday(birthday);
         });

@@ -63,7 +63,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     protected void onDestroy() {
         if (mBinding != null)
             mBinding.unbind();
-
         super.onDestroy();
     }
 
@@ -149,9 +148,9 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     public void fitComprehensiveScreen() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().addFlags(View.SYSTEM_UI_FLAG_FULLSCREEN);
-            getWindow().addFlags(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-            getWindow().addFlags(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+            getWindow().addFlags(View.SYSTEM_UI_FLAG_FULLSCREEN);// 导致华为手机模糊
+            getWindow().addFlags(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);// 导致华为手机黑屏
+//            getWindow().addFlags(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
             getWindow().addFlags(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             getWindow().setNavigationBarColor(Color.TRANSPARENT);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
@@ -175,7 +174,8 @@ public abstract class BaseActivity extends RxAppCompatActivity {
      * @param runnable      请求权限回调
      * @param permissions   请求的权限（数组类型），直接从Manifest中读取相应的值，比如Manifest.permission.WRITE_CONTACTS
      */
-    public void performCodeWithPermission(@NonNull String permissionDes, PermissionCallback runnable, @NonNull String... permissions) {
+    public void performCodeWithPermission(@NonNull String permissionDes, PermissionCallback
+            runnable, @NonNull String... permissions) {
         if (permissions == null || permissions.length == 0) return;
         this.permissionRunnable = runnable;
         if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.M) || checkPermissionGranted(permissions)) {
@@ -204,7 +204,8 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     private boolean isClose = false;
 
     @SuppressLint("ClickableViewAccessibility")
-    private void requestPermission(String permissionDes, final int requestCode, final String[] permissions) {
+    private void requestPermission(String permissionDes, final int requestCode,
+                                   final String[] permissions) {
         if (shouldShowRequestPermissionRationale(permissions)) {
             //如果用户之前拒绝过此权限，再提示一次准备授权相关权限
             final AlertDialog build = new AlertDialog.Builder(this).create();
@@ -266,7 +267,8 @@ public abstract class BaseActivity extends RxAppCompatActivity {
      * Callback received when a permissions request has been completed.
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         if (requestCode == permissionRequestCode) {
             if (verifyPermissions(grantResults)) {
                 if (permissionRunnable != null) {

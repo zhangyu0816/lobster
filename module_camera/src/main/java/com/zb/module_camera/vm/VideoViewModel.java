@@ -1,5 +1,6 @@
 package com.zb.module_camera.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
@@ -50,11 +51,12 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
             time += 100;
             int s = (int) (time / 1000);
             int ms = (int) (time - s * 1000) / 10;
-            videoBinding.setSecond("已录制" + (s < 10 ? "0" + s : s + "") + ":" + (ms < 10 ? "0" + ms : ms + "") + "S");
+            videoBinding.setSecond("已录制" + s + "." + (ms < 10 ? "0" + ms : ms + "") + "S");
             handler.postDelayed(this, 100);
         }
     };
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
@@ -173,7 +175,7 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
                 SCToastUtil.showToast(activity, "视频文件已达到3M，自动停止！", true);
             } else if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) {
                 stopRecorder(view);
-                SCToastUtil.showToast(activity, "视频文件已录制15秒，自动停止！", true);
+                SCToastUtil.showToast(activity, "视频文件已录制20秒，自动停止！", true);
             }
         });
         preview.startRecord();
@@ -191,12 +193,14 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
 
     @Override
     public void selectIndex(int index) {
-        if (index == 0) {
-            ActivityUtils.getCameraMain(activity, true, true);
-        } else if (index == 2) {
-            ActivityUtils.getCameraPhoto(true, true);
+        if (!videoBinding.getIsRecorder() && !videoBinding.getIsFinish()) {
+            if (index == 0) {
+                ActivityUtils.getCameraMain(activity, true, true);
+            } else if (index == 2) {
+                ActivityUtils.getCameraPhoto(true, true);
+            }
+            back(null);
         }
-        back(null);
     }
 
     @Override
@@ -212,11 +216,10 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
                 float x = event.getX();
                 float y = event.getY();
                 isFoucing = true;
-                if (mCamera != null && !videoBinding.getIsRecorder()) {
+                if (mCamera != null && !videoBinding.getIsFinish()) {
                     mOverCameraView.setTouchFoucusRect(mCamera, autoFocusCallback, x, y);
                 }
                 mRunnable = () -> {
-                    SCToastUtil.showToast(activity, "自动聚焦超时,请调整合适的位置拍摄！", true);
                     isFoucing = false;
                     mOverCameraView.setFoucuing(false);
                     mOverCameraView.disDrawTouchFocusRect();

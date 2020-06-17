@@ -30,6 +30,7 @@ public class PhoneActivity extends RegisterBaseActivity {
 
     @Override
     public void initUI() {
+        fitComprehensiveScreen();
         viewModel = new PhoneViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);

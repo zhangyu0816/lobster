@@ -129,8 +129,8 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
                 mineInfoDb.saveMineInfo(o);
                 if (!MineApp.isLogin) {
                     ActivityUtils.getMainActivity();
-                    activity.sendBroadcast(new Intent("lobster_mainSelect"));
                 }
+                activity.sendBroadcast(new Intent("lobster_mainSelect"));
                 activity.finish();
             }
         }, activity);

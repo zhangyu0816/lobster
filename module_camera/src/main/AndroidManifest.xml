@@ -6,13 +6,15 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-
+    <uses-feature android:name="android.hardware.camera.autofocus"/>
     <uses-feature android:name="android.hardware.camera" />
 
-    <application android:theme="@style/CameraTheme">
+    <application
+        android:hardwareAccelerated="true"
+        android:theme="@style/CameraTheme">
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.VideoActivity" />
-        <activity android:name=".activity.PhotoActivity"/>
+        <activity android:name=".activity.PhotoActivity" />
         <activity android:name=".activity.VideosActivity" />
         <activity android:name=".activity.VideoPlayActivity" />
     </application>

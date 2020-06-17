@@ -166,9 +166,11 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         mainSelectReceiver = new BaseReceiver(activity, "lobster_mainSelect") {
             @Override
             public void onReceive(Context context, Intent intent) {
+                if (!MineApp.isLogin){
+                    selectPage(1);
+                }
                 MineApp.isLogin = true;
                 joinPairPool(PreferenceUtil.readStringValue(activity, "longitude"), PreferenceUtil.readStringValue(activity, "latitude"));
-                selectPage(1);
                 myImAccountInfoApi();
                 walletAndPop();
                 newDynMsgAllNum();
@@ -205,13 +207,17 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onPageScrollStateChanged(int state) {
                 mBinding.setIndex(nowIndex);
-                if (state == 0 && nowIndex == 1 && PreferenceUtil.readIntValue(activity, "showGuidance") == 0) {
-                    new GuidancePW(activity, mBinding.getRoot());
-                }
+
             }
         });
 
         selectPage(1);
+        new Handler().postDelayed(() -> {
+            if (PreferenceUtil.readIntValue(activity, "showGuidance") == 0) {
+                new GuidancePW(activity, mBinding.getRoot());
+            }
+        },500);
+
     }
 
     @Override

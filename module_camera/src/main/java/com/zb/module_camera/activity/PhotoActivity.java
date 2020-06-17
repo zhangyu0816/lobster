@@ -25,7 +25,6 @@ public class PhotoActivity extends CameraBaseActivity {
 
     @Override
     public void initUI() {
-        fitComprehensiveScreen();
         viewModel = new PhotoViewModel();
         viewModel.isMore = isMore;
         viewModel.showBottom = showBottom;

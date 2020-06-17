@@ -25,6 +25,7 @@ public class MainActivity extends RegisterBaseActivity {
 
     @Override
     public void initUI() {
+        fitComprehensiveScreen();
         MainViewModel viewModel = new MainViewModel();
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);

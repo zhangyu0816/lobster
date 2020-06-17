@@ -199,6 +199,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         KeyboardStateObserver.getKeyboardStateObserver(activity).
                 setKeyboardVisibilityListener(height -> {
                     mBinding.setIsVoice(false);
+                    mBinding.setIsEmoji(false);
                     PreferenceUtil.saveIntValue(activity, "keyboardHeight", height);
                     AdapterBinding.viewSize(mBinding.emojiList, MineApp.W, height);
                 });

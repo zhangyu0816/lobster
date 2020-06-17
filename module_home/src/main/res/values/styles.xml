@@ -8,14 +8,12 @@
         <item name="android:windowBackground">@android:color/white</item>
         <item name="colorPrimaryDark">@android:color/white</item>
     </style>
+
     <style name="HomeVideoTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowEnableSplitTouch">false</item>
         <item name="android:splitMotionEvents">false</item>
         <item name="android:windowBackground">@android:color/black</item>
         <item name="colorPrimaryDark">@android:color/black</item>
-    </style>
-    <style name="HomeDetailTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowFullscreen">true</item>
     </style>
 </resources>

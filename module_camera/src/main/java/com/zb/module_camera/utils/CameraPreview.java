@@ -79,7 +79,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
         mPreviewSize = chooseOptimalSize(mPreviewSizes.sizes(mAspectRatio));
         parameters.setPreviewSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
-        Log.i("previewSize", mPreviewSize.getWidth() + "" + mPreviewSize.getHeight());
+        Log.i("previewSize", mPreviewSize.getWidth() + "" + mPreviewSize.getHeight());//1280720
         //设置预览方向
         mCamera.setDisplayOrientation(90);
 
@@ -104,6 +104,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 mPictureSizes.add(new Size(size.width, size.height));
             }
             Size pictureSize = mPictureSizes.sizes(mAspectRatio).last();
+            Log.i("pictureSize", pictureSize.getWidth() + "" + pictureSize.getHeight());//41602340  46082592
             //设置相机参数
             parameters.setPictureSize(pictureSize.getWidth(), pictureSize.getHeight());
             parameters.setPictureFormat(ImageFormat.JPEG);
@@ -182,7 +183,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 long maxFileSize = Long.parseLong(3 * 1024 * 1024 + "");
                 mRecorder.setVideoFrameRate(15);
                 mRecorder.setMaxFileSize(maxFileSize);
-                mRecorder.setMaxDuration(15*1000);
+                mRecorder.setMaxDuration(20*1000);
                 String cameraPath = Environment.getExternalStorageDirectory().getPath() + File.separator + "DCIM" + File.separator + "Camera";
                 //相册文件夹
                 File cameraFolder = new File(cameraPath);
@@ -195,11 +196,11 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 //设置输出文件的路径
                 mRecorder.setOutputFile(videoPath);
                 mRecorder.setPreviewDisplay(mHolder.getSurface());
+                //准备录制
+                mRecorder.prepare();
+                //开始录制
+                mRecorder.start();
             }
-            //准备录制
-            mRecorder.prepare();
-            //开始录制
-            mRecorder.start();
         } catch (Exception e) {
             e.printStackTrace();
         }

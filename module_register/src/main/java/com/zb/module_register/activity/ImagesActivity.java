@@ -27,6 +27,7 @@ public class ImagesActivity extends RegisterBaseActivity {
 
     @Override
     public void initUI() {
+        fitComprehensiveScreen();
         viewModel = new ImagesViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);

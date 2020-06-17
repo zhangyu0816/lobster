@@ -19,7 +19,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="78dp">
 
         <TextView
             android:id="@+id/white_bg"

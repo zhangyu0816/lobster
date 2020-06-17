@@ -23,6 +23,7 @@ public class NickNameActivity extends RegisterBaseActivity {
 
     @Override
     public void initUI() {
+        fitComprehensiveScreen();
         viewModel = new NickViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
@@ -37,6 +38,8 @@ public class NickNameActivity extends RegisterBaseActivity {
         KeyBroadUtils.controlKeyboardLayout(binding.btnLayout, binding.tvNext);
         // 初始化昵称
         binding.setNick(MineApp.registerInfo.getName());
+        binding.tvNick.setText(MineApp.registerInfo.getName());
+        binding.tvNick.setSelection(MineApp.registerInfo.getName().length());
     }
 
     @Override

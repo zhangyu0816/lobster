@@ -22,6 +22,7 @@ public class BirthdayActivity extends RegisterBaseActivity {
 
     @Override
     public void initUI() {
+        fitComprehensiveScreen();
         viewModel = new BirthdayViewModel();
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);

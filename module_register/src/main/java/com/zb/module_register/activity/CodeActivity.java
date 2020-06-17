@@ -35,6 +35,7 @@ public class CodeActivity extends RegisterBaseActivity implements KeyBroadUtils.
 
     @Override
     public void initUI() {
+        fitComprehensiveScreen();
         viewModel = new CodeViewModel();
         viewModel.isLogin = isLogin;
         mBinding.setVariable(BR.viewModel, viewModel);

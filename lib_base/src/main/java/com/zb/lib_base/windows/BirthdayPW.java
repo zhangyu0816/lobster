@@ -38,13 +38,13 @@ public class BirthdayPW extends BasePopupWindow {
     private String selectDate = "";
     private String nowDate = "";
 
-    public BirthdayPW(RxAppCompatActivity activity, View parentView, CallBack callBack) {
+    public BirthdayPW(RxAppCompatActivity activity, View parentView, String birthday, CallBack callBack) {
         super(activity, parentView, true);
         mCallBack = callBack;
         nowDate = DateUtil.getNow(DateUtil.yyyy_MM_dd);
-        selectDate = MineApp.registerInfo.getBirthday();
+        selectDate = birthday;
         if (selectDate.isEmpty()) {
-            selectDate = nowDate;
+            selectDate = "2000-01-01";
         }
         String[] strs = selectDate.split("-");
         mYear = Integer.parseInt(strs[0]);

@@ -222,7 +222,6 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
                     mOverCameraView.setTouchFoucusRect(mCamera, autoFocusCallback, x, y);
                 }
                 mRunnable = () -> {
-                    SCToastUtil.showToast(activity, "自动聚焦超时,请调整合适的位置拍摄！", true);
                     isFoucing = false;
                     mOverCameraView.setFoucuing(false);
                     mOverCameraView.disDrawTouchFocusRect();
