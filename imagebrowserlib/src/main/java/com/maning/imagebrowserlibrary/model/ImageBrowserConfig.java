@@ -2,6 +2,7 @@ package com.maning.imagebrowserlibrary.model;
 
 import com.maning.imagebrowserlibrary.ImageEngine;
 import com.maning.imagebrowserlibrary.listeners.OnClickListener;
+import com.maning.imagebrowserlibrary.listeners.OnDeleteImageListener;
 import com.maning.imagebrowserlibrary.listeners.OnLongClickListener;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class ImageBrowserConfig {
     private ImageEngine imageEngine;
     private OnClickListener onClickListener;
     private OnLongClickListener onLongClickListener;
+    private OnDeleteImageListener onDeleteImageListener;
 
     public IndicatorType getIndicatorType() {
         return indicatorType;
@@ -65,6 +67,14 @@ public class ImageBrowserConfig {
 
     public void setOnLongClickListener(OnLongClickListener onLongClickListener) {
         this.onLongClickListener = onLongClickListener;
+    }
+
+    public OnDeleteImageListener getOnDeleteImageListener() {
+        return onDeleteImageListener;
+    }
+
+    public void setOnDeleteImageListener(OnDeleteImageListener onDeleteImageListener) {
+        this.onDeleteImageListener = onDeleteImageListener;
     }
 
     public ArrayList<String> getImageList() {

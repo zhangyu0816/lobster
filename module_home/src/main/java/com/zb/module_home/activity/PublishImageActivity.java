@@ -6,6 +6,7 @@ import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_home.BR;
 import com.zb.module_home.R;
@@ -30,6 +31,7 @@ public class PublishImageActivity extends HomeBaseActivity {
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.title, "");
         mBinding.setVariable(BR.content, "");
+        mBinding.setVariable(BR.cityName, MineApp.cityName);
         viewModel.setAdapter();
 
         cameraReceiver = new BaseReceiver(activity, "lobster_camera") {

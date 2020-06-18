@@ -50,6 +50,7 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
     public void back(View view) {
         super.back(view);
         MineApp.selectMap.clear();
+        MineApp.selectPathMap.clear();
         MineApp.cutImageViewMap.clear();
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
         activity.finish();
@@ -109,7 +110,10 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
             for (int i = 0; i < images.size() - 1; i++) {
                 imageList.add(images.get(i));
             }
-            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position);
+            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, position12 -> {
+                adapter.notifyItemRemoved(position12);
+                images.remove(position12);
+            });
         }
     }
 

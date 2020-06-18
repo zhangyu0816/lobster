@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.View;
 
 import com.maning.imagebrowserlibrary.listeners.OnClickListener;
+import com.maning.imagebrowserlibrary.listeners.OnDeleteImageListener;
 import com.maning.imagebrowserlibrary.listeners.OnLongClickListener;
 import com.maning.imagebrowserlibrary.model.ImageBrowserConfig;
 
@@ -53,6 +54,10 @@ public class MNImageBrowser {
 
     public MNImageBrowser setOnClickListener(OnClickListener onClickListener) {
         imageBrowserConfig.setOnClickListener(onClickListener);
+        return this;
+    }
+    public MNImageBrowser setOnDeleteImageListener(OnDeleteImageListener onDeleteImageListener) {
+        imageBrowserConfig.setOnDeleteImageListener(onDeleteImageListener);
         return this;
     }
 

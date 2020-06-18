@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.view.View;
 
+import com.maning.imagebrowserlibrary.MNImage;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.modifyMemberInfoApi;
 import com.zb.lib_base.app.MineApp;
@@ -21,7 +22,6 @@ import com.zb.lib_base.utils.uploadImage.PhotoFile;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BirthdayPW;
-import com.zb.lib_base.windows.SelectorPW;
 import com.zb.module_mine.R;
 import com.zb.module_mine.adapter.MineAdapter;
 import com.zb.module_mine.databinding.MineEditMemberBinding;
@@ -44,7 +44,6 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     public int _position = 0;
     private SimpleItemTouchHelperCallback callback;
     private MineEditMemberBinding mineEditMemberBinding;
-    private List<String> selectorImageList = new ArrayList<>();
     public MineInfo mineInfo;
     private PhotoManager photoManager;
     private String images = "";
@@ -60,8 +59,6 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        selectorImageList.add("替换");
-        selectorImageList.add("删除");
         mineEditMemberBinding = (MineEditMemberBinding) binding;
         areaDb = new AreaDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
@@ -125,13 +122,17 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
         if (imageList.get(position).isEmpty()) {
             getPermissions();
         } else {
-            new SelectorPW(activity, mBinding.getRoot(), selectorImageList, position1 -> {
-                if (position1 == 0) {
-                    getPermissions();
-                } else {
-                    imageList.set(_position, "");
-                    adapter.notifyItemChanged(_position);
+            ArrayList<String> images = new ArrayList<>();
+            for (String s : imageList) {
+                if (!s.isEmpty()) {
+                    images.add(s);
                 }
+            }
+            MNImage.imageBrowser(activity, mBinding.getRoot(), images, position, position12 -> {
+                adapter.notifyItemRemoved(position12);
+                imageList.remove(position12);
+                imageList.add("");
+                adapter.notifyDataSetChanged();
             });
         }
     }

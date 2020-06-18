@@ -30,7 +30,7 @@ public class VipAdPW extends BasePopupWindow {
     private PwsVipAdBinding binding;
 
     public VipAdPW(RxAppCompatActivity activity, View parentView) {
-        super(activity, parentView, true);
+        super(activity, parentView, false);
         for (int i = 0; i < 4; i++) {
             VipAd vipAd = new VipAd();
             Ads ads = new Ads();
@@ -69,6 +69,8 @@ public class VipAdPW extends BasePopupWindow {
     @Override
     public void initUI() {
         adapter = new CardAdapter<>(activity, R.layout.item_vip_ad, MineApp.vipInfoList, this);
+        preIndex = 1;
+        adapter.setSelectIndex(1);
         mBinding.setVariable(BR.pw, this);
 
         mBinding.setVariable(BR.adapter, adapter);
@@ -85,7 +87,7 @@ public class VipAdPW extends BasePopupWindow {
                     public void loadImages(Context context, Ads ads, ImageView image, int position) {
                         AdapterBinding.loadImage(image, "", ads.getAdRes(),
                                 ObjectUtils.getDefaultRes(), ObjectUtils.getViewSizeByWidthFromMax(900), (int) (ObjectUtils.getViewSizeByWidthFromMax(900) * 579f / 810f),
-                                false, false, 0, false, 0,false);
+                                false, false, 0, false, 0, false);
                     }
 
                     @Override
@@ -126,5 +128,11 @@ public class VipAdPW extends BasePopupWindow {
             return;
         }
         submitOpenedMemberOrder(MineApp.vipInfoList.get(preIndex).getMemberOfOpenedProductId());
+    }
+
+    @Override
+    public void cancel(View view) {
+        super.cancel(view);
+        dismiss();
     }
 }

@@ -82,8 +82,8 @@ public class ActivityUtils {
     }
 
     // 定位
-    public static void getMineLocation() {
-        ARouter.getInstance().build(RouteUtils.Mine_Location).navigation();
+    public static void getMineLocation(boolean isDiscover) {
+        ARouter.getInstance().build(RouteUtils.Mine_Location).withBoolean("isDiscover", isDiscover).navigation();
     }
 
     // 修改密码

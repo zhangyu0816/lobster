@@ -38,7 +38,7 @@ public class GiftRecordViewModel extends BaseViewModel implements GiftRecordVMIn
 
     @Override
     public void toProfitRecord(View view) {
-        ActivityUtils.getMineTranRecord(31);
+        ActivityUtils.getMineTranRecord(32);
     }
 
     @Override

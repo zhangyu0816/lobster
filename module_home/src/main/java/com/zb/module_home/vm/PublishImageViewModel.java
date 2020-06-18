@@ -1,6 +1,7 @@
 package com.zb.module_home.vm;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
@@ -13,6 +14,7 @@ import android.view.View;
 
 import com.maning.imagebrowserlibrary.MNImage;
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.publishDynApi;
 import com.zb.lib_base.api.uploadVideoApi;
 import com.zb.lib_base.app.MineApp;
@@ -24,11 +26,11 @@ import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
-import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.SelectorPW;
+import com.zb.module_home.BR;
 import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
 import com.zb.module_home.databinding.HomePublicImageBinding;
@@ -44,6 +46,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import androidx.databinding.ViewDataBinding;
 
@@ -59,10 +62,13 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     private PhotoManager photoManager;
     private MineInfo mineInfo;
     private OnlyCompressOverBean onlyCompressOverBean;
+    private BaseReceiver locationReceiver;
 
     @Override
     public void back(View view) {
+        locationReceiver.unregisterReceiver();
         MineApp.selectMap.clear();
+        MineApp.selectPathMap.clear();
         MineApp.cutImageViewMap.clear();
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "videos"));
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
@@ -89,6 +95,13 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
             videoPath.mkdirs();
         }
         JianXiCamera.setVideoCachePath(videoPath.getPath() + "/");
+
+        locationReceiver = new BaseReceiver(activity,"lobster_location") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.setVariable(BR.cityName, intent.getStringExtra("cityName"));
+            }
+        };
     }
 
     @Override
@@ -118,18 +131,25 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                 for (int i = 0; i < images.size() - 1; i++) {
                     imageList.add(images.get(i));
                 }
-                MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position);
+                MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, position12 -> {
+                   int count =  MineApp.selectMap.remove(MineApp.selectPathMap.get(images.get(position12)));
+                    MineApp.cutImageViewMap.remove(MineApp.selectPathMap.get(images.get(position12)));
+                    for (Map.Entry<String, Integer> entry : MineApp.selectMap.entrySet()) {
+                        if (entry.getValue() > count) {
+                            MineApp.selectMap.put(entry.getKey(), entry.getValue() - 1);
+                        }
+                    }
+                    adapter.notifyItemRemoved(position12);
+                    images.remove(position12);
+                    adapter.notifyDataSetChanged();
+                });
             }
         }
     }
 
     @Override
     public void selectCity(View view) {
-        if (mineInfo.getMemberType() == 1) {
-            SCToastUtil.showToast(activity, "位置漫游服务为VIP用户专享功能", true);
-            return;
-        }
-        ActivityUtils.getMineLocation();
+        ActivityUtils.getMineLocation(true);
     }
 
     @Override
@@ -211,8 +231,6 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                 break;
             case 1:
                 photoManager.addFileUpload(0, videoImageFile);
-
-
                 break;
         }
         return false;
@@ -233,13 +251,9 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
         publishDynApi api = new publishDynApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                MineApp.selectMap.clear();
-                MineApp.cutImageViewMap.clear();
-                DataCleanManager.deleteFile(new File(activity.getCacheDir(), "videos"));
-                DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
                 activity.sendBroadcast(new Intent("lobster_publish"));
                 SCToastUtil.showToast(activity, "发布成功", true);
-                activity.finish();
+                back(null);
             }
         }, activity)
                 .setText(publicImageBinding.getContent())
@@ -247,7 +261,8 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                 .setImages(images)
                 .setResTime((int) videoTime / 1000)
                 .setVideoUrl(videoUrl)
-                .setAddressInfo(PreferenceUtil.readStringValue(activity, "address"));
+                .setAddressInfo(publicImageBinding.getCityName());
+//                .setAddressInfo(PreferenceUtil.readStringValue(activity, "address"));
         HttpManager.getInstance().doHttpDeal(api);
     }
 

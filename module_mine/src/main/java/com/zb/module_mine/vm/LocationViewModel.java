@@ -45,6 +45,7 @@ import androidx.databinding.ViewDataBinding;
 
 public class LocationViewModel extends BaseViewModel implements LocationVMInterface, GeocodeSearch.OnGeocodeSearchListener {
     public MineAdapter adapter;
+    public boolean isDiscover;
     private List<LocationInfo> locationInfoList = new ArrayList<>();
     private AMap aMap;
     private int prePosition = -1;
@@ -243,9 +244,16 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
         LocationInfo info = locationInfoList.get(prePosition);
         info.setCityName(regeocodeAddress.getCity());
         PreferenceUtil.saveStringValue(activity, "address", info.getAddress());
-        MineApp.cityName = info.getCityName();
-        joinPairPool(info.getLongitude() + "", info.getLatitude() + "");
 
+        if (isDiscover) {
+            Intent data = new Intent("lobster_location");
+            data.putExtra("cityName", info.getCityName());
+            activity.sendBroadcast(data);
+            activity.finish();
+        } else {
+            MineApp.cityName = info.getCityName();
+            joinPairPool(info.getLongitude() + "", info.getLatitude() + "");
+        }
     }
 
     @Override

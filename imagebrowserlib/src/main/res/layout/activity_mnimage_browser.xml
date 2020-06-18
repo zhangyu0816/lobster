@@ -25,13 +25,52 @@
 
     </com.maning.imagebrowserlibrary.view.MNGestureView>
 
+    <RelativeLayout
+        android:id="@+id/relativeLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:src="@drawable/back_white_icon" />
+
+            <TextView
+                android:id="@+id/numberIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text=""
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="1/10" />
+
+            <ImageView
+                android:id="@+id/iv_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:padding="15dp"
+                android:src="@drawable/iv_delete_image" />
+        </RelativeLayout>
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/rl_indicator"
         android:layout_width="match_parent"
         android:layout_height="36dp"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="20dp">
+        android:layout_margin="20dp"
+        android:visibility="gone">
 
 
         <com.maning.imagebrowserlibrary.view.CircleIndicator
@@ -39,23 +78,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true" />
-
-        <TextView
-            android:id="@+id/numberIndicator"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:paddingBottom="6dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="6dp"
-            android:text=""
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:visibility="visible"
-            tools:text="1/10" />
-
 
     </RelativeLayout>
 

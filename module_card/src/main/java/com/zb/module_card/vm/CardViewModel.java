@@ -23,6 +23,7 @@ import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.CityInfo;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DistrictInfo;
@@ -131,8 +132,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         locationReceiver = new BaseReceiver(activity, "lobster_location") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                MineApp.cityName = intent.getStringExtra("cityName");
-                mBinding.setVariable(BR.viewModel, CardViewModel.this);
+                mBinding.setVariable(BR.cityName, MineApp.cityName);
                 prePairList(true);
             }
         };
@@ -247,7 +247,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             SCToastUtil.showToast(activity, "位置漫游服务为VIP用户专享功能", true);
             return;
         }
-        ActivityUtils.getMineLocation();
+        ActivityUtils.getMineLocation(false);
     }
 
     @Override
@@ -264,6 +264,14 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     pairInfoList.add(pairInfo);
                 }
                 adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof HttpTimeException&&((HttpTimeException) e).getCode()==HttpTimeException.NO_DATA){
+                    pairInfoList.clear();
+                    adapter.notifyDataSetChanged();
+                }
             }
         }, activity)
                 .setSex(mineInfo.getSex() == 0 ? 1 : 0)

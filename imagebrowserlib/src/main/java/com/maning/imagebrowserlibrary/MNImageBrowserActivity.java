@@ -7,11 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.chrisbanes.photoview.PhotoView;
 import com.maning.imagebrowserlibrary.listeners.OnClickListener;
+import com.maning.imagebrowserlibrary.listeners.OnDeleteImageListener;
 import com.maning.imagebrowserlibrary.listeners.OnLongClickListener;
 import com.maning.imagebrowserlibrary.model.ImageBrowserConfig;
 import com.maning.imagebrowserlibrary.transforms.DefaultTransformer;
@@ -45,6 +47,8 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
     private RelativeLayout rl_indicator;
     private TextView numberIndicator;
     private CircleIndicator circleIndicator;
+    private ImageView ivBack;
+    private ImageView ivDelete;
 
     //图片地址
     private ArrayList<String> imageUrlList;
@@ -59,9 +63,11 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
     //监听
     public OnLongClickListener onLongClickListener;
     public OnClickListener onClickListener;
+    public OnDeleteImageListener onDeleteImageListener;
     //相关配置信息
     public static ImageBrowserConfig imageBrowserConfig;
     private MyAdapter imageBrowserAdapter;
+    private View mCurrentView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +101,38 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
         rl_indicator = (RelativeLayout) findViewById(R.id.rl_indicator);
         circleIndicator = (CircleIndicator) findViewById(R.id.circleIndicator);
         numberIndicator = (TextView) findViewById(R.id.numberIndicator);
-        circleIndicator.setVisibility(View.GONE);
-        numberIndicator.setVisibility(View.GONE);
+        ivBack = findViewById(R.id.iv_back);
+        ivDelete = findViewById(R.id.iv_delete);
+//        circleIndicator.setVisibility(View.GONE);
+//        numberIndicator.setVisibility(View.GONE);
+
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finishBrowser();
+            }
+        });
+        ivDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageBrowserAdapter.destroyItem(viewPagerBrowser, currentPosition, mCurrentView);
+                imageUrlList.remove(currentPosition);
+                imageBrowserAdapter.notifyDataSetChanged();
+
+                if (onDeleteImageListener != null)
+                    onDeleteImageListener.delete(currentPosition);
+                if (imageUrlList.size() == 0) {
+                    finishBrowser();
+                } else {
+                    if (currentPosition > 0) {
+                        currentPosition--;
+                    }
+                    numberIndicator.setText(String.valueOf((currentPosition + 1) + "/" + imageUrlList.size()));
+                    initViewPager();
+                }
+
+            }
+        });
     }
 
     private void initData() {
@@ -105,20 +141,27 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
         transformType = imageBrowserConfig.getTransformType();
         imageEngine = imageBrowserConfig.getImageEngine();
         onClickListener = imageBrowserConfig.getOnClickListener();
+        onDeleteImageListener = imageBrowserConfig.getOnDeleteImageListener();
         onLongClickListener = imageBrowserConfig.getOnLongClickListener();
         indicatorType = imageBrowserConfig.getIndicatorType();
 
+        ivDelete.setVisibility(onDeleteImageListener == null ? View.GONE : View.VISIBLE);
         if (imageUrlList.size() <= 1) {
-            rl_indicator.setVisibility(View.GONE);
-        } else {
-            rl_indicator.setVisibility(View.VISIBLE);
-            if (indicatorType == ImageBrowserConfig.IndicatorType.Indicator_Number) {
-                numberIndicator.setVisibility(View.VISIBLE);
-                numberIndicator.setText(String.valueOf((currentPosition + 1) + "/" + imageUrlList.size()));
-            } else {
-                circleIndicator.setVisibility(View.VISIBLE);
-            }
+            numberIndicator.setVisibility(View.GONE);
         }
+        numberIndicator.setText(String.valueOf((currentPosition + 1) + "/" + imageUrlList.size()));
+
+//        if (imageUrlList.size() <= 1) {
+//            rl_indicator.setVisibility(View.GONE);
+//        } else {
+//            rl_indicator.setVisibility(View.VISIBLE);
+//            if (indicatorType == ImageBrowserConfig.IndicatorType.Indicator_Number) {
+//                numberIndicator.setVisibility(View.VISIBLE);
+//                numberIndicator.setText(String.valueOf((currentPosition + 1) + "/" + imageUrlList.size()));
+//            } else {
+//                circleIndicator.setVisibility(View.VISIBLE);
+//            }
+//        }
     }
 
     private void initViewPager() {
@@ -135,6 +178,7 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+                currentPosition = position;
                 numberIndicator.setText(String.valueOf((position + 1) + "/" + imageUrlList.size()));
             }
 
@@ -168,7 +212,7 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
 
                 float mAlpha = 1 - deltaY / 500;
                 if (mAlpha < 0.3) {
-                    mAlpha = 0.3f;
+                    mAlpha = 0f;
                 }
                 if (mAlpha > 1) {
                     mAlpha = 1;
@@ -207,8 +251,8 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
     }
 
     private void finishBrowser() {
-        rl_indicator.setVisibility(View.GONE);
-        rl_black_bg.setAlpha(0);
+//        rl_indicator.setVisibility(View.GONE);
+//        rl_black_bg.setAlpha(0);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         finish();
         this.overridePendingTransition(0, R.anim.browser_exit_anim);
@@ -222,7 +266,6 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
 
     private class MyAdapter extends PagerAdapter {
 
-        private View mCurrentView;
 
         private LayoutInflater layoutInflater;
 
@@ -263,12 +306,12 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
             //图片加载
             imageEngine.loadImage(context, url, imageView);
 
-            rl_browser_root.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    finishBrowser();
-                }
-            });
+//            rl_browser_root.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    finishBrowser();
+//                }
+//            });
 
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -277,7 +320,7 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
                     if (onClickListener != null) {
                         onClickListener.onClick(MNImageBrowserActivity.this, imageView, position, url);
                     }
-                    finishBrowser();
+//                    finishBrowser();
                 }
             });
 

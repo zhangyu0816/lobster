@@ -8,6 +8,7 @@ import android.view.View;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.dynCancelLikeApi;
 import com.zb.lib_base.api.dynDoLikeApi;
@@ -187,7 +188,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
             }
         }, activity)
                 .setDynType(3)
-                .setOtherUserId(otherUserId)
+                .setOtherUserId(otherUserId == 1 ? BaseActivity.userId : otherUserId)
                 .setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
     }

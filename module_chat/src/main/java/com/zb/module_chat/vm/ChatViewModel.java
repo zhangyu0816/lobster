@@ -333,7 +333,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         if (historyMsg.getMsgType() == 2) {
             ArrayList<String> imageList = new ArrayList<>();
             imageList.add(historyMsg.getResLink());
-            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, 0);
+            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, 0, null);
         } else {
             if (direction == 0) {
                 ivPlay = view.findViewById(R.id.iv_play);

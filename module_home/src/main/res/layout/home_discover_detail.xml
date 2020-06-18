@@ -120,33 +120,53 @@
                                 android:layout_height="40dp"
                                 android:layout_margin="15dp" />
 
-                            <TextView
-                                onClickDelayed="@{viewModel::toMemberDetail}"
-                                android:layout_width="wrap_content"
+                            <RelativeLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
-                                android:layout_toEndOf="@+id/iv_logo"
-                                android:background="@{viewModel.discoverInfo==null?@drawable/default_bg:@drawable/empty_bg}"
-                                android:minWidth="60dp"
-                                android:text="@{viewModel.discoverInfo.nick}"
-                                android:textColor="@color/black_252"
-                                android:textSize="16sp"
-                                android:textStyle="bold"
-                                tools:text="默认仓库" />
+                                android:layout_toEndOf="@+id/iv_logo">
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_centerVertical="true"
-                                android:layout_marginEnd="15dp"
-                                android:background="@{viewModel.discoverInfo==null?@drawable/default_bg:@drawable/empty_bg}"
-                                android:minWidth="30dp"
-                                android:text="@{viewModel.discoverInfo.createTime.substring(11,16)}"
-                                android:textColor="@color/black_c3b"
-                                android:textSize="12sp"
-                                android:textStyle="bold"
-                                tools:text="20:00" />
+                                <TextView
+                                    android:id="@+id/tv_nick"
+                                    onClickDelayed="@{viewModel::toMemberDetail}"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@{viewModel.discoverInfo==null?@drawable/default_bg:@drawable/empty_bg}"
+                                    android:minWidth="60dp"
+                                    android:text="@{viewModel.discoverInfo.nick}"
+                                    android:textColor="@color/black_252"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    tools:text="默认仓库" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_marginEnd="15dp"
+                                    android:background="@{viewModel.discoverInfo==null?@drawable/default_bg:@drawable/empty_bg}"
+                                    android:minWidth="30dp"
+                                    android:text="@{viewModel.discoverInfo.createTime.substring(11,16)}"
+                                    android:textColor="@color/black_c3b"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    tools:text="20:00" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:singleLine="true"
+                                    android:layout_below="@+id/tv_nick"
+                                    android:textSize="11sp"
+                                    android:drawablePadding="3dp"
+                                    android:textColor="@color/black_827"
+                                    android:layout_marginTop="5dp"
+                                    android:drawableStart="@mipmap/address_small_icon"
+                                    android:text="@{viewModel.discoverInfo.addressInfo}"
+                                    tools:text="温州市"/>
+
+                            </RelativeLayout>
+
                         </RelativeLayout>
 
                         <TextView

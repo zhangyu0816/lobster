@@ -68,9 +68,10 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
         };
     }
 
-    public void onDestroy(){
+    public void onDestroy() {
         finishRefreshReceiver.unregisterReceiver();
     }
+
     @Override
     public void back(View view) {
         super.back(view);
@@ -142,7 +143,7 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
         if (systemMsg.getMsgType() == 2) {
             ArrayList<String> imageList = new ArrayList<>();
             imageList.add(systemMsg.getResLink());
-            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, 0);
+            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, 0, null);
         } else {
             ImageView ivPlay = view.findViewById(R.id.iv_play);
             ImageView ivProgress = view.findViewById(R.id.iv_progress);

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.view.View;
 
+import com.maning.imagebrowserlibrary.MNImage;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.registerApi;
@@ -22,7 +23,6 @@ import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
-import com.zb.lib_base.windows.SelectorPW;
 import com.zb.module_register.R;
 import com.zb.module_register.adapter.RegisterAdapter;
 import com.zb.module_register.databinding.RegisterImagesBinding;
@@ -42,7 +42,6 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
     public List<String> images = new ArrayList<>();
     private SimpleItemTouchHelperCallback callback;
     private PhotoManager photoManager;
-    private List<String> selectorList = new ArrayList<>();
     private AreaDb areaDb;
 
     @Override
@@ -69,9 +68,6 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
             photoManager.deleteAllFile();
             register(MineApp.registerInfo);
         });
-
-        selectorList.add("替换");
-        selectorList.add("删除");
     }
 
     @Override
@@ -140,17 +136,19 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
             _position = position;
             getPermissions();
         } else {
-            new SelectorPW(activity, mBinding.getRoot(), selectorList, position1 -> {
-                if (position1 == 0) {
-                    _position = position;
-                    getPermissions();
-                } else {
-                    images.set(_position, "");
-                    adapter.notifyItemChanged(_position);
+            ArrayList<String> imageList = new ArrayList<>();
+            for (String s : images) {
+                if (!s.isEmpty()) {
+                    imageList.add(s);
                 }
+            }
+            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, position12 -> {
+                adapter.notifyItemRemoved(position12);
+                images.remove(position12);
+                images.add("");
+                adapter.notifyDataSetChanged();
             });
         }
-
     }
 
     /**
@@ -158,7 +156,7 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
      */
     private void getPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission( "虾菇需要访问读外部存储权限", new BaseActivity.PermissionCallback() {
+            performCodeWithPermission("虾菇需要访问读外部存储权限", new BaseActivity.PermissionCallback() {
                 @Override
                 public void hasPermission() {
                     setPermissions();

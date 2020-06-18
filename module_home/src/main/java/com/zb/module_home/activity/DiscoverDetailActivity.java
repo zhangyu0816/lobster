@@ -32,6 +32,7 @@ public class DiscoverDetailActivity extends BaseActivity {
 
     @Override
     public void initUI() {
+        fitComprehensiveScreen();
         viewModel = new DiscoverDetailViewModel();
         viewModel.friendDynId = friendDynId;
         viewModel.setBinding(mBinding);

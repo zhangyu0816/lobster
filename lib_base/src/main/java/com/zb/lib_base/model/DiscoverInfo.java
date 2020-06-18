@@ -26,6 +26,7 @@ public class DiscoverInfo extends BaseObservable {
     private int resTime = 0;
     private int privateRedPageNum = 0; //私密红包数量
     private String friendTitle = "";
+    private String addressInfo = "";
 
     @Bindable
     public long getFriendDynId() {
@@ -215,5 +216,15 @@ public class DiscoverInfo extends BaseObservable {
     public void setFriendTitle(String friendTitle) {
         this.friendTitle = friendTitle;
         notifyPropertyChanged(BR.friendTitle);
+    }
+
+    @Bindable
+    public String getAddressInfo() {
+        return addressInfo;
+    }
+
+    public void setAddressInfo(String addressInfo) {
+        this.addressInfo = addressInfo;
+        notifyPropertyChanged(BR.addressInfo);
     }
 }

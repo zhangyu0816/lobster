@@ -11,8 +11,6 @@
 
         <import type="com.zb.lib_base.utils.DateUtil" />
 
-        <import type="com.zb.lib_base.app.MineApp" />
-
         <variable
             name="viewModel"
             type="com.zb.module_card.vm.CardViewModel" />
@@ -28,6 +26,12 @@
         <variable
             name="adapter"
             type="com.zb.module_card.adapter.CardAdapter" />
+
+        <variable
+            name="cityName"
+            type="String" />
+
+
     </data>
 
     <RelativeLayout
@@ -48,7 +52,7 @@
             android:gravity="center"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            android:text="@{MineApp.cityName}"
+            android:text="@{cityName}"
             android:textColor="@color/black_252"
             android:textSize="14sp"
             android:textStyle="bold" />

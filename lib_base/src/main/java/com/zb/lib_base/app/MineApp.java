@@ -52,8 +52,9 @@ public class MineApp extends MultiDexApplication {
     public static int W;
     public static int H;
     public static String PHONE_NUMBER_REG = "^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\\d{8}$";
-    public static Map<String, Integer> selectMap = new HashMap<>();
     public static Map<Integer, String> tranTypeMap = new HashMap<>();
+    public static Map<String, Integer> selectMap = new HashMap<>();
+    public static Map<String, String> selectPathMap = new HashMap<>();
     public static Map<String, CutImageView> cutImageViewMap = new HashMap<>();
     public static Typeface type;
     public static Typeface simplifiedType;
@@ -104,7 +105,9 @@ public class MineApp extends MultiDexApplication {
         tranTypeMap.put(17, "诚意订单定金");
         tranTypeMap.put(18, "诚意订单收款");
         tranTypeMap.put(19, "诚意订单退款");
-        tranTypeMap.put(31, "礼物打赏");
+        tranTypeMap.put(31, "礼物打赏消费");
+        tranTypeMap.put(32, "礼物打赏收益");
+        tranTypeMap.put(41, "优惠充值");
 
         moneyTypeMap.put(0, "");
         moneyTypeMap.put(1, "最受欢迎");

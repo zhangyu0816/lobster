@@ -51,7 +51,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
             SCToastUtil.showToast(activity, "位置漫游服务为VIP用户专享功能", true);
             return;
         }
-        ActivityUtils.getMineLocation();
+        ActivityUtils.getMineLocation(false);
     }
 
     @Override

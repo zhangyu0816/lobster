@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,7 +50,6 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
 
     private int selectCount = 0; // 选中的张数
     private int maxCount = 9; // 最大数量
-    private List<String> selectPaths = new ArrayList<>();
     private int selectIndex = -1;
     public boolean isMore = false;
     public boolean showBottom = false;
@@ -98,7 +98,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
         if (index == 1) {
             ActivityUtils.getCameraVideo();
         } else if (index == 2) {
-            ActivityUtils.getCameraPhoto(isMore,showBottom);
+            ActivityUtils.getCameraPhoto(isMore, showBottom);
         }
         activity.finish();
     }
@@ -203,6 +203,19 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                 return;
             }
             new Thread(() -> {
+                Map<String, String> map = new TreeMap<>();
+                for (Map.Entry<String, Integer> entry : MineApp.selectMap.entrySet()) {
+                    map.put(entry.getKey(), entry.getValue() + "");
+                }
+                List<Map.Entry<String, String>> list = new ArrayList<>(map.entrySet());
+                //升序排序
+                Collections.sort(list, (o1, o2) -> o1.getValue().compareTo(o2.getValue()));
+
+                List<String> imageList = new ArrayList<>();
+                MineApp.selectPathMap.clear();
+                for (Map.Entry<String, String> mapping : list) {
+                    imageList.add(mapping.getKey());
+                }
                 for (Map.Entry<String, CutImageView> entry : MineApp.cutImageViewMap.entrySet()) {
                     Bitmap bitmap = entry.getValue().getCutBitmap();
                     if (bitmap != null) {
@@ -212,7 +225,11 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
                             bos.flush();
                             bos.close();
-                            selectPaths.add(file.getAbsolutePath());
+                            int i = imageList.indexOf(entry.getKey());
+                            if (i != -1) {
+                                MineApp.selectPathMap.put(file.getAbsolutePath(), entry.getKey());
+                                imageList.set(i, file.getAbsolutePath());
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -221,7 +238,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                 Intent data = new Intent("lobster_camera");
                 data.putExtra("cameraType", 0);
                 data.putExtra("isMore", true);
-                data.putExtra("filePath", TextUtils.join(",", selectPaths));
+                data.putExtra("filePath", TextUtils.join(",", imageList));
                 activity.sendBroadcast(data);
                 activity.finish();
             }).start();

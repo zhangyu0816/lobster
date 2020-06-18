@@ -2,10 +2,8 @@ package com.zb.module_mine.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.RouteUtils;
@@ -14,14 +12,8 @@ import com.zb.module_mine.R;
 import com.zb.module_mine.vm.WalletViewModel;
 
 @Route(path = RouteUtils.Mine_Wallet)
-public class WalletActivity extends BaseActivity {
+public class WalletActivity extends MineBaseActivity {
     private BaseReceiver updateWalletReceiver;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.MineTheme);
-        super.onCreate(savedInstanceState);
-    }
 
     @Override
     public int getRes() {
