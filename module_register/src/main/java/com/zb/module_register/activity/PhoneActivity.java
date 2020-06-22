@@ -32,9 +32,9 @@ public class PhoneActivity extends RegisterBaseActivity {
     public void initUI() {
         fitComprehensiveScreen();
         viewModel = new PhoneViewModel();
+        viewModel.isLogin = isLogin;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
-        viewModel.isLogin = isLogin;
         RegisterPhoneBinding binding = (RegisterPhoneBinding) mBinding;
         binding.setBtnName("获取验证码");
         binding.setRemark(isLogin ? "" : "您的手机号将获取验证码");

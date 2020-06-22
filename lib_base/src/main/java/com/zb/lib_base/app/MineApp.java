@@ -51,7 +51,8 @@ public class MineApp extends MultiDexApplication {
     public static RegisterInfo registerInfo = new RegisterInfo();
     public static int W;
     public static int H;
-    public static String PHONE_NUMBER_REG = "^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\\d{8}$";
+    public static String PHONE_NUMBER_REG = "^1[0-9]{10}$";
+    public static String EMAIL_REG = "^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
     public static Map<Integer, String> tranTypeMap = new HashMap<>();
     public static Map<String, Integer> selectMap = new HashMap<>();
     public static Map<String, String> selectPathMap = new HashMap<>();
@@ -192,5 +193,33 @@ public class MineApp extends MultiDexApplication {
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(config);
+    }
+
+    //验证银行卡号
+    public static boolean checkBankCard(String cardId) {
+        char bit = getBankCardCheckCode(cardId.substring(0, cardId.length() - 1));
+        if (bit == 'N') {
+            return false;
+        }
+        return cardId.charAt(cardId.length() - 1) == bit;
+    }
+    //从不含校验位的银行卡卡号采用 Luhm 校验算法获得校验位
+    private static char getBankCardCheckCode(String nonCheckCodeCardId) {
+        if (nonCheckCodeCardId == null || nonCheckCodeCardId.trim().length() == 0
+                || !nonCheckCodeCardId.matches("\\d+")) {
+            //如果传的不是数据返回N
+            return 'N';
+        }
+        char[] chs = nonCheckCodeCardId.trim().toCharArray();
+        int luhmSum = 0;
+        for (int i = chs.length - 1, j = 0; i >= 0; i--, j++) {
+            int k = chs[i] - '0';
+            if (j % 2 == 0) {
+                k *= 2;
+                k = k / 10 + k % 10;
+            }
+            luhmSum += k;
+        }
+        return (luhmSum % 10 == 0) ? '0' : (char) ((10 - luhmSum % 10) + '0');
     }
 }

@@ -1,5 +1,7 @@
 package com.zb.module_card.adapter;
 
+import android.view.View;
+
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.adapter.BindingItemAdapter;
 import com.zb.lib_base.adapter.RecyclerHolder;
@@ -20,8 +22,18 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
     private BasePopupWindow pw;
     private int selectImageIndex = 0;
     private int selectIndex = -1;
+    private View currentView;
+
     public void setSelectIndex(int selectIndex) {
         this.selectIndex = selectIndex;
+    }
+
+    public View getCurrentView() {
+        return currentView;
+    }
+
+    public void setCurrentView(View currentView) {
+        this.currentView = currentView;
     }
 
     public CardAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
@@ -50,8 +62,10 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
         holder.binding.setVariable(BR.position, position);
         holder.binding.setVariable(BR.isSelect, position == selectIndex);
         holder.binding.setVariable(BR.isImageSelect, position == selectImageIndex);
+        holder.binding.setVariable(BR.imageAdapter, CardAdapter.this);
         if (t instanceof PairInfo) {
             CardAdapter adapter = new CardAdapter<>(activity, R.layout.item_card_image, ((PairInfo) t).getImageList(), viewModel);
+            adapter.setCurrentView(holder.binding.getRoot());
             holder.binding.setVariable(BR.adapter, adapter);
             holder.binding.setVariable(BR.currentView, holder.binding.getRoot());
         }

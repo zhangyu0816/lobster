@@ -13,17 +13,10 @@
         android:layout_height="match_parent"
         android:background="#000000" />
 
-    <com.maning.imagebrowserlibrary.view.MNGestureView
-        android:id="@+id/mnGestureView"
+    <com.maning.imagebrowserlibrary.view.MNViewPager
+        android:id="@+id/viewPagerBrowser"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.maning.imagebrowserlibrary.view.MNViewPager
-            android:id="@+id/viewPagerBrowser"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </com.maning.imagebrowserlibrary.view.MNGestureView>
+        android:layout_height="match_parent" />
 
     <RelativeLayout
         android:id="@+id/relativeLayout3"

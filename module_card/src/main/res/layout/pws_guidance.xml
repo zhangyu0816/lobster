@@ -23,6 +23,12 @@
         android:layout_height="match_parent"
         android:onClick="@{v->pw.selectIndex(position)}">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.5"
+            android:background="@color/black" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -138,8 +144,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="10dp"
                 android:layout_marginTop="4dp"
+                android:layout_marginEnd="10dp"
                 android:background="@mipmap/guidance_exposure"
                 android:visibility="@{position==6?View.VISIBLE:View.GONE}" />
         </RelativeLayout>

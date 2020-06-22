@@ -2,6 +2,7 @@ package com.zb.lib_base.activity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -47,6 +48,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
         ARouter.getInstance().inject(this);
         update();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         initUI();
     }
 

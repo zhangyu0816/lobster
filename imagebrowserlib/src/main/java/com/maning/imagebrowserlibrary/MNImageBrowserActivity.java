@@ -1,6 +1,7 @@
 package com.maning.imagebrowserlibrary;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -24,7 +25,6 @@ import com.maning.imagebrowserlibrary.transforms.ZoomInTransformer;
 import com.maning.imagebrowserlibrary.transforms.ZoomOutSlideTransformer;
 import com.maning.imagebrowserlibrary.transforms.ZoomOutTransformer;
 import com.maning.imagebrowserlibrary.view.CircleIndicator;
-import com.maning.imagebrowserlibrary.view.MNGestureView;
 import com.maning.imagebrowserlibrary.view.MNViewPager;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
@@ -41,7 +41,7 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
 
     private Context context;
 
-    private MNGestureView mnGestureView;
+//    private MNGestureView mnGestureView;
     private MNViewPager viewPagerBrowser;
     private RelativeLayout rl_black_bg;
     private RelativeLayout rl_indicator;
@@ -85,18 +85,19 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
     }
 
     private void setWindowFullScreen() {
-        //设置全屏
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            // 虚拟导航栏透明
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION, WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().addFlags(View.SYSTEM_UI_FLAG_FULLSCREEN);// 导致华为手机模糊
+            getWindow().addFlags(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);// 导致华为手机黑屏
+//            getWindow().addFlags(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+            getWindow().addFlags(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            getWindow().setNavigationBarColor(Color.TRANSPARENT);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
     }
 
     private void initViews() {
         viewPagerBrowser = (MNViewPager) findViewById(R.id.viewPagerBrowser);
-        mnGestureView = (MNGestureView) findViewById(R.id.mnGestureView);
+//        mnGestureView = (MNGestureView) findViewById(R.id.mnGestureView);
         rl_black_bg = (RelativeLayout) findViewById(R.id.rl_black_bg);
         rl_indicator = (RelativeLayout) findViewById(R.id.rl_indicator);
         circleIndicator = (CircleIndicator) findViewById(R.id.circleIndicator);
@@ -188,46 +189,46 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
             }
         });
 
-        mnGestureView.setOnGestureListener(new MNGestureView.OnCanSwipeListener() {
-            @Override
-            public boolean canSwipe() {
-                View view = imageBrowserAdapter.getPrimaryItem();
-                PhotoView imageView = (PhotoView) view.findViewById(R.id.imageView);
-                if (imageView.getScale() != 1.0) {
-                    return false;
-                }
-                return true;
-            }
-        });
+//        mnGestureView.setOnGestureListener(new MNGestureView.OnCanSwipeListener() {
+//            @Override
+//            public boolean canSwipe() {
+//                View view = imageBrowserAdapter.getPrimaryItem();
+//                PhotoView imageView = (PhotoView) view.findViewById(R.id.imageView);
+//                if (imageView.getScale() != 1.0) {
+//                    return false;
+//                }
+//                return true;
+//            }
+//        });
 
-        mnGestureView.setOnSwipeListener(new MNGestureView.OnSwipeListener() {
-            @Override
-            public void downSwipe() {
-                finishBrowser();
-            }
-
-            @Override
-            public void onSwiping(float deltaY) {
-                rl_indicator.setVisibility(View.GONE);
-
-                float mAlpha = 1 - deltaY / 500;
-                if (mAlpha < 0.3) {
-                    mAlpha = 0f;
-                }
-                if (mAlpha > 1) {
-                    mAlpha = 1;
-                }
-                rl_black_bg.setAlpha(mAlpha);
-            }
-
-            @Override
-            public void overSwipe() {
-                if (imageUrlList.size() > 1) {
-                    rl_indicator.setVisibility(View.VISIBLE);
-                }
-                rl_black_bg.setAlpha(1);
-            }
-        });
+//        mnGestureView.setOnSwipeListener(new MNGestureView.OnSwipeListener() {
+//            @Override
+//            public void downSwipe() {
+//                finishBrowser();
+//            }
+//
+//            @Override
+//            public void onSwiping(float deltaY) {
+////                rl_indicator.setVisibility(View.GONE);
+//
+//                float mAlpha = 1 - deltaY / 500;
+//                if (mAlpha < 0.3) {
+//                    mAlpha = 0f;
+//                }
+//                if (mAlpha > 1) {
+//                    mAlpha = 1;
+//                }
+//                rl_black_bg.setAlpha(mAlpha);
+//            }
+//
+//            @Override
+//            public void overSwipe() {
+////                if (imageUrlList.size() > 1) {
+////                    rl_indicator.setVisibility(View.VISIBLE);
+////                }
+////                rl_black_bg.setAlpha(1);
+//            }
+//        });
     }
 
     private void setViewPagerTransforms() {
@@ -255,7 +256,7 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
 //        rl_black_bg.setAlpha(0);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         finish();
-        this.overridePendingTransition(0, R.anim.browser_exit_anim);
+//        this.overridePendingTransition(0, R.anim.browser_exit_anim);
     }
 
     @Override

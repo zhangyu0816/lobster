@@ -29,7 +29,6 @@ import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
-import com.zb.lib_base.windows.SelectorPW;
 import com.zb.module_home.BR;
 import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
@@ -57,16 +56,17 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     public String videoUrl = "";
     private File videoImageFile;
     public int cameraType = 0;
-    private List<String> selectorList = new ArrayList<>();
     private HomePublicImageBinding publicImageBinding;
     private PhotoManager photoManager;
     private MineInfo mineInfo;
     private OnlyCompressOverBean onlyCompressOverBean;
     private BaseReceiver locationReceiver;
+    private BaseReceiver deleteVideoReceiver;
 
     @Override
     public void back(View view) {
         locationReceiver.unregisterReceiver();
+        deleteVideoReceiver.unregisterReceiver();
         MineApp.selectMap.clear();
         MineApp.selectPathMap.clear();
         MineApp.cutImageViewMap.clear();
@@ -78,8 +78,6 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        selectorList.add("预览");
-        selectorList.add("删除");
         mineInfo = mineInfoDb.getMineInfo();
         publicImageBinding = (HomePublicImageBinding) binding;
         photoManager = new PhotoManager(activity, () -> {
@@ -96,10 +94,19 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
         }
         JianXiCamera.setVideoCachePath(videoPath.getPath() + "/");
 
-        locationReceiver = new BaseReceiver(activity,"lobster_location") {
+        locationReceiver = new BaseReceiver(activity, "lobster_location") {
             @Override
             public void onReceive(Context context, Intent intent) {
                 mBinding.setVariable(BR.cityName, intent.getStringExtra("cityName"));
+            }
+        };
+        deleteVideoReceiver = new BaseReceiver(activity, "lobster_deleteVideo") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                cameraType = 0;
+                images.clear();
+                images.add("add_image_icon");
+                adapter.notifyDataSetChanged();
             }
         };
     }
@@ -113,16 +120,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     @Override
     public void previewImage(int position) {
         if (cameraType == 1) {
-            new SelectorPW(activity, mBinding.getRoot(), selectorList, position1 -> {
-                if (position1 == 0) {
-                    ActivityUtils.getCameraVideoPlay(images.get(0));
-                } else {
-                    cameraType = 0;
-                    images.clear();
-                    images.add("add_image_icon");
-                    adapter.notifyDataSetChanged();
-                }
-            });
+            ActivityUtils.getCameraVideoPlay(images.get(0));
         } else {
             if (position == images.size() - 1) {
                 getPermissions();
@@ -132,7 +130,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                     imageList.add(images.get(i));
                 }
                 MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, position12 -> {
-                   int count =  MineApp.selectMap.remove(MineApp.selectPathMap.get(images.get(position12)));
+                    int count = MineApp.selectMap.remove(MineApp.selectPathMap.get(images.get(position12)));
                     MineApp.cutImageViewMap.remove(MineApp.selectPathMap.get(images.get(position12)));
                     for (Map.Entry<String, Integer> entry : MineApp.selectMap.entrySet()) {
                         if (entry.getValue() > count) {
@@ -154,14 +152,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
 
     @Override
     public void publish(View view) {
-        if (publicImageBinding.getTitle().isEmpty()) {
-            SCToastUtil.showToast(activity, "请填写动态标题", true);
-            return;
-        }
-        if (publicImageBinding.getContent().isEmpty()) {
-            SCToastUtil.showToast(activity, "请填写动态内容", true);
-            return;
-        }
+
         if (videoUrl.isEmpty()) {
             if (images.size() == 1) {
                 SCToastUtil.showToast(activity, "请上传照片或视频", true);
@@ -271,7 +262,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
      */
     private void getPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission( "虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
+            performCodeWithPermission("虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
                         @Override
                         public void hasPermission() {
                             setPermissions();

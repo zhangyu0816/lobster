@@ -1,6 +1,7 @@
 package com.zb.module_mine.vm;
 
 import android.content.Intent;
+import android.text.InputType;
 import android.view.View;
 
 import com.zb.lib_base.api.bindBankCardApi;
@@ -36,6 +37,7 @@ public class BindingBankViewModel extends BaseViewModel implements BindingBankVM
         mBinding.tvBankTitle.setTestSize(16);
         mBinding.tvBankAddress.setText("开户网点");
         mBinding.tvBankAddress.setTestSize(16);
+        mBinding.edBankAccount.setInputType(InputType.TYPE_CLASS_NUMBER);
     }
 
     @Override
@@ -52,6 +54,11 @@ public class BindingBankViewModel extends BaseViewModel implements BindingBankVM
             mBinding.tvBankName.setTextColor(activity.getResources().getColor(R.color.black_252));
             mBinding.tvBankTitle.setText(bankInfo.getBankType() == 1 ? "银行卡" : bankInfo.getBankName());
             mBinding.edBankAccount.setHint(bankInfo.getBankType() == 1 ? "请输入银行卡卡号" : "请输入" + bankInfo.getBankName() + "账号");
+            if (bankInfo.getBankType() == 1) {
+                mBinding.edBankAccount.setInputType(InputType.TYPE_CLASS_NUMBER);
+            } else {
+                mBinding.edBankAccount.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+            }
             mBinding.setShowAddress(bankInfo.getBankType() == 1);
         });
     }
@@ -71,13 +78,25 @@ public class BindingBankViewModel extends BaseViewModel implements BindingBankVM
             return;
         }
         if (bankInfo.getBankType() == 1) {
+            if (!MineApp.checkBankCard(mBinding.getBankAccount())) {
+                SCToastUtil.showToast(activity, "银行卡账号错误", true);
+                return;
+            }
+            // 银行卡
             if (mBinding.getBankAddress().isEmpty()) {
                 SCToastUtil.showToast(activity, "请输入开户网点", true);
+                return;
+            }
+        } else {
+            // 支付宝
+            if (!mBinding.getBankAccount().matches(MineApp.PHONE_NUMBER_REG) && !mBinding.getBankAccount().matches(MineApp.EMAIL_REG)) {
+                SCToastUtil.showToast(activity, bankInfo.getBankName() + "账号错误", true);
                 return;
             }
         }
         bindBankCard();
     }
+
 
     @Override
     public void bankList(View view) {

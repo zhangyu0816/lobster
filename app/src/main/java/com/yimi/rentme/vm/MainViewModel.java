@@ -29,6 +29,7 @@ import com.zb.lib_base.api.newDynMsgAllNumApi;
 import com.zb.lib_base.api.noReadBottleNumApi;
 import com.zb.lib_base.api.openedMemberPriceListApi;
 import com.zb.lib_base.api.otherInfoApi;
+import com.zb.lib_base.api.prePairListApi;
 import com.zb.lib_base.api.rechargeDiscountListApi;
 import com.zb.lib_base.api.systemChatApi;
 import com.zb.lib_base.api.walletAndPopApi;
@@ -40,6 +41,7 @@ import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.imcore.CustomMessageBody;
 import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.model.BankInfo;
+import com.zb.lib_base.model.BaseEntity;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.GiftInfo;
@@ -58,6 +60,8 @@ import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.TextPW;
+import com.zb.module_card.vm.CardViewModel;
 import com.zb.module_card.windows.GuidancePW;
 
 import java.util.ArrayList;
@@ -77,6 +81,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private AnimatorSet animatorSet = new AnimatorSet();
     private AMapLocation aMapLocation;
     private LoginSampleHelper loginHelper;
+    private BaseReceiver systemErrorReceiver;
     private BaseReceiver rechargeReceiver;
     private BaseReceiver chatListReceiver;
     private BaseReceiver newMsgReceiver;
@@ -105,6 +110,23 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             myImAccountInfoApi();
 
         giftList();
+
+        systemErrorReceiver = new BaseReceiver(activity, "lobster_systemError") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                new TextPW(activity, mBinding.getRoot(), "断线重连", "网络异常，请重新链接", "重连", () -> {
+                    for (BaseEntity baseEntity : MineApp.apiList) {
+                        if (baseEntity instanceof prePairListApi) {
+                            CardViewModel.setOutLine();
+                        } else {
+                            HttpManager.getInstance().doHttpDeal(baseEntity);
+                        }
+                    }
+                    MineApp.apiList.clear();
+                });
+            }
+        };
+
         rechargeReceiver = new BaseReceiver(activity, "lobster_recharge") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -166,7 +188,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         mainSelectReceiver = new BaseReceiver(activity, "lobster_mainSelect") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (!MineApp.isLogin){
+                if (!MineApp.isLogin) {
                     selectPage(1);
                 }
                 MineApp.isLogin = true;
@@ -179,6 +201,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     }
 
     public void onDestroy() {
+        systemErrorReceiver.unregisterReceiver();
         rechargeReceiver.unregisterReceiver();
         chatListReceiver.unregisterReceiver();
         newMsgReceiver.unregisterReceiver();
@@ -216,7 +239,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             if (PreferenceUtil.readIntValue(activity, "showGuidance") == 0) {
                 new GuidancePW(activity, mBinding.getRoot());
             }
-        },500);
+        }, 500);
 
     }
 

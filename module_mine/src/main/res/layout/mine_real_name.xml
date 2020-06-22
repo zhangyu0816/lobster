@@ -54,7 +54,7 @@
                 android:background="#FFF5D9"
                 android:gravity="center"
                 android:padding="8dp"
-                android:text="此认证照片仅用于认证，不会在您的个人主页"
+                android:text="此认证照片仅用于认证，不会在您的个人主页上分享！"
                 android:textColor="#F7BF00"
                 android:textSize="12sp" />
 

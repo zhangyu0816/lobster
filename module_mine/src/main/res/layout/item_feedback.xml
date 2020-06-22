@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:text="@{ObjectUtils.feedbackText(item.replyState)}"
-                android:textColor="@{ObjectUtils.feedbackTextColor(item.replyState)}"
+                android:textColor="@{item.replyState==1?@color/black_252:@color/red_fe4}"
                 android:textSize="12sp"
                 tools:text="查看回复" />
         </RelativeLayout>

@@ -1,6 +1,7 @@
 package com.zb.module_mine.activity;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.R;
@@ -25,7 +26,7 @@ public class ModifyPassActivity extends MineBaseActivity {
         mBinding.setVariable(BR.showNewPass, false);
         mBinding.setVariable(BR.showSurePass, false);
         mBinding.setVariable(BR.type, 1);
-        mBinding.setVariable(BR.phone, "");
+        mBinding.setVariable(BR.phone, PreferenceUtil.readStringValue(activity,"userName"));
         mBinding.setVariable(BR.code, "");
     }
 }

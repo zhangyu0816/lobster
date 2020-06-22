@@ -1,5 +1,7 @@
 package com.yimi.rentme.vm;
 
+import android.os.Handler;
+
 import com.yimi.rentme.iv.LoadingVMInterface;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.myInfoApi;
@@ -7,9 +9,33 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.RulePW;
+
+import androidx.databinding.ViewDataBinding;
 
 public class LoadingViewModel extends BaseViewModel implements LoadingVMInterface {
+    @Override
+    public void setBinding(ViewDataBinding binding) {
+        super.setBinding(binding);
+        if (PreferenceUtil.readIntValue(activity, "ruleType2") == 0) {
+            new Handler().postDelayed(() -> new RulePW(activity, mBinding.getRoot(), 2, new RulePW.CallBack() {
+                @Override
+                public void sureBack() {
+                    PreferenceUtil.saveIntValue(activity, "ruleType2", 1);
+                    myInfo();
+                }
+
+                @Override
+                public void cancelBack() {
+                    activity.finish();
+                }
+            }), 200);
+        } else {
+            myInfo();
+        }
+    }
 
     @Override
     public void myInfo() {

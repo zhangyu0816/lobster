@@ -60,6 +60,9 @@ public class ObjectUtils {
     public static int getVipIntroBgHeight(float scale) {
         return (int) (getViewSizeByWidth(scale) * 458f / 1035f);
     }
+    public static int getVipExposureHeight(int width) {
+        return (int) (getViewSizeByWidthFromMax(width) * 579f / 810f);
+    }
 
     // 默认图片
     public static int getDefaultRes() {
@@ -243,14 +246,6 @@ public class ObjectUtils {
             return R.color.purple_7a4;
         } else {
             return R.color.black_252;
-        }
-    }
-
-    public static int feedbackTextColor(int replyState) {
-        if (replyState == 1) {
-            return R.color.black_252;
-        } else {
-            return R.color.red_fe4;
         }
     }
 

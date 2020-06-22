@@ -63,19 +63,19 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:alpha="0"
-                android:onClick="@{v->viewModel.leftBtn(currentView,adapter,position)}" />
+                android:onClick="@{v->viewModel.leftBtn(currentView,adapter)}" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:alpha="0"
-                android:onClick="@{v->viewModel.rightBtn(currentView,adapter,position)}" />
+                android:onClick="@{v->viewModel.rightBtn(currentView,adapter)}" />
         </LinearLayout>
 
         <RelativeLayout
             android:id="@+id/info_relative"
-            onClickDelayed="@{v->viewModel.selectCard(currentView,position)}"
+            onClickDelayed="@{v->viewModel.selectCard(currentView)}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

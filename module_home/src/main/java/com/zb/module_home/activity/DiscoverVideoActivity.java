@@ -30,7 +30,6 @@ public class DiscoverVideoActivity extends BaseActivity {
 
     @Override
     public void initUI() {
-        fitComprehensiveScreen();
         viewModel = new DiscoverVideoViewModel();
         viewModel.friendDynId = friendDynId;
         viewModel.setBinding(mBinding);

@@ -83,7 +83,7 @@
                     android:layout_marginBottom="15dp"
                     android:background="@drawable/btn_bg_white_black_efe_radius5"
                     android:gravity="top"
-                    android:hint="输入反馈内容"
+                    android:hint="请填写反馈内容，我们将在15个工作日内处理"
                     android:lines="8"
                     android:padding="15dp"
                     android:text="@={viewModel.feedbackInfo.content}"

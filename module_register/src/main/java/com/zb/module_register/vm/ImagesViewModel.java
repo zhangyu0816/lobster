@@ -70,6 +70,8 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
         });
     }
 
+
+
     @Override
     public void complete(View view) {
         String images = "";

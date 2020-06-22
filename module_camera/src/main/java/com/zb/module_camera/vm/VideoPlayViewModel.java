@@ -1,5 +1,6 @@
 package com.zb.module_camera.vm;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.view.View;
 
@@ -30,6 +31,13 @@ public class VideoPlayViewModel extends BaseViewModel implements VideoPlayVMInte
         mBinding.videoView.stopPlayback();//停止播放视频,并且释放
         mBinding.videoView.suspend();//在任何状态下释放媒体播放器
         activity.finish();
+    }
+
+    @Override
+    public void right(View view) {
+        super.right(view);
+        activity.sendBroadcast(new Intent("lobster_deleteVideo"));
+        back(null);
     }
 
     @Override

@@ -25,6 +25,7 @@ public class CardFragment extends BaseFragment {
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.cityName, MineApp.cityName);
+        mBinding.setVariable(BR.isOutLine, false);
     }
 
     @Override

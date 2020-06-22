@@ -1,6 +1,5 @@
 package com.maning.imagebrowserlibrary;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -83,8 +82,7 @@ public class MNImageBrowser {
             imageBrowserConfig.setIndicatorType(ImageBrowserConfig.IndicatorType.Indicator_Number);
         }
         MNImageBrowserActivity.imageBrowserConfig = imageBrowserConfig;
-        Intent intent = new Intent(context, MNImageBrowserActivity.class);
-        startBrowserAvtivity(context, view, intent);
+        context.startActivity(new Intent(context, MNImageBrowserActivity.class));
     }
 
     private static void startBrowserAvtivity(Context context, View view, Intent intent) {
@@ -95,7 +93,7 @@ public class MNImageBrowser {
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             context.startActivity(intent);
-            ((Activity) context).overridePendingTransition(R.anim.browser_enter_anim, 0);
+//            ((Activity) context).overridePendingTransition(R.anim.browser_enter_anim, 0);
         }
     }
 

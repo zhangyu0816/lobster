@@ -377,7 +377,7 @@ public interface HttpService {
     // 人脸认证
     @GET("api/Verify_humanFace")
     Observable<BaseResultEntity> humanFace(@Query("faceVerifyType") int faceVerifyType, @Query("faceImage") String faceImage,
-                                           @Query("faceVideo") String faceVideo);
+                                           @Query("faceVideo") String faceVideo, @Query("verifyMethodType") int verifyMethodType);
 
     // 我关注的
     @GET("api/Collect_myConcerns")
@@ -405,7 +405,7 @@ public interface HttpService {
 
     // 清除全部未读消息
     @GET("api/Interactive_readNewDynMsgAll")
-    Observable<BaseResultEntity> readNewDynMsgAll(@QueryMap Map<String,String> map);
+    Observable<BaseResultEntity> readNewDynMsgAll(@QueryMap Map<String, String> map);
 
     // 礼物记录列表
     @GET("api/Gift_giveOrReceiveList")

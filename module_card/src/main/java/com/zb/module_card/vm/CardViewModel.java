@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnimationUtils;
@@ -17,7 +18,6 @@ import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.prePairListApi;
-import com.zb.lib_base.api.superExposureApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.LikeDb;
@@ -31,7 +31,9 @@ import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.PairInfo;
 import com.zb.lib_base.model.ProvinceInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.ObjectUtils;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.SimulateNetAPI;
 import com.zb.lib_base.views.MyRecyclerView;
@@ -46,6 +48,7 @@ import com.zb.module_card.R;
 import com.zb.module_card.adapter.CardAdapter;
 import com.zb.module_card.databinding.CardFragBinding;
 import com.zb.module_card.iv.CardVMInterface;
+import com.zb.module_card.windows.ExposurePW;
 import com.zb.module_card.windows.VipAdPW;
 
 import org.json.JSONArray;
@@ -67,7 +70,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     public CardAdapter adapter;
     private List<PairInfo> pairInfoList = new ArrayList<>();
     private PairInfo pairInfo;
-    private CardFragBinding cardFragBinding;
+    private static CardFragBinding cardFragBinding;
     private CardItemTouchHelperCallback<PairInfo> cardCallback;
     private View currentView;
     private Handler handler = new Handler(msg -> {
@@ -163,6 +166,10 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         setAdapter();
     }
 
+    public static void setOutLine() {
+        cardFragBinding.setIsOutLine(true);
+    }
+
     @Override
     public void setAdapter() {
         adapter = new CardAdapter<>(activity, R.layout.item_card, pairInfoList, this);
@@ -176,9 +183,9 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     }
 
     @Override
-    public void selectCard(View currentView, int position) {
+    public void selectCard(View currentView) {
         this.currentView = currentView;
-        pairInfo = pairInfoList.get(position);
+        pairInfo = pairInfoList.get(0);
         ActivityUtils.getCardMemberDetail(pairInfo.getOtherUserId(), true);
     }
 
@@ -211,34 +218,39 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     @Override
     public void exposure(View view) {
         if (mineInfo.getMemberType() == 2) {
-            superExposureApi api = new superExposureApi(new HttpOnNextListener() {
-                @Override
-                public void onNext(Object o) {
-                    SCToastUtil.showToast(activity, "曝光成功", true);
-                }
-            }, activity);
-            HttpManager.getInstance().doHttpDeal(api);
+            if (TextUtils.equals(PreferenceUtil.readStringValue(activity, "exposureTime"), DateUtil.getNow(DateUtil.yyyy_MM_dd))) {
+                SCToastUtil.showToast(activity, "今日超级爆光权限已使用", true);
+            } else {
+                new ExposurePW(activity, mBinding.getRoot());
+            }
         } else {
             new VipAdPW(activity, mBinding.getRoot());
         }
     }
 
     @Override
-    public void leftBtn(View currentView, CardAdapter imageAdapter, int position) {
+    public void leftBtn(View currentView, CardAdapter imageAdapter) {
         if (imageAdapter.getSelectImageIndex() > 0) {
             int preIndex = imageAdapter.getSelectImageIndex();
             int selectIndex = preIndex - 1;
-            updateAdapterUI(currentView, imageAdapter, preIndex, selectIndex, pairInfoList.get(position).getImageList());
+            updateAdapterUI(currentView, imageAdapter, preIndex, selectIndex, pairInfoList.get(0).getImageList());
         }
     }
 
     @Override
-    public void rightBtn(View currentView, CardAdapter imageAdapter, int position) {
-        if (imageAdapter.getSelectImageIndex() < pairInfoList.get(position).getImageList().size() - 1) {
+    public void rightBtn(View currentView, CardAdapter imageAdapter) {
+        if (imageAdapter.getSelectImageIndex() < pairInfoList.get(0).getImageList().size() - 1) {
             int preIndex = imageAdapter.getSelectImageIndex();
             int selectIndex = preIndex + 1;
-            updateAdapterUI(currentView, imageAdapter, preIndex, selectIndex, pairInfoList.get(position).getImageList());
+            updateAdapterUI(currentView, imageAdapter, preIndex, selectIndex, pairInfoList.get(0).getImageList());
         }
+    }
+
+    @Override
+    public void selectImage(CardAdapter imageAdapter, int position) {
+        int preIndex = imageAdapter.getSelectImageIndex();
+        int selectIndex = position;
+        updateAdapterUI(imageAdapter.getCurrentView(), imageAdapter, preIndex, selectIndex, pairInfoList.get(0).getImageList());
     }
 
     @Override
@@ -268,7 +280,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
             @Override
             public void onError(Throwable e) {
-                if(e instanceof HttpTimeException&&((HttpTimeException) e).getCode()==HttpTimeException.NO_DATA){
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     pairInfoList.clear();
                     adapter.notifyDataSetChanged();
                 }
@@ -320,6 +332,12 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             }
         }, activity).setOtherUserId(pairInfo.getOtherUserId()).setLikeOtherStatus(likeOtherStatus);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void onRefresh(View view) {
+        mBinding.setVariable(BR.isOutLine, false);
+        prePairList(true);
     }
 
     // 更新adapterUI

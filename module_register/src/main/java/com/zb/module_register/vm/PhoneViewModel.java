@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Handler;
 import android.telephony.TelephonyManager;
 import android.view.View;
 
@@ -15,6 +16,7 @@ import com.zb.lib_base.utils.Mac;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.RulePW;
 import com.zb.module_register.databinding.RegisterPhoneBinding;
 import com.zb.module_register.iv.PhoneVMInterface;
 
@@ -33,6 +35,9 @@ public class PhoneViewModel extends BaseViewModel implements PhoneVMInterface {
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         getPermissions();
+
+        if (!isLogin)
+            showRule();
     }
 
     @Override
@@ -48,6 +53,21 @@ public class PhoneViewModel extends BaseViewModel implements PhoneVMInterface {
             }
             activity.finish();
         }
+    }
+
+    private void showRule() {
+        if (PreferenceUtil.readIntValue(activity, "ruleType1") == 0)
+            new Handler().postDelayed(() -> new RulePW(activity, mBinding.getRoot(), 1, new RulePW.CallBack() {
+                @Override
+                public void sureBack() {
+                    PreferenceUtil.saveIntValue(activity, "ruleType1", 1);
+                }
+
+                @Override
+                public void cancelBack() {
+                    back(null);
+                }
+            }), 200);
     }
 
     @SuppressLint("HardwareIds")

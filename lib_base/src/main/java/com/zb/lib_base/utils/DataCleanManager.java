@@ -127,14 +127,14 @@ public class DataCleanManager {
      */
     private static String getFormatSize(long size) {
         float kiloByte = size / 1024f;
-        if (kiloByte < 1) {
-            return size + "B";
-        }
+//        if (kiloByte < 1) {
+//            return size + "B";
+//        }
         float megaByte = kiloByte / 1024f;
-        if (megaByte < 1) {
-            BigDecimal result1 = new BigDecimal(Double.toString(kiloByte));
-            return result1.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "KB";
-        }
+//        if (megaByte < 1) {
+//            BigDecimal result1 = new BigDecimal(Double.toString(kiloByte));
+//            return result1.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "KB";
+//        }
         float gigaByte = megaByte / 1024f;
         if (gigaByte < 1) {
             BigDecimal result2 = new BigDecimal(Double.toString(megaByte));

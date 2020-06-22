@@ -23,6 +23,6 @@ public class humanFaceApi extends BaseEntity<BaseResultEntity> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.humanFace(1, faceImage, "");
+        return methods.humanFace(1, faceImage, "", 1);
     }
 }
