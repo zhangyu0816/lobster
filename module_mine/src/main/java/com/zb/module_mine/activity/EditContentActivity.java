@@ -5,6 +5,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.R;
+import com.zb.module_mine.databinding.MineEditContentBinding;
 import com.zb.module_mine.vm.EditContentViewModel;
 
 @Route(path = RouteUtils.Mine_Edit_Content)
@@ -36,5 +37,9 @@ public class EditContentActivity extends MineBaseActivity {
         mBinding.setVariable(BR.lines, lines);
         mBinding.setVariable(BR.type, type);
         mBinding.setVariable(BR.hint, hint);
+
+        MineEditContentBinding binding = (MineEditContentBinding) mBinding;
+        binding.edContent.setText(content);
+        binding.edContent.setSelection(content.length());
     }
 }

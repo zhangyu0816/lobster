@@ -26,6 +26,7 @@ import com.zb.module_home.iv.FollowVMInterface;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,7 +129,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
 
             @Override
             public void onError(Throwable e) {
-                if (e instanceof SocketTimeoutException || e instanceof ConnectException) {
+                if (e instanceof SocketTimeoutException || e instanceof ConnectException || e instanceof UnknownHostException) {
                     mBinding.noNetLinear.setVisibility(View.VISIBLE);
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
@@ -146,6 +147,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
     @Override
     public void onRefreshForNet(View view) {
         // 下拉刷新
+        mBinding.noNetLinear.setVisibility(View.GONE);
         mBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         discoverInfoList.clear();

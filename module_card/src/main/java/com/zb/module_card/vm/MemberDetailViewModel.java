@@ -20,6 +20,7 @@ import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
@@ -28,6 +29,7 @@ import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.ObjectUtils;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.CountUsedPW;
 import com.zb.lib_base.windows.SelectorPW;
@@ -91,6 +93,10 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
 
     @Override
     public void dislike(View view) {
+        if (memberInfo == null) {
+            SCToastUtil.showToast(activity, "网络异常，请检查网络是否链接", true);
+            return;
+        }
         activity.finish();
         Intent data = new Intent("lobster_card");
         data.putExtra("direction", 0);
@@ -99,6 +105,10 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
 
     @Override
     public void like(View view) {
+        if (memberInfo == null) {
+            SCToastUtil.showToast(activity, "网络异常，请检查网络是否链接", true);
+            return;
+        }
         activity.finish();
         Intent data = new Intent("lobster_card");
         data.putExtra("direction", 1);
@@ -167,6 +177,17 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 mBinding.tvFollow.setText("取消关注");
                 mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
                 attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
+                    if (e.getMessage().equals("已经关注过")) {
+                        mBinding.tvFollow.setText("取消关注");
+                        mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                        attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
+                    }
+                }
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);

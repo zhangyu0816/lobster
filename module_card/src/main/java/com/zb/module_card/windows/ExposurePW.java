@@ -15,8 +15,11 @@ import com.zb.module_card.R;
 
 public class ExposurePW extends BasePopupWindow {
 
-    public ExposurePW(RxAppCompatActivity activity, View parentView) {
+    private CallBack callBack;
+
+    public ExposurePW(RxAppCompatActivity activity, View parentView, CallBack callBack) {
         super(activity, parentView, true);
+        this.callBack = callBack;
         initUI();
     }
 
@@ -40,7 +43,17 @@ public class ExposurePW extends BasePopupWindow {
                 PreferenceUtil.saveStringValue(activity, "exposureTime", DateUtil.getNow(DateUtil.yyyy_MM_dd));
                 dismiss();
             }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.error(e);
+                dismiss();
+            }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    public interface CallBack {
+        void error(Throwable e);
     }
 }

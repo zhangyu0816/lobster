@@ -164,6 +164,17 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 adapter.notifyItemChanged(_selectIndex);
             }
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
+                    if (e.getMessage().equals("已经关注过")) {
+                        MemberInfo memberInfo = memberInfoList.get(_selectIndex);
+                        memberInfo.setFansQuantity(memberInfo.getFansQuantity() + 1);
+                        attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
+                        adapter.notifyItemChanged(_selectIndex);
+                    }
+                }
+            }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
     }

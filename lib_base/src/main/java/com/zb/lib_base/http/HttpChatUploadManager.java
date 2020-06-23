@@ -56,8 +56,7 @@ public class HttpChatUploadManager {
      */
     public void doHttpDeal(BaseEntity basePar) {
         ProgressSubscriber subscriber = new ProgressSubscriber(basePar.getListener(), basePar.getRxAppCompatActivity(),
-                basePar.isShowProgress(), basePar.getDialogTitle(), () -> {
-        });
+                basePar.isShowProgress(), basePar.getDialogTitle());
         Observable observable = basePar.getObservable(httpService)
                 /*失败后的retry配置*/.retryWhen(new RetryWhenNetworkException());
         if (basePar.getRxAppCompatActivity() != null) {

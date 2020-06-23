@@ -135,6 +135,16 @@ public class ObjectUtils {
         }
     }
 
+    public static Drawable getNewsNoData(int reviewType) {
+        if (reviewType == 1) {
+            return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_review_icon);
+        } else if (reviewType == 2) {
+            return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_good_icon);
+        } else {
+            return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_gift_icon);
+        }
+    }
+
     public static String getStanza(String stanza, int msgType) {
         //消息类型 1：文字 2：图片 3：语音 4：视频
         if (msgType == 1)

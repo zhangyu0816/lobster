@@ -1,10 +1,7 @@
 package com.zb.lib_base.http;
 
 
-import android.content.Intent;
-
 import com.google.gson.Gson;
-import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.log.HttpLogger;
 import com.zb.lib_base.model.BaseEntity;
 
@@ -28,8 +25,8 @@ public class HttpManager {
     //    public static final String BASE_URL = "http://www.zuwo.la/";
     //    public static String BASE_URL = "http://www.zuwo.la:8066/";
     //    public static String BASE_URL = "http://xiagus.utools.club/";//敏耀
-        public static String BASE_URL = "http://192.168.1.88:8090/";//敏耀
-//    public static String BASE_URL = "http://317a598y11.wicp.vip/";//敏耀
+//        public static String BASE_URL = "http://192.168.1.88:8090/";//敏耀
+    public static String BASE_URL = "http://317a598y11.wicp.vip/";//敏耀
     /*超时设置*/
     private static final int DEFAULT_TIMEOUT = 6;
     private HttpService httpService;
@@ -71,10 +68,7 @@ public class HttpManager {
      */
     public void doHttpDeal(BaseEntity basePar) {
         ProgressSubscriber subscriber = new ProgressSubscriber(basePar.getListener(), basePar.getRxAppCompatActivity
-                (), basePar.isShowProgress(), basePar.getDialogTitle(), basePar.getPosition(), () -> {
-            MineApp.apiList.add(basePar);
-            basePar.getRxAppCompatActivity().sendBroadcast(new Intent("lobster_systemError"));
-        });
+                (), basePar.isShowProgress(), basePar.getDialogTitle(), basePar.getPosition());
         Observable observable = basePar.getObservable(httpService)
                 /*失败后的retry配置*/.retryWhen(new RetryWhenNetworkException());
         if (basePar.getRxAppCompatActivity() != null) {

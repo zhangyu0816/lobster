@@ -28,5 +28,6 @@ public class MemberDetailActivity extends CardBaseActivity {
         viewModel.showLike = showLike;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.showLike, showLike);
+        mBinding.setVariable(BR.viewModel, viewModel);
     }
 }

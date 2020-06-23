@@ -6,6 +6,7 @@ import com.zb.lib_base.utils.SCToastUtil;
 import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.Objects;
 
 import rx.Subscriber;
@@ -25,7 +26,6 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
     private WeakReference<RxAppCompatActivity> mActivity;
 
     private String dialogTitle = "正在加载中";
-    private CallBack mCallBack;
     private int position = 0;
 
     public interface CallBack {
@@ -40,21 +40,19 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
      * @param showProgressAndCancel     是否需要加载框,是否能取消加载框
      */
     public ProgressSubscriber(HttpOnNextListener mSubscriberOnNextListener, RxAppCompatActivity context, boolean showProgressAndCancel,
-                              String dialogTitle, CallBack callBack) {
+                              String dialogTitle) {
         this.mSubscriberOnNextListener = mSubscriberOnNextListener;
         this.mActivity = new WeakReference<>(context);
         this.showProgressAndCancel = showProgressAndCancel;
-        mCallBack = callBack;
         setDialogTitle(dialogTitle);
     }
 
     public ProgressSubscriber(HttpOnNextListener mSubscriberOnNextListener, RxAppCompatActivity context, boolean showProgressAndCancel,
-                              String dialogTitle, int position, CallBack callBack) {
+                              String dialogTitle, int position) {
         this.mSubscriberOnNextListener = mSubscriberOnNextListener;
         this.mActivity = new WeakReference<>(context);
         this.showProgressAndCancel = showProgressAndCancel;
         this.position = position;
-        mCallBack = callBack;
         setDialogTitle(dialogTitle);
     }
 
@@ -100,12 +98,8 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
         if (context == null) {
             return;
         }
-        if (e instanceof SocketTimeoutException) {
-            if (mCallBack != null)
-                mCallBack.error();
-        } else if (e instanceof ConnectException) {
-            if (mCallBack != null)
-                mCallBack.error();
+        if (e instanceof SocketTimeoutException || e instanceof ConnectException || e instanceof UnknownHostException) {
+            SCToastUtil.showToast(context, "网络异常，请检查网络是否链接", position == 0);
         } else if (e instanceof HttpTimeException) {
             HttpTimeException exception = (HttpTimeException) e;
             switch (exception.getCode()) {

@@ -20,7 +20,6 @@ import com.zb.lib_base.adaptive.FitScreen;
 import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.log.LogUtil;
 import com.zb.lib_base.model.BankInfo;
-import com.zb.lib_base.model.BaseEntity;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.MineNewsCount;
@@ -64,7 +63,6 @@ public class MineApp extends MultiDexApplication {
     public static String versionName;
     public static String WX_PAY_APPID = "wxbdd7128e0a0a08f8";
     public static boolean isLogin = false;
-    public static List<BaseEntity> apiList = new ArrayList<>(); // 断线重连
     public static Map<Integer, String> moneyTypeMap = new HashMap<>();
     public static Map<Integer, String> tranStatusMap = new HashMap<>();
 

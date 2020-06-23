@@ -7,6 +7,7 @@ import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.utils.RouteUtils;
+import com.zb.module_home.BR;
 import com.zb.module_home.R;
 import com.zb.module_home.vm.DiscoverVideoViewModel;
 
@@ -33,6 +34,7 @@ public class DiscoverVideoActivity extends BaseActivity {
         viewModel = new DiscoverVideoViewModel();
         viewModel.friendDynId = friendDynId;
         viewModel.setBinding(mBinding);
+        mBinding.setVariable(BR.viewModel,viewModel);
     }
 
     @Override

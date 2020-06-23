@@ -30,7 +30,7 @@ public class EditContentViewModel extends BaseViewModel implements EditContentVM
     public void submit(View view) {
         if (type == 2) {
             if (contentBinding.getContent().isEmpty()) {
-                SCToastUtil.showToast(activity, "昵称不能为空", true);
+                SCToastUtil.showToast(activity, "名称不能为空", true);
                 return;
             }
         }
@@ -39,5 +39,10 @@ public class EditContentViewModel extends BaseViewModel implements EditContentVM
         data.putExtra("content", contentBinding.getContent());
         activity.sendBroadcast(data);
         activity.finish();
+    }
+
+    @Override
+    public void cleanContent(View view) {
+        contentBinding.setContent("");
     }
 }

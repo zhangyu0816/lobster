@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="《虾菇用户注册协议》"
-                    android:textColor="#3A76E7"
+                    android:textColor="#23ACFF"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -78,7 +78,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="《虾菇隐私政策》"
-                    android:textColor="#3A76E7"
+                    android:textColor="#23ACFF"
                     android:textSize="12sp"
                     android:textStyle="bold" />
             </LinearLayout>

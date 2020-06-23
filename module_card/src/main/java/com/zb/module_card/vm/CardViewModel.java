@@ -54,6 +54,9 @@ import com.zb.module_card.windows.VipAdPW;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -166,10 +169,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         setAdapter();
     }
 
-    public static void setOutLine() {
-        cardFragBinding.setIsOutLine(true);
-    }
-
     @Override
     public void setAdapter() {
         adapter = new CardAdapter<>(activity, R.layout.item_card, pairInfoList, this);
@@ -221,7 +220,11 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             if (TextUtils.equals(PreferenceUtil.readStringValue(activity, "exposureTime"), DateUtil.getNow(DateUtil.yyyy_MM_dd))) {
                 SCToastUtil.showToast(activity, "今日超级爆光权限已使用", true);
             } else {
-                new ExposurePW(activity, mBinding.getRoot());
+                new ExposurePW(activity, mBinding.getRoot(), e -> {
+                    if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
+                        mBinding.setVariable(BR.isOutLine, true);
+                    }
+                });
             }
         } else {
             new VipAdPW(activity, mBinding.getRoot());
@@ -283,6 +286,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     pairInfoList.clear();
                     adapter.notifyDataSetChanged();
+                } else if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
+                    mBinding.setVariable(BR.isOutLine, true);
                 }
             }
         }, activity)
@@ -330,12 +335,21 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     }
                 }
             }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
+                    mBinding.setVariable(BR.isOutLine, true);
+                }
+            }
         }, activity).setOtherUserId(pairInfo.getOtherUserId()).setLikeOtherStatus(likeOtherStatus);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override
     public void onRefresh(View view) {
+        pairInfoList.clear();
+        adapter.notifyDataSetChanged();
         mBinding.setVariable(BR.isOutLine, false);
         prePairList(true);
     }

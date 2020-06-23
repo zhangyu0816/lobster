@@ -6,6 +6,8 @@
 
         <import type="com.zb.lib_base.utils.ObjectUtils" />
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.zb.module_mine.vm.EditContentViewModel" />
@@ -60,22 +62,42 @@
 
         </RelativeLayout>
 
-        <EditText
-            android:id="@+id/ed_content"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:background="@{lines==1?@drawable/btn_bg_white_black_c3b_radius34:@drawable/empty_bg}"
-            android:gravity="top"
-            android:hint="@{hint}"
-            android:lines="@{lines}"
-            android:maxLength="@{type==2?10:200}"
-            android:padding="15dp"
-            android:text="@={content}"
-            android:textColor="@color/black_252"
-            android:textColorHint="@color/black_c3b"
-            android:textCursorDrawable="@drawable/cursor_color_black_252"
-            tools:text="文件访问量礼物老玩家了我我发我" />
+            android:background="@{lines==1?@drawable/btn_bg_white_black_c3b_radius34:@drawable/empty_bg}">
+
+            <EditText
+                android:id="@+id/ed_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/iv_close"
+                android:background="@null"
+                android:gravity="top"
+                android:hint="@{hint}"
+                android:lines="@{lines}"
+                android:maxLength="@{type==2?10:200}"
+                android:padding="15dp"
+                android:text="@={content}"
+                android:textColor="@color/black_252"
+                android:textColorHint="@color/black_c3b"
+                android:textCursorDrawable="@drawable/cursor_color_black_252"
+                tools:text="文件访问量礼物老玩家了我我发我" />
+
+            <ImageView
+                android:id="@+id/iv_close"
+                onClickDelayed="@{viewModel::cleanContent}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(80)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(80)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="15dp"
+                android:background="@mipmap/close_icon"
+                android:visibility="@{lines==1?View.VISIBLE:View.GONE}" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/textView5"

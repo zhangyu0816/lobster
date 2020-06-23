@@ -152,6 +152,10 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
 
     @Override
     public void publish(View view) {
+        if (publicImageBinding.getTitle().isEmpty()) {
+            SCToastUtil.showToast(activity, "请填写动态标题", true);
+            return;
+        }
 
         if (videoUrl.isEmpty()) {
             if (images.size() == 1) {

@@ -139,7 +139,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
 
     @Override
     public void toEditNick(View view) {
-        ActivityUtils.getMineEditContent(2, 1, "编辑昵称", mineInfo.getNick(), "输入你的昵称，昵称不能为空");
+        ActivityUtils.getMineEditContent(2, 1, "编辑名称", mineInfo.getNick(), "输入你的名称，名称不能为空");
     }
 
     @Override

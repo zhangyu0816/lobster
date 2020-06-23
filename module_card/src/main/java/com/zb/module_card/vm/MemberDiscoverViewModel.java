@@ -33,6 +33,7 @@ import com.zb.module_card.iv.MemberDiscoverVMInterface;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,7 +159,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
 
             @Override
             public void onError(Throwable e) {
-                if (e instanceof SocketTimeoutException || e instanceof ConnectException) {
+                if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
                     mBinding.noNetLinear.setVisibility(View.VISIBLE);
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
@@ -200,7 +201,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
 
             @Override
             public void onError(Throwable e) {
-                if (e instanceof SocketTimeoutException || e instanceof ConnectException) {
+                if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
                     mBinding.noNetLinear.setVisibility(View.VISIBLE);
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
@@ -226,6 +227,16 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 memberInfo = o;
                 getData();
             }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
+                    mBinding.noNetLinear.setVisibility(View.VISIBLE);
+                    mBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
+                }
+            }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
     }
@@ -233,6 +244,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     @Override
     public void onRefreshForNet(View view) {
         // 下拉刷新
+        mBinding.noNetLinear.setVisibility(View.GONE);
         mBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         discoverInfoList.clear();

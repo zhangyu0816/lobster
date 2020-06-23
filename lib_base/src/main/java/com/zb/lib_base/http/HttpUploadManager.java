@@ -57,8 +57,7 @@ public class HttpUploadManager {
      */
     public void doHttpDeal(BaseEntity basePar) {
         ProgressSubscriber subscriber = new ProgressSubscriber(basePar.getListener(), basePar.getRxAppCompatActivity(),
-                basePar.isShowProgress(), basePar.getDialogTitle(), () -> {
-        });
+                basePar.isShowProgress(), basePar.getDialogTitle());
         Observable observable = basePar.getObservable(httpService).retryWhen(new RetryWhenNetworkException());
         if (basePar.getRxAppCompatActivity() != null) {
             /*生命周期管理*/

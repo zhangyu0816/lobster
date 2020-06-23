@@ -30,6 +30,7 @@ import com.zb.module_card.iv.MemberVideoVMInterface;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -142,7 +143,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
 
             @Override
             public void onError(Throwable e) {
-                if (e instanceof SocketTimeoutException || e instanceof ConnectException) {
+                if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
                     mBinding.noNetLinear.setVisibility(View.VISIBLE);
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
@@ -175,7 +176,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
 
             @Override
             public void onError(Throwable e) {
-                if (e instanceof SocketTimeoutException || e instanceof ConnectException) {
+                if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
                     mBinding.noNetLinear.setVisibility(View.VISIBLE);
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
@@ -196,6 +197,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
     @Override
     public void onRefreshForNet(View view) {
         // 下拉刷新
+        mBinding.noNetLinear.setVisibility(View.GONE);
         mBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         discoverInfoList.clear();
