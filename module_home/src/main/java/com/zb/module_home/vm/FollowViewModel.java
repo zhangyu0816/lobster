@@ -42,6 +42,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
     private BaseReceiver attentionReceiver;
     private BaseReceiver finishRefreshReceiver;
     private BaseReceiver mainSelectReceiver;
+    private BaseReceiver attentionListReceiver;
     private int prePosition = -1;
     private long friendDynId = 0;
     private DiscoverInfo discoverInfo;
@@ -88,6 +89,12 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
                 onRefreshForNet(null);
             }
         };
+        attentionListReceiver = new BaseReceiver(activity, "lobster_attentionList") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                onRefreshForNet(null);
+            }
+        };
     }
 
     public void onDestroy() {
@@ -95,6 +102,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
         attentionReceiver.unregisterReceiver();
         finishRefreshReceiver.unregisterReceiver();
         mainSelectReceiver.unregisterReceiver();
+        attentionListReceiver.unregisterReceiver();
     }
 
     @Override

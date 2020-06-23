@@ -179,7 +179,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="VIP套餐"
-                    android:textColor="#827F9AFF"
+                    android:textColor="#827F9A"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 

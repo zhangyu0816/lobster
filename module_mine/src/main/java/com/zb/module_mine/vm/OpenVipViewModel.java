@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.myInfoApi;
+import com.zb.lib_base.api.openedMemberPriceListApi;
 import com.zb.lib_base.api.payOrderForTranApi;
 import com.zb.lib_base.api.submitOpenedMemberOrderApi;
 import com.zb.lib_base.app.MineApp;
@@ -14,6 +15,7 @@ import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.OrderNumber;
 import com.zb.lib_base.model.OrderTran;
+import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.PaymentPW;
@@ -21,6 +23,8 @@ import com.zb.module_mine.R;
 import com.zb.module_mine.adapter.MineAdapter;
 import com.zb.module_mine.databinding.MineOpenVipBinding;
 import com.zb.module_mine.iv.OpenVipVMInterface;
+
+import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
 
@@ -36,8 +40,11 @@ public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterfac
         super.setBinding(binding);
         vipBinding = (MineOpenVipBinding) binding;
         mineInfo = mineInfoDb.getMineInfo();
-        setAdapter();
-
+        if (MineApp.vipInfoList.size() == 0) {
+            openedMemberPriceList();
+        } else {
+            setAdapter();
+        }
         // 开通会员
         openVipReceiver = new BaseReceiver(activity, "lobster_openVip") {
             @Override
@@ -50,6 +57,9 @@ public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterfac
     @Override
     public void setAdapter() {
         adapter = new MineAdapter<>(activity, R.layout.item_mine_vip, MineApp.vipInfoList, this);
+        adapter.setSelectIndex(1);
+        preIndex = 1;
+        adapter.notifyItemChanged(1);
     }
 
     @Override
@@ -92,6 +102,23 @@ public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterfac
             }
         }, activity)
                 .setMemberOfOpenedProductId(MineApp.vipInfoList.get(preIndex).getMemberOfOpenedProductId());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void openedMemberPriceList() {
+        openedMemberPriceListApi api = new openedMemberPriceListApi(new HttpOnNextListener<List<VipInfo>>() {
+            @Override
+            public void onNext(List<VipInfo> o) {
+                MineApp.vipInfoList.addAll(o);
+                setAdapter();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+            }
+        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

@@ -28,10 +28,10 @@
     <RelativeLayout
         onClickDelayed="@{v->viewModel.selectIndex(position)}"
         viewHeightSize="@{-2}"
-        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.3f)}"
+        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.275f)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp">
+        android:layout_marginEnd="15dp">
 
         <LinearLayout
             android:layout_width="match_parent"

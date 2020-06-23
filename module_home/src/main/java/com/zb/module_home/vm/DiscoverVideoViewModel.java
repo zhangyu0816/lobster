@@ -258,6 +258,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                 mBinding.tvFollow.setText("取消关注");
                 mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
                 attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
+                activity.sendBroadcast(new Intent("lobster_attentionList"));
             }
 
             @Override
@@ -267,6 +268,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                         mBinding.tvFollow.setText("取消关注");
                         mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
                         attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
+                        activity.sendBroadcast(new Intent("lobster_attentionList"));
                     }
                 }
             }
@@ -283,6 +285,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                 mBinding.tvFollow.setText("关注");
                 mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_4d4));
                 attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
+                activity.sendBroadcast(new Intent("lobster_attentionList"));
             }
         }, activity).setOtherUserId(discoverInfo.getUserId());
         HttpManager.getInstance().doHttpDeal(api);

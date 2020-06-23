@@ -7,4 +7,6 @@ public interface OpenVipVMInterface {
     void selectIndex(int index);
 
     void submitOpenedMemberOrder();
+
+    void openedMemberPriceList();
 }

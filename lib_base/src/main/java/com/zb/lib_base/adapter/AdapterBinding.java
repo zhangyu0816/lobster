@@ -2,6 +2,7 @@ package com.zb.lib_base.adapter;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -10,6 +11,7 @@ import android.widget.VideoView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
@@ -32,6 +34,7 @@ import com.zb.lib_base.views.card.CardItemTouchHelperCallback;
 import com.zb.lib_base.views.card.CardLayoutManager;
 import com.zb.lib_base.views.card.OnRecyclerItemClickListener;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.NonNull;
