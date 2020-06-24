@@ -165,7 +165,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:onClick="@{v->viewModel.select(1)}"
                 android:paddingStart="15dp"
                 android:paddingEnd="15dp"
                 android:src="@{showNewPass?@drawable/eye_open:@drawable/eye_close}" />
@@ -200,7 +199,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:onClick="@{v->viewModel.select(2)}"
                 android:paddingStart="15dp"
                 android:paddingEnd="15dp"
                 android:src="@{showSurePass?@drawable/eye_open:@drawable/eye_close}" />

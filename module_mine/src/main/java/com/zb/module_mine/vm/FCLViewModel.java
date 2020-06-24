@@ -52,8 +52,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
     public LikeDb likeDb;
     private int _selectIndex = -1;
     private MineInfo mineInfo;
-    private int prePosition = -1;
-    private BaseReceiver attentionReceiver;
+    private BaseReceiver attentionListReceiver;
     private BaseReceiver finishRefreshReceiver;
     private HistoryMsgDb historyMsgDb;
 
@@ -79,17 +78,17 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 mBinding.refresh.finishLoadMore();
             }
         };
-        attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
+        attentionListReceiver = new BaseReceiver(activity, "lobster_attentionList") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                adapter.notifyItemChanged(prePosition);
+                adapter.notifyItemChanged(_selectIndex);
             }
         };
     }
 
     public void onDestroy() {
         finishRefreshReceiver.unregisterReceiver();
-        attentionReceiver.unregisterReceiver();
+        attentionListReceiver.unregisterReceiver();
     }
 
     @Override
@@ -118,7 +117,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
     @Override
     public void selectPosition(int position) {
         super.selectPosition(position);
-        prePosition = position;
+        _selectIndex = position;
         ActivityUtils.getCardMemberDetail(memberInfoList.get(position).getUserId(), false);
     }
 
@@ -162,7 +161,6 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 MemberInfo memberInfo = memberInfoList.get(_selectIndex);
                 memberInfo.setFansQuantity(memberInfo.getFansQuantity() + 1);
                 attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
-                adapter.notifyItemChanged(_selectIndex);
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
             }
             @Override
@@ -172,7 +170,6 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                         MemberInfo memberInfo = memberInfoList.get(_selectIndex);
                         memberInfo.setFansQuantity(memberInfo.getFansQuantity() + 1);
                         attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
-                        adapter.notifyItemChanged(_selectIndex);
                         activity.sendBroadcast(new Intent("lobster_attentionList"));
                     }
                 }
@@ -188,7 +185,6 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 MemberInfo memberInfo = memberInfoList.get(_selectIndex);
                 memberInfo.setFansQuantity(memberInfo.getFansQuantity() - 1);
                 attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
-                adapter.notifyItemChanged(_selectIndex);
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
             }
         }, activity).setOtherUserId(otherUserId);

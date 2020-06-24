@@ -118,11 +118,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     public void back(View view) {
         super.back(view);
         finishRefreshReceiver.unregisterReceiver();
-        Intent data = new Intent("lobster_attention");
-        if (goodNum > 0) {
-            data.putExtra("goodNum", goodNum);
-        }
-        activity.sendBroadcast(data);
         activity.finish();
     }
 
@@ -335,6 +330,11 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 goodNum = discoverInfo.getGoodNum() + 1;
                 discoverInfo.setGoodNum(goodNum);
                 mBinding.setViewModel(DiscoverDetailViewModel.this);
+
+                Intent data = new Intent("lobster_doGood");
+                data.putExtra("goodNum", goodNum);
+                data.putExtra("friendDynId", friendDynId);
+                activity.sendBroadcast(data);
             }
 
             @Override
@@ -343,6 +343,9 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     if (TextUtils.equals(e.getMessage(), "已经赞过了")) {
                         goodDb.saveGood(new CollectID(friendDynId));
                         mBinding.setViewModel(DiscoverDetailViewModel.this);
+                        Intent data = new Intent("lobster_doGood");
+                        data.putExtra("friendDynId", friendDynId);
+                        activity.sendBroadcast(data);
                     }
                 }
             }
@@ -359,6 +362,10 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 goodNum = discoverInfo.getGoodNum() - 1;
                 discoverInfo.setGoodNum(goodNum);
                 mBinding.setViewModel(DiscoverDetailViewModel.this);
+                Intent data = new Intent("lobster_doGood");
+                data.putExtra("goodNum", goodNum);
+                data.putExtra("friendDynId", friendDynId);
+                activity.sendBroadcast(data);
             }
         }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);

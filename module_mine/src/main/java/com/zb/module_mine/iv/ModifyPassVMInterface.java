@@ -6,8 +6,6 @@ import com.zb.lib_base.model.ImageCaptcha;
 
 public interface ModifyPassVMInterface {
 
-    void select(int index);
-
     void modify(View view);
 
     void changeType(View view);

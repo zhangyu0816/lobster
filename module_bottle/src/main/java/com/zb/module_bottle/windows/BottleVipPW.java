@@ -16,7 +16,7 @@ public class BottleVipPW extends BasePopupWindow {
     private int preIndex = -1;
 
     public BottleVipPW(RxAppCompatActivity activity, View parentView) {
-        super(activity, parentView, true);
+        super(activity, parentView, false);
         initUI();
     }
 
@@ -28,8 +28,16 @@ public class BottleVipPW extends BasePopupWindow {
     @Override
     public void initUI() {
         adapter = new BottleAdapter<>(activity, R.layout.item_bottle_vip, MineApp.vipInfoList, this);
+        preIndex = 1;
+        adapter.setSelectIndex(1);
         mBinding.setVariable(BR.pw, this);
         mBinding.setVariable(BR.adapter, adapter);
+    }
+
+    @Override
+    public void cancel(View view) {
+        super.cancel(view);
+        dismiss();
     }
 
     @Override

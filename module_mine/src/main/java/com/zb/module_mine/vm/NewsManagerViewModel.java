@@ -13,7 +13,9 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.TextPW;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.iv.NewsManagerVMInterface;
 
@@ -46,19 +48,22 @@ public class NewsManagerViewModel extends BaseViewModel implements NewsManagerVM
     @Override
     public void right(View view) {
         super.right(view);
-        readNewDynMsgAllApi api = new readNewDynMsgAllApi(new HttpOnNextListener() {
-            @Override
-            public void onNext(Object o) {
-                MineApp.mineNewsCount.setFriendDynamicGiftNum(0);
-                MineApp.mineNewsCount.setFriendDynamicGoodNum(0);
-                MineApp.mineNewsCount.setFriendDynamicReviewNum(0);
-                mBinding.setVariable(BR.mineNewsCount, MineApp.mineNewsCount);
-                if (MineApp.mineNewsCount.getSystemNewsNum() > 0) {
-                    systemHistoryMsgList();
+        new TextPW(activity, mBinding.getRoot(), "清除消息", "清除后，消息无法恢复", "清除", () -> {
+            readNewDynMsgAllApi api = new readNewDynMsgAllApi(new HttpOnNextListener() {
+                @Override
+                public void onNext(Object o) {
+                    MineApp.mineNewsCount.setFriendDynamicGiftNum(0);
+                    MineApp.mineNewsCount.setFriendDynamicGoodNum(0);
+                    MineApp.mineNewsCount.setFriendDynamicReviewNum(0);
+                    mBinding.setVariable(BR.mineNewsCount, MineApp.mineNewsCount);
+                    if (MineApp.mineNewsCount.getSystemNewsNum() > 0) {
+                        systemHistoryMsgList();
+                    }
+                    SCToastUtil.showToast(activity, "已全部清除", true);
                 }
-            }
-        }, activity).setReviewType(0);
-        HttpManager.getInstance().doHttpDeal(api);
+            }, activity).setReviewType(0);
+            HttpManager.getInstance().doHttpDeal(api);
+        });
     }
 
     @Override

@@ -1,7 +1,9 @@
 package com.zb.module_mine.vm;
 
 import android.os.CountDownTimer;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -27,6 +29,7 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
     private MineModifyPassBinding mBinding;
     private int second = 120;
     private CountDownTimer timer;
+    private boolean isTimer = false;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -35,31 +38,55 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
         mBinding.setRemark("获取验证码");
         timer = new CountDownTimer(second * 1000, 1000) {
             public void onTick(long millisUntilFinished) {
+                isTimer = true;
                 mBinding.setRemark(MineApp.getInstance().getResources().getString(R.string.code_second, millisUntilFinished / 1000));
             }
 
             public void onFinish() {
+                isTimer = false;
                 mBinding.setRemark("获取验证码");
                 timer.cancel();
             }
         };
+
+        mBinding.edNew.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mBinding.setShowNewPass(s.length() > 5);
+            }
+        });
+        mBinding.edSure.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mBinding.setShowSurePass(s.length() > 5 && TextUtils.equals(s.toString(), mBinding.getNewPass()));
+            }
+        });
     }
 
     @Override
     public void back(View view) {
         super.back(view);
         activity.finish();
-    }
-
-    @Override
-    public void select(int index) {
-        if (index == 1) {
-            mBinding.setShowNewPass(!mBinding.getShowNewPass());
-            mBinding.edNew.setTransformationMethod(mBinding.getShowNewPass() ? HideReturnsTransformationMethod.getInstance() : PasswordTransformationMethod.getInstance());
-        } else {
-            mBinding.setShowSurePass(!mBinding.getShowSurePass());
-            mBinding.edSure.setTransformationMethod(mBinding.getShowSurePass() ? HideReturnsTransformationMethod.getInstance() : PasswordTransformationMethod.getInstance());
-        }
     }
 
     @Override
@@ -120,6 +147,7 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
 
     @Override
     public void getCode(View view) {
+        if (isTimer) return;
         if (mBinding.getPhone().isEmpty()) {
             SCToastUtil.showToast(activity, "请输入手机号", true);
             return;
@@ -131,8 +159,6 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
         new ImageCaptchaPW(activity, mBinding.getRoot(), new ImageCaptchaPW.CallBack() {
             @Override
             public void success(ImageCaptcha imageCaptcha, String code) {
-                mBinding.setRemark(MineApp.getInstance().getResources().getString(R.string.code_second, second));
-                timer.start();
                 findPassCaptcha(imageCaptcha, code);
             }
 
@@ -150,6 +176,12 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "短信验证码发送成功，请注意查看", true);
+                mBinding.setRemark(MineApp.getInstance().getResources().getString(R.string.code_second, second));
+                timer.start();
+            }
+
+            @Override
+            public void onError(Throwable e) {
                 mBinding.setRemark("获取验证码");
                 timer.cancel();
             }

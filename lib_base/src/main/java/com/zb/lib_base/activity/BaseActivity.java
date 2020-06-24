@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.PwsPerformBinding;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -42,6 +43,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        MineApp.addActivity(this);
         super.onCreate(savedInstanceState);
         activity = this;
         mBinding = DataBindingUtil.setContentView(this, getRes());
@@ -63,6 +65,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        MineApp.removeActivity(this);
         if (mBinding != null)
             mBinding.unbind();
         super.onDestroy();

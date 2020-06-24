@@ -30,10 +30,10 @@
     <RelativeLayout
         onClickDelayed="@{v->pw.selectIndex(position)}"
         viewHeightSize="@{-2}"
-        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.3f)}"
+        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.235f)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp">
+        android:layout_marginEnd="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -89,12 +89,12 @@
         </LinearLayout>
 
         <TextView
-            viewHeightSize="@{36}"
+            viewHeightSize="@{-2}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
             android:layout_width="150dp"
-            android:layout_height="32dp"
+            android:layout_height="18dp"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/btn_bg_red_fe4_radius40"
+            android:background="@drawable/btn_bg_red_fe4_radius18"
             android:gravity="center"
             android:text='@{String.format("省%.1f元",item.originalPrice-item.price)}'
             android:textColor="@android:color/white"

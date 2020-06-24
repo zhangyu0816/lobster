@@ -53,7 +53,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     private MineInfo mineInfo;
     private MemberInfo memberInfo;
     private int prePosition = -1;
-    private BaseReceiver attentionReceiver;
+    private BaseReceiver doGoodReceiver;
     private BaseReceiver finishRefreshReceiver;
     private BaseReceiver mainSelectReceiver;
     private long friendDynId = 0;
@@ -70,16 +70,20 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 onRefreshForNet(null);
             }
         };
-        attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
+        doGoodReceiver = new BaseReceiver(activity, "lobster_doGood") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (prePosition == -1) return;
+                long friendDynId = intent.getLongExtra("friendDynId", 0);
                 int goodNum = intent.getIntExtra("goodNum", 0);
-                if (goodNum != 0) {
-                    discoverInfoList.get(prePosition).setGoodNum(goodNum);
-                    adapter.notifyItemChanged(prePosition);
+                for (int i = 0; i < discoverInfoList.size(); i++) {
+                    if (discoverInfoList.get(i).getFriendDynId() == friendDynId) {
+                        if (goodNum != 0) {
+                            discoverInfoList.get(i).setGoodNum(goodNum);
+                        }
+                        adapter.notifyItemChanged(i);
+                        break;
+                    }
                 }
-                prePosition = -1;
             }
         };
         finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
@@ -103,7 +107,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
 
     public void onDestroy() {
         publishReceiver.unregisterReceiver();
-        attentionReceiver.unregisterReceiver();
+        doGoodReceiver.unregisterReceiver();
         finishRefreshReceiver.unregisterReceiver();
         mainSelectReceiver.unregisterReceiver();
     }
@@ -254,7 +258,6 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
 
     @Override
     public void clickItem(int position) {
-        prePosition = position;
         DiscoverInfo discoverInfo = discoverInfoList.get(position);
         if (discoverInfo.getVideoUrl().isEmpty())
             ActivityUtils.getHomeDiscoverDetail(discoverInfo.getFriendDynId());
@@ -282,7 +285,6 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 goodDb.saveGood(new CollectID(friendDynId));
                 discoverInfo.setGoodNum(discoverInfo.getGoodNum() + 1);
                 adapter.notifyItemChanged(prePosition);
-                prePosition = -1;
             }
 
             @Override
@@ -291,7 +293,6 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                     if (TextUtils.equals(e.getMessage(), "已经赞过了")) {
                         goodDb.saveGood(new CollectID(friendDynId));
                         adapter.notifyItemChanged(prePosition);
-                        prePosition = -1;
                     }
                 }
             }
@@ -307,7 +308,6 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 goodDb.deleteGood(friendDynId);
                 discoverInfo.setGoodNum(discoverInfo.getGoodNum() - 1);
                 adapter.notifyItemChanged(prePosition);
-                prePosition = -1;
             }
         }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);

@@ -71,8 +71,8 @@ public class VipAdPW extends BasePopupWindow {
         adapter = new CardAdapter<>(activity, R.layout.item_vip_ad, MineApp.vipInfoList, this);
         preIndex = 1;
         adapter.setSelectIndex(1);
-        mBinding.setVariable(BR.pw, this);
 
+        mBinding.setVariable(BR.pw, this);
         mBinding.setVariable(BR.adapter, adapter);
 
         binding = (PwsVipAdBinding) mBinding;

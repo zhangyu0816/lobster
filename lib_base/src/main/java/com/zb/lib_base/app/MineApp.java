@@ -1,5 +1,6 @@
 package com.zb.lib_base.app;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -34,6 +35,7 @@ import com.zb.lib_base.views.CutImageView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -75,6 +77,8 @@ public class MineApp extends MultiDexApplication {
     public static MineNewsCount mineNewsCount;
     public static ContactNum contactNum;
     public static int noReadBottleNum = 0;
+
+    private static LinkedList<Activity> mActivityList = new LinkedList<>();
 
     static {
         //设置全局的Header构建器
@@ -201,6 +205,7 @@ public class MineApp extends MultiDexApplication {
         }
         return cardId.charAt(cardId.length() - 1) == bit;
     }
+
     //从不含校验位的银行卡卡号采用 Luhm 校验算法获得校验位
     private static char getBankCardCheckCode(String nonCheckCodeCardId) {
         if (nonCheckCodeCardId == null || nonCheckCodeCardId.trim().length() == 0
@@ -219,5 +224,52 @@ public class MineApp extends MultiDexApplication {
             luhmSum += k;
         }
         return (luhmSum % 10 == 0) ? '0' : (char) ((10 - luhmSum % 10) + '0');
+    }
+
+    /**
+     * Activity开启时添加Activity到集合
+     *
+     * @param activity
+     */
+    public static void addActivity(Activity activity) {
+        mActivityList.addFirst(activity);
+    }
+
+    /**
+     * Activity退出时清除集合中的Activity.
+     *
+     * @param activity 被移除的activity
+     */
+    public static void removeActivity(Activity activity) {
+        mActivityList.remove(activity);
+    }
+
+    /**
+     * 清除 除了自己外其他activity
+     *
+     * @param oneself 不被移除的activity
+     */
+    public static void removeOtherActivity(Activity oneself) {
+        try {
+            for (Activity activity : mActivityList) {
+                if (activity != null && !activity.getLocalClassName().equals(oneself.getLocalClassName())) {
+                    activity.finish();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * 退出应用时调用
+     */
+    public static void exit() {
+        for (Activity activity : mActivityList) {
+            if (activity != null) {
+                activity.finish();
+            }
+        }
     }
 }

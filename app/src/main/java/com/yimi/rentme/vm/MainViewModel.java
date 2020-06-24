@@ -397,7 +397,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 chatList.setImage("be_like_logo_icon");
                 chatList.setNick("查看谁喜欢我");
                 chatList.setMsgType(1);
-                chatList.setStanza("小姐姐们正在焦急等待你们的回应！");
+                chatList.setStanza("TA们喜欢你，正等待你回应");
                 chatList.setNoReadNum(MineApp.contactNum.getBeLikeCount());
                 chatList.setChatType(1);
                 chatListDb.saveChatList(chatList);
@@ -428,7 +428,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 chatList.setImage("bottle_logo_icon");
                 chatList.setNick("漂流瓶");
                 chatList.setMsgType(1);
-                chatList.setStanza(o == 0 ? "暂无消息" : "您有新消息");
+                chatList.setStanza(o == 0 ? "茫茫人海中，需要流浪到何时" : "您有新消息");
                 chatList.setNoReadNum(o);
                 chatList.setChatType(2);
                 chatListDb.saveChatList(chatList);
