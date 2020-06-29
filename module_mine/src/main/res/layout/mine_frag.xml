@@ -135,8 +135,8 @@
                             imageUrl="@{mineInfo.image}"
                             isCircle="@{true}"
                             onClickDelayed="@{viewModel::toEditMember}"
-                            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.23f)}"
-                            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.23f)}"
+                            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.2f)}"
+                            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.2f)}"
                             android:layout_width="80dp"
                             android:layout_height="80dp" />
 
@@ -144,7 +144,7 @@
                             android:id="@+id/num_linear"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="15dp"
+                            android:layout_marginStart="50dp"
                             android:layout_toEndOf="@+id/iv_image"
                             android:orientation="horizontal">
 
@@ -153,26 +153,33 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:gravity="center"
                                 android:orientation="vertical">
 
-                                <TextView
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:singleLine="true"
-                                    android:text='@{String.format("%d",contactNum.concernCount)}'
-                                    android:textColor="@color/black_252"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold"
-                                    tools:text="35" />
+                                    android:gravity="center"
+                                    android:orientation="vertical">
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="5dp"
-                                    android:text="关注"
-                                    android:textColor="@color/black_c3b"
-                                    android:textSize="12sp" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:singleLine="true"
+                                        android:text='@{String.format("%d",contactNum.concernCount)}'
+                                        android:textColor="@color/black_252"
+                                        android:textSize="18sp"
+                                        android:textStyle="bold"
+                                        tools:text="35" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:text="关注"
+                                        android:textColor="@color/black_c3b"
+                                        android:textSize="12sp" />
+                                </LinearLayout>
+
                             </LinearLayout>
 
                             <LinearLayout
@@ -207,41 +214,48 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:gravity="center"
+                                android:gravity="right"
                                 android:orientation="vertical">
 
-                                <RelativeLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content">
-
-                                    <TextView
-                                        android:id="@+id/tv_beLike"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:singleLine="true"
-                                        android:text='@{String.format("%d",contactNum.beLikeCount)}'
-                                        android:textColor="@color/black_252"
-                                        android:textSize="18sp"
-                                        android:textStyle="bold"
-                                        tools:text="3124125" />
-
-                                    <TextView
-                                        android:layout_width="5dp"
-                                        android:layout_height="5dp"
-                                        android:layout_alignEnd="@+id/tv_beLike"
-                                        android:layout_marginTop="5dp"
-                                        android:background="@drawable/circle_red"
-                                        android:visibility="@{hasNewBeLike?View.VISIBLE:View.GONE}" />
-                                </RelativeLayout>
-
-
-                                <TextView
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="5dp"
-                                    android:text="被喜欢"
-                                    android:textColor="@color/black_c3b"
-                                    android:textSize="12sp" />
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <RelativeLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content">
+
+                                        <TextView
+                                            android:id="@+id/tv_beLike"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:singleLine="true"
+                                            android:text='@{String.format("%d",contactNum.beLikeCount)}'
+                                            android:textColor="@color/black_252"
+                                            android:textSize="18sp"
+                                            android:textStyle="bold"
+                                            tools:text="3124125" />
+
+                                        <TextView
+                                            android:layout_width="5dp"
+                                            android:layout_height="5dp"
+                                            android:layout_alignEnd="@+id/tv_beLike"
+                                            android:layout_marginTop="5dp"
+                                            android:background="@drawable/circle_red"
+                                            android:visibility="@{hasNewBeLike?View.VISIBLE:View.GONE}" />
+                                    </RelativeLayout>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:text="被喜欢"
+                                        android:textColor="@color/black_c3b"
+                                        android:textSize="12sp" />
+                                </LinearLayout>
+
                             </LinearLayout>
                         </LinearLayout>
 
@@ -249,11 +263,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/num_linear"
-                            android:layout_marginStart="15dp"
+                            android:layout_marginStart="50dp"
                             android:layout_marginTop="10dp"
                             android:layout_toEndOf="@+id/iv_image"
                             android:singleLine="true"
-                            android:text="@{mineInfo.personalitySign}"
+                            android:text="@{mineInfo.personalitySign.isEmpty()?@string/mine_sign_content:mineInfo.personalitySign}"
                             android:textColor="@color/black_4d4"
                             android:textSize="14sp"
                             android:textStyle="bold"

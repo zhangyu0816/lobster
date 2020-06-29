@@ -36,6 +36,7 @@ public class MemberInfo extends BaseObservable {
     private String serviceTags = "";
     private String newDycCreateTime = "";  //最新创建时间   3天内的属于新增动态
     private int idAttest;  //实名认证 V  0未认证  1认证
+    private int faceAttest;  //人脸 V  0未认证  1认证
     private int newDycType; // 最新的动态类型       配上对应的文字
     private int attentionStatus; //关注关系  1 关注  0 未关注
 //    未知   0
@@ -65,7 +66,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.userId);
     }
 
-    @Bindable public String getNick() {
+    @Bindable
+    public String getNick() {
         return nick;
     }
 
@@ -74,7 +76,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.nick);
     }
 
-    @Bindable public String getImage() {
+    @Bindable
+    public String getImage() {
         return image;
     }
 
@@ -83,7 +86,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.image);
     }
 
-    @Bindable public String getMoreImages() {
+    @Bindable
+    public String getMoreImages() {
         return moreImages;
     }
 
@@ -92,7 +96,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.moreImages);
     }
 
-    @Bindable public String getPersonalitySign() {
+    @Bindable
+    public String getPersonalitySign() {
         return personalitySign;
     }
 
@@ -101,7 +106,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.personalitySign);
     }
 
-    @Bindable public String getShopUrl() {
+    @Bindable
+    public String getShopUrl() {
         return shopUrl;
     }
 
@@ -110,7 +116,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.shopUrl);
     }
 
-    @Bindable public String getBirthday() {
+    @Bindable
+    public String getBirthday() {
         return birthday;
     }
 
@@ -119,7 +126,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.birthday);
     }
 
-    @Bindable public int getSex() {
+    @Bindable
+    public int getSex() {
         return sex;
     }
 
@@ -128,7 +136,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.sex);
     }
 
-    @Bindable public int getHeight() {
+    @Bindable
+    public int getHeight() {
         return height;
     }
 
@@ -137,7 +146,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.height);
     }
 
-    @Bindable public int getWeight() {
+    @Bindable
+    public int getWeight() {
         return weight;
     }
 
@@ -146,7 +156,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.weight);
     }
 
-    @Bindable public int getConstellation() {
+    @Bindable
+    public int getConstellation() {
         return constellation;
     }
 
@@ -155,7 +166,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.constellation);
     }
 
-    @Bindable public int getBloodType() {
+    @Bindable
+    public int getBloodType() {
         return bloodType;
     }
 
@@ -164,7 +176,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.bloodType);
     }
 
-    @Bindable public String getJob() {
+    @Bindable
+    public String getJob() {
         return job;
     }
 
@@ -173,7 +186,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.job);
     }
 
-    @Bindable public int getEducation() {
+    @Bindable
+    public int getEducation() {
         return education;
     }
 
@@ -182,7 +196,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.education);
     }
 
-    @Bindable public long getProvinceId() {
+    @Bindable
+    public long getProvinceId() {
         return provinceId;
     }
 
@@ -191,7 +206,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.provinceId);
     }
 
-    @Bindable public long getCityId() {
+    @Bindable
+    public long getCityId() {
         return cityId;
     }
 
@@ -200,7 +216,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.cityId);
     }
 
-    @Bindable public long getDistrictId() {
+    @Bindable
+    public long getDistrictId() {
         return districtId;
     }
 
@@ -209,7 +226,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.districtId);
     }
 
-    @Bindable public int getRstatus() {
+    @Bindable
+    public int getRstatus() {
         return rstatus;
     }
 
@@ -218,7 +236,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.rstatus);
     }
 
-    @Bindable public String getRemark() {
+    @Bindable
+    public String getRemark() {
         return remark;
     }
 
@@ -227,7 +246,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.remark);
     }
 
-    @Bindable public int getAttentionQuantity() {
+    @Bindable
+    public int getAttentionQuantity() {
         return attentionQuantity;
     }
 
@@ -236,7 +256,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.attentionQuantity);
     }
 
-    @Bindable public int getFansQuantity() {
+    @Bindable
+    public int getFansQuantity() {
         return fansQuantity;
     }
 
@@ -245,7 +266,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.fansQuantity);
     }
 
-    @Bindable public int getPopularity() {
+    @Bindable
+    public int getPopularity() {
         return popularity;
     }
 
@@ -254,7 +276,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.popularity);
     }
 
-    @Bindable public int getPollQuantity() {
+    @Bindable
+    public int getPollQuantity() {
         return pollQuantity;
     }
 
@@ -263,7 +286,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.pollQuantity);
     }
 
-    @Bindable public int getRentQuantity() {
+    @Bindable
+    public int getRentQuantity() {
         return rentQuantity;
     }
 
@@ -272,7 +296,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.rentQuantity);
     }
 
-    @Bindable public int getBeLikeQuantity() {
+    @Bindable
+    public int getBeLikeQuantity() {
         return beLikeQuantity;
     }
 
@@ -281,7 +306,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.beLikeQuantity);
     }
 
-    @Bindable public int getMemberType() {
+    @Bindable
+    public int getMemberType() {
         return memberType;
     }
 
@@ -290,7 +316,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.memberType);
     }
 
-    @Bindable public String getServiceTags() {
+    @Bindable
+    public String getServiceTags() {
         return serviceTags;
     }
 
@@ -299,7 +326,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.serviceTags);
     }
 
-    @Bindable public String getNewDycCreateTime() {
+    @Bindable
+    public String getNewDycCreateTime() {
         return newDycCreateTime;
     }
 
@@ -308,7 +336,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.newDycCreateTime);
     }
 
-    @Bindable public int getIdAttest() {
+    @Bindable
+    public int getIdAttest() {
         return idAttest;
     }
 
@@ -317,7 +346,8 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.idAttest);
     }
 
-    @Bindable public int getNewDycType() {
+    @Bindable
+    public int getNewDycType() {
         return newDycType;
     }
 
@@ -326,12 +356,23 @@ public class MemberInfo extends BaseObservable {
         notifyPropertyChanged(BR.newDycType);
     }
 
-    @Bindable public int getAttentionStatus() {
+    @Bindable
+    public int getAttentionStatus() {
         return attentionStatus;
     }
 
     public void setAttentionStatus(int attentionStatus) {
         this.attentionStatus = attentionStatus;
         notifyPropertyChanged(BR.attentionStatus);
+    }
+
+    @Bindable
+    public int getFaceAttest() {
+        return faceAttest;
+    }
+
+    public void setFaceAttest(int faceAttest) {
+        this.faceAttest = faceAttest;
+        notifyPropertyChanged(BR.faceAttest);
     }
 }

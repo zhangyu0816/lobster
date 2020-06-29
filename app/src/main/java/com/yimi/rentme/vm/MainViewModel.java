@@ -275,7 +275,16 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         rechargeDiscountListApi api = new rechargeDiscountListApi(new HttpOnNextListener<List<RechargeInfo>>() {
             @Override
             public void onNext(List<RechargeInfo> o) {
-                MineApp.rechargeInfoList.addAll(o);
+                for (RechargeInfo item : o) {
+                    if (item.getMoneyType() == 0) {
+                        item.setContent(String.format("送%.1f虾菇币", item.getExtraGiveMoney()));
+                    } else if (item.getMoneyType() == 1) {
+                        item.setContent("最受欢迎");
+                    } else {
+                        item.setContent("优惠最大");
+                    }
+                    MineApp.rechargeInfoList.add(item);
+                }
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

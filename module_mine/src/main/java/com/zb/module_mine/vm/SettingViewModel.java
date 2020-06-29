@@ -1,13 +1,18 @@
 package com.zb.module_mine.vm;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.api.humanFaceStatusApi;
 import com.zb.lib_base.api.loginOutApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.http.HttpTimeException;
+import com.zb.lib_base.model.FaceStatus;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
@@ -15,12 +20,15 @@ import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.BR;
+import com.zb.module_mine.databinding.MineSettingBinding;
 import com.zb.module_mine.iv.SettingVMInterface;
 
 import androidx.databinding.ViewDataBinding;
 
 public class SettingViewModel extends BaseViewModel implements SettingVMInterface {
     private MineInfo mineInfo;
+    private BaseReceiver updateWalletReceiver;
+    private MineSettingBinding mBinding;
 
     @Override
     public void back(View view) {
@@ -32,12 +40,31 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
+        mBinding = (MineSettingBinding) binding;
         mineInfo = mineInfoDb.getMineInfo();
+        humanFaceStatus();
+        mBinding.setVariable(BR.walletInfo, MineApp.walletInfo);
+        updateWalletReceiver = new BaseReceiver(activity, "lobster_updateWallet") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.setVariable(BR.walletInfo, MineApp.walletInfo);
+            }
+        };
+    }
+
+    public void onDestroy() {
+        updateWalletReceiver.unregisterReceiver();
     }
 
     @Override
     public void toRealName(View view) {
-        ActivityUtils.getMineRealName();
+        if (mBinding.getIsChecked() == -1 || mBinding.getIsChecked() == 2)
+            ActivityUtils.getMineRealName();
+        else if (mBinding.getIsChecked() == 0) {
+            SCToastUtil.showToast(activity, "人脸信息正在审核中，请耐心等待", true);
+        } else {
+            SCToastUtil.showToast(activity, "人脸信息验证成功，无需再次提交", true);
+        }
     }
 
     @Override
@@ -82,7 +109,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
 
     @Override
     public void toAboutUs(View view) {
-        ActivityUtils.getMineWeb("关于我们", HttpManager.BASE_URL + "mobile/yuenar_about_us.html");
+        ActivityUtils.getMineWeb("关于我们", HttpManager.BASE_URL + "mobile/xiagu_about_us.html");
     }
 
     @Override
@@ -103,6 +130,24 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
                 MineApp.exit();
                 ActivityUtils.getRegisterMain();
                 activity.finish();
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void humanFaceStatus() {
+        humanFaceStatusApi api = new humanFaceStatusApi(new HttpOnNextListener<FaceStatus>() {
+            @Override
+            public void onNext(FaceStatus o) {
+                mBinding.setIsChecked(o.getIsChecked());
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    mBinding.setIsChecked(-1);
+                }
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

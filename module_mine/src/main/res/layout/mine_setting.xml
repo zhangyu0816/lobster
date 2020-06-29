@@ -3,6 +3,10 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
         <variable
             name="viewModel"
             type="com.zb.module_mine.vm.SettingViewModel" />
@@ -14,6 +18,14 @@
         <variable
             name="cacheSize"
             type="String" />
+
+        <variable
+            name="isChecked"
+            type="Integer" />
+
+        <variable
+            name="walletInfo"
+            type="com.zb.lib_base.model.WalletInfo" />
 
     </data>
 
@@ -68,11 +80,21 @@
                         android:padding="15dp">
 
                         <TextView
+                            android:id="@+id/tv_real"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="15dp"
                             android:text="真人认证"
                             android:textColor="@color/black_4d4"
                             android:textSize="14sp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@+id/tv_real"
+                            android:background="@{ObjectUtils.getRealCheck(isChecked)}" />
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -102,12 +124,17 @@
                             android:textColor="@color/black_4d4"
                             android:textSize="14sp" />
 
-                        <ImageView
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:background="@mipmap/arrow_small_right_icon" />
+                            android:drawableEnd="@mipmap/arrow_small_right_icon"
+                            android:drawablePadding="5dp"
+                            android:gravity="center"
+                            android:text='@{String.format("￥%.2f",walletInfo.wallet)}'
+                            android:textColorHint="@color/black_827"
+                            android:textSize="14sp" />
                     </RelativeLayout>
 
                     <View
@@ -191,7 +218,7 @@
                         android:layout_marginStart="15dp"
                         android:layout_marginEnd="15dp"
                         android:background="@color/black_efe"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <RelativeLayout
                         onClickDelayed="@{viewModel::toNotice}"

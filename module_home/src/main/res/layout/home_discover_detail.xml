@@ -143,6 +143,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
                                     android:layout_marginEnd="15dp"
                                     android:background="@{viewModel.discoverInfo==null?@drawable/default_bg:@drawable/empty_bg}"
                                     android:minWidth="30dp"
@@ -155,15 +156,15 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:singleLine="true"
                                     android:layout_below="@+id/tv_nick"
-                                    android:textSize="11sp"
-                                    android:drawablePadding="3dp"
-                                    android:textColor="@color/black_827"
                                     android:layout_marginTop="5dp"
                                     android:drawableStart="@mipmap/address_small_icon"
+                                    android:drawablePadding="3dp"
+                                    android:singleLine="true"
                                     android:text="@{viewModel.discoverInfo.addressInfo}"
-                                    tools:text="温州市"/>
+                                    android:textColor="@color/black_827"
+                                    android:textSize="11sp"
+                                    tools:text="温州市" />
 
                             </RelativeLayout>
 
@@ -196,8 +197,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}">
+                                android:orientation="vertical">
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
@@ -223,72 +223,28 @@
 
                                 <androidx.recyclerview.widget.RecyclerView
                                     adapter="@{viewModel.rewardAdapter}"
-                                    gridNum="@{6}"
+                                    gridNum="@{10}"
                                     recyclerType="@{2}"
                                     size="@{10}"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_horizontal"
-                                    android:layout_marginStart="15dp"
-                                    android:layout_marginTop="15dp"
-                                    android:layout_marginEnd="15dp" />
-                            </LinearLayout>
-
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.VISIBLE:View.GONE}">
-
-                                <LinearLayout
-                                    android:id="@+id/rewardNum_linear"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center_horizontal"
-                                    android:layout_marginStart="15dp"
-                                    android:orientation="horizontal">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text='@{String.format("%d",viewModel.discoverInfo.rewardNum)}'
-                                        android:textColor="#FE4F71"
-                                        android:textSize="12sp"
-                                        tools:text="7" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="人送礼物"
-                                        android:textColor="@color/black_827"
-                                        android:textSize="12sp" />
-                                </LinearLayout>
-
-                                <androidx.recyclerview.widget.RecyclerView
-                                    adapter="@{viewModel.rewardAdapter}"
-                                    gridNum="@{6}"
-                                    recyclerType="@{2}"
-                                    size="@{10}"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@+id/rewardNum_linear"
-                                    android:layout_marginStart="15dp"
-                                    android:layout_marginTop="15dp" />
+                                    android:layout_margin="15dp" />
 
                                 <TextView
                                     onClickDelayed="@{viewModel::toRewardList}"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginEnd="15dp"
+                                    android:layout_gravity="center_horizontal"
                                     android:drawableEnd="@mipmap/arrow_right_icon"
                                     android:drawablePadding="5dp"
                                     android:gravity="center"
                                     android:text="查看礼物详情"
                                     android:textColor="@color/black_827"
                                     android:textSize="14sp"
-                                    android:textStyle="bold" />
-                            </RelativeLayout>
+                                    android:textStyle="bold"
+                                    android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.VISIBLE:View.GONE}" />
+                            </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.appcompat.widget.Toolbar>

@@ -103,6 +103,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="10dp"
+                    android:visibility="@{item.memberType==2?View.VISIBLE:View.GONE}"
+                    app:srcCompat="@mipmap/vip_icon" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:visibility="@{item.faceAttest==1?View.VISIBLE:View.GONE}"
                     app:srcCompat="@mipmap/real_icon" />
             </LinearLayout>
 
@@ -222,7 +231,6 @@
             android:layout_alignParentBottom="true"
             android:layout_margin="15dp"
             android:background="@mipmap/super_like_icon" />
-
 
     </RelativeLayout>
 </layout>

@@ -2,16 +2,17 @@ package com.zb.module_register.vm;
 
 import android.Manifest;
 import android.os.Build;
+import android.os.Handler;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.RulePW;
 import com.zb.module_register.iv.MainVMInterface;
 
 import androidx.databinding.ViewDataBinding;
@@ -34,19 +35,43 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     @Override
     public void selectSex(int sex) {
         MineApp.registerInfo.setSex(sex);
-        ActivityUtils.getRegisterNick();
-        activity.finish();
+        showRule(1);
     }
 
     @Override
     public void toLogin(View view) {
-        ActivityUtils.getRegisterPhone(true);
-        activity.finish();
+        showRule(2);
     }
 
-    @Override
-    public void toRule(View view) {
-        ActivityUtils.getMineWeb("隐私服务条款", HttpManager.BASE_URL + "mobile/yuenar_reg_protocol.html");
+    private void showRule(int type) {
+        if (PreferenceUtil.readIntValue(activity, "ruleType1") == 0) {
+            new Handler().postDelayed(() -> new RulePW(activity, mBinding.getRoot(), 1, new RulePW.CallBack() {
+                @Override
+                public void sureBack() {
+                    PreferenceUtil.saveIntValue(activity, "ruleType1", 1);
+                    if (type == 1) {
+                        ActivityUtils.getRegisterNick();
+                        activity.finish();
+                    } else if (type == 2) {
+                        ActivityUtils.getRegisterPhone(true);
+                        activity.finish();
+                    }
+                }
+
+                @Override
+                public void cancelBack() {
+
+                }
+            }), 200);
+        } else {
+            if (type == 1) {
+                ActivityUtils.getRegisterNick();
+                activity.finish();
+            } else if (type == 2) {
+                ActivityUtils.getRegisterPhone(true);
+                activity.finish();
+            }
+        }
     }
 
     /**

@@ -60,6 +60,7 @@ public class ObjectUtils {
     public static int getVipIntroBgHeight(float scale) {
         return (int) (getViewSizeByWidth(scale) * 458f / 1035f);
     }
+
     public static int getVipExposureHeight(int width) {
         return (int) (getViewSizeByWidthFromMax(width) * 579f / 810f);
     }
@@ -122,6 +123,18 @@ public class ObjectUtils {
             return R.mipmap.crown_bg_2;
         } else {
             return R.mipmap.crown_bg_3;
+        }
+    }
+
+    public static Drawable getRealCheck(int isChecked) {
+        if (isChecked == -1) {
+            return MineApp.getInstance().getResources().getDrawable(R.mipmap.real_un_icon);
+        } else if (isChecked == 0) {
+            return MineApp.getInstance().getResources().getDrawable(R.mipmap.real_checking_icon);
+        } else if (isChecked == 1) {
+            return MineApp.getInstance().getResources().getDrawable(R.mipmap.real_icon);
+        } else {
+            return MineApp.getInstance().getResources().getDrawable(R.mipmap.real_fail_icon);
         }
     }
 

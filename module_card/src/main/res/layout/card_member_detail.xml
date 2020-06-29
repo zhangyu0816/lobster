@@ -138,7 +138,7 @@
                                 android:minWidth="60dp"
                                 android:text="@{viewModel.memberInfo.remark.isEmpty()?viewModel.memberInfo.nick:viewModel.memberInfo.remark}"
                                 android:textColor="@color/black_252"
-                                android:textSize="16sp"
+                                android:textSize="25sp"
                                 android:textStyle="bold"
                                 tools:text="默认仓库" />
 
@@ -154,7 +154,7 @@
                                 android:id="@+id/imageView5"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:visibility="@{viewModel.memberInfo.idAttest==1?View.VISIBLE:View.GONE}"
+                                android:visibility="@{viewModel.memberInfo.faceAttest==1?View.VISIBLE:View.GONE}"
                                 app:srcCompat="@mipmap/real_icon" />
                         </LinearLayout>
 
@@ -188,7 +188,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@{viewModel.memberInfo==null?@drawable/default_bg:@drawable/empty_bg}"
-                                android:text="@{viewModel.memberInfo.personalitySign}"
+                                android:text="@{viewModel.memberInfo.personalitySign.isEmpty()?@string/sign_content:viewModel.memberInfo.personalitySign}"
                                 android:textColor="@color/black_4d4"
                                 android:textSize="14sp"
                                 tools:text="默认仓库" />
@@ -201,7 +201,8 @@
                             android:layout_marginStart="15dp"
                             android:layout_marginTop="15dp"
                             android:layout_marginEnd="15dp"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:visibility="@{viewModel.memberInfo.getServiceTags().length() > 0?View.VISIBLE:View.GONE}">
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -241,6 +242,14 @@
                         app:tabRippleColor="@android:color/transparent"
                         app:tabSelectedTextColor="@color/black_4d4"
                         app:tabTextColor="@color/black_c3b" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginTop="22dp"
+                        android:background="@color/black_efe"/>
                 </RelativeLayout>
 
 

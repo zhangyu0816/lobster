@@ -138,7 +138,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
         if (position == 2) {
             // 被喜欢
             if (likeDb.hasLike(otherUserId)) {
-                new TextPW(activity, mBinding.getRoot(), "解除匹配关系", "解除匹配关系后，将对方移除匹配列表及聊天列表。","解除", () -> {
+                new TextPW(activity, mBinding.getRoot(), "解除匹配关系", "解除匹配关系后，将对方移除匹配列表及聊天列表。", "解除", () -> {
                     relievePair(otherUserId);
                 });
             } else {
@@ -163,6 +163,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
             }
+
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
@@ -240,7 +241,10 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
             @Override
             public void onNext(List<MemberInfo> o) {
                 int start = memberInfoList.size();
-                memberInfoList.addAll(o);
+                for (MemberInfo item : o) {
+                    attentionDb.saveAttention(new AttentionInfo(item.getUserId(), item.getNick(), item.getImage(), true, BaseActivity.userId));
+                    memberInfoList.add(item);
+                }
                 adapter.notifyItemRangeChanged(start, memberInfoList.size());
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();

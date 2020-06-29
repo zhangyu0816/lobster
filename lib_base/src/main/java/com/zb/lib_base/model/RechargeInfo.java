@@ -10,6 +10,7 @@ public class RechargeInfo extends BaseObservable {
     double originalMoney;    //原价 金额
     double extraGiveMoney;    //额外赠送 金额
     int moneyType;        // 0.默认   1.最受欢迎  2.优惠最大  3.........
+    String content = "";
 
     @Bindable
     public long getId() {
@@ -49,5 +50,15 @@ public class RechargeInfo extends BaseObservable {
     public void setMoneyType(int moneyType) {
         this.moneyType = moneyType;
         notifyPropertyChanged(BR.moneyType);
+    }
+
+    @Bindable
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+        notifyPropertyChanged(BR.content);
     }
 }

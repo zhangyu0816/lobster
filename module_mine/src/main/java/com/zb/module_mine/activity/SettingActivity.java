@@ -30,6 +30,12 @@ public class SettingActivity extends MineBaseActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             viewModel.back(null);

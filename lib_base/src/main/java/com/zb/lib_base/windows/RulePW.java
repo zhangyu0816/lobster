@@ -11,6 +11,8 @@ import android.widget.PopupWindow;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 import com.zb.lib_base.databinding.PwsRuleBinding;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.utils.ActivityUtils;
 
 import androidx.databinding.DataBindingUtil;
 
@@ -68,6 +70,7 @@ public class RulePW extends PopupWindow {
         }
 
         mBinding.tvRule1.setOnClickListener(v12 -> {
+            ActivityUtils.getMineWeb("注册协议", HttpManager.BASE_URL + "mobile/xiagu_reg_protocol.html");
         });
 
         mBinding.tvRule2.setOnClickListener(v12 -> {

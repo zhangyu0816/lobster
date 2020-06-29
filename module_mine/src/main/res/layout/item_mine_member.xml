@@ -46,15 +46,32 @@
             android:layout_toEndOf="@+id/iv_logo"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:text="@{item.nick}"
-                android:textColor="@color/black_252"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                tools:text="分为发" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{item.nick}"
+                    android:textColor="@color/black_252"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="捡光就钢结构捡光捡光" />
+
+                <ImageView
+                    viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(86)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(150)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:background="@mipmap/vip_icon"
+                    android:visibility="@{item.memberType==2?View.VISIBLE:View.GONE}" />
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -100,9 +117,9 @@
             android:layout_marginEnd="15dp"
             android:background="@{viewModel.position==2?(viewModel.likeDb.hasLike(item.userId)?@drawable/btn_bg_black_efe_radius40: @drawable/btn_bg_purple_7a4_white_radius60):(viewModel.attentionDb.isAttention(item.userId)?@drawable/btn_bg_black_efe_radius40: @drawable/btn_bg_purple_7a4_white_radius60)}"
             android:gravity="center"
-            android:textStyle="bold"
             android:onClick="@{v->viewModel.clickMember(position)}"
             android:text="@{ObjectUtils.textName(viewModel.likeDb, viewModel.attentionDb, item.userId, viewModel.position)}"
-            android:textColor="@{ObjectUtils.textColor(viewModel.likeDb, viewModel.attentionDb, item.userId, viewModel.position)}" />
+            android:textColor="@{ObjectUtils.textColor(viewModel.likeDb, viewModel.attentionDb, item.userId, viewModel.position)}"
+            android:textStyle="bold" />
     </RelativeLayout>
 </layout>

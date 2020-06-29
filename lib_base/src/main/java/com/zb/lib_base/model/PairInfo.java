@@ -20,6 +20,8 @@ public class PairInfo extends BaseObservable {
     private int age;//年龄
     private int sex;//性别  0女  1男
     private int idAttest;//是否实名认证  0未认证  1认证
+    private int memberType = 1;
+    private int faceAttest = 0;
     private long provinceId = 0;  //省份id
     private long cityId = 0;   //地区id
     private long districtId = 0;
@@ -174,5 +176,25 @@ public class PairInfo extends BaseObservable {
     public void setImageList(List<String> imageList) {
         this.imageList = imageList;
         notifyPropertyChanged(BR.imageList);
+    }
+
+    @Bindable
+    public int getMemberType() {
+        return memberType;
+    }
+
+    public void setMemberType(int memberType) {
+        this.memberType = memberType;
+        notifyPropertyChanged(BR.memberType);
+    }
+
+    @Bindable
+    public int getFaceAttest() {
+        return faceAttest;
+    }
+
+    public void setFaceAttest(int faceAttest) {
+        this.faceAttest = faceAttest;
+        notifyPropertyChanged(BR.faceAttest);
     }
 }

@@ -7,6 +7,4 @@ public interface MainVMInterface {
     void selectSex(int sex);
 
     void toLogin(View view);
-
-    void toRule(View view);
 }

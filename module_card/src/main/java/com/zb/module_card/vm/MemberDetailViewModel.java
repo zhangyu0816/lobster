@@ -67,8 +67,11 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         super.setBinding(binding);
         areaDb = new AreaDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
-        if (otherUserId != BaseActivity.userId)
+        if (otherUserId != BaseActivity.userId) {
+            selectorList.add("超级喜欢");
             selectorList.add("举报");
+        }
+
         selectorList.add("分享");
         mBinding = (CardMemberDetailBinding) binding;
         mBinding.setVariable(BR.baseInfo, "");
@@ -281,11 +284,13 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         new SelectorPW(activity, mBinding.getRoot(), selectorList, position -> {
             if (position == 0) {
                 if (otherUserId != BaseActivity.userId) {
-                    ActivityUtils.getHomeReport(otherUserId);
+                   superLike(null);
                 } else {
                     memberInfoConf();
                 }
             } else if (position == 1) {
+                ActivityUtils.getHomeReport(otherUserId);
+            } else if (position == 2) {
                 memberInfoConf();
             }
         });
@@ -313,7 +318,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 .setDelay(3000)
                 .setUpIndicators(R.drawable.banner_circle_pressed, R.drawable.banner_circle_unpressed)
                 .setUpIndicatorSize(20, 20)
-                .isAutoPlay(true)
+                .isAutoPlay(false)
                 .start();
     }
 }

@@ -89,20 +89,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="46dp"
-            android:text="我们绝不会未经您的许可发布留言"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            onClickDelayed="@{viewModel::toRule}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="隐私 服务条款"
+            android:text="我们绝不会未经您的许可发布留言"
             android:textColor="@android:color/white"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"

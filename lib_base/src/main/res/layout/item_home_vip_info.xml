@@ -77,10 +77,10 @@
             android:layout_height="24dp"
             android:background="@drawable/btn_bg_red_fe4_radius_top5"
             android:gravity="center"
-            android:text="@{MineApp.moneyTypeMap.get(item.moneyType)}"
+            android:text="@{item.content}"
             android:textColor="@android:color/white"
             android:textSize="12sp"
-            android:visibility="@{(isSelect&amp;&amp;!MineApp.moneyTypeMap.get(item.moneyType).isEmpty())?View.VISIBLE:View.GONE}"
+            android:visibility="@{isSelect?View.VISIBLE:View.GONE}"
             tools:text="最受欢迎" />
     </RelativeLayout>
 </layout>

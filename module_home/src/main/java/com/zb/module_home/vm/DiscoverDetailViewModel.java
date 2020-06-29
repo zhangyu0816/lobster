@@ -476,7 +476,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 .setDelay(3000)
                 .setUpIndicators(R.drawable.banner_circle_pressed, R.drawable.banner_circle_unpressed)
                 .setUpIndicatorSize(20, 20)
-                .isAutoPlay(true)
+                .isAutoPlay(false)
                 .start();
     }
 }

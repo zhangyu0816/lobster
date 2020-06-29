@@ -24,4 +24,6 @@ public interface SettingVMInterface {
     void exit(View view);
 
     void loginOut();
+
+    void humanFaceStatus();
 }

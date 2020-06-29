@@ -108,6 +108,11 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
             SCToastUtil.showToast(activity, "请上传至少1张照片", true);
             return;
         }
+
+        if(mineInfo.getPersonalitySign().isEmpty()){
+            SCToastUtil.showToast(activity,"请添加自己的个性签名",true);
+            return;
+        }
         if (uploadImages.isEmpty()) {
             modifyMemberInfo();
         } else {
