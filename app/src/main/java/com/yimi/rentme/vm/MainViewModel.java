@@ -277,7 +277,10 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             public void onNext(List<RechargeInfo> o) {
                 for (RechargeInfo item : o) {
                     if (item.getMoneyType() == 0) {
-                        item.setContent(String.format("送%.1f虾菇币", item.getExtraGiveMoney()));
+                        if (item.getExtraGiveMoney() == 0)
+                            item.setContent("");
+                        else
+                            item.setContent(String.format("送%.1f虾菇币", item.getExtraGiveMoney()));
                     } else if (item.getMoneyType() == 1) {
                         item.setContent("最受欢迎");
                     } else {

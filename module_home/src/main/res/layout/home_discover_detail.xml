@@ -22,6 +22,12 @@
         <variable
             name="name"
             type="String" />
+
+        <variable
+            name="rewardNum"
+            type="Integer" />
+
+
     </data>
 
     <RelativeLayout
@@ -186,7 +192,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:orientation="vertical"
-                            android:visibility="@{viewModel.discoverInfo.rewardNum==0?View.GONE:View.VISIBLE}">
+                            android:visibility="@{rewardNum==0?View.GONE:View.VISIBLE}">
 
                             <View
                                 android:layout_width="match_parent"
@@ -208,7 +214,7 @@
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text='@{String.format("%d",viewModel.discoverInfo.rewardNum)}'
+                                        android:text='@{String.format("%d",rewardNum)}'
                                         android:textColor="#FE4F71"
                                         android:textSize="12sp"
                                         tools:text="7" />
