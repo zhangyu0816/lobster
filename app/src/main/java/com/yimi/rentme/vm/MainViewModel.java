@@ -247,6 +247,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         openedMemberPriceListApi api = new openedMemberPriceListApi(new HttpOnNextListener<List<VipInfo>>() {
             @Override
             public void onNext(List<VipInfo> o) {
+                MineApp.vipInfoList.clear();
                 MineApp.vipInfoList.addAll(o);
             }
         }, activity);
@@ -258,6 +259,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         giftListApi api = new giftListApi(new HttpOnNextListener<List<GiftInfo>>() {
             @Override
             public void onNext(List<GiftInfo> o) {
+                MineApp.giftInfoList.clear();
                 MineApp.giftInfoList.addAll(o);
                 openedMemberPriceList();
                 rechargeDiscountList();
@@ -275,6 +277,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         rechargeDiscountListApi api = new rechargeDiscountListApi(new HttpOnNextListener<List<RechargeInfo>>() {
             @Override
             public void onNext(List<RechargeInfo> o) {
+                MineApp.rechargeInfoList.clear();
                 for (RechargeInfo item : o) {
                     if (item.getMoneyType() == 0) {
                         if (item.getExtraGiveMoney() == 0)
@@ -298,6 +301,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         bankInfoListApi api = new bankInfoListApi(new HttpOnNextListener<List<BankInfo>>() {
             @Override
             public void onNext(List<BankInfo> o) {
+                MineApp.bankInfoList.clear();
                 MineApp.bankInfoList.addAll(o);
             }
         }, activity);
@@ -309,6 +313,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         comTypeApi api = new comTypeApi(new HttpOnNextListener<List<Report>>() {
             @Override
             public void onNext(List<Report> o) {
+                MineApp.reportList.clear();
                 MineApp.reportList.addAll(o);
             }
         }, activity);

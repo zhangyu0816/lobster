@@ -31,8 +31,6 @@ public interface DiscoverVideoVMInterface {
 
     void cancelAttention();
 
-    void seeGiftRewards();
-
     void dynDoLike();
 
     void dynCancelLike();

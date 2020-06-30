@@ -16,6 +16,7 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.ChatList;
+import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
@@ -219,6 +220,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
             public void onNext(List<LikeMe> o) {
                 int start = chatMsgList.size();
                 for (LikeMe likeMe : o) {
+                    likeDb.saveLike(new CollectID(likeMe.getOtherUserId()));
                     ChatList chatMsg = chatListDb.getChatMsg(likeMe.getOtherUserId(), 4);
                     ChatList chatList = new ChatList();
                     chatList.setUserId(likeMe.getOtherUserId());

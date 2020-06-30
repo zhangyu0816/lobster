@@ -248,30 +248,6 @@ public class ObjectUtils {
             return "99+";
     }
 
-    public static int textColor(int useType) {
-        if (useType == 1) {
-            return R.color.red_fe4;
-        } else {
-            return R.color.black_4d4;
-        }
-    }
-
-    public static int stanzaTextColor(int chatType) {
-        if (chatType == 3) {
-            return R.color.red_fe4;
-        } else {
-            return R.color.black_827;
-        }
-    }
-
-    public static int reportTextColor(boolean isSelect) {
-        if (isSelect) {
-            return R.color.purple_7a4;
-        } else {
-            return R.color.black_252;
-        }
-    }
-
     public static String feedbackText(int replyState) {
         if (replyState == 1) {
             return "查看回复";

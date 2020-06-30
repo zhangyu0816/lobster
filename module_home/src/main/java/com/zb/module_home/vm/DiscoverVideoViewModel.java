@@ -58,8 +58,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     public DiscoverInfo discoverInfo;
     public MemberInfo memberInfo;
     public GoodDb goodDb;
-    public HomeAdapter rewardAdapter;
-    private List<Reward> rewardList = new ArrayList<>();
     private HomeDiscoverVideoBinding mBinding;
     private ObjectAnimator animator;
     private int goodNum = 0;
@@ -77,16 +75,8 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
         super.setBinding(binding);
         mBinding = (HomeDiscoverVideoBinding) binding;
         goodDb = new GoodDb(Realm.getDefaultInstance());
-        mBinding.setIsPlay(false);
+        mBinding.setIsPlay(true);
         mBinding.setIsProgress(false);
-        setAdapter();
-    }
-
-    @Override
-    public void setAdapter() {
-        // 打赏
-        rewardAdapter = new HomeAdapter<>(activity, R.layout.item_discover_video_reward, rewardList, this);
-        mBinding.setGridNum(3);
         dynDetail();
     }
 
@@ -149,14 +139,13 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     public void doReward(View view) {
         new GiftPW(activity, mBinding.getRoot(), giftInfo ->
                 new GiftPayPW(activity, mBinding.getRoot(), giftInfo, friendDynId, () -> {
-                    discoverInfo.setRewardNum(discoverInfo.getRewardNum() + 1);
-                    mBinding.setVariable(BR.viewModel, DiscoverVideoViewModel.this);
-                    seeGiftRewards();
                 }));
     }
 
     @Override
     public void toRewards(View view) {
+        mBinding.setIsPlay(false);
+        mBinding.videoView.pause();
         ActivityUtils.getHomeRewardList(friendDynId);
     }
 
@@ -206,7 +195,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                     }
                 });
                 otherInfo();
-                seeGiftRewards();
                 attentionStatus();
             }
         }, activity).setFriendDynId(friendDynId);
@@ -287,25 +275,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     }
 
     @Override
-    public void seeGiftRewards() {
-        seeGiftRewardsApi api = new seeGiftRewardsApi(new HttpOnNextListener<List<Reward>>() {
-            @Override
-            public void onNext(List<Reward> o) {
-                rewardList.clear();
-                rewardAdapter.notifyDataSetChanged();
-                for (int i = 0; i < Math.min(o.size(), 3); i++) {
-                    rewardList.add(o.get(i));
-                }
-                mBinding.setGridNum(rewardList.size());
-                rewardAdapter.notifyDataSetChanged();
-            }
-        }, activity).setFriendDynId(friendDynId)
-                .setRewardSortType(2)
-                .setPageNo(1);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
     public void dynDoLike() {
         dynDoLikeApi api = new dynDoLikeApi(new HttpOnNextListener() {
             @Override
@@ -355,15 +324,17 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     private void initVideo() {
         //视频加载完成,准备好播放视频的回调
         mBinding.videoView.setOnPreparedListener(mp -> {
-            mBinding.setIsPlay(false);
+//            mBinding.setIsPlay(false);
             //尺寸变化回调
             mp.setOnVideoSizeChangedListener((mp1, width, height) -> changeVideoSize(mp1));
         });
         //视频播放完成后的回调
         mBinding.videoView.setOnCompletionListener(mp -> {
-            mBinding.setIsPlay(false);
+//            mBinding.setIsPlay(false);
             mBinding.videoView.stopPlayback();//停止播放视频,并且释放
             mBinding.videoView.suspend();//在任何状态下释放媒体播放器
+            mBinding.videoView.setVideoPath(discoverInfo.getVideoUrl());
+            mBinding.videoView.start();
         });
         //异常回调
         mBinding.videoView.setOnErrorListener((mp, what, extra) -> {
@@ -380,12 +351,12 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                 return true;
             } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
                 // 缓冲开始
-                mBinding.setIsPlay(false);
+                mBinding.setIsPlay(true);
                 return true;
             } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
                 // 缓冲结束,此接口每次回调完START就回调END,若不加上判断就会出现缓冲图标一闪一闪的卡顿现象
                 if (mp.isPlaying()) {
-                    mBinding.setIsPlay(false);
+                    mBinding.setIsPlay(true);
                 }
                 return true;
             } else if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {

@@ -13,18 +13,12 @@ import com.zb.module_home.R;
 import com.zb.module_home.vm.DiscoverDetailViewModel;
 
 @Route(path = RouteUtils.Home_Discover_Detail)
-public class DiscoverDetailActivity extends BaseActivity {
+public class DiscoverDetailActivity extends HomeBaseActivity {
 
     @Autowired(name = "friendDynId")
     long friendDynId;
 
     private DiscoverDetailViewModel viewModel;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        StatusBarUtil.statusBarLightModeNotFull(this);
-    }
 
     @Override
     public int getRes() {

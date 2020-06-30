@@ -27,7 +27,9 @@
             name="rewardNum"
             type="Integer" />
 
-
+        <variable
+            name="listNum"
+            type="Integer" />
     </data>
 
     <RelativeLayout
@@ -71,7 +73,8 @@
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="60dp">
+                                android:layout_height="60dp"
+                                android:layout_marginTop="22dp">
 
                                 <ImageView
                                     onClickDelayed="@{viewModel::back}"
@@ -203,12 +206,12 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:gravity="center_horizontal"
                                 android:orientation="vertical">
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="center_horizontal"
                                     android:orientation="horizontal">
 
                                     <TextView
@@ -229,19 +232,17 @@
 
                                 <androidx.recyclerview.widget.RecyclerView
                                     adapter="@{viewModel.rewardAdapter}"
-                                    gridNum="@{10}"
+                                    gridNum="@{listNum}"
                                     recyclerType="@{2}"
                                     size="@{10}"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="center_horizontal"
                                     android:layout_margin="15dp" />
 
                                 <TextView
                                     onClickDelayed="@{viewModel::toRewardList}"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="center_horizontal"
                                     android:drawableEnd="@mipmap/arrow_right_icon"
                                     android:drawablePadding="5dp"
                                     android:gravity="center"
@@ -362,8 +363,7 @@
                         android:background="@null"
                         android:hint="写点什么..."
                         android:imeOptions="actionSend"
-                        android:paddingStart="15dp"
-                        android:paddingEnd="15dp"
+                        android:padding="15dp"
                         android:singleLine="true"
                         android:text="@={content}"
                         android:textColor="@color/black_252"

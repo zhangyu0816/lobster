@@ -202,7 +202,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                     mBinding.setIsEmoji(false);
                     PreferenceUtil.saveIntValue(activity, "keyboardHeight", height);
                     AdapterBinding.viewSize(mBinding.emojiList, MineApp.W, height);
-                });
+                },false);
         AdapterBinding.viewSize(mBinding.emojiList, MineApp.W, PreferenceUtil.readIntValue(activity, "keyboardHeight") == 0 ? MineApp.H / 3 : PreferenceUtil.readIntValue(activity, "keyboardHeight"));
 
     }

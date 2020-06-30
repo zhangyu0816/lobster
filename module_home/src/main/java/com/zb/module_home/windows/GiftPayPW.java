@@ -68,7 +68,7 @@ public class GiftPayPW extends BasePopupWindow {
                     activity.sendBroadcast(new Intent("lobster_recharge"));
                     callBack.paySuccess();
                     dismiss();
-                    new GiveSuccessPW(activity, mBinding.getRoot(), giftInfo);
+                    new GiveSuccessPW(activity, mBinding.getRoot(), giftInfo, Integer.parseInt(binding.getContent()));
                 }
             }
         }, activity).setFriendDynId(friendDynId).setGiftId(giftInfo.getGiftId()).setGiftNum(Integer.parseInt(binding.getContent()));
@@ -87,7 +87,7 @@ public class GiftPayPW extends BasePopupWindow {
                 activity.sendBroadcast(new Intent("lobster_recharge"));
                 callBack.paySuccess();
                 dismiss();
-                new GiveSuccessPW(activity, mBinding.getRoot(), giftInfo);
+                new GiveSuccessPW(activity, mBinding.getRoot(), giftInfo, Integer.parseInt(binding.getContent()));
             }
         }, activity).setTranOrderId(tranOrderId);
         HttpManager.getInstance().doHttpDeal(api);

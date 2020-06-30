@@ -76,6 +76,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
                     android:text="@{item.text}"
                     android:textColor="@color/black_4d4"
                     android:textSize="12sp" />
@@ -106,13 +108,13 @@
                         android:textSize="12sp" />
 
                     <TextView
-                        android:onClick="@{v->viewModel.doLike(position)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:drawableStart="@{viewModel.goodDb.hasGood(item.friendDynId)?@drawable/like_red_icon:@drawable/like_grey_icon}"
                         android:drawablePadding="5dp"
+                        android:onClick="@{v->viewModel.doLike(position)}"
                         android:text='@{String.format("%d",item.goodNum)}'
                         android:textColor="@color/black_827"
                         android:textSize="14sp" />

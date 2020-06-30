@@ -11,10 +11,12 @@ import com.zb.module_home.R;
 public class GiveSuccessPW extends BasePopupWindow {
 
     private GiftInfo giftInfo;
+    private int giftNum;
 
-    public GiveSuccessPW(RxAppCompatActivity activity, View parentView, GiftInfo giftInfo) {
+    public GiveSuccessPW(RxAppCompatActivity activity, View parentView, GiftInfo giftInfo, int giftNum) {
         super(activity, parentView, true);
         this.giftInfo = giftInfo;
+        this.giftNum = giftNum;
         initUI();
     }
 
@@ -27,6 +29,7 @@ public class GiveSuccessPW extends BasePopupWindow {
     public void initUI() {
         mBinding.setVariable(BR.pw, this);
         mBinding.setVariable(BR.giftInfo, giftInfo);
+        mBinding.setVariable(BR.giftNum, giftNum);
     }
 
     @Override

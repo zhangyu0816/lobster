@@ -22,12 +22,6 @@
         <variable
             name="isProgress"
             type="boolean" />
-
-        <variable
-            name="gridNum"
-            type="Integer" />
-
-
     </data>
 
     <RelativeLayout
@@ -128,16 +122,20 @@
                     android:visibility="@{viewModel.memberInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
             </RelativeLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                adapter="@{viewModel.rewardAdapter}"
-                gridNum="@{gridNum}"
-                recyclerType="@{3}"
-                viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.08f)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.26f)}"
+            <TextView
+                onClickDelayed="@{viewModel::toRewards}"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="15dp" />
+                android:layout_marginEnd="15dp"
+                android:text="查看礼物"
+                android:gravity="center"
+                android:drawablePadding="5dp"
+                android:drawableEnd="@mipmap/arrow_right_white_icon"
+                android:layout_centerVertical="true"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
         </RelativeLayout>
 
         <TextView

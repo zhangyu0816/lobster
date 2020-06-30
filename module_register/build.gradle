@@ -5,15 +5,15 @@ if (!isNeedRegisterModule.toBoolean()) {
 }
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
         if (!isNeedRegisterModule.toBoolean()) {
             applicationId "com.zb.module_register"
         }
         minSdkVersion 19
-        targetSdkVersion 29
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 

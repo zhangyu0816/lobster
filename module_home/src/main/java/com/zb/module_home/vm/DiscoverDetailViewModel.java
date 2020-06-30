@@ -1,5 +1,6 @@
 package com.zb.module_home.vm;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -40,7 +41,9 @@ import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.model.Reward;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.KeyboardStateObserver;
 import com.zb.lib_base.utils.ObjectUtils;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.CountUsedPW;
@@ -79,6 +82,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     private long reviewId = 0;
     private int goodNum = 0;
     private BaseReceiver finishRefreshReceiver;
+    private ObjectAnimator translateYUp, translateYDown;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -86,8 +90,9 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         mBinding = (HomeDiscoverDetailBinding) binding;
         mineInfo = mineInfoDb.getMineInfo();
         AdapterBinding.viewSize(mBinding.banner, MineApp.W, ObjectUtils.getLogoHeight(1.0f));
-        mBinding.setVariable(BR.content, "");
-        mBinding.setVariable(BR.name, "");
+        mBinding.setContent("");
+        mBinding.setName("");
+        mBinding.setListNum(10);
         setAdapter();
         dynDetail();
         // 发送
@@ -104,6 +109,23 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 mBinding.refresh.finishLoadMore();
             }
         };
+
+        KeyboardStateObserver.getKeyboardStateObserver(activity).
+                setKeyboardVisibilityListener(new KeyboardStateObserver.OnKeyboardVisibilityListener() {
+                    @Override
+                    public void onKeyboardHeight(int height) {
+                        PreferenceUtil.saveIntValue(activity, "keyboardHeight", height);
+                        translateYUp = ObjectAnimator.ofFloat(mBinding.mainLayout, "translationY", 0, -height).setDuration(100);
+                        translateYDown = ObjectAnimator.ofFloat(mBinding.mainLayout, "translationY", -height, 0).setDuration(100);
+                        translateYUp.start();
+                    }
+
+                    @Override
+                    public void onKeyboardHide() {
+                        if (translateYDown != null)
+                            translateYDown.start();
+                    }
+                }, true);
     }
 
     @Override
@@ -117,6 +139,10 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void back(View view) {
         super.back(view);
+        if (translateYUp != null)
+            translateYUp.cancel();
+        if (translateYDown != null)
+            translateYDown.cancel();
         finishRefreshReceiver.unregisterReceiver();
         activity.finish();
     }
@@ -217,6 +243,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 rewardList.addAll(o);
                 rewardAdapter.notifyDataSetChanged();
                 mBinding.setRewardNum(rewardList.size());
+                int gridNum = rewardList.size() % 10;
+                mBinding.setListNum(gridNum == 0 ? 10 : gridNum);
             }
         }, activity).setFriendDynId(friendDynId)
                 .setRewardSortType(2)

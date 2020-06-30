@@ -106,7 +106,7 @@
             android:layout_toEndOf="@+id/image_relative"
             android:singleLine="true"
             android:text='@{ObjectUtils.getStanza(item.stanza,item.msgType)}'
-            android:textColor="@{ObjectUtils.stanzaTextColor(item.chatType)}"
+            android:textColor="@{item.chatType==3?@color/red_fe4:@color/black_827}"
             android:textSize="14sp"
             tools:text="二五零附近未来房价我了文旅局为了将放了假了来房价未  无法就为了附件为了减肥了就" />
 

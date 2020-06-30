@@ -33,7 +33,7 @@
         android:textSize="14sp"
         android:gravity="center_vertical"
         android:paddingStart="15dp"
-        android:textColor="@{ObjectUtils.reportTextColor(isSelect)}"
+        android:textColor="@{isSelect?@color/purple_7a4:@color/black_252}"
         tools:text="而忘记问了文件微了为"
         android:background="@{isSelect?@drawable/btn_bg_purple_7a4_white_radius60:@drawable/btn_bg_white_black_c3b_radius34}" />
 
