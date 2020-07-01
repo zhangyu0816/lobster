@@ -1,13 +1,10 @@
 package com.zb.module_home.activity;
 
-import android.os.Bundle;
 import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.utils.RouteUtils;
-import com.zb.lib_base.utils.StatusBarUtil;
 import com.zb.module_home.BR;
 import com.zb.module_home.R;
 import com.zb.module_home.vm.DiscoverDetailViewModel;

@@ -39,22 +39,7 @@ public class MemberInfo extends BaseObservable {
     private int faceAttest;  //人脸 V  0未认证  1认证
     private int newDycType; // 最新的动态类型       配上对应的文字
     private int attentionStatus; //关注关系  1 关注  0 未关注
-//    未知   0
-//    文字   1
-//    图片   2
-//    图文   3
-//    视频   4
-//    视频_文字  5
-//    视频_图片  6
-//    视频_图片_文字   7
-//    私密   8 (未使用)
-//    私密文字  9  (未使用)
-//    私密图片 10
-//    私密图文 11
-//    私密视频 12 (未使用)
-//    私密视频文字  13 (未使用)
-//    私密视频图片 14 (未使用)
-//    私密视频图文 15 (未使用)
+    private String distance = "";
 
     @Bindable
     public long getUserId() {
@@ -374,5 +359,15 @@ public class MemberInfo extends BaseObservable {
     public void setFaceAttest(int faceAttest) {
         this.faceAttest = faceAttest;
         notifyPropertyChanged(BR.faceAttest);
+    }
+
+    @Bindable
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
+        notifyPropertyChanged(BR.distance);
     }
 }

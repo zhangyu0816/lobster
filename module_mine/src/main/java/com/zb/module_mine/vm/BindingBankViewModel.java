@@ -69,10 +69,10 @@ public class BindingBankViewModel extends BaseViewModel implements BindingBankVM
             SCToastUtil.showToast(activity, "请选择开户行", true);
             return;
         }
-//        if (mBinding.getName().isEmpty()) {
-//            SCToastUtil.showToast(activity, "请输入户名", true);
-//            return;
-//        }
+        if (mBinding.getName().isEmpty()) {
+            SCToastUtil.showToast(activity, "请输入户名", true);
+            return;
+        }
         if (mBinding.getBankAccount().isEmpty()) {
             SCToastUtil.showToast(activity, "请输入" + bankInfo.getBankName() + "账号", true);
             return;

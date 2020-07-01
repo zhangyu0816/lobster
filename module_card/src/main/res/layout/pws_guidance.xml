@@ -116,10 +116,10 @@
                         viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(466)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_above="@+id/iv_super_like"
                         android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
                         android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="-55dp"
+                        android:layout_marginBottom="38dp"
                         android:background="@mipmap/guidance_return"
                         android:visibility="@{position==4?View.VISIBLE:View.GONE}" />
 
@@ -132,7 +132,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentBottom="true"
                         android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="-16dp"
+                        android:layout_marginBottom="12dp"
                         android:background="@mipmap/guidance_super"
                         android:visibility="@{position==5?View.VISIBLE:View.INVISIBLE}" />
                 </RelativeLayout>

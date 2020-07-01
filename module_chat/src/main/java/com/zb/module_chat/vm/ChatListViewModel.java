@@ -69,10 +69,10 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                         }
                     }
                     if (position != -1) {
-                        chatMsgList.set(position, chatListDb.getChatMsg(userId,4));
+                        chatMsgList.set(position, chatListDb.getChatMsg(userId, 4));
                         adapter.notifyItemChanged(position);
                     } else {
-                        chatMsgList.add(0, chatListDb.getChatMsg(userId,4));
+                        chatMsgList.add(0, chatListDb.getChatMsg(userId, 4));
                         adapter.notifyDataSetChanged();
                     }
                 }
@@ -82,6 +82,8 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
             @Override
             public void onReceive(Context context, Intent intent) {
                 long otherUserId = intent.getLongExtra("otherUserId", 0);
+                if (chatMsgList.size() == 0)
+                    return;
                 if (prePosition == -1) {
                     for (int i = 0; i < chatMsgList.size(); i++) {
                         if (chatMsgList.get(i).getUserId() == otherUserId) {

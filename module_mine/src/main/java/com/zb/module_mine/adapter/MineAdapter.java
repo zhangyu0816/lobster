@@ -26,7 +26,7 @@ public class MineAdapter<T> extends BindingItemAdapter<T> implements ItemTouchHe
     private BaseViewModel viewModel;
     private BasePopupWindow pw;
     private int selectIndex = -1;
-    private List<Long> userIdList = new ArrayList<>();
+    public List<Long> userIdList = new ArrayList<>();
 
     public MineAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
         super(activity, layoutId, list);

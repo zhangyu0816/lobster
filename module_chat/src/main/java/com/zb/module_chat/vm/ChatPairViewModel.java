@@ -94,6 +94,8 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
             @Override
             public void onReceive(Context context, Intent intent) {
                 long otherUserId = intent.getLongExtra("otherUserId", 0);
+                if (chatMsgList.size() == 0)
+                    return;
                 if (prePosition == -1) {
                     for (int i = 0; i < chatMsgList.size(); i++) {
                         if (chatMsgList.get(i).getChatType() == 4 && chatMsgList.get(i).getUserId() == otherUserId) {

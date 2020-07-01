@@ -130,6 +130,10 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     tagAdapter.notifyDataSetChanged();
                 }
                 String distant = "";
+                if (!memberInfo.getDistance().isEmpty()) {
+                    distant = String.format("%.1f", Integer.parseInt(memberInfo.getDistance()) / 1000f) + "km";
+                }
+
                 String sex = memberInfo.getSex() == 0 ? "女/" : "男/";
                 String constellation = DateUtil.getConstellations(memberInfo.getBirthday()) + "/";
                 String cityName = areaDb.getCityName(memberInfo.getCityId()) + " ";
@@ -284,7 +288,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         new SelectorPW(activity, mBinding.getRoot(), selectorList, position -> {
             if (position == 0) {
                 if (otherUserId != BaseActivity.userId) {
-                   superLike(null);
+                    superLike(null);
                 } else {
                     memberInfoConf();
                 }

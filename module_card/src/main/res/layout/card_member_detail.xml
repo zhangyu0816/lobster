@@ -206,8 +206,9 @@
 
                             <TextView
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="40dp"
                                 android:text="个性标签："
+                                android:gravity="center_vertical"
                                 android:textColor="@color/black_4d4"
                                 android:textSize="14sp" />
 

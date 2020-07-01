@@ -111,6 +111,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
         pageNo = 1;
         memberInfoList.clear();
         adapter.notifyDataSetChanged();
+        adapter.userIdList.clear();
         getData();
     }
 

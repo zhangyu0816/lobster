@@ -26,7 +26,8 @@ public class HttpLogger implements HttpLoggingInterceptor.Logger {
         // 请求或者响应结束，打印整条日志
         if (message.startsWith("<-- END HTTP")) {
             try {
-                LogUtil.d(JsonUtil.decodeUnicode(URLDecoder.decode(mMessage.toString(),"UTF-8")));
+                String s = mMessage.toString().replaceAll("%(?![0-9a-fA-F]{2})", "%25").replaceAll("\\+", "%2B");
+                LogUtil.d(JsonUtil.decodeUnicode(URLDecoder.decode(s, "UTF-8")));
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }

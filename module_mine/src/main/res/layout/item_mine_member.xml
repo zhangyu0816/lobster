@@ -60,16 +60,24 @@
                     android:textColor="@color/black_252"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    tools:text="捡光就钢结构捡光捡光" />
+                    android:maxLength="10"
+                    tools:text="捡光就" />
 
                 <ImageView
                     viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(86)}"
                     viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(150)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="10dp"
                     android:background="@mipmap/vip_icon"
                     android:visibility="@{item.memberType==2?View.VISIBLE:View.GONE}" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="@mipmap/real_icon"
+                    android:visibility="@{item.faceAttest==1?View.VISIBLE:View.GONE}" />
             </LinearLayout>
 
 
@@ -115,6 +123,7 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
+            android:textSize="14sp"
             android:background="@{viewModel.position==2?(viewModel.likeDb.hasLike(item.userId)?@drawable/btn_bg_black_efe_radius40: @drawable/btn_bg_purple_7a4_white_radius60):(viewModel.attentionDb.isAttention(item.userId)?@drawable/btn_bg_black_efe_radius40: @drawable/btn_bg_purple_7a4_white_radius60)}"
             android:gravity="center"
             android:onClick="@{v->viewModel.clickMember(position)}"

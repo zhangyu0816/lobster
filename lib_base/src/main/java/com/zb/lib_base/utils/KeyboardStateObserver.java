@@ -1,6 +1,5 @@
 package com.zb.lib_base.utils;
 
-import android.content.res.Resources;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.util.Log;
