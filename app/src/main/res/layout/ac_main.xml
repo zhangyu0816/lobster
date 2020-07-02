@@ -24,7 +24,9 @@
             name="unReadCount"
             type="Integer" />
 
-
+        <variable
+            name="newsCount"
+            type="Integer" />
     </data>
 
     <RelativeLayout
@@ -116,19 +118,41 @@
             </RelativeLayout>
 
 
-            <TextView
+            <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableTop="@{index==3?@drawable/mine_select_icon:@drawable/mine_unselect_icon}"
-                android:drawablePadding="2dp"
-                android:gravity="center"
-                android:onClick="@{v->viewModel.selectPage(3)}"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp"
-                android:text="我的"
-                android:textColor="@color/black_3e4"
-                android:textSize="12sp" />
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv_mine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:drawableTop="@{index==3?@drawable/mine_select_icon:@drawable/mine_unselect_icon}"
+                    android:drawablePadding="2dp"
+                    android:gravity="center"
+                    android:onClick="@{v->viewModel.selectPage(3)}"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:text="我的"
+                    android:textColor="@color/black_3e4"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_alignEnd="@+id/tv_mine"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginEnd="-5dp"
+                    android:background="@drawable/circle_white_red"
+                    android:gravity="center"
+                    android:text="@{ObjectUtils.count(newsCount)}"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"
+                    android:visibility="@{newsCount==0?View.GONE:View.VISIBLE}"
+                    tools:text="···" />
+            </RelativeLayout>
+
         </LinearLayout>
 
         <RelativeLayout

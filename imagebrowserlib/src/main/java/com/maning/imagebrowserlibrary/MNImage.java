@@ -20,7 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class MNImage {
-    public static void imageBrowser(final RxAppCompatActivity mContext, final View view, ArrayList<String> sourceImageList, int index, OnDeleteImageListener onDeleteImageListener) {
+    public static void imageBrowser(final RxAppCompatActivity mContext, final View view, ArrayList<String> sourceImageList, int index,boolean showDelete, OnDeleteImageListener onDeleteImageListener) {
         final int W = mContext.getResources().getDisplayMetrics().widthPixels;
         final int H = mContext.getResources().getDisplayMetrics().heightPixels;
         MNImageBrowser.with(mContext)
@@ -52,6 +52,7 @@ public class MNImage {
                 })
                 .setOnDeleteImageListener(onDeleteImageListener)
                 .setImageList(sourceImageList)
+                .setShowDelete(showDelete)
                 .show(view);
     }
 }

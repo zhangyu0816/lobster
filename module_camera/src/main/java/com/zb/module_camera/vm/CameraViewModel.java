@@ -212,26 +212,35 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                 Collections.sort(list, (o1, o2) -> o1.getValue().compareTo(o2.getValue()));
 
                 List<String> imageList = new ArrayList<>();
-                MineApp.selectPathMap.clear();
                 for (Map.Entry<String, String> mapping : list) {
-                    imageList.add(mapping.getKey());
+                    if (MineApp.selectPathMap.containsValue(mapping.getKey())) {
+                        for (Map.Entry<String, String> pathMap : MineApp.selectPathMap.entrySet()) {
+                            if (TextUtils.equals(pathMap.getValue(), mapping.getKey())) {
+                                imageList.add(pathMap.getKey());
+                                break;
+                            }
+                        }
+                    } else
+                        imageList.add(mapping.getKey());
                 }
                 for (Map.Entry<String, CutImageView> entry : MineApp.cutImageViewMap.entrySet()) {
-                    Bitmap bitmap = entry.getValue().getCutBitmap();
-                    if (bitmap != null) {
-                        File file = BaseActivity.getImageFile();
-                        try {
-                            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-                            bos.flush();
-                            bos.close();
-                            int i = imageList.indexOf(entry.getKey());
-                            if (i != -1) {
-                                MineApp.selectPathMap.put(file.getAbsolutePath(), entry.getKey());
-                                imageList.set(i, file.getAbsolutePath());
+                    if (!MineApp.selectPathMap.containsValue(entry.getKey())) {
+                        Bitmap bitmap = entry.getValue().getCutBitmap();
+                        if (bitmap != null) {
+                            File file = BaseActivity.getImageFile();
+                            try {
+                                BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+                                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+                                bos.flush();
+                                bos.close();
+                                int i = imageList.indexOf(entry.getKey());
+                                if (i != -1) {
+                                    MineApp.selectPathMap.put(file.getAbsolutePath(), entry.getKey());
+                                    imageList.set(i, file.getAbsolutePath());
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
                     }
                 }

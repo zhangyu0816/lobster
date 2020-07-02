@@ -131,7 +131,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 }
                 String distant = "";
                 if (!memberInfo.getDistance().isEmpty()) {
-                    distant = String.format("%.1f", Integer.parseInt(memberInfo.getDistance()) / 1000f) + "km";
+                    distant = String.format("%.1f", Float.parseFloat(memberInfo.getDistance()) / 1000f) + "km/";
                 }
 
                 String sex = memberInfo.getSex() == 0 ? "女/" : "男/";

@@ -109,8 +109,8 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
             return;
         }
 
-        if(mineInfo.getPersonalitySign().isEmpty()){
-            SCToastUtil.showToast(activity,"请添加自己的个性签名",true);
+        if (mineInfo.getPersonalitySign().isEmpty()) {
+            SCToastUtil.showToast(activity, "请添加自己的个性签名", true);
             return;
         }
         if (uploadImages.isEmpty()) {
@@ -133,7 +133,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
                     images.add(s);
                 }
             }
-            MNImage.imageBrowser(activity, mBinding.getRoot(), images, position, position12 -> {
+            MNImage.imageBrowser(activity, mBinding.getRoot(), images, position, true, position12 -> {
                 adapter.notifyItemRemoved(position12);
                 imageList.remove(position12);
                 imageList.add("");
@@ -149,7 +149,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
 
     @Override
     public void toSelectBirthday(View view) {
-        new BirthdayPW(activity, mBinding.getRoot(),mineInfo.getBirthday(), birthday -> {
+        new BirthdayPW(activity, mBinding.getRoot(), mineInfo.getBirthday(), birthday -> {
             mineInfoDb.updateContent(birthday, 5);
             mineInfo = mineInfoDb.getMineInfo();
             mBinding.setVariable(BR.viewModel, EditMemberViewModel.this);

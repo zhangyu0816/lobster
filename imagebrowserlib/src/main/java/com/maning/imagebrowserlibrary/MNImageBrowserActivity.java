@@ -41,7 +41,7 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
 
     private Context context;
 
-//    private MNGestureView mnGestureView;
+    //    private MNGestureView mnGestureView;
     private MNViewPager viewPagerBrowser;
     private RelativeLayout rl_black_bg;
     private RelativeLayout rl_indicator;
@@ -68,6 +68,7 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
     public static ImageBrowserConfig imageBrowserConfig;
     private MyAdapter imageBrowserAdapter;
     private View mCurrentView;
+    private boolean showDelete = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,8 +146,9 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
         onDeleteImageListener = imageBrowserConfig.getOnDeleteImageListener();
         onLongClickListener = imageBrowserConfig.getOnLongClickListener();
         indicatorType = imageBrowserConfig.getIndicatorType();
+        showDelete = imageBrowserConfig.isShowDelete();
 
-        ivDelete.setVisibility(onDeleteImageListener == null ? View.GONE : View.VISIBLE);
+        ivDelete.setVisibility(showDelete ? View.VISIBLE : View.GONE);
         if (imageUrlList.size() <= 1) {
             numberIndicator.setVisibility(View.GONE);
         }

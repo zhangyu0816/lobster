@@ -1,6 +1,7 @@
 package com.zb.module_mine.vm;
 
 import android.Manifest;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
+import com.zb.lib_base.views.CutImageView;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.R;
 import com.zb.module_mine.adapter.MineAdapter;
@@ -26,6 +28,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import androidx.databinding.ViewDataBinding;
 
@@ -78,9 +81,18 @@ public class FeedbackDetailViewModel extends BaseViewModel implements FeedbackDe
             for (int i = 0; i < images.size() - 1; i++) {
                 imageList.add(images.get(i));
             }
-            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, position12 -> {
+            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, feedbackInfo.getId() == 0, position12 -> {
+                int count = MineApp.selectMap.remove(MineApp.selectPathMap.get(images.get(position12)));
+                MineApp.cutImageViewMap.remove(MineApp.selectPathMap.get(images.get(position12)));
+                MineApp.selectPathMap.remove(images.get(position12));
+                for (Map.Entry<String, Integer> entry : MineApp.selectMap.entrySet()) {
+                    if (entry.getValue() > count) {
+                        MineApp.selectMap.put(entry.getKey(), entry.getValue() - 1);
+                    }
+                }
                 adapter.notifyItemRemoved(position12);
                 images.remove(position12);
+                adapter.notifyDataSetChanged();
             });
         }
     }
@@ -126,7 +138,7 @@ public class FeedbackDetailViewModel extends BaseViewModel implements FeedbackDe
      */
     private void getPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission( "虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
+            performCodeWithPermission("虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
                         @Override
                         public void hasPermission() {
                             setPermissions();

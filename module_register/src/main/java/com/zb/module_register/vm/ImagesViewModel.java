@@ -71,7 +71,6 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
     }
 
 
-
     @Override
     public void complete(View view) {
         String images = "";
@@ -144,7 +143,7 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
                     imageList.add(s);
                 }
             }
-            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, position12 -> {
+            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, true, position12 -> {
                 adapter.notifyItemRemoved(position12);
                 images.remove(position12);
                 images.add("");

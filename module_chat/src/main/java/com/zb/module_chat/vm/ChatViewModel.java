@@ -202,7 +202,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                     mBinding.setIsEmoji(false);
                     PreferenceUtil.saveIntValue(activity, "keyboardHeight", height);
                     AdapterBinding.viewSize(mBinding.emojiList, MineApp.W, height);
-                },false);
+                }, false);
         AdapterBinding.viewSize(mBinding.emojiList, MineApp.W, PreferenceUtil.readIntValue(activity, "keyboardHeight") == 0 ? MineApp.H / 3 : PreferenceUtil.readIntValue(activity, "keyboardHeight"));
 
     }
@@ -333,7 +333,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         if (historyMsg.getMsgType() == 2) {
             ArrayList<String> imageList = new ArrayList<>();
             imageList.add(historyMsg.getResLink());
-            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, 0, null);
+            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, 0, false, null);
         } else {
             if (direction == 0) {
                 ivPlay = view.findViewById(R.id.iv_play);

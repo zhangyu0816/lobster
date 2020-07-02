@@ -114,7 +114,8 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/white"
                 android:orientation="horizontal"
-                android:padding="15dp">
+                android:padding="15dp"
+                android:visibility="gone">
 
                 <com.zb.lib_base.views.LineTextView
                     android:id="@+id/tv_name"

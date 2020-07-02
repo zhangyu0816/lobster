@@ -11,5 +11,5 @@ public interface GiftRecordVMInterface {
 
     void incomeDeposit(View view);
 
-    void realNameVerify();
+    void realNameVerify(int position);
 }

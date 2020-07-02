@@ -93,6 +93,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         mBinding.tvTitle.setTypeface(MineApp.simplifiedType);
         mBinding.tvContent.setTypeface(MineApp.simplifiedType);
         mBinding.tvSubContent.setTypeface(MineApp.simplifiedType);
+        mBinding.setUnReadCount(0);
+        mBinding.setNewsCount(0);
         initFragments();
         aMapLocation = new AMapLocation(activity);
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
@@ -214,9 +216,9 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
         selectPage(1);
         new Handler().postDelayed(() -> {
-//            if (PreferenceUtil.readIntValue(activity, "showGuidance") == 0) {
+            if (PreferenceUtil.readIntValue(activity, "showGuidance") == 0) {
                 new GuidancePW(activity, mBinding.getRoot());
-//            }
+            }
         }, 500);
 
     }
@@ -338,6 +340,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onNext(MineNewsCount o) {
                 MineApp.mineNewsCount = o;
+                mBinding.setNewsCount(MineApp.mineNewsCount.getFriendDynamicGiftNum() + MineApp.mineNewsCount.getFriendDynamicReviewNum() + MineApp.mineNewsCount.getFriendDynamicGoodNum());
                 activity.sendBroadcast(new Intent("lobster_newsCount"));
 //                systemChat();
                 chatList();
@@ -352,6 +355,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onNext(SystemMsg o) {
                 MineApp.mineNewsCount.setSystemNewsNum(o.getNoReadNum());
+                mBinding.setNewsCount(MineApp.mineNewsCount.getFriendDynamicGiftNum() + MineApp.mineNewsCount.getFriendDynamicReviewNum() + MineApp.mineNewsCount.getFriendDynamicGoodNum()+MineApp.mineNewsCount.getSystemNewsNum());
                 activity.sendBroadcast(new Intent("lobster_newsCount"));
             }
 
@@ -378,6 +382,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                         MineApp.mineNewsCount.setCreateTime(chatMsg.getCreationDate());
                         MineApp.mineNewsCount.setMsgType(chatMsg.getMsgType());
                         MineApp.mineNewsCount.setSystemNewsNum(chatMsg.getNoReadNum());
+                        mBinding.setNewsCount(MineApp.mineNewsCount.getFriendDynamicGiftNum() + MineApp.mineNewsCount.getFriendDynamicReviewNum() + MineApp.mineNewsCount.getFriendDynamicGoodNum()+MineApp.mineNewsCount.getSystemNewsNum());
                         activity.sendBroadcast(new Intent("lobster_newsCount"));
                     }
                     if (chatMsg.getUserId() > 10010) {

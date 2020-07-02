@@ -53,7 +53,7 @@
                     android:layout_marginEnd="30dp"
                     android:layout_marginBottom="15dp"
                     android:lineSpacingExtra="2dp"
-                    android:text="\t\t\t\t漂流瓶是一个匿名交流功能。将想分享的内容写进漂流瓶后扔出。其他异性用户在打捞时会随机获取漂流瓶，他们可以选择回复或仍会海里从新打捞。当回复后，此漂流瓶将不能再回到海里。\n\t\t\t\t漂流瓶聊天有一方删除聊天后便不能继续聊天。\n\t\t\t\t和谐社会请文明聊天，不文明的内容一经查实会被禁止使用此功能。"
+                    android:text="漂流瓶是一个匿名交流功能。将想分享的内容写进漂流瓶后扔出。其他异性用户在打捞时会随机获取漂流瓶，他们可以选择回复或仍会海里从新打捞。当回复后，此漂流瓶将不能再回到海里。\n漂流瓶聊天有一方删除聊天后便不能继续聊天。\n和谐社会请文明聊天，不文明的内容一经查实会被禁止使用此功能。"
                     android:textColor="@color/black_827"
                     android:textSize="14sp" />
 

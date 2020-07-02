@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="21dp"
                     android:layout_marginTop="10dp"
-                    android:text="手滑了？不要错过任何一个缘分！"
+                    android:text="直接解锁头像，揭开TA的神秘面纱！"
                     android:textColor="@color/black_827"
                     android:textSize="12sp" />
 

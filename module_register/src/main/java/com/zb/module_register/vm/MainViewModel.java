@@ -3,14 +3,17 @@ package com.zb.module_register.vm;
 import android.Manifest;
 import android.os.Build;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.RulePW;
 import com.zb.module_register.iv.MainVMInterface;
@@ -41,6 +44,19 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     @Override
     public void toLogin(View view) {
         showRule(2);
+    }
+
+    private long exitTime = 0;
+
+    @Override
+    public void changeUrl(View view) {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            exitTime = System.currentTimeMillis();
+        } else {
+            exitTime = 0;
+            HttpManager.BASE_URL = TextUtils.equals(HttpManager.BASE_URL, "http://www.zuwo.la/") ? "http://317a598y11.wicp.vip/" : "http://www.zuwo.la/";
+            HttpManager.INSTANCE = null;
+        }
     }
 
     private void showRule(int type) {

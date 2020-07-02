@@ -69,6 +69,10 @@ public class MNImageBrowser {
         imageBrowserConfig.setIndicatorType(indicatorType);
         return this;
     }
+    public MNImageBrowser setShowDelete(boolean showDelete) {
+        imageBrowserConfig.setShowDelete(showDelete);
+        return this;
+    }
 
     public void show(View view) {
         //判断是不是空

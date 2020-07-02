@@ -44,6 +44,7 @@ public class ImageBrowserConfig {
     private OnClickListener onClickListener;
     private OnLongClickListener onLongClickListener;
     private OnDeleteImageListener onDeleteImageListener;
+    private boolean showDelete = false;
 
     public IndicatorType getIndicatorType() {
         return indicatorType;
@@ -107,5 +108,13 @@ public class ImageBrowserConfig {
 
     public void setTransformType(TransformType transformType) {
         this.transformType = transformType;
+    }
+
+    public boolean isShowDelete() {
+        return showDelete;
+    }
+
+    public void setShowDelete(boolean showDelete) {
+        this.showDelete = showDelete;
     }
 }

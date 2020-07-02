@@ -30,7 +30,7 @@ public class HttpManager {
     /*超时设置*/
     private static final int DEFAULT_TIMEOUT = 6;
     private HttpService httpService;
-    private volatile static HttpManager INSTANCE;
+    public volatile static HttpManager INSTANCE;
 
     //构造方法私有
     private HttpManager() {
