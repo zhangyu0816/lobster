@@ -576,21 +576,28 @@ public class XBanner extends RelativeLayout {
 
     private void bindView() {
         binding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.xbanner, this, true);
-        binding.setVariable(BR.position, -1);
+        int position = type - 1;
+        binding.setVariable(BR.position, position);
         if (mIsTitlebgAlpha) {
             binding.indicatorContainer.setBackgroundColor(Color.TRANSPARENT);
         }
     }
 
     private boolean showBg = false;
+    private int type = 0;
 
     public XBanner setShowBg(boolean showBg) {
         this.showBg = showBg;
         return this;
     }
 
+    public XBanner setType(int type) {
+        this.type = type;
+        return this;
+    }
+
     public void setBannerBg(int position) {
-        if (showBg) {
+        if (showBg && type == 0) {
             binding.setVariable(BR.position, position - 1);
             mImageLoader.getPosition(position - 1);
         }

@@ -15,6 +15,7 @@ public class MineNews extends BaseObservable {
     String friendDynamicImages = "";
     int friendDynamicImageSize;
     String friendDynamicVideoUrl = "";
+    String friendDynamicTitle = "";
     int friendDynamicDycType;
     //    未知   0
 //    文字   1
@@ -204,5 +205,15 @@ public class MineNews extends BaseObservable {
     public void setGiftName(String giftName) {
         this.giftName = giftName;
         notifyPropertyChanged(BR.giftName);
+    }
+
+    @Bindable
+    public String getFriendDynamicTitle() {
+        return friendDynamicTitle;
+    }
+
+    public void setFriendDynamicTitle(String friendDynamicTitle) {
+        this.friendDynamicTitle = friendDynamicTitle;
+        notifyPropertyChanged(BR.friendDynamicTitle);
     }
 }

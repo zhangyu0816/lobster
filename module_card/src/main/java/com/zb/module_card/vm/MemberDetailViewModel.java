@@ -40,7 +40,7 @@ import com.zb.module_card.R;
 import com.zb.module_card.adapter.CardAdapter;
 import com.zb.module_card.databinding.CardMemberDetailBinding;
 import com.zb.module_card.iv.MemberDetailVMInterface;
-import com.zb.module_card.windows.VipAdPW;
+import com.zb.lib_base.windows.VipAdPW;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -240,7 +240,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     if (mineInfo.getMemberType() == 2) {
                         new CountUsedPW(activity, mBinding.getRoot(), 2);
                     } else {
-                        new VipAdPW(activity, mBinding.getRoot());
+                        new VipAdPW(activity, mBinding.getRoot(), false, 3);
                     }
                 }
             }
@@ -272,7 +272,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         if (mineInfo.getMemberType() == 2) {
             makeEvaluate();
         } else {
-            new VipAdPW(activity, mBinding.getRoot());
+            new VipAdPW(activity, mBinding.getRoot(), false, 3);
         }
     }
 

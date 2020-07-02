@@ -50,6 +50,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
     private BaseReceiver doGoodReceiver;
     private BaseReceiver finishRefreshReceiver;
     private BaseReceiver mainSelectReceiver;
+    private BaseReceiver locationReceiver;
     private long friendDynId = 0;
     private DiscoverInfo discoverInfo;
 
@@ -90,11 +91,15 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
         mainSelectReceiver = new BaseReceiver(activity, "lobster_mainSelect") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                mBinding.refresh.setEnableLoadMore(true);
-                pageNo = 1;
-                discoverInfoList.clear();
-                adapter.notifyDataSetChanged();
-                personOtherDyn();
+                onRefreshForNet(null);
+            }
+        };
+
+        // 位置漫游
+        locationReceiver = new BaseReceiver(activity, "lobster_location") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                onRefreshForNet(null);
             }
         };
     }
@@ -104,6 +109,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
         doGoodReceiver.unregisterReceiver();
         finishRefreshReceiver.unregisterReceiver();
         mainSelectReceiver.unregisterReceiver();
+        locationReceiver.unregisterReceiver();
     }
 
     @Override

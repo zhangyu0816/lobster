@@ -49,7 +49,7 @@ import com.zb.module_card.adapter.CardAdapter;
 import com.zb.module_card.databinding.CardFragBinding;
 import com.zb.module_card.iv.CardVMInterface;
 import com.zb.module_card.windows.ExposurePW;
-import com.zb.module_card.windows.VipAdPW;
+import com.zb.lib_base.windows.VipAdPW;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -199,7 +199,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             // 反悔次数用尽
             // new CountUsedPW(activity, mBinding.getRoot(), 1);
         } else {
-            new VipAdPW(activity, mBinding.getRoot());
+            new VipAdPW(activity, mBinding.getRoot(), true, 0);
         }
     }
 
@@ -210,7 +210,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             this.pairInfo = pairInfo;
             makeEvaluate(pairInfo, 2);
         } else {
-            new VipAdPW(activity, mBinding.getRoot());
+            new VipAdPW(activity, mBinding.getRoot(), true, 0);
         }
     }
 
@@ -227,7 +227,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 });
             }
         } else {
-            new VipAdPW(activity, mBinding.getRoot());
+            new VipAdPW(activity, mBinding.getRoot(), true, 0);
         }
     }
 
@@ -331,7 +331,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     if (mineInfo.getMemberType() == 2) {
                         new CountUsedPW(activity, mBinding.getRoot(), 2);
                     } else {
-                        new VipAdPW(activity, mBinding.getRoot());
+                        new VipAdPW(activity, mBinding.getRoot(), true, 0);
                     }
                 }
             }

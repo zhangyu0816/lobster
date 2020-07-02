@@ -77,8 +77,9 @@ public class FeedbackDetailViewModel extends BaseViewModel implements FeedbackDe
         if (TextUtils.equals(images.get(position), "add_image_icon")) {
             getPermissions();
         } else {
+
             ArrayList<String> imageList = new ArrayList<>();
-            for (int i = 0; i < images.size() - 1; i++) {
+            for (int i = 0; i < (feedbackInfo.getId() == 0 ? (images.size() - 1) : images.size()); i++) {
                 imageList.add(images.get(i));
             }
             MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, feedbackInfo.getId() == 0, position12 -> {

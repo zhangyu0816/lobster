@@ -26,6 +26,7 @@ import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.module_card.BR;
 import com.zb.module_card.R;
 import com.zb.module_card.adapter.CardAdapter;
 import com.zb.module_card.databinding.CardMemberDiscoverBinding;
@@ -56,6 +57,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     private BaseReceiver doGoodReceiver;
     private BaseReceiver finishRefreshReceiver;
     private BaseReceiver mainSelectReceiver;
+    private BaseReceiver locationReceiver;
     private long friendDynId = 0;
     private DiscoverInfo discoverInfo;
 
@@ -96,11 +98,15 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
         mainSelectReceiver = new BaseReceiver(activity, "lobster_mainSelect") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                mBinding.refresh.setEnableLoadMore(true);
-                pageNo = 1;
-                discoverInfoList.clear();
-                adapter.notifyDataSetChanged();
-                personOtherDyn();
+                onRefreshForNet(null);
+            }
+        };
+
+        // 位置漫游
+        locationReceiver = new BaseReceiver(activity, "lobster_location") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                onRefreshForNet(null);
             }
         };
     }
@@ -110,6 +116,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
         doGoodReceiver.unregisterReceiver();
         finishRefreshReceiver.unregisterReceiver();
         mainSelectReceiver.unregisterReceiver();
+        locationReceiver.unregisterReceiver();
     }
 
     @Override

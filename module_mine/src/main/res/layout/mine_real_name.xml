@@ -25,9 +25,8 @@
             type="Integer" />
 
         <variable
-            name="errorMsg"
+            name="remind"
             type="String" />
-
     </data>
 
     <LinearLayout
@@ -54,7 +53,7 @@
                 android:background="#FFF5D9"
                 android:gravity="center"
                 android:padding="8dp"
-                android:text="此认证照片仅用于认证，不会在您的个人主页上分享！"
+                android:text="@{remind}"
                 android:textColor="#F7BF00"
                 android:textSize="12sp" />
 
@@ -123,16 +122,6 @@
                         android:textColor="@color/black_4d4"
                         android:textSize="14sp" />
                 </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:text="@{errorMsg}"
-                    android:textColor="@color/red_fe4"
-                    android:textSize="14sp"
-                    android:visibility="@{errorMsg.isEmpty()?View.GONE:View.VISIBLE}"
-                    tools:text="未通过" />
             </LinearLayout>
 
             <TextView

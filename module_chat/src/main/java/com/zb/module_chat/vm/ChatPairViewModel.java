@@ -2,10 +2,12 @@ package com.zb.module_chat.vm;
 
 import android.content.Context;
 import android.content.Intent;
+import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.pairListApi;
 import com.zb.lib_base.api.relievePairApi;
@@ -24,6 +26,7 @@ import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.TextPW;
+import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_chat.R;
 import com.zb.module_chat.adapter.ChatAdapter;
 import com.zb.module_chat.databinding.ChatPairFragmentBinding;
@@ -167,7 +170,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 ActivityUtils.getMineFCL(2);
                 return;
             }
-            SCToastUtil.showToast(activity, "查看被喜欢的人为VIP用户专享功能", true);
+            new VipAdPW(activity, mBinding.getRoot(), false, 4);
         } else if (chatList.getChatType() == 2) {
             // 漂流瓶
             ActivityUtils.getBottleList();

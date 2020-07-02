@@ -17,6 +17,7 @@ import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.R;
 import com.zb.module_mine.databinding.MineFragBinding;
@@ -147,7 +148,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                 ActivityUtils.getMineFCL(2);
                 return;
             }
-            SCToastUtil.showToast(activity, "查看被喜欢的人为VIP用户专享功能", true);
+            new VipAdPW(activity, mBinding.getRoot(), false, 4);
         } else {
             ActivityUtils.getMineFCL(position);
         }

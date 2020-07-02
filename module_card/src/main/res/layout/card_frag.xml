@@ -279,11 +279,14 @@
         </LinearLayout>
 
         <RelativeLayout
+            viewHeightSize="@{ObjectUtils.getLogoHeight(0.92f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.92f)}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
             android:layout_below="@+id/textView"
             android:gravity="center"
-            android:orientation="vertical"
             android:visibility="@{isOutLine?View.VISIBLE:View.GONE}">
 
             <ImageView

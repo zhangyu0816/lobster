@@ -24,6 +24,7 @@ public class RealNameActivity extends MineBaseActivity {
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.title, "真人认证");
         mBinding.setVariable(BR.step, 1);
+        mBinding.setVariable(BR.remind, "此认证照片仅用于认证，不会在您的个人主页上分享！");
     }
 
     @Override

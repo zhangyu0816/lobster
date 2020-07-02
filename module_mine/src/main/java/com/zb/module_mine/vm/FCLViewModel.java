@@ -82,6 +82,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
             @Override
             public void onReceive(Context context, Intent intent) {
                 adapter.notifyItemChanged(_selectIndex);
+                activity.sendBroadcast(new Intent("lobster_resumeContactNum"));
             }
         };
     }

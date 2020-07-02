@@ -35,7 +35,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="22dp"
                 android:padding="15dp"
-                android:text="添加"
+                android:text="反馈"
                 android:textColor="@color/black_252"
                 android:textSize="16sp"
                 android:textStyle="bold" />

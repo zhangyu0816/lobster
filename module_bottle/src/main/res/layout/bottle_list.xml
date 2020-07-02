@@ -10,6 +10,10 @@
             name="viewModel"
             type="com.zb.module_bottle.vm.BottleListViewModel" />
 
+        <variable
+            name="showBg"
+            type="boolean" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,20 +51,20 @@
             </com.google.android.material.appbar.AppBarLayout>
 
             <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                android:id="@+id/refresh"
                 onLoadMoreListener="@{viewModel}"
                 onRefreshListener="@{viewModel}"
-                android:id="@+id/refresh"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/black_efe"
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/bottle_list"
                     adapter="@{viewModel.adapter}"
                     color="@{ObjectUtils.getLineColor()}"
                     recyclerType="@{0}"
                     size="@{1}"
-                    android:id="@+id/bottle_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/white" />
@@ -68,31 +72,41 @@
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="22dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@{showBg?@color/black_252:@android:color/transparent}"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/imageView"
-                onClickDelayed="@{viewModel::back}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:padding="15dp"
-                app:srcCompat="@mipmap/back_white_icon" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="22dp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_centerHorizontal="true"
-                android:text="我的漂流瓶"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp">
 
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/imageView"
+                    onClickDelayed="@{viewModel::back}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:padding="15dp"
+                    app:srcCompat="@mipmap/back_white_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_centerHorizontal="true"
+                    android:text="我的漂流瓶"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

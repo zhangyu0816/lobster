@@ -194,6 +194,8 @@ public class ObjectUtils {
             return "审核中";
         else if (checkStatus == 1)
             return "已通过";
+        else if (checkStatus == 2)
+            return "继续验证";
         else
             return "立即验证";
     }

@@ -28,6 +28,7 @@ import androidx.databinding.ViewDataBinding;
 public class SettingViewModel extends BaseViewModel implements SettingVMInterface {
     private MineInfo mineInfo;
     private BaseReceiver updateWalletReceiver;
+    private BaseReceiver humanFaceReceiver;
     private MineSettingBinding mBinding;
 
     @Override
@@ -50,9 +51,17 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
                 mBinding.setVariable(BR.walletInfo, MineApp.walletInfo);
             }
         };
+
+        humanFaceReceiver = new BaseReceiver(activity,"lobster_humanFace") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                humanFaceStatus();
+            }
+        };
     }
 
     public void onDestroy() {
+        humanFaceReceiver.unregisterReceiver();
         updateWalletReceiver.unregisterReceiver();
     }
 

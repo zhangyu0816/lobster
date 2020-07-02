@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.CountDownTimer;
@@ -199,7 +200,7 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
             @Override
             public void onNext(FaceStatus o) {
                 mBinding.setVariable(BR.checkStatus, o.getIsChecked());
-                mBinding.setVariable(BR.errorMsg, o.getMark());
+                mBinding.setVariable(BR.remind, "虾菇仔细的看了你的照片，发现不合格哦！");
             }
 
             @Override
@@ -218,6 +219,7 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "人脸认证已提交", true);
+                activity.sendBroadcast(new Intent("lobster_humanFace"));
                 back(null);
             }
         }, activity).setFaceImage(image);

@@ -2,8 +2,12 @@ package com.zb.module_bottle.vm;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -19,6 +23,9 @@ import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DisplayUtils;
+import com.zb.lib_base.utils.ObjectUtils;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.TextPW;
@@ -33,6 +40,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 import io.realm.Realm;
 
 public class BottleListViewModel extends BaseViewModel implements BottleListVMInterface, OnRefreshListener, OnLoadMoreListener {
@@ -55,7 +63,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
         mineInfo = mineInfoDb.getMineInfo();
         bottleCacheDb = new BottleCacheDb(Realm.getDefaultInstance());
         mBinding = (BottleListBinding) binding;
-
+        mBinding.setShowBg(false);
         // 开通会员
         openVipReceiver = new BaseReceiver(activity, "lobster_openVip") {
             @Override
@@ -82,6 +90,8 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 adapter.notifyItemChanged(prePosition);
             }
         };
+        int height = ObjectUtils.getViewSizeByWidthFromMax(300);
+        mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> mBinding.setShowBg(verticalOffset < -height));
         setAdapter();
     }
 
