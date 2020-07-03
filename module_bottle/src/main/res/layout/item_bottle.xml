@@ -31,7 +31,7 @@
             android:id="@+id/iv_image"
             defaultRes="@{ObjectUtils.getDefaultRes()}"
             imageUrl="@{item.otherHeadImage}"
-            isBlur="@{viewModel.mineInfo.memberType!=2}"
+            isBlur="@{true}"
             isCircle="@{true}"
             viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"

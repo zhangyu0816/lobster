@@ -30,6 +30,14 @@
         <variable
             name="listNum"
             type="Integer" />
+
+        <variable
+            name="showBg"
+            type="boolean" />
+
+        <variable
+            name="isAttention"
+            type="boolean" />
     </data>
 
     <RelativeLayout
@@ -53,65 +61,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/white"
+                    android:minHeight="82dp"
                     app:contentInsetStart="0dp"
-                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                     <LinearLayout
+                        android:id="@+id/top_linear"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <RelativeLayout
+                        <com.app.abby.xbanner.XBanner
+                            android:id="@+id/banner"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                            <com.app.abby.xbanner.XBanner
-                                android:id="@+id/banner"
-                                android:layout_width="match_parent"
-                                android:layout_height="300dp"
-                                android:background="@color/black_efe" />
-
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="60dp"
-                                android:layout_marginTop="22dp">
-
-                                <ImageView
-                                    onClickDelayed="@{viewModel::back}"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerVertical="true"
-                                    android:padding="15dp"
-                                    app:srcCompat="@mipmap/back_white_icon" />
-
-                                <TextView
-                                    android:id="@+id/tv_follow"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="24dp"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginEnd="15dp"
-                                    android:layout_toStartOf="@+id/iv_more"
-                                    android:background="@drawable/btn_bg_white_radius60"
-                                    android:gravity="center"
-                                    android:onClick="@{viewModel::follow}"
-                                    android:paddingStart="20dp"
-                                    android:paddingEnd="20dp"
-                                    android:text="关注"
-                                    android:textColor="@color/black_4d4"
-                                    android:textSize="13sp"
-                                    android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
-
-                                <ImageView
-                                    android:id="@+id/iv_more"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_centerVertical="true"
-                                    android:onClick="@{viewModel::more}"
-                                    android:padding="15dp"
-                                    app:srcCompat="@mipmap/more_icon" />
-                            </RelativeLayout>
-                        </RelativeLayout>
+                            android:layout_height="300dp"
+                            android:background="@color/black_efe" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -282,6 +246,7 @@
                         android:textSize="12sp"
                         tools:text="(7)" />
                 </LinearLayout>
+
             </com.google.android.material.appbar.AppBarLayout>
 
             <com.scwang.smartrefresh.layout.SmartRefreshLayout
@@ -406,6 +371,66 @@
             </RelativeLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@{showBg?@color/black_252:@android:color/transparent}"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="22dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp">
+
+                <ImageView
+                    android:id="@+id/iv_back"
+                    onClickDelayed="@{viewModel::back}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:padding="15dp"
+                    app:srcCompat="@mipmap/back_white_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/iv_back"
+                    android:text="@{viewModel.discoverInfo.nick}"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:visibility="@{showBg?View.VISIBLE:View.GONE}"
+                    tools:text="杀杀杀" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/iv_more"
+                    android:background="@drawable/btn_bg_white_radius60"
+                    android:gravity="center"
+                    android:onClick="@{viewModel::follow}"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:text="@{isAttention?@string/attention_false:@string/attention_true}"
+                    android:textColor="@{isAttention?@color/black_827:@color/black_4d4}"
+                    android:textSize="13sp"
+                    android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
+
+                <ImageView
+                    android:id="@+id/iv_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:onClick="@{viewModel::more}"
+                    android:padding="15dp"
+                    app:srcCompat="@mipmap/more_icon" />
+            </RelativeLayout>
+        </LinearLayout>
 
     </RelativeLayout>
 </layout>

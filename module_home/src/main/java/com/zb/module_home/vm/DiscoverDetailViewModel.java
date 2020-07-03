@@ -3,6 +3,7 @@ package com.zb.module_home.vm;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -41,6 +42,7 @@ import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.model.Reward;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.KeyboardStateObserver;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
@@ -93,6 +95,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         mBinding.setContent("");
         mBinding.setName("");
         mBinding.setListNum(10);
+        mBinding.setIsAttention(false);
         setAdapter();
         dynDetail();
         // 发送
@@ -126,6 +129,11 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                             translateYDown.start();
                     }
                 }, true);
+
+        new Handler().postDelayed(() -> {
+            int height = DisplayUtils.dip2px(82) - mBinding.topLinear.getHeight();
+            mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> mBinding.setShowBg(verticalOffset <= height));
+        }, 300);
     }
 
     @Override
@@ -172,7 +180,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void follow(View view) {
         super.follow(view);
-        if (mBinding.tvFollow.getText().toString().equals("关注")) {
+        if (!mBinding.getIsAttention()) {
             attentionOther();
         } else {
             cancelAttention();
@@ -411,8 +419,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(Object o) {
                 if (o == null) {
-                    mBinding.tvFollow.setText("取消关注");
-                    mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                    mBinding.setIsAttention(true);
                     attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 } else {
                     attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
@@ -428,8 +435,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         attentionOtherApi api = new attentionOtherApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                mBinding.tvFollow.setText("取消关注");
-                mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                mBinding.setIsAttention(true);
                 attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
             }
@@ -438,8 +444,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
                     if (e.getMessage().equals("已经关注过")) {
-                        mBinding.tvFollow.setText("取消关注");
-                        mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                        mBinding.setIsAttention(true);
                         attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                         activity.sendBroadcast(new Intent("lobster_attentionList"));
                     }
@@ -455,8 +460,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         cancelAttentionApi api = new cancelAttentionApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                mBinding.tvFollow.setText("关注");
-                mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_4d4));
+                mBinding.setIsAttention(false);
                 attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
             }

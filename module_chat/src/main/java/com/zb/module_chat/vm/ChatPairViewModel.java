@@ -2,12 +2,10 @@ package com.zb.module_chat.vm;
 
 import android.content.Context;
 import android.content.Intent;
-import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.pairListApi;
 import com.zb.lib_base.api.relievePairApi;
@@ -22,7 +20,6 @@ import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
-import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.TextPW;

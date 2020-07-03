@@ -37,11 +37,13 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
     private long reviewId;
     private BaseReceiver finishRefreshReceiver;
     private CallBack callBack;
+    private int reviews = 0;
 
-    public ReviewPW(RxAppCompatActivity activity, View parentView, long friendDynId, CallBack callBack) {
+    public ReviewPW(RxAppCompatActivity activity, View parentView, long friendDynId, int reviews, CallBack callBack) {
         super(activity, parentView, false);
         this.friendDynId = friendDynId;
         this.callBack = callBack;
+        this.reviews = reviews;
         initUI();
     }
 
@@ -57,6 +59,7 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
         mBinding.setVariable(BR.name, "");
         mBinding.setVariable(BR.content, "");
         mBinding.setVariable(BR.adapter, adapter);
+        mBinding.setVariable(BR.reviews,reviews);
         binding = (PwsHomeReviewBinding) mBinding;
         seeReviews();
         finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {

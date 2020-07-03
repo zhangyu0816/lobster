@@ -104,7 +104,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
 
     @Override
     public void toReviews(View view) {
-        new ReviewPW(activity, mBinding.getRoot(), friendDynId, () -> {
+        new ReviewPW(activity, mBinding.getRoot(), friendDynId, discoverInfo.getReviews(), () -> {
             discoverInfo.setReviews(discoverInfo.getReviews() + 1);
             mBinding.setViewModel(DiscoverVideoViewModel.this);
         });

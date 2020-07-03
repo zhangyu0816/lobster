@@ -9,10 +9,6 @@
         <import type="android.view.View" />
 
         <variable
-            name="pw"
-            type="com.zb.lib_base.windows.BasePopupWindow" />
-
-        <variable
             name="bottleInfo"
             type="com.zb.lib_base.model.BottleInfo" />
 
@@ -27,9 +23,13 @@
         <variable
             name="btnName"
             type="String" />
+
+        <variable
+            name="pw"
+            type="com.zb.module_bottle.windows.BottleContentPW" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -37,20 +37,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:alpha="0.5"
-            android:background="@color/black" />
+            android:background="@color/black"
+            android:visibility="@{isWrite?View.GONE:View.VISIBLE}" />
 
         <LinearLayout
             viewHeightSize="@{-2}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(980)}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:background="@mipmap/bottle_content_bg"
-            android:orientation="vertical"
-            onClickDelayed="@{pw::touch}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -62,7 +59,7 @@
                     recyclerType="@{5}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="@{isWrite?View.GONE:View.VISIBLE}"/>
+                    android:visibility="@{isWrite?View.GONE:View.VISIBLE}" />
 
                 <EditText
                     android:id="@+id/ed_content"
@@ -70,20 +67,20 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:gravity="top"
-                    android:minLines="5"
-                    android:maxLines="10"
+                    android:hint="在这里写下你想说的话...(100字)"
                     android:lineSpacingExtra="10dp"
                     android:maxLength="100"
+                    android:maxLines="10"
+                    android:minLines="5"
                     android:textColor="@color/black_4d4"
+                    android:textColorHint="#C3BDCD"
                     android:textCursorDrawable="@drawable/cursor_color_black_4d4"
                     android:textSize="16sp"
-                    android:hint="在这里写下你想说的话...(100字)"
-                    android:textColorHint="#C3BDCD"
                     android:visibility="@{isWrite?View.VISIBLE:View.GONE}" />
             </RelativeLayout>
 
             <TextView
-                onClickDelayed="@{pw::sure}"
+                android:id="@+id/tv_sure"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_gravity="center_horizontal"
@@ -98,7 +95,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                onClickDelayed="@{pw::cancel}"
+                android:id="@+id/tv_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_gravity="center_horizontal"
@@ -113,5 +110,38 @@
                 android:textStyle="bold"
                 android:visibility="@{isWrite?View.GONE:View.VISIBLE}" />
         </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="@{isWrite?View.VISIBLE:View.GONE}">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="15dp"
+                app:srcCompat="@mipmap/back_white_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:text="扔一个瓶子"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/iv_question"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:padding="15dp"
+                app:srcCompat="@mipmap/question_white_icon" />
+        </RelativeLayout>
+    </RelativeLayout>
 </layout>

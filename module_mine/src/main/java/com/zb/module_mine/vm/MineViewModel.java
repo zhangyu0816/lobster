@@ -15,7 +15,6 @@ import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
-import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_mine.BR;

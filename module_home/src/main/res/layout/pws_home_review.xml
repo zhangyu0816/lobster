@@ -22,6 +22,11 @@
         <variable
             name="adapter"
             type="com.zb.module_home.adapter.HomeAdapter" />
+
+        <variable
+            name="reviews"
+            type="Integer" />
+
     </data>
 
     <RelativeLayout
@@ -51,7 +56,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp"
-                    android:text="评论"
+                    android:text="@{String.format(@string/reviews,reviews)}"
                     android:textColor="@color/black_252"
                     android:textSize="14sp" />
 

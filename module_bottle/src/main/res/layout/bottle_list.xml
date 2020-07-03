@@ -38,8 +38,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/white"
+                    android:minHeight="82dp"
                     app:contentInsetStart="0dp"
-                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                     <ImageView
                         viewHeightSize="@{ObjectUtils.getViewSizeByWidth(660f/1125f)}"

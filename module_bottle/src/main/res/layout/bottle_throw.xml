@@ -4,9 +4,19 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.zb.module_bottle.vm.BottleThrowViewModel" />
+
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="showBtn"
+            type="boolean" />
 
     </data>
 
@@ -16,6 +26,7 @@
 
         <include
             layout="@layout/bottle_white_back"
+            title="@{title}"
             viewModel="@{viewModel}" />
 
         <LinearLayout
@@ -30,8 +41,8 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                onClickDelayed="@{viewModel::collectBottle}"
                 android:id="@+id/imageView3"
+                onClickDelayed="@{viewModel::collectBottle}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@mipmap/throw_bottle_icon" />
@@ -42,13 +53,14 @@
                 android:text="每天10/10个"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:visibility="@{showBtn?View.VISIBLE:View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <TextView

@@ -2,12 +2,8 @@ package com.zb.module_bottle.vm;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewTreeObserver;
 
-import com.google.android.material.appbar.AppBarLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -25,7 +21,6 @@ import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.ObjectUtils;
-import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.TextPW;
@@ -40,7 +35,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.RecyclerView;
 import io.realm.Realm;
 
 public class BottleListViewModel extends BaseViewModel implements BottleListVMInterface, OnRefreshListener, OnLoadMoreListener {
@@ -90,8 +84,8 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 adapter.notifyItemChanged(prePosition);
             }
         };
-        int height = ObjectUtils.getViewSizeByWidthFromMax(300);
-        mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> mBinding.setShowBg(verticalOffset < -height));
+        int height = DisplayUtils.dip2px(82) - ObjectUtils.getViewSizeByWidth(660f / 1125f);
+        mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> mBinding.setShowBg(verticalOffset <= height));
         setAdapter();
     }
 
@@ -168,7 +162,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
 
     @Override
     public void deleteBottle(int position) {
-        new TextPW(activity, mBinding.getRoot(), "销毁漂流瓶", "销毁后，将不会收到对方发送的消息", "销毁", false, new TextPW.CallBack() {
+        new TextPW(activity, mBinding.getRoot(), "销毁漂流瓶", "销毁后，你将与对方失去联系", "销毁", false, new TextPW.CallBack() {
             @Override
             public void sure() {
                 pickBottle(position);

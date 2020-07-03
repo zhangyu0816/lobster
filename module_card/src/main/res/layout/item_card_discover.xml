@@ -104,10 +104,14 @@
                         android:layout_marginStart="5dp"
                         android:layout_toEndOf="@+id/iv_logo"
                         android:text="@{item.nick}"
+                        android:layout_toStartOf="@+id/tv_good"
+                        android:singleLine="true"
+                        android:ellipsize="end"
                         android:textColor="@color/black_827"
                         android:textSize="12sp" />
 
                     <TextView
+                        android:id="@+id/tv_good"
                         android:onClick="@{v->viewModel.doLike(position)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

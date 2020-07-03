@@ -18,6 +18,8 @@ public class BottleThrowActivity extends BottleBaseActivity {
         fitComprehensiveScreen();
         BottleThrowViewModel viewModel = new BottleThrowViewModel();
         viewModel.setBinding(mBinding);
-        mBinding.setVariable(BR.viewModel,viewModel);
+        mBinding.setVariable(BR.viewModel, viewModel);
+        mBinding.setVariable(BR.title, "我的漂流瓶");
+        mBinding.setVariable(BR.showBtn, true);
     }
 }

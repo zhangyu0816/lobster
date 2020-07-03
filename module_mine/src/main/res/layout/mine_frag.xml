@@ -48,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:padding="15dp"
+                android:padding="20dp"
                 app:srcCompat="@mipmap/news_icon" />
 
             <TextView

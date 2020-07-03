@@ -1,6 +1,7 @@
 package com.zb.module_card.vm;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -27,6 +28,7 @@ import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
+import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -35,12 +37,12 @@ import com.zb.lib_base.windows.CountUsedPW;
 import com.zb.lib_base.windows.SelectorPW;
 import com.zb.lib_base.windows.SharePW;
 import com.zb.lib_base.windows.SuperLikePW;
+import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;
 import com.zb.module_card.adapter.CardAdapter;
 import com.zb.module_card.databinding.CardMemberDetailBinding;
 import com.zb.module_card.iv.MemberDetailVMInterface;
-import com.zb.lib_base.windows.VipAdPW;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,6 +78,11 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         mBinding = (CardMemberDetailBinding) binding;
         mBinding.setVariable(BR.baseInfo, "");
         AdapterBinding.viewSize(mBinding.banner, MineApp.W, ObjectUtils.getLogoHeight(1.0f));
+
+        new Handler().postDelayed(() -> {
+            int height = DisplayUtils.dip2px(82) - mBinding.topLinear.getHeight();
+            mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> mBinding.setShowBg(verticalOffset <= height));
+        }, 300);
         setAdapter();
         initFragments();
         otherInfo();

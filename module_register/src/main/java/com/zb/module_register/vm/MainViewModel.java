@@ -13,7 +13,6 @@ import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
-import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.RulePW;
 import com.zb.module_register.iv.MainVMInterface;
