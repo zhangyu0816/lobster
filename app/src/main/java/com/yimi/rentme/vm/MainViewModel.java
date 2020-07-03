@@ -60,6 +60,7 @@ import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_card.windows.GuidancePW;
+import com.zb.module_mine.BR;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +85,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private BaseReceiver resumeContactNumReceiver;
     private BaseReceiver bottleNumReceiver;
     private BaseReceiver mainSelectReceiver;
+    private BaseReceiver newsCountReceiver;
     private AreaDb areaDb;
 
     @Override
@@ -184,6 +186,16 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 newDynMsgAllNum();
             }
         };
+
+        newsCountReceiver = new BaseReceiver(activity, "lobster_newsCount") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                boolean isClean = intent.getBooleanExtra("isClean", false);
+                if (isClean) {
+                    mBinding.setNewsCount(MineApp.mineNewsCount.getFriendDynamicGiftNum() + MineApp.mineNewsCount.getFriendDynamicReviewNum() + MineApp.mineNewsCount.getFriendDynamicGoodNum() + MineApp.mineNewsCount.getSystemNewsNum());
+                }
+            }
+        };
     }
 
     public void onDestroy() {
@@ -193,6 +205,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         resumeContactNumReceiver.unregisterReceiver();
         bottleNumReceiver.unregisterReceiver();
         mainSelectReceiver.unregisterReceiver();
+        newsCountReceiver.unregisterReceiver();
     }
 
     private void initFragments() {

@@ -15,6 +15,7 @@ import android.view.animation.CycleInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
@@ -138,7 +139,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     currentView.postDelayed(() -> cardCallback.swiped(currentView, ItemTouchHelper.RIGHT), 800);
                     String myHead = mineInfo.getImage();
                     String otherHead = pairInfo.getMoreImages().split("#")[0];
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), pairInfo.getSex());
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), pairInfo.getSex(), null);
                 }
             }
         };
@@ -205,10 +206,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 PairInfo pairInfo = disLikeList.remove(0);
                 setCardAnimationLeftToRight(pairInfo);
             }
-            // 反悔次数用尽
-            // new CountUsedPW(activity, mBinding.getRoot(), 1);
         } else {
-            new VipAdPW(activity, mBinding.getRoot(), true, 0);
+            new VipAdPW(activity, mBinding.getRoot(), false, 2);
         }
     }
 
@@ -219,7 +218,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             this.pairInfo = pairInfo;
             makeEvaluate(pairInfo, 2);
         } else {
-            new VipAdPW(activity, mBinding.getRoot(), true, 0);
+            new VipAdPW(activity, mBinding.getRoot(), false, 3);
         }
     }
 
@@ -236,7 +235,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 });
             }
         } else {
-            new VipAdPW(activity, mBinding.getRoot(), true, 0);
+            new VipAdPW(activity, mBinding.getRoot(), false, 1);
         }
     }
 
@@ -268,7 +267,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     @Override
     public void selectCity(View view) {
         if (mineInfo.getMemberType() == 1) {
-            new TextPW(activity, mBinding.getRoot(), "VIP特权", "位置漫游服务为VIP用户专享功能", "开通会员", ActivityUtils::getMineOpenVip);
+           new VipAdPW( activity, mBinding.getRoot(),false, 5);
             return;
         }
         ActivityUtils.getMineLocation(false);
@@ -288,11 +287,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     pairInfoList.add(pairInfo);
                 }
                 adapter.notifyDataSetChanged();
-
-                // 1喜欢成功 2匹配成功 3喜欢次数用尽
-                String myHead = mineInfo.getImage();
-                String otherHead = pairInfoList.get(0).getMoreImages().split("#")[0];
-                new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), pairInfoList.get(0).getSex());
             }
 
             @Override
@@ -330,12 +324,12 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                         data.putExtra("direction", 2);
                         activity.sendBroadcast(data);
                         activity.sendBroadcast(new Intent("lobster_pairList"));
-                        new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), pairInfo.getSex());
+                        new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), pairInfo.getSex(), null);
                     }
                 } else if (o == 2) {
                     // 匹配成功
                     likeDb.saveLike(new CollectID(pairInfo.getOtherUserId()));
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), pairInfo.getSex());
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), pairInfo.getSex(), () -> ActivityUtils.getChatActivity(pairInfo.getOtherUserId()));
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                 } else if (o == 3) {
                     // 喜欢次数用尽
@@ -345,7 +339,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     if (mineInfo.getMemberType() == 2) {
                         new CountUsedPW(activity, mBinding.getRoot(), 2);
                     } else {
-                        new VipAdPW(activity, mBinding.getRoot(), true, 0);
+                        new VipAdPW(activity, mBinding.getRoot(), false, 3);
                     }
                 }
             }

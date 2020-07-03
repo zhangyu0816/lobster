@@ -53,6 +53,8 @@ public class WithdrawViewModel extends BaseViewModel implements WithdrawVMInterf
                 if (!mBinding.getMoney().isEmpty()) {
                     if (MineApp.walletInfo.getCanWithdrawCreditWallet() < Float.parseFloat(mBinding.getMoney())) {
                         mBinding.setMoney(MineApp.walletInfo.getCanWithdrawCreditWallet() + "");
+                        mBinding.edMoney.setText(MineApp.walletInfo.getCanWithdrawCreditWallet() + "");
+                        mBinding.edMoney.setSelection(mBinding.getMoney().length());
                     }
                 }
             }

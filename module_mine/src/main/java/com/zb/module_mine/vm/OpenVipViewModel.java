@@ -64,13 +64,9 @@ public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterfac
 
     @Override
     public void getVip(int index) {
-        if (index == 0 && preIndex == -1) {
+        if (index == 0) {
             vipBinding.scrollView.scrollTo(0, vipBinding.scrollView.getHeight());
         } else {
-            if (preIndex == -1) {
-                SCToastUtil.showToast(activity, "请选择VIP套餐", true);
-                return;
-            }
             submitOpenedMemberOrder();
         }
     }

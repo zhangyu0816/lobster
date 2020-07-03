@@ -117,10 +117,12 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="20dp"
                         android:layout_marginEnd="15dp"
-                        android:text='@{viewModel.mineInfo.memberExpireTime.isEmpty()?"":viewModel.mineInfo.memberExpireTime.substring(0,10)}'
-                        android:textColor="@color/white_cc"
-                        android:textSize="16sp"
+                        android:gravity="right"
+                        android:text='@{viewModel.mineInfo.memberExpireTime.isEmpty()?"":String.format(@string/member_expire_time,viewModel.mineInfo.memberExpireTime.substring(0,10))}'
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"
                         android:textStyle="bold"
+                        android:alpha="0.8"
                         android:visibility="@{viewModel.mineInfo.memberType==2?View.VISIBLE:View.GONE}" />
 
                     <TextView
@@ -140,17 +142,16 @@
                         android:layout_height="38dp"
                         android:layout_below="@+id/tv_nick"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginTop="5dp"
+                        android:layout_marginTop="15dp"
                         android:layout_marginEnd="15dp"
                         android:background="@drawable/gradient_yellow_ffc_ff9"
                         android:gravity="center"
                         android:paddingStart="25dp"
                         android:paddingEnd="25dp"
-                        android:text="立即开通"
+                        android:text="@{viewModel.mineInfo.memberType==2?@string/pay_vip:@string/open_vip}"
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:visibility="@{viewModel.mineInfo.memberType==2?View.GONE:View.VISIBLE}" />
+                        android:textStyle="bold"/>
                 </RelativeLayout>
 
             </LinearLayout>
@@ -172,8 +173,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="15dp"
-                android:visibility="@{viewModel.mineInfo.memberType==2?View.GONE:View.VISIBLE}">
+                android:padding="15dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -197,7 +197,7 @@
                     android:layout_height="48dp"
                     android:background="@drawable/gradient_purple_6d5_ae7"
                     android:gravity="center"
-                    android:text="获取VIP特权"
+                    android:text="@{viewModel.mineInfo.memberType==2?@string/pay_btn:@string/open_btn}"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />

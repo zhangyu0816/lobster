@@ -240,7 +240,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     } else {
                         String myHead = mineInfo.getImage();
                         String otherHead = memberInfo.getMoreImages().split("#")[0];
-                        new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex());
+                        new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
                     }
                 } else {
                     // 超级喜欢时，非会员或超级喜欢次数用尽

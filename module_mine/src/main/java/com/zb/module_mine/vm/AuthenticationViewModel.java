@@ -97,11 +97,11 @@ public class AuthenticationViewModel extends BaseViewModel implements Authentica
             return;
         }
         if (TextUtils.equals(imageList.get(1), "add_image_icon")) {
-            SCToastUtil.showToast(activity, "请上传身份证正面照片", true);
+            SCToastUtil.showToast(activity, "请上传身份证反面照片", true);
             return;
         }
         if (TextUtils.equals(imageList.get(2), "add_image_icon")) {
-            SCToastUtil.showToast(activity, "请上传身份证正面照片", true);
+            SCToastUtil.showToast(activity, "请上传手持身份证照片", true);
             return;
         }
 

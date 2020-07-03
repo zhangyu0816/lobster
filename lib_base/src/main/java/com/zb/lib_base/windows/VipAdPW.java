@@ -35,7 +35,7 @@ public class VipAdPW extends BasePopupWindow {
         this.isAutoPlay = isAutoPlay;
         this.type = type;
         if (type == 0) {
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 5; i++) {
                 VipAd vipAd = new VipAd();
                 Ads ads = new Ads();
                 if (i == 0) {
@@ -53,15 +53,29 @@ public class VipAdPW extends BasePopupWindow {
                     vipAd.setTitle("超级喜欢");
                     vipAd.setContent("每天10个超级喜欢，开通专属私信通道");
                     ads.setAdRes(R.mipmap.vip_ad_3);
-                } else {
+                } else if (i == 3) {
                     vipAd.setTopRes(R.mipmap.vip_ad_4);
                     vipAd.setTitle("谁喜欢我");
                     vipAd.setContent("第一时间查看喜欢你的人！立即匹配哦~");
                     ads.setAdRes(R.mipmap.vip_ad_4);
+                } else {
+                    vipAd.setTopRes(R.mipmap.vip_ad_5);
+                    vipAd.setTitle("位置漫游");
+                    vipAd.setContent("让你随时随地认识全世界的朋友！");
+                    ads.setAdRes(R.mipmap.vip_ad_5);
                 }
                 vipAdList.add(vipAd);
                 adsList.add(ads);
             }
+        } else if (type == 5) {
+            VipAd vipAd = new VipAd();
+            Ads ads = new Ads();
+            vipAd.setTopRes(R.mipmap.vip_ad_5);
+            vipAd.setTitle("位置漫游");
+            vipAd.setContent("让你随时随地认识全世界的朋友！");
+            ads.setAdRes(R.mipmap.vip_ad_5);
+            vipAdList.add(vipAd);
+            adsList.add(ads);
         } else if (type == 4) {
             VipAd vipAd = new VipAd();
             Ads ads = new Ads();
@@ -78,6 +92,24 @@ public class VipAdPW extends BasePopupWindow {
             vipAd.setTitle("超级喜欢");
             vipAd.setContent("每天10个超级喜欢，开通专属私信通道");
             ads.setAdRes(R.mipmap.vip_ad_3);
+            vipAdList.add(vipAd);
+            adsList.add(ads);
+        } else if (type == 2) {
+            VipAd vipAd = new VipAd();
+            Ads ads = new Ads();
+            vipAd.setTopRes(R.mipmap.vip_ad_2);
+            vipAd.setTitle("划错反悔");
+            vipAd.setContent("手滑了？不要错过任何一个缘分");
+            ads.setAdRes(R.mipmap.vip_ad_2);
+            vipAdList.add(vipAd);
+            adsList.add(ads);
+        } else if (type == 1) {
+            VipAd vipAd = new VipAd();
+            Ads ads = new Ads();
+            vipAd.setTopRes(R.mipmap.vip_ad_1);
+            vipAd.setTitle("超级曝光");
+            vipAd.setContent("增加10倍曝光度，让更多人先发现你");
+            ads.setAdRes(R.mipmap.vip_ad_1);
             vipAdList.add(vipAd);
             adsList.add(ads);
         }

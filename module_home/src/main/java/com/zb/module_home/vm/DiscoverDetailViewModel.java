@@ -293,7 +293,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 String myHead = mineInfo.getImage();
                 String otherHead = memberInfo.getMoreImages().split("#")[0];
                 if (o == 1) {
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex());
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
                 } else if (o == 4) {
                     new CountUsedPW(activity, mBinding.getRoot(), 2);
                 }

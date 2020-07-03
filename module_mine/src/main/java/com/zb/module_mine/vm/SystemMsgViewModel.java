@@ -132,7 +132,9 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
             @Override
             public void onNext(Object o) {
                 MineApp.mineNewsCount.setSystemNewsNum(0);
-                activity.sendBroadcast(new Intent("lobster_newsCount"));
+                Intent data = new Intent("lobster_newsCount");
+                data.putExtra("isClean", true);
+                activity.sendBroadcast(data);
             }
         }, activity).setMessageId(messageId);
         HttpManager.getInstance().doHttpDeal(api);

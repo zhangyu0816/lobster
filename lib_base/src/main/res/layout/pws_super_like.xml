@@ -23,6 +23,9 @@
             name="otherSex"
             type="Integer" />
 
+        <variable
+            name="pw"
+            type="com.zb.lib_base.windows.SuperLikePW" />
 
         <import type="com.zb.lib_base.utils.ObjectUtils" />
 
@@ -42,29 +45,28 @@
             android:background="@android:color/black" />
 
         <RelativeLayout
-            android:layout_width="match_parent"
+            onClickDelayed="@{pw::toChat}"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginStart="55dp"
-            android:layout_marginEnd="55dp"
-            android:background="@{isPair?@drawable/pair_success_icon:@drawable/pws_super_like}"
-            android:paddingBottom="10dp">
+            android:background="@{isPair?@drawable/pair_success_icon:@drawable/pws_super_like}">
 
             <LinearLayout
+                android:id="@+id/image_linear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
-                android:orientation="horizontal">
+                android:layout_centerInParent="true"
+                android:orientation="horizontal"
+                android:paddingTop="30dp">
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="-10dp">
+                    android:layout_marginEnd="-5dp">
 
                     <View
-                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.19f)}"
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.19f)}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         android:background="@{isPair?(otherSex==0?@drawable/circle_red:@drawable/circle_blue):@drawable/circle_white}" />
@@ -72,8 +74,8 @@
                     <ImageView
                         imageUrl="@{otherHead}"
                         isCircle="@{true}"
-                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.18f)}"
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.18f)}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.235f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.235f)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true" />
@@ -82,11 +84,11 @@
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="-10dp">
+                    android:layout_marginStart="-5dp">
 
                     <View
-                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.19f)}"
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.19f)}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.25f)}"
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         android:background="@{mySex==0?@drawable/circle_red:@drawable/circle_blue}" />
@@ -94,8 +96,8 @@
                     <ImageView
                         imageUrl="@{myHead}"
                         isCircle="@{true}"
-                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.18f)}"
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.18f)}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.235f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.235f)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true" />
@@ -110,7 +112,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="40dp"
                 android:visibility="@{isPair?View.GONE:View.VISIBLE}" />
         </RelativeLayout>
     </RelativeLayout>
