@@ -3,6 +3,7 @@ package com.zb.module_mine.vm;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Build;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
@@ -26,7 +27,9 @@ import com.amap.api.services.poisearch.PoiSearch;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.joinPairPoolApi;
+import com.zb.lib_base.api.updatePairPoolApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.LocationInfo;
@@ -42,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
+import io.realm.Realm;
 
 public class LocationViewModel extends BaseViewModel implements LocationVMInterface, GeocodeSearch.OnGeocodeSearchListener {
     public MineAdapter adapter;
@@ -54,10 +58,12 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
     private LatLng tagLl;
     private boolean isSearch = false;
     private GeocodeSearch geocodeSearch;
+    private AreaDb areaDb;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
+        areaDb = new AreaDb(Realm.getDefaultInstance());
         geocodeSearch = new GeocodeSearch(activity);
         geocodeSearch.setOnGeocodeSearchListener(this);
         locationBinding = (MineLocationBinding) binding;
@@ -242,7 +248,9 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
     public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
         RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
         LocationInfo info = locationInfoList.get(prePosition);
-        info.setCityName(regeocodeAddress.getCity());
+        info.setProvinceName(regeocodeAddress.getProvince());
+        info.setCityName(TextUtils.equals(regeocodeAddress.getProvince(), "台湾省") ? "台湾" : regeocodeAddress.getCity());
+        info.setDistrictName(regeocodeAddress.getDistrict());
         PreferenceUtil.saveStringValue(activity, "address", info.getAddress());
 
         if (isDiscover) {
@@ -252,7 +260,7 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
             activity.finish();
         } else {
             MineApp.cityName = info.getCityName();
-            joinPairPool(info.getLongitude() + "", info.getLatitude() + "");
+            updatePairPool(info.getLongitude() + "", info.getLatitude() + "", areaDb.getProvinceId(info.getProvinceName()), areaDb.getCityId(info.getCityName()), areaDb.getDistrictId(info.getDistrictName()));
         }
     }
 
@@ -261,15 +269,15 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
 
     }
 
-    private void joinPairPool(String longitude, String latitude) {
+    private void updatePairPool(String longitude, String latitude, long provinceId, long cityId, long districtId) {
         // 加入匹配池
-        joinPairPoolApi api = new joinPairPoolApi(new HttpOnNextListener() {
+        updatePairPoolApi api = new updatePairPoolApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
                 activity.sendBroadcast(new Intent("lobster_location"));
                 activity.finish();
             }
-        }, activity).setLatitude(latitude).setLongitude(longitude);
+        }, activity).setLatitude(latitude).setLongitude(longitude).setProvinceId(provinceId).setCityId(cityId).setDistrictId(districtId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

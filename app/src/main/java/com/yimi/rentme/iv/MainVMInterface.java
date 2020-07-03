@@ -6,7 +6,7 @@ public interface MainVMInterface {
 
     void selectPage(int index);
 
-    void joinPairPool(String longitude, String latitude);
+    void joinPairPool(String longitude, String latitude, long provinceId, long cityId, long districtId);
 
     void openedMemberPriceList();
 

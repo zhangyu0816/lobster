@@ -272,7 +272,14 @@ public interface HttpService {
     /******************************* 卡片 **********************************/
     // 加入匹配池 (提交当前位置)
     @GET("api/Pair_joinPairPool")
-    Observable<BaseResultEntity> joinPairPool(@Query("longitude") String longitude, @Query("latitude") String latitude);
+    Observable<BaseResultEntity> joinPairPool(@Query("longitude") String longitude, @Query("latitude") String latitude,
+                                              @Query("provinceId") long provinceId, @Query("cityId") long cityId,
+                                              @Query("districtId") long districtId);
+    // 更新(提交当前位置)
+    @GET("api/Pair_updatePairPool")
+    Observable<BaseResultEntity> updatePairPool(@Query("longitude") String longitude, @Query("latitude") String latitude,
+                                              @Query("provinceId") long provinceId, @Query("cityId") long cityId,
+                                              @Query("districtId") long districtId);
 
     // 预匹配列表
     @GET("api/Pair_prePairList")

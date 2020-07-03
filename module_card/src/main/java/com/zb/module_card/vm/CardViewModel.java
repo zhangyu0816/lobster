@@ -1,9 +1,11 @@
 package com.zb.module_card.vm;
 
+import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,8 +15,10 @@ import android.view.animation.CycleInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
+import com.zb.lib_base.api.joinPairPoolApi;
 import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.prePairListApi;
@@ -30,6 +34,7 @@ import com.zb.lib_base.model.DistrictInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.PairInfo;
 import com.zb.lib_base.model.ProvinceInfo;
+import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.ObjectUtils;
@@ -76,8 +81,10 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     private static CardFragBinding cardFragBinding;
     private CardItemTouchHelperCallback<PairInfo> cardCallback;
     private View currentView;
+    private AMapLocation aMapLocation;
     private Handler handler = new Handler(msg -> {
         if (msg.what == 1) {
+            getPermissions();
             adapter.notifyDataSetChanged();
         }
         return false;
@@ -102,6 +109,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         areaDb = new AreaDb(Realm.getDefaultInstance());
         likeDb = new LikeDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
+        aMapLocation = new AMapLocation(activity);
         cardFragBinding = (CardFragBinding) binding;
         // 详情页操作后滑动卡片
         cardReceiver = new BaseReceiver(activity, "lobster_card") {
@@ -354,6 +362,18 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         prePairList(true);
     }
 
+    @Override
+    public void joinPairPool(String longitude, String latitude, long provinceId, long cityId, long districtId) {
+        // 加入匹配池
+        joinPairPoolApi api = new joinPairPoolApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+
+            }
+        }, activity).setLatitude(latitude).setLongitude(longitude).setProvinceId(provinceId).setCityId(cityId).setDistrictId(districtId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
     // 更新adapterUI
     private void updateAdapterUI(View view, CardAdapter imageAdapter, int preIndex, int selectIndex, List<String> imageList) {
         imageAdapter.setSelectImageIndex(selectIndex);
@@ -526,4 +546,65 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+
+    /**
+     * 权限
+     */
+    private void getPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            performCodeWithPermission("虾菇需要访问定位权限", new BaseActivity.PermissionCallback() {
+                        @Override
+                        public void hasPermission() {
+                            setLocation();
+                        }
+
+                        @Override
+                        public void noPermission() {
+                            baseLocation();
+                        }
+                    }, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_PHONE_STATE);
+        } else {
+            setLocation();
+        }
+    }
+
+    private void setLocation() {
+        aMapLocation.start(location -> {
+            if (location != null) {
+                if (location.getErrorCode() == 0) {
+                    MineApp.cityName = location.getCity();
+                    String provinceName = location.getProvince();
+                    String districtName = location.getDistrict();
+                    String address = location.getAddress();
+                    String longitude = location.getLongitude() + "";
+                    String latitude = location.getLatitude() + "";
+
+                    PreferenceUtil.saveStringValue(activity, "longitude", longitude);
+                    PreferenceUtil.saveStringValue(activity, "latitude", latitude);
+                    PreferenceUtil.saveStringValue(activity, "provinceName", provinceName);
+                    PreferenceUtil.saveStringValue(activity, "cityName", MineApp.cityName);
+                    PreferenceUtil.saveStringValue(activity, "districtName", districtName);
+                    PreferenceUtil.saveStringValue(activity, "address", address);
+                    joinPairPool(longitude, latitude, areaDb.getProvinceId(provinceName), areaDb.getCityId(MineApp.cityName), areaDb.getDistrictId(districtName));
+                }
+                aMapLocation.stop();
+                aMapLocation.destroy();
+            }
+        });
+    }
+
+    private void baseLocation() {
+        PreferenceUtil.saveStringValue(activity, "longitude", "120.641956");
+        PreferenceUtil.saveStringValue(activity, "latitude", "28.021994");
+        PreferenceUtil.saveStringValue(activity, "cityName", "温州市");
+        PreferenceUtil.saveStringValue(activity, "provinceName", "浙江省");
+        PreferenceUtil.saveStringValue(activity, "districtName", "鹿城区");
+        PreferenceUtil.saveStringValue(activity, "address", "浙江省温州市鹿城区望江东路175号靠近温州银行(文化支行)");
+        joinPairPool(PreferenceUtil.readStringValue(activity, "longitude"), PreferenceUtil.readStringValue(activity, "latitude"),
+                areaDb.getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")),
+                areaDb.getCityId(PreferenceUtil.readStringValue(activity, "cityName")),
+                areaDb.getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
+    }
 }

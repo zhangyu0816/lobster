@@ -29,4 +29,5 @@ public interface CardVMInterface {
 
     void onRefresh(View view);
 
+    void joinPairPool(String longitude, String latitude, long provinceId, long cityId, long districtId);
 }

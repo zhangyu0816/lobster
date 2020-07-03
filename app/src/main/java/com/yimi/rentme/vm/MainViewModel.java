@@ -33,6 +33,7 @@ import com.zb.lib_base.api.rechargeDiscountListApi;
 import com.zb.lib_base.api.systemChatApi;
 import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -75,7 +76,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private int pageNo = 1;
     private int nowIndex = -1;
     private AnimatorSet animatorSet = new AnimatorSet();
-    private AMapLocation aMapLocation;
+
     private LoginSampleHelper loginHelper;
     private BaseReceiver rechargeReceiver;
     private BaseReceiver chatListReceiver;
@@ -83,11 +84,13 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private BaseReceiver resumeContactNumReceiver;
     private BaseReceiver bottleNumReceiver;
     private BaseReceiver mainSelectReceiver;
+    private AreaDb areaDb;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         MineApp.isLogin = true;
+        areaDb = new AreaDb(Realm.getDefaultInstance());
         chatListDb = new ChatListDb(Realm.getDefaultInstance());
         mBinding = (AcMainBinding) binding;
         mBinding.tvTitle.setTypeface(MineApp.simplifiedType);
@@ -96,9 +99,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         mBinding.setUnReadCount(0);
         mBinding.setNewsCount(0);
         initFragments();
-        aMapLocation = new AMapLocation(activity);
+
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
-        getPermissions();
 
         loginHelper = LoginSampleHelper.getInstance();
         loginHelper.loginOut_Sample();
@@ -173,7 +175,10 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                     selectPage(1);
                 }
                 MineApp.isLogin = true;
-                joinPairPool(PreferenceUtil.readStringValue(activity, "longitude"), PreferenceUtil.readStringValue(activity, "latitude"));
+                joinPairPool(PreferenceUtil.readStringValue(activity, "longitude"), PreferenceUtil.readStringValue(activity, "latitude"),
+                        areaDb.getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")),
+                        areaDb.getCityId(PreferenceUtil.readStringValue(activity, "cityName")),
+                        areaDb.getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
                 myImAccountInfoApi();
                 walletAndPop();
                 newDynMsgAllNum();
@@ -233,14 +238,14 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     }
 
     @Override
-    public void joinPairPool(String longitude, String latitude) {
+    public void joinPairPool(String longitude, String latitude, long provinceId, long cityId, long districtId) {
         // 加入匹配池
         joinPairPoolApi api = new joinPairPoolApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
 
             }
-        }, activity).setLatitude(latitude).setLongitude(longitude);
+        }, activity).setLatitude(latitude).setLongitude(longitude).setProvinceId(provinceId).setCityId(cityId).setDistrictId(districtId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -355,7 +360,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onNext(SystemMsg o) {
                 MineApp.mineNewsCount.setSystemNewsNum(o.getNoReadNum());
-                mBinding.setNewsCount(MineApp.mineNewsCount.getFriendDynamicGiftNum() + MineApp.mineNewsCount.getFriendDynamicReviewNum() + MineApp.mineNewsCount.getFriendDynamicGoodNum()+MineApp.mineNewsCount.getSystemNewsNum());
+                mBinding.setNewsCount(MineApp.mineNewsCount.getFriendDynamicGiftNum() + MineApp.mineNewsCount.getFriendDynamicReviewNum() + MineApp.mineNewsCount.getFriendDynamicGoodNum() + MineApp.mineNewsCount.getSystemNewsNum());
                 activity.sendBroadcast(new Intent("lobster_newsCount"));
             }
 
@@ -382,7 +387,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                         MineApp.mineNewsCount.setCreateTime(chatMsg.getCreationDate());
                         MineApp.mineNewsCount.setMsgType(chatMsg.getMsgType());
                         MineApp.mineNewsCount.setSystemNewsNum(chatMsg.getNoReadNum());
-                        mBinding.setNewsCount(MineApp.mineNewsCount.getFriendDynamicGiftNum() + MineApp.mineNewsCount.getFriendDynamicReviewNum() + MineApp.mineNewsCount.getFriendDynamicGoodNum()+MineApp.mineNewsCount.getSystemNewsNum());
+                        mBinding.setNewsCount(MineApp.mineNewsCount.getFriendDynamicGiftNum() + MineApp.mineNewsCount.getFriendDynamicReviewNum() + MineApp.mineNewsCount.getFriendDynamicGoodNum() + MineApp.mineNewsCount.getSystemNewsNum());
                         activity.sendBroadcast(new Intent("lobster_newsCount"));
                     }
                     if (chatMsg.getUserId() > 10010) {
@@ -577,59 +582,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
     public void stopAnimator() {
         animatorSet.cancel();
-    }
-
-    /**
-     * 权限
-     */
-    private void getPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission("虾菇需要访问定位权限", new BaseActivity.PermissionCallback() {
-                        @Override
-                        public void hasPermission() {
-                            setLocation();
-                        }
-
-                        @Override
-                        public void noPermission() {
-                            baseLocation();
-                        }
-                    }, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_PHONE_STATE);
-        } else {
-            setLocation();
-        }
-    }
-
-    private void setLocation() {
-        aMapLocation.start(location -> {
-            if (location != null) {
-                if (location.getErrorCode() == 0) {
-                    MineApp.cityName = location.getCity();
-                    String address = location.getAddress();
-                    String longitude = location.getLongitude() + "";
-                    String latitude = location.getLatitude() + "";
-
-                    PreferenceUtil.saveStringValue(activity, "longitude", longitude);
-                    PreferenceUtil.saveStringValue(activity, "latitude", latitude);
-                    PreferenceUtil.saveStringValue(activity, "provinceName", location.getProvince());
-                    PreferenceUtil.saveStringValue(activity, "cityName", MineApp.cityName);
-                    PreferenceUtil.saveStringValue(activity, "districtName", location.getDistrict());
-                    PreferenceUtil.saveStringValue(activity, "address", address);
-                    joinPairPool(longitude, latitude);
-                }
-                aMapLocation.stop();
-                aMapLocation.destroy();
-            }
-        });
-    }
-
-    private void baseLocation() {
-        PreferenceUtil.saveStringValue(activity, "longitude", "120.641956");
-        PreferenceUtil.saveStringValue(activity, "latitude", "28.021994");
-        PreferenceUtil.saveStringValue(activity, "cityName", "温州市");
-        PreferenceUtil.saveStringValue(activity, "address", "浙江省温州市鹿城区望江东路175号靠近温州银行(文化支行)");
     }
 
     /**
