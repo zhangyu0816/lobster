@@ -19,6 +19,7 @@ import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.TextPW;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.databinding.MineSettingBinding;
 import com.zb.module_mine.iv.SettingVMInterface;
@@ -84,7 +85,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     @Override
     public void toLocation(View view) {
         if (mineInfo.getMemberType() == 1) {
-            SCToastUtil.showToast(activity, "位置漫游服务为VIP用户专享功能", true);
+            new TextPW(activity, mBinding.getRoot(), "VIP特权", "位置漫游服务为VIP用户专享功能", "开通会员", ActivityUtils::getMineOpenVip);
             return;
         }
         ActivityUtils.getMineLocation(false);

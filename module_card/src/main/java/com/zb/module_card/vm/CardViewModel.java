@@ -48,6 +48,7 @@ import com.zb.lib_base.views.card.OnSwipeListener;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.CountUsedPW;
 import com.zb.lib_base.windows.SuperLikePW;
+import com.zb.lib_base.windows.TextPW;
 import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;
@@ -267,7 +268,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     @Override
     public void selectCity(View view) {
         if (mineInfo.getMemberType() == 1) {
-            SCToastUtil.showToast(activity, "位置漫游服务为VIP用户专享功能", true);
+            new TextPW(activity, mBinding.getRoot(), "VIP特权", "位置漫游服务为VIP用户专享功能", "开通会员", ActivityUtils::getMineOpenVip);
             return;
         }
         ActivityUtils.getMineLocation(false);
@@ -287,6 +288,11 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     pairInfoList.add(pairInfo);
                 }
                 adapter.notifyDataSetChanged();
+
+                // 1喜欢成功 2匹配成功 3喜欢次数用尽
+                String myHead = mineInfo.getImage();
+                String otherHead = pairInfoList.get(0).getMoreImages().split("#")[0];
+                new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), pairInfoList.get(0).getSex());
             }
 
             @Override
