@@ -16,7 +16,6 @@ import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.OrderNumber;
 import com.zb.lib_base.model.OrderTran;
 import com.zb.lib_base.model.VipInfo;
-import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.PaymentPW;
 import com.zb.module_mine.R;
@@ -91,6 +90,8 @@ public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterfac
 
     @Override
     public void submitOpenedMemberOrder() {
+        if (MineApp.vipInfoList.size() == 0)
+            return;
         submitOpenedMemberOrderApi api = new submitOpenedMemberOrderApi(new HttpOnNextListener<OrderNumber>() {
             @Override
             public void onNext(OrderNumber o) {

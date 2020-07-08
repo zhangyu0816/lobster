@@ -21,6 +21,7 @@ public class BottleListActivity extends BottleBaseActivity {
         viewModel = new BottleListViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
+        mBinding.setVariable(BR.noData, true);
     }
 
     @Override

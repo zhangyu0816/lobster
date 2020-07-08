@@ -1,11 +1,9 @@
 package com.yimi.rentme.vm;
 
-import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -53,14 +51,12 @@ import com.zb.lib_base.model.Report;
 import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WalletInfo;
-import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_card.windows.GuidancePW;
-import com.zb.module_mine.BR;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -452,6 +448,11 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                     noReadBottleNum(false);
                     initRemind(o.getBeLikeCount());
                 }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
             }
         }, activity).setOtherUserId(BaseActivity.userId);
         HttpManager.getInstance().doHttpDeal(api);

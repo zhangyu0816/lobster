@@ -134,7 +134,8 @@ public class LoginSampleHelper {
                     JSONObject data = new JSONObject(
                             new JSONObject(ywMessage.getContent()).getString("customize"));
                     if (data.has("message")) { // 聊天信息
-                        appSound();
+                        if (body.getFromId() != BaseActivity.userId)
+                            appSound();
                         // 单聊消息
 //                        YWConversation conversation = conversationService.getConversationByConversationId(contact.getUserId());
                         YWConversation conversation = conversationService.getConversationByUserId(contact.getUserId());
@@ -163,46 +164,46 @@ public class LoginSampleHelper {
         }
     };
 
-    private IYWP2PPushListener mP2PListener = new IYWP2PPushListener() {
-        @Override
-        public void onPushMessage(IYWContact contact, List<YWMessage> messages) {
-            for (YWMessage ywMessage : messages) {
-                CustomMessageBody body = (CustomMessageBody) unpack(ywMessage.getContent());
-                if (Long.parseLong(ywMessage.getAuthorUserId()) == BaseActivity.userId) {
-                    if (body.getMsgType() == 12 || body.getMsgType() == 102 || body.getMsgType() == 112)
-                        return;
-                }
-                if (isBackground()) {
-                    sendMsg(ywMessage);
-                } else {
-                    Log.i("addPushListener", this + "");
-                    try {
-                        JSONObject data = new JSONObject(
-                                new JSONObject(ywMessage.getContent()).getString("customize"));
-                        if (data.has("message")) { // 聊天信息
-                            appSound();
-                            // 单聊消息
-                            YWConversation conversation = conversationService.getConversationByConversationId(ywMessage.getAuthorUserId());
-//                            YWConversation conversation = conversationService.getConversationByUserId(contact.getUserId());
-                            if (conversation != null) {
-                                Intent intent = new Intent("lobster_newMsg");
-                                intent.putExtra("unReadCount", conversation.getUnreadCount());
-                                intent.putExtra("ywMessage", ywMessage);
-                                MineApp.getInstance().sendBroadcast(intent);
-                            }
-                        } else if (data.has("roster")) { // 添加好友
-                            MineApp.getInstance().sendBroadcast(new Intent("lobster_updateFriendList"));
-                            Intent intent = new Intent("lobster_updateFriendStatus");
-                            intent.putExtra("ywMessage", ywMessage);
-                            MineApp.getInstance().sendBroadcast(intent);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-    };
+//    private IYWP2PPushListener mP2PListener = new IYWP2PPushListener() {
+//        @Override
+//        public void onPushMessage(IYWContact contact, List<YWMessage> messages) {
+//            for (YWMessage ywMessage : messages) {
+//                CustomMessageBody body = (CustomMessageBody) unpack(ywMessage.getContent());
+//                if (Long.parseLong(ywMessage.getAuthorUserId()) == BaseActivity.userId) {
+//                    if (body.getMsgType() == 12 || body.getMsgType() == 102 || body.getMsgType() == 112)
+//                        return;
+//                }
+//                if (isBackground()) {
+//                    sendMsg(ywMessage);
+//                } else {
+//                    Log.i("addPushListener", this + "");
+//                    try {
+//                        JSONObject data = new JSONObject(
+//                                new JSONObject(ywMessage.getContent()).getString("customize"));
+//                        if (data.has("message")) { // 聊天信息
+//                            appSound();
+//                            // 单聊消息
+//                            YWConversation conversation = conversationService.getConversationByConversationId(ywMessage.getAuthorUserId());
+////                            YWConversation conversation = conversationService.getConversationByUserId(contact.getUserId());
+//                            if (conversation != null) {
+//                                Intent intent = new Intent("lobster_newMsg");
+//                                intent.putExtra("unReadCount", conversation.getUnreadCount());
+//                                intent.putExtra("ywMessage", ywMessage);
+//                                MineApp.getInstance().sendBroadcast(intent);
+//                            }
+//                        } else if (data.has("roster")) { // 添加好友
+//                            MineApp.getInstance().sendBroadcast(new Intent("lobster_updateFriendList"));
+//                            Intent intent = new Intent("lobster_updateFriendStatus");
+//                            intent.putExtra("ywMessage", ywMessage);
+//                            MineApp.getInstance().sendBroadcast(intent);
+//                        }
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }
+//    };
 
     /**
      * 登出

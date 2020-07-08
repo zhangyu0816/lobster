@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -18,6 +19,11 @@
             name="showBtn"
             type="boolean" />
 
+        <variable
+            name="noReadNum"
+            type="Integer" />
+
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,6 +32,7 @@
 
         <include
             layout="@layout/bottle_white_back"
+            showBtn="@{showBtn}"
             title="@{title}"
             viewModel="@{viewModel}" />
 
@@ -76,18 +83,36 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <TextView
-                onClickDelayed="@{viewModel::myBottle}"
+            <RelativeLayout
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="40dp"
-                android:layout_weight="1"
-                android:background="@drawable/btn_bg_white_radius60"
-                android:gravity="center"
-                android:text="我的漂流瓶"
-                android:textColor="@color/black_252"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:layout_weight="1">
+
+                <TextView
+                    onClickDelayed="@{viewModel::myBottle}"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/btn_bg_white_radius60"
+                    android:gravity="center"
+                    android:text="我的漂流瓶"
+                    android:textColor="@color/black_252"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/circle_red"
+                    android:gravity="center"
+                    android:text='@{String.format("%d",noReadNum)}'
+                    android:textColor="@android:color/white"
+                    android:textSize="9sp"
+                    android:visibility="@{noReadNum==0?View.GONE:View.VISIBLE}"
+                    tools:text="99" />
+            </RelativeLayout>
+
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

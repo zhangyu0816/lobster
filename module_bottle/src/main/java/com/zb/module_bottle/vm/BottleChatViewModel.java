@@ -101,7 +101,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     @Override
     public void toMemberDetail(View view) {
         if (mineInfo.getMemberType() == 2) {
-            ActivityUtils.getCardMemberDetail(bottleInfo.getUserId(), false);
+            ActivityUtils.getCardMemberDetail(bottleInfo.getOtherUserId(), false);
             return;
         }
         new BottleVipPW(activity, mBinding.getRoot());

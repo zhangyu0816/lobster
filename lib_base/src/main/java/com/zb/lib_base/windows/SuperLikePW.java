@@ -1,15 +1,10 @@
 package com.zb.lib_base.windows;
 
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
-import com.zb.lib_base.databinding.PwsSuperLikeBinding;
-import com.zb.lib_base.utils.DisplayUtils;
 
 
 public class SuperLikePW extends BasePopupWindow {

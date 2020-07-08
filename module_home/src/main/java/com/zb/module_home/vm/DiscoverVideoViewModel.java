@@ -33,6 +33,7 @@ import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.SelectorPW;
 import com.zb.lib_base.windows.SharePW;
 import com.zb.lib_base.windows.TextPW;
 import com.zb.module_home.BR;
@@ -42,6 +43,9 @@ import com.zb.module_home.iv.DiscoverVideoVMInterface;
 import com.zb.module_home.windows.GiftPW;
 import com.zb.module_home.windows.GiftPayPW;
 import com.zb.module_home.windows.ReviewPW;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
@@ -55,6 +59,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     private HomeDiscoverVideoBinding mBinding;
     private ObjectAnimator animator;
     private int goodNum = 0;
+    private List<String> selectorList = new ArrayList<>();
 
     @Override
     public void back(View view) {
@@ -149,6 +154,25 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     }
 
     @Override
+    public void more(View view) {
+        super.more(view);
+        new SelectorPW(activity, mBinding.getRoot(), selectorList, position -> {
+            if (position == 0) {
+                // 查看礼物
+                toRewards(null);
+            } else {
+                if (discoverInfo.getUserId() == BaseActivity.userId) {
+                    toDelete(null);
+                } else {
+                    mBinding.setIsPlay(false);
+                    mBinding.videoView.pause();
+                    ActivityUtils.getHomeReport(discoverInfo.getUserId());
+                }
+            }
+        });
+    }
+
+    @Override
     public void deleteDyn() {
         deleteDynApi api = new deleteDynApi(new HttpOnNextListener() {
             @Override
@@ -168,6 +192,10 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             @Override
             public void onNext(DiscoverInfo o) {
                 discoverInfo = o;
+
+                selectorList.add("查看礼物");
+                selectorList.add(discoverInfo.getUserId() == BaseActivity.userId ? "删除动态" : "举报");
+
                 DownLoad.getFilePath(discoverInfo.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), new DownLoad.CallBack() {
                     @Override
                     public void success(String filePath) {

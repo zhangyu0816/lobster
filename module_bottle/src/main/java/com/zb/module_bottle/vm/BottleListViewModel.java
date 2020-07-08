@@ -130,6 +130,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
         myBottleListApi api = new myBottleListApi(new HttpOnNextListener<List<BottleInfo>>() {
             @Override
             public void onNext(List<BottleInfo> o) {
+                mBinding.setNoData(false);
                 int start = bottleInfoList.size();
                 for (BottleInfo bottleInfo : o) {
                     if (bottleInfo.getOtherHeadImage().isEmpty()) {
@@ -180,10 +181,12 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
         pickBottleApi api = new pickBottleApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
+                bottleCacheDb.deleteBottleCache(bottleInfoList.get(position).getDriftBottleId());
                 adapter.notifyItemRemoved(position);
                 bottleInfoList.remove(position);
-                bottleCacheDb.deleteBottleCache(bottleInfoList.get(position).getDriftBottleId());
                 activity.sendBroadcast(new Intent("lobster_bottleNum"));
+
+                mBinding.setNoData(bottleInfoList.size() == 0);
             }
         }, activity).setDriftBottleId(bottleInfoList.get(position).getDriftBottleId()).setDriftBottleType(3);
         api.setShowProgress(true);

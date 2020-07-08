@@ -59,7 +59,7 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
         mBinding.setVariable(BR.name, "");
         mBinding.setVariable(BR.content, "");
         mBinding.setVariable(BR.adapter, adapter);
-        mBinding.setVariable(BR.reviews,reviews);
+        mBinding.setVariable(BR.reviews, reviews);
         binding = (PwsHomeReviewBinding) mBinding;
         seeReviews();
         finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
@@ -126,6 +126,8 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
                 SCToastUtil.showToast(activity, "发布成功", true);
                 binding.setContent("");
                 callBack.success();
+                reviews = reviews + 1;
+                mBinding.setVariable(BR.reviews, reviews);
                 // 下拉刷新
                 onRefresh(binding.refresh);
             }

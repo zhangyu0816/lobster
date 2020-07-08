@@ -6,12 +6,18 @@
 
         <import type="com.zb.lib_base.utils.ObjectUtils" />
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.zb.module_bottle.vm.BottleListViewModel" />
 
         <variable
             name="showBg"
+            type="boolean" />
+
+        <variable
+            name="noData"
             type="boolean" />
 
     </data>
@@ -71,13 +77,24 @@
                     android:background="@android:color/white" />
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="50dp"
+                android:gravity="center_horizontal"
+                android:text="暂无数据"
+                android:textColor="@color/black_4d4"
+                android:textSize="20sp"
+                android:visibility="@{noData?View.VISIBLE:View.GONE}"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:background="@{showBg?@color/black_252:@android:color/transparent}"
+            android:orientation="vertical"
             app:layout_constraintTop_toTopOf="parent">
 
             <View

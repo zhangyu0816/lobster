@@ -4,4 +4,6 @@
     <string name="is_out_line">当前没有网络</string>
     <string name="bottle_reply">立即回复</string>
     <string name="bottle_throw">立即扔海</string>
+    <string name="get_bottle">捡一个瓶子</string>
+    <string name="throw_bottle">扔一个瓶子</string>
 </resources>

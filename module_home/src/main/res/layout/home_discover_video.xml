@@ -62,6 +62,7 @@
                 android:id="@+id/info_relative"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginStart="15dp"
                 android:background="@mipmap/video_play_bg">
 
@@ -122,20 +123,15 @@
                     android:visibility="@{viewModel.memberInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
             </RelativeLayout>
 
-            <TextView
-                onClickDelayed="@{viewModel::toRewards}"
+            <ImageView
+                android:id="@+id/iv_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="15dp"
-                android:text="查看礼物"
-                android:gravity="center"
-                android:drawablePadding="5dp"
-                android:drawableEnd="@mipmap/arrow_right_white_icon"
                 android:layout_centerVertical="true"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:onClick="@{viewModel::more}"
+                android:padding="15dp"
+                app:srcCompat="@mipmap/more_icon" />
         </RelativeLayout>
 
         <TextView
@@ -162,16 +158,32 @@
                 android:layout_toStartOf="@+id/right_linear"
                 android:orientation="vertical">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:background="@mipmap/video_play_text_bg"
-                    android:padding="10dp"
-                    android:text="@{viewModel.discoverInfo.text}"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    tools:text="我看了就反胃了了文理科发" />
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.discoverInfo.friendTitle}"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp"
+                        tools:text="我看了就反胃了了文理科发" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.discoverInfo.text}"
+                        android:textColor="@android:color/white"
+                        android:layout_marginTop="5dp"
+                        android:textSize="14sp"
+                        tools:text="我看了就反胃了了文理科发" />
+                </LinearLayout>
+
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -224,16 +236,6 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
                 android:orientation="vertical">
-
-                <ImageView
-                    onClickDelayed="@{viewModel::toDelete}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="15dp"
-                    android:paddingEnd="15dp"
-                    android:paddingBottom="15dp"
-                    android:src="@mipmap/video_play_delete"
-                    android:visibility="@{viewModel.memberInfo.userId==BaseActivity.userId?View.VISIBLE:View.GONE}" />
 
                 <ImageView
                     onClickDelayed="@{viewModel::doGood}"

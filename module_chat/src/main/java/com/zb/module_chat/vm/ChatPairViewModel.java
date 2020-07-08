@@ -74,8 +74,10 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 int chatType = intent.getIntExtra("chatType", 0);
                 boolean isUpdate = intent.getBooleanExtra("isUpdate", false);
                 if (isUpdate) {
-                    chatMsgList.set(chatType - 1, chatListDb.getChatList(chatType).get(0));
-                    adapter.notifyItemChanged(chatType - 1);
+                    if (chatMsgList.size() != 0) {
+                        chatMsgList.set(chatType - 1, chatListDb.getChatList(chatType).get(0));
+                        adapter.notifyItemChanged(chatType - 1);
+                    }
                 } else {
                     if (chatType == 1) {
                         chatMsgList.clear();

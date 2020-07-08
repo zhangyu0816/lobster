@@ -53,7 +53,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             exitTime = System.currentTimeMillis();
         } else {
             exitTime = 0;
-            HttpManager.BASE_URL = TextUtils.equals(HttpManager.BASE_URL, "http://www.zuwo.la/") ? "http://317a598y11.wicp.vip/" : "http://www.zuwo.la/";
+            HttpManager.BASE_URL = TextUtils.equals(HttpManager.BASE_URL, "http://api1.zuwo.la:8067/") ? "http://317a598y11.wicp.vip/" : "http://api1.zuwo.la:8067/";
             HttpManager.INSTANCE = null;
         }
     }

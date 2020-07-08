@@ -113,8 +113,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="@{isWrite?View.VISIBLE:View.GONE}">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/iv_back"
@@ -129,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_centerHorizontal="true"
-                android:text="扔一个瓶子"
+                android:text="@{isWrite?@string/throw_bottle:@string/get_bottle}"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />

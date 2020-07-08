@@ -63,10 +63,11 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                 } else {
                     int position = -1;
                     for (int i = 0; i < chatMsgList.size(); i++) {
-                        if (chatMsgList.get(i).getUserId() == userId) {
-                            position = i;
-                            break;
-                        }
+                        if (chatMsgList.get(i) != null)
+                            if (chatMsgList.get(i).getUserId() == userId) {
+                                position = i;
+                                break;
+                            }
                     }
                     if (position != -1) {
                         chatMsgList.set(position, chatListDb.getChatMsg(userId, 4));

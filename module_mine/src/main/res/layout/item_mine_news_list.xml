@@ -106,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:singleLine="true"
-                android:text="@{String.format(@string/dyn_text,item.friendDynamicText)}"
+                android:text="@{String.format(@string/dyn_text,item.friendDynamicTitle)}"
                 android:textColor="@color/black_4d4"
                 android:textSize="12sp"
                 android:visibility="@{viewModel.reviewType==3?View.VISIBLE:View.GONE}" />

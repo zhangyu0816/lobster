@@ -42,7 +42,7 @@ public class KeyboardStateObserver {
             int usableHeightSansKeyboard = mChildOfContent.getRootView().getHeight();
             boolean hasNavigationBar = checkDeviceHasNavigationBar();
             int heightDifference = usableHeightSansKeyboard - usableHeightNow - (isFull ? (hasNavigationBar ? StatusBarUtil.getStatusBarHeight(mActivity)*2 : 0) : (hasNavigationBar ? StatusBarUtil.getStatusBarHeight(mActivity) : 0));
-            if (heightDifference > (usableHeightSansKeyboard / 4)) {
+            if (heightDifference > (usableHeightSansKeyboard / 5)) {
                 if (listener != null) {
                     listener.onKeyboardHeight(heightDifference);
                 }

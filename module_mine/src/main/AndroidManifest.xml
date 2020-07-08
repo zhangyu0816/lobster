@@ -3,8 +3,7 @@
     package="com.zb.module_mine">
 
     <application android:theme="@style/MineTheme">
-        <activity
-            android:name=".activity.OpenVipActivity" />
+        <activity android:name=".activity.OpenVipActivity" />
         <activity android:name=".activity.SettingActivity" />
         <activity android:name=".activity.NewsListActivity" />
         <activity android:name=".activity.NewsManagerActivity" />

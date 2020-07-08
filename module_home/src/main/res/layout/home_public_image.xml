@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -35,7 +36,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                android:paddingTop="20dp"
+                android:paddingBottom="10dp">
 
                 <TextView
                     android:id="@+id/textView"
@@ -120,21 +122,20 @@
                     android:textColorHint="#827F9A"
                     android:textCursorDrawable="@drawable/cursor_color_black_252"
                     android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editText2"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="15dp"
+                    android:text="@{ObjectUtils.editMax(content,200)}"
+                    android:textColor="#C3BDCD"
+                    android:textSize="14sp"
+                    tools:text="0/200" />
             </RelativeLayout>
         </ScrollView>
-
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/view3"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="15dp"
-            android:layout_marginBottom="8dp"
-            android:text="@{ObjectUtils.editMax(content,200)}"
-            android:textColor="#C3BDCD"
-            android:textSize="14sp" />
 
         <View
             android:id="@+id/view3"

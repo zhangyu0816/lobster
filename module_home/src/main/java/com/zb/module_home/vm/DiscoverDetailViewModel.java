@@ -53,6 +53,7 @@ import com.zb.lib_base.windows.SelectorPW;
 import com.zb.lib_base.windows.SharePW;
 import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.TextPW;
+import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_home.BR;
 import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
@@ -167,7 +168,11 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 }
             } else {
                 if (position == 0) {
-                    makeEvaluate();
+                    if (mineInfo.getMemberType() == 2) {
+                        makeEvaluate();
+                    } else {
+                        new VipAdPW(activity, mBinding.getRoot(), false, 3);
+                    }
                 } else if (position == 1) {
                     ActivityUtils.getHomeReport(discoverInfo.getUserId());
                 } else if (position == 2) {
@@ -411,6 +416,11 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     public void selectReview(Review review) {
         reviewId = reviewId == review.getReviewId() ? 0 : review.getReviewId();
         mBinding.setVariable(BR.name, reviewId == 0 ? "" : review.getNick());
+    }
+
+    @Override
+    public void toReviewList(View view) {
+        mBinding.appbar.setExpanded(false);
     }
 
     @Override
