@@ -227,7 +227,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
             @Override
             public void onNext(Object o) {
                 likeDb.deleteLike(otherUserId);
-                historyMsgDb.deleteHistoryMsg(otherUserId);
+                historyMsgDb.deleteHistoryMsg(otherUserId, 1, 0);
                 adapter.notifyItemChanged(_selectIndex);
                 Intent data = new Intent("lobster_relieve");
                 data.putExtra("otherUserId", otherUserId);

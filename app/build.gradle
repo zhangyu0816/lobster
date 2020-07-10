@@ -29,6 +29,11 @@ android {
         packagingOptions {
             exclude 'META-INF/rxjava.properties'
         }
+        manifestPlaceholders = [
+                GETUI_APP_ID    : "HHWzdCtaSz5j94MO2tqcT3",
+                GETUI_APP_KEY   : "CH9PAvBiZh9D4iyAMmghb5",
+                GETUI_APP_SECRET: "U0fFTRQ05270lMFvBmWp46"
+        ]
     }
     signingConfigs {
         debug {

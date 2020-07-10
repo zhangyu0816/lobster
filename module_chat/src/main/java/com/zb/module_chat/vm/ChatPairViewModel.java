@@ -51,6 +51,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
     private BaseReceiver updateContactNumReceiver;
     private BaseReceiver relieveReceiver;
     private BaseReceiver finishRefreshReceiver;
+    private BaseReceiver updateChatReceiver;
     private SimpleItemTouchHelperCallback callback;
     private int prePosition = -1;
 
@@ -108,6 +109,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 }
                 adapter.notifyItemRemoved(prePosition);
                 chatMsgList.remove(prePosition);
+                chatListDb.deleteChatMsg(otherUserId);
                 prePosition = -1;
             }
         };
@@ -118,7 +120,24 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 mBinding.refresh.finishLoadMore();
             }
         };
-
+        updateChatReceiver = new BaseReceiver(activity, "lobster_updateChat") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                long userId = intent.getLongExtra("userId", 0);
+                if (userId == 0) {
+                    onRefresh(mBinding.refresh);
+                } else {
+                    for (int i = 0; i < chatMsgList.size(); i++) {
+                        if (chatMsgList.get(i) != null)
+                            if (chatMsgList.get(i).getChatType() == 4 && chatMsgList.get(i).getUserId() == userId) {
+                                chatMsgList.set(i, chatListDb.getChatMsg(userId, 4));
+                                adapter.notifyItemChanged(i);
+                                break;
+                            }
+                    }
+                }
+            }
+        };
         setAdapter();
     }
 
@@ -127,6 +146,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         updateContactNumReceiver.unregisterReceiver();
         relieveReceiver.unregisterReceiver();
         finishRefreshReceiver.unregisterReceiver();
+        updateChatReceiver.unregisterReceiver();
     }
 
     @Override
@@ -208,7 +228,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
             @Override
             public void onNext(Object o) {
                 likeDb.deleteLike(otherUserId);
-                historyMsgDb.deleteHistoryMsg(otherUserId);
+                historyMsgDb.deleteHistoryMsg(otherUserId, 1, 0);
                 Intent data = new Intent("lobster_relieve");
                 data.putExtra("otherUserId", otherUserId);
                 activity.sendBroadcast(data);

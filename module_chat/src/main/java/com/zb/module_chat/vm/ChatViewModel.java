@@ -130,7 +130,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         // 发送
         mBinding.edContent.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEND) {
-                if (mBinding.getContent().isEmpty()) {
+                if (mBinding.getContent().trim().isEmpty()) {
                     return false;
                 }
                 sendChatMessage(1, mBinding.getContent(), "", 0, "【文字】");
@@ -223,7 +223,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
 
     @Override
     public void setAdapter() {
-        realmResults = historyMsgDb.getRealmResults(otherUserId);
+        realmResults = historyMsgDb.getRealmResults(otherUserId, 1, 0);
         historyMsgList.addAll(historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize));
         adapter = new ChatAdapter<>(activity, R.layout.item_chat, historyMsgList, this);
         mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
@@ -287,7 +287,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                     if (historyMsgId > 0) {
                         readOverHistoryMsg();
                     } else {
-                        thirdHistoryMsgList(0);
+                        thirdHistoryMsgList(1);
                     }
                 }
             }
@@ -311,12 +311,12 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     historyMsgList.clear();
-                    realmResults = historyMsgDb.getRealmResults(otherUserId);
+                    realmResults = historyMsgDb.getRealmResults(otherUserId, 1, 0);
                     historyMsgList.addAll(historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize));
                     adapter.notifyDataSetChanged();
                 }
             }
-        }, activity).setOtherUserId(otherUserId).setPageNo(pageNo);
+        }, activity).setOtherUserId(otherUserId).setPageNo(pageNo).setMsgChannelType(1);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -510,7 +510,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         readOverHistoryMsgApi api = new readOverHistoryMsgApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                thirdHistoryMsgList(0);
+                thirdHistoryMsgList(1);
             }
         }, activity).setOtherUserId(otherUserId).setMessageId(historyMsgId);
         HttpManager.getInstance().doHttpDeal(api);
@@ -581,7 +581,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
      * @param summary
      */
     private void sendChatMessage(final int msgType, final String stanza, final String resLink, final int resTime, final String summary) {
-        YWMessageBody body = new CustomMessageBody(msgType, stanza, resLink, resTime, BaseActivity.userId, otherUserId, summary);
+        YWMessageBody body = new CustomMessageBody(msgType, stanza, resLink, resTime, BaseActivity.userId, otherUserId, summary, 0);
         body.setSummary(body.getSummary());
         body.setContent(loginHelper.pack(body));
         final YWMessage message = YWMessageChannel.createCustomMessage(body);

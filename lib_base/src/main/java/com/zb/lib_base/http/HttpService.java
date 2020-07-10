@@ -5,6 +5,7 @@ import com.zb.lib_base.model.AliPay;
 import com.zb.lib_base.model.Authentication;
 import com.zb.lib_base.model.BankInfo;
 import com.zb.lib_base.model.BaseResultEntity;
+import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.BottleMsg;
 import com.zb.lib_base.model.ChatList;
@@ -275,11 +276,12 @@ public interface HttpService {
     Observable<BaseResultEntity> joinPairPool(@Query("longitude") String longitude, @Query("latitude") String latitude,
                                               @Query("provinceId") long provinceId, @Query("cityId") long cityId,
                                               @Query("districtId") long districtId);
+
     // 更新(提交当前位置)
     @GET("api/Pair_updatePairPool")
     Observable<BaseResultEntity> updatePairPool(@Query("longitude") String longitude, @Query("latitude") String latitude,
-                                              @Query("provinceId") long provinceId, @Query("cityId") long cityId,
-                                              @Query("districtId") long districtId);
+                                                @Query("provinceId") long provinceId, @Query("cityId") long cityId,
+                                                @Query("districtId") long districtId);
 
     // 预匹配列表
     @GET("api/Pair_prePairList")
@@ -326,7 +328,7 @@ public interface HttpService {
     // 第三方消息
     @GET("api/Contact_thirdHistoryMsgList")
     Observable<BaseResultEntity<List<HistoryMsg>>> thirdHistoryMsgList(@Query("otherUserId") long otherUserId, @Query("pageNo") int pageNo,
-                                                                       @Query("imPlatformType") int imPlatformType);
+                                                                       @Query("imPlatformType") int imPlatformType, @Query("msgChannelType") int msgChannelType);
 
     // 获取第三方未读会话
     @GET("api/Contact_thirdReadChat")
@@ -361,6 +363,15 @@ public interface HttpService {
     // 漂流瓶未读数量
     @GET("api/DriftBottle_noReadBottleNum")
     Observable<BaseResultEntity<Integer>> noReadBottleNum();
+
+    // 漂流瓶历史记录
+    @GET("api/DriftBottle_historyMsgList")
+    Observable<BaseResultEntity<List<HistoryMsg>>> bottleHistoryMsgList(@Query("otherUserId") long otherUserId, @Query("driftBottleId") long driftBottleId,
+                                                                        @Query("pageNo") int pageNo);
+
+    // 漂流瓶未读会话列表
+    @GET("api/Contact_driftBottleChatList")
+    Observable<BaseResultEntity<List<BottleCache>>> driftBottleChatList(@Query("isPublicAccount") int isPublicAccount, @Query("pageNo") int pageNo);
 
     /******************************* 我的 **********************************/
 

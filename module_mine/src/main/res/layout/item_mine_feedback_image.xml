@@ -15,14 +15,14 @@
 
         <variable
             name="viewModel"
-            type="com.zb.module_mine.vm.FeedbackDetailViewModel" />
+            type="com.zb.lib_base.vm.BaseViewModel" />
     </data>
 
     <ImageView
         defaultRes="@{ObjectUtils.getDefaultRes()}"
         imageUrl="@{item}"
         isRound="@{true}"
-        onClickDelayed="@{v->viewModel.selectImage(position)}"
+        onClickDelayed="@{v->viewModel.selectPosition(position)}"
         roundSize="@{7}"
         viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.3f)}"
         viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.3f)}"

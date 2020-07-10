@@ -19,6 +19,13 @@ public class HistoryMsg extends RealmObject {
     long mainUserId = BaseActivity.userId;
     long otherUserId = 0;
 
+    int isDelete;         //状态 0：正常 1删除
+    int isRead;           //状态 0：未读 1已读
+    int msgChannelType = 1; //消息渠道类型  1.普通聊天 （默认）  2. 漂流瓶
+    long driftBottleId = 0;    //所属漂流瓶
+    int imPlatformType; //
+    String thirdMessageId = ""; //第三方消息id
+
     public long getId() {
         return id;
     }
@@ -105,5 +112,53 @@ public class HistoryMsg extends RealmObject {
 
     public void setOtherUserId(long otherUserId) {
         this.otherUserId = otherUserId;
+    }
+
+    public int getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(int isDelete) {
+        this.isDelete = isDelete;
+    }
+
+    public int getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(int isRead) {
+        this.isRead = isRead;
+    }
+
+    public int getMsgChannelType() {
+        return msgChannelType;
+    }
+
+    public void setMsgChannelType(int msgChannelType) {
+        this.msgChannelType = msgChannelType;
+    }
+
+    public long getDriftBottleId() {
+        return driftBottleId;
+    }
+
+    public void setDriftBottleId(long driftBottleId) {
+        this.driftBottleId = driftBottleId;
+    }
+
+    public int getImPlatformType() {
+        return imPlatformType;
+    }
+
+    public void setImPlatformType(int imPlatformType) {
+        this.imPlatformType = imPlatformType;
+    }
+
+    public String getThirdMessageId() {
+        return thirdMessageId;
+    }
+
+    public void setThirdMessageId(String thirdMessageId) {
+        this.thirdMessageId = thirdMessageId;
     }
 }

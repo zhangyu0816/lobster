@@ -313,6 +313,8 @@ public class LoginSampleHelper {
                 body.setResLink(valueBean.getString("resLink"));
                 if (valueBean.has("resTime"))
                     body.setResTime(valueBean.getInt("resTime"));
+                if (valueBean.has("driftBottleId"))
+                    body.setDriftBottleId(valueBean.getLong("driftBottleId"));
             } else if (data.has("rosterApply")) {
                 JSONObject rosterApply = data.getJSONObject("rosterApply");
                 body.setFromId(rosterApply.getLong("fromId"));
@@ -346,13 +348,11 @@ public class LoginSampleHelper {
         try {
             JSONObject message = new JSONObject();
             JSONObject valueBean = new JSONObject();
-            valueBean.put("msgType",
-                    ((CustomMessageBody) body).getMsgType());
+            valueBean.put("msgType", ((CustomMessageBody) body).getMsgType());
             valueBean.put("stanza", ((CustomMessageBody) body).getStanza());
-            valueBean.put("resLink",
-                    ((CustomMessageBody) body).getResLink());
-            valueBean.put("resTime",
-                    ((CustomMessageBody) body).getResTime());
+            valueBean.put("resLink", ((CustomMessageBody) body).getResLink());
+            valueBean.put("resTime", ((CustomMessageBody) body).getResTime());
+            valueBean.put("driftBottleId", ((CustomMessageBody) body).getDriftBottleId());
             message.put("fromId", ((CustomMessageBody) body).getFromId());
             message.put("toId", ((CustomMessageBody) body).getToId());
             message.put("valueBean", valueBean);

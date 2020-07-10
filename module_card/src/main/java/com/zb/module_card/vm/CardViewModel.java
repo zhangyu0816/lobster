@@ -265,7 +265,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     @Override
     public void selectCity(View view) {
         if (mineInfo.getMemberType() == 1) {
-           new VipAdPW( activity, mBinding.getRoot(),false, 5);
+            new VipAdPW(activity, mBinding.getRoot(), false, 5);
             return;
         }
         ActivityUtils.getMineLocation(false);
@@ -281,7 +281,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     adapter.notifyDataSetChanged();
                 }
                 for (PairInfo pairInfo : o) {
-                    pairInfo.setImageList(Arrays.asList(pairInfo.getMoreImages().split("#")));
+                    if (!pairInfo.getMoreImages().isEmpty())
+                        pairInfo.setImageList(Arrays.asList(pairInfo.getMoreImages().split("#")));
                     pairInfoList.add(pairInfo);
                 }
                 adapter.notifyDataSetChanged();
@@ -374,6 +375,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     // 更新adapterUI
     private void updateAdapterUI(View view, CardAdapter imageAdapter, int preIndex, int selectIndex, List<String> imageList) {
+        if (imageList.size() == 0)
+            return;
         imageAdapter.setSelectImageIndex(selectIndex);
         imageAdapter.notifyItemChanged(preIndex);
         imageAdapter.notifyItemChanged(selectIndex);

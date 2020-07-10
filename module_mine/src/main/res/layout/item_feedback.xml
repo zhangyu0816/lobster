@@ -25,59 +25,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
         android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
         android:background="@drawable/btn_bg_white_radius5"
         android:padding="15dp">
-
-        <ImageView
-            android:id="@+id/iv_logo"
-            defaultRes="@{ObjectUtils.getDefaultRes()}"
-            imageUrl='@{item.images.split(",")[0]}'
-            isCircle="@{true}"
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="15dp" />
 
         <TextView
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/iv_logo"
-            android:text="@{item.title}"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@{item.content}"
+            android:layout_marginEnd="50dp"
             android:textColor="@color/black_252"
             android:textSize="16sp"
             android:textStyle="bold"
-            tools:text="维生素" />
-
-        <TextView
-            android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_name"
-            android:layout_marginTop="5dp"
-            android:layout_toEndOf="@+id/iv_logo"
-            android:text="@{item.createTime}"
-            android:textColor="@color/black_827"
-            android:textSize="12sp"
-            tools:text="维生素" />
+            tools:text="维生素维生素维生素维生素维生素维生素维生素维生素" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_time"
-            android:layout_marginTop="5dp"
-            android:layout_toEndOf="@+id/iv_logo">
+            android:layout_below="@+id/tv_name"
+            android:layout_marginTop="5dp">
 
             <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@+id/tv_status"
-                android:singleLine="true"
-                android:text="@{item.content}"
-                android:textColor="@color/black_4d4"
+                android:text="@{item.createTime}"
+                android:textColor="@color/black_827"
                 android:textSize="12sp"
                 tools:text="维生素" />
 

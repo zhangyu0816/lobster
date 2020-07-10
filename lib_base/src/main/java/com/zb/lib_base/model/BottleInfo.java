@@ -14,12 +14,11 @@ public class BottleInfo extends BaseObservable {
     long userId;
     String text = ""; //内容
     int driftBottleType; //漂流瓶状态 .1.漂流中  2.被拾起  3.销毁
-    long otherUserId; //拾起人id
     int noReadNum;//未读数量
     String otherHeadImage = "";//头像
     String otherNick = "";  //昵称
+    long otherUserId; //
     String modifyTime = "";
-    private List<BottleMsg> messageList = new ArrayList<>();
 
     @Bindable
     public long getDriftBottleId() {
@@ -109,15 +108,5 @@ public class BottleInfo extends BaseObservable {
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
         notifyPropertyChanged(BR.modifyTime);
-    }
-
-    @Bindable
-    public List<BottleMsg> getMessageList() {
-        return messageList;
-    }
-
-    public void setMessageList(List<BottleMsg> messageList) {
-        this.messageList = messageList;
-        notifyPropertyChanged(BR.messageList);
     }
 }

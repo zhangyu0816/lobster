@@ -72,7 +72,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         findBottleApi api = new findBottleApi(new HttpOnNextListener<BottleInfo>() {
             @Override
             public void onNext(BottleInfo o) {
-                mBinding.setVariable(BR.title, "捡一个瓶子");
+                mBinding.setVariable(BR.title, "我的漂流瓶");
                 mBinding.setVariable(BR.showBtn, false);
                 new BottleContentPW(activity, mBinding.getRoot(), o, false, () -> {
                     mBinding.setVariable(BR.title, "我的漂流瓶");

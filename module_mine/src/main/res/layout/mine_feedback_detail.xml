@@ -20,83 +20,137 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <include
-                layout="@layout/back_black_layout"
-                showRight="@{false}"
-                title="@{title}"
-                viewModel="@{viewModel}" />
-
-            <TextView
-                onClickDelayed="@{viewModel::submit}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="22dp"
-                android:padding="15dp"
-                android:text="提交"
-                android:textColor="@color/black_252"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:visibility="@{viewModel.feedbackInfo.id==0?View.VISIBLE:View.GONE}" />
-        </RelativeLayout>
+        <include
+            layout="@layout/back_black_layout"
+            showRight="@{false}"
+            title="@{title}"
+            viewModel="@{viewModel}" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            android:background="@color/black_efe">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/ed_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
-                    android:background="@drawable/btn_bg_white_black_efe_radius5"
-                    android:gravity="top"
-                    android:hint="输入反馈标题"
-                    android:padding="15dp"
-                    android:singleLine="true"
-                    android:text="@={viewModel.feedbackInfo.title}"
-                    android:textColor="@color/black_252"
-                    android:textColorHint="#C3BDCD"
-                    android:textCursorDrawable="@drawable/cursor_color_black_4d4"
-                    android:textSize="16sp" />
-
-                <EditText
-                    android:id="@+id/ed_content"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:layout_marginEnd="15dp"
-                    android:layout_marginBottom="15dp"
-                    android:background="@drawable/btn_bg_white_black_efe_radius5"
-                    android:gravity="top"
-                    android:hint="请填写反馈内容，我们将在15个工作日内处理"
-                    android:lines="8"
-                    android:padding="15dp"
-                    android:text="@={viewModel.feedbackInfo.content}"
-                    android:textColor="@color/black_252"
-                    android:textColorHint="#C3BDCD"
-                    android:textCursorDrawable="@drawable/cursor_color_black_4d4"
-                    android:textSize="16sp" />
+                    android:background="@drawable/btn_bg_white_radius5"
+                    android:padding="15dp">
+
+                    <TextView
+                        android:id="@+id/tv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="50dp"
+                        android:ellipsize="end"
+                        android:singleLine="true"
+                        android:text="@{viewModel.feedbackInfo.content}"
+                        android:textColor="@color/black_252"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        tools:text="维生素维生素维生素维生素维生素维生素维生素维生素" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_name"
+                        android:layout_marginTop="5dp">
+
+                        <TextView
+                            android:id="@+id/tv_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.feedbackInfo.createTime}"
+                            android:textColor="@color/black_827"
+                            android:textSize="12sp"
+                            tools:text="维生素" />
+
+                        <TextView
+                            android:id="@+id/tv_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="@{ObjectUtils.feedbackText(viewModel.feedbackInfo.replyState)}"
+                            android:textColor="@{viewModel.feedbackInfo.replyState==1?@color/black_252:@color/red_fe4}"
+                            android:textSize="12sp"
+                            tools:text="查看回复" />
+                    </RelativeLayout>
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@drawable/btn_bg_white_radius5"
+                    android:orientation="vertical"
+                    android:padding="15dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:orientation="vertical"
+                        android:visibility="@{viewModel.feedbackInfo.replyState==1?View.VISIBLE:View.GONE}">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="回复结果"
+                            android:textColor="@color/black_252"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@{viewModel.feedbackInfo.replyContent}"
+                            android:textColor="@color/black_827"
+                            android:textSize="12sp"
+                            tools:text="服务框架和我咖啡喝完咖啡未来房价劳务纠纷礼物微积分了" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="反馈内容"
+                        android:textColor="@color/black_252"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="@{viewModel.feedbackInfo.content}"
+                        android:textColor="@color/black_827"
+                        android:textSize="12sp"
+                        tools:text="服务框架和我咖啡喝完咖啡未来房价劳务纠纷礼物微积分了" />
+
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
-                    android:text="图片证据（必填）"
+                    android:layout_marginTop="15dp"
+                    android:text="图片反馈"
                     android:textColor="@color/black_252"
                     android:textSize="14sp" />
 
@@ -108,32 +162,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="@{viewModel.feedbackInfo.id==0?View.GONE:View.VISIBLE}">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:text="回复"
-                        android:textColor="@color/black_252"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@{viewModel.feedbackInfo.replyContent}"
-                        tools:text="说服客户为为开发完了 "
-                        android:background="@drawable/btn_bg_white_black_efe_radius5"
-                        android:padding="15dp"
-                        android:layout_margin="15dp"
-                        android:textColor="@color/black_252"
-                        android:textSize="14sp"/>
-                </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </LinearLayout>

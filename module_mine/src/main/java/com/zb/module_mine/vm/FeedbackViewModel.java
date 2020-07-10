@@ -111,7 +111,7 @@ public class FeedbackViewModel extends BaseViewModel implements FeedbackVMInterf
 
     @Override
     public void add(View view) {
-        ActivityUtils.getMineFeedbackDetail(new FeedbackInfo());
+        ActivityUtils.getMineAddFeedback(new FeedbackInfo());
     }
 
 }

@@ -20,6 +20,7 @@ public class WXPayEntryActivity extends RxAppCompatActivity implements IWXAPIEve
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.pay_result);
         api = WXAPIFactory.createWXAPI(this, MineApp.WX_PAY_APPID);

@@ -147,8 +147,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 String districtName = areaDb.getDistrictName(memberInfo.getDistrictId());
                 mBinding.setVariable(BR.baseInfo, distant + sex + constellation + cityName + districtName);
 
+                List<Ads> adsList = new ArrayList<>();
                 if (!memberInfo.getMoreImages().isEmpty()) {
-                    List<Ads> adsList = new ArrayList<>();
                     String[] images = memberInfo.getMoreImages().split("#");
                     for (String image : images) {
                         if (!image.isEmpty()) {
@@ -157,8 +157,12 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                             adsList.add(ads);
                         }
                     }
-                    showBanner(adsList);
+                } else {
+                    Ads ads = new Ads();
+                    ads.setSmallImage(memberInfo.getImage());
+                    adsList.add(ads);
                 }
+                showBanner(adsList);
                 attentionStatus();
                 mBinding.setVariable(BR.viewModel, MemberDetailViewModel.this);
             }

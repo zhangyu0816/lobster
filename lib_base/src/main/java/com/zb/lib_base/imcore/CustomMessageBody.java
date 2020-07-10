@@ -17,12 +17,13 @@ public class CustomMessageBody extends YWMessageBody {
     private String mResLink;
     private int mResTime;
     private String mSummary;
+    private long mDriftBottleId;
     // 好友
     private int status;
     private String askMark;
 
     public CustomMessageBody(int msgType, String stanza, String resLink,
-                             int resTime, long fromId, long toId, String summary) {
+                             int resTime, long fromId, long toId, String summary, long driftBottleId) {
         mMsgType = msgType;
         mStanza = stanza;
         mResLink = resLink;
@@ -30,6 +31,7 @@ public class CustomMessageBody extends YWMessageBody {
         mSummary = summary;
         mFromId = fromId;
         mToId = toId;
+        mDriftBottleId = driftBottleId;
     }
 
     public CustomMessageBody(long fromId, long toId, String summary,
@@ -98,6 +100,14 @@ public class CustomMessageBody extends YWMessageBody {
 
     public void setToId(long toId) {
         this.mToId = toId;
+    }
+
+    public long getDriftBottleId() {
+        return mDriftBottleId;
+    }
+
+    public void setDriftBottleId(long mDriftBottleId) {
+        this.mDriftBottleId = mDriftBottleId;
     }
 
     public int getStatus() {

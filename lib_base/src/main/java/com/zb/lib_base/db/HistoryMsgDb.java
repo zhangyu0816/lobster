@@ -20,16 +20,26 @@ public class HistoryMsgDb extends BaseDao {
         commitTransaction();
     }
 
-    public RealmResults<HistoryMsg> getRealmResults(long otherUserId) {
+    public RealmResults<HistoryMsg> getRealmResults(long otherUserId, int msgChannelType, long driftBottleId) {
         beginTransaction();
-        RealmResults<HistoryMsg> results = realm.where(HistoryMsg.class).equalTo("otherUserId", otherUserId).equalTo("mainUserId", BaseActivity.userId).findAllSorted("creationDate", Sort.DESCENDING);
+        RealmResults<HistoryMsg> results = realm.where(HistoryMsg.class).
+                equalTo("otherUserId", otherUserId).
+                equalTo("msgChannelType", msgChannelType).
+                equalTo("driftBottleId", driftBottleId).
+                equalTo("mainUserId", BaseActivity.userId).
+                findAllSorted("creationDate", Sort.DESCENDING);
         commitTransaction();
         return results;
     }
 
-    public void deleteHistoryMsg(long otherUserId) {
+    public void deleteHistoryMsg(long otherUserId, int msgChannelType, long driftBottleId) {
         beginTransaction();
-        RealmResults<HistoryMsg> results = realm.where(HistoryMsg.class).equalTo("otherUserId", otherUserId).equalTo("mainUserId", BaseActivity.userId).findAll();
+        RealmResults<HistoryMsg> results = realm.where(HistoryMsg.class).
+                equalTo("otherUserId", otherUserId).
+                equalTo("msgChannelType", msgChannelType).
+                equalTo("driftBottleId", driftBottleId).
+                equalTo("mainUserId", BaseActivity.userId).
+                findAll();
         if (results.size() > 0) {
             results.deleteAllFromRealm();
         }

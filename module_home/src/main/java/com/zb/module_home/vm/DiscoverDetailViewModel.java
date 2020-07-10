@@ -132,7 +132,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 }, true);
 
         new Handler().postDelayed(() -> {
-            int height = DisplayUtils.dip2px(82) - mBinding.topLinear.getHeight();
+            int height = DisplayUtils.dip2px(82) - mBinding.banner.getHeight();
             mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> mBinding.setShowBg(verticalOffset <= height));
         }, 300);
     }
@@ -334,7 +334,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 
     @Override
     public void dynDoReview() {
-        if (mBinding.getContent().isEmpty()) {
+        if (mBinding.getContent().trim().isEmpty()) {
             SCToastUtil.showToast(activity, "请输入评论内容", true);
             return;
         }

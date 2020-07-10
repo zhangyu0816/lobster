@@ -28,6 +28,7 @@
         <activity android:name=".activity.SystemMsgActivity" />
         <activity android:name=".activity.WithdrawActivity" />
         <activity android:name=".activity.AuthenticationActivity" />
+        <activity android:name=".activity.AddFeedbackActivity" />
     </application>
 
 </manifest>

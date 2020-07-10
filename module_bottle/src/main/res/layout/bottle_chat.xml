@@ -3,6 +3,10 @@
 
     <data>
 
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.zb.module_bottle.vm.BottleChatViewModel" />
@@ -14,6 +18,10 @@
         <variable
             name="content"
             type="String" />
+
+        <variable
+            name="isEmoji"
+            type="boolean" />
 
     </data>
 
@@ -48,61 +56,132 @@
                 onClickDelayed="@{viewModel::toMemberDetail}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@{viewModel.mineInfo.memberType==2?@drawable/look_icon:@drawable/unlook_icon}"
-                android:padding="15dp"
                 android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"/>
+                android:layout_centerVertical="true"
+                android:padding="15dp"
+                android:src="@{viewModel.mineInfo.memberType==2?@drawable/look_icon:@drawable/unlook_icon}" />
         </RelativeLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            adapter="@{viewModel.adapter}"
-            recyclerType="@{0}"
-            size="@{0}"
-            android:id="@+id/chat_list"
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refresh"
+            onRefreshListener="@{viewModel}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/bottom_layout"
             android:layout_below="@+id/relativeLayout3"
-            android:background="@color/black_efe" />
+            android:background="@color/black_efe">
 
-        <RelativeLayout
+            <com.zb.lib_base.views.MyHeaderView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/chat_list"
+                adapter="@{viewModel.adapter}"
+                recyclerType="@{0}"
+                size="@{0}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/bottom_layout"
+                android:layout_below="@+id/relativeLayout3"
+                android:background="@color/black_efe" />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+        <LinearLayout
             android:id="@+id/bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
 
-            <EditText
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.zb.lib_base.emojj.EmojiEditText
+                    android:id="@+id/ed_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_toStartOf="@+id/btn_linear"
+                    android:background="@drawable/btn_bg_black_efe_radius5"
+                    android:hint="输入文字"
+                    android:imeOptions="actionSend"
+                    android:onClick="@{viewModel::toKeyboard}"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:singleLine="true"
+                    android:text="@={content}"
+                    android:textColor="@color/black_4d4"
+                    android:textColorHint="#C3BDCD"
+                    android:textCursorDrawable="@drawable/cursor_color_black_4d4"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:id="@+id/btn_linear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        onClickDelayed="@{viewModel::toCamera}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:src="@mipmap/chat_camera_icon"
+                        android:visibility="gone"/>
+
+                    <ImageView
+                        onClickDelayed="@{viewModel::toEmoji}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:src="@mipmap/chat_emoji_icon" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@+id/tv_send"
-                android:background="@null"
-                android:hint="输入文字"
-                android:padding="10dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginStart="5dp"
-                android:text="@={content}"
-                android:layout_margin="10dp"
-                android:textColor="@color/black_4d4"
-                android:textColorHint="#C3BDCD"
-                android:textCursorDrawable="@drawable/cursor_color_black_4d4"
-                android:textSize="16sp" />
+                android:visibility="@{isEmoji?View.VISIBLE:View.GONE}">
 
-            <TextView
-                onClickDelayed="@{viewModel::sendBottle}"
-                android:id="@+id/tv_send"
-                android:layout_width="wrap_content"
-                android:layout_height="38dp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="15dp"
-                android:layout_centerVertical="true"
-                android:background="@drawable/btn_bg_purple_7a4_radius60"
-                android:gravity="center"
-                android:textSize="16sp"
-                android:layout_marginStart="5dp"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:text="发送"
-                android:textColor="@android:color/white" />
-        </RelativeLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/emoji_list"
+                    adapter="@{viewModel.emojiAdapter}"
+                    gridNum="@{7}"
+                    recyclerType="@{2}"
+                    size="@{10}"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:padding="15dp" />
+
+                <RelativeLayout
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(140)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(140)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/emoji_list"
+                    android:layout_alignParentEnd="true"
+                    android:layout_margin="15dp"
+                    android:background="@drawable/gradient_white"
+                    android:onClick="@{viewModel::deleteContent}">
+
+                    <ImageView
+                        imageRes="@{ObjectUtils.getEmojiDeleteRes()}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(75)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(90)}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"/>
+                </RelativeLayout>
+            </RelativeLayout>
+
+        </LinearLayout>
     </RelativeLayout>
 </layout>

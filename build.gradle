@@ -22,6 +22,9 @@ allprojects {
         maven {
             url 'http://repo.baichuan-android.taobao.com/content/groups/BaichuanRepositories/'
         }
+        maven {
+            url "http://mvn.gt.igexin.com/nexus/content/repositories/releases/"
+        }
     }
 }
 

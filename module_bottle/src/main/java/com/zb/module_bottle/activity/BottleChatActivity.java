@@ -15,6 +15,10 @@ import com.zb.module_bottle.vm.BottleChatViewModel;
 public class BottleChatActivity extends BaseActivity {
     @Autowired(name = "driftBottleId")
     long driftBottleId;
+    @Autowired(name = "text")
+    String text = "";
+
+    private BottleChatViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +34,18 @@ public class BottleChatActivity extends BaseActivity {
 
     @Override
     public void initUI() {
-        BottleChatViewModel viewModel = new BottleChatViewModel();
+        viewModel = new BottleChatViewModel();
         viewModel.driftBottleId = driftBottleId;
+        viewModel.text = text;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
+        mBinding.setVariable(BR.isEmoji, false);
+        mBinding.setVariable(BR.content, "");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 }

@@ -106,6 +106,11 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Mine_Feedback_Detail).withParcelable("feedbackInfo", feedbackInfo).navigation();
     }
 
+    // 反馈
+    public static void getMineAddFeedback(FeedbackInfo feedbackInfo) {
+        ARouter.getInstance().build(RouteUtils.Mine_Add_Feedback).withParcelable("feedbackInfo", feedbackInfo).navigation();
+    }
+
     // 网页
     public static void getMineWeb(String title, String url) {
         ARouter.getInstance().build(RouteUtils.Mine_Web).withString("title", title).withString("url", url).navigation();
@@ -264,7 +269,7 @@ public class ActivityUtils {
     }
 
     // 漂流瓶主页
-    public static void getBottleChat(long driftBottleId) {
-        ARouter.getInstance().build(RouteUtils.Bottle_Chat).withLong("driftBottleId", driftBottleId).navigation();
+    public static void getBottleChat(long driftBottleId, String text) {
+        ARouter.getInstance().build(RouteUtils.Bottle_Chat).withLong("driftBottleId", driftBottleId).withString("text", text).navigation();
     }
 }

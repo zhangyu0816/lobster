@@ -22,7 +22,7 @@ import rx.schedulers.Schedulers;
  */
 public class HttpManager {
     /* 平台服务器 */
-    public static String BASE_URL = "http://api1.zuwo.la:8067/";
+    public static String BASE_URL = "https://xgapi.zuwo.la/";
     //    public static String BASE_URL = "http://www.zuwo.la:8066/";
     //    public static String BASE_URL = "http://xiagus.utools.club/";//敏耀
 //        public static String BASE_URL = "http://192.168.1.88:8090/";//敏耀

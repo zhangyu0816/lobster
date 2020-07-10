@@ -153,7 +153,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
             @Override
             public void onNext(Object o) {
                 likeDb.deleteLike(otherUserId);
-                historyMsgDb.deleteHistoryMsg(otherUserId);
+                historyMsgDb.deleteHistoryMsg(otherUserId, 1, 0);
                 Intent data = new Intent("lobster_relieve");
                 data.putExtra("otherUserId", otherUserId);
                 activity.sendBroadcast(data);

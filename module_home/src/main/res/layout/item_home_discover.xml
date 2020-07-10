@@ -6,6 +6,8 @@
 
         <import type="com.zb.lib_base.utils.ObjectUtils" />
 
+        <import type="android.view.View" />
+
         <variable
             name="item"
             type="com.zb.lib_base.model.DiscoverInfo" />
@@ -71,7 +73,8 @@
                     android:layout_height="wrap_content"
                     android:text="@{item.friendTitle}"
                     android:textColor="@color/black_252"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:visibility="@{item.friendTitle.isEmpty()?View.GONE:View.VISIBLE}" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -81,7 +84,8 @@
                     android:maxLines="2"
                     android:text="@{item.text}"
                     android:textColor="@color/black_4d4"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="@{item.text.isEmpty()?View.GONE:View.VISIBLE}" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -103,14 +107,14 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="5dp"
-                        android:layout_toEndOf="@+id/iv_logo"
                         android:layout_toStartOf="@+id/tv_good"
-                        android:singleLine="true"
+                        android:layout_toEndOf="@+id/iv_logo"
                         android:ellipsize="end"
+                        android:singleLine="true"
                         android:text="@{viewModel.attentionDb.getAttentionInfo(item.otherUserId).nick}"
                         android:textColor="@color/black_827"
                         android:textSize="12sp"
-                        tools:text="sf "/>
+                        tools:text="sf " />
 
                     <TextView
                         android:id="@+id/tv_good"

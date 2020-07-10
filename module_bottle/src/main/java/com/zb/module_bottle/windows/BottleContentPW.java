@@ -8,13 +8,19 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.castBottleApi;
 import com.zb.lib_base.api.pickBottleApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.BottleCacheDb;
+import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.BottleInfo;
+import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.windows.BottleQuestionPW;
 import com.zb.module_bottle.BR;
@@ -25,6 +31,7 @@ import com.zb.module_bottle.databinding.PwsBottleContentBinding;
 import java.util.Arrays;
 
 import androidx.databinding.DataBindingUtil;
+import io.realm.Realm;
 
 public class BottleContentPW extends PopupWindow {
     private BottleInfo bottleInfo;
@@ -82,7 +89,7 @@ public class BottleContentPW extends PopupWindow {
 
         mBinding.tvCancel.setOnClickListener(view -> pickBottle(1));
 
-        mBinding.ivBack.setOnClickListener(view ->   pw.dismiss());
+        mBinding.ivBack.setOnClickListener(view -> pw.dismiss());
 
         mBinding.ivQuestion.setOnClickListener(view -> {
             pw.dismiss();
@@ -108,7 +115,7 @@ public class BottleContentPW extends PopupWindow {
             @Override
             public void onNext(Object o) {
                 if (driftBottleType == 2) {
-                    ActivityUtils.getBottleChat(bottleInfo.getDriftBottleId());
+                    ActivityUtils.getBottleChat(bottleInfo.getDriftBottleId(), bottleInfo.getText());
                 }
                 pw.dismiss();
             }

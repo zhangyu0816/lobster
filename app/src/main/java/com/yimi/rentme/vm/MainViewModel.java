@@ -19,6 +19,7 @@ import com.zb.lib_base.api.bankInfoListApi;
 import com.zb.lib_base.api.chatListApi;
 import com.zb.lib_base.api.comTypeApi;
 import com.zb.lib_base.api.contactNumApi;
+import com.zb.lib_base.api.driftBottleChatListApi;
 import com.zb.lib_base.api.giftListApi;
 import com.zb.lib_base.api.joinPairPoolApi;
 import com.zb.lib_base.api.likeMeListApi;
@@ -32,16 +33,20 @@ import com.zb.lib_base.api.systemChatApi;
 import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
+import com.zb.lib_base.db.BottleCacheDb;
 import com.zb.lib_base.db.ChatListDb;
+import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.imcore.CustomMessageBody;
 import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.model.BankInfo;
+import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.GiftInfo;
+import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.MemberInfo;
@@ -71,6 +76,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private AcMainBinding mBinding;
     private ChatListDb chatListDb;
     private int pageNo = 1;
+    private int bottlePageNo = 1;
+    private BottleCacheDb bottleCacheDb;
     private int nowIndex = -1;
     private AnimatorSet animatorSet = new AnimatorSet();
 
@@ -88,6 +95,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         MineApp.isLogin = true;
+        bottleCacheDb = new BottleCacheDb(Realm.getDefaultInstance());
         areaDb = new AreaDb(Realm.getDefaultInstance());
         chatListDb = new ChatListDb(Realm.getDefaultInstance());
         mBinding = (AcMainBinding) binding;
@@ -115,11 +123,13 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             }
         };
 
-        chatListReceiver = new BaseReceiver(activity, "lobster_ chatList") {
+        chatListReceiver = new BaseReceiver(activity, "lobster_chatList") {
             @Override
             public void onReceive(Context context, Intent intent) {
                 pageNo = 1;
                 chatList();
+                bottlePageNo = 1;
+                driftBottleChatList();
             }
         };
 
@@ -132,24 +142,52 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 CustomMessageBody body = (CustomMessageBody) LoginSampleHelper.unpack(ywMessage.getContent());
                 long otherUserId = body.getFromId() == BaseActivity.userId ? body.getToId() : body.getFromId();
 
-                chatListDb.updateChatMsg(otherUserId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType(), count, new ChatListDb.CallBack() {
-                    @Override
-                    public void success() {
-                        mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
-                        Intent data = new Intent("lobster_updateChat");
-                        data.putExtra("userId", otherUserId);
-                        activity.sendBroadcast(data);
-                    }
+                if (body.getDriftBottleId() == 0) {
+                    chatListDb.updateChatMsg(otherUserId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType(), count, new ChatListDb.CallBack() {
+                        @Override
+                        public void success() {
+                            if (otherUserId == BaseActivity.systemUserId) {
 
-                    @Override
-                    public void fail() {
-                        otherInfo(otherUserId, count, body);
-                    }
-                });
+                            } else {
+                                // 更新会话列表
+                                mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
+                                Intent data = new Intent("lobster_updateChat");
+                                data.putExtra("userId", otherUserId);
+                                activity.sendBroadcast(data);
+                            }
+                        }
 
-                Intent upMessage = new Intent("lobster_upMessage/friend=" + otherUserId);
-                upMessage.putExtra("ywMessage", ywMessage);
-                activity.sendBroadcast(upMessage);
+                        @Override
+                        public void fail() {
+                            otherInfo(otherUserId, count, body);
+                        }
+                    });
+                    // 更新对话页面
+                    Intent upMessage = new Intent("lobster_upMessage/friend=" + otherUserId);
+                    upMessage.putExtra("ywMessage", ywMessage);
+                    activity.sendBroadcast(upMessage);
+                } else {
+                    BottleCache bottleCache = new BottleCache();
+                    bottleCache.setDriftBottleId(body.getDriftBottleId());
+                    bottleCache.setUserId(otherUserId);
+                    bottleCache.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
+                    bottleCache.setStanza(body.getStanza());
+                    bottleCache.setMsgType(body.getMsgType());
+                    bottleCache.setNoReadNum(count);
+                    bottleCache.setMainUserId(BaseActivity.userId);
+                    bottleCacheDb.saveBottleCache(bottleCache);
+
+                    // 更新会话列表
+                    Intent data = new Intent("lobster_singleBottleCache");
+                    data.putExtra("driftBottleId", body.getDriftBottleId());
+                    activity.sendBroadcast(data);
+
+                    // 更新对话页面
+                    Intent upMessage = new Intent("lobster_upMessage/driftBottleId=" + body.getDriftBottleId());
+                    upMessage.putExtra("ywMessage", ywMessage);
+                    activity.sendBroadcast(upMessage);
+                }
+
             }
         };
 
@@ -358,6 +396,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 activity.sendBroadcast(new Intent("lobster_newsCount"));
 //                systemChat();
                 chatList();
+                driftBottleChatList();
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
@@ -419,6 +458,21 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 }
             }
         }, activity).setPageNo(pageNo);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void driftBottleChatList() {
+        driftBottleChatListApi api = new driftBottleChatListApi(new HttpOnNextListener<List<BottleCache>>() {
+            @Override
+            public void onNext(List<BottleCache> o) {
+                for (BottleCache item : o) {
+                    bottleCacheDb.saveBottleCache(item);
+                }
+                bottlePageNo++;
+                driftBottleChatList();
+            }
+        }, activity).setPageNo(bottlePageNo);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -564,6 +618,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 chatList.setAuthType(1);
                 chatListDb.saveChatList(chatList);
                 mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
+                // 更新会话列表
                 Intent data = new Intent("lobster_updateChat");
                 data.putExtra("userId", otherUserId);
                 activity.sendBroadcast(data);

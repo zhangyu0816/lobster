@@ -93,13 +93,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
+                    android:ellipsize="end"
+                    android:maxWidth="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
+                    android:singleLine="true"
                     android:text="@{item.nick}"
                     android:textColor="@android:color/white"
                     android:textSize="25sp"
                     android:textStyle="bold"
-                    android:maxWidth="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
-                    android:singleLine="true"
-                    android:ellipsize="end"
                     tools:text="租我吧租我吧租我吧" />
 
                 <ImageView
@@ -170,6 +170,7 @@
                 android:layout_below="@+id/area_linear"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -211,8 +212,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/info_linear"
                 android:layout_marginStart="15dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="15dp" />
+                android:layout_marginBottom="15dp"
+                android:visibility="@{item.imageList.size()==0?View.GONE:View.VISIBLE}" />
         </RelativeLayout>
 
         <ImageView

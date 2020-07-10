@@ -6,6 +6,8 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 public class ChatList extends RealmObject {
+
+
     @PrimaryKey
     long userId;//好友userId
     String nick = "";//好友昵称
@@ -25,6 +27,8 @@ public class ChatList extends RealmObject {
     //订单信息  人气  不可见
     //租号不可见
     int chatType=0;// 1 喜欢我  2 漂流瓶  3超级喜欢  4 匹配成功
+
+    long driftBottleId;	//所属漂流瓶
 
     public ChatList() {
     }
@@ -123,5 +127,13 @@ public class ChatList extends RealmObject {
 
     public void setChatType(int chatType) {
         this.chatType = chatType;
+    }
+
+    public long getDriftBottleId() {
+        return driftBottleId;
+    }
+
+    public void setDriftBottleId(long driftBottleId) {
+        this.driftBottleId = driftBottleId;
     }
 }

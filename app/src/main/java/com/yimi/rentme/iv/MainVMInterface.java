@@ -26,6 +26,8 @@ public interface MainVMInterface {
 
     void chatList();
 
+    void driftBottleChatList();
+
     void contactNum(boolean isUpdate);
 
     void noReadBottleNum(boolean isUpdate);

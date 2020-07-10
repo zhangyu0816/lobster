@@ -49,6 +49,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     private SimpleItemTouchHelperCallback callback;
     private BottleCacheDb bottleCacheDb;
     private BaseReceiver updateBottleReceiver;
+    private BaseReceiver singleBottleCacheReceiver;
     private int prePosition = -1;
 
     @Override
@@ -78,12 +79,32 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 BottleInfo bottleInfo = bottleInfoList.get(prePosition);
                 BottleCache bottleCache = bottleCacheDb.getBottleCache(bottleInfo.getDriftBottleId());
                 if (bottleCache != null) {
-                    bottleInfo.setText(bottleCache.getText());
-                    bottleInfo.setModifyTime(bottleCache.getModifyTime());
+                    bottleInfo.setText(bottleCache.getStanza());
+                    bottleInfo.setModifyTime(bottleCache.getCreationDate());
                 }
                 adapter.notifyItemChanged(prePosition);
             }
         };
+        singleBottleCacheReceiver = new BaseReceiver(activity, "lobster_singleBottleCache") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                long driftBottleId = intent.getLongExtra("driftBottleId", 0);
+                for (int i = 0; i < bottleInfoList.size(); i++) {
+                    BottleInfo bottleInfo = bottleInfoList.get(i);
+                    if (bottleInfo.getDriftBottleId() == driftBottleId) {
+                        BottleCache bottleCache = bottleCacheDb.getBottleCache(driftBottleId);
+                        if (bottleCache != null) {
+                            bottleInfo.setText(bottleCache.getStanza());
+                            bottleInfo.setModifyTime(bottleCache.getCreationDate());
+                        }
+                        adapter.notifyItemChanged(i);
+                        break;
+                    }
+                }
+
+            }
+        };
+
         int height = DisplayUtils.dip2px(82) - ObjectUtils.getViewSizeByWidth(660f / 1125f);
         mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> mBinding.setShowBg(verticalOffset <= height));
         setAdapter();
@@ -93,6 +114,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
         openVipReceiver.unregisterReceiver();
         finishRefreshReceiver.unregisterReceiver();
         updateBottleReceiver.unregisterReceiver();
+        singleBottleCacheReceiver.unregisterReceiver();
     }
 
     @Override
@@ -121,7 +143,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
         BottleInfo bottleInfo = bottleInfoList.get(position);
         bottleInfo.setNoReadNum(0);
         adapter.notifyItemChanged(position);
-        ActivityUtils.getBottleChat(bottleInfo.getDriftBottleId());
+        ActivityUtils.getBottleChat(bottleInfo.getDriftBottleId(), "");
 
     }
 
@@ -139,8 +161,8 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                     }
                     BottleCache bottleCache = bottleCacheDb.getBottleCache(bottleInfo.getDriftBottleId());
                     if (bottleCache != null) {
-                        bottleInfo.setText(bottleCache.getText());
-                        bottleInfo.setModifyTime(bottleCache.getModifyTime());
+                        bottleInfo.setText(bottleCache.getStanza());
+                        bottleInfo.setModifyTime(bottleCache.getCreationDate());
                     }
                     bottleInfoList.add(bottleInfo);
                 }

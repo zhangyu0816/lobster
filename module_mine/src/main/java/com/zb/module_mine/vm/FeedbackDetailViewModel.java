@@ -1,32 +1,18 @@
 package com.zb.module_mine.vm;
 
-import android.Manifest;
-import android.os.Build;
-import android.text.TextUtils;
 import android.view.View;
 
 import com.maning.imagebrowserlibrary.MNImage;
-import com.zb.lib_base.activity.BaseActivity;
-import com.zb.lib_base.api.addFeedBackApi;
-import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.http.HttpManager;
-import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.FeedbackInfo;
-import com.zb.lib_base.utils.ActivityUtils;
-import com.zb.lib_base.utils.DataCleanManager;
-import com.zb.lib_base.utils.SCToastUtil;
-import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.R;
 import com.zb.module_mine.adapter.MineAdapter;
 import com.zb.module_mine.databinding.MineFeedbackDetailBinding;
 import com.zb.module_mine.iv.FeedbackDetailVMInterface;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import androidx.databinding.ViewDataBinding;
 
@@ -35,125 +21,34 @@ public class FeedbackDetailViewModel extends BaseViewModel implements FeedbackDe
     public MineAdapter adapter;
     private MineFeedbackDetailBinding mBinding;
     public List<String> images = new ArrayList<>();
-    private PhotoManager photoManager;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (MineFeedbackDetailBinding) binding;
-        mBinding.setTitle(feedbackInfo.getId() == 0 ? "添加反馈" : "反馈详情");
-        mBinding.edContent.setEnabled(feedbackInfo.getId() == 0);
-        mBinding.edTitle.setEnabled(feedbackInfo.getId() == 0);
+        mBinding.setTitle("反馈详情");
         setAdapter();
-        photoManager = new PhotoManager(activity, () -> {
-            addFeedBack(photoManager.jointWebUrl(","));
-        });
     }
 
     @Override
     public void back(View view) {
         super.back(view);
-        MineApp.selectMap.clear();
-        MineApp.selectPathMap.clear();
-        MineApp.cutImageViewMap.clear();
-        DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
         activity.finish();
     }
 
     @Override
     public void setAdapter() {
-        if (feedbackInfo.getId() == 0)
-            images.add("add_image_icon");
-        else {
-            images.addAll(Arrays.asList(feedbackInfo.getImages().split(",")));
-        }
+        images.addAll(Arrays.asList(feedbackInfo.getImages().split(",")));
         adapter = new MineAdapter<>(activity, R.layout.item_mine_feedback_image, images, this);
     }
 
     @Override
-    public void selectImage(int position) {
-        if (TextUtils.equals(images.get(position), "add_image_icon")) {
-            getPermissions();
-        } else {
-
-            ArrayList<String> imageList = new ArrayList<>();
-            for (int i = 0; i < (feedbackInfo.getId() == 0 ? (images.size() - 1) : images.size()); i++) {
-                imageList.add(images.get(i));
-            }
-            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, feedbackInfo.getId() == 0, position12 -> {
-                int count = MineApp.selectMap.remove(MineApp.selectPathMap.get(images.get(position12)));
-                MineApp.cutImageViewMap.remove(MineApp.selectPathMap.get(images.get(position12)));
-                MineApp.selectPathMap.remove(images.get(position12));
-                for (Map.Entry<String, Integer> entry : MineApp.selectMap.entrySet()) {
-                    if (entry.getValue() > count) {
-                        MineApp.selectMap.put(entry.getKey(), entry.getValue() - 1);
-                    }
-                }
-                adapter.notifyItemRemoved(position12);
-                images.remove(position12);
-                adapter.notifyDataSetChanged();
-            });
+    public void selectPosition(int position) {
+        super.selectPosition(position);
+        ArrayList<String> imageList = new ArrayList<>();
+        for (int i = 0; i < (feedbackInfo.getId() == 0 ? (images.size() - 1) : images.size()); i++) {
+            imageList.add(images.get(i));
         }
-    }
-
-    @Override
-    public void submit(View view) {
-        if (feedbackInfo.getTitle().isEmpty()) {
-            SCToastUtil.showToast(activity, "请填写反馈标题", true);
-            return;
-        }
-        if (feedbackInfo.getContent().isEmpty()) {
-            SCToastUtil.showToast(activity, "请填写反馈内容", true);
-            return;
-        }
-        if (images.size() == 1) {
-            SCToastUtil.showToast(activity, "请上传图片证据", true);
-            return;
-        }
-
-        List<String> imageList = new ArrayList<>();
-        for (String url : images) {
-            if (!TextUtils.equals(url, "add_image_icon")) {
-                imageList.add(url);
-            }
-        }
-        photoManager.addFiles(imageList, () -> photoManager.reUploadByUnSuccess());
-    }
-
-    @Override
-    public void addFeedBack(String images) {
-        addFeedBackApi api = new addFeedBackApi(new HttpOnNextListener() {
-            @Override
-            public void onNext(Object o) {
-                SCToastUtil.showToast(activity, "提交成功", true);
-                back(null);
-            }
-        }, activity).setContent(feedbackInfo.getContent()).setImages(images).setTitle(feedbackInfo.getTitle());
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    /**
-     * 权限
-     */
-    private void getPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission("虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
-                        @Override
-                        public void hasPermission() {
-                            setPermissions();
-                        }
-
-                        @Override
-                        public void noPermission() {
-                        }
-                    }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO);
-        } else {
-            setPermissions();
-        }
-    }
-
-    private void setPermissions() {
-        ActivityUtils.getCameraMain(activity, true, false);
+        MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, false, null);
     }
 }

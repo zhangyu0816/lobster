@@ -92,4 +92,6 @@ dependencies {
     api files('libs/open_sdk_r5923_lite.jar')
     // 网路请求
     api files('libs/xUtils-2.6.14.jar')
+    //个推
+    api 'com.getui:sdk:2.13.2.0'
 }

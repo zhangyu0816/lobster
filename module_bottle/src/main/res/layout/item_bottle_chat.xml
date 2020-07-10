@@ -12,7 +12,7 @@
 
         <variable
             name="item"
-            type="com.zb.lib_base.model.BottleMsg" />
+            type="com.zb.lib_base.model.HistoryMsg" />
 
         <variable
             name="viewModel"
@@ -30,7 +30,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
-            android:visibility="@{item.userId!=BaseActivity.userId?View.VISIBLE:View.GONE}">
+            android:visibility="@{item.fromId!=BaseActivity.userId?View.VISIBLE:View.GONE}">
 
             <ImageView
                 android:id="@+id/iv_other_logo"
@@ -51,7 +51,7 @@
                 android:layout_toEndOf="@+id/iv_other_logo"
                 android:background="@drawable/btn_bg_white_radius5"
                 android:padding="10dp"
-                android:text="@{item.text}"
+                android:text="@{item.stanza}"
                 android:textColor="@color/black_252"
                 android:textSize="14sp"
                 tools:text="1" />
@@ -63,7 +63,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
-            android:visibility="@{item.userId==BaseActivity.userId?View.VISIBLE:View.GONE}">
+            android:visibility="@{item.fromId==BaseActivity.userId?View.VISIBLE:View.GONE}">
 
             <com.zb.lib_base.emojj.EmojiTextView
                 android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
                 android:background="@drawable/btn_bg_purple_7a4_radius5"
                 android:layout_toStartOf="@+id/iv_mine_logo"
                 android:padding="10dp"
-                android:text="@{item.text}"
+                android:text="@{item.stanza}"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 tools:text="1" />
