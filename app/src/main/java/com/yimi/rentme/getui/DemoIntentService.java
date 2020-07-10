@@ -8,8 +8,6 @@ import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -23,7 +21,6 @@ import com.igexin.sdk.message.GTTransmitMessage;
 import com.yimi.rentme.R;
 import com.yimi.rentme.activity.MainActivity;
 import com.yimi.rentme.activity.NotifivationActivity;
-import com.yimi.rentme.utils.NotifivationIntentUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 
 import org.json.JSONObject;

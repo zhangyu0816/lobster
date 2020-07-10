@@ -12,7 +12,6 @@ import android.media.MediaPlayer;
 import android.util.Log;
 
 import com.alibaba.mobileim.IYWLoginService;
-import com.alibaba.mobileim.IYWP2PPushListener;
 import com.alibaba.mobileim.IYWPushListener;
 import com.alibaba.mobileim.YWAPI;
 import com.alibaba.mobileim.YWIMCore;
@@ -308,13 +307,18 @@ public class LoginSampleHelper {
                 body.setFromId(message.getLong("fromId"));
                 body.setToId(message.getLong("toId"));
                 JSONObject valueBean = message.getJSONObject("valueBean");
-                body.setMsgType(valueBean.getInt("msgType"));
-                body.setStanza(valueBean.getString("stanza"));
-                body.setResLink(valueBean.getString("resLink"));
+                if (valueBean.has("msgType"))
+                    body.setMsgType(valueBean.getInt("msgType"));
+                if (valueBean.has("stanza"))
+                    body.setStanza(valueBean.getString("stanza"));
+                if (valueBean.has("resLink"))
+                    body.setResLink(valueBean.getString("resLink"));
                 if (valueBean.has("resTime"))
                     body.setResTime(valueBean.getInt("resTime"));
                 if (valueBean.has("driftBottleId"))
                     body.setDriftBottleId(valueBean.getLong("driftBottleId"));
+                if (valueBean.has("msgChannelType"))
+                    body.setMsgChannelType(valueBean.getInt("msgChannelType"));
             } else if (data.has("rosterApply")) {
                 JSONObject rosterApply = data.getJSONObject("rosterApply");
                 body.setFromId(rosterApply.getLong("fromId"));
@@ -353,6 +357,7 @@ public class LoginSampleHelper {
             valueBean.put("resLink", ((CustomMessageBody) body).getResLink());
             valueBean.put("resTime", ((CustomMessageBody) body).getResTime());
             valueBean.put("driftBottleId", ((CustomMessageBody) body).getDriftBottleId());
+            valueBean.put("msgChannelType", ((CustomMessageBody) body).getMsgChannelType());
             message.put("fromId", ((CustomMessageBody) body).getFromId());
             message.put("toId", ((CustomMessageBody) body).getToId());
             message.put("valueBean", valueBean);

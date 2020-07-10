@@ -28,7 +28,7 @@ public class ChatListDb extends BaseDao {
     public List<ChatList> getChatList(int chatType) {
         beginTransaction();
         List<ChatList> chatMsgList = new ArrayList<>();
-        RealmResults<ChatList> results = realm.where(ChatList.class).equalTo("chatType", chatType).equalTo("mainUserId", BaseActivity.userId).findAllSorted("creationDate", Sort.DESCENDING);
+        RealmResults<ChatList> results = realm.where(ChatList.class).between("msgType",1,4).equalTo("chatType", chatType).equalTo("mainUserId", BaseActivity.userId).findAllSorted("creationDate", Sort.DESCENDING);
         if (results.size() > 0) {
             chatMsgList.addAll(results);
         }
@@ -39,7 +39,7 @@ public class ChatListDb extends BaseDao {
     // 单个用户的最新聊天记录
     public ChatList getChatMsg(long otherUserId, int chatType) {
         beginTransaction();
-        ChatList chatList = realm.where(ChatList.class).equalTo("chatType", chatType).equalTo("userId", otherUserId).equalTo("mainUserId", BaseActivity.userId).findFirst();
+        ChatList chatList = realm.where(ChatList.class).between("msgType",1,4).equalTo("chatType", chatType).equalTo("userId", otherUserId).equalTo("mainUserId", BaseActivity.userId).findFirst();
         commitTransaction();
         return chatList;
     }

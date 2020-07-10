@@ -12,7 +12,6 @@ import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.R;
 import com.zb.module_mine.vm.AddFeedbackViewModel;
-import com.zb.module_mine.vm.FeedbackDetailViewModel;
 
 import java.util.Arrays;
 

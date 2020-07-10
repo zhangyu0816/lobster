@@ -146,6 +146,25 @@ public class BaseViewModel implements BaseVMInterface {
     }
 
     /**
+     * 打开软键盘
+     *
+     * @param v
+     */
+
+    public void showImplicit(View v) {
+        imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(v, InputMethodManager.SHOW_FORCED);
+    }
+
+    /**
+     * 隐藏键盘
+     */
+    public void closeImplicit(View view) {
+        imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0); // 强制隐藏键盘
+    }
+
+    /**
      * Android M运行时权限请求封装
      *
      * @param permissionDes 权限描述

@@ -56,9 +56,16 @@ public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterfac
     @Override
     public void setAdapter() {
         adapter = new MineAdapter<>(activity, R.layout.item_mine_vip, MineApp.vipInfoList, this);
-        adapter.setSelectIndex(1);
-        preIndex = 1;
-        adapter.notifyItemChanged(1);
+        if (MineApp.vipInfoList.size() < 2) {
+            preIndex = MineApp.vipInfoList.size() - 1;
+        } else {
+            preIndex = 1;
+        }
+
+        if (preIndex >= 0) {
+            adapter.setSelectIndex(preIndex);
+            adapter.notifyItemChanged(preIndex);
+        }
     }
 
     @Override

@@ -49,31 +49,25 @@
             android:layout_toEndOf="@+id/iv_logo"
             android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_nick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:text="@{item.givingUserNick}"
+                android:textColor="@color/black_252"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:text="分为发" />
 
-                <TextView
-                    android:id="@+id/tv_nick"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
-                    android:text="@{item.givingUserNick}"
-                    android:textColor="@color/black_252"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    tools:text="分为发" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/tv_nick"
-                    android:layout_toEndOf="@+id/tv_nick"
-                    android:text="@{String.format(viewModel.friendDynGiftType==1?@string/give_gift_news:@string/get_gift_news,item.giftName,item.giftNumber)}"
-                    android:textColor="@color/black_827"
-                    android:textSize="12sp"
-                    tools:text="香蕉*5" />
-            </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{String.format(viewModel.friendDynGiftType==1?@string/give_gift_news:@string/get_gift_news,item.giftName,item.giftNumber)}"
+                android:textColor="@color/black_827"
+                android:textSize="12sp"
+                android:layout_marginTop="5dp"
+                tools:text="香蕉*5" />
 
             <TextView
                 android:layout_width="wrap_content"

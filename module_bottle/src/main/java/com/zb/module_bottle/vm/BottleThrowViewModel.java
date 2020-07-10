@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
-import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.findBottleApi;
 import com.zb.lib_base.app.MineApp;
@@ -12,7 +11,6 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.utils.ActivityUtils;
-import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_bottle.BR;
 import com.zb.module_bottle.iv.BottleThrowVMInterface;

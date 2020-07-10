@@ -157,18 +157,20 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     public void more(View view) {
         super.more(view);
         new SelectorPW(activity, mBinding.getRoot(), selectorList, position -> {
-            if (position == 0) {
-                // 查看礼物
-                toRewards(null);
-            } else {
-                if (discoverInfo.getUserId() == BaseActivity.userId) {
-                    toDelete(null);
+            if (discoverInfo.getUserId() == BaseActivity.userId) {
+                if (position == 0) {
+                    // 查看礼物
+                    toRewards(null);
                 } else {
-                    mBinding.setIsPlay(false);
-                    mBinding.videoView.pause();
-                    ActivityUtils.getHomeReport(discoverInfo.getUserId());
+                    toDelete(null);
                 }
+            } else {
+                mBinding.setIsPlay(false);
+                mBinding.videoView.pause();
+                ActivityUtils.getHomeReport(discoverInfo.getUserId());
             }
+
+
         });
     }
 
@@ -192,8 +194,8 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             @Override
             public void onNext(DiscoverInfo o) {
                 discoverInfo = o;
-
-                selectorList.add("查看礼物");
+                if (discoverInfo.getUserId() == BaseActivity.userId)
+                    selectorList.add("查看礼物");
                 selectorList.add(discoverInfo.getUserId() == BaseActivity.userId ? "删除动态" : "举报");
 
                 DownLoad.getFilePath(discoverInfo.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), new DownLoad.CallBack() {

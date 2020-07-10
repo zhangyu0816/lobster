@@ -59,7 +59,6 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                     adapter.notifyDataSetChanged();
                     chatMsgList.addAll(chatListDb.getChatList(4));
                     adapter.notifyDataSetChanged();
-                    mBinding.refresh.finishRefresh();
                 } else {
                     int position = -1;
                     for (int i = 0; i < chatMsgList.size(); i++) {
@@ -77,6 +76,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                         adapter.notifyDataSetChanged();
                     }
                 }
+                mBinding.refresh.finishRefresh();
             }
         };
         relieveReceiver = new BaseReceiver(activity, "lobster_relieve") {

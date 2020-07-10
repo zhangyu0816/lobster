@@ -19,6 +19,7 @@ public class BottleAdapter<T> extends BindingItemAdapter<T> implements ItemTouch
     private BaseViewModel viewModel;
     private BasePopupWindow pw;
     private int selectIndex = -1;
+    private String time = "";
 
     public BottleAdapter(RxAppCompatActivity activity, int layoutId, List<T> list) {
         super(activity, layoutId, list);

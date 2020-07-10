@@ -104,7 +104,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 dynDoReview();
             }
-            return false;
+            return true;
         });
         finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
             @Override

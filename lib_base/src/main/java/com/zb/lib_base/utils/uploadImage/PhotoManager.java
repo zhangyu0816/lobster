@@ -6,6 +6,7 @@ import android.text.TextUtils;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.api.uploadImagesApi;
+import com.zb.lib_base.http.HttpChatUploadManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpUploadManager;
 import com.zb.lib_base.model.ResourceUrl;
@@ -522,6 +523,11 @@ public class PhotoManager {
         }
     }
 
+    private boolean isChat = false;
+
+    public void setChat(boolean isChat) {
+        this.isChat = isChat;
+    }
 
     public void uploadImage(final PhotoFile photoFile) {
         photoFile.setUploadStatus(2);
@@ -550,7 +556,10 @@ public class PhotoManager {
                 .setIsCompre(2)
                 .setIsCutImage(1);
         api.setShowProgress(needProgress);
-        HttpUploadManager.getInstance().doHttpDeal(api);
+        if (isChat)
+            HttpChatUploadManager.getInstance().doHttpDeal(api);
+        else
+            HttpUploadManager.getInstance().doHttpDeal(api);
     }
 
     @FunctionalInterface

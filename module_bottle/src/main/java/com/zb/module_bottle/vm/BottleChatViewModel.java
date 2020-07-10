@@ -27,7 +27,6 @@ import com.zb.lib_base.api.myBottleApi;
 import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.api.readOverHistoryMsgApi;
-import com.zb.lib_base.api.replyBottleApi;
 import com.zb.lib_base.api.thirdHistoryMsgListApi;
 import com.zb.lib_base.api.thirdReadChatApi;
 import com.zb.lib_base.app.MineApp;
@@ -41,7 +40,6 @@ import com.zb.lib_base.imcore.CustomMessageBody;
 import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.BottleInfo;
-import com.zb.lib_base.model.BottleMsg;
 import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.MineInfo;
@@ -51,7 +49,6 @@ import com.zb.lib_base.utils.KeyboardStateObserver;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
-import com.zb.module_bottle.BR;
 import com.zb.module_bottle.R;
 import com.zb.module_bottle.adapter.BottleAdapter;
 import com.zb.module_bottle.databinding.BottleChatBinding;
@@ -59,6 +56,7 @@ import com.zb.module_bottle.iv.BottleChatVMInterface;
 import com.zb.module_bottle.windows.BottleVipPW;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -68,7 +66,6 @@ import io.realm.RealmResults;
 
 public class BottleChatViewModel extends BaseViewModel implements BottleChatVMInterface, OnRefreshListener {
     public long driftBottleId;
-    public String text;
     public BottleAdapter adapter;
     public BottleAdapter emojiAdapter;
     private BottleChatBinding mBinding;
@@ -86,7 +83,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     private HistoryMsgDb historyMsgDb;
     private List<HistoryMsg> historyMsgList = new ArrayList<>();
     private RealmResults<HistoryMsg> realmResults;
-    private int pagerNo = 1;
+    private int pagerNo = 0;
     private int pageSize = 20;
     private boolean updateAll = false;
     private List<Integer> emojiList = new ArrayList<>();
@@ -130,15 +127,15 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         // 发送
         mBinding.edContent.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEND) {
-                if (mBinding.getContent().trim().isEmpty()) {
+                if (mBinding.edContent.getText().toString().trim().isEmpty()) {
                     SCToastUtil.showToast(activity, "请输入回复内容", true);
                     return false;
                 }
-                sendChatMessage(1, mBinding.getContent(), "", 0, "【文字】");
-                mBinding.setContent("");
+                sendChatMessage(1, mBinding.edContent.getText().toString(), "", 0, "【文字】");
+                mBinding.edContent.setText("");
                 hintKeyBoard();
             }
-            return false;
+            return true;
         });
 
         KeyboardStateObserver.getKeyboardStateObserver(activity).
@@ -168,6 +165,8 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         }
         pagerNo++;
         List<HistoryMsg> tempList = historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize);
+        Collections.reverse(tempList);
+        updateTime();
         historyMsgList.addAll(0, tempList);
         adapter.notifyItemRangeChanged(0, tempList.size());
         updateAll = tempList.size() == 0;
@@ -176,14 +175,20 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
 
     @Override
     public void setAdapter() {
-        realmResults = historyMsgDb.getRealmResults(otherUserId, 1, 0);
+        realmResults = historyMsgDb.getRealmResults(otherUserId, 2, driftBottleId);
         historyMsgList.addAll(historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize));
+        Collections.reverse(historyMsgList);
+        updateTime();
+
         adapter = new BottleAdapter<>(activity, R.layout.item_bottle_chat, historyMsgList, this);
         mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
+        mBinding.refresh.setEnableLoadMore(false);
         for (int i = 1; i < EmojiHandler.maxEmojiCount; i++) {
             emojiList.add(EmojiHandler.sCustomizeEmojisMap.get(i));
         }
         emojiAdapter = new BottleAdapter<>(activity, R.layout.item_bottle_emoji, emojiList, this);
+
+
         myBottle();
     }
 
@@ -270,16 +275,20 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     historyMsgList.clear();
-                    realmResults = historyMsgDb.getRealmResults(otherUserId, 1, 0);
+                    realmResults = historyMsgDb.getRealmResults(otherUserId, 2, driftBottleId);
                     historyMsgList.addAll(historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize));
                     if (historyMsgList.size() == 0) {
                         HistoryMsg historyMsg = new HistoryMsg();
-                        historyMsg.setStanza(text);
+                        historyMsg.setStanza(bottleInfo.getText());
                         historyMsg.setMsgType(1);
                         historyMsg.setFromId(otherUserId);
+                        historyMsg.setCreationDate(bottleInfo.getCreateTime());
                         historyMsgList.add(historyMsg);
                     }
+                    Collections.reverse(historyMsgList);
+                    updateTime();
                     adapter.notifyDataSetChanged();
+                    mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
                 }
             }
         }, activity).setOtherUserId(otherUserId).setPageNo(pageNo).setMsgChannelType(1);
@@ -337,7 +346,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     @Override
     public void addEmoji(int position, int emojiRes) {
         @SuppressLint("DefaultLocale")
-        String content = mBinding.getContent() + String.format("{f:%d}", position + 1);
+        String content = mBinding.edContent.getText().toString() + String.format("{f:%d}", position + 1);
         mBinding.edContent.setText(content);
         mBinding.edContent.setSelection(content.length());
     }
@@ -357,7 +366,9 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
      * @param summary
      */
     private void sendChatMessage(final int msgType, final String stanza, final String resLink, final int resTime, final String summary) {
-        YWMessageBody body = new CustomMessageBody(msgType, stanza, resLink, resTime, BaseActivity.userId, bottleInfo.getOtherUserId(), summary, driftBottleId);
+        if(bottleInfo==null)
+            return;
+        YWMessageBody body = new CustomMessageBody(msgType, stanza, resLink, resTime, BaseActivity.userId, bottleInfo.getOtherUserId(), summary, driftBottleId, 2);
         body.setSummary(body.getSummary());
         body.setContent(loginHelper.pack(body));
         final YWMessage message = YWMessageChannel.createCustomMessage(body);
@@ -412,11 +423,26 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         historyMsg.setMainUserId(BaseActivity.userId);
         historyMsgDb.saveHistoryMsg(historyMsg);
         historyMsgList.add(historyMsg);
+        updateTime();
         adapter.notifyDataSetChanged();
         mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
-        mBinding.setContent("");
-        hintKeyBoard();
         activity.sendBroadcast(new Intent("lobster_updateBottle"));
+    }
+
+    private void updateTime() {
+        String time = "";
+        if (historyMsgList.size() > 0) {
+            historyMsgList.get(0).setShowTime(true);
+            time = historyMsgList.get(0).getCreationDate();
+            for (int i = 1; i < historyMsgList.size(); i++) {
+                if (DateUtil.getDateCount(historyMsgList.get(i).getCreationDate(), time, DateUtil.yyyy_MM_dd_HH_mm_ss, 1000f * 60f) > 3) {
+                    time = historyMsgList.get(i).getCreationDate();
+                    historyMsgList.get(i).setShowTime(true);
+                } else {
+                    historyMsgList.get(i).setShowTime(false);
+                }
+            }
+        }
     }
 
     /**

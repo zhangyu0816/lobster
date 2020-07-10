@@ -26,6 +26,8 @@ public class HistoryMsg extends RealmObject {
     int imPlatformType; //
     String thirdMessageId = ""; //第三方消息id
 
+    boolean showTime = false;
+
     public long getId() {
         return id;
     }
@@ -160,5 +162,13 @@ public class HistoryMsg extends RealmObject {
 
     public void setThirdMessageId(String thirdMessageId) {
         this.thirdMessageId = thirdMessageId;
+    }
+
+    public boolean isShowTime() {
+        return showTime;
+    }
+
+    public void setShowTime(boolean showTime) {
+        this.showTime = showTime;
     }
 }

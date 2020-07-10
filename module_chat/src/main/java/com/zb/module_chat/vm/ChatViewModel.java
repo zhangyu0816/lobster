@@ -73,6 +73,7 @@ import com.zb.module_chat.iv.ChatVMInterface;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -126,6 +127,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
 
         photoManager = new PhotoManager(activity, () ->
                 sendChatMessage(2, "", photoManager.jointWebUrl(","), 0, "【图片】"));
+        photoManager.setChat(true);
 
         // 发送
         mBinding.edContent.setOnEditorActionListener((v, actionId, event) -> {
@@ -135,9 +137,9 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                 }
                 sendChatMessage(1, mBinding.getContent(), "", 0, "【文字】");
                 mBinding.setContent("");
-                hintKeyBoard();
+                closeImplicit(mBinding.edContent);
             }
-            return false;
+            return true;
         });
 
         soundView = new SoundView(activity, mBinding.audioBtn, new SoundView.CallBack() {
@@ -225,8 +227,11 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     public void setAdapter() {
         realmResults = historyMsgDb.getRealmResults(otherUserId, 1, 0);
         historyMsgList.addAll(historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize));
+        Collections.reverse(historyMsgList);
+        updateTime();
         adapter = new ChatAdapter<>(activity, R.layout.item_chat, historyMsgList, this);
         mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
+        mBinding.refresh.setEnableLoadMore(false);
         for (int i = 1; i < EmojiHandler.maxEmojiCount; i++) {
             emojiList.add(EmojiHandler.sCustomizeEmojisMap.get(i));
         }
@@ -242,6 +247,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         }
         pagerNo++;
         List<HistoryMsg> tempList = historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize);
+        Collections.reverse(tempList);
+        updateTime();
         historyMsgList.addAll(0, tempList);
         adapter.notifyItemRangeChanged(0, tempList.size());
         updateAll = tempList.size() == 0;
@@ -313,7 +320,10 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                     historyMsgList.clear();
                     realmResults = historyMsgDb.getRealmResults(otherUserId, 1, 0);
                     historyMsgList.addAll(historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize));
+                    Collections.reverse(historyMsgList);
+                    updateTime();
                     adapter.notifyDataSetChanged();
+                    mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
                 }
             }
         }, activity).setOtherUserId(otherUserId).setPageNo(pageNo).setMsgChannelType(1);
@@ -581,7 +591,9 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
      * @param summary
      */
     private void sendChatMessage(final int msgType, final String stanza, final String resLink, final int resTime, final String summary) {
-        YWMessageBody body = new CustomMessageBody(msgType, stanza, resLink, resTime, BaseActivity.userId, otherUserId, summary, 0);
+        if (memberInfo == null)
+            return;
+        YWMessageBody body = new CustomMessageBody(msgType, stanza, resLink, resTime, BaseActivity.userId, otherUserId, summary, 0, 1);
         body.setSummary(body.getSummary());
         body.setContent(loginHelper.pack(body));
         final YWMessage message = YWMessageChannel.createCustomMessage(body);
@@ -619,6 +631,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         historyMsg.setTitle(title);
         historyMsg.setOtherUserId(otherUserId);
         historyMsgList.add(historyMsg);
+        updateTime();
         adapter.notifyDataSetChanged();
         mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
         historyMsgDb.saveHistoryMsg(historyMsg);
@@ -636,8 +649,25 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         chatList.setAuthType(1);
         chatList.setChatType(4);
         chatListDb.saveChatList(chatList);
+
         Intent data = new Intent("lobster_updateChat");
         data.putExtra("userId", otherUserId);
         activity.sendBroadcast(data);
+    }
+
+    private void updateTime() {
+        String time = "";
+        if (historyMsgList.size() > 0) {
+            historyMsgList.get(0).setShowTime(true);
+            time = historyMsgList.get(0).getCreationDate();
+            for (int i = 1; i < historyMsgList.size(); i++) {
+                if (DateUtil.getDateCount(historyMsgList.get(i).getCreationDate(), time, DateUtil.yyyy_MM_dd_HH_mm_ss, 1000f * 60f) > 3) {
+                    time = historyMsgList.get(i).getCreationDate();
+                    historyMsgList.get(i).setShowTime(true);
+                } else {
+                    historyMsgList.get(i).setShowTime(false);
+                }
+            }
+        }
     }
 }

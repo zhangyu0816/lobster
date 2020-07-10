@@ -74,7 +74,7 @@ public class NotifivationActivity extends RxAppCompatActivity {
             } else if (TextUtils.equals(activity, "FCLActivity")) {
                 ActivityUtils.getMineFCL(1);
             } else if (TextUtils.equals(activity, "BottleChatActivity")) {
-                ActivityUtils.getBottleChat(driftBottleId,"");
+                ActivityUtils.getBottleChat(driftBottleId);
             }
             finish();
         } catch (JSONException e) {

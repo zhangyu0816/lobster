@@ -35,7 +35,6 @@ import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.BottleCacheDb;
 import com.zb.lib_base.db.ChatListDb;
-import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -46,7 +45,6 @@ import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.GiftInfo;
-import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.MemberInfo;
@@ -450,9 +448,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    if (chatListDb.getChatList(4).size() > 0) {
-                        activity.sendBroadcast(new Intent("lobster_updateChat"));
-                    }
+                    activity.sendBroadcast(new Intent("lobster_updateChat"));
                     mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
                     contactNum(false);
                 }

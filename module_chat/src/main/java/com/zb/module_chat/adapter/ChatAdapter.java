@@ -30,6 +30,7 @@ public class ChatAdapter<T> extends BindingItemAdapter<T> implements ItemTouchHe
         if (viewModel != null) {
             holder.binding.setVariable(BR.viewModel, viewModel);
         }
+
         holder.binding.executePendingBindings();
     }
 

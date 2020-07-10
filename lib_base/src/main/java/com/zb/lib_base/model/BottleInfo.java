@@ -3,9 +3,6 @@ package com.zb.lib_base.model;
 
 import com.zb.lib_base.BR;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
@@ -19,6 +16,7 @@ public class BottleInfo extends BaseObservable {
     String otherNick = "";  //昵称
     long otherUserId; //
     String modifyTime = "";
+    String createTime="";
 
     @Bindable
     public long getDriftBottleId() {
@@ -108,5 +106,13 @@ public class BottleInfo extends BaseObservable {
     public void setModifyTime(String modifyTime) {
         this.modifyTime = modifyTime;
         notifyPropertyChanged(BR.modifyTime);
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 }

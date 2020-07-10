@@ -74,23 +74,26 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
             public void onReceive(Context context, Intent intent) {
                 int chatType = intent.getIntExtra("chatType", 0);
                 boolean isUpdate = intent.getBooleanExtra("isUpdate", false);
-                if (isUpdate) {
-                    if (chatMsgList.size() != 0) {
-                        chatMsgList.set(chatType - 1, chatListDb.getChatList(chatType).get(0));
+                try {
+                    if (isUpdate) {
+                        if (chatMsgList.size() != 0) {
+                            chatMsgList.set(chatType - 1, chatListDb.getChatList(chatType).get(0));
+                            adapter.notifyItemChanged(chatType - 1);
+                        }
+                    } else {
+                        if (chatType == 1) {
+                            chatMsgList.clear();
+                            adapter.notifyDataSetChanged();
+                        }
+                        chatMsgList.addAll(chatListDb.getChatList(chatType));
                         adapter.notifyItemChanged(chatType - 1);
+                        if (chatType == 3) {
+                            pairList();
+                        }
                     }
-                } else {
-                    if (chatType == 1) {
-                        chatMsgList.clear();
-                        adapter.notifyDataSetChanged();
-                    }
-                    chatMsgList.addAll(chatListDb.getChatList(chatType));
-                    adapter.notifyItemChanged(chatType - 1);
-                    if (chatType == 3) {
-                        pairList();
-                    }
-
+                } catch (Exception e) {
                 }
+
             }
         };
         relieveReceiver = new BaseReceiver(activity, "lobster_relieve") {

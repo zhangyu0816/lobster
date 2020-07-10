@@ -18,12 +18,13 @@ public class CustomMessageBody extends YWMessageBody {
     private int mResTime;
     private String mSummary;
     private long mDriftBottleId;
+    private int mMsgChannelType; //消息渠道类型  1.好友聊天  2. 漂流瓶聊天
     // 好友
     private int status;
     private String askMark;
 
     public CustomMessageBody(int msgType, String stanza, String resLink,
-                             int resTime, long fromId, long toId, String summary, long driftBottleId) {
+                             int resTime, long fromId, long toId, String summary, long driftBottleId, int msgChannelType) {
         mMsgType = msgType;
         mStanza = stanza;
         mResLink = resLink;
@@ -32,6 +33,7 @@ public class CustomMessageBody extends YWMessageBody {
         mFromId = fromId;
         mToId = toId;
         mDriftBottleId = driftBottleId;
+        mMsgChannelType = msgChannelType;
     }
 
     public CustomMessageBody(long fromId, long toId, String summary,
@@ -108,6 +110,14 @@ public class CustomMessageBody extends YWMessageBody {
 
     public void setDriftBottleId(long mDriftBottleId) {
         this.mDriftBottleId = mDriftBottleId;
+    }
+
+    public int getMsgChannelType() {
+        return mMsgChannelType;
+    }
+
+    public void setMsgChannelType(int mMsgChannelType) {
+        this.mMsgChannelType = mMsgChannelType;
     }
 
     public int getStatus() {

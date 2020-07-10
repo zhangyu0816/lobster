@@ -143,7 +143,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
         BottleInfo bottleInfo = bottleInfoList.get(position);
         bottleInfo.setNoReadNum(0);
         adapter.notifyItemChanged(position);
-        ActivityUtils.getBottleChat(bottleInfo.getDriftBottleId(), "");
+        ActivityUtils.getBottleChat(bottleInfo.getDriftBottleId());
 
     }
 
