@@ -112,9 +112,7 @@ public class NewsListViewModel extends BaseViewModel implements NewsListVMInterf
                     MineApp.mineNewsCount.setFriendDynamicGoodNum(0);
                 else
                     MineApp.mineNewsCount.setFriendDynamicGiftNum(0);
-                Intent data = new Intent("lobster_newsCount");
-                data.putExtra("isClean", true);
-                activity.sendBroadcast(data);
+                activity.sendBroadcast(new Intent("lobster_newsCount"));
             }
         }, activity).setReviewType(reviewType);
         HttpManager.getInstance().doHttpDeal(api);

@@ -148,6 +148,7 @@ public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterfac
             public void onNext(MineInfo o) {
                 mineInfo = o;
                 mineInfoDb.saveMineInfo(o);
+                vipBinding.setViewModel(OpenVipViewModel.this);
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

@@ -185,7 +185,7 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
             if (fos != null) {
                 try {
                     fos.close();
-                    photoManager.addFileUpload(0, imageFile);
+                    photoManager.addFileUpload(-1, imageFile);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

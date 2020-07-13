@@ -145,7 +145,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                         @Override
                         public void success() {
                             if (otherUserId == BaseActivity.systemUserId) {
-
+                                MineApp.mineNewsCount.setSystemNewsNum(count);
+                                activity.sendBroadcast(new Intent("lobster_newsCount"));
                             } else {
                                 // 更新会话列表
                                 mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
@@ -184,6 +185,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                     Intent upMessage = new Intent("lobster_upMessage/driftBottleId=" + body.getDriftBottleId());
                     upMessage.putExtra("ywMessage", ywMessage);
                     activity.sendBroadcast(upMessage);
+
+                    noReadBottleNum(true);
                 }
 
             }
@@ -222,10 +225,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         newsCountReceiver = new BaseReceiver(activity, "lobster_newsCount") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                boolean isClean = intent.getBooleanExtra("isClean", false);
-                if (isClean) {
-                    mBinding.setNewsCount(MineApp.mineNewsCount.getFriendDynamicGiftNum() + MineApp.mineNewsCount.getFriendDynamicReviewNum() + MineApp.mineNewsCount.getFriendDynamicGoodNum() + MineApp.mineNewsCount.getSystemNewsNum());
-                }
+                mBinding.setNewsCount(MineApp.mineNewsCount.getFriendDynamicGiftNum() + MineApp.mineNewsCount.getFriendDynamicReviewNum() + MineApp.mineNewsCount.getFriendDynamicGoodNum() + MineApp.mineNewsCount.getSystemNewsNum());
             }
         };
     }
@@ -390,7 +390,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onNext(MineNewsCount o) {
                 MineApp.mineNewsCount = o;
-                mBinding.setNewsCount(MineApp.mineNewsCount.getFriendDynamicGiftNum() + MineApp.mineNewsCount.getFriendDynamicReviewNum() + MineApp.mineNewsCount.getFriendDynamicGoodNum());
                 activity.sendBroadcast(new Intent("lobster_newsCount"));
 //                systemChat();
                 chatList();
@@ -406,14 +405,12 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onNext(SystemMsg o) {
                 MineApp.mineNewsCount.setSystemNewsNum(o.getNoReadNum());
-                mBinding.setNewsCount(MineApp.mineNewsCount.getFriendDynamicGiftNum() + MineApp.mineNewsCount.getFriendDynamicReviewNum() + MineApp.mineNewsCount.getFriendDynamicGoodNum() + MineApp.mineNewsCount.getSystemNewsNum());
                 activity.sendBroadcast(new Intent("lobster_newsCount"));
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    MineApp.mineNewsCount.setSystemNewsNum(0);
                     activity.sendBroadcast(new Intent("lobster_newsCount"));
                 }
             }
@@ -433,7 +430,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                         MineApp.mineNewsCount.setCreateTime(chatMsg.getCreationDate());
                         MineApp.mineNewsCount.setMsgType(chatMsg.getMsgType());
                         MineApp.mineNewsCount.setSystemNewsNum(chatMsg.getNoReadNum());
-                        mBinding.setNewsCount(MineApp.mineNewsCount.getFriendDynamicGiftNum() + MineApp.mineNewsCount.getFriendDynamicReviewNum() + MineApp.mineNewsCount.getFriendDynamicGoodNum() + MineApp.mineNewsCount.getSystemNewsNum());
                         activity.sendBroadcast(new Intent("lobster_newsCount"));
                     }
                     if (chatMsg.getUserId() > 10010) {

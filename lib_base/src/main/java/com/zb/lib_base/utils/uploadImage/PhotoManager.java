@@ -186,8 +186,6 @@ public class PhotoManager {
      * @param file
      * @return
      */
-
-
     public PhotoManager addFileUpload(final int index, File file) {
         if (null == file) {
             return this;

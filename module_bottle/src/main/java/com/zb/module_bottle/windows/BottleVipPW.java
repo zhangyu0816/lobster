@@ -28,8 +28,16 @@ public class BottleVipPW extends BasePopupWindow {
     @Override
     public void initUI() {
         adapter = new BottleAdapter<>(activity, R.layout.item_bottle_vip, MineApp.vipInfoList, this);
-        preIndex = 1;
-        adapter.setSelectIndex(1);
+        if (MineApp.vipInfoList.size() < 2) {
+            preIndex = MineApp.vipInfoList.size() - 1;
+        } else {
+            preIndex = 1;
+        }
+
+        if (preIndex >= 0) {
+            adapter.setSelectIndex(preIndex);
+            adapter.notifyItemChanged(preIndex);
+        }
         mBinding.setVariable(BR.pw, this);
         mBinding.setVariable(BR.adapter, adapter);
     }

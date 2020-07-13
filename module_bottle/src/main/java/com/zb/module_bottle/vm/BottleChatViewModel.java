@@ -121,6 +121,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                 historyMsg.setMainUserId(BaseActivity.userId);
                 historyMsgList.add(adapter.getItemCount(), historyMsg);
                 adapter.notifyItemChanged(adapter.getItemCount());
+                mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
             }
         };
 
@@ -226,6 +227,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             public void onNext(List<HistoryMsg> o) {
                 for (HistoryMsg historyMsg : o) {
                     historyMsg.setOtherUserId(otherUserId);
+                    historyMsg.setMainUserId(BaseActivity.userId);
                     historyMsgDb.saveHistoryMsg(historyMsg);
                 }
                 historyMsgId = o.get(o.size() - 1).getId();
@@ -266,6 +268,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             public void onNext(List<HistoryMsg> o) {
                 for (HistoryMsg historyMsg : o) {
                     historyMsg.setOtherUserId(otherUserId);
+                    historyMsg.setMainUserId(BaseActivity.userId);
                     historyMsgDb.saveHistoryMsg(historyMsg);
                 }
                 thirdHistoryMsgList(pageNo + 1);

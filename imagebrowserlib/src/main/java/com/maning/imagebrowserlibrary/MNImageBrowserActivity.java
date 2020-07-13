@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,6 +70,7 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
     private MyAdapter imageBrowserAdapter;
     private View mCurrentView;
     private boolean showDelete = false;
+    private boolean isDelete = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,12 +119,12 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
         ivDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (onDeleteImageListener != null)
+                    onDeleteImageListener.delete(currentPosition);
+                isDelete = true;
                 imageBrowserAdapter.destroyItem(viewPagerBrowser, currentPosition, mCurrentView);
                 imageUrlList.remove(currentPosition);
                 imageBrowserAdapter.notifyDataSetChanged();
-
-                if (onDeleteImageListener != null)
-                    onDeleteImageListener.delete(currentPosition);
                 if (imageUrlList.size() == 0) {
                     finishBrowser();
                 } else {
@@ -131,6 +133,7 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
                     }
                     numberIndicator.setText(String.valueOf((currentPosition + 1) + "/" + imageUrlList.size()));
                     initViewPager();
+                    isDelete = false;
                 }
 
             }
@@ -176,18 +179,22 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
         viewPagerBrowser.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+                Log.e("", position + "");
+                Log.e("", positionOffset + "");
+                Log.e("", positionOffsetPixels + "");
             }
 
             @Override
             public void onPageSelected(int position) {
-                currentPosition = position;
-                numberIndicator.setText(String.valueOf((position + 1) + "/" + imageUrlList.size()));
+                if (!isDelete) {
+                    currentPosition = position;
+                    numberIndicator.setText(String.valueOf((position + 1) + "/" + imageUrlList.size()));
+                }
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
+                Log.e("", state + "");
             }
         });
 

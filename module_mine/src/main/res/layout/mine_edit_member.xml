@@ -45,11 +45,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFF5D9"
-            android:ellipsize="marquee"
             android:gravity="center"
-            android:marqueeRepeatLimit="marquee_forever"
             android:padding="8dp"
-            android:singleLine="true"
             android:text="发布的内容必须遵守法律法规和社区规定，请严格遵守，以免违规"
             android:textColor="#F7BF00"
             android:textSize="12sp" />

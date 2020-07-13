@@ -120,12 +120,8 @@ public class LoginSampleHelper {
         @Override
         public void onPushMessage(IYWContact contact, YWMessage ywMessage) {
             CustomMessageBody body = (CustomMessageBody) unpack(ywMessage.getContent());
-            if (body.getMsgType() == 11 || body.getMsgType() == 12 || body.getMsgType() == 13 || body.getMsgType() == 21)
+            if (body.getMsgType() > 4)
                 return;
-            if (Long.parseLong(ywMessage.getAuthorUserId()) == BaseActivity.userId) {
-                if (body.getMsgType() == 12 || body.getMsgType() == 102 || body.getMsgType() == 112)
-                    return;
-            }
             if (isBackground()) {
                 sendMsg(ywMessage);
             } else {
@@ -136,8 +132,8 @@ public class LoginSampleHelper {
                         if (body.getFromId() != BaseActivity.userId)
                             appSound();
                         // 单聊消息
-//                        YWConversation conversation = conversationService.getConversationByConversationId(contact.getUserId());
-                        YWConversation conversation = conversationService.getConversationByUserId(contact.getUserId());
+                        YWConversation conversation = conversationService.getConversationByConversationId(contact.getUserId());
+//                        YWConversation conversation = conversationService.getConversationByUserId(contact.getUserId());
                         if (conversation != null) {
                             Intent intent = new Intent("lobster_newMsg");
                             intent.putExtra("unreadCount", conversation.getUnreadCount());

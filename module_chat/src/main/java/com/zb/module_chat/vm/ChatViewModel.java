@@ -195,6 +195,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                 historyMsg.setMainUserId(BaseActivity.userId);
                 historyMsgList.add(adapter.getItemCount(), historyMsg);
                 adapter.notifyItemChanged(adapter.getItemCount());
+                mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
             }
         };
 
@@ -281,8 +282,11 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             @Override
             public void onNext(List<HistoryMsg> o) {
                 for (HistoryMsg historyMsg : o) {
-                    historyMsg.setOtherUserId(otherUserId);
-                    historyMsgDb.saveHistoryMsg(historyMsg);
+                    if (historyMsg.getMsgType() < 5) {
+                        historyMsg.setOtherUserId(otherUserId);
+                        historyMsg.setMainUserId(BaseActivity.userId);
+                        historyMsgDb.saveHistoryMsg(historyMsg);
+                    }
                 }
                 historyMsgId = o.get(o.size() - 1).getId();
                 historyMsgList(pageNo + 1);
@@ -308,8 +312,11 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             @Override
             public void onNext(List<HistoryMsg> o) {
                 for (HistoryMsg historyMsg : o) {
-                    historyMsg.setOtherUserId(otherUserId);
-                    historyMsgDb.saveHistoryMsg(historyMsg);
+                    if (historyMsg.getMsgType() < 5) {
+                        historyMsg.setOtherUserId(otherUserId);
+                        historyMsg.setMainUserId(BaseActivity.userId);
+                        historyMsgDb.saveHistoryMsg(historyMsg);
+                    }
                 }
                 thirdHistoryMsgList(pageNo + 1);
             }
@@ -510,7 +517,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
      * @param fileName
      */
     public void uploadImage(String fileName) {
-        photoManager.addFileUpload(0, new File(fileName));
+        photoManager.addFileUpload(-1, new File(fileName));
     }
 
     /**
@@ -630,6 +637,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         historyMsg.setStanza(stanza);
         historyMsg.setTitle(title);
         historyMsg.setOtherUserId(otherUserId);
+        historyMsg.setMainUserId(BaseActivity.userId);
         historyMsgList.add(historyMsg);
         updateTime();
         adapter.notifyDataSetChanged();

@@ -12,7 +12,8 @@ public class GRGiftActivity extends MineBaseActivity {
     @Autowired(name = "friendDynGiftType")
     int friendDynGiftType;
 
-    private  GRGiftViewModel viewModel;
+    private GRGiftViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.mine_give_receive_gift;
@@ -20,11 +21,13 @@ public class GRGiftActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
-         viewModel = new GRGiftViewModel();
+        viewModel = new GRGiftViewModel();
         viewModel.friendDynGiftType = friendDynGiftType;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.title, friendDynGiftType == 1 ? "送礼记录" : "收礼记录");
+        mBinding.setVariable(BR.noData, true);
+        mBinding.setVariable(BR.remark, friendDynGiftType == 1 ? "暂无送礼记录" : "暂无收礼记录");
     }
 
     @Override

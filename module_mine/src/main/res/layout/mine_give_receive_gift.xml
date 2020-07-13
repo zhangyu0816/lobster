@@ -3,12 +3,22 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.zb.module_mine.vm.GRGiftViewModel" />
 
         <variable
             name="title"
+            type="String" />
+
+        <variable
+            name="noData"
+            type="boolean" />
+
+        <variable
+            name="remark"
             type="String" />
 
     </data>
@@ -30,7 +40,8 @@
             onRefreshListener="@{viewModel}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/black_efe">
+            android:background="@color/black_efe"
+            android:visibility="@{noData?View.GONE:View.VISIBLE}">
 
             <androidx.recyclerview.widget.RecyclerView
                 adapter="@{viewModel.adapter}"
@@ -42,5 +53,14 @@
                 android:layout_marginTop="7dp"
                 android:layout_marginEnd="7dp" />
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@{remark}"
+            android:textColor="@color/black_4d4"
+            android:textSize="16sp"
+            android:visibility="@{noData?View.VISIBLE:View.GONE}" />
     </LinearLayout>
 </layout>

@@ -62,10 +62,12 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
         mineEditMemberBinding = (MineEditMemberBinding) binding;
         areaDb = new AreaDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
-
-        String[] images = mineInfo.getMoreImages().split("#");
-        imageList.addAll(Arrays.asList(images));
-
+        if (mineInfo.getMoreImages().isEmpty()) {
+            imageList.add(mineInfo.getImage());
+        } else {
+            String[] images = mineInfo.getMoreImages().split("#");
+            imageList.addAll(Arrays.asList(images));
+        }
         for (int i = imageList.size(); i < 6; i++) {
             imageList.add("");
         }

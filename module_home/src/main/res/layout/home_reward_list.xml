@@ -3,10 +3,19 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.zb.module_home.vm.RewardListViewModel" />
 
+        <variable
+            name="noData"
+            type="boolean" />
+
+        <variable
+            name="remark"
+            type="String" />
     </data>
 
     <LinearLayout
@@ -42,7 +51,8 @@
             onLoadMoreListener="@{viewModel}"
             onRefreshListener="@{viewModel}"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="@{noData?View.GONE:View.VISIBLE}">
 
             <androidx.recyclerview.widget.RecyclerView
                 adapter="@{viewModel.adapter}"
@@ -51,5 +61,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@{remark}"
+            android:textColor="@color/black_4d4"
+            android:textSize="16sp"
+            android:visibility="@{noData?View.VISIBLE:View.GONE}" />
     </LinearLayout>
 </layout>

@@ -25,6 +25,8 @@ public class RewardListActivity extends HomeBaseActivity {
         viewModel.friendDynId = friendDynId;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
+        mBinding.setVariable(BR.noData, true);
+        mBinding.setVariable(BR.remark, "暂无排行榜记录");
     }
 
     @Override

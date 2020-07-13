@@ -172,36 +172,61 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
             photoManager.addFiles(imageList, () -> photoManager.reUploadByUnSuccess());
         } else {
             CustomProgressDialog.showLoading(activity, "正在压缩视频", true);
-            File file = new File(videoUrl);
-            if (file.length() > 3 * 1024 * 1024) {
-                compress(videoUrl);
+            if (isChinese(videoUrl)) {
+                SCToastUtil.showToast(activity, "视频链接含中文路径，压缩失败", true);
+                CustomProgressDialog.stopLoading();
             } else {
-                saveBitmapFile(ThumbnailUtils.createVideoThumbnail(videoUrl, MediaStore.Video.Thumbnails.MINI_KIND));
+                File file = new File(videoUrl);
+                if (file.length() > 3 * 1024 * 1024) {
+                    compress(videoUrl);
+                } else {
+                    saveBitmapFile(ThumbnailUtils.createVideoThumbnail(videoUrl, MediaStore.Video.Thumbnails.MINI_KIND));
+                }
             }
         }
     }
 
+    // 判断一个字符是否是中文
+    public boolean isChinese(char c) {
+        return c >= 0x4E00 && c <= 0x9FA5;// 根据字节码判断
+    }
+
+    // 判断一个字符串是否含有中文
+    public boolean isChinese(String str) {
+        if (str == null)
+            return false;
+        for (char c : str.toCharArray()) {
+            if (isChinese(c))
+                return true;// 有一个中文字符就返回
+        }
+        return false;
+    }
+
     private void compress(final String filePath) {
         new Thread(() -> {
-            // 选择本地视频压缩
-            final LocalMediaConfig config = new LocalMediaConfig.Buidler()
-                    .setVideoPath(filePath)
-                    .captureThumbnailsTime(1)
-                    .doH264Compress(new AutoVBRMode(34))
-                    .setFramerate(10)
-                    .build();
+            try {  // 选择本地视频压缩
+                final LocalMediaConfig config = new LocalMediaConfig.Buidler()
+                        .setVideoPath(filePath)
+                        .captureThumbnailsTime(1)
+                        .doH264Compress(new AutoVBRMode(34))
+                        .setFramerate(10)
+                        .build();
 
-            onlyCompressOverBean = new LocalMediaCompress(config).startCompress();
+                onlyCompressOverBean = new LocalMediaCompress(config).startCompress();
 
 
-            File file = new File(onlyCompressOverBean.getVideoPath());
-            if (file.length() > 3 * 1024 * 1024) {
+                File file = new File(onlyCompressOverBean.getVideoPath());
+                if (file.length() > 3 * 1024 * 1024) {
+                    handler.sendEmptyMessage(0);
+                } else {
+                    videoUrl = onlyCompressOverBean.getVideoPath();
+                    videoImageFile = new File(onlyCompressOverBean.getPicPath());
+                    handler.sendEmptyMessage(1);
+                }
+            } catch (Exception e) {
                 handler.sendEmptyMessage(0);
-            } else {
-                videoUrl = onlyCompressOverBean.getVideoPath();
-                videoImageFile = new File(onlyCompressOverBean.getPicPath());
-                handler.sendEmptyMessage(1);
             }
+
         }).start();
     }
 
@@ -226,7 +251,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                 SCToastUtil.showToast(activity, "压缩视频失败", true);
                 break;
             case 1:
-                photoManager.addFileUpload(0, videoImageFile);
+                photoManager.addFileUpload(-1, videoImageFile);
                 break;
         }
         return false;

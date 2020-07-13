@@ -170,6 +170,8 @@ public class VideosViewModel extends BaseViewModel implements VideosVMInterface 
         }
     }
 
+    private int start = 0;
+
     private void getVideoFile(File file) {// 获得视频文件
         mThread = new Thread(() -> file.listFiles(file1 -> {
             if (mWorking) {
@@ -179,6 +181,7 @@ public class VideosViewModel extends BaseViewModel implements VideosVMInterface 
                 if (i != -1) {
                     name = name.substring(i);
                     if (name.equalsIgnoreCase(".mp4")) {
+                        start = videoInfoList.size();
                         VideoInfo vi = new VideoInfo();
                         vi.setName(file1.getName());
                         vi.setPath(file1.getAbsolutePath());
@@ -200,7 +203,7 @@ public class VideosViewModel extends BaseViewModel implements VideosVMInterface 
         @Override
         public boolean handleMessage(@NonNull Message msg) {
             if (msg.what == 0) {
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemRangeChanged(start, videoInfoList.size());
             }
             return false;
         }

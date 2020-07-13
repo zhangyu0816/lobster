@@ -69,6 +69,7 @@ public class GRGiftViewModel extends BaseViewModel implements GRGiftVMInterface,
         giveOrReceiveListApi api = new giveOrReceiveListApi(new HttpOnNextListener<List<GiftRecord>>() {
             @Override
             public void onNext(List<GiftRecord> o) {
+                mBinding.setNoData(false);
                 int start = giftRecordList.size();
                 giftRecordList.addAll(o);
                 adapter.notifyItemRangeChanged(start, giftRecordList.size());

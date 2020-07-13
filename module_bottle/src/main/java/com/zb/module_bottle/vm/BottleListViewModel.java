@@ -162,6 +162,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                     BottleCache bottleCache = bottleCacheDb.getBottleCache(bottleInfo.getDriftBottleId());
                     if (bottleCache != null) {
                         bottleInfo.setText(bottleCache.getStanza());
+                        bottleInfo.setNoReadNum(bottleCache.getNoReadNum());
                         bottleInfo.setModifyTime(bottleCache.getCreationDate());
                     }
                     bottleInfoList.add(bottleInfo);
