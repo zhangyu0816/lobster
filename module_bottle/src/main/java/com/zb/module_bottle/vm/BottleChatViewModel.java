@@ -128,6 +128,10 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         // 发送
         mBinding.edContent.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEND) {
+                if (bottleInfo.getDestroyType() != 0) {
+                    SCToastUtil.showToast(activity, "该漂流瓶已被对方销毁", true);
+                    return true;
+                }
                 if (mBinding.edContent.getText().toString().trim().isEmpty()) {
                     SCToastUtil.showToast(activity, "请输入回复内容", true);
                     return false;
@@ -211,6 +215,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                     otherImAccountInfoApi();
                 }
                 thirdReadChat();
+                bottleCacheDb.updateReadNum(driftBottleId);
                 activity.sendBroadcast(new Intent("lobster_bottleNum"));
 
                 new Thread(() -> bottleHistoryMsgList(0)).start();
@@ -369,7 +374,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
      * @param summary
      */
     private void sendChatMessage(final int msgType, final String stanza, final String resLink, final int resTime, final String summary) {
-        if(bottleInfo==null)
+        if (bottleInfo == null)
             return;
         YWMessageBody body = new CustomMessageBody(msgType, stanza, resLink, resTime, BaseActivity.userId, bottleInfo.getOtherUserId(), summary, driftBottleId, 2);
         body.setSummary(body.getSummary());

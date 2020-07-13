@@ -23,6 +23,15 @@ public class BottleCacheDb extends BaseDao {
         return bottleCache;
     }
 
+    public void updateReadNum(long driftBottleId) {
+        beginTransaction();
+        BottleCache bottleCache = realm.where(BottleCache.class).equalTo("driftBottleId", driftBottleId).findFirst();
+        if (bottleCache != null) {
+            bottleCache.setNoReadNum(0);
+        }
+        commitTransaction();
+    }
+
     public void deleteBottleCache(long driftBottleId) {
         beginTransaction();
         BottleCache bottleCache = realm.where(BottleCache.class).equalTo("driftBottleId", driftBottleId).findFirst();

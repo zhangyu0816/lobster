@@ -16,7 +16,8 @@ public class BottleInfo extends BaseObservable {
     String otherNick = "";  //昵称
     long otherUserId; //
     String modifyTime = "";
-    String createTime="";
+    String createTime = "";
+    int destroyType;  // 0未销毁  1 单方销毁  2双方销毁
 
     @Bindable
     public long getDriftBottleId() {
@@ -108,11 +109,23 @@ public class BottleInfo extends BaseObservable {
         notifyPropertyChanged(BR.modifyTime);
     }
 
+    @Bindable
     public String getCreateTime() {
         return createTime;
     }
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+        notifyPropertyChanged(BR.createTime);
+    }
+
+    @Bindable
+    public int getDestroyType() {
+        return destroyType;
+    }
+
+    public void setDestroyType(int destroyType) {
+        this.destroyType = destroyType;
+        notifyPropertyChanged(BR.destroyType);
     }
 }

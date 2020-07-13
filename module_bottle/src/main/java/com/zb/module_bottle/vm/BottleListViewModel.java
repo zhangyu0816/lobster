@@ -7,6 +7,7 @@ import android.view.View;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.myBottleListApi;
 import com.zb.lib_base.api.myInfoApi;
@@ -155,17 +156,23 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 mBinding.setNoData(false);
                 int start = bottleInfoList.size();
                 for (BottleInfo bottleInfo : o) {
-                    if (bottleInfo.getOtherHeadImage().isEmpty()) {
-                        bottleInfo.setOtherHeadImage(mineInfo.getImage());
-                        bottleInfo.setOtherNick(mineInfo.getNick());
+                    if (bottleInfo.getDestroyType() != 3) {
+                        if (bottleInfo.getDestroyType() == 1 && bottleInfo.getUserId() == BaseActivity.userId) {
+                            return;
+                        }
+
+                        if (bottleInfo.getOtherHeadImage().isEmpty()) {
+                            bottleInfo.setOtherHeadImage(mineInfo.getImage());
+                            bottleInfo.setOtherNick(mineInfo.getNick());
+                        }
+                        BottleCache bottleCache = bottleCacheDb.getBottleCache(bottleInfo.getDriftBottleId());
+                        if (bottleCache != null) {
+                            bottleInfo.setText(bottleCache.getStanza());
+                            bottleInfo.setNoReadNum(bottleCache.getNoReadNum());
+                            bottleInfo.setModifyTime(bottleCache.getCreationDate());
+                        }
+                        bottleInfoList.add(bottleInfo);
                     }
-                    BottleCache bottleCache = bottleCacheDb.getBottleCache(bottleInfo.getDriftBottleId());
-                    if (bottleCache != null) {
-                        bottleInfo.setText(bottleCache.getStanza());
-                        bottleInfo.setNoReadNum(bottleCache.getNoReadNum());
-                        bottleInfo.setModifyTime(bottleCache.getCreationDate());
-                    }
-                    bottleInfoList.add(bottleInfo);
                 }
                 adapter.notifyItemRangeChanged(start, bottleInfoList.size());
                 mBinding.refresh.finishRefresh();
