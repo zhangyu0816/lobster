@@ -17,7 +17,7 @@ public class BottleInfo extends BaseObservable {
     long otherUserId; //
     String modifyTime = "";
     String createTime = "";
-    int destroyType;  // 0未销毁  1 单方销毁  2双方销毁
+    int destroyType;  // 0未销毁  1 单方销毁 所属人  2 单方销毁 拾起人  3 双方销毁
 
     @Bindable
     public long getDriftBottleId() {

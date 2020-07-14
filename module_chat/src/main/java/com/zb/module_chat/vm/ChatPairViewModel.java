@@ -7,6 +7,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.api.likeMeListApi;
 import com.zb.lib_base.api.pairListApi;
 import com.zb.lib_base.api.relievePairApi;
 import com.zb.lib_base.db.ChatListDb;
@@ -87,8 +88,8 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                         }
                         chatMsgList.addAll(chatListDb.getChatList(chatType));
                         adapter.notifyItemChanged(chatType - 1);
-                        if (chatType == 3) {
-                            pairList();
+                        if (chatType == 2) {
+                            beSuperLikeList();
                         }
                     }
                 } catch (Exception e) {
@@ -182,7 +183,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         chatMsgList.addAll(chatListDb.getChatList(1));
         chatMsgList.addAll(chatListDb.getChatList(2));
         chatMsgList.addAll(chatListDb.getChatList(3));
-        pairList();
+        beSuperLikeList();
     }
 
     @Override
@@ -226,6 +227,38 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         } else {
             adapter.notifyItemChanged(position);
         }
+    }
+
+    @Override
+    public void beSuperLikeList() {
+        likeMeListApi api = new likeMeListApi(new HttpOnNextListener<List<LikeMe>>() {
+            @Override
+            public void onNext(List<LikeMe> o) {
+                int start = chatMsgList.size();
+                for (LikeMe likeMe : o) {
+                    ChatList chatList = new ChatList();
+                    chatList.setUserId(likeMe.getUserId());
+                    chatList.setImage(likeMe.getHeadImage());
+                    chatList.setNick(likeMe.getNick());
+                    chatList.setMsgType(1);
+                    chatList.setStanza("超级喜欢你！");
+                    chatList.setNoReadNum(0);
+                    chatList.setChatType(3);
+                    chatList.setCreationDate(likeMe.getModifyTime());
+                    chatMsgList.add(chatList);
+                }
+                adapter.notifyItemRangeChanged(start, chatMsgList.size());
+                pairList();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    pairList();
+                }
+            }
+        }, activity).setPageNo(0).setLikeOtherStatus(2);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     private void relievePair(long otherUserId) {

@@ -185,7 +185,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
         modifyMemberInfoApi api = new modifyMemberInfoApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToast(activity, "提交个人信息", true);
+                SCToastUtil.showToast(activity, "个人信息提交成功", true);
                 mineInfoDb.updateImages(images);
                 activity.sendBroadcast(new Intent("lobster_updateMineInfo"));
                 activity.finish();

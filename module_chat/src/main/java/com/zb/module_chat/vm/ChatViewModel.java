@@ -266,11 +266,6 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             public void onNext(MemberInfo o) {
                 memberInfo = o;
                 mBinding.setVariable(BR.viewModel, ChatViewModel.this);
-                chatListDb.updateMember(otherUserId, memberInfo.getImage(), memberInfo.getNick());
-                Intent data = new Intent("lobster_updateChat");
-                data.putExtra("userId", otherUserId);
-                data.putExtra("updateImage", true);
-                activity.sendBroadcast(data);
                 if (loginHelper.getImCore() == null) {
                     myImAccountInfoApi();
                 } else {
@@ -334,6 +329,58 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                     updateTime();
                     adapter.notifyDataSetChanged();
                     mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
+                    if (historyMsgList.size() > 0) {
+                        HistoryMsg historyMsg = historyMsgList.get(historyMsgList.size() - 1);
+                        ChatList chatList = new ChatList();
+                        chatList.setUserId(otherUserId);
+                        chatList.setNick(memberInfo.getNick());
+                        chatList.setImage(memberInfo.getImage());
+                        chatList.setCreationDate(historyMsg.getCreationDate());
+                        chatList.setStanza(historyMsg.getStanza());
+                        chatList.setMsgType(historyMsg.getMsgType());
+                        chatList.setNoReadNum(0);
+                        chatList.setPublicTag("");
+                        chatList.setEffectType(1);
+                        chatList.setAuthType(1);
+                        chatList.setChatType(4);
+                        chatListDb.saveChatList(chatList);
+                        Intent data = new Intent("lobster_updateChat");
+                        data.putExtra("userId", otherUserId);
+                        data.putExtra("updateImage", true);
+                        activity.sendBroadcast(data);
+                    } else {
+                        chatListDb.updateMember(otherUserId, memberInfo.getImage(), memberInfo.getNick(), 4, new ChatListDb.CallBack() {
+                            @Override
+                            public void success() {
+                                Intent data = new Intent("lobster_updateChat");
+                                data.putExtra("userId", otherUserId);
+                                data.putExtra("updateImage", true);
+                                activity.sendBroadcast(data);
+                            }
+
+                            @Override
+                            public void fail() {
+                                ChatList chatList = new ChatList();
+                                chatList.setUserId(otherUserId);
+                                chatList.setNick(memberInfo.getNick());
+                                chatList.setImage(memberInfo.getImage());
+                                chatList.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
+                                chatList.setStanza("欢迎留言");
+                                chatList.setMsgType(1);
+                                chatList.setNoReadNum(0);
+                                chatList.setPublicTag("");
+                                chatList.setEffectType(1);
+                                chatList.setAuthType(1);
+                                chatList.setChatType(4);
+                                chatListDb.saveChatList(chatList);
+                                Intent data = new Intent("lobster_updateChat");
+                                data.putExtra("userId", otherUserId);
+                                data.putExtra("updateImage", true);
+                                activity.sendBroadcast(data);
+                            }
+                        });
+                    }
+
                 }
             }
         }, activity).setOtherUserId(otherUserId).setPageNo(pageNo).setMsgChannelType(1);

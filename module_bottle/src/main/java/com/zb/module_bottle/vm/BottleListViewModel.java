@@ -156,27 +156,34 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 mBinding.setNoData(false);
                 int start = bottleInfoList.size();
                 for (BottleInfo bottleInfo : o) {
-                    if (bottleInfo.getDestroyType() != 3) {
-                        if (bottleInfo.getDestroyType() == 1 && bottleInfo.getUserId() == BaseActivity.userId) {
-                            return;
-                        }
-
-                        if (bottleInfo.getOtherHeadImage().isEmpty()) {
-                            bottleInfo.setOtherHeadImage(mineInfo.getImage());
-                            bottleInfo.setOtherNick(mineInfo.getNick());
-                        }
-                        BottleCache bottleCache = bottleCacheDb.getBottleCache(bottleInfo.getDriftBottleId());
-                        if (bottleCache != null) {
-                            bottleInfo.setText(bottleCache.getStanza());
-                            bottleInfo.setNoReadNum(bottleCache.getNoReadNum());
-                            bottleInfo.setModifyTime(bottleCache.getCreationDate());
-                        }
-                        bottleInfoList.add(bottleInfo);
+                    if (bottleInfo.getDestroyType() == 1 && bottleInfo.getUserId() == BaseActivity.userId) {
+                        continue;
                     }
+                    if (bottleInfo.getDestroyType() == 2 && bottleInfo.getOtherUserId() == BaseActivity.userId) {
+                        continue;
+                    }
+
+                    if (bottleInfo.getOtherHeadImage().isEmpty()) {
+                        bottleInfo.setOtherHeadImage(mineInfo.getImage());
+                        bottleInfo.setOtherNick(mineInfo.getNick());
+                    }
+                    BottleCache bottleCache = bottleCacheDb.getBottleCache(bottleInfo.getDriftBottleId());
+                    if (bottleCache != null) {
+                        bottleInfo.setText(bottleCache.getStanza());
+                        bottleInfo.setNoReadNum(bottleCache.getNoReadNum());
+                        bottleInfo.setModifyTime(bottleCache.getCreationDate());
+                    }
+                    bottleInfoList.add(bottleInfo);
                 }
                 adapter.notifyItemRangeChanged(start, bottleInfoList.size());
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
+                if (bottleInfoList.size() == 0 && pageNo == 1) {
+                    mBinding.setNoData(true);
+                } else if (bottleInfoList.size() < 10) {
+                    pageNo++;
+                    myBottleList();
+                }
             }
 
             @Override
@@ -185,6 +192,9 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
                     mBinding.refresh.finishLoadMore();
+                    if (bottleInfoList.size() == 0 && pageNo == 1) {
+                        mBinding.setNoData(true);
+                    }
                 }
             }
         }, activity).setPageNo(pageNo);
@@ -215,8 +225,10 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 adapter.notifyItemRemoved(position);
                 bottleInfoList.remove(position);
                 activity.sendBroadcast(new Intent("lobster_bottleNum"));
+                if (bottleInfoList.size() == 0) {
+                    onRefresh(mBinding.refresh);
+                }
 
-                mBinding.setNoData(bottleInfoList.size() == 0);
             }
         }, activity).setDriftBottleId(bottleInfoList.get(position).getDriftBottleId()).setDriftBottleType(3);
         api.setShowProgress(true);

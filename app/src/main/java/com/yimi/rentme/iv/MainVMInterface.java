@@ -32,7 +32,5 @@ public interface MainVMInterface {
 
     void noReadBottleNum(boolean isUpdate);
 
-    void beSuperLikeList();
-
     void otherInfo(long otherUserId, int count, CustomMessageBody body);
 }

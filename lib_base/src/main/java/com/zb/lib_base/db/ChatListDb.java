@@ -69,12 +69,15 @@ public class ChatListDb extends BaseDao {
         commitTransaction();
     }
 
-    public void updateMember(long otherUserId, String image, String nick) {
+    public void updateMember(long otherUserId, String image, String nick, int chatType, CallBack callBack) {
         beginTransaction();
-        ChatList chatList = realm.where(ChatList.class).equalTo("userId", otherUserId).equalTo("mainUserId", BaseActivity.userId).findFirst();
+        ChatList chatList = realm.where(ChatList.class).equalTo("chatType", chatType).equalTo("userId", otherUserId).equalTo("mainUserId", BaseActivity.userId).findFirst();
         if (chatList != null) {
             chatList.setImage(image);
             chatList.setNick(nick);
+            callBack.success();
+        } else {
+            callBack.fail();
         }
         commitTransaction();
     }

@@ -18,9 +18,11 @@ import com.zb.lib_base.api.deleteDynApi;
 import com.zb.lib_base.api.dynCancelLikeApi;
 import com.zb.lib_base.api.dynDetailApi;
 import com.zb.lib_base.api.dynDoLikeApi;
+import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.GoodDb;
+import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -28,13 +30,16 @@ import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.CountUsedPW;
 import com.zb.lib_base.windows.SelectorPW;
 import com.zb.lib_base.windows.SharePW;
+import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.TextPW;
 import com.zb.module_home.BR;
 import com.zb.module_home.R;
@@ -60,6 +65,8 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     private ObjectAnimator animator;
     private int goodNum = 0;
     private List<String> selectorList = new ArrayList<>();
+    private MineInfo mineInfo;
+    private LikeDb likeDb;
 
     @Override
     public void back(View view) {
@@ -73,6 +80,8 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (HomeDiscoverVideoBinding) binding;
+        mineInfo = mineInfoDb.getMineInfo();
+        likeDb = new LikeDb(Realm.getDefaultInstance());
         goodDb = new GoodDb(Realm.getDefaultInstance());
         mBinding.setIsPlay(true);
         mBinding.setIsProgress(false);
@@ -165,13 +174,45 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                     toDelete(null);
                 }
             } else {
-                mBinding.setIsPlay(false);
-                mBinding.videoView.pause();
-                ActivityUtils.getHomeReport(discoverInfo.getUserId());
+                if (position == 0) {
+                    // 超级喜欢
+                    makeEvaluate();
+                } else {
+                    // 举报
+                    mBinding.setIsPlay(false);
+                    mBinding.videoView.pause();
+                    ActivityUtils.getHomeReport(discoverInfo.getUserId());
+                }
             }
-
-
         });
+    }
+
+    @Override
+    public void makeEvaluate() {
+        makeEvaluateApi api = new makeEvaluateApi(new HttpOnNextListener<Integer>() {
+            @Override
+            public void onNext(Integer o) {
+                // 1喜欢成功 2匹配成功 3喜欢次数用尽
+                String myHead = mineInfo.getImage();
+                String otherHead = memberInfo.getMoreImages().split("#")[0];
+                if (o == 1) {
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
+                } else if (o == 2) {
+                    // 匹配成功
+                    likeDb.saveLike(new CollectID(memberInfo.getUserId()));
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), memberInfo.getSex(), () -> ActivityUtils.getChatActivity(memberInfo.getUserId()));
+                    activity.sendBroadcast(new Intent("lobster_pairList"));
+                } else if (o == 3) {
+                    // 喜欢次数用尽
+                    SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
+                } else if (o == 4) {
+                    new CountUsedPW(activity, mBinding.getRoot(), 2);
+                } else if (o == 5) {
+                    SCToastUtil.showToast(activity, "已喜欢", true);
+                }
+            }
+        }, activity).setOtherUserId(discoverInfo.getUserId()).setLikeOtherStatus(2);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override
@@ -194,10 +235,13 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             @Override
             public void onNext(DiscoverInfo o) {
                 discoverInfo = o;
-                if (discoverInfo.getUserId() == BaseActivity.userId)
+                if (discoverInfo.getUserId() == BaseActivity.userId) {
                     selectorList.add("查看礼物");
-                selectorList.add(discoverInfo.getUserId() == BaseActivity.userId ? "删除动态" : "举报");
-
+                    selectorList.add("删除动态");
+                } else {
+                    selectorList.add("超级喜欢");
+                    selectorList.add("举报");
+                }
                 DownLoad.getFilePath(discoverInfo.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), new DownLoad.CallBack() {
                     @Override
                     public void success(String filePath) {

@@ -19,10 +19,12 @@ import com.zb.lib_base.api.memberInfoConfApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
+import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.AttentionInfo;
+import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.ShareInfo;
@@ -63,11 +65,13 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     private List<String> selectorList = new ArrayList<>();
     private AreaDb areaDb;
     private MineInfo mineInfo;
+    private LikeDb likeDb;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         areaDb = new AreaDb(Realm.getDefaultInstance());
+        likeDb = new LikeDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
         if (otherUserId != BaseActivity.userId) {
             selectorList.add("超级喜欢");
@@ -233,6 +237,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         makeEvaluateApi api = new makeEvaluateApi(new HttpOnNextListener<Integer>() {
             @Override
             public void onNext(Integer o) {
+                String myHead = mineInfo.getImage();
+                String otherHead = memberInfo.getMoreImages().split("#")[0];
                 // 1喜欢成功 2匹配成功 3喜欢次数用尽
                 if (o == 1) {
                     if (showLike) {
@@ -242,10 +248,17 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                         data.putExtra("direction", 2);
                         activity.sendBroadcast(data);
                     } else {
-                        String myHead = mineInfo.getImage();
-                        String otherHead = memberInfo.getMoreImages().split("#")[0];
+
                         new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
                     }
+                } else if (o == 2) {
+                    // 匹配成功
+                    likeDb.saveLike(new CollectID(memberInfo.getUserId()));
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), memberInfo.getSex(), () -> ActivityUtils.getChatActivity(memberInfo.getUserId()));
+                    activity.sendBroadcast(new Intent("lobster_pairList"));
+                } else if (o == 3) {
+                    // 喜欢次数用尽
+                    SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else if (o == 5) {
                     SCToastUtil.showToast(activity, "已喜欢", true);
                 } else {

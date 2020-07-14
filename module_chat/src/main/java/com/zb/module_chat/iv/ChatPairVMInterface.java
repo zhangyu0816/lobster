@@ -5,5 +5,8 @@ public interface ChatPairVMInterface {
 
     void deleteItem(int position);
 
+    void beSuperLikeList();
+
     void pairList();
+
 }

@@ -15,7 +15,7 @@ public class BottleCacheDb extends BaseDao {
         realm.insertOrUpdate(bottleCache);
         commitTransaction();
     }
-
+    // 单个漂流瓶的最新聊天记录
     public BottleCache getBottleCache(long driftBottleId) {
         beginTransaction();
         BottleCache bottleCache = realm.where(BottleCache.class).equalTo("driftBottleId", driftBottleId).findFirst();

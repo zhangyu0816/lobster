@@ -7,12 +7,9 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
-import com.zb.lib_base.api.relievePairApi;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.db.LikeDb;
-import com.zb.lib_base.http.HttpManager;
-import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
@@ -144,12 +141,18 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
 
     @Override
     public void deleteItem(int position) {
-        new TextPW(activity, mBinding.getRoot(), "解除匹配关系", "解除匹配关系后，将对方移除匹配列表及聊天列表。",
-                "解除", false, new TextPW.CallBack() {
+        new TextPW(activity, mBinding.getRoot(), "清除聊天记录", "清除记录后，将无法找回",
+                "清除", false, new TextPW.CallBack() {
             @Override
             public void sure() {
                 prePosition = position;
-                relievePair(chatMsgList.get(position).getUserId());
+                long otherUserId = chatMsgList.get(position).getUserId();
+                historyMsgDb.deleteHistoryMsg(otherUserId, 1, 0);
+                adapter.notifyItemRemoved(prePosition);
+                chatMsgList.remove(prePosition);
+                chatListDb.deleteChatMsg(otherUserId);
+
+                activity.sendBroadcast(new Intent("lobster_pairList"));
             }
 
             @Override
@@ -159,17 +162,4 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
         });
     }
 
-    private void relievePair(long otherUserId) {
-        relievePairApi api = new relievePairApi(new HttpOnNextListener() {
-            @Override
-            public void onNext(Object o) {
-                likeDb.deleteLike(otherUserId);
-                historyMsgDb.deleteHistoryMsg(otherUserId, 1, 0);
-                Intent data = new Intent("lobster_relieve");
-                data.putExtra("otherUserId", otherUserId);
-                activity.sendBroadcast(data);
-            }
-        }, activity).setOtherUserId(otherUserId);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
 }

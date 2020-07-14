@@ -217,7 +217,6 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                 thirdReadChat();
                 bottleCacheDb.updateReadNum(driftBottleId);
                 activity.sendBroadcast(new Intent("lobster_bottleNum"));
-
                 new Thread(() -> bottleHistoryMsgList(1)).start();
 
             }

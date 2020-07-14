@@ -31,6 +31,7 @@ import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.seeGiftRewardsApi;
 import com.zb.lib_base.api.seeReviewsApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -67,6 +68,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
+import io.realm.Realm;
 
 public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDetailVMInterface, OnRefreshListener, OnLoadMoreListener {
     private HomeDiscoverDetailBinding mBinding;
@@ -74,6 +76,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     public DiscoverInfo discoverInfo;
     public HomeAdapter reviewAdapter;
     public HomeAdapter rewardAdapter;
+    private LikeDb likeDb;
 
     private List<String> selectorList = new ArrayList<>();
     private List<Review> reviewList = new ArrayList<>();
@@ -92,6 +95,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         super.setBinding(binding);
         mBinding = (HomeDiscoverDetailBinding) binding;
         mineInfo = mineInfoDb.getMineInfo();
+        likeDb = new LikeDb(Realm.getDefaultInstance());
         AdapterBinding.viewSize(mBinding.banner, MineApp.W, ObjectUtils.getLogoHeight(1.0f));
         mBinding.setContent("");
         mBinding.setName("");
@@ -303,6 +307,14 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 String otherHead = memberInfo.getMoreImages().split("#")[0];
                 if (o == 1) {
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
+                } else if (o == 2) {
+                    // 匹配成功
+                    likeDb.saveLike(new CollectID(memberInfo.getUserId()));
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), memberInfo.getSex(), () -> ActivityUtils.getChatActivity(memberInfo.getUserId()));
+                    activity.sendBroadcast(new Intent("lobster_pairList"));
+                } else if (o == 3) {
+                    // 喜欢次数用尽
+                    SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else if (o == 4) {
                     new CountUsedPW(activity, mBinding.getRoot(), 2);
                 } else if (o == 5) {

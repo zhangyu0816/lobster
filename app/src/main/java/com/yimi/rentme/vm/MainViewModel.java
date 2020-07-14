@@ -24,7 +24,6 @@ import com.zb.lib_base.api.contactNumApi;
 import com.zb.lib_base.api.driftBottleChatListApi;
 import com.zb.lib_base.api.giftListApi;
 import com.zb.lib_base.api.joinPairPoolApi;
-import com.zb.lib_base.api.likeMeListApi;
 import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.newDynMsgAllNumApi;
 import com.zb.lib_base.api.noReadBottleNumApi;
@@ -48,7 +47,6 @@ import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.ImAccount;
-import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.RechargeInfo;
@@ -238,16 +236,18 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 mBinding.setNewsCount(MineApp.mineNewsCount.getFriendDynamicGiftNum() + MineApp.mineNewsCount.getFriendDynamicReviewNum() + MineApp.mineNewsCount.getFriendDynamicGoodNum() + MineApp.mineNewsCount.getSystemNewsNum());
             }
         };
-
-        if (!isNotificationEnabled()) {
-            new Handler().postDelayed(() -> {
-                new TextPW(activity, mBinding.getRoot(), "应用通知", "为了及时收到虾菇通知，请开启通知", "去开启", new TextPW.CallBack() {
-                    @Override
-                    public void sure() {
-                        gotoSet();
-                    }
-                });
-            }, 1000);
+        if (PreferenceUtil.readIntValue(activity, "isNotificationEnabled") == 0) {
+            if (!isNotificationEnabled()) {
+                new Handler().postDelayed(() -> {
+                    PreferenceUtil.saveIntValue(activity, "isNotificationEnabled", 1);
+                    new TextPW(activity, mBinding.getRoot(), "应用通知", "为了及时收到虾菇通知，请开启通知", "去开启", new TextPW.CallBack() {
+                        @Override
+                        public void sure() {
+                            gotoSet();
+                        }
+                    });
+                }, 1000);
+            }
         }
 
     }
@@ -584,52 +584,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                     data.putExtra("isUpdate", isUpdate);
                     activity.sendBroadcast(data);
                 }, 500);
-
-                if (!isUpdate) {
-                    beSuperLikeList();
-                }
             }
         }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
-    public void beSuperLikeList() {
-        likeMeListApi api = new likeMeListApi(new HttpOnNextListener<List<LikeMe>>() {
-            @Override
-            public void onNext(List<LikeMe> o) {
-                for (LikeMe likeMe : o) {
-                    ChatList chatList = new ChatList();
-                    chatList.setUserId(likeMe.getOtherUserId());
-                    chatList.setImage(likeMe.getHeadImage());
-                    chatList.setNick(likeMe.getNick());
-                    chatList.setMsgType(1);
-                    chatList.setStanza("超级喜欢你！");
-                    chatList.setNoReadNum(0);
-                    chatList.setChatType(3);
-                    chatList.setCreationDate(likeMe.getModifyTime());
-                    chatListDb.saveChatList(chatList);
-                    new Handler().postDelayed(() -> {
-                        Intent data = new Intent("lobster_updateContactNum");
-                        data.putExtra("chatType", 3);
-                        data.putExtra("isUpdate", false);
-                        activity.sendBroadcast(data);
-                    }, 500);
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    new Handler().postDelayed(() -> {
-                        Intent data = new Intent("lobster_updateContactNum");
-                        data.putExtra("chatType", 3);
-                        data.putExtra("isUpdate", false);
-                        activity.sendBroadcast(data);
-                    }, 500);
-                }
-            }
-        }, activity).setPageNo(0).setLikeOtherStatus(2);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

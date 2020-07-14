@@ -19,6 +19,8 @@ public interface DiscoverVideoVMInterface {
 
     void toDelete(View view);
 
+    void makeEvaluate();
+
     void deleteDyn();
 
     void dynDetail();
