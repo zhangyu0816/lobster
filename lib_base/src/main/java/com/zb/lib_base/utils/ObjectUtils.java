@@ -7,6 +7,9 @@ import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AttentionDb;
 import com.zb.lib_base.db.LikeDb;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Map;
 
 public class ObjectUtils {
@@ -168,7 +171,15 @@ public class ObjectUtils {
             return "[语音]";
         else if (msgType == 4)
             return "[视频]";
-        else
+        else if (msgType == 112) {
+            JSONObject object = null;
+            try {
+                object = new JSONObject(stanza);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return object.has("content") ? object.optString("content") : "[你有新的动态消息]";
+        } else
             return "[暂不支付该类型消息]";
     }
 

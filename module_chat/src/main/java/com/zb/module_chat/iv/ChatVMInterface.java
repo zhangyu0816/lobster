@@ -3,6 +3,7 @@ package com.zb.module_chat.iv;
 import android.view.View;
 
 import com.zb.lib_base.model.HistoryMsg;
+import com.zb.lib_base.model.StanzaInfo;
 
 import java.io.File;
 
@@ -35,4 +36,8 @@ public interface ChatVMInterface {
     void stopPlayer();
 
     void uploadSound(File file, int resTime);
+
+    void check(StanzaInfo stanzaInfo);
+
+    void dynDetail(long discoverId);
 }

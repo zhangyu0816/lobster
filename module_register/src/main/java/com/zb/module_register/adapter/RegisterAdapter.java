@@ -1,11 +1,14 @@
 package com.zb.module_register.adapter;
 
+import android.os.Handler;
+
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.adapter.BindingItemAdapter;
 import com.zb.lib_base.adapter.ItemTouchHelperAdapter;
 import com.zb.lib_base.adapter.RecyclerHolder;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_register.BR;
+import com.zb.module_register.vm.ImagesViewModel;
 
 import java.util.Collections;
 import java.util.List;
@@ -45,6 +48,10 @@ public class RegisterAdapter<T> extends BindingItemAdapter<T> implements ItemTou
             }
             //更新视图
             notifyItemMoved(fromPosition, toPosition);
+            if (viewModel instanceof ImagesViewModel) {
+                ((ImagesViewModel) viewModel).images = (List<String>) getList();
+            }
+            new Handler().postDelayed(this::notifyDataSetChanged, 500);
         }
 
     }

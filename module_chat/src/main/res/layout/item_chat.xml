@@ -18,11 +18,17 @@
             name="viewModel"
             type="com.zb.module_chat.vm.ChatViewModel" />
 
+        <variable
+            name="stanzaInfo"
+            type="com.zb.lib_base.model.StanzaInfo" />
+
+
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/black_efe">
 
         <TextView
             android:id="@+id/tv_time"
@@ -51,7 +57,7 @@
             <ImageView
                 android:id="@+id/iv_other_logo"
                 defaultRes="@{ObjectUtils.getDefaultRes()}"
-                imageUrl='@{viewModel.memberInfo.moreImages.split("#")[0]}'
+                imageUrl='@{viewModel.memberInfo.image}'
                 isCircle="@{true}"
                 onClickDelayed="@{viewModel::toDetail}"
                 viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
@@ -67,10 +73,10 @@
                 android:layout_toEndOf="@+id/iv_other_logo"
                 android:background="@drawable/btn_bg_white_radius5"
                 android:padding="10dp"
-                android:text="@{item.msgType>4?@string/msg_no_type:item.stanza}"
+                android:text="@{item.stanza}"
                 android:textColor="@color/black_252"
                 android:textSize="14sp"
-                android:visibility="@{(item.msgType==1||item.msgType>4)?View.VISIBLE:View.GONE}"
+                android:visibility="@{item.msgType==1?View.VISIBLE:View.GONE}"
                 tools:text="色附件为 库文件 未考虑附件为来房价为福建未来房价微了访问了访问访问" />
 
             <RelativeLayout
@@ -154,6 +160,69 @@
 
             </RelativeLayout>
 
+            <LinearLayout
+                onClickDelayed="@{v->viewModel.check(stanzaInfo)}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="30dp"
+                android:layout_toEndOf="@+id/iv_other_logo"
+                android:background="@drawable/btn_bg_white_radius10"
+                android:orientation="vertical"
+                android:visibility="@{item.msgType==112?View.VISIBLE:View.GONE}">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        imageUrl="@{stanzaInfo.image}"
+                        isCircle="@{true}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(100)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(100)}"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:text="@{stanzaInfo.title}"
+                        android:textColor="@color/black_252"
+                        android:textSize="16sp"
+                        tools:text="萨拉就乌克兰就f" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:text="@{stanzaInfo.content}"
+                    android:textColor="@color/black_4d4"
+                    android:textSize="13sp"
+                    tools:text="微积分礼物分文理科访问了" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@color/black_efe" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:text="@{stanzaInfo.linkContent}"
+                    android:textColor="#6d87b4"
+                    android:textSize="16sp"
+                    tools:text="查看" />
+            </LinearLayout>
         </RelativeLayout>
 
         <RelativeLayout
@@ -173,10 +242,10 @@
                 android:layout_toStartOf="@+id/iv_mine_logo"
                 android:background="@drawable/btn_bg_purple_7a4_radius5"
                 android:padding="10dp"
-                android:text="@{item.msgType>4?@string/msg_no_type:item.stanza}"
+                android:text="@{item.stanza}"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
-                android:visibility="@{(item.msgType==1||item.msgType>4)?View.VISIBLE:View.GONE}"
+                android:visibility="@{item.msgType==1?View.VISIBLE:View.GONE}"
                 tools:text="色附件为 库文件二分法我访问访问为访问访问我 " />
 
             <RelativeLayout

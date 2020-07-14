@@ -4,6 +4,8 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -59,15 +61,19 @@ import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.TextPW;
 import com.zb.module_card.windows.GuidancePW;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.core.app.NotificationManagerCompat;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import io.realm.Realm;
+
+import static com.umeng.socialize.utils.ContextUtil.getPackageName;
 
 public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private ArrayList<Fragment> fragments = new ArrayList<>();
@@ -141,30 +147,34 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 long otherUserId = body.getFromId() == BaseActivity.userId ? body.getToId() : body.getFromId();
 
                 if (body.getDriftBottleId() == 0) {
-                    chatListDb.updateChatMsg(otherUserId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType(), count, new ChatListDb.CallBack() {
-                        @Override
-                        public void success() {
-                            if (otherUserId == BaseActivity.systemUserId) {
-                                MineApp.mineNewsCount.setSystemNewsNum(count);
-                                activity.sendBroadcast(new Intent("lobster_newsCount"));
-                            } else {
+                    if (otherUserId == BaseActivity.systemUserId) {
+                        MineApp.mineNewsCount.setSystemNewsNum(count);
+                        activity.sendBroadcast(new Intent("lobster_newsCount"));
+                    } else {
+                        chatListDb.updateChatMsg(otherUserId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType(), count, new ChatListDb.CallBack() {
+                            @Override
+                            public void success() {
+
                                 // 更新会话列表
                                 mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
                                 Intent data = new Intent("lobster_updateChat");
                                 data.putExtra("userId", otherUserId);
                                 activity.sendBroadcast(data);
                             }
-                        }
 
-                        @Override
-                        public void fail() {
-                            otherInfo(otherUserId, count, body);
+                            @Override
+                            public void fail() {
+                                otherInfo(otherUserId, count, body);
+                            }
+                        });
+                        if (body.getMsgType() == 112) {
+                            newDynMsgAllNum(true);
                         }
-                    });
-                    // 更新对话页面
-                    Intent upMessage = new Intent("lobster_upMessage/friend=" + otherUserId);
-                    upMessage.putExtra("ywMessage", ywMessage);
-                    activity.sendBroadcast(upMessage);
+                        // 更新对话页面
+                        Intent upMessage = new Intent("lobster_upMessage/friend=" + otherUserId);
+                        upMessage.putExtra("ywMessage", ywMessage);
+                        activity.sendBroadcast(upMessage);
+                    }
                 } else {
                     BottleCache bottleCache = new BottleCache();
                     bottleCache.setDriftBottleId(body.getDriftBottleId());
@@ -218,7 +228,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                         areaDb.getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
                 myImAccountInfoApi();
                 walletAndPop();
-                newDynMsgAllNum();
+                newDynMsgAllNum(false);
             }
         };
 
@@ -228,6 +238,18 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 mBinding.setNewsCount(MineApp.mineNewsCount.getFriendDynamicGiftNum() + MineApp.mineNewsCount.getFriendDynamicReviewNum() + MineApp.mineNewsCount.getFriendDynamicGoodNum() + MineApp.mineNewsCount.getSystemNewsNum());
             }
         };
+
+        if (!isNotificationEnabled()) {
+            new Handler().postDelayed(() -> {
+                new TextPW(activity, mBinding.getRoot(), "应用通知", "为了及时收到虾菇通知，请开启通知", "去开启", new TextPW.CallBack() {
+                    @Override
+                    public void sure() {
+                        gotoSet();
+                    }
+                });
+            }, 1000);
+        }
+
     }
 
     public void onDestroy() {
@@ -238,6 +260,37 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         bottleNumReceiver.unregisterReceiver();
         mainSelectReceiver.unregisterReceiver();
         newsCountReceiver.unregisterReceiver();
+    }
+
+    private boolean isNotificationEnabled() {
+        boolean isOpened = false;
+        try {
+            isOpened = NotificationManagerCompat.from(activity).areNotificationsEnabled();
+        } catch (Exception e) {
+            e.printStackTrace();
+            isOpened = false;
+        }
+        return isOpened;
+    }
+
+    private void gotoSet() {
+        Intent intent = new Intent();
+        if (Build.VERSION.SDK_INT >= 26) {
+            // android 8.0引导
+            intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+            intent.putExtra("android.provider.extra.APP_PACKAGE", getPackageName());
+        } else if (Build.VERSION.SDK_INT >= 21) {
+            // android 5.0-7.0
+            intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+            intent.putExtra("app_package", getPackageName());
+            intent.putExtra("app_uid", activity.getApplicationInfo().uid);
+        } else {
+            // 其他
+            intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+            intent.setData(Uri.fromParts("package", getPackageName(), null));
+        }
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        activity.startActivity(intent);
     }
 
     private void initFragments() {
@@ -318,7 +371,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 bankInfoList();
                 comType();
                 walletAndPop();
-                newDynMsgAllNum();
+                newDynMsgAllNum(false);
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
@@ -385,15 +438,16 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     }
 
     @Override
-    public void newDynMsgAllNum() {
+    public void newDynMsgAllNum(boolean isUpdate) {
         newDynMsgAllNumApi api = new newDynMsgAllNumApi(new HttpOnNextListener<MineNewsCount>() {
             @Override
             public void onNext(MineNewsCount o) {
                 MineApp.mineNewsCount = o;
                 activity.sendBroadcast(new Intent("lobster_newsCount"));
-//                systemChat();
-                chatList();
-                driftBottleChatList();
+                if (!isUpdate) {
+                    chatList();
+                    driftBottleChatList();
+                }
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
@@ -431,6 +485,10 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                         MineApp.mineNewsCount.setMsgType(chatMsg.getMsgType());
                         MineApp.mineNewsCount.setSystemNewsNum(chatMsg.getNoReadNum());
                         activity.sendBroadcast(new Intent("lobster_newsCount"));
+                    } else if (chatMsg.getUserId() == BaseActivity.dynUserId) {
+                        // 评论
+                        chatMsg.setChatType(5);
+                        chatListDb.saveChatList(chatMsg);
                     }
                     if (chatMsg.getUserId() > 10010) {
                         chatMsg.setChatType(4);
@@ -605,6 +663,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 chatList.setStanza(body.getStanza());
                 chatList.setMsgType(body.getMsgType());
                 chatList.setNoReadNum(count);
+                chatList.setChatType(otherUserId == BaseActivity.dynUserId ? 5 : 4);
                 chatList.setPublicTag("");
                 chatList.setEffectType(1);
                 chatList.setAuthType(1);

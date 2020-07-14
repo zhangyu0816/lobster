@@ -209,6 +209,8 @@ public class AdapterBinding {
                     builder.load(R.mipmap.be_like_logo_icon).into(view);
                 } else if (imageUrl != null && imageUrl.equals("bottle_logo_icon")) {
                     builder.load(R.mipmap.bottle_logo_icon).into(view);
+                } else if (imageUrl != null && imageUrl.equals("review_tag_icon")) {
+                    builder.load(R.mipmap.review_tag_icon).into(view);
                 } else {
                     if (imageUrl != null && imageUrl.contains(".mp3"))
                         imageUrl = "";

@@ -120,8 +120,6 @@ public class LoginSampleHelper {
         @Override
         public void onPushMessage(IYWContact contact, YWMessage ywMessage) {
             CustomMessageBody body = (CustomMessageBody) unpack(ywMessage.getContent());
-            if (body.getMsgType() > 4)
-                return;
             if (isBackground()) {
                 sendMsg(ywMessage);
             } else {
@@ -132,8 +130,7 @@ public class LoginSampleHelper {
                         if (body.getFromId() != BaseActivity.userId)
                             appSound();
                         // 单聊消息
-                        YWConversation conversation = conversationService.getConversationByConversationId(contact.getUserId());
-//                        YWConversation conversation = conversationService.getConversationByUserId(contact.getUserId());
+                        YWConversation conversation = conversationService.getConversationByUserId(contact.getUserId());
                         if (conversation != null) {
                             Intent intent = new Intent("lobster_newMsg");
                             intent.putExtra("unreadCount", conversation.getUnreadCount());
@@ -141,12 +138,6 @@ public class LoginSampleHelper {
                             MineApp.getInstance().sendBroadcast(intent);
                         }
                     }
-//                    else if (data.has("roster")) { // 添加好友
-//                        MineApplication.sContext.sendBroadcast(new Intent("updateFriendList"));
-//                        Intent intent = new Intent("updateFriendStatus");
-//                        intent.putExtra("ywMessage", ywMessage);
-//                        MineApplication.sContext.sendBroadcast(intent);
-//                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

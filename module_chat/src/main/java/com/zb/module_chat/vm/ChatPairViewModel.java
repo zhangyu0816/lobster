@@ -110,10 +110,12 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                         }
                     }
                 }
-                adapter.notifyItemRemoved(prePosition);
-                chatMsgList.remove(prePosition);
-                chatListDb.deleteChatMsg(otherUserId);
-                prePosition = -1;
+                if (prePosition != -1) {
+                    adapter.notifyItemRemoved(prePosition);
+                    chatMsgList.remove(prePosition);
+                    chatListDb.deleteChatMsg(otherUserId);
+                    prePosition = -1;
+                }
             }
         };
         finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {

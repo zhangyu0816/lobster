@@ -59,6 +59,7 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/bottom_layout"
             android:layout_below="@+id/relativeLayout3"
+            android:paddingBottom="15dp"
             android:background="@color/black_efe">
 
             <com.zb.lib_base.views.MyHeaderView

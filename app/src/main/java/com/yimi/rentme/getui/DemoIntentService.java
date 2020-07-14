@@ -31,7 +31,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 public class DemoIntentService extends GTIntentService {
-    public static int nId = 0;
     public static StringBuilder payloadData = new StringBuilder();
 
     public DemoIntentService() {
@@ -55,13 +54,12 @@ public class DemoIntentService extends GTIntentService {
             NotificationManager notificationManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationManagerCompat nmc = NotificationManagerCompat.from(context);
-            NotificationCompat.Builder builder = getNotificationBuilderByChannel(notificationManager, "com.yimi.rentme");
+            NotificationCompat.Builder builder = getNotificationBuilderByChannel(notificationManager, "com.yimi.mdcm");
             JSONObject object;
             try {
                 object = new JSONObject(data);
                 JSONObject customContent = object.optJSONObject("custom_content");
                 int openType = object.optInt("open_type");
-                nId++;
                 String description = object.optString("description");
                 String title = object.optString("title");
                 // 通知内容
@@ -72,15 +70,27 @@ public class DemoIntentService extends GTIntentService {
                 builder.setDefaults(Notification.DEFAULT_ALL);
                 builder.setSmallIcon(R.mipmap.ic_launcher); // 向通知添加声音、闪灯和振动效果的最简单、最一致的方式是使用当前的用户默认设置，使用defaults属性，可以组合：
 
+                ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+                List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(100);
+                boolean isAppRunning = false;
+                String MY_PKG_NAME = "com.yimi.rentme";
+                for (ActivityManager.RunningTaskInfo info : list) {
+                    if (info.topActivity.getPackageName().equals(MY_PKG_NAME)
+                            || info.baseActivity.getPackageName().equals(MY_PKG_NAME)) {
+                        isAppRunning = true;
+                        break;
+                    }
+                }
+
                 if (openType == 1) {
                     Intent[] intents = new Intent[2];
                     intents[0] = Intent.makeRestartActivityTask(new ComponentName(context, MainActivity.class));
                     intents[1] = new Intent(Intent.ACTION_VIEW, Uri.parse(object.optString("url")));
-                    PendingIntent contentIntent = PendingIntent.getActivities(context, nId, intents,
+                    PendingIntent contentIntent = PendingIntent.getActivities(context, 1, intents,
                             PendingIntent.FLAG_UPDATE_CURRENT);
                     // 指定内容意图
                     builder.setContentIntent(contentIntent);
-                    notificationManager.notify(nId, builder.build());
+                    nmc.notify(null, 1, builder.build());
 
                 } else if (customContent == null) {
                     Intent intentMain = new Intent(Intent.ACTION_MAIN);
@@ -89,29 +99,19 @@ public class DemoIntentService extends GTIntentService {
                     intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
                     PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intentMain, 0);
                     builder.setContentIntent(contextIntent);
-                    notificationManager.notify(nId, builder.build());
+                    nmc.notify(null, 2, builder.build());
                 } else {
                     long userId = object.optJSONObject("custom_content").optLong("userId");
                     JSONObject activityContent = object.optJSONObject("custom_content").optJSONObject("Activity");
                     if (userId != PreferenceUtil.readLongValue(context, "userId")) {
                         return;
                     }
-                    ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-                    List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(100);
-                    boolean isAppRunning = false;
-                    String MY_PKG_NAME = "com.yimi.rentme";
-                    for (ActivityManager.RunningTaskInfo info : list) {
-                        if (info.topActivity.getPackageName().equals(MY_PKG_NAME)
-                                || info.baseActivity.getPackageName().equals(MY_PKG_NAME)) {
-                            isAppRunning = true;
-                            break;
-                        }
-                    }
+
                     if (isAppRunning) {
                         Log.i("isAppRunning", "isAppRunning == true");
                         Intent intent1 = new Intent(context, NotifivationActivity.class);
                         intent1.putExtra("activityContent", activityContent.toString());
-                        PendingIntent contentIntent = PendingIntent.getActivity(context, nId, intent1,
+                        PendingIntent contentIntent = PendingIntent.getActivity(context, 3, intent1,
                                 PendingIntent.FLAG_UPDATE_CURRENT);
                         // 指定内容意图
                         builder.setContentIntent(contentIntent);
@@ -121,18 +121,22 @@ public class DemoIntentService extends GTIntentService {
                         intents[0] = Intent.makeRestartActivityTask(new ComponentName(context, MainActivity.class));
                         intents[1] = new Intent(context, NotifivationActivity.class);
                         intents[1].putExtra("activityContent", activityContent.toString());
-                        PendingIntent contentIntent = PendingIntent.getActivities(context, nId, intents,
+                        PendingIntent contentIntent = PendingIntent.getActivities(context, 3, intents,
                                 PendingIntent.FLAG_UPDATE_CURRENT);
                         // 指定内容意图
                         builder.setContentIntent(contentIntent);
                     }
-                    notificationManager.notify(nId, builder.build());
+                    nmc.notify(null, 3, builder.build());
+                }
+                if (!isAppRunning) {
+                    appSound(context);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            appSound(context);
+
         }
+
     }
 
     private void appSound(Context context) {

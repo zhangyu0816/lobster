@@ -1,5 +1,7 @@
 package com.zb.module_mine.adapter;
 
+import android.os.Handler;
+
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.adapter.BindingItemAdapter;
 import com.zb.lib_base.adapter.ItemTouchHelperAdapter;
@@ -13,6 +15,7 @@ import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_mine.BR;
+import com.zb.module_mine.vm.EditMemberViewModel;
 import com.zb.module_mine.vm.FCLViewModel;
 
 import java.util.ArrayList;
@@ -101,6 +104,10 @@ public class MineAdapter<T> extends BindingItemAdapter<T> implements ItemTouchHe
             }
             //更新视图
             notifyItemMoved(fromPosition, toPosition);
+            if (viewModel instanceof EditMemberViewModel) {
+                ((EditMemberViewModel) viewModel).imageList = (List<String>) getList();
+            }
+            new Handler().postDelayed(this::notifyDataSetChanged, 500);
         }
     }
 

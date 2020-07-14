@@ -246,6 +246,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                         String otherHead = memberInfo.getMoreImages().split("#")[0];
                         new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
                     }
+                } else if (o == 5) {
+                    SCToastUtil.showToast(activity, "已喜欢", true);
                 } else {
                     // 超级喜欢时，非会员或超级喜欢次数用尽
                     if (mineInfo.getMemberType() == 2) {

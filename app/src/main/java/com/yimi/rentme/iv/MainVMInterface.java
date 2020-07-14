@@ -20,7 +20,7 @@ public interface MainVMInterface {
 
     void walletAndPop();
 
-    void newDynMsgAllNum();
+    void newDynMsgAllNum(boolean isUpdate);
 
     void systemChat();
 

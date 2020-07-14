@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.relievePairApi;
 import com.zb.lib_base.db.ChatListDb;
@@ -54,9 +55,11 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
             @Override
             public void onReceive(Context context, Intent intent) {
                 long userId = intent.getLongExtra("userId", 0);
+                boolean updateImage = intent.getBooleanExtra("updateImage", false);
                 if (userId == 0) {
                     chatMsgList.clear();
                     adapter.notifyDataSetChanged();
+                    chatMsgList.addAll(chatListDb.getChatList(5));
                     chatMsgList.addAll(chatListDb.getChatList(4));
                     adapter.notifyDataSetChanged();
                 } else {
@@ -68,11 +71,18 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                                 break;
                             }
                     }
-                    if (position != -1) {
-                        chatMsgList.set(position, chatListDb.getChatMsg(userId, 4));
-                        adapter.notifyItemChanged(position);
+
+                    if (updateImage) {
+                        if (position != -1) {
+                            chatMsgList.set(position, chatListDb.getChatMsg(userId, userId == BaseActivity.dynUserId ? 5 : 4));
+                            adapter.notifyItemChanged(position);
+                        }
                     } else {
-                        chatMsgList.add(0, chatListDb.getChatMsg(userId, 4));
+                        if (position != -1) {
+                            adapter.notifyItemRemoved(position);
+                            chatMsgList.remove(position);
+                        }
+                        chatMsgList.add(0, chatListDb.getChatMsg(userId, userId == BaseActivity.dynUserId ? 5 : 4));
                         adapter.notifyDataSetChanged();
                     }
                 }
@@ -109,6 +119,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
 
     @Override
     public void setAdapter() {
+        chatMsgList.addAll(chatListDb.getChatList(5));
         chatMsgList.addAll(chatListDb.getChatList(4));
         adapter = new ChatAdapter<>(activity, R.layout.item_chat_list, chatMsgList, this);
         callback = new SimpleItemTouchHelperCallback(adapter);

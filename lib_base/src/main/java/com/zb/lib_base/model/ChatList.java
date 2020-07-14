@@ -14,7 +14,7 @@ public class ChatList extends RealmObject {
     String image = "";//好友头像
     String creationDate = "";//会话时间
     String stanza = "";//内容
-    int msgType;//消息类型 1：文字 2：图片 3：语音 4：视频
+    int msgType;//消息类型 1：文字 2：图片 3：语音 4：视频  112：评论
     int noReadNum;//未读条数
     String publicTag = "";//标签   默认 null
     int effectType;//作用类型 1.无  2.系统内置      默认 null

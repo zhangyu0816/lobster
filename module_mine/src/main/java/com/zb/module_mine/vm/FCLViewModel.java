@@ -216,6 +216,8 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                 } else if (o == 3) {
                     SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
+                } else if (o == 5) {
+                    SCToastUtil.showToast(activity, "已喜欢", true);
                 }
             }
         }, activity).setOtherUserId(otherUserId).setLikeOtherStatus(likeOtherStatus);

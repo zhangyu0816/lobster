@@ -218,7 +218,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                 bottleCacheDb.updateReadNum(driftBottleId);
                 activity.sendBroadcast(new Intent("lobster_bottleNum"));
 
-                new Thread(() -> bottleHistoryMsgList(0)).start();
+                new Thread(() -> bottleHistoryMsgList(1)).start();
 
             }
         }, activity).setDriftBottleId(driftBottleId);
@@ -429,7 +429,6 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         historyMsg.setMsgChannelType(2);
         historyMsg.setDriftBottleId(driftBottleId);
         historyMsg.setMainUserId(BaseActivity.userId);
-        historyMsgDb.saveHistoryMsg(historyMsg);
         historyMsgList.add(historyMsg);
         updateTime();
         adapter.notifyDataSetChanged();

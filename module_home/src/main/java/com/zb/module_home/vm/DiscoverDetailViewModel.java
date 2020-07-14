@@ -218,6 +218,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(DiscoverInfo o) {
                 discoverInfo = o;
+                mBinding.setViewModel(DiscoverDetailViewModel.this);
                 if (discoverInfo.getUserId() == BaseActivity.userId) {
                     selectorList.add("分享");
                     selectorList.add("删除");
@@ -237,9 +238,12 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                             adsList.add(ads);
                         }
                     }
+                } else {
+                    Ads ads = new Ads();
+                    ads.setSmallImage(discoverInfo.getImage());
+                    adsList.add(ads);
                 }
                 showBanner(adsList);
-                mBinding.setVariable(BR.viewModel, DiscoverDetailViewModel.this);
                 seeGiftRewards();
                 seeReviews();
             }
@@ -301,6 +305,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
                 } else if (o == 4) {
                     new CountUsedPW(activity, mBinding.getRoot(), 2);
+                } else if (o == 5) {
+                    SCToastUtil.showToast(activity, "已喜欢", true);
                 }
             }
         }, activity).setOtherUserId(discoverInfo.getUserId()).setLikeOtherStatus(2);
@@ -313,6 +319,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(MemberInfo o) {
                 memberInfo = o;
+                mBinding.setViewModel(DiscoverDetailViewModel.this);
                 attentionStatus();
             }
         }, activity).setOtherUserId(discoverInfo.getUserId());

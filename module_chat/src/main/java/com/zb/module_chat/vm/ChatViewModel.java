@@ -31,6 +31,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
+import com.zb.lib_base.api.dynDetailApi;
 import com.zb.lib_base.api.historyMsgListApi;
 import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.otherImAccountInfoApi;
@@ -51,11 +52,13 @@ import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.imcore.CustomMessageBody;
 import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.model.ChatList;
+import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.ResourceUrl;
+import com.zb.lib_base.model.StanzaInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.DateUtil;
@@ -263,14 +266,18 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             public void onNext(MemberInfo o) {
                 memberInfo = o;
                 mBinding.setVariable(BR.viewModel, ChatViewModel.this);
-
+                chatListDb.updateMember(otherUserId, memberInfo.getImage(), memberInfo.getNick());
+                Intent data = new Intent("lobster_updateChat");
+                data.putExtra("userId", otherUserId);
+                data.putExtra("updateImage", true);
+                activity.sendBroadcast(data);
                 if (loginHelper.getImCore() == null) {
                     myImAccountInfoApi();
                 } else {
                     otherImAccountInfoApi();
                 }
                 thirdReadChat();
-                new Thread(() -> historyMsgList(0)).start();
+                new Thread(() -> historyMsgList(1)).start();
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
@@ -282,11 +289,9 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             @Override
             public void onNext(List<HistoryMsg> o) {
                 for (HistoryMsg historyMsg : o) {
-                    if (historyMsg.getMsgType() < 5) {
-                        historyMsg.setOtherUserId(otherUserId);
-                        historyMsg.setMainUserId(BaseActivity.userId);
-                        historyMsgDb.saveHistoryMsg(historyMsg);
-                    }
+                    historyMsg.setOtherUserId(otherUserId);
+                    historyMsg.setMainUserId(BaseActivity.userId);
+                    historyMsgDb.saveHistoryMsg(historyMsg);
                 }
                 historyMsgId = o.get(o.size() - 1).getId();
                 historyMsgList(pageNo + 1);
@@ -312,11 +317,9 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             @Override
             public void onNext(List<HistoryMsg> o) {
                 for (HistoryMsg historyMsg : o) {
-                    if (historyMsg.getMsgType() < 5) {
-                        historyMsg.setOtherUserId(otherUserId);
-                        historyMsg.setMainUserId(BaseActivity.userId);
-                        historyMsgDb.saveHistoryMsg(historyMsg);
-                    }
+                    historyMsg.setOtherUserId(otherUserId);
+                    historyMsg.setMainUserId(BaseActivity.userId);
+                    historyMsgDb.saveHistoryMsg(historyMsg);
                 }
                 thirdHistoryMsgList(pageNo + 1);
             }
@@ -487,6 +490,31 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         HttpChatUploadManager.getInstance().doHttpDeal(api);
     }
 
+    @Override
+    public void check(StanzaInfo stanzaInfo) {
+        if (stanzaInfo.getLink().contains("person_detail")) {
+            ActivityUtils.getCardMemberDetail(Long.parseLong(stanzaInfo.getLink().replace("zw://appview/person_detail?userId=", "")), false);
+        } else if (stanzaInfo.getLink().contains("dynamic_detail")) {
+            dynDetail(Long.parseLong(stanzaInfo.getLink().replace("zw://appview/dynamic_detail?friendDynId=", "")));
+        }
+
+    }
+
+    @Override
+    public void dynDetail(long discoverId) {
+        dynDetailApi api = new dynDetailApi(new HttpOnNextListener<DiscoverInfo>() {
+            @Override
+            public void onNext(DiscoverInfo o) {
+                if (o.getVideoUrl().isEmpty()) {
+                    ActivityUtils.getHomeDiscoverDetail(discoverId);
+                } else {
+                    ActivityUtils.getHomeDiscoverVideo(discoverId);
+                }
+            }
+        }, activity).setFriendDynId(discoverId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
     /**
      * 权限
      */
@@ -642,7 +670,6 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         updateTime();
         adapter.notifyDataSetChanged();
         mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
-        historyMsgDb.saveHistoryMsg(historyMsg);
 
         ChatList chatList = new ChatList();
         chatList.setUserId(otherUserId);
