@@ -128,8 +128,11 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         loginHelper = LoginSampleHelper.getInstance();
         setAdapter();
 
-        photoManager = new PhotoManager(activity, () ->
-                sendChatMessage(2, "", photoManager.jointWebUrl(","), 0, "【图片】"));
+        photoManager = new PhotoManager(activity, () -> {
+            sendChatMessage(2, "", photoManager.jointWebUrl(","), 0, "【图片】");
+            photoManager.deleteAllFile();
+        });
+
         photoManager.setChat(true);
 
         // 发送
@@ -145,7 +148,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             return true;
         });
 
-        soundView = new SoundView(activity, mBinding.audioBtn, new SoundView.CallBack() {
+        soundView = new SoundView(activity, mBinding.audioBtn);
+        soundView.setCallBack(new SoundView.CallBack() {
             @Override
             public void sendSoundBack(int resTime, String audioPath) {
                 uploadSound(new File(audioPath), resTime);
@@ -166,10 +170,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     mBinding.tvSpeak.setPressed(true);
-                    soundView.start();
                     mBinding.tvSpeak.setText("松开  结束");
-                    stopPlayer();
-                    stopVoiceDrawable();
+                    getPermissions(3);
                     return true;
                 case MotionEvent.ACTION_UP:
                     mBinding.audioBtn.setVisibility(View.GONE);
@@ -240,6 +242,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             emojiList.add(EmojiHandler.sCustomizeEmojisMap.get(i));
         }
         emojiAdapter = new ChatAdapter<>(activity, R.layout.item_emoji, emojiList, this);
+
+        mBinding.bottomLayout.setVisibility(otherUserId < 10010 ? View.GONE : View.VISIBLE);
         otherInfo();
     }
 
@@ -342,14 +346,14 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                         chatList.setPublicTag("");
                         chatList.setEffectType(1);
                         chatList.setAuthType(1);
-                        chatList.setChatType(4);
+                        chatList.setChatType(otherUserId == BaseActivity.dynUserId ? 5 : 4);
                         chatListDb.saveChatList(chatList);
                         Intent data = new Intent("lobster_updateChat");
                         data.putExtra("userId", otherUserId);
                         data.putExtra("updateImage", true);
                         activity.sendBroadcast(data);
                     } else {
-                        chatListDb.updateMember(otherUserId, memberInfo.getImage(), memberInfo.getNick(), 4, new ChatListDb.CallBack() {
+                        chatListDb.updateMember(otherUserId, memberInfo.getImage(), memberInfo.getNick(), otherUserId == BaseActivity.dynUserId ? 5 : 4, new ChatListDb.CallBack() {
                             @Override
                             public void success() {
                                 Intent data = new Intent("lobster_updateChat");
@@ -371,7 +375,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                                 chatList.setPublicTag("");
                                 chatList.setEffectType(1);
                                 chatList.setAuthType(1);
-                                chatList.setChatType(4);
+                                chatList.setChatType(otherUserId == BaseActivity.dynUserId ? 5 : 4);
                                 chatListDb.saveChatList(chatList);
                                 Intent data = new Intent("lobster_updateChat");
                                 data.putExtra("userId", otherUserId);
@@ -389,7 +393,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
 
     @Override
     public void toDetail(View view) {
-        ActivityUtils.getCardMemberDetail(otherUserId, false);
+        if (otherUserId > 10010)
+            ActivityUtils.getCardMemberDetail(otherUserId, false);
     }
 
     private ImageView ivPlay;
@@ -439,7 +444,13 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         DownLoad.getFilePath(historyMsg.getResLink(), BaseActivity.getDownloadFile(".amr").getAbsolutePath(), filePath -> {
             // direction 0 左  1右
             stopVoiceDrawable();
-            preImageView = (ImageView) view;
+            ImageView voiceView = null;
+            if (direction == 0) {
+                voiceView = view.findViewById(R.id.iv_voice_left);
+            } else {
+                voiceView = view.findViewById(R.id.iv_voice_right);
+            }
+            preImageView = voiceView;
             preDirection = direction;
 
             preImageView.setImageResource(direction == 0 ? R.drawable.voice_chat_anim_left : R.drawable.voice_chat_anim_right);
@@ -464,6 +475,9 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         hintKeyBoard();
         mBinding.setIsEmoji(false);
         mBinding.setIsVoice(!mBinding.getIsVoice());
+        if (mBinding.getIsVoice()) {
+            getPermissions(2);
+        }
     }
 
     @Override
@@ -487,7 +501,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     public void toCamera(View view) {
         hintKeyBoard();
         mBinding.setIsEmoji(false);
-        getPermissions();
+        getPermissions(1);
     }
 
     @Override
@@ -541,7 +555,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     public void check(StanzaInfo stanzaInfo) {
         if (stanzaInfo.getLink().contains("person_detail")) {
             ActivityUtils.getCardMemberDetail(Long.parseLong(stanzaInfo.getLink().replace("zw://appview/person_detail?userId=", "")), false);
-        } else if (stanzaInfo.getLink().contains("dynamic_detail")) {
+        } else {
             dynDetail(Long.parseLong(stanzaInfo.getLink().replace("zw://appview/dynamic_detail?friendDynId=", "")));
         }
 
@@ -559,31 +573,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                 }
             }
         }, activity).setFriendDynId(discoverId);
+        api.setShowProgress(false);
         HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    /**
-     * 权限
-     */
-    private void getPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission("虾菇需要访问读外部存储权限", new BaseActivity.PermissionCallback() {
-                @Override
-                public void hasPermission() {
-                    setPermissions();
-                }
-
-                @Override
-                public void noPermission() {
-                }
-            }, Manifest.permission.READ_EXTERNAL_STORAGE);
-        } else {
-            setPermissions();
-        }
-    }
-
-    private void setPermissions() {
-        ActivityUtils.getCameraMain(activity, false, false);
     }
 
     /**
@@ -715,7 +706,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         historyMsg.setMainUserId(BaseActivity.userId);
         historyMsgList.add(historyMsg);
         updateTime();
-        adapter.notifyDataSetChanged();
+        adapter.notifyItemChanged(adapter.getItemCount() - 1);
         mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
 
         ChatList chatList = new ChatList();
@@ -750,6 +741,37 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                     historyMsgList.get(i).setShowTime(false);
                 }
             }
+        }
+    }
+
+    /**
+     * 权限
+     */
+    private void getPermissions(int type) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            performCodeWithPermission("虾菇需要访问读写外部存储权限、相机权限及录音权限", new BaseActivity.PermissionCallback() {
+                        @Override
+                        public void hasPermission() {
+                            setPermissions(type);
+                        }
+
+                        @Override
+                        public void noPermission() {
+                        }
+                    }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO);
+        } else {
+            setPermissions(type);
+        }
+    }
+
+    private void setPermissions(int type) {
+        if (type == 1) {
+            ActivityUtils.getCameraMain(activity, false, false);
+        } else if (type == 3) {
+            soundView.start();
+            stopPlayer();
+            stopVoiceDrawable();
         }
     }
 }

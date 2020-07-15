@@ -341,6 +341,9 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     } else {
                         new VipAdPW(activity, mBinding.getRoot(), false, 3);
                     }
+                } else {
+                    if (likeOtherStatus == 2)
+                        SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
                 }
             }
 

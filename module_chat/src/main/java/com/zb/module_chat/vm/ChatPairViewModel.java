@@ -10,6 +10,7 @@ import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.likeMeListApi;
 import com.zb.lib_base.api.pairListApi;
 import com.zb.lib_base.api.relievePairApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.db.LikeDb;
@@ -31,6 +32,7 @@ import com.zb.module_chat.databinding.ChatPairFragmentBinding;
 import com.zb.module_chat.iv.ChatPairVMInterface;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -103,20 +105,16 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 long otherUserId = intent.getLongExtra("otherUserId", 0);
                 if (chatMsgList.size() == 0)
                     return;
-                if (prePosition == -1) {
-                    for (int i = 0; i < chatMsgList.size(); i++) {
-                        if (chatMsgList.get(i).getChatType() == 4 && chatMsgList.get(i).getUserId() == otherUserId) {
-                            prePosition = i;
-                            break;
-                        }
+                Iterator item = chatMsgList.iterator();
+                while (item.hasNext()) {
+                    ChatList chatList = (ChatList) item.next();
+                    if (chatList.getUserId() == otherUserId) {
+                        item.remove();
+                        chatListDb.deleteChatMsg(otherUserId);
                     }
                 }
-                if (prePosition != -1) {
-                    adapter.notifyItemRemoved(prePosition);
-                    chatMsgList.remove(prePosition);
-                    chatListDb.deleteChatMsg(otherUserId);
-                    prePosition = -1;
-                }
+                prePosition = -1;
+                adapter.notifyDataSetChanged();
             }
         };
         finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
@@ -182,7 +180,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         adapter.notifyDataSetChanged();
         chatMsgList.addAll(chatListDb.getChatList(1));
         chatMsgList.addAll(chatListDb.getChatList(2));
-        chatMsgList.addAll(chatListDb.getChatList(3));
+        MineApp.pairList.clear();
         beSuperLikeList();
     }
 
@@ -295,6 +293,8 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                     chatList.setCreationDate(chatMsg != null ? chatMsg.getCreationDate() : likeMe.getModifyTime());
                     chatMsgList.add(chatList);
                 }
+
+                MineApp.pairList.addAll(o);
                 adapter.notifyItemRangeChanged(start, chatMsgList.size());
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();

@@ -41,6 +41,7 @@ import com.zb.lib_base.windows.SelectorPW;
 import com.zb.lib_base.windows.SharePW;
 import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.TextPW;
+import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_home.BR;
 import com.zb.module_home.R;
 import com.zb.module_home.databinding.HomeDiscoverVideoBinding;
@@ -176,7 +177,11 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             } else {
                 if (position == 0) {
                     // 超级喜欢
-                    makeEvaluate();
+                    if (mineInfo.getMemberType() == 2) {
+                        makeEvaluate();
+                    } else {
+                        new VipAdPW(activity, mBinding.getRoot(), false, 3);
+                    }
                 } else {
                     // 举报
                     mBinding.setIsPlay(false);
@@ -207,6 +212,8 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                     SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else if (o == 4) {
                     new CountUsedPW(activity, mBinding.getRoot(), 2);
+                } else {
+                    SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
                 }
             }
         }, activity).setOtherUserId(discoverInfo.getUserId()).setLikeOtherStatus(2);

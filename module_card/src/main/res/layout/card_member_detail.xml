@@ -83,7 +83,8 @@
                                 android:layout_alignBottom="@+id/banner"
                                 android:layout_alignParentEnd="true"
                                 android:layout_margin="15dp"
-                                app:srcCompat="@mipmap/super_like_icon" />
+                                app:srcCompat="@mipmap/super_like_icon"
+                                android:visibility="@{viewModel.mineInfo.userId==viewModel.otherUserId?View.GONE:View.VISIBLE}"/>
                         </RelativeLayout>
 
                         <LinearLayout

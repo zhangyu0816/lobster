@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:text='@{item==null?"":(item.modifyTime.isEmpty()?"":item.modifyTime.substring(11,16))}'
+            android:text='@{item==null?"":(item.modifyTime.isEmpty()?"":item.modifyTime.substring(5,16))}'
             android:textColor="@color/black_827"
             android:textSize="12sp"
             tools:text="20:02" />

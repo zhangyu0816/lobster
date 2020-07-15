@@ -20,6 +20,7 @@ import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
@@ -31,7 +32,10 @@ import com.zb.module_bottle.databinding.BottleListBinding;
 import com.zb.module_bottle.iv.BottleListVMInterface;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
@@ -90,17 +94,27 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
             @Override
             public void onReceive(Context context, Intent intent) {
                 long driftBottleId = intent.getLongExtra("driftBottleId", 0);
+                int position = -1;
+                BottleInfo bottleInfo = null;
                 for (int i = 0; i < bottleInfoList.size(); i++) {
-                    BottleInfo bottleInfo = bottleInfoList.get(i);
+                    bottleInfo = bottleInfoList.get(i);
                     if (bottleInfo.getDriftBottleId() == driftBottleId) {
-                        BottleCache bottleCache = bottleCacheDb.getBottleCache(driftBottleId);
-                        if (bottleCache != null) {
-                            bottleInfo.setText(bottleCache.getStanza());
-                            bottleInfo.setModifyTime(bottleCache.getCreationDate());
-                        }
-                        adapter.notifyItemChanged(i);
+                        position = i;
                         break;
                     }
+                }
+
+                if (position > -1) {
+                    adapter.notifyItemRemoved(position);
+                    bottleInfoList.remove(position);
+
+                    BottleCache bottleCache = bottleCacheDb.getBottleCache(driftBottleId);
+                    if (bottleCache != null) {
+                        bottleInfo.setText(bottleCache.getStanza());
+                        bottleInfo.setModifyTime(bottleCache.getCreationDate());
+                    }
+                    bottleInfoList.add(0, bottleInfo);
+                    adapter.notifyDataSetChanged();
                 }
 
             }
@@ -175,6 +189,9 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                     }
                     bottleInfoList.add(bottleInfo);
                 }
+                BottleInfoComparator comparator = new BottleInfoComparator();
+                Collections.sort(bottleInfoList, comparator);
+
                 adapter.notifyItemRangeChanged(start, bottleInfoList.size());
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
@@ -199,6 +216,17 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
             }
         }, activity).setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    public static class BottleInfoComparator implements Comparator<BottleInfo> {
+        @Override
+        public int compare(BottleInfo o1, BottleInfo o2) {
+            if (o1.getModifyTime().isEmpty())
+                return 1;
+            if (o2.getModifyTime().isEmpty())
+                return 1;
+            return DateUtil.getDateCount(o2.getModifyTime(), o1.getModifyTime(), DateUtil.yyyy_MM_dd_HH_mm_ss, 1000f);
+        }
     }
 
     @Override

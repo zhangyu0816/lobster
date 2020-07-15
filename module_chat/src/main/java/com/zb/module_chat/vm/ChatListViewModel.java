@@ -7,9 +7,12 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.api.readOverHistoryMsgApi;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.db.LikeDb;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
@@ -118,6 +121,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
     public void setAdapter() {
         chatMsgList.addAll(chatListDb.getChatList(5));
         chatMsgList.addAll(chatListDb.getChatList(4));
+
         adapter = new ChatAdapter<>(activity, R.layout.item_chat_list, chatMsgList, this);
         callback = new SimpleItemTouchHelperCallback(adapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
@@ -151,7 +155,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                 adapter.notifyItemRemoved(prePosition);
                 chatMsgList.remove(prePosition);
                 chatListDb.deleteChatMsg(otherUserId);
-
+//                readOverHistoryMsg(otherUserId, historyMsgId);
                 activity.sendBroadcast(new Intent("lobster_pairList"));
             }
 
@@ -160,6 +164,18 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                 adapter.notifyItemChanged(position);
             }
         });
+    }
+
+    /**
+     * 清空用户消息
+     */
+    private void readOverHistoryMsg(long otherUserId, long historyMsgId) {
+        readOverHistoryMsgApi api = new readOverHistoryMsgApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+            }
+        }, activity).setOtherUserId(otherUserId).setMessageId(historyMsgId);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
 }

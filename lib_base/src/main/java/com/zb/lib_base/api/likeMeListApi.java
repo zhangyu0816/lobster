@@ -36,7 +36,8 @@ public class likeMeListApi extends BaseEntity<List<LikeMe>> {
         Map<String, String> map = new HashMap<>();
         if (pageNo > 0)
             map.put("pageNo", pageNo + "");
-        map.put("likeOtherStatus", likeOtherStatus + "");
+        if (likeOtherStatus > 0)
+            map.put("likeOtherStatus", likeOtherStatus + "");
         return methods.likeMeList(map);
     }
 }

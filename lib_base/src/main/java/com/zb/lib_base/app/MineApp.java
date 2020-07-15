@@ -23,6 +23,7 @@ import com.zb.lib_base.log.LogUtil;
 import com.zb.lib_base.model.BankInfo;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.GiftInfo;
+import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.RegisterInfo;
@@ -76,6 +77,8 @@ public class MineApp extends MultiDexApplication {
     public static MineNewsCount mineNewsCount;
     public static ContactNum contactNum;
     public static int noReadBottleNum = 0;
+
+    public static List<LikeMe> pairList = new ArrayList<>();
 
     private static LinkedList<Activity> mActivityList = new LinkedList<>();
 

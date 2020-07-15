@@ -64,7 +64,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     private List<Fragment> fragments = new ArrayList<>();
     private List<String> selectorList = new ArrayList<>();
     private AreaDb areaDb;
-    private MineInfo mineInfo;
+    public MineInfo mineInfo;
     private LikeDb likeDb;
 
     @Override
@@ -266,7 +266,10 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     } else {
                         new VipAdPW(activity, mBinding.getRoot(), false, 3);
                     }
+                } else {
+                    SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
                 }
+
             }
         }, activity).setOtherUserId(otherUserId).setLikeOtherStatus(2);
         HttpManager.getInstance().doHttpDeal(api);

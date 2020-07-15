@@ -430,7 +430,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         historyMsg.setMainUserId(BaseActivity.userId);
         historyMsgList.add(historyMsg);
         updateTime();
-        adapter.notifyDataSetChanged();
+        adapter.notifyItemChanged(adapter.getItemCount() - 1);
         mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
         activity.sendBroadcast(new Intent("lobster_updateBottle"));
     }

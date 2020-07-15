@@ -62,6 +62,7 @@ public class DemoIntentService extends GTIntentService {
                 int openType = object.optInt("open_type");
                 String description = object.optString("description");
                 String title = object.optString("title");
+                int notificationBasicStyle = object.optInt("notification_basic_style");
                 // 通知内容
                 builder.setContentText(description);
                 builder.setContentTitle(title);
@@ -91,7 +92,7 @@ public class DemoIntentService extends GTIntentService {
                     // 指定内容意图
                     builder.setContentIntent(contentIntent);
                     nmc.notify(null, 1, builder.build());
-
+                    appSound(context);
                 } else if (customContent == null) {
                     Intent intentMain = new Intent(Intent.ACTION_MAIN);
                     intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -100,6 +101,10 @@ public class DemoIntentService extends GTIntentService {
                     PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intentMain, 0);
                     builder.setContentIntent(contextIntent);
                     nmc.notify(null, 2, builder.build());
+                    if (notificationBasicStyle == 7) {
+                        context.sendBroadcast(new Intent("lobster_updateChat"));
+                    }
+                    appSound(context);
                 } else {
                     long userId = object.optJSONObject("custom_content").optLong("userId");
                     JSONObject activityContent = object.optJSONObject("custom_content").optJSONObject("Activity");
@@ -125,11 +130,9 @@ public class DemoIntentService extends GTIntentService {
                                 PendingIntent.FLAG_UPDATE_CURRENT);
                         // 指定内容意图
                         builder.setContentIntent(contentIntent);
+                        appSound(context);
                     }
                     nmc.notify(null, 3, builder.build());
-                }
-                if (!isAppRunning) {
-                    appSound(context);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

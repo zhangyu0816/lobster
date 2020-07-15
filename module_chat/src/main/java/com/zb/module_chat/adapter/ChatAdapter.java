@@ -37,7 +37,7 @@ public class ChatAdapter<T> extends BindingItemAdapter<T> implements ItemTouchHe
             holder.binding.setVariable(BR.viewModel, viewModel);
         }
 
-        if (viewModel instanceof ChatViewModel) {
+        if (viewModel instanceof ChatViewModel && t instanceof HistoryMsg) {
             HistoryMsg item = (HistoryMsg) t;
             if (item.getMsgType() == 112) {
                 try {

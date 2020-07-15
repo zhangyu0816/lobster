@@ -317,6 +317,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else if (o == 4) {
                     new CountUsedPW(activity, mBinding.getRoot(), 2);
+                } else {
+                    SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
                 }
             }
         }, activity).setOtherUserId(discoverInfo.getUserId()).setLikeOtherStatus(2);

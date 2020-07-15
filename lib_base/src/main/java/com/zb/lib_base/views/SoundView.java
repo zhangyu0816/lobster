@@ -47,10 +47,9 @@ public class SoundView {
         }
     }
 
-    public SoundView(RxAppCompatActivity context, ImageView audioBtn, CallBack callBack) {
+    public SoundView(RxAppCompatActivity context, ImageView audioBtn) {
         this.context = context;
         this.audioBtn = audioBtn;
-        this.callBack = callBack;
     }
 
     public SoundView(RxAppCompatActivity context, CallBack callBack) {
@@ -98,6 +97,7 @@ public class SoundView {
                 timer.scheduleAtFixedRate(timerTask, 0, 1000);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -119,10 +119,19 @@ public class SoundView {
     public void stop() {
         if (mediaRecorder == null)
             return;
-        timer.cancel();
-        mediaRecorder.stop();
-        mediaRecorder.release();
-        mediaRecorder = null;
+
+        try {
+            if (timer != null)
+                timer.cancel();
+            if (mediaRecorder != null) {
+                mediaRecorder.stop();
+                mediaRecorder.release();
+                mediaRecorder = null;
+            }
+        } catch (Exception e) {
+            mediaRecorder = null;
+        }
+
         audioBtn.setVisibility(View.GONE);
         audioBtn.setImageResource(R.mipmap.voice_anim_1);
         animationDrawable.stop();
