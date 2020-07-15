@@ -259,9 +259,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 } else if (o == 3) {
                     // 喜欢次数用尽
                     SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
-                } else if (o == 5) {
-                    SCToastUtil.showToast(activity, "已喜欢", true);
-                } else {
+                } else if (o == 4) {
                     // 超级喜欢时，非会员或超级喜欢次数用尽
                     if (mineInfo.getMemberType() == 2) {
                         new CountUsedPW(activity, mBinding.getRoot(), 2);

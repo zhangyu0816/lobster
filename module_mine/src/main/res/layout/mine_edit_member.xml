@@ -41,13 +41,19 @@
                 android:textStyle="bold" />
         </RelativeLayout>
 
-        <TextView
+        <com.zb.lib_base.views.MarqueTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFF5D9"
             android:padding="8dp"
             android:text="发布的内容必须遵守法律法规和社区规定，请严格遵守，以免违规"
             android:textColor="#F7BF00"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
             android:textSize="12sp" />
 
         <androidx.core.widget.NestedScrollView

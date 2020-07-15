@@ -17,7 +17,7 @@ public class SuperLikePW extends BasePopupWindow {
     private CallBack callBack;
 
     public SuperLikePW(RxAppCompatActivity activity, View parentView, String myHead, String otherHead, boolean isPair, int mySex, int otherSex, CallBack callBack) {
-        super(activity, parentView, !isPair);
+        super(activity, parentView, true);
         this.myHead = myHead;
         this.otherHead = otherHead;
         this.isPair = isPair;

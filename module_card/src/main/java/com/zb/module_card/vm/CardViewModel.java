@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnimationUtils;
@@ -333,9 +334,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 } else if (o == 3) {
                     // 喜欢次数用尽
                     SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
-                } else if (o == 5) {
-                    SCToastUtil.showToast(activity, "已喜欢", true);
-                } else {
+                } else if (o == 4) {
                     // 超级喜欢时，非会员或超级喜欢次数用尽
                     if (mineInfo.getMemberType() == 2) {
                         new CountUsedPW(activity, mBinding.getRoot(), 2);
@@ -418,7 +417,9 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void onSwiping(View view, float ratio, int direction) {
+        Log.e("ratio", "ratio == " + ratio);
         if (_direction != direction) {
+            Log.e("direction", "111111111111111");
             _direction = direction;
             if (animatorSet != null)
                 animatorSet.cancel();
@@ -427,14 +428,14 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
         if (direction == CardConfig.SWIPING_LEFT) {
             if (isAnimation) {
+                Log.e("direction", "222222222222222222");
                 startAnimation(cardFragBinding.ivDislike, MineApp.W / 2f + ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 100);
             }
         } else if (direction == CardConfig.SWIPING_RIGHT) {
             if (isAnimation) {
+                Log.e("direction", "333333333333333");
                 startAnimation(cardFragBinding.ivLike, 0 - MineApp.W / 2f - ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 100);
             }
-        } else {
-            initAnimation();
         }
     }
 
