@@ -26,7 +26,6 @@ import com.zb.lib_base.api.giftListApi;
 import com.zb.lib_base.api.joinPairPoolApi;
 import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.newDynMsgAllNumApi;
-import com.zb.lib_base.api.noReadBottleNumApi;
 import com.zb.lib_base.api.openedMemberPriceListApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.rechargeDiscountListApi;
@@ -91,6 +90,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private BaseReceiver bottleNumReceiver;
     private BaseReceiver mainSelectReceiver;
     private BaseReceiver newsCountReceiver;
+    private BaseReceiver unReadCountReceiver;
     private AreaDb areaDb;
 
     @Override
@@ -106,7 +106,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         mBinding.tvSubContent.setTypeface(MineApp.simplifiedType);
         mBinding.setUnReadCount(0);
         mBinding.setNewsCount(0);
-        initFragments();
 
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
 
@@ -116,6 +115,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         if (!TextUtils.equals(BaseActivity.sessionId, ""))
             myImAccountInfoApi();
 
+        initFragments();
         giftList();
 
         rechargeReceiver = new BaseReceiver(activity, "lobster_recharge") {
@@ -138,7 +138,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         newMsgReceiver = new BaseReceiver(activity, "lobster_newMsg") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                int count = intent.getIntExtra("unReadCount", 0);
+//                int count = intent.getIntExtra("unReadCount", 0);
 
                 YWMessage ywMessage = (YWMessage) intent.getSerializableExtra("ywMessage");
                 CustomMessageBody body = (CustomMessageBody) LoginSampleHelper.unpack(ywMessage.getContent());
@@ -146,10 +146,10 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
                 if (body.getDriftBottleId() == 0) {
                     if (otherUserId == BaseActivity.systemUserId) {
-                        MineApp.mineNewsCount.setSystemNewsNum(count);
+                        MineApp.mineNewsCount.setSystemNewsNum(MineApp.mineNewsCount.getSystemNewsNum() + 1);
                         activity.sendBroadcast(new Intent("lobster_newsCount"));
                     } else {
-                        chatListDb.updateChatMsg(otherUserId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType(), count, new ChatListDb.CallBack() {
+                        chatListDb.updateChatMsg(otherUserId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType(), new ChatListDb.CallBack() {
                             @Override
                             public void success() {
 
@@ -162,7 +162,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
                             @Override
                             public void fail() {
-                                otherInfo(otherUserId, count, body);
+                                otherInfo(otherUserId, body);
                             }
                         });
                         if (body.getMsgType() == 112) {
@@ -174,13 +174,14 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                         activity.sendBroadcast(upMessage);
                     }
                 } else {
+                    BottleCache dbData = bottleCacheDb.getBottleCache(body.getDriftBottleId());
                     BottleCache bottleCache = new BottleCache();
                     bottleCache.setDriftBottleId(body.getDriftBottleId());
                     bottleCache.setUserId(otherUserId);
                     bottleCache.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
                     bottleCache.setStanza(body.getStanza());
                     bottleCache.setMsgType(body.getMsgType());
-                    bottleCache.setNoReadNum(count);
+                    bottleCache.setNoReadNum(dbData == null ? 1 : dbData.getNoReadNum() + 1);
                     bottleCache.setMainUserId(BaseActivity.userId);
                     bottleCacheDb.saveBottleCache(bottleCache);
 
@@ -236,6 +237,14 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 mBinding.setNewsCount(MineApp.mineNewsCount.getFriendDynamicGiftNum() + MineApp.mineNewsCount.getFriendDynamicReviewNum() + MineApp.mineNewsCount.getFriendDynamicGoodNum() + MineApp.mineNewsCount.getSystemNewsNum());
             }
         };
+
+        unReadCountReceiver = new BaseReceiver(activity, "lobster_unReadCount") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
+            }
+        };
+
         if (PreferenceUtil.readIntValue(activity, "isNotificationEnabled") == 0) {
             if (!isNotificationEnabled()) {
                 new Handler().postDelayed(() -> {
@@ -260,6 +269,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         bottleNumReceiver.unregisterReceiver();
         mainSelectReceiver.unregisterReceiver();
         newsCountReceiver.unregisterReceiver();
+        unReadCountReceiver.unregisterReceiver();
     }
 
     private boolean isNotificationEnabled() {
@@ -564,29 +574,23 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
     @Override
     public void noReadBottleNum(boolean isUpdate) {
-        noReadBottleNumApi api = new noReadBottleNumApi(new HttpOnNextListener<Integer>() {
-            @Override
-            public void onNext(Integer o) {
-                MineApp.noReadBottleNum = o;
-                ChatList chatList = new ChatList();
-                chatList.setUserId(BaseActivity.bottleUserId);
-                chatList.setImage("bottle_logo_icon");
-                chatList.setNick("漂流瓶");
-                chatList.setMsgType(1);
-                chatList.setStanza(o == 0 ? "茫茫人海中，需要流浪到何时" : "您有新消息");
-                chatList.setNoReadNum(o);
-                chatList.setChatType(2);
-                chatListDb.saveChatList(chatList);
-                mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
-                new Handler().postDelayed(() -> {
-                    Intent data = new Intent("lobster_updateContactNum");
-                    data.putExtra("chatType", 2);
-                    data.putExtra("isUpdate", isUpdate);
-                    activity.sendBroadcast(data);
-                }, 500);
-            }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
+        MineApp.noReadBottleNum = bottleCacheDb.getUnReadCount();
+        ChatList chatList = new ChatList();
+        chatList.setUserId(BaseActivity.bottleUserId);
+        chatList.setImage("bottle_logo_icon");
+        chatList.setNick("漂流瓶");
+        chatList.setMsgType(1);
+        chatList.setStanza(MineApp.noReadBottleNum == 0 ? "茫茫人海中，需要流浪到何时" : "您有新消息");
+        chatList.setNoReadNum(MineApp.noReadBottleNum);
+        chatList.setChatType(2);
+        chatListDb.saveChatList(chatList);
+        mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
+        new Handler().postDelayed(() -> {
+            Intent data = new Intent("lobster_updateContactNum");
+            data.putExtra("chatType", 2);
+            data.putExtra("isUpdate", isUpdate);
+            activity.sendBroadcast(data);
+        }, 500);
     }
 
     private void initRemind(int beLikeCount) {
@@ -607,10 +611,11 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     }
 
     @Override
-    public void otherInfo(long otherUserId, int count, CustomMessageBody body) {
+    public void otherInfo(long otherUserId, CustomMessageBody body) {
         otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
             @Override
             public void onNext(MemberInfo o) {
+                ChatList dbData = chatListDb.getChatMsg(otherUserId, otherUserId == BaseActivity.dynUserId ? 5 : 4);
                 ChatList chatList = new ChatList();
                 chatList.setUserId(otherUserId);
                 chatList.setNick(o.getNick());
@@ -618,7 +623,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 chatList.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
                 chatList.setStanza(body.getStanza());
                 chatList.setMsgType(body.getMsgType());
-                chatList.setNoReadNum(count);
+                chatList.setNoReadNum(dbData == null ? 1 : dbData.getNoReadNum() + 1);
                 chatList.setChatType(otherUserId == BaseActivity.dynUserId ? 5 : 4);
                 chatList.setPublicTag("");
                 chatList.setEffectType(1);

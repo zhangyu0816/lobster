@@ -52,7 +52,7 @@ public class LoginSampleHelper {
 
     private RxAppCompatActivity activity;
     public static String APP_KEY = "23484729";
-    private YWIMCore imCore;
+    public static YWIMCore imCore;
     private IYWConversationService conversationService;
 
     public YWIMCore getImCore() {

@@ -323,7 +323,8 @@ public interface HttpService {
 
     // 清空用户消息
     @GET("api/Contact_readOverHistoryMsg")
-    Observable<BaseResultEntity> readOverHistoryMsg(@Query("otherUserId") long otherUserId, @Query("messageId") long messageId);
+    Observable<BaseResultEntity> readOverHistoryMsg(@Query("otherUserId") long otherUserId, @Query("messageId") long messageId,
+                                                    @Query("msgChannelType") int msgChannelType, @Query("driftBottleId") long driftBottleId);
 
     // 第三方消息
     @GET("api/Contact_thirdHistoryMsgList")
@@ -333,6 +334,10 @@ public interface HttpService {
     // 获取第三方未读会话
     @GET("api/Contact_thirdReadChat")
     Observable<BaseResultEntity> thirdReadChat(@Query("otherUserId") long otherUserId);
+
+    @GET("api/Contact_clearHistoryMsg")
+    Observable<BaseResultEntity> clearAllHistoryMsg(@Query("otherUserId") long otherUserId, @Query("msgChannelType") int msgChannelType,
+                                                    @Query("driftBottleId") long driftBottleId);
 
     /******************************* 漂流瓶 **********************************/
 

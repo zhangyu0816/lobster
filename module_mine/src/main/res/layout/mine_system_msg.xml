@@ -30,7 +30,8 @@
             onRefreshListener="@{viewModel}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/black_efe">
+            android:background="@color/black_efe"
+            android:paddingBottom="15dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 adapter="@{viewModel.adapter}"

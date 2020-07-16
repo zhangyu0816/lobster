@@ -26,6 +26,7 @@ import com.zb.lib_base.api.bottleHistoryMsgListApi;
 import com.zb.lib_base.api.myBottleApi;
 import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.otherImAccountInfoApi;
+import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.readOverHistoryMsgApi;
 import com.zb.lib_base.api.thirdHistoryMsgListApi;
 import com.zb.lib_base.api.thirdReadChatApi;
@@ -42,6 +43,7 @@ import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.ImAccount;
+import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
@@ -88,6 +90,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     private boolean updateAll = false;
     private List<Integer> emojiList = new ArrayList<>();
     private BaseReceiver bottleChatReceiver;
+    private MemberInfo memberInfo;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -98,7 +101,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         mineInfo = mineInfoDb.getMineInfo();
         loginHelper = LoginSampleHelper.getInstance();
         setAdapter();
-
+        setProhibitEmoji(mBinding.edContent);
         bottleChatReceiver = new BaseReceiver(activity, "lobster_upMessage/driftBottleId=" + driftBottleId) {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -128,6 +131,8 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         // 发送
         mBinding.edContent.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEND) {
+                if (bottleInfo == null)
+                    return false;
                 if (bottleInfo.getDestroyType() != 0) {
                     SCToastUtil.showToast(activity, "该漂流瓶已被对方销毁", true);
                     return true;
@@ -203,24 +208,32 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             @Override
             public void onNext(BottleInfo o) {
                 bottleInfo = o;
-                otherUserId = bottleInfo.getOtherUserId();
+                otherUserId = bottleInfo.getUserId() == BaseActivity.userId ? bottleInfo.getOtherUserId() : bottleInfo.getUserId();
                 mBinding.setNick(bottleInfo.getOtherNick());
-
                 adapter.notifyDataSetChanged();
                 mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
+                otherInfo();
+            }
+        }, activity).setDriftBottleId(driftBottleId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
 
+    @Override
+    public void otherInfo() {
+        otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
+            @Override
+            public void onNext(MemberInfo o) {
+                memberInfo = o;
                 if (loginHelper.getImCore() == null) {
                     myImAccountInfoApi();
                 } else {
                     otherImAccountInfoApi();
                 }
                 thirdReadChat();
-                bottleCacheDb.updateReadNum(driftBottleId);
                 activity.sendBroadcast(new Intent("lobster_bottleNum"));
                 new Thread(() -> bottleHistoryMsgList(1)).start();
-
             }
-        }, activity).setDriftBottleId(driftBottleId);
+        }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -230,6 +243,8 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             @Override
             public void onNext(List<HistoryMsg> o) {
                 for (HistoryMsg historyMsg : o) {
+                    historyMsg.setMsgChannelType(2);
+                    historyMsg.setDriftBottleId(driftBottleId);
                     historyMsg.setOtherUserId(otherUserId);
                     historyMsg.setMainUserId(BaseActivity.userId);
                     historyMsgDb.saveHistoryMsg(historyMsg);
@@ -261,7 +276,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             public void onNext(Object o) {
                 thirdHistoryMsgList(1);
             }
-        }, activity).setOtherUserId(otherUserId).setMessageId(historyMsgId);
+        }, activity).setOtherUserId(otherUserId).setMessageId(historyMsgId).setMsgChannelType(2).setDriftBottleId(driftBottleId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -271,6 +286,8 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             @Override
             public void onNext(List<HistoryMsg> o) {
                 for (HistoryMsg historyMsg : o) {
+                    historyMsg.setMsgChannelType(2);
+                    historyMsg.setDriftBottleId(driftBottleId);
                     historyMsg.setOtherUserId(otherUserId);
                     historyMsg.setMainUserId(BaseActivity.userId);
                     historyMsgDb.saveHistoryMsg(historyMsg);
@@ -284,18 +301,70 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                     historyMsgList.clear();
                     realmResults = historyMsgDb.getRealmResults(otherUserId, 2, driftBottleId);
                     historyMsgList.addAll(historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize));
-                    if (historyMsgList.size() == 0) {
+                    Collections.reverse(historyMsgList);
+                    updateTime();
+                    adapter.notifyDataSetChanged();
+                    mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
+
+                    if (historyMsgList.size() > 0) {
+                        HistoryMsg historyMsg = historyMsgList.get(historyMsgList.size() - 1);
+                        BottleCache bottleCache = new BottleCache();
+                        bottleCache.setDriftBottleId(driftBottleId);
+                        bottleCache.setUserId(otherUserId);
+                        bottleCache.setNick(memberInfo.getNick());
+                        bottleCache.setImage(memberInfo.getImage());
+                        bottleCache.setCreationDate(historyMsg.getCreationDate());
+                        bottleCache.setStanza(historyMsg.getStanza());
+                        bottleCache.setMsgType(historyMsg.getMsgType());
+                        bottleCache.setNoReadNum(0);
+                        bottleCache.setPublicTag("");
+                        bottleCache.setEffectType(1);
+                        bottleCache.setAuthType(1);
+                        bottleCacheDb.saveBottleCache(bottleCache);
+                        // 更新会话列表
+                        Intent data = new Intent("lobster_singleBottleCache");
+                        data.putExtra("driftBottleId", driftBottleId);
+                        activity.sendBroadcast(data);
+                    } else {
                         HistoryMsg historyMsg = new HistoryMsg();
                         historyMsg.setStanza(bottleInfo.getText());
                         historyMsg.setMsgType(1);
                         historyMsg.setFromId(otherUserId);
                         historyMsg.setCreationDate(bottleInfo.getCreateTime());
                         historyMsgList.add(historyMsg);
+                        adapter.notifyDataSetChanged();
+                        mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
+                        bottleCacheDb.updateBottleCache(driftBottleId, memberInfo.getImage(), memberInfo.getNick(), new BottleCacheDb.CallBack() {
+                            @Override
+                            public void success() {
+                                // 更新会话列表
+                                Intent data = new Intent("lobster_singleBottleCache");
+                                data.putExtra("driftBottleId", driftBottleId);
+                                activity.sendBroadcast(data);
+                            }
+
+                            @Override
+                            public void fail() {
+                                BottleCache bottleCache = new BottleCache();
+                                bottleCache.setDriftBottleId(driftBottleId);
+                                bottleCache.setUserId(otherUserId);
+                                bottleCache.setNick(memberInfo.getNick());
+                                bottleCache.setImage(memberInfo.getImage());
+                                bottleCache.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
+                                bottleCache.setStanza(bottleInfo.getText());
+                                bottleCache.setMsgType(1);
+                                bottleCache.setNoReadNum(0);
+                                bottleCache.setPublicTag("");
+                                bottleCache.setEffectType(1);
+                                bottleCache.setAuthType(1);
+                                bottleCacheDb.saveBottleCache(bottleCache);
+                                // 更新会话列表
+                                Intent data = new Intent("lobster_singleBottleCache");
+                                data.putExtra("driftBottleId", driftBottleId);
+                                activity.sendBroadcast(data);
+                            }
+                        });
                     }
-                    Collections.reverse(historyMsgList);
-                    updateTime();
-                    adapter.notifyDataSetChanged();
-                    mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
                 }
             }
         }, activity).setOtherUserId(otherUserId).setPageNo(pageNo).setMsgChannelType(1);
@@ -306,7 +375,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     public void toMemberDetail(View view) {
         hintKeyBoard();
         if (mineInfo.getMemberType() == 2) {
-            ActivityUtils.getCardMemberDetail(bottleInfo.getOtherUserId(), false);
+            ActivityUtils.getCardMemberDetail(otherUserId, false);
             return;
         }
         new BottleVipPW(activity, mBinding.getRoot());
@@ -375,7 +444,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     private void sendChatMessage(final int msgType, final String stanza, final String resLink, final int resTime, final String summary) {
         if (bottleInfo == null)
             return;
-        YWMessageBody body = new CustomMessageBody(msgType, stanza, resLink, resTime, BaseActivity.userId, bottleInfo.getOtherUserId(), summary, driftBottleId, 2);
+        YWMessageBody body = new CustomMessageBody(msgType, stanza, resLink, resTime, BaseActivity.userId, otherUserId, summary, driftBottleId, 2);
         body.setSummary(body.getSummary());
         body.setContent(loginHelper.pack(body));
         final YWMessage message = YWMessageChannel.createCustomMessage(body);
@@ -405,12 +474,20 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         BottleCache bottleCache = new BottleCache();
         bottleCache.setDriftBottleId(driftBottleId);
         bottleCache.setUserId(otherUserId);
+        bottleCache.setNick(memberInfo.getNick());
+        bottleCache.setImage(memberInfo.getImage());
         bottleCache.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
         bottleCache.setStanza(stanza);
         bottleCache.setMsgType(msgType);
         bottleCache.setNoReadNum(0);
-        bottleCache.setMainUserId(BaseActivity.userId);
+        bottleCache.setPublicTag("");
+        bottleCache.setEffectType(1);
+        bottleCache.setAuthType(1);
         bottleCacheDb.saveBottleCache(bottleCache);
+        // 更新会话列表
+        Intent data = new Intent("lobster_singleBottleCache");
+        data.putExtra("driftBottleId", driftBottleId);
+        activity.sendBroadcast(data);
 
         // 记录我们发出去的消息
         HistoryMsg historyMsg = new HistoryMsg();
@@ -432,7 +509,6 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         updateTime();
         adapter.notifyItemChanged(adapter.getItemCount() - 1);
         mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
-        activity.sendBroadcast(new Intent("lobster_updateBottle"));
     }
 
     private void updateTime() {
@@ -492,7 +568,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                 checkConversation();
             }
         }, activity);
-        api.setOtherUserId(bottleInfo.getOtherUserId());
+        api.setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

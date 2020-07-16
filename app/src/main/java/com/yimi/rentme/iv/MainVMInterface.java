@@ -32,5 +32,5 @@ public interface MainVMInterface {
 
     void noReadBottleNum(boolean isUpdate);
 
-    void otherInfo(long otherUserId, int count, CustomMessageBody body);
+    void otherInfo(long otherUserId, CustomMessageBody body);
 }

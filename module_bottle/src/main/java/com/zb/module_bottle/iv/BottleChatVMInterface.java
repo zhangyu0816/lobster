@@ -6,6 +6,8 @@ public interface BottleChatVMInterface {
 
     void myBottle();
 
+    void otherInfo();
+
     void bottleHistoryMsgList(int pageNo);
 
     void thirdHistoryMsgList(int pageNo);

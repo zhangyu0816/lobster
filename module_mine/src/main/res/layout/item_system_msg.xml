@@ -66,7 +66,7 @@
                 <ImageView
                     countSize="@{true}"
                     defaultRes="@{ObjectUtils.getDefaultRes()}"
-                    imageUrl="@{item.resLink}"
+                    imageUrl='@{item.resLink.contains(@string/mp3)?"":item.resLink}'
                     isRound="@{true}"
                     roundSize="@{20}"
                     viewHeightSize="@{0}"

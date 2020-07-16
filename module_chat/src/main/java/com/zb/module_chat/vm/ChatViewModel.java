@@ -128,6 +128,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         loginHelper = LoginSampleHelper.getInstance();
         setAdapter();
 
+        setProhibitEmoji(mBinding.edContent);
+
         photoManager = new PhotoManager(activity, () -> {
             sendChatMessage(2, "", photoManager.jointWebUrl(","), 0, "【图片】");
             photoManager.deleteAllFile();
@@ -288,6 +290,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             @Override
             public void onNext(List<HistoryMsg> o) {
                 for (HistoryMsg historyMsg : o) {
+                    historyMsg.setMsgChannelType(1);
+                    historyMsg.setDriftBottleId(0);
                     historyMsg.setOtherUserId(otherUserId);
                     historyMsg.setMainUserId(BaseActivity.userId);
                     historyMsgDb.saveHistoryMsg(historyMsg);
@@ -316,6 +320,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             @Override
             public void onNext(List<HistoryMsg> o) {
                 for (HistoryMsg historyMsg : o) {
+                    historyMsg.setMsgChannelType(1);
+                    historyMsg.setDriftBottleId(0);
                     historyMsg.setOtherUserId(otherUserId);
                     historyMsg.setMainUserId(BaseActivity.userId);
                     historyMsgDb.saveHistoryMsg(historyMsg);
@@ -333,6 +339,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                     updateTime();
                     adapter.notifyDataSetChanged();
                     mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
+
                     if (historyMsgList.size() > 0) {
                         HistoryMsg historyMsg = historyMsgList.get(historyMsgList.size() - 1);
                         ChatList chatList = new ChatList();
@@ -352,6 +359,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                         data.putExtra("userId", otherUserId);
                         data.putExtra("updateImage", true);
                         activity.sendBroadcast(data);
+                        activity.sendBroadcast(new Intent("lobster_unReadCount"));
                     } else {
                         chatListDb.updateMember(otherUserId, memberInfo.getImage(), memberInfo.getNick(), otherUserId == BaseActivity.dynUserId ? 5 : 4, new ChatListDb.CallBack() {
                             @Override
@@ -360,6 +368,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                                 data.putExtra("userId", otherUserId);
                                 data.putExtra("updateImage", true);
                                 activity.sendBroadcast(data);
+                                activity.sendBroadcast(new Intent("lobster_unReadCount"));
                             }
 
                             @Override
@@ -381,6 +390,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                                 data.putExtra("userId", otherUserId);
                                 data.putExtra("updateImage", true);
                                 activity.sendBroadcast(data);
+                                activity.sendBroadcast(new Intent("lobster_unReadCount"));
                             }
                         });
                     }
@@ -595,7 +605,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             public void onNext(Object o) {
                 thirdHistoryMsgList(1);
             }
-        }, activity).setOtherUserId(otherUserId).setMessageId(historyMsgId);
+        }, activity).setOtherUserId(otherUserId).setMessageId(historyMsgId).setMsgChannelType(1).setDriftBottleId(0);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

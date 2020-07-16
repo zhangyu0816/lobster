@@ -3,17 +3,25 @@ package com.zb.module_chat.vm;
 import android.content.Context;
 import android.content.Intent;
 
+import com.alibaba.mobileim.conversation.IYWConversationService;
+import com.alibaba.mobileim.conversation.YWConversation;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
-import com.zb.lib_base.api.readOverHistoryMsgApi;
+import com.zb.lib_base.api.clearAllHistoryMsgApi;
+import com.zb.lib_base.api.otherImAccountInfoApi;
+import com.zb.lib_base.api.thirdReadChatApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.model.ChatList;
+import com.zb.lib_base.model.ImAccount;
+import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -103,10 +111,15 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                         }
                     }
                 }
-                adapter.notifyItemRemoved(prePosition);
-                chatMsgList.remove(prePosition);
-                chatListDb.deleteChatMsg(otherUserId);
-                prePosition = -1;
+                if (prePosition != -1) {
+                    adapter.notifyItemRemoved(prePosition);
+                    chatMsgList.remove(prePosition);
+                    chatListDb.deleteChatMsg(otherUserId);
+                    prePosition = -1;
+                }
+                otherImAccountInfoApi(otherUserId);
+                clearAllHistoryMsg(otherUserId);
+                thirdReadChat(otherUserId);
             }
         };
     }
@@ -120,8 +133,17 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
     @Override
     public void setAdapter() {
         chatMsgList.addAll(chatListDb.getChatList(5));
-        chatMsgList.addAll(chatListDb.getChatList(4));
 
+        for (ChatList item : chatListDb.getChatList(4)) {
+            boolean has = false;
+            for (LikeMe likeMe : MineApp.pairList) {
+                if (item.getUserId() == likeMe.getOtherUserId()) {
+                    has = true;
+                }
+            }
+            if (has)
+                chatMsgList.add(item);
+        }
         adapter = new ChatAdapter<>(activity, R.layout.item_chat_list, chatMsgList, this);
         callback = new SimpleItemTouchHelperCallback(adapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
@@ -155,7 +177,9 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                 adapter.notifyItemRemoved(prePosition);
                 chatMsgList.remove(prePosition);
                 chatListDb.deleteChatMsg(otherUserId);
-//                readOverHistoryMsg(otherUserId, historyMsgId);
+                otherImAccountInfoApi(otherUserId);
+                clearAllHistoryMsg(otherUserId);
+                thirdReadChat(otherUserId);
                 activity.sendBroadcast(new Intent("lobster_pairList"));
             }
 
@@ -167,15 +191,47 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
     }
 
     /**
-     * 清空用户消息
+     * 对方的阿里百川账号
      */
-    private void readOverHistoryMsg(long otherUserId, long historyMsgId) {
-        readOverHistoryMsgApi api = new readOverHistoryMsgApi(new HttpOnNextListener() {
+    private void otherImAccountInfoApi(long otherUserId) {
+        otherImAccountInfoApi api = new otherImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
             @Override
-            public void onNext(Object o) {
+            public void onNext(ImAccount o) {
+                try {
+                    IYWConversationService mConversationService = LoginSampleHelper.imCore
+                            .getConversationService();
+                    YWConversation conversation = mConversationService
+                            .getConversationByUserId(o.getImUserId(), LoginSampleHelper.APP_KEY);
+                    // 删除所有聊天记录
+                    conversation.getMessageLoader().deleteAllMessage();
+                } catch (Exception e) {
+                }
             }
-        }, activity).setOtherUserId(otherUserId).setMessageId(historyMsgId);
+        }, activity);
+        api.setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    private void clearAllHistoryMsg(long otherUserId) {
+        clearAllHistoryMsgApi api = new clearAllHistoryMsgApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+
+            }
+        }, activity).setOtherUserId(otherUserId).setMsgChannelType(1).setDriftBottleId(0);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 清除未读数量
+     */
+    private void thirdReadChat(long otherUserId) {
+        thirdReadChatApi api = new thirdReadChatApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+
+            }
+        }, activity).setOtherUserId(otherUserId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
 }

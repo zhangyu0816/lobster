@@ -22,6 +22,7 @@ import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.TextPW;
@@ -110,7 +111,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                     ChatList chatList = (ChatList) item.next();
                     if (chatList.getUserId() == otherUserId) {
                         item.remove();
-                        chatListDb.deleteChatMsg(otherUserId);
+//                        chatListDb.deleteChatMsg(otherUserId);
                     }
                 }
                 prePosition = -1;
@@ -287,7 +288,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                     chatList.setImage(likeMe.getHeadImage());
                     chatList.setNick(likeMe.getNick());
                     chatList.setMsgType(chatMsg != null ? chatMsg.getMsgType() : 1);
-                    chatList.setStanza(chatMsg != null ? chatMsg.getStanza() : "匹配于" + (likeMe.getPairTime().isEmpty() ? likeMe.getPairTime() : likeMe.getPairTime().substring(5, 10)));
+                    chatList.setStanza(chatMsg != null ? chatMsg.getStanza() : "匹配于" + (likeMe.getPairTime().isEmpty() ? DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss).substring(5, 10) : likeMe.getPairTime().substring(5, 10)));
                     chatList.setNoReadNum(chatMsg != null ? chatMsg.getNoReadNum() : 0);
                     chatList.setChatType(4);
                     chatList.setCreationDate(chatMsg != null ? chatMsg.getCreationDate() : likeMe.getModifyTime());

@@ -21,4 +21,5 @@
     <string name="member_expire_time">有效期至\n%s</string>
     <string name="open_btn">获取VIP特权</string>
     <string name="pay_btn">立即续费VIP特权</string>
+    <string name="mp3">.mp3</string>
 </resources>
