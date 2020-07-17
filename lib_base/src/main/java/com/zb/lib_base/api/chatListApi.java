@@ -25,6 +25,6 @@ public class chatListApi extends BaseEntity<List<ChatList>> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.chatList(pageNo, 10, 1);
+        return methods.chatList(pageNo, 10, 1, 1);
     }
 }

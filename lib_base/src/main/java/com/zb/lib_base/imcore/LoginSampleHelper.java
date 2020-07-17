@@ -121,18 +121,16 @@ public class LoginSampleHelper {
         @Override
         public void onPushMessage(IYWContact contact, YWMessage ywMessage) {
             CustomMessageBody body = (CustomMessageBody) unpack(ywMessage.getContent());
-            if (body.getMsgType() == 112) {
-                long otherUserId = body.getFromId();
-                boolean hasOtherUserId = false;
-                for (LikeMe item : MineApp.pairList) {
-                    if (item.getOtherUserId() == otherUserId) {
-                        hasOtherUserId = true;
-                        break;
-                    }
+            long otherUserId = body.getFromId();
+            boolean hasOtherUserId = false;
+            for (LikeMe item : MineApp.pairList) {
+                if (item.getOtherUserId() == otherUserId) {
+                    hasOtherUserId = true;
+                    break;
                 }
-                if (!hasOtherUserId) {
-                    return;
-                }
+            }
+            if (!hasOtherUserId) {
+                return;
             }
             if (isBackground()) {
                 sendMsg(ywMessage);

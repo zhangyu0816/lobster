@@ -1,5 +1,6 @@
 package com.zb.lib_base.db;
 
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.model.BottleCache;
 
 import io.realm.Realm;
@@ -20,14 +21,14 @@ public class BottleCacheDb extends BaseDao {
     // 单个漂流瓶的最新聊天记录
     public BottleCache getBottleCache(long driftBottleId) {
         beginTransaction();
-        BottleCache bottleCache = realm.where(BottleCache.class).equalTo("driftBottleId", driftBottleId).findFirst();
+        BottleCache bottleCache = realm.where(BottleCache.class).equalTo("driftBottleId", driftBottleId).equalTo("mainUserId", BaseActivity.userId).findFirst();
         commitTransaction();
         return bottleCache;
     }
 
     public void updateBottleCache(long driftBottleId, String image, String nick, CallBack callBack) {
         beginTransaction();
-        BottleCache bottleCache = realm.where(BottleCache.class).equalTo("driftBottleId", driftBottleId).findFirst();
+        BottleCache bottleCache = realm.where(BottleCache.class).equalTo("driftBottleId", driftBottleId).equalTo("mainUserId", BaseActivity.userId).findFirst();
         if (bottleCache != null) {
             bottleCache.setImage(image);
             bottleCache.setNick(nick);
@@ -47,7 +48,7 @@ public class BottleCacheDb extends BaseDao {
 
     public void deleteBottleCache(long driftBottleId) {
         beginTransaction();
-        BottleCache bottleCache = realm.where(BottleCache.class).equalTo("driftBottleId", driftBottleId).findFirst();
+        BottleCache bottleCache = realm.where(BottleCache.class).equalTo("driftBottleId", driftBottleId).equalTo("mainUserId", BaseActivity.userId).findFirst();
         if (bottleCache != null)
             bottleCache.deleteFromRealm();
         commitTransaction();
@@ -56,7 +57,7 @@ public class BottleCacheDb extends BaseDao {
     public int getUnReadCount() {
         int count = 0;
         beginTransaction();
-        RealmResults<BottleCache> results = realm.where(BottleCache.class).findAll();
+        RealmResults<BottleCache> results = realm.where(BottleCache.class).equalTo("mainUserId", BaseActivity.userId).findAll();
         if (results.size() > 0) {
             for (BottleCache bottleCache : results) {
                 count += bottleCache.getNoReadNum();

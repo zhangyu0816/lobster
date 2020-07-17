@@ -15,6 +15,7 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.OrderNumber;
 import com.zb.lib_base.model.OrderTran;
+import com.zb.lib_base.utils.ActivityUtils;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
@@ -96,6 +97,7 @@ public abstract class BasePopupWindow extends PopupWindow {
      * @param view
      */
     public void showRule(View view) {
+        ActivityUtils.getMineWeb("用户充值协议", HttpManager.BASE_URL + "mobile/xiagu_recharge_protocol.html");
     }
 
     public void touch(View view) {

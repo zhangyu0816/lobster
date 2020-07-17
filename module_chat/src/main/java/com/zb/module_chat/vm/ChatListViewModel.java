@@ -133,7 +133,6 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
     @Override
     public void setAdapter() {
         chatMsgList.addAll(chatListDb.getChatList(5));
-
         for (ChatList item : chatListDb.getChatList(4)) {
             boolean has = false;
             for (LikeMe likeMe : MineApp.pairList) {
@@ -229,9 +228,9 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
         thirdReadChatApi api = new thirdReadChatApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-
+                activity.sendBroadcast(new Intent("lobster_unReadCount"));
             }
-        }, activity).setOtherUserId(otherUserId);
+        }, activity).setOtherUserId(otherUserId).setDriftBottleId(0).setMsgChannelType(1);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

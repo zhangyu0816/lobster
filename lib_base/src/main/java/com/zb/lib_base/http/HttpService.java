@@ -307,7 +307,9 @@ public interface HttpService {
 
     // 未读会话列表
     @GET("api/Contact_thirdChatList")
-    Observable<BaseResultEntity<List<ChatList>>> chatList(@Query("pageNo") int pageNo, @Query("pageSize") int pageSize, @Query("isPublicAccount") int isPublicAccount);
+    Observable<BaseResultEntity<List<ChatList>>> chatList(@Query("pageNo") int pageNo, @Query("pageSize") int pageSize,
+                                                          @Query("isPublicAccount") int isPublicAccount,
+                                                          @Query("msgChannelType") int msgChannelType);
 
     // 获取阿里百川登录账号
     @GET("api/Contact_myImAccountInfo")
@@ -333,7 +335,7 @@ public interface HttpService {
 
     // 获取第三方未读会话
     @GET("api/Contact_thirdReadChat")
-    Observable<BaseResultEntity> thirdReadChat(@Query("otherUserId") long otherUserId);
+    Observable<BaseResultEntity> thirdReadChat(@QueryMap Map<String, String> map);
 
     @GET("api/Contact_clearHistoryMsg")
     Observable<BaseResultEntity> clearAllHistoryMsg(@Query("otherUserId") long otherUserId, @Query("msgChannelType") int msgChannelType,

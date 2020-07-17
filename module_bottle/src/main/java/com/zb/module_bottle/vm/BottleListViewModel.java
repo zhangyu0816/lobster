@@ -16,7 +16,9 @@ import com.zb.lib_base.api.myBottleListApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.api.pickBottleApi;
+import com.zb.lib_base.api.thirdReadChatApi;
 import com.zb.lib_base.db.BottleCacheDb;
+import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -60,12 +62,14 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     private BottleCacheDb bottleCacheDb;
     private BaseReceiver singleBottleCacheReceiver;
     private int prePosition = -1;
+    private HistoryMsgDb historyMsgDb;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mineInfo = mineInfoDb.getMineInfo();
         bottleCacheDb = new BottleCacheDb(Realm.getDefaultInstance());
+        historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         mBinding = (BottleListBinding) binding;
         mBinding.setShowBg(false);
         // 开通会员
@@ -140,7 +144,6 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
         callback.setSwipeEnabled(true);
         callback.setSwipeFlags(ItemTouchHelper.START | ItemTouchHelper.END);
         callback.setDragFlags(0);
-        activity.sendBroadcast(new Intent("lobster_bottleNum"));
         myBottleList();
     }
 
@@ -163,9 +166,11 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 int start = bottleInfoList.size();
                 for (BottleInfo bottleInfo : o) {
                     if (bottleInfo.getDestroyType() == 1 && bottleInfo.getUserId() == BaseActivity.userId) {
+                        bottleCacheDb.deleteBottleCache(bottleInfo.getDriftBottleId());
                         continue;
                     }
                     if (bottleInfo.getDestroyType() == 2 && bottleInfo.getOtherUserId() == BaseActivity.userId) {
+                        bottleCacheDb.deleteBottleCache(bottleInfo.getDriftBottleId());
                         continue;
                     }
 
@@ -185,7 +190,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 }
                 BottleInfoComparator comparator = new BottleInfoComparator();
                 Collections.sort(bottleInfoList, comparator);
-
+                activity.sendBroadcast(new Intent("lobster_bottleNum"));
                 adapter.notifyItemRangeChanged(start, bottleInfoList.size());
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
@@ -244,13 +249,16 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
             @Override
             public void onNext(Object o) {
                 BottleInfo bottleInfo = bottleInfoList.get(position);
+                long otherUserId = bottleInfo.getUserId() == BaseActivity.userId ? bottleInfo.getOtherUserId() : bottleInfo.getUserId();
+
                 bottleCacheDb.deleteBottleCache(bottleInfo.getDriftBottleId());
+                historyMsgDb.deleteHistoryMsg(otherUserId, 1, 0);
                 adapter.notifyItemRemoved(position);
                 bottleInfoList.remove(position);
-                long otherUserId = bottleInfo.getUserId() == BaseActivity.userId ? bottleInfo.getOtherUserId() : bottleInfo.getUserId();
 
                 otherImAccountInfoApi(otherUserId);
                 clearAllHistoryMsg(otherUserId, bottleInfo.getDriftBottleId());
+                thirdReadChat(otherUserId, bottleInfo.getDriftBottleId());
                 activity.sendBroadcast(new Intent("lobster_bottleNum"));
                 if (bottleInfoList.size() == 0) {
                     onRefresh(mBinding.refresh);
@@ -273,7 +281,6 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         // 下拉刷新
-        activity.sendBroadcast(new Intent("lobster_bottleNum"));
         mBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
         bottleInfoList.clear();
@@ -317,6 +324,19 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
 
     private void clearAllHistoryMsg(long otherUserId, long driftBottleId) {
         clearAllHistoryMsgApi api = new clearAllHistoryMsgApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+
+            }
+        }, activity).setOtherUserId(otherUserId).setMsgChannelType(2).setDriftBottleId(driftBottleId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 清除未读数量
+     */
+    private void thirdReadChat(long otherUserId, long driftBottleId) {
+        thirdReadChatApi api = new thirdReadChatApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
 

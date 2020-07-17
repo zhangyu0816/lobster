@@ -5,10 +5,13 @@ import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.loginByPassApi;
+import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.imcore.LoginSampleHelper;
+import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.LoginInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
@@ -23,6 +26,7 @@ import androidx.databinding.ViewDataBinding;
 
 public class LoginViewModel extends BaseViewModel implements LoginVMInterface {
     private RegisterLoginBinding loginBinding;
+    private LoginSampleHelper loginHelper;
 
     @Override
     public void back(View view) {
@@ -89,10 +93,27 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface {
                     ActivityUtils.getMainActivity();
                 }
                 activity.sendBroadcast(new Intent("lobster_mainSelect"));
-                activity.finish();
+                loginHelper = LoginSampleHelper.getInstance();
+                loginHelper.loginOut_Sample();
+                myImAccountInfoApi();
             }
         }, activity);
         api.setPosition(1);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 阿里百川登录账号
+     */
+    private void myImAccountInfoApi() {
+        myImAccountInfoApi api = new myImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
+            @Override
+            public void onNext(ImAccount o) {
+                loginHelper.loginOut_Sample();
+                loginHelper.login_Sample(activity, o.getImUserId(), o.getImPassWord());
+                activity.finish();
+            }
+        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

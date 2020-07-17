@@ -123,6 +123,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                 historyMsg.setDriftBottleId(driftBottleId);
                 historyMsg.setMainUserId(BaseActivity.userId);
                 historyMsgList.add(adapter.getItemCount(), historyMsg);
+                updateTime();
                 adapter.notifyItemChanged(adapter.getItemCount());
                 mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
             }
@@ -209,6 +210,24 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             public void onNext(BottleInfo o) {
                 bottleInfo = o;
                 otherUserId = bottleInfo.getUserId() == BaseActivity.userId ? bottleInfo.getOtherUserId() : bottleInfo.getUserId();
+                // 记录我们发出去的消息
+                HistoryMsg historyMsg = new HistoryMsg();
+                historyMsg.setCreationDate(bottleInfo.getCreateTime());
+                historyMsg.setFromId(BaseActivity.userId);
+                historyMsg.setToId(otherUserId);
+                historyMsg.setMsgType(1);
+                historyMsg.setResLink("");
+                historyMsg.setResTime(0);
+                historyMsg.setStanza(bottleInfo.getText());
+                historyMsg.setTitle("【文字】");
+                historyMsg.setOtherUserId(otherUserId);
+                historyMsg.setMsgChannelType(2);
+                historyMsg.setDriftBottleId(driftBottleId);
+                historyMsg.setMainUserId(BaseActivity.userId);
+                historyMsgList.add(historyMsg);
+                historyMsgDb.saveHistoryMsg(historyMsg);
+                adapter.notifyDataSetChanged();
+                mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
                 mBinding.setNick(bottleInfo.getOtherNick());
                 adapter.notifyDataSetChanged();
                 mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
@@ -326,14 +345,6 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                         data.putExtra("driftBottleId", driftBottleId);
                         activity.sendBroadcast(data);
                     } else {
-                        HistoryMsg historyMsg = new HistoryMsg();
-                        historyMsg.setStanza(bottleInfo.getText());
-                        historyMsg.setMsgType(1);
-                        historyMsg.setFromId(otherUserId);
-                        historyMsg.setCreationDate(bottleInfo.getCreateTime());
-                        historyMsgList.add(historyMsg);
-                        adapter.notifyDataSetChanged();
-                        mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
                         bottleCacheDb.updateBottleCache(driftBottleId, memberInfo.getImage(), memberInfo.getNick(), new BottleCacheDb.CallBack() {
                             @Override
                             public void success() {
@@ -536,7 +547,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             public void onNext(Object o) {
 
             }
-        }, activity).setOtherUserId(bottleInfo.getOtherUserId());
+        }, activity).setOtherUserId(otherUserId).setMsgChannelType(2).setDriftBottleId(driftBottleId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

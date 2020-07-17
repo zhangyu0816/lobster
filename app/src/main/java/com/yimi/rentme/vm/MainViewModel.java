@@ -455,6 +455,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 MineApp.mineNewsCount = o;
                 activity.sendBroadcast(new Intent("lobster_newsCount"));
                 if (!isUpdate) {
+                    pageNo = 1;
+                    bottlePageNo = 1;
                     chatList();
                     driftBottleChatList();
                 }
@@ -497,10 +499,12 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                         activity.sendBroadcast(new Intent("lobster_newsCount"));
                     } else if (chatMsg.getUserId() == BaseActivity.dynUserId) {
                         // 评论
+                        chatMsg.setMainUserId(BaseActivity.userId);
                         chatMsg.setChatType(5);
                         chatListDb.saveChatList(chatMsg);
                     }
                     if (chatMsg.getUserId() > 10010) {
+                        chatMsg.setMainUserId(BaseActivity.userId);
                         chatMsg.setChatType(4);
                         chatListDb.saveChatList(chatMsg);
                     }
@@ -527,6 +531,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onNext(List<BottleCache> o) {
                 for (BottleCache item : o) {
+                    item.setMainUserId(BaseActivity.userId);
                     bottleCacheDb.saveBottleCache(item);
                 }
                 bottlePageNo++;

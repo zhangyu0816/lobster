@@ -19,7 +19,7 @@ public interface ChatVMInterface {
 
     void toImageVideo(View view, HistoryMsg historyMsg, int direction);
 
-    void toVoice(View view, HistoryMsg historyMsg, int direction);
+    void toVoice(View view, HistoryMsg historyMsg, int direction, int position);
 
     void toVoiceKeyboard(View view);
 
@@ -29,7 +29,7 @@ public interface ChatVMInterface {
 
     void toEmoji(View view);
 
-    void addEmoji(int position,int emojiRes);
+    void addEmoji(int position, int emojiRes);
 
     void deleteContent(View view);
 

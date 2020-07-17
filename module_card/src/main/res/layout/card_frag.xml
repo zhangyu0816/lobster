@@ -37,6 +37,10 @@
             name="isOutLine"
             type="boolean" />
 
+        <variable
+            name="noData"
+            type="boolean" />
+
 
     </data>
 
@@ -79,7 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/textView"
-            android:visibility="@{isOutLine?View.GONE:View.VISIBLE}"/>
+            android:visibility="@{(isOutLine||noData)?View.GONE:View.VISIBLE}" />
 
         <ImageView
             android:id="@+id/iv_dislike"
@@ -283,9 +287,9 @@
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.92f)}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@+id/textView"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:layout_below="@+id/textView"
             android:gravity="center"
             android:visibility="@{isOutLine?View.VISIBLE:View.GONE}">
 
@@ -311,6 +315,16 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="暂无数据"
+            android:textColor="@color/black_252"
+            android:textSize="16sp"
+            android:visibility="@{noData?View.VISIBLE:View.GONE}" />
 
     </RelativeLayout>
 </layout>

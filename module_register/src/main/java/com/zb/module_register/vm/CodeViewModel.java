@@ -7,11 +7,14 @@ import android.view.View;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.loginByCaptchaApi;
 import com.zb.lib_base.api.loginCaptchaApi;
+import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.registerCaptchaApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.imcore.LoginSampleHelper;
+import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.LoginInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
@@ -32,6 +35,7 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
     private CountDownTimer timer;
     public boolean isLogin = false;
     private boolean getCode = true;
+    private LoginSampleHelper loginHelper;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -49,6 +53,7 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
                 getCode = true;
             }
         };
+
         // 验证码
         if (!isLogin) {
             registerCaptcha();
@@ -111,7 +116,6 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
                 BaseActivity.update();
                 timer.cancel();
                 myInfo();
-
             }
         }, activity)
                 .setUserName(MineApp.registerInfo.getPhone())
@@ -131,10 +135,27 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
                     ActivityUtils.getMainActivity();
                 }
                 activity.sendBroadcast(new Intent("lobster_mainSelect"));
-                activity.finish();
+                loginHelper = LoginSampleHelper.getInstance();
+                loginHelper.loginOut_Sample();
+                myImAccountInfoApi();
             }
         }, activity);
         api.setPosition(1);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 阿里百川登录账号
+     */
+    private void myImAccountInfoApi() {
+        myImAccountInfoApi api = new myImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
+            @Override
+            public void onNext(ImAccount o) {
+                loginHelper.loginOut_Sample();
+                loginHelper.login_Sample(activity, o.getImUserId(), o.getImPassWord());
+                activity.finish();
+            }
+        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

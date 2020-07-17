@@ -287,6 +287,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     pairInfoList.add(pairInfo);
                 }
                 adapter.notifyDataSetChanged();
+                cardFragBinding.setIsOutLine(false);
+                cardFragBinding.setNoData(false);
             }
 
             @Override
@@ -294,8 +296,9 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     pairInfoList.clear();
                     adapter.notifyDataSetChanged();
+                    cardFragBinding.setNoData(true);
                 } else if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
-                    mBinding.setVariable(BR.isOutLine, true);
+                    cardFragBinding.setIsOutLine(true);
                 }
             }
         }, activity)

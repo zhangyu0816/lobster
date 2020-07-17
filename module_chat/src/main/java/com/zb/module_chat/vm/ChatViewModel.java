@@ -115,6 +115,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     private int preDirection;
     private ObjectAnimator animator;
     private BaseReceiver chatReceiver;
+    private int soundPosition = -1;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -160,6 +161,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             @Override
             public void playEndBack(View view) {
                 stopVoiceDrawable();
+                if (soundPosition != -1)
+                    adapter.notifyItemChanged(soundPosition);
             }
 
             @Override
@@ -450,8 +453,9 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
 
 
     @Override
-    public void toVoice(View view, HistoryMsg historyMsg, int direction) {
+    public void toVoice(View view, HistoryMsg historyMsg, int direction, int position) {
         DownLoad.getFilePath(historyMsg.getResLink(), BaseActivity.getDownloadFile(".amr").getAbsolutePath(), filePath -> {
+            soundPosition = position;
             // direction 0 左  1右
             stopVoiceDrawable();
             ImageView voiceView = null;
@@ -660,7 +664,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             public void onNext(Object o) {
 
             }
-        }, activity).setOtherUserId(otherUserId);
+        }, activity).setOtherUserId(otherUserId).setDriftBottleId(0).setMsgChannelType(1);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

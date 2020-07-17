@@ -6,13 +6,28 @@ import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.model.BaseEntity;
 import com.zb.lib_base.model.BaseResultEntity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import rx.Observable;
 
 public class thirdReadChatApi extends BaseEntity<BaseResultEntity> {
     long otherUserId;
+    int msgChannelType;
+    long driftBottleId;
 
     public thirdReadChatApi setOtherUserId(long otherUserId) {
         this.otherUserId = otherUserId;
+        return this;
+    }
+
+    public thirdReadChatApi setMsgChannelType(int msgChannelType) {
+        this.msgChannelType = msgChannelType;
+        return this;
+    }
+
+    public thirdReadChatApi setDriftBottleId(long driftBottleId) {
+        this.driftBottleId = driftBottleId;
         return this;
     }
 
@@ -23,6 +38,12 @@ public class thirdReadChatApi extends BaseEntity<BaseResultEntity> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.thirdReadChat(otherUserId);
+        Map<String, String> map = new HashMap<>();
+        map.put("otherUserId", otherUserId + "");
+        map.put("msgChannelType", msgChannelType + "");
+        if (driftBottleId > 0)
+            map.put("driftBottleId", driftBottleId + "");
+
+        return methods.thirdReadChat(map);
     }
 }

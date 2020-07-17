@@ -25,6 +25,7 @@ public class GiftRecordViewModel extends BaseViewModel implements GiftRecordVMIn
     @Override
     public void right(View view) {
         super.right(view);
+        ActivityUtils.getMineWeb("提现帮助", HttpManager.BASE_URL + "mobile/xiagu_get_help.html");
     }
 
     @Override
