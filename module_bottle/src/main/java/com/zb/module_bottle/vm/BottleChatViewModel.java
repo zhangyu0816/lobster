@@ -32,6 +32,7 @@ import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.BottleCacheDb;
 import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.emojj.EmojiHandler;
+import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -43,6 +44,7 @@ import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.model.PrivateMsg;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.KeyboardStateObserver;
@@ -89,6 +91,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     private List<Integer> emojiList = new ArrayList<>();
     private BaseReceiver bottleChatReceiver;
     private MemberInfo memberInfo;
+    private boolean needLink = false;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -106,7 +109,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                 YWMessage ywMessage = (YWMessage) intent.getSerializableExtra("ywMessage");
                 CustomMessageBody body = (CustomMessageBody) LoginSampleHelper.unpack(ywMessage.getContent());
                 HistoryMsg historyMsg = new HistoryMsg();
-                historyMsg.setId(ywMessage.getMsgId());
+                historyMsg.setThirdMessageId(ywMessage.getMsgId() + "");
                 historyMsg.setFromId(body.getFromId());
                 historyMsg.setToId(body.getToId());
                 historyMsg.setTitle(body.getSummary());
@@ -116,14 +119,21 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                 historyMsg.setResTime(body.getResTime());
                 historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
                 historyMsg.setOtherUserId(otherUserId);
-                historyMsg.setThirdMessageId(ywMessage.getMsgId() + "");
                 historyMsg.setMsgChannelType(2);
                 historyMsg.setDriftBottleId(driftBottleId);
                 historyMsg.setMainUserId(BaseActivity.userId);
+                historyMsgDb.saveHistoryMsg(historyMsg);
                 historyMsgList.add(adapter.getItemCount(), historyMsg);
                 updateTime();
-                adapter.notifyItemChanged(adapter.getItemCount());
+                adapter.notifyItemChanged(adapter.getItemCount() - 1);
                 mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
+
+                bottleCacheDb.updateBottleCache(driftBottleId, memberInfo.getImage(), memberInfo.getNick(), () -> new Handler().postDelayed(() -> {
+                    // 更新会话列表
+                    Intent data = new Intent("lobster_singleBottleCache");
+                    data.putExtra("driftBottleId", body.getDriftBottleId());
+                    activity.sendBroadcast(data);
+                }, 500));
             }
         };
 
@@ -211,26 +221,27 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             @Override
             public void onNext(BottleInfo o) {
                 bottleInfo = o;
+                mBinding.setNick(bottleInfo.getOtherNick());
+
                 otherUserId = bottleInfo.getUserId() == BaseActivity.userId ? bottleInfo.getOtherUserId() : bottleInfo.getUserId();
                 // 记录我们发出去的消息
                 HistoryMsg historyMsg = new HistoryMsg();
+                historyMsg.setThirdMessageId("1");
+                historyMsg.setMainUserId(BaseActivity.userId);
+                historyMsg.setFromId(bottleInfo.getUserId());
+                historyMsg.setToId(bottleInfo.getOtherUserId());
                 historyMsg.setCreationDate(bottleInfo.getCreateTime());
-                historyMsg.setFromId(BaseActivity.userId);
-                historyMsg.setToId(otherUserId);
-                historyMsg.setMsgType(1);
-                historyMsg.setResLink("");
-                historyMsg.setResTime(0);
                 historyMsg.setStanza(bottleInfo.getText());
+                historyMsg.setMsgType(1);
                 historyMsg.setTitle("【文字】");
+                historyMsg.setResTime(0);
+                historyMsg.setResLink("");
                 historyMsg.setOtherUserId(otherUserId);
                 historyMsg.setMsgChannelType(2);
                 historyMsg.setDriftBottleId(driftBottleId);
-                historyMsg.setMainUserId(BaseActivity.userId);
-                historyMsgList.add(historyMsg);
                 historyMsgDb.saveHistoryMsg(historyMsg);
-                adapter.notifyDataSetChanged();
-                mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
-                mBinding.setNick(bottleInfo.getOtherNick());
+                historyMsgList.add(historyMsg);
+                updateTime();
                 adapter.notifyDataSetChanged();
                 mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
                 otherInfo();
@@ -259,14 +270,24 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
 
     @Override
     public void bottleHistoryMsgList(int pageNo) {
-        bottleHistoryMsgListApi api = new bottleHistoryMsgListApi(new HttpOnNextListener<List<HistoryMsg>>() {
+        bottleHistoryMsgListApi api = new bottleHistoryMsgListApi(new HttpOnNextListener<List<PrivateMsg>>() {
             @Override
-            public void onNext(List<HistoryMsg> o) {
-                for (HistoryMsg historyMsg : o) {
+            public void onNext(List<PrivateMsg> o) {
+                for (PrivateMsg privateMsg : o) {
+                    HistoryMsg historyMsg = new HistoryMsg();
+                    historyMsg.setThirdMessageId(privateMsg.getThirdMessageId());
+                    historyMsg.setMainUserId(BaseActivity.userId);
+                    historyMsg.setFromId(privateMsg.getFromId());
+                    historyMsg.setToId(privateMsg.getToId());
+                    historyMsg.setCreationDate(privateMsg.getCreationDate());
+                    historyMsg.setStanza(privateMsg.getStanza());
+                    historyMsg.setMsgType(privateMsg.getMsgType());
+                    historyMsg.setTitle(privateMsg.getTitle());
+                    historyMsg.setResTime(privateMsg.getResTime());
+                    historyMsg.setResLink(privateMsg.getResLink());
+                    historyMsg.setOtherUserId(otherUserId);
                     historyMsg.setMsgChannelType(2);
                     historyMsg.setDriftBottleId(driftBottleId);
-                    historyMsg.setOtherUserId(otherUserId);
-                    historyMsg.setMainUserId(BaseActivity.userId);
                     historyMsgDb.saveHistoryMsg(historyMsg);
                 }
                 historyMsgId = o.get(o.size() - 1).getId();
@@ -276,7 +297,8 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    readOverHistoryMsg();
+                    if (historyMsgId > 0)
+                        readOverHistoryMsg();
                     historyMsgList.clear();
                     realmResults = historyMsgDb.getRealmResults(otherUserId, 2, driftBottleId);
                     historyMsgList.addAll(historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize));
@@ -299,6 +321,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                         bottleCache.setPublicTag("");
                         bottleCache.setEffectType(1);
                         bottleCache.setAuthType(1);
+                        bottleCache.setMainUserId(BaseActivity.userId);
                         bottleCacheDb.saveBottleCache(bottleCache);
                         // 更新会话列表
                         Intent data = new Intent("lobster_singleBottleCache");
@@ -328,6 +351,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                                 bottleCache.setPublicTag("");
                                 bottleCache.setEffectType(1);
                                 bottleCache.setAuthType(1);
+                                bottleCache.setMainUserId(BaseActivity.userId);
                                 bottleCacheDb.saveBottleCache(bottleCache);
                                 // 更新会话列表
                                 Intent data = new Intent("lobster_singleBottleCache");
@@ -346,6 +370,9 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
      * 清空用户消息
      */
     private void readOverHistoryMsg() {
+        if (bottleInfo.getDestroyType() != 0) {
+            return;
+        }
         readOverDriftBottleHistoryMsgApi api = new readOverDriftBottleHistoryMsgApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
@@ -431,24 +458,38 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         body.setSummary(body.getSummary());
         body.setContent(loginHelper.pack(body));
         final YWMessage message = YWMessageChannel.createCustomMessage(body);
-        checkConversation();
-        conversation.getMessageSender().sendMessage(message, timeOut, new IWxCallback() {
 
-            @Override
-            public void onSuccess(Object... arg0) {
-                updateMySend(message, stanza, msgType, resLink, resTime, summary);
+        if (mConversationService == null) {
+            needLink = true;
+            CustomProgressDialog.showLoading(activity, "已断开连接，正在重新连接...");
+            if (loginHelper.getImCore() == null) {
+                myImAccountInfoApi();
+            } else {
+                otherImAccountInfoApi();
             }
-
-            @Override
-            public void onProgress(int arg0) {
-
+        } else {
+            if (conversation == null) { // 这里必须判空
+                IYWContact contact = YWContactFactory.createAPPContact(otherIMUserId, LoginSampleHelper.APP_KEY);
+                conversation = mConversationService.getConversationCreater().createConversationIfNotExist(contact);
             }
+            conversation.getMessageSender().sendMessage(message, timeOut, new IWxCallback() {
 
-            @Override
-            public void onError(int arg0, String arg1) {
+                @Override
+                public void onSuccess(Object... arg0) {
+                    updateMySend(message, stanza, msgType, resLink, resTime, summary);
+                }
 
-            }
-        });
+                @Override
+                public void onProgress(int arg0) {
+
+                }
+
+                @Override
+                public void onError(int arg0, String arg1) {
+
+                }
+            });
+        }
     }
 
     private void updateMySend(YWMessage message, String stanza, int msgType, String resLink, int resTime, String title) {
@@ -466,6 +507,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         bottleCache.setPublicTag("");
         bottleCache.setEffectType(1);
         bottleCache.setAuthType(1);
+        bottleCache.setMainUserId(BaseActivity.userId);
         bottleCacheDb.saveBottleCache(bottleCache);
         // 更新会话列表
         Intent data = new Intent("lobster_singleBottleCache");
@@ -474,20 +516,21 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
 
         // 记录我们发出去的消息
         HistoryMsg historyMsg = new HistoryMsg();
-        historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
-        historyMsg.setId(message.getMsgId());
+        historyMsg.setThirdMessageId(message.getMsgId() + "");
+        historyMsg.setMainUserId(BaseActivity.userId);
         historyMsg.setFromId(BaseActivity.userId);
         historyMsg.setToId(otherUserId);
-        historyMsg.setMsgType(msgType);
-        historyMsg.setResLink(resLink);
-        historyMsg.setResTime(resTime);
+        historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
         historyMsg.setStanza(stanza);
+        historyMsg.setMsgType(msgType);
         historyMsg.setTitle(title);
+        historyMsg.setResTime(resTime);
+        historyMsg.setResLink(resLink);
         historyMsg.setOtherUserId(otherUserId);
-        historyMsg.setThirdMessageId(message.getMsgId() + "");
         historyMsg.setMsgChannelType(2);
         historyMsg.setDriftBottleId(driftBottleId);
-        historyMsg.setMainUserId(BaseActivity.userId);
+        historyMsgDb.saveHistoryMsg(historyMsg);
+
         historyMsgList.add(historyMsg);
         updateTime();
         adapter.notifyItemChanged(adapter.getItemCount() - 1);
@@ -536,6 +579,11 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                 mConversationService = loginHelper.getConversationService();
                 conversation = mConversationService.getConversationByUserId(otherIMUserId, LoginSampleHelper.APP_KEY);
                 checkConversation();
+                if (needLink) {
+                    needLink = false;
+                    CustomProgressDialog.stopLoading();
+                    SCToastUtil.showToast(activity, "连接成功", true);
+                }
             }
         }, activity);
         api.setOtherUserId(otherUserId);

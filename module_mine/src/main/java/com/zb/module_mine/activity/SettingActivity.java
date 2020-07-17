@@ -43,4 +43,10 @@ public class SettingActivity extends MineBaseActivity {
         }
         return false;
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewModel.humanFaceStatus();
+    }
 }

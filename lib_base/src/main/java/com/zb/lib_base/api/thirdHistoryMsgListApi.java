@@ -4,13 +4,13 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.model.BaseEntity;
-import com.zb.lib_base.model.HistoryMsg;
+import com.zb.lib_base.model.PrivateMsg;
 
 import java.util.List;
 
 import rx.Observable;
 
-public class thirdHistoryMsgListApi extends BaseEntity<List<HistoryMsg>> {
+public class thirdHistoryMsgListApi extends BaseEntity<List<PrivateMsg>> {
     long otherUserId;//  他人userId
     int pageNo;//页数
 

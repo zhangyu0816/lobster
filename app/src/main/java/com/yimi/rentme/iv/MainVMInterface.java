@@ -1,6 +1,6 @@
 package com.yimi.rentme.iv;
 
-import com.zb.lib_base.imcore.CustomMessageBody;
+import com.alibaba.mobileim.conversation.YWMessage;
 
 public interface MainVMInterface {
 
@@ -32,5 +32,5 @@ public interface MainVMInterface {
 
     void noReadBottleNum(boolean isUpdate);
 
-    void otherInfo(long otherUserId, CustomMessageBody body);
+    void otherInfo(long otherUserId,  YWMessage ywMessage);
 }

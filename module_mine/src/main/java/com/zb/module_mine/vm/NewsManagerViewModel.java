@@ -11,6 +11,7 @@ import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.clearAllHistoryMsgApi;
 import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.api.readNewDynMsgAllApi;
+import com.zb.lib_base.api.thirdReadChatApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -64,7 +65,7 @@ public class NewsManagerViewModel extends BaseViewModel implements NewsManagerVM
                         // 获取与某个聊天对象的会话记录
                         otherImAccountInfoApi();
                         clearAllHistoryMsg(BaseActivity.systemUserId);
-//                        thirdReadChat(BaseActivity.systemUserId);
+                        thirdReadChat(BaseActivity.systemUserId);
                     }
                     SCToastUtil.showToast(activity, "已全部清除", true);
                 }
@@ -90,6 +91,7 @@ public class NewsManagerViewModel extends BaseViewModel implements NewsManagerVM
 
     @Override
     public void toLobsterNews(View view) {
+        mBinding.setVariable(BR.mineNewsCount, MineApp.mineNewsCount);
         ActivityUtils.getMineSystemMsg();
     }
 
@@ -118,7 +120,22 @@ public class NewsManagerViewModel extends BaseViewModel implements NewsManagerVM
             @Override
             public void onNext(Object o) {
                 MineApp.mineNewsCount.setSystemNewsNum(0);
+                MineApp.mineNewsCount.setMsgType(0);
                 mBinding.setVariable(BR.mineNewsCount, MineApp.mineNewsCount);
+                activity.sendBroadcast(new Intent("lobster_newsCount"));
+            }
+        }, activity).setOtherUserId(otherUserId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 清除未读数量
+     */
+    private void thirdReadChat(long otherUserId) {
+        thirdReadChatApi api = new thirdReadChatApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);

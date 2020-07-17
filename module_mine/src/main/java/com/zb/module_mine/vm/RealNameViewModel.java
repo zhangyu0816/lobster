@@ -4,7 +4,6 @@ import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.CountDownTimer;
@@ -219,7 +218,6 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "人脸认证已提交", true);
-                activity.sendBroadcast(new Intent("lobster_humanFace"));
                 back(null);
             }
         }, activity).setFaceImage(image);

@@ -15,7 +15,6 @@ import com.zb.lib_base.model.FaceStatus;
 import com.zb.lib_base.model.FeedbackInfo;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.GiftRecord;
-import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.ImageCaptcha;
 import com.zb.lib_base.model.LikeMe;
@@ -28,6 +27,7 @@ import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.OrderNumber;
 import com.zb.lib_base.model.OrderTran;
 import com.zb.lib_base.model.PairInfo;
+import com.zb.lib_base.model.PrivateMsg;
 import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.Report;
 import com.zb.lib_base.model.ResourceUrl;
@@ -320,7 +320,7 @@ public interface HttpService {
 
     // 获取历史消息
     @GET("api/Contact_historyMsgList")
-    Observable<BaseResultEntity<List<HistoryMsg>>> historyMsgList(@Query("otherUserId") long otherUserId, @Query("pageNo") int pageNo);
+    Observable<BaseResultEntity<List<PrivateMsg>>> historyMsgList(@Query("otherUserId") long otherUserId, @Query("pageNo") int pageNo);
 
     // 清空用户消息
     @GET("api/Contact_readOverHistoryMsg")
@@ -328,7 +328,7 @@ public interface HttpService {
 
     // 第三方消息
     @GET("api/Contact_thirdHistoryMsgList")
-    Observable<BaseResultEntity<List<HistoryMsg>>> thirdHistoryMsgList(@Query("otherUserId") long otherUserId, @Query("pageNo") int pageNo,
+    Observable<BaseResultEntity<List<PrivateMsg>>> thirdHistoryMsgList(@Query("otherUserId") long otherUserId, @Query("pageNo") int pageNo,
                                                                        @Query("imPlatformType") int imPlatformType);
 
     // 清除第三方未读会话
@@ -371,7 +371,7 @@ public interface HttpService {
 
     // 漂流瓶历史记录
     @GET("api/DriftBottle_historyMsgList")
-    Observable<BaseResultEntity<List<HistoryMsg>>> bottleHistoryMsgList(@Query("otherUserId") long otherUserId, @Query("driftBottleId") long driftBottleId,
+    Observable<BaseResultEntity<List<PrivateMsg>>> bottleHistoryMsgList(@Query("otherUserId") long otherUserId, @Query("driftBottleId") long driftBottleId,
                                                                         @Query("pageNo") int pageNo);
 
     // 漂流瓶未读会话列表

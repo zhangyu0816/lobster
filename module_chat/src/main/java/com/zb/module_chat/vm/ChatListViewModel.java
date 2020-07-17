@@ -3,22 +3,13 @@ package com.zb.module_chat.vm;
 import android.content.Context;
 import android.content.Intent;
 
-import com.alibaba.mobileim.conversation.IYWConversationService;
-import com.alibaba.mobileim.conversation.YWConversation;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
-import com.zb.lib_base.api.clearAllHistoryMsgApi;
-import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.ChatListDb;
-import com.zb.lib_base.db.HistoryMsgDb;
-import com.zb.lib_base.http.HttpManager;
-import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.model.ChatList;
-import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
@@ -45,14 +36,11 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
     private BaseReceiver updateChatReceiver;
     private BaseReceiver relieveReceiver;
     private SimpleItemTouchHelperCallback callback;
-    private HistoryMsgDb historyMsgDb;
-    private int prePosition = -1;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         chatListDb = new ChatListDb(Realm.getDefaultInstance());
-        historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         mBinding = (ChatListFragmentBinding) binding;
         setAdapter();
         updateChatReceiver = new BaseReceiver(activity, "lobster_updateChat") {
@@ -68,13 +56,15 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                     adapter.notifyDataSetChanged();
                 } else {
                     int position = -1;
-                    for (int i = 0; i < chatMsgList.size(); i++) {
-                        if (chatMsgList.get(i) != null)
+                    if (chatMsgList.size() > 0) {
+                        for (int i = 0; i < chatMsgList.size(); i++) {
                             if (chatMsgList.get(i).getUserId() == userId) {
                                 position = i;
                                 break;
                             }
+                        }
                     }
+
 
                     if (updateImage) {
                         if (position != -1) {
@@ -97,25 +87,22 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
             @Override
             public void onReceive(Context context, Intent intent) {
                 long otherUserId = intent.getLongExtra("otherUserId", 0);
-                if (chatMsgList.size() == 0)
-                    return;
-                if (prePosition == -1) {
+                int position = -1;
+                if (chatMsgList.size() > 0) {
                     for (int i = 0; i < chatMsgList.size(); i++) {
-                        if (chatMsgList.get(i).getUserId() == otherUserId) {
-                            prePosition = i;
+                        ChatList item = chatMsgList.get(i);
+                        if (item.getUserId() == otherUserId) {
+                            position = i;
                             break;
                         }
                     }
                 }
-                if (prePosition != -1) {
-                    adapter.notifyItemRemoved(prePosition);
-                    chatMsgList.remove(prePosition);
-                    chatListDb.deleteChatMsg(otherUserId);
-                    prePosition = -1;
+                if (position != -1) {
+                    adapter.notifyItemRemoved(position);
+                    chatMsgList.remove(position);
+                    adapter.notifyDataSetChanged();
                 }
-                otherImAccountInfoApi(otherUserId);
-                clearAllHistoryMsg(otherUserId);
-//                thirdReadChat(otherUserId);
+
             }
         };
     }
@@ -166,16 +153,11 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                 "清除", false, new TextPW.CallBack() {
             @Override
             public void sure() {
-                prePosition = position;
                 long otherUserId = chatMsgList.get(position).getUserId();
-                historyMsgDb.deleteHistoryMsg(otherUserId, 1, 0);
-                adapter.notifyItemRemoved(prePosition);
-                chatMsgList.remove(prePosition);
-                chatListDb.deleteChatMsg(otherUserId);
-                otherImAccountInfoApi(otherUserId);
-                clearAllHistoryMsg(otherUserId);
-//                thirdReadChat(otherUserId);
-                activity.sendBroadcast(new Intent("lobster_pairList"));
+                Intent data = new Intent("lobster_relieve");
+                data.putExtra("otherUserId", otherUserId);
+                data.putExtra("isRelieve", false);
+                activity.sendBroadcast(data);
             }
 
             @Override
@@ -183,37 +165,5 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                 adapter.notifyItemChanged(position);
             }
         });
-    }
-
-    /**
-     * 对方的阿里百川账号
-     */
-    private void otherImAccountInfoApi(long otherUserId) {
-        otherImAccountInfoApi api = new otherImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
-            @Override
-            public void onNext(ImAccount o) {
-                try {
-                    IYWConversationService mConversationService = LoginSampleHelper.imCore
-                            .getConversationService();
-                    YWConversation conversation = mConversationService
-                            .getConversationByUserId(o.getImUserId(), LoginSampleHelper.APP_KEY);
-                    // 删除所有聊天记录
-                    conversation.getMessageLoader().deleteAllMessage();
-                } catch (Exception e) {
-                }
-            }
-        }, activity);
-        api.setOtherUserId(otherUserId);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    private void clearAllHistoryMsg(long otherUserId) {
-        clearAllHistoryMsgApi api = new clearAllHistoryMsgApi(new HttpOnNextListener() {
-            @Override
-            public void onNext(Object o) {
-                activity.sendBroadcast(new Intent("lobster_unReadCount"));
-            }
-        }, activity).setOtherUserId(otherUserId);
-        HttpManager.getInstance().doHttpDeal(api);
     }
 }

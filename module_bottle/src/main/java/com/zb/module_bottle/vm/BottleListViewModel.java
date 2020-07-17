@@ -161,8 +161,6 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
         myBottleListApi api = new myBottleListApi(new HttpOnNextListener<List<BottleInfo>>() {
             @Override
             public void onNext(List<BottleInfo> o) {
-                mBinding.setNoData(false);
-                int start = bottleInfoList.size();
                 for (BottleInfo bottleInfo : o) {
                     if (bottleInfo.getDestroyType() == 1 && bottleInfo.getUserId() == BaseActivity.userId) {
                         bottleCacheDb.deleteBottleCache(bottleInfo.getDriftBottleId());
@@ -187,18 +185,8 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                     }
                     bottleInfoList.add(bottleInfo);
                 }
-                BottleInfoComparator comparator = new BottleInfoComparator();
-                Collections.sort(bottleInfoList, comparator);
-                activity.sendBroadcast(new Intent("lobster_bottleNum"));
-                adapter.notifyItemRangeChanged(start, bottleInfoList.size());
-                mBinding.refresh.finishRefresh();
-                mBinding.refresh.finishLoadMore();
-                if (bottleInfoList.size() == 0 && pageNo == 1) {
-                    mBinding.setNoData(true);
-                } else if (bottleInfoList.size() < 10) {
-                    pageNo++;
-                    myBottleList();
-                }
+                pageNo++;
+                myBottleList();
             }
 
             @Override
@@ -207,8 +195,15 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
                     mBinding.refresh.finishLoadMore();
-                    if (bottleInfoList.size() == 0 && pageNo == 1) {
+
+                    if (bottleInfoList.size() == 0) {
                         mBinding.setNoData(true);
+                    } else {
+                        mBinding.setNoData(false);
+                        BottleInfoComparator comparator = new BottleInfoComparator();
+                        Collections.sort(bottleInfoList, comparator);
+                        adapter.notifyDataSetChanged();
+                        activity.sendBroadcast(new Intent("lobster_bottleNum"));
                     }
                 }
             }
@@ -251,10 +246,10 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 long otherUserId = bottleInfo.getUserId() == BaseActivity.userId ? bottleInfo.getOtherUserId() : bottleInfo.getUserId();
 
                 bottleCacheDb.deleteBottleCache(bottleInfo.getDriftBottleId());
-                historyMsgDb.deleteHistoryMsg(otherUserId, 1, 0);
+                historyMsgDb.deleteHistoryMsg(otherUserId, 2, bottleInfo.getDriftBottleId());
                 adapter.notifyItemRemoved(position);
                 bottleInfoList.remove(position);
-
+                adapter.notifyDataSetChanged();
                 otherImAccountInfoApi(otherUserId);
                 clearAllHistoryMsg(otherUserId, bottleInfo.getDriftBottleId());
                 activity.sendBroadcast(new Intent("lobster_bottleNum"));

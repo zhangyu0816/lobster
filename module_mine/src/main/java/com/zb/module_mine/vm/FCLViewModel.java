@@ -16,7 +16,6 @@ import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.myConcernsApi;
 import com.zb.lib_base.api.myFansApi;
 import com.zb.lib_base.api.relievePairApi;
-import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -54,7 +53,6 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
     private MineInfo mineInfo;
     private BaseReceiver attentionListReceiver;
     private BaseReceiver finishRefreshReceiver;
-    private HistoryMsgDb historyMsgDb;
 
     @Override
     public void back(View view) {
@@ -67,7 +65,6 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         likeDb = new LikeDb(Realm.getDefaultInstance());
-        historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         mBinding = (MineFclBinding) binding;
         mineInfo = mineInfoDb.getMineInfo();
         setAdapter();
@@ -231,10 +228,21 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
             @Override
             public void onNext(Object o) {
                 likeDb.deleteLike(otherUserId);
-                historyMsgDb.deleteHistoryMsg(otherUserId, 1, 0);
-                adapter.notifyItemChanged(_selectIndex);
+                adapter.notifyItemRemoved(_selectIndex);
+                memberInfoList.remove(_selectIndex);
+                adapter.notifyDataSetChanged();
+                if (memberInfoList.size() == 0) {
+                    // 下拉刷新
+                    mBinding.refresh.setEnableLoadMore(true);
+                    pageNo = 1;
+                    memberInfoList.clear();
+                    adapter.notifyDataSetChanged();
+                    adapter.userIdList.clear();
+                    getData();
+                }
                 Intent data = new Intent("lobster_relieve");
                 data.putExtra("otherUserId", otherUserId);
+                data.putExtra("isRelieve", true);
                 activity.sendBroadcast(data);
             }
         }, activity).setOtherUserId(otherUserId);
@@ -263,6 +271,9 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
                     mBinding.refresh.finishLoadMore();
+                    if (memberInfoList.size() == 0) {
+                        mBinding.setNoData(true);
+                    }
                 }
             }
         }, activity).setPageNo(pageNo);
@@ -288,6 +299,9 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
                     mBinding.refresh.finishLoadMore();
+                    if (memberInfoList.size() == 0) {
+                        mBinding.setNoData(true);
+                    }
                 }
             }
         }, activity).setPageNo(pageNo);
@@ -319,6 +333,9 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
                     mBinding.refresh.finishLoadMore();
+                    if (memberInfoList.size() == 0) {
+                        mBinding.setNoData(true);
+                    }
                 }
             }
         }, activity).setPageNo(pageNo).setLikeOtherStatus(0);

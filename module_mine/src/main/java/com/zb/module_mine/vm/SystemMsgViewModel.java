@@ -153,6 +153,7 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
         clearHistoryMsgApi api = new clearHistoryMsgApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
+                MineApp.mineNewsCount.setMsgType(0);
                 MineApp.mineNewsCount.setSystemNewsNum(0);
                 activity.sendBroadcast(new Intent("lobster_newsCount"));
             }

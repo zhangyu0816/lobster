@@ -83,10 +83,12 @@ public class ChatListDb extends BaseDao {
         commitTransaction();
     }
 
+    @FunctionalInterface
     public interface CallBack {
         void success();
 
-        void fail();
+        default void fail() {
+        }
     }
 
     public int getAllUnReadNum() {

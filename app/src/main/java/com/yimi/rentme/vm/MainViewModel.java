@@ -35,6 +35,7 @@ import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.BottleCacheDb;
 import com.zb.lib_base.db.ChatListDb;
+import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -45,6 +46,7 @@ import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.GiftInfo;
+import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineNewsCount;
@@ -92,6 +94,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private BaseReceiver newsCountReceiver;
     private BaseReceiver unReadCountReceiver;
     private AreaDb areaDb;
+    private HistoryMsgDb historyMsgDb;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -100,6 +103,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         bottleCacheDb = new BottleCacheDb(Realm.getDefaultInstance());
         areaDb = new AreaDb(Realm.getDefaultInstance());
         chatListDb = new ChatListDb(Realm.getDefaultInstance());
+        historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         mBinding = (AcMainBinding) binding;
         mBinding.tvTitle.setTypeface(MineApp.simplifiedType);
         mBinding.tvContent.setTypeface(MineApp.simplifiedType);
@@ -138,8 +142,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         newMsgReceiver = new BaseReceiver(activity, "lobster_newMsg") {
             @Override
             public void onReceive(Context context, Intent intent) {
-//                int count = intent.getIntExtra("unReadCount", 0);
-
                 YWMessage ywMessage = (YWMessage) intent.getSerializableExtra("ywMessage");
                 CustomMessageBody body = (CustomMessageBody) LoginSampleHelper.unpack(ywMessage.getContent());
                 long otherUserId = body.getFromId() == BaseActivity.userId ? body.getToId() : body.getFromId();
@@ -149,31 +151,64 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                         MineApp.mineNewsCount.setSystemNewsNum(MineApp.mineNewsCount.getSystemNewsNum() + 1);
                         activity.sendBroadcast(new Intent("lobster_newsCount"));
                     } else {
+                        HistoryMsg historyMsg = new HistoryMsg();
+                        historyMsg.setThirdMessageId(ywMessage.getMsgId() + "");
+                        historyMsg.setFromId(body.getFromId());
+                        historyMsg.setToId(body.getToId());
+                        historyMsg.setTitle(body.getSummary());
+                        historyMsg.setStanza(body.getStanza());
+                        historyMsg.setMsgType(body.getMsgType());
+                        historyMsg.setResLink(body.getResLink());
+                        historyMsg.setResTime(body.getResTime());
+                        historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
+                        historyMsg.setOtherUserId(otherUserId);
+                        historyMsg.setMsgChannelType(1);
+                        historyMsg.setDriftBottleId(0);
+                        historyMsg.setMainUserId(BaseActivity.userId);
+                        historyMsgDb.saveHistoryMsg(historyMsg);
+
                         chatListDb.updateChatMsg(otherUserId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType(), new ChatListDb.CallBack() {
                             @Override
                             public void success() {
-
                                 // 更新会话列表
                                 mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
                                 Intent data = new Intent("lobster_updateChat");
                                 data.putExtra("userId", otherUserId);
                                 activity.sendBroadcast(data);
+
+                                // 更新对话页面
+                                Intent upMessage = new Intent("lobster_upMessage/friend=" + otherUserId);
+                                upMessage.putExtra("ywMessage", ywMessage);
+                                activity.sendBroadcast(upMessage);
                             }
 
                             @Override
                             public void fail() {
-                                otherInfo(otherUserId, body);
+                                otherInfo(otherUserId, ywMessage);
                             }
                         });
                         if (body.getMsgType() == 112) {
                             newDynMsgAllNum(true);
                         }
-                        // 更新对话页面
-                        Intent upMessage = new Intent("lobster_upMessage/friend=" + otherUserId);
-                        upMessage.putExtra("ywMessage", ywMessage);
-                        activity.sendBroadcast(upMessage);
                     }
                 } else {
+
+                    HistoryMsg historyMsg = new HistoryMsg();
+                    historyMsg.setThirdMessageId(ywMessage.getMsgId() + "");
+                    historyMsg.setFromId(body.getFromId());
+                    historyMsg.setToId(body.getToId());
+                    historyMsg.setTitle(body.getSummary());
+                    historyMsg.setStanza(body.getStanza());
+                    historyMsg.setMsgType(body.getMsgType());
+                    historyMsg.setResLink(body.getResLink());
+                    historyMsg.setResTime(body.getResTime());
+                    historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
+                    historyMsg.setOtherUserId(otherUserId);
+                    historyMsg.setMsgChannelType(2);
+                    historyMsg.setDriftBottleId(body.getDriftBottleId());
+                    historyMsg.setMainUserId(BaseActivity.userId);
+                    historyMsgDb.saveHistoryMsg(historyMsg);
+
                     BottleCache dbData = bottleCacheDb.getBottleCache(body.getDriftBottleId());
                     BottleCache bottleCache = new BottleCache();
                     bottleCache.setDriftBottleId(body.getDriftBottleId());
@@ -555,6 +590,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 chatList.setStanza("TA们喜欢你，正等待你回应");
                 chatList.setNoReadNum(MineApp.contactNum.getBeLikeCount());
                 chatList.setChatType(1);
+                chatList.setMainUserId(BaseActivity.userId);
                 chatListDb.saveChatList(chatList);
                 mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
                 new Handler().postDelayed(() -> {
@@ -588,6 +624,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         chatList.setStanza(MineApp.noReadBottleNum == 0 ? "茫茫人海中，需要流浪到何时" : "您有新消息");
         chatList.setNoReadNum(MineApp.noReadBottleNum);
         chatList.setChatType(2);
+        chatList.setMainUserId(BaseActivity.userId);
         chatListDb.saveChatList(chatList);
         mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
         new Handler().postDelayed(() -> {
@@ -616,10 +653,11 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     }
 
     @Override
-    public void otherInfo(long otherUserId, CustomMessageBody body) {
+    public void otherInfo(long otherUserId, YWMessage ywMessage) {
         otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
             @Override
             public void onNext(MemberInfo o) {
+                CustomMessageBody body = (CustomMessageBody) LoginSampleHelper.unpack(ywMessage.getContent());
                 ChatList dbData = chatListDb.getChatMsg(otherUserId, otherUserId == BaseActivity.dynUserId ? 5 : 4);
                 ChatList chatList = new ChatList();
                 chatList.setUserId(otherUserId);
@@ -633,12 +671,19 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 chatList.setPublicTag("");
                 chatList.setEffectType(1);
                 chatList.setAuthType(1);
+                chatList.setMainUserId(BaseActivity.userId);
                 chatListDb.saveChatList(chatList);
                 mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
                 // 更新会话列表
                 Intent data = new Intent("lobster_updateChat");
                 data.putExtra("userId", otherUserId);
                 activity.sendBroadcast(data);
+
+                // 更新对话页面
+                Intent upMessage = new Intent("lobster_upMessage/friend=" + otherUserId);
+                upMessage.putExtra("ywMessage", ywMessage);
+                activity.sendBroadcast(upMessage);
+
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);

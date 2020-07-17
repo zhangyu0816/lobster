@@ -7,7 +7,7 @@ import io.realm.annotations.PrimaryKey;
 
 public class HistoryMsg extends RealmObject {
     @PrimaryKey
-    long id;               //id
+    String thirdMessageId = ""; //第三方消息id
     long fromId;             //发送人ID
     long toId;               //接收人ID
     String creationDate = "";     //发送时间
@@ -24,20 +24,8 @@ public class HistoryMsg extends RealmObject {
     int msgChannelType = 1; //消息渠道类型  1.普通聊天 （默认）  2. 漂流瓶
     long driftBottleId = 0;    //所属漂流瓶
     int imPlatformType; //
-    String thirdMessageId = ""; //第三方消息id
-
     boolean showTime = false;
-
     String theChatUk = "";        //两个人的Id拼接起来，小的在前面  #12#101#
-
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     public long getFromId() {
         return fromId;

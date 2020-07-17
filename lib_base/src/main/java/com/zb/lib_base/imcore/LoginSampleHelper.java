@@ -122,15 +122,17 @@ public class LoginSampleHelper {
         public void onPushMessage(IYWContact contact, YWMessage ywMessage) {
             CustomMessageBody body = (CustomMessageBody) unpack(ywMessage.getContent());
             long otherUserId = body.getFromId();
-            boolean hasOtherUserId = false;
-            for (LikeMe item : MineApp.pairList) {
-                if (item.getOtherUserId() == otherUserId) {
-                    hasOtherUserId = true;
-                    break;
+            if (body.getDriftBottleId() == 0) {
+                boolean hasOtherUserId = false;
+                for (LikeMe item : MineApp.pairList) {
+                    if (item.getOtherUserId() == otherUserId) {
+                        hasOtherUserId = true;
+                        break;
+                    }
                 }
-            }
-            if (!hasOtherUserId) {
-                return;
+                if (!hasOtherUserId) {
+                    return;
+                }
             }
             if (isBackground()) {
                 sendMsg(ywMessage);
@@ -355,8 +357,10 @@ public class LoginSampleHelper {
             valueBean.put("stanza", ((CustomMessageBody) body).getStanza());
             valueBean.put("resLink", ((CustomMessageBody) body).getResLink());
             valueBean.put("resTime", ((CustomMessageBody) body).getResTime());
-            valueBean.put("driftBottleId", ((CustomMessageBody) body).getDriftBottleId());
-            valueBean.put("msgChannelType", ((CustomMessageBody) body).getMsgChannelType());
+            if (((CustomMessageBody) body).getDriftBottleId() != 0)
+                valueBean.put("driftBottleId", ((CustomMessageBody) body).getDriftBottleId());
+            if (((CustomMessageBody) body).getMsgChannelType() == 2)
+                valueBean.put("msgChannelType", ((CustomMessageBody) body).getMsgChannelType());
             message.put("fromId", ((CustomMessageBody) body).getFromId());
             message.put("toId", ((CustomMessageBody) body).getToId());
             message.put("valueBean", valueBean);

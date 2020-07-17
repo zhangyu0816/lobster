@@ -49,7 +49,7 @@ public class RewardListViewModel extends BaseViewModel implements RewardListVMIn
         };
     }
 
-    public void onDestroy(){
+    public void onDestroy() {
         finishRefreshReceiver.unregisterReceiver();
     }
 
@@ -70,6 +70,7 @@ public class RewardListViewModel extends BaseViewModel implements RewardListVMIn
         seeGiftRewardsApi api = new seeGiftRewardsApi(new HttpOnNextListener<List<Reward>>() {
             @Override
             public void onNext(List<Reward> o) {
+                mBinding.setNoData(false);
                 int start = rewardList.size();
                 rewardList.addAll(o);
                 adapter.notifyItemRangeChanged(start, rewardList.size());
@@ -83,6 +84,9 @@ public class RewardListViewModel extends BaseViewModel implements RewardListVMIn
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
                     mBinding.refresh.finishLoadMore();
+                    if (rewardList.size() == 0) {
+                        mBinding.setNoData(true);
+                    }
                 }
             }
         }, activity).setFriendDynId(friendDynId)

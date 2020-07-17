@@ -40,10 +40,12 @@ public class BottleCacheDb extends BaseDao {
         commitTransaction();
     }
 
+    @FunctionalInterface
     public interface CallBack {
         void success();
 
-        void fail();
+        default void fail() {
+        }
     }
 
     public void deleteBottleCache(long driftBottleId) {
