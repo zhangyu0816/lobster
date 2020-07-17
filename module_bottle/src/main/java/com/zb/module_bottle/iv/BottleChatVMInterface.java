@@ -10,8 +10,6 @@ public interface BottleChatVMInterface {
 
     void bottleHistoryMsgList(int pageNo);
 
-    void thirdHistoryMsgList(int pageNo);
-
     void toMemberDetail(View view);
 
     void toKeyboard(View view);

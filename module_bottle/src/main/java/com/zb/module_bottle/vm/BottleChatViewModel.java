@@ -27,9 +27,7 @@ import com.zb.lib_base.api.myBottleApi;
 import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.api.otherInfoApi;
-import com.zb.lib_base.api.readOverHistoryMsgApi;
-import com.zb.lib_base.api.thirdHistoryMsgListApi;
-import com.zb.lib_base.api.thirdReadChatApi;
+import com.zb.lib_base.api.readOverDriftBottleHistoryMsgApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.BottleCacheDb;
 import com.zb.lib_base.db.HistoryMsgDb;
@@ -252,7 +250,6 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                 } else {
                     otherImAccountInfoApi();
                 }
-//                thirdReadChat();
                 activity.sendBroadcast(new Intent("lobster_bottleNum"));
                 new Thread(() -> bottleHistoryMsgList(1)).start();
             }
@@ -279,48 +276,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    if (historyMsgId > 0) {
-                        readOverHistoryMsg();
-                    } else {
-                        thirdHistoryMsgList(1);
-                    }
-                }
-            }
-        }, activity).setDriftBottleId(driftBottleId).setOtherUserId(otherUserId).setPageNo(pageNo);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    /**
-     * 清空用户消息
-     */
-    private void readOverHistoryMsg() {
-        readOverHistoryMsgApi api = new readOverHistoryMsgApi(new HttpOnNextListener() {
-            @Override
-            public void onNext(Object o) {
-                thirdHistoryMsgList(1);
-            }
-        }, activity).setOtherUserId(otherUserId).setMessageId(historyMsgId).setMsgChannelType(2).setDriftBottleId(driftBottleId);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
-    public void thirdHistoryMsgList(int pageNo) {
-        thirdHistoryMsgListApi api = new thirdHistoryMsgListApi(new HttpOnNextListener<List<HistoryMsg>>() {
-            @Override
-            public void onNext(List<HistoryMsg> o) {
-                for (HistoryMsg historyMsg : o) {
-                    historyMsg.setMsgChannelType(2);
-                    historyMsg.setDriftBottleId(driftBottleId);
-                    historyMsg.setOtherUserId(otherUserId);
-                    historyMsg.setMainUserId(BaseActivity.userId);
-                    historyMsgDb.saveHistoryMsg(historyMsg);
-                }
-                thirdHistoryMsgList(pageNo + 1);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    readOverHistoryMsg();
                     historyMsgList.clear();
                     realmResults = historyMsgDb.getRealmResults(otherUserId, 2, driftBottleId);
                     historyMsgList.addAll(historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize));
@@ -382,7 +338,19 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                     }
                 }
             }
-        }, activity).setOtherUserId(otherUserId).setPageNo(pageNo).setMsgChannelType(1);
+        }, activity).setDriftBottleId(driftBottleId).setOtherUserId(otherUserId).setPageNo(pageNo);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 清空用户消息
+     */
+    private void readOverHistoryMsg() {
+        readOverDriftBottleHistoryMsgApi api = new readOverDriftBottleHistoryMsgApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+            }
+        }, activity).setOtherUserId(otherUserId).setMessageId(historyMsgId).setDriftBottleId(driftBottleId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -541,19 +509,6 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             }
         }
     }
-
-//    /**
-//     * 清除未读数量
-//     */
-//    private void thirdReadChat() {
-//        thirdReadChatApi api = new thirdReadChatApi(new HttpOnNextListener() {
-//            @Override
-//            public void onNext(Object o) {
-//
-//            }
-//        }, activity).setOtherUserId(otherUserId).setMsgChannelType(2).setDriftBottleId(driftBottleId);
-//        HttpManager.getInstance().doHttpDeal(api);
-//    }
 
     /**
      * 阿里百川登录账号

@@ -28,6 +28,9 @@ public class HistoryMsg extends RealmObject {
 
     boolean showTime = false;
 
+    String theChatUk = "";        //两个人的Id拼接起来，小的在前面  #12#101#
+
+
     public long getId() {
         return id;
     }
@@ -170,5 +173,13 @@ public class HistoryMsg extends RealmObject {
 
     public void setShowTime(boolean showTime) {
         this.showTime = showTime;
+    }
+
+    public String getTheChatUk() {
+        return theChatUk;
+    }
+
+    public void setTheChatUk(String theChatUk) {
+        this.theChatUk = theChatUk;
     }
 }

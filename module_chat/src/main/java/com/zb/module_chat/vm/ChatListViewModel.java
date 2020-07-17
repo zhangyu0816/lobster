@@ -11,11 +11,9 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.clearAllHistoryMsgApi;
 import com.zb.lib_base.api.otherImAccountInfoApi;
-import com.zb.lib_base.api.thirdReadChatApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.db.HistoryMsgDb;
-import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.imcore.LoginSampleHelper;
@@ -47,7 +45,6 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
     private BaseReceiver updateChatReceiver;
     private BaseReceiver relieveReceiver;
     private SimpleItemTouchHelperCallback callback;
-    private LikeDb likeDb;
     private HistoryMsgDb historyMsgDb;
     private int prePosition = -1;
 
@@ -56,7 +53,6 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
         super.setBinding(binding);
         chatListDb = new ChatListDb(Realm.getDefaultInstance());
         historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
-        likeDb = new LikeDb(Realm.getDefaultInstance());
         mBinding = (ChatListFragmentBinding) binding;
         setAdapter();
         updateChatReceiver = new BaseReceiver(activity, "lobster_updateChat") {
@@ -119,6 +115,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                 }
                 otherImAccountInfoApi(otherUserId);
                 clearAllHistoryMsg(otherUserId);
+//                thirdReadChat(otherUserId);
             }
         };
     }
@@ -177,6 +174,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                 chatListDb.deleteChatMsg(otherUserId);
                 otherImAccountInfoApi(otherUserId);
                 clearAllHistoryMsg(otherUserId);
+//                thirdReadChat(otherUserId);
                 activity.sendBroadcast(new Intent("lobster_pairList"));
             }
 
@@ -215,7 +213,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
             public void onNext(Object o) {
                 activity.sendBroadcast(new Intent("lobster_unReadCount"));
             }
-        }, activity).setOtherUserId(otherUserId).setMsgChannelType(1).setDriftBottleId(0);
+        }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

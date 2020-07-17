@@ -13,7 +13,6 @@ import rx.Observable;
 public class thirdHistoryMsgListApi extends BaseEntity<List<HistoryMsg>> {
     long otherUserId;//  他人userId
     int pageNo;//页数
-    int msgChannelType;
 
     public thirdHistoryMsgListApi setOtherUserId(long otherUserId) {
         this.otherUserId = otherUserId;
@@ -25,11 +24,6 @@ public class thirdHistoryMsgListApi extends BaseEntity<List<HistoryMsg>> {
         return this;
     }
 
-    public thirdHistoryMsgListApi setMsgChannelType(int msgChannelType) {
-        this.msgChannelType = msgChannelType;
-        return this;
-    }
-
     public thirdHistoryMsgListApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
         setShowProgress(false);
@@ -37,6 +31,6 @@ public class thirdHistoryMsgListApi extends BaseEntity<List<HistoryMsg>> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.thirdHistoryMsgList(otherUserId, pageNo, 2, msgChannelType);
+        return methods.thirdHistoryMsgList(otherUserId, pageNo, 2);
     }
 }

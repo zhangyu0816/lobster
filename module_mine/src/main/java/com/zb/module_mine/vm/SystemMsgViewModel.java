@@ -23,7 +23,6 @@ import com.zb.lib_base.api.clearHistoryMsgApi;
 import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.api.systemHistoryMsgListApi;
-import com.zb.lib_base.api.thirdReadChatApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.ResFileDb;
 import com.zb.lib_base.http.HttpManager;
@@ -260,5 +259,4 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
             conversation = mConversationService.getConversationCreater().createConversationIfNotExist(contact);
         }
     }
-
 }

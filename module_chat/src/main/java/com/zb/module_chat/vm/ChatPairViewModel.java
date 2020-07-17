@@ -57,7 +57,6 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
     private BaseReceiver finishRefreshReceiver;
     private BaseReceiver updateChatReceiver;
     private SimpleItemTouchHelperCallback callback;
-    private int prePosition = -1;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -114,7 +113,6 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
 //                        chatListDb.deleteChatMsg(otherUserId);
                     }
                 }
-                prePosition = -1;
                 adapter.notifyDataSetChanged();
             }
         };
@@ -214,7 +212,6 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                     "解除", false, new TextPW.CallBack() {
                 @Override
                 public void sure() {
-                    prePosition = position;
                     relievePair(chatMsgList.get(position).getUserId());
                 }
 

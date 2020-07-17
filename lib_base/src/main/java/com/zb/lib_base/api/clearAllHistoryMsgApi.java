@@ -10,21 +10,9 @@ import rx.Observable;
 
 public class clearAllHistoryMsgApi extends BaseEntity<BaseResultEntity> {
     long otherUserId;
-    int msgChannelType;//渠道类型 1.好友聊天 2.漂流瓶
-    long driftBottleId;
 
     public clearAllHistoryMsgApi setOtherUserId(long otherUserId) {
         this.otherUserId = otherUserId;
-        return this;
-    }
-
-    public clearAllHistoryMsgApi setMsgChannelType(int msgChannelType) {
-        this.msgChannelType = msgChannelType;
-        return this;
-    }
-
-    public clearAllHistoryMsgApi setDriftBottleId(long driftBottleId) {
-        this.driftBottleId = driftBottleId;
         return this;
     }
 
@@ -35,6 +23,6 @@ public class clearAllHistoryMsgApi extends BaseEntity<BaseResultEntity> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.clearAllHistoryMsg(otherUserId, msgChannelType, driftBottleId);
+        return methods.clearAllHistoryMsg(otherUserId);
     }
 }

@@ -11,12 +11,11 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
-import com.zb.lib_base.api.clearAllHistoryMsgApi;
+import com.zb.lib_base.api.clearAllDriftBottleHistoryMsgApi;
 import com.zb.lib_base.api.myBottleListApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.api.pickBottleApi;
-import com.zb.lib_base.api.thirdReadChatApi;
 import com.zb.lib_base.db.BottleCacheDb;
 import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.http.HttpManager;
@@ -322,12 +321,12 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     }
 
     private void clearAllHistoryMsg(long otherUserId, long driftBottleId) {
-        clearAllHistoryMsgApi api = new clearAllHistoryMsgApi(new HttpOnNextListener() {
+        clearAllDriftBottleHistoryMsgApi api = new clearAllDriftBottleHistoryMsgApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
 
             }
-        }, activity).setOtherUserId(otherUserId).setMsgChannelType(2).setDriftBottleId(driftBottleId);
+        }, activity).setOtherUserId(otherUserId).setDriftBottleId(driftBottleId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

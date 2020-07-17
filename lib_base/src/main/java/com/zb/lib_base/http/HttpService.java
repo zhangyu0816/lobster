@@ -306,10 +306,9 @@ public interface HttpService {
     /******************************* 对话 **********************************/
 
     // 未读会话列表
-    @GET("api/Contact_chatList")
+    @GET("api/Contact_thirdChatList")
     Observable<BaseResultEntity<List<ChatList>>> chatList(@Query("pageNo") int pageNo, @Query("pageSize") int pageSize,
-                                                          @Query("isPublicAccount") int isPublicAccount,
-                                                          @Query("msgChannelType") int msgChannelType);
+                                                          @Query("isPublicAccount") int isPublicAccount);
 
     // 获取阿里百川登录账号
     @GET("api/Contact_myImAccountInfo")
@@ -325,21 +324,20 @@ public interface HttpService {
 
     // 清空用户消息
     @GET("api/Contact_readOverHistoryMsg")
-    Observable<BaseResultEntity> readOverHistoryMsg(@Query("otherUserId") long otherUserId, @Query("messageId") long messageId,
-                                                    @Query("msgChannelType") int msgChannelType, @Query("driftBottleId") long driftBottleId);
+    Observable<BaseResultEntity> readOverHistoryMsg(@Query("otherUserId") long otherUserId, @Query("messageId") long messageId);
 
     // 第三方消息
     @GET("api/Contact_thirdHistoryMsgList")
     Observable<BaseResultEntity<List<HistoryMsg>>> thirdHistoryMsgList(@Query("otherUserId") long otherUserId, @Query("pageNo") int pageNo,
-                                                                       @Query("imPlatformType") int imPlatformType, @Query("msgChannelType") int msgChannelType);
+                                                                       @Query("imPlatformType") int imPlatformType);
 
     // 清除第三方未读会话
     @GET("api/Contact_thirdReadChat")
-    Observable<BaseResultEntity> thirdReadChat(@QueryMap Map<String, String> map);
+    Observable<BaseResultEntity> thirdReadChat(@Query("otherUserId") long otherUserId);
 
+    // 清除与这个人的消息
     @GET("api/Contact_clearHistoryMsg")
-    Observable<BaseResultEntity> clearAllHistoryMsg(@Query("otherUserId") long otherUserId, @Query("msgChannelType") int msgChannelType,
-                                                    @Query("driftBottleId") long driftBottleId);
+    Observable<BaseResultEntity> clearAllHistoryMsg(@Query("otherUserId") long otherUserId);
 
     /******************************* 漂流瓶 **********************************/
 
@@ -377,8 +375,17 @@ public interface HttpService {
                                                                         @Query("pageNo") int pageNo);
 
     // 漂流瓶未读会话列表
-    @GET("api/Contact_driftBottleChatList")
+    @GET("api/DriftBottle_chatList")
     Observable<BaseResultEntity<List<BottleCache>>> driftBottleChatList(@Query("isPublicAccount") int isPublicAccount, @Query("pageNo") int pageNo);
+
+    // 清除与这个人的消息
+    @GET("api/DriftBottle_clearHistoryMsg")
+    Observable<BaseResultEntity> clearAllDriftBottleHistoryMsg(@Query("otherUserId") long otherUserId, @Query("driftBottleId") long driftBottleId);
+
+    // 清空用户消息
+    @GET("api/DriftBottle_readOverHistoryMsg")
+    Observable<BaseResultEntity> readOverDriftBottleHistoryMsg(@Query("otherUserId") long otherUserId, @Query("driftBottleId") long driftBottleId,
+                                                               @Query("messageId") long messageId);
 
     /******************************* 我的 **********************************/
 
