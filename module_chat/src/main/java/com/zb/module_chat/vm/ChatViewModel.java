@@ -31,6 +31,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
+import com.zb.lib_base.api.clearAllHistoryMsgApi;
 import com.zb.lib_base.api.dynDetailApi;
 import com.zb.lib_base.api.historyMsgListApi;
 import com.zb.lib_base.api.myImAccountInfoApi;
@@ -280,7 +281,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                 } else {
                     otherImAccountInfoApi();
                 }
-                thirdReadChat();
+//                thirdReadChat();
+                clearAllHistoryMsg(otherUserId);
                 new Thread(() -> historyMsgList(1)).start();
             }
         }, activity).setOtherUserId(otherUserId);
@@ -655,16 +657,24 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         }
     }
 
-    /**
-     * 清除未读数量
-     */
-    private void thirdReadChat() {
-        thirdReadChatApi api = new thirdReadChatApi(new HttpOnNextListener() {
+    //    /**
+//     * 清除未读数量
+//     */
+//    private void thirdReadChat() {
+//        thirdReadChatApi api = new thirdReadChatApi(new HttpOnNextListener() {
+//            @Override
+//            public void onNext(Object o) {
+//
+//            }
+//        }, activity).setOtherUserId(otherUserId).setDriftBottleId(0).setMsgChannelType(1);
+//        HttpManager.getInstance().doHttpDeal(api);
+//    }
+    private void clearAllHistoryMsg(long otherUserId) {
+        clearAllHistoryMsgApi api = new clearAllHistoryMsgApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-
             }
-        }, activity).setOtherUserId(otherUserId).setDriftBottleId(0).setMsgChannelType(1);
+        }, activity).setOtherUserId(otherUserId).setMsgChannelType(1).setDriftBottleId(0);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

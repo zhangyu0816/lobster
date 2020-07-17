@@ -53,7 +53,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
             }
         };
 
-        humanFaceReceiver = new BaseReceiver(activity,"lobster_humanFace") {
+        humanFaceReceiver = new BaseReceiver(activity, "lobster_humanFace") {
             @Override
             public void onReceive(Context context, Intent intent) {
                 humanFaceStatus();
@@ -114,7 +114,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
 
     @Override
     public void toRule(View view) {
-        ActivityUtils.getMineWeb("隐私政策", "");
+        ActivityUtils.getMineWeb("隐私政策", HttpManager.BASE_URL + "mobile/xiagu_privacy_protocol.html");
     }
 
     @Override

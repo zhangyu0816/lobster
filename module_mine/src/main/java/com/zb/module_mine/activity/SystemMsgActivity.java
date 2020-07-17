@@ -1,5 +1,7 @@
 package com.zb.module_mine.activity;
 
+import android.view.KeyEvent;
+
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_mine.BR;
@@ -27,5 +29,14 @@ public class SystemMsgActivity extends MineBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         viewModel.onDestroy();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            viewModel.back(null);
+            return true;
+        }
+        return false;
     }
 }

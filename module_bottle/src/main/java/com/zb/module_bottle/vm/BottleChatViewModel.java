@@ -165,6 +165,10 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     @Override
     public void back(View view) {
         super.back(view);
+        try {
+            mConversationService.markReaded(conversation);
+        } catch (Exception e) {
+        }
         activity.finish();
     }
 
@@ -248,7 +252,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                 } else {
                     otherImAccountInfoApi();
                 }
-                thirdReadChat();
+//                thirdReadChat();
                 activity.sendBroadcast(new Intent("lobster_bottleNum"));
                 new Thread(() -> bottleHistoryMsgList(1)).start();
             }
@@ -538,18 +542,18 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         }
     }
 
-    /**
-     * 清除未读数量
-     */
-    private void thirdReadChat() {
-        thirdReadChatApi api = new thirdReadChatApi(new HttpOnNextListener() {
-            @Override
-            public void onNext(Object o) {
-
-            }
-        }, activity).setOtherUserId(otherUserId).setMsgChannelType(2).setDriftBottleId(driftBottleId);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
+//    /**
+//     * 清除未读数量
+//     */
+//    private void thirdReadChat() {
+//        thirdReadChatApi api = new thirdReadChatApi(new HttpOnNextListener() {
+//            @Override
+//            public void onNext(Object o) {
+//
+//            }
+//        }, activity).setOtherUserId(otherUserId).setMsgChannelType(2).setDriftBottleId(driftBottleId);
+//        HttpManager.getInstance().doHttpDeal(api);
+//    }
 
     /**
      * 阿里百川登录账号

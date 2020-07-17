@@ -1,6 +1,7 @@
 package com.zb.module_bottle.activity;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -43,5 +44,14 @@ public class BottleChatActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         viewModel.onDestroy();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            viewModel.back(null);
+            return true;
+        }
+        return false;
     }
 }

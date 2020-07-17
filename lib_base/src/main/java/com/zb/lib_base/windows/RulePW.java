@@ -74,6 +74,7 @@ public class RulePW extends PopupWindow {
         });
 
         mBinding.tvRule2.setOnClickListener(v12 -> {
+            ActivityUtils.getMineWeb("隐私政策", HttpManager.BASE_URL + "mobile/xiagu_privacy_protocol.html");
         });
 
         mBinding.tvSure.setOnClickListener(v1 -> {

@@ -306,7 +306,7 @@ public interface HttpService {
     /******************************* 对话 **********************************/
 
     // 未读会话列表
-    @GET("api/Contact_thirdChatList")
+    @GET("api/Contact_chatList")
     Observable<BaseResultEntity<List<ChatList>>> chatList(@Query("pageNo") int pageNo, @Query("pageSize") int pageSize,
                                                           @Query("isPublicAccount") int isPublicAccount,
                                                           @Query("msgChannelType") int msgChannelType);
@@ -333,7 +333,7 @@ public interface HttpService {
     Observable<BaseResultEntity<List<HistoryMsg>>> thirdHistoryMsgList(@Query("otherUserId") long otherUserId, @Query("pageNo") int pageNo,
                                                                        @Query("imPlatformType") int imPlatformType, @Query("msgChannelType") int msgChannelType);
 
-    // 获取第三方未读会话
+    // 清除第三方未读会话
     @GET("api/Contact_thirdReadChat")
     Observable<BaseResultEntity> thirdReadChat(@QueryMap Map<String, String> map);
 

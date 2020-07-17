@@ -119,7 +119,6 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                 }
                 otherImAccountInfoApi(otherUserId);
                 clearAllHistoryMsg(otherUserId);
-                thirdReadChat(otherUserId);
             }
         };
     }
@@ -178,7 +177,6 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                 chatListDb.deleteChatMsg(otherUserId);
                 otherImAccountInfoApi(otherUserId);
                 clearAllHistoryMsg(otherUserId);
-                thirdReadChat(otherUserId);
                 activity.sendBroadcast(new Intent("lobster_pairList"));
             }
 
@@ -215,22 +213,9 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
         clearAllHistoryMsgApi api = new clearAllHistoryMsgApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-
-            }
-        }, activity).setOtherUserId(otherUserId).setMsgChannelType(1).setDriftBottleId(0);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    /**
-     * 清除未读数量
-     */
-    private void thirdReadChat(long otherUserId) {
-        thirdReadChatApi api = new thirdReadChatApi(new HttpOnNextListener() {
-            @Override
-            public void onNext(Object o) {
                 activity.sendBroadcast(new Intent("lobster_unReadCount"));
             }
-        }, activity).setOtherUserId(otherUserId).setDriftBottleId(0).setMsgChannelType(1);
+        }, activity).setOtherUserId(otherUserId).setMsgChannelType(1).setDriftBottleId(0);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

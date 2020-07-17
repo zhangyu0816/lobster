@@ -258,7 +258,6 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
 
                 otherImAccountInfoApi(otherUserId);
                 clearAllHistoryMsg(otherUserId, bottleInfo.getDriftBottleId());
-                thirdReadChat(otherUserId, bottleInfo.getDriftBottleId());
                 activity.sendBroadcast(new Intent("lobster_bottleNum"));
                 if (bottleInfoList.size() == 0) {
                     onRefresh(mBinding.refresh);
@@ -324,19 +323,6 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
 
     private void clearAllHistoryMsg(long otherUserId, long driftBottleId) {
         clearAllHistoryMsgApi api = new clearAllHistoryMsgApi(new HttpOnNextListener() {
-            @Override
-            public void onNext(Object o) {
-
-            }
-        }, activity).setOtherUserId(otherUserId).setMsgChannelType(2).setDriftBottleId(driftBottleId);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    /**
-     * 清除未读数量
-     */
-    private void thirdReadChat(long otherUserId, long driftBottleId) {
-        thirdReadChatApi api = new thirdReadChatApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
 

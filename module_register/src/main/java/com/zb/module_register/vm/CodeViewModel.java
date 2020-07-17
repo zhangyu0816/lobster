@@ -66,7 +66,8 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
     public void back(View view) {
         super.back(view);
         ActivityUtils.getRegisterPhone(isLogin);
-        timer.cancel();
+        if (timer != null)
+            timer.cancel();
         activity.finish();
     }
 
@@ -74,7 +75,8 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
     public void right(View view) {
         super.right(view);
         ActivityUtils.getRegisterLogin();
-        timer.cancel();
+        if (timer != null)
+            timer.cancel();
         activity.finish();
     }
 

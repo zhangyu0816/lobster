@@ -9,6 +9,10 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 
+import com.alibaba.mobileim.contact.IYWContact;
+import com.alibaba.mobileim.contact.YWContactFactory;
+import com.alibaba.mobileim.conversation.IYWConversationService;
+import com.alibaba.mobileim.conversation.YWConversation;
 import com.maning.imagebrowserlibrary.MNImage;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -16,12 +20,17 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.clearHistoryMsgApi;
+import com.zb.lib_base.api.myImAccountInfoApi;
+import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.api.systemHistoryMsgListApi;
+import com.zb.lib_base.api.thirdReadChatApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.ResFileDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
+import com.zb.lib_base.imcore.LoginSampleHelper;
+import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DownLoad;
@@ -51,6 +60,10 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
     private SoundView soundView;
     private ObjectAnimator animator;
     private BaseReceiver finishRefreshReceiver;
+    private LoginSampleHelper loginHelper;
+    private String otherIMUserId;
+    private YWConversation conversation;
+    private IYWConversationService mConversationService;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -66,6 +79,12 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
                 mBinding.refresh.finishLoadMore();
             }
         };
+        loginHelper = LoginSampleHelper.getInstance();
+        if (loginHelper.getImCore() == null) {
+            myImAccountInfoApi();
+        } else {
+            otherImAccountInfoApi();
+        }
     }
 
     public void onDestroy() {
@@ -75,6 +94,10 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
     @Override
     public void back(View view) {
         super.back(view);
+        try {
+            mConversationService.markReaded(conversation);
+        } catch (Exception e) {
+        }
         activity.finish();
     }
 
@@ -195,4 +218,47 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
             drawable = null;
         }
     }
+
+    /**
+     * 阿里百川登录账号
+     */
+    private void myImAccountInfoApi() {
+        myImAccountInfoApi api = new myImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
+            @Override
+            public void onNext(ImAccount o) {
+                loginHelper.loginOut_Sample();
+                loginHelper.login_Sample(activity, o.getImUserId(), o.getImPassWord());
+                otherImAccountInfoApi();
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 对方的阿里百川账号
+     */
+    private void otherImAccountInfoApi() {
+        otherImAccountInfoApi api = new otherImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
+            @Override
+            public void onNext(ImAccount o) {
+                otherIMUserId = o.getImUserId();
+                mConversationService = loginHelper.getConversationService();
+                conversation = mConversationService.getConversationByUserId(otherIMUserId, LoginSampleHelper.APP_KEY);
+                checkConversation();
+            }
+        }, activity);
+        api.setOtherUserId(BaseActivity.systemUserId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 检查 conversation
+     */
+    private void checkConversation() {
+        if (conversation == null) { // 这里必须判空
+            IYWContact contact = YWContactFactory.createAPPContact(otherIMUserId, LoginSampleHelper.APP_KEY);
+            conversation = mConversationService.getConversationCreater().createConversationIfNotExist(contact);
+        }
+    }
+
 }
