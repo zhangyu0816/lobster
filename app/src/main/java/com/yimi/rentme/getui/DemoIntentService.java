@@ -103,6 +103,7 @@ public class DemoIntentService extends GTIntentService {
                     nmc.notify(null, 2, builder.build());
                     if (notificationBasicStyle == 7) {
                         context.sendBroadcast(new Intent("lobster_updateChat"));
+                        context.sendBroadcast(new Intent("lobster_newDynMsgAllNum"));
                     }
                     appSound(context);
                 } else {

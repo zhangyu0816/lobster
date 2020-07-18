@@ -49,12 +49,38 @@ public class WithdrawViewModel extends BaseViewModel implements WithdrawVMInterf
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable editable) {
                 if (!mBinding.getMoney().isEmpty()) {
+                    String s = editable.toString();
+                    if (s.contains(".")) {
+                        if (s.length() - 1 - s.indexOf(".") > 2) {
+                            s = s.substring(0, s.indexOf(".") + (2 + 1));
+                            mBinding.setMoney(s);
+                        }
+                    }
+
+                    //限制只能输入一次小数点
+                    if (s.contains(".")) {
+                        if (s.indexOf(".", s.indexOf(".") + 1) > 0) {
+                            mBinding.setMoney(s.substring(0, s.length() - 1));
+                        }
+                    }
+
+                    //第一次输入为点的时候
+                    if (s.trim().equals(".")) {
+                        mBinding.setMoney("0" + s);
+                    }
+
+                    //个位数为0的时候
+                    if (s.startsWith("0") && s.trim().length() > 1) {
+                        if (!s.substring(1, 2).equals(".")) {
+                            mBinding.setMoney(s.subSequence(0, 1).toString());
+                        }
+                    }
+                    mBinding.edMoney.setSelection(s.length());
+
                     if (MineApp.walletInfo.getCanWithdrawCreditWallet() < Float.parseFloat(mBinding.getMoney())) {
                         mBinding.setMoney(MineApp.walletInfo.getCanWithdrawCreditWallet() + "");
-                        mBinding.edMoney.setText(MineApp.walletInfo.getCanWithdrawCreditWallet() + "");
-                        mBinding.edMoney.setSelection(mBinding.getMoney().length());
                     }
                 }
             }

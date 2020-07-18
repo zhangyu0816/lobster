@@ -54,30 +54,36 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                     chatMsgList.addAll(chatListDb.getChatList(5));
                     chatMsgList.addAll(chatListDb.getChatList(4));
                     adapter.notifyDataSetChanged();
+                    activity.sendBroadcast(new Intent("lobster_updateRed"));
                 } else {
                     int position = -1;
                     if (chatMsgList.size() > 0) {
                         for (int i = 0; i < chatMsgList.size(); i++) {
-                            if (chatMsgList.get(i).getUserId() == userId) {
+                            if (chatMsgList.get(i) != null && chatMsgList.get(i).getUserId() == userId) {
                                 position = i;
                                 break;
                             }
                         }
                     }
-
-
+                    ChatList chatList = chatListDb.getChatMsg(userId, userId == BaseActivity.dynUserId ? 5 : 4);
+                    if (chatList == null) {
+                        mBinding.refresh.finishRefresh();
+                        return;
+                    }
                     if (updateImage) {
                         if (position != -1) {
-                            chatMsgList.set(position, chatListDb.getChatMsg(userId, userId == BaseActivity.dynUserId ? 5 : 4));
+                            chatMsgList.set(position, chatList);
                             adapter.notifyItemChanged(position);
+                            activity.sendBroadcast(new Intent("lobster_updateRed"));
                         }
                     } else {
                         if (position != -1) {
                             adapter.notifyItemRemoved(position);
                             chatMsgList.remove(position);
                         }
-                        chatMsgList.add(0, chatListDb.getChatMsg(userId, userId == BaseActivity.dynUserId ? 5 : 4));
+                        chatMsgList.add(0, chatList);
                         adapter.notifyDataSetChanged();
+                        activity.sendBroadcast(new Intent("lobster_updateRed"));
                     }
                 }
                 mBinding.refresh.finishRefresh();
@@ -91,7 +97,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                 if (chatMsgList.size() > 0) {
                     for (int i = 0; i < chatMsgList.size(); i++) {
                         ChatList item = chatMsgList.get(i);
-                        if (item.getUserId() == otherUserId) {
+                        if (item != null && item.getUserId() == otherUserId) {
                             position = i;
                             break;
                         }
@@ -101,6 +107,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                     adapter.notifyItemRemoved(position);
                     chatMsgList.remove(position);
                     adapter.notifyDataSetChanged();
+                    activity.sendBroadcast(new Intent("lobster_updateRed"));
                 }
 
             }
@@ -127,6 +134,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                 chatMsgList.add(item);
         }
         adapter = new ChatAdapter<>(activity, R.layout.item_chat_list, chatMsgList, this);
+        activity.sendBroadcast(new Intent("lobster_updateRed"));
         callback = new SimpleItemTouchHelperCallback(adapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(mBinding.chatList);
@@ -163,6 +171,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
             @Override
             public void cancel() {
                 adapter.notifyItemChanged(position);
+                activity.sendBroadcast(new Intent("lobster_updateRed"));
             }
         });
     }

@@ -8,15 +8,19 @@ import android.view.View;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.attentionDynApi;
 import com.zb.lib_base.api.dynCancelLikeApi;
 import com.zb.lib_base.api.dynDoLikeApi;
+import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
+import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
+import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_home.R;
@@ -128,17 +132,18 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
         ActivityUtils.getBottleMain();
     }
 
+    private int index = 0;
+    private int start;
+
     @Override
     public void attentionDyn() {
         attentionDynApi api = new attentionDynApi(new HttpOnNextListener<List<DiscoverInfo>>() {
             @Override
             public void onNext(List<DiscoverInfo> o) {
                 mBinding.noNetLinear.setVisibility(View.GONE);
-                int start = discoverInfoList.size();
+                start = discoverInfoList.size();
                 discoverInfoList.addAll(o);
-                adapter.notifyItemRangeChanged(start, discoverInfoList.size());
-                mBinding.refresh.finishRefresh();
-                mBinding.refresh.finishLoadMore();
+                setImage();
             }
 
             @Override
@@ -158,12 +163,43 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    private void setImage() {
+        DiscoverInfo discoverInfo = discoverInfoList.get(index);
+        if (!attentionDb.isAttention(discoverInfo.getOtherUserId())) {
+            otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
+                @Override
+                public void onNext(MemberInfo o) {
+                    attentionDb.saveAttention(new AttentionInfo(discoverInfo.getOtherUserId(), o.getNick(), o.getImage(), true, BaseActivity.userId));
+                    if (index < discoverInfoList.size() - 1) {
+                        index++;
+                        setImage();
+                    } else {
+                        adapter.notifyItemRangeChanged(start, discoverInfoList.size());
+                        mBinding.refresh.finishRefresh();
+                        mBinding.refresh.finishLoadMore();
+                    }
+                }
+            }, activity).setOtherUserId(discoverInfo.getOtherUserId());
+            HttpManager.getInstance().doHttpDeal(api);
+        } else {
+            if (index < discoverInfoList.size() - 1) {
+                index++;
+                setImage();
+            } else {
+                adapter.notifyItemRangeChanged(start, discoverInfoList.size());
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
+            }
+        }
+    }
+
     @Override
     public void onRefreshForNet(View view) {
         // 下拉刷新
         mBinding.noNetLinear.setVisibility(View.GONE);
         mBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
+        index = 0;
         discoverInfoList.clear();
         adapter.notifyDataSetChanged();
         attentionDyn();

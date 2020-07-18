@@ -47,7 +47,7 @@
                     android:id="@+id/roundImageView"
                     countSize="@{true}"
                     defaultRes="@{ObjectUtils.getDefaultRes()}"
-                    imageUrl='@{item.videoUrl.isEmpty()?(item.images.isEmpty()?item.image:item.images.split(",")[0]):item.videoUrl}'
+                    imageUrl='@{item.videoUrl.isEmpty()?(item.images.isEmpty()?viewModel.attentionDb.getAttentionInfo(item.otherUserId).image:item.images.split(",")[0]):item.videoUrl}'
                     viewHeightSize="@{0}"
                     viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.47f)}"
                     android:layout_width="match_parent"

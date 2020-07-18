@@ -94,7 +94,7 @@ public class ChatListDb extends BaseDao {
     public int getAllUnReadNum() {
         beginTransaction();
         int unReadNum = 0;
-        RealmResults<ChatList> results = realm.where(ChatList.class).notEqualTo("chatType", 1).equalTo("mainUserId", BaseActivity.userId).findAll();
+        RealmResults<ChatList> results = realm.where(ChatList.class).notEqualTo("noReadNum", 0).notEqualTo("chatType", 1).equalTo("mainUserId", BaseActivity.userId).findAll();
         if (results.size() > 0) {
             for (ChatList chatList : results) {
                 unReadNum += chatList.getNoReadNum();

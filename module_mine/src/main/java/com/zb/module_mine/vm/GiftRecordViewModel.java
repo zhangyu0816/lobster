@@ -49,7 +49,6 @@ public class GiftRecordViewModel extends BaseViewModel implements GiftRecordVMIn
 
     @Override
     public void incomeDeposit(View view) {
-//        new TextPW(activity, mBinding.getRoot(), "收益押金说明", "说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明说明");
     }
 
     @Override
@@ -74,7 +73,7 @@ public class GiftRecordViewModel extends BaseViewModel implements GiftRecordVMIn
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    new TextPW(activity, mBinding.getRoot(), "实名认证", position == 1?"你还未实名认证无法提现,请前往提交实名认证信息！":"你还未实名认证无法添加银行卡,请前往提交实名认证信息！", "去认证", () -> ActivityUtils.getMineAuthentication(new Authentication()));
+                    new TextPW(activity, mBinding.getRoot(), "实名认证", position == 1 ? "你还未实名认证无法提现,请前往提交实名认证信息！" : "你还未实名认证无法添加银行卡,请前往提交实名认证信息！", "去认证", () -> ActivityUtils.getMineAuthentication(new Authentication()));
                 }
             }
         }, activity);

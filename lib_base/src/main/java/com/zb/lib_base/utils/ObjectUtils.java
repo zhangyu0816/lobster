@@ -269,6 +269,14 @@ public class ObjectUtils {
         }
     }
 
+    public static String feedbackDetailText(int replyState) {
+        if (replyState == 1) {
+            return "已回复";
+        } else {
+            return "待处理";
+        }
+    }
+
     public static String idCardText(int position) {
         if (position == 0) {
             return "身份证正面";

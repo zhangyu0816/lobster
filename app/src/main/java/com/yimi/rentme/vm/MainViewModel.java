@@ -93,6 +93,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private BaseReceiver mainSelectReceiver;
     private BaseReceiver newsCountReceiver;
     private BaseReceiver unReadCountReceiver;
+    private BaseReceiver newDynMsgAllNumReceiver;
     private AreaDb areaDb;
     private HistoryMsgDb historyMsgDb;
 
@@ -236,6 +237,13 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             }
         };
 
+        newDynMsgAllNumReceiver = new BaseReceiver(activity, "lobster_newDynMsgAllNum") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                newDynMsgAllNum(true);
+            }
+        };
+
         resumeContactNumReceiver = new BaseReceiver(activity, "lobster_resumeContactNum") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -305,6 +313,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         mainSelectReceiver.unregisterReceiver();
         newsCountReceiver.unregisterReceiver();
         unReadCountReceiver.unregisterReceiver();
+        newDynMsgAllNumReceiver.unregisterReceiver();
     }
 
     private boolean isNotificationEnabled() {

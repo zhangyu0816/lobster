@@ -9,12 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AttentionDb;
 import com.zb.lib_base.db.GoodDb;
 import com.zb.lib_base.db.MineInfoDb;
@@ -89,12 +91,19 @@ public class BaseViewModel implements BaseVMInterface {
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
             if (tab != null) {
-                tab.setCustomView(getTabView(tabNames[i]));
+                if (tabNames[i].contains("-")) {
+                    String[] temp = tabNames[i].split("-");
+                    tab.setCustomView(getTabView(temp[0], Boolean.parseBoolean(temp[1])));
+                } else {
+                    tab.setCustomView(getTabView(tabNames[i], false));
+                }
+
             }
         }
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                MineApp.chatSelectIndex = tab.getPosition();
                 viewPager.setCurrentItem(tab.getPosition());
                 changeTab(tab, 18, selectColor);
             }
@@ -109,26 +118,29 @@ public class BaseViewModel implements BaseVMInterface {
 
             }
         });
-        changeTab(Objects.requireNonNull(tabLayout.getTabAt(0)), 18, selectColor);
+        changeTab(Objects.requireNonNull(tabLayout.getTabAt(MineApp.chatSelectIndex)), 18, selectColor);
     }
 
     // 改变选中状态
     private void changeTab(TabLayout.Tab tab, int size, int color) {
         View view = tab.getCustomView();
-        if (view instanceof TextView) {
+        if (view instanceof RelativeLayout) {
+            TextView textView = view.findViewById(R.id.tab_item_textview);
             // 改变 tab 选择状态下的字体大小
-            ((TextView) view).setTextSize(size);
-            ((TextView) view).setTextColor(ContextCompat.getColor(activity, color));
+            textView.setTextSize(size);
+            textView.setTextColor(ContextCompat.getColor(activity, color));
         }
     }
 
     /**
      * 自定义Tab的View * @param currentPosition * @return
      */
-    private View getTabView(String name) {
+    private View getTabView(String name, boolean showRed) {
         View view = LayoutInflater.from(activity).inflate(R.layout.layout_tab, null);
         TextView textView = view.findViewById(R.id.tab_item_textview);
+        TextView tvRed = view.findViewById(R.id.tv_red);
         textView.setText(name);
+        tvRed.setVisibility(showRed ? View.VISIBLE : View.GONE);
         return view;
     }
 

@@ -227,10 +227,12 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
         relievePairApi api = new relievePairApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                likeDb.deleteLike(otherUserId);
-                adapter.notifyItemRemoved(_selectIndex);
-                memberInfoList.remove(_selectIndex);
-                adapter.notifyDataSetChanged();
+                if (_selectIndex != -1) {
+                    likeDb.deleteLike(otherUserId);
+                    adapter.notifyItemRemoved(_selectIndex);
+                    memberInfoList.remove(_selectIndex);
+                    adapter.notifyDataSetChanged();
+                }
                 if (memberInfoList.size() == 0) {
                     // 下拉刷新
                     mBinding.refresh.setEnableLoadMore(true);

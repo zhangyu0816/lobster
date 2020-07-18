@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="15dp"
-                    android:text="VIP超级曝光（1次/天）"
+                    android:text="开通会员增加曝光量"
                     android:textColor="@color/black_4d4"
                     android:textSize="18sp"
                     android:textStyle="bold" />

@@ -77,6 +77,7 @@ public class MineApp extends MultiDexApplication {
     public static MineNewsCount mineNewsCount;
     public static ContactNum contactNum;
     public static int noReadBottleNum = 0;
+    public static int chatSelectIndex = 0;
 
     public static List<LikeMe> pairList = new ArrayList<>();
 
