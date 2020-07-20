@@ -110,17 +110,19 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
             public void onReceive(Context context, Intent intent) {
                 long otherUserId = intent.getLongExtra("otherUserId", 0);
                 boolean isRelieve = intent.getBooleanExtra("isRelieve", false);
-
-                if (isRelieve) {
-                    activity.sendBroadcast(new Intent("lobster_resumeContactNum"));
-                    likeDb.deleteLike(otherUserId);
+                try {
+                    if (isRelieve) {
+                        activity.sendBroadcast(new Intent("lobster_resumeContactNum"));
+                        likeDb.deleteLike(otherUserId);
+                    }
+                    historyMsgDb.deleteHistoryMsg(otherUserId, 1, 0);
+                    chatListDb.deleteChatMsg(otherUserId);
+                    otherImAccountInfoApi(otherUserId);
+                    clearAllHistoryMsg(otherUserId);
+                    thirdReadChat(otherUserId);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                historyMsgDb.deleteHistoryMsg(otherUserId, 1, 0);
-                chatListDb.deleteChatMsg(otherUserId);
-                otherImAccountInfoApi(otherUserId);
-                clearAllHistoryMsg(otherUserId);
-                thirdReadChat(otherUserId);
-
                 onRefresh(mBinding.refresh);
             }
         };

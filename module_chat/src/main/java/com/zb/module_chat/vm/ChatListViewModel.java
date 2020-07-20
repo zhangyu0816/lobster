@@ -94,22 +94,25 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
             public void onReceive(Context context, Intent intent) {
                 long otherUserId = intent.getLongExtra("otherUserId", 0);
                 int position = -1;
-                if (chatMsgList.size() > 0) {
-                    for (int i = 0; i < chatMsgList.size(); i++) {
-                        ChatList item = chatMsgList.get(i);
-                        if (item != null && item.getUserId() == otherUserId) {
-                            position = i;
-                            break;
+                try {
+                    if (chatMsgList.size() > 0) {
+                        for (int i = 0; i < chatMsgList.size(); i++) {
+                            ChatList item = chatMsgList.get(i);
+                            if (item != null && item.getUserId() == otherUserId) {
+                                position = i;
+                                break;
+                            }
                         }
                     }
+                    if (position != -1) {
+                        adapter.notifyItemRemoved(position);
+                        chatMsgList.remove(position);
+                        adapter.notifyDataSetChanged();
+                        activity.sendBroadcast(new Intent("lobster_updateRed"));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                if (position != -1) {
-                    adapter.notifyItemRemoved(position);
-                    chatMsgList.remove(position);
-                    adapter.notifyDataSetChanged();
-                    activity.sendBroadcast(new Intent("lobster_updateRed"));
-                }
-
             }
         };
     }

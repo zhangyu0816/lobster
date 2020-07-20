@@ -10,7 +10,7 @@ public class GiftRecord extends BaseObservable {
     long friendDynamicGiftId;  //详情id
     long friendDynamicId;
     String friendDynamicText = ""; //动态内容
-    String friendDynamicTitle = "";
+    String friendTitle = "";
     String giftName = "";    //礼物名称
     String giftImage = "";     //礼物图片
     int giftNumber;        //礼物数量
@@ -21,13 +21,13 @@ public class GiftRecord extends BaseObservable {
     int dycType;
 
     @Bindable
-    public String getFriendDynamicTitle() {
-        return friendDynamicTitle;
+    public String getFriendTitle() {
+        return friendTitle;
     }
 
-    public void setFriendDynamicTitle(String friendDynamicTitle) {
-        this.friendDynamicTitle = friendDynamicTitle;
-        notifyPropertyChanged(BR.friendDynamicTitle);
+    public void setFriendTitle(String friendTitle) {
+        this.friendTitle = friendTitle;
+        notifyPropertyChanged(BR.friendTitle);
     }
 
     @Bindable
