@@ -16,7 +16,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.zb.module_home"
+            android:authorities="com.zb.module_home.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

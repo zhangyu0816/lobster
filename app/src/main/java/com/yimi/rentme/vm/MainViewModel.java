@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.RelativeLayout;
@@ -72,6 +73,8 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import io.realm.Realm;
 
+import static android.provider.Settings.EXTRA_APP_PACKAGE;
+import static android.provider.Settings.EXTRA_CHANNEL_ID;
 import static com.umeng.socialize.utils.ContextUtil.getPackageName;
 
 public class MainViewModel extends BaseViewModel implements MainVMInterface {
@@ -328,23 +331,29 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     }
 
     private void gotoSet() {
-        Intent intent = new Intent();
+
         if (Build.VERSION.SDK_INT >= 26) {
             // android 8.0引导
-            intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
-            intent.putExtra("android.provider.extra.APP_PACKAGE", getPackageName());
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(EXTRA_APP_PACKAGE, getPackageName());
+            intent.putExtra(EXTRA_CHANNEL_ID, activity.getApplicationInfo().uid);
+            activity.startActivity(intent);
         } else if (Build.VERSION.SDK_INT >= 21) {
             // android 5.0-7.0
-            intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
             intent.putExtra("app_package", getPackageName());
             intent.putExtra("app_uid", activity.getApplicationInfo().uid);
+            activity.startActivity(intent);
         } else {
             // 其他
-            intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-            intent.setData(Uri.fromParts("package", getPackageName(), null));
+            Intent intent = new Intent();
+            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+            Uri uri = Uri.fromParts("package", getPackageName(), null);
+            intent.setData(uri);
+            activity.startActivity(intent);
         }
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        activity.startActivity(intent);
     }
 
     private void initFragments() {

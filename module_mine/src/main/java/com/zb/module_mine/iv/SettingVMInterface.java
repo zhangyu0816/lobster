@@ -17,6 +17,8 @@ public interface SettingVMInterface {
 
     void toFeedback(View view);
 
+    void toRegisterRule(View view);
+
     void toRule(View view);
 
     void toAboutUs(View view);

@@ -224,9 +224,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     @Override
     public void exposure(View view) {
         if (mineInfo.getMemberType() == 2) {
-            if (TextUtils.equals(PreferenceUtil.readStringValue(activity, "exposureTime"), DateUtil.getNow(DateUtil.yyyy_MM_dd))) {
-                SCToastUtil.showToast(activity, "今日超级爆光权限已使用", true);
-            } else {
+            if (!TextUtils.equals(PreferenceUtil.readStringValue(activity, "exposureTime"), DateUtil.getNow(DateUtil.yyyy_MM_dd))) {
                 new ExposurePW(activity, mBinding.getRoot(), e -> {
                     if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
                         mBinding.setVariable(BR.isOutLine, true);

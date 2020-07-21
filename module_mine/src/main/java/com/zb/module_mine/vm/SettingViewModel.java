@@ -103,6 +103,11 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     }
 
     @Override
+    public void toRegisterRule(View view) {
+        ActivityUtils.getMineWeb("注册协议", HttpManager.BASE_URL + "mobile/xiagu_reg_protocol.html");
+    }
+
+    @Override
     public void toRule(View view) {
         ActivityUtils.getMineWeb("隐私政策", HttpManager.BASE_URL + "mobile/xiagu_privacy_protocol.html");
     }

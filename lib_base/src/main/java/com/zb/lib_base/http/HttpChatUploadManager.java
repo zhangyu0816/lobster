@@ -19,8 +19,8 @@ import rx.schedulers.Schedulers;
  */
 public class HttpChatUploadManager {
     /*基础url*/
-    public static final String BASE_URL = "http://img01.weishangagent.com/";
-//    public static final String BASE_URL = "http://cimg.zuwo.la/";
+//    public static final String BASE_URL = "http://img01.weishangagent.com/";
+    public static final String BASE_URL = "http://cimg.zuwo.la/";
 
     /*超时设置*/
     private static final int DEFAULT_TIMEOUT = 6;

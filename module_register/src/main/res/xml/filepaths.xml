@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <files-path name="imageFiles" path="images/"/>
-    <files-path name="videoFiles" path="videos/"/>
-    <files-path name="audioFiles" path="audios/"/>
+    <cache-path name="imageFiles" path="images/"/>
+    <cache-path name="videoFiles" path="videos/"/>
+    <cache-path name="audioFiles" path="audios/"/>
 </paths>

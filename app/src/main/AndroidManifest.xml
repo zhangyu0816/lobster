@@ -28,7 +28,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.yimi.rentme"
+            android:authorities="com.yimi.rentme.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -67,7 +67,11 @@
             android:name=".getui.DemoPushService"
             android:exported="true"
             android:label="PushService"
-            android:process=":pushservice" />
+            android:process=":pushservice">
+            <intent-filter>
+                <action android:name="com.igexin.sdk.action.service.message" />
+            </intent-filter>
+        </service>
         <service android:name=".getui.DemoIntentService" />
         <!-- 个推SDK配置结束 -->
 
