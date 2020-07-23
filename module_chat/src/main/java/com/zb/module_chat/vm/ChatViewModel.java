@@ -635,7 +635,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
      * @param fileName
      */
     public void uploadImage(String fileName) {
-        photoManager.addFileUpload(-1, new File(fileName));
+        photoManager.addFileUpload(0, new File(fileName));
     }
 
     /**

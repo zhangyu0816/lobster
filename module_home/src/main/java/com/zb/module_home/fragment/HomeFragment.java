@@ -41,6 +41,6 @@ public class HomeFragment extends BaseFragment {
         fragments.add(FragmentUtils.getCardMemberDiscoverFragment(0));
         fragments.add(FragmentUtils.getCardMemberVideoFragment(0));
         homeFragBinding.viewPage.setAdapter(new FragmentAdapter(getChildFragmentManager(), fragments));
-        viewModel.initTabLayout(new String[]{"关注", "推荐", "小视频"}, homeFragBinding.tabLayout, homeFragBinding.viewPage, R.color.black_252, R.color.black_827);
+        viewModel.initTabLayout(new String[]{"关注", "推荐", "小视频"}, homeFragBinding.tabLayout, homeFragBinding.viewPage, R.color.black_252, R.color.black_827,0);
     }
 }

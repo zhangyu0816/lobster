@@ -9,4 +9,10 @@
         <item name="colorPrimaryDark">@android:color/white</item>
     </style>
 
+    <!-- 应用启动页(StartingWindow)的theme -->
+    <style name="StartingWindowTheme" parent="AppTheme">
+        <!--也可以设置成一张图片 -->
+        <item name="android:windowBackground">@mipmap/loading_bg_icon</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
 </resources>

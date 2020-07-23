@@ -113,8 +113,11 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
 
     @Override
     public void toMemberDetail(View view) {
-        if (discoverInfo != null)
+        if (discoverInfo != null) {
+            mBinding.setIsPlay(false);
+            mBinding.videoView.pause();
             ActivityUtils.getCardMemberDetail(discoverInfo.getUserId(), false);
+        }
     }
 
     @Override

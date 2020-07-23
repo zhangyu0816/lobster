@@ -2,6 +2,7 @@ package com.zb.module_home.activity;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -17,6 +18,7 @@ public class DiscoverVideoActivity extends BaseActivity {
     long friendDynId;
 
     private DiscoverVideoViewModel viewModel;
+    private boolean isFirst = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +36,16 @@ public class DiscoverVideoActivity extends BaseActivity {
         viewModel = new DiscoverVideoViewModel();
         viewModel.friendDynId = friendDynId;
         viewModel.setBinding(mBinding);
-        mBinding.setVariable(BR.viewModel,viewModel);
+        mBinding.setVariable(BR.viewModel, viewModel);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!isFirst) {
+            viewModel.videoPlay(null);
+        }
+        isFirst = false;
     }
 
     @Override

@@ -111,14 +111,18 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
             for (int i = 0; i < images.size() - 1; i++) {
                 imageList.add(images.get(i));
             }
-            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position,true, position12 -> {
-                int count = MineApp.selectMap.remove(MineApp.selectPathMap.get(images.get(position12)));
-                MineApp.cutImageViewMap.remove(MineApp.selectPathMap.get(images.get(position12)));
-                MineApp.selectPathMap.remove(images.get(position12));
-                for (Map.Entry<String, Integer> entry : MineApp.selectMap.entrySet()) {
-                    if (entry.getValue() > count) {
-                        MineApp.selectMap.put(entry.getKey(), entry.getValue() - 1);
+            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, true, position12 -> {
+                try {
+                    int count = MineApp.selectMap.remove(MineApp.selectPathMap.get(images.get(position12)));
+                    MineApp.cutImageViewMap.remove(MineApp.selectPathMap.get(images.get(position12)));
+                    MineApp.selectPathMap.remove(images.get(position12));
+                    for (Map.Entry<String, Integer> entry : MineApp.selectMap.entrySet()) {
+                        if (entry.getValue() > count) {
+                            MineApp.selectMap.put(entry.getKey(), entry.getValue() - 1);
+                        }
                     }
+                } catch (Exception e) {
+
                 }
                 imageAdapter.notifyItemRemoved(position12);
                 images.remove(position12);
@@ -149,7 +153,7 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
      */
     private void getPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission( "虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
+            performCodeWithPermission("虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
                         @Override
                         public void hasPermission() {
                             setPermissions();

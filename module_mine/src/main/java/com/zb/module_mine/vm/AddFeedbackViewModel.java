@@ -74,14 +74,19 @@ public class AddFeedbackViewModel extends BaseViewModel implements AddFeedbackVM
                 imageList.add(images.get(i));
             }
             MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, true, position12 -> {
-                int count = MineApp.selectMap.remove(MineApp.selectPathMap.get(images.get(position12)));
-                MineApp.cutImageViewMap.remove(MineApp.selectPathMap.get(images.get(position12)));
-                MineApp.selectPathMap.remove(images.get(position12));
-                for (Map.Entry<String, Integer> entry : MineApp.selectMap.entrySet()) {
-                    if (entry.getValue() > count) {
-                        MineApp.selectMap.put(entry.getKey(), entry.getValue() - 1);
+                try {
+                    int count = MineApp.selectMap.remove(MineApp.selectPathMap.get(images.get(position12)));
+                    MineApp.cutImageViewMap.remove(MineApp.selectPathMap.get(images.get(position12)));
+                    MineApp.selectPathMap.remove(images.get(position12));
+                    for (Map.Entry<String, Integer> entry : MineApp.selectMap.entrySet()) {
+                        if (entry.getValue() > count) {
+                            MineApp.selectMap.put(entry.getKey(), entry.getValue() - 1);
+                        }
                     }
+                } catch (Exception e) {
+
                 }
+
                 adapter.notifyItemRemoved(position12);
                 images.remove(position12);
                 adapter.notifyDataSetChanged();

@@ -110,7 +110,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         fragments.add(FragmentUtils.getCardMemberDiscoverFragment(1));
         fragments.add(FragmentUtils.getCardMemberVideoFragment(1));
         mBinding.viewPage.setAdapter(new FragmentAdapter(fm, fragments));
-        initTabLayout(new String[]{"动态", "小视频"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827);
+        initTabLayout(new String[]{"动态", "小视频"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, 0);
     }
 
     @Override

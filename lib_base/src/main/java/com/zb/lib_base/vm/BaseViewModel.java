@@ -85,7 +85,7 @@ public class BaseViewModel implements BaseVMInterface {
         new BottleQuestionPW(activity, mBinding.getRoot());
     }
 
-    public void initTabLayout(String[] tabNames, TabLayout tabLayout, ViewPager viewPager, int selectColor, int color) {
+    public void initTabLayout(String[] tabNames, TabLayout tabLayout, ViewPager viewPager, int selectColor, int color, int index) {
         tabLayout.setupWithViewPager(viewPager);
 
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
@@ -118,7 +118,7 @@ public class BaseViewModel implements BaseVMInterface {
 
             }
         });
-        changeTab(Objects.requireNonNull(tabLayout.getTabAt(MineApp.chatSelectIndex)), 18, selectColor);
+        changeTab(Objects.requireNonNull(tabLayout.getTabAt(index)), 18, selectColor);
     }
 
     // 改变选中状态
