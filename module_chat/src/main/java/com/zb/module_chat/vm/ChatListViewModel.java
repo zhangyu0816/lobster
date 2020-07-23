@@ -36,7 +36,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.ItemTouchHelper;
-
 import io.realm.Realm;
 
 public class ChatListViewModel extends BaseViewModel implements ChatListVMInterface, OnRefreshListener {

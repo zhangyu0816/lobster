@@ -2,7 +2,6 @@ package com.zb.module_home.activity;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;

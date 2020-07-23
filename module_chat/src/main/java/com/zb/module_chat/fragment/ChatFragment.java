@@ -2,7 +2,6 @@ package com.zb.module_chat.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseFragment;

@@ -3,10 +3,6 @@ package com.zb.module_chat.vm;
 import android.content.Context;
 import android.content.Intent;
 
-import androidx.annotation.NonNull;
-import androidx.databinding.ViewDataBinding;
-import androidx.recyclerview.widget.ItemTouchHelper;
-
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -38,6 +34,9 @@ import com.zb.module_chat.iv.ChatPairVMInterface;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.databinding.ViewDataBinding;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import io.realm.Realm;
 
 public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterface, OnRefreshListener, OnLoadMoreListener {
