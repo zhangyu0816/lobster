@@ -15,7 +15,7 @@ public class LoadingActivity extends AppBaseActivity {
 
     @Override
     public void initUI() {
-        fitComprehensiveScreen();
+//        fitComprehensiveScreen();
         // 个推注册
         PushManager.getInstance().initialize(this.getApplicationContext(), DemoPushService.class);
         PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), DemoIntentService.class);

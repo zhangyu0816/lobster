@@ -4,6 +4,8 @@
 
     <data>
 
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
         <variable
             name="viewModel"
             type="com.yimi.rentme.vm.LoadingViewModel" />
@@ -15,13 +17,15 @@
         android:layout_height="match_parent">
 
         <ImageView
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(1f)}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByHeight(1f)}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@mipmap/loading_bg_icon"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
