@@ -28,4 +28,6 @@ public interface OnSwipeListener<T> {
      */
     void onSwipedClear();
 
+    void onReset();
+
 }

@@ -1,6 +1,7 @@
 package com.zb.lib_base.views.card;
 
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.View;
 
 import java.util.List;
@@ -53,7 +54,7 @@ public class CardItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        swiped(viewHolder.itemView,  direction);
+        swiped(viewHolder.itemView, direction);
     }
 
     public void swiped(View view, int direction) {
@@ -64,6 +65,7 @@ public class CardItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
         if (mListener != null) {
             mListener.onSwiped(view, remove, direction == ItemTouchHelper.LEFT ? CardConfig.SWIPED_LEFT : CardConfig.SWIPED_RIGHT);
         }
+        view.setAlpha(1.0f);
         // 当没有数据时回调 mListener
         if (adapter.getItemCount() <= 3) {
             if (mListener != null) {
@@ -84,6 +86,7 @@ public class CardItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
         View itemView = viewHolder.itemView;
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             float ratio = dX / getThreshold(recyclerView, viewHolder);
+
             // ratio 最大为 1 或 -1
             if (ratio > 1) {
                 ratio = 1;
@@ -91,6 +94,10 @@ public class CardItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
                 ratio = -1;
             }
             itemView.setRotation(ratio * CardConfig.DEFAULT_ROTATE_DEGREE);
+            float value = 1.3f - Math.abs(ratio);
+            if (value < 0.5f)
+                value = 0f;
+            itemView.setAlpha(value);
             if (mListener != null) {
                 if (ratio != 0) {
                     mListener.onSwiping(itemView, ratio, ratio < 0 ? CardConfig.SWIPING_LEFT : CardConfig.SWIPING_RIGHT);
@@ -105,10 +112,17 @@ public class CardItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
         viewHolder.itemView.setRotation(0f);
+        if (mListener != null) {
+            mListener.onReset();
+        }
     }
 
     private float getThreshold(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        return recyclerView.getWidth() * getSwipeThreshold(viewHolder);
+        return recyclerView.getWidth() * 0.6f;
     }
 
+    @Override
+    public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
+        return 0.2f;
+    }
 }

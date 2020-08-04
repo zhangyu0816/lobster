@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnimationUtils;
@@ -279,12 +278,13 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     pairInfoList.clear();
                     adapter.notifyDataSetChanged();
                 }
+                int start = pairInfoList.size();
                 for (PairInfo pairInfo : o) {
                     if (!pairInfo.getMoreImages().isEmpty())
                         pairInfo.setImageList(Arrays.asList(pairInfo.getMoreImages().split("#")));
                     pairInfoList.add(pairInfo);
                 }
-                adapter.notifyDataSetChanged();
+                adapter.notifyItemRangeChanged(start, pairInfoList.size());
                 cardFragBinding.setIsOutLine(false);
                 cardFragBinding.setNoData(false);
             }
@@ -421,23 +421,12 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void onSwiping(View view, float ratio, int direction) {
-        Log.e("ratio", "ratio == " + ratio);
-        if (_direction != direction) {
-            Log.e("direction", "111111111111111");
-            _direction = direction;
-            if (animatorSet != null)
-                animatorSet.cancel();
-            initAnimation();
-        }
-
         if (direction == CardConfig.SWIPING_LEFT) {
             if (isAnimation) {
-                Log.e("direction", "222222222222222222");
                 startAnimation(cardFragBinding.ivDislike, MineApp.W / 2f + ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 100);
             }
         } else if (direction == CardConfig.SWIPING_RIGHT) {
             if (isAnimation) {
-                Log.e("direction", "333333333333333");
                 startAnimation(cardFragBinding.ivLike, 0 - MineApp.W / 2f - ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 100);
             }
         }
@@ -459,6 +448,11 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     @Override
     public void onSwipedClear() {
         prePairList(false);
+    }
+
+    @Override
+    public void onReset() {
+        initAnimation();
     }
 
     /**

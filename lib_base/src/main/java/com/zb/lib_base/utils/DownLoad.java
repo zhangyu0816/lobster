@@ -15,6 +15,7 @@ import io.realm.Realm;
 public class DownLoad {
 
     private static ResFileDb resFileDb;
+    private static RequestCallBack<File> back;
 
     public static void getFilePath(String fileUrl, String filePath, CallBack callBack) {
         if (resFileDb == null)
@@ -33,7 +34,7 @@ public class DownLoad {
     }
 
     private static void downloadVideo(String fileUrl, String filePath, CallBack callBack) {
-        DownLoadRetrofitHelper.httpClient.download(fileUrl, filePath, new RequestCallBack<File>() {
+        back = new RequestCallBack<File>() {
 
             @Override
             public void onSuccess(ResponseInfo<File> file) {
@@ -54,7 +55,13 @@ public class DownLoad {
                 super.onLoading(total, current, isUploading);
                 callBack.onLoading(total, current);
             }
-        });
+        };
+
+        DownLoadRetrofitHelper.httpClient.download(fileUrl, filePath, back);
+    }
+
+    public static void stop() {
+        back.onCancelled();
     }
 
     @FunctionalInterface
