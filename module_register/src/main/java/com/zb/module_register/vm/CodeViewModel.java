@@ -55,10 +55,10 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
         };
 
         // 验证码
-        if (!isLogin) {
-            registerCaptcha();
+        if (isLogin) {
+            loginCaptchaApi();
         } else {
-            mBinding.setRemark("获取短信验证码");
+            registerCaptcha();
         }
     }
 

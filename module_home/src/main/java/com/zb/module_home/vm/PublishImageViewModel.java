@@ -58,7 +58,6 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     public int cameraType = 0;
     private HomePublicImageBinding publicImageBinding;
     private PhotoManager photoManager;
-    private MineInfo mineInfo;
     private OnlyCompressOverBean onlyCompressOverBean;
     private BaseReceiver locationReceiver;
     private BaseReceiver deleteVideoReceiver;
@@ -78,14 +77,9 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        mineInfo = mineInfoDb.getMineInfo();
         publicImageBinding = (HomePublicImageBinding) binding;
         photoManager = new PhotoManager(activity, () -> {
-            if (videoUrl.isEmpty()) {
-                publishDyn(photoManager.jointWebUrl(","));
-            } else {
-                uploadVideo(photoManager.jointWebUrl(","));
-            }
+            publishDyn(photoManager.jointWebUrl(","));
             photoManager.deleteAllFile();
         });
         File videoPath = new File(activity.getCacheDir(), "videos");
@@ -103,12 +97,14 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
         deleteVideoReceiver = new BaseReceiver(activity, "lobster_deleteVideo") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                cameraType = 0;
                 images.clear();
                 images.add("add_image_icon");
                 adapter.notifyDataSetChanged();
             }
         };
+
+
+        setAdapter();
     }
 
     @Override
@@ -120,7 +116,11 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     @Override
     public void previewImage(int position) {
         if (cameraType == 1) {
-            ActivityUtils.getCameraVideoPlay(images.get(0));
+            if (TextUtils.equals(images.get(0),"add_image_icon")) {
+                getPermissions();
+            } else {
+                ActivityUtils.getCameraVideoPlay(images.get(0));
+            }
         } else {
             if (position == images.size() - 1) {
                 getPermissions();
@@ -184,7 +184,8 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                 if (file.length() > 3 * 1024 * 1024) {
                     compress(videoUrl);
                 } else {
-                    saveBitmapFile(ThumbnailUtils.createVideoThumbnail(videoUrl, MediaStore.Video.Thumbnails.MINI_KIND));
+                    uploadVideo();
+//                    saveBitmapFile(ThumbnailUtils.createVideoThumbnail(videoUrl, MediaStore.Video.Thumbnails.MINI_KIND));
                 }
             }
         }
@@ -255,18 +256,18 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                 SCToastUtil.showToast(activity, "压缩视频失败", true);
                 break;
             case 1:
-                photoManager.addFileUpload(0, videoImageFile);
+                uploadVideo();
                 break;
         }
         return false;
     });
 
-    private void uploadVideo(String image) {
+    private void uploadVideo() {
         uploadVideoApi api = new uploadVideoApi(new HttpOnNextListener<ResourceUrl>() {
             @Override
             public void onNext(ResourceUrl o) {
                 videoUrl = o.getUrl();
-                publishDyn(image);
+                publishDyn("");
             }
         }, activity).setFile(new File(videoUrl));
         HttpUploadManager.getInstance().doHttpDeal(api);
@@ -278,6 +279,11 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
             public void onNext(Object o) {
                 activity.sendBroadcast(new Intent("lobster_publish"));
                 SCToastUtil.showToast(activity, "发布成功", true);
+                MineApp.toPublish = false;
+                MineApp.cameraType = 0;
+                MineApp.isMore = false;
+                MineApp.filePath = "";
+                MineApp.time = 0;
                 back(null);
             }
         }, activity)
@@ -287,7 +293,6 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                 .setResTime((int) videoTime / 1000)
                 .setVideoUrl(videoUrl)
                 .setAddressInfo(publicImageBinding.getCityName());
-//                .setAddressInfo(PreferenceUtil.readStringValue(activity, "address"));
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -313,6 +318,15 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     }
 
     private void setPermissions() {
-        ActivityUtils.getCameraMain(activity, true, true);
+        if (MineApp.toPublish) {
+            MineApp.toContinue = true;
+            if (cameraType == 1) {
+                ActivityUtils.getCameraVideo(false);
+            } else {
+                ActivityUtils.getCameraMain(activity, true, true, false);
+            }
+        } else {
+            ActivityUtils.getCameraMain(activity, true, true, true);
+        }
     }
 }

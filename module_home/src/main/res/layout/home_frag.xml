@@ -4,6 +4,8 @@
 
     <data>
 
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
         <variable
             name="viewModel"
             type="com.zb.module_home.vm.HomeViewModel" />
@@ -40,13 +42,35 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/tab_layout" />
 
-        <ImageView
+
+        <RelativeLayout
             onClickDelayed="@{viewModel::publishDiscover}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(237)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(237)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="15dp"
-            app:srcCompat="@mipmap/discover_icon" />
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="15dp">
+
+            <View
+                android:id="@+id/circle_view"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(237)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(237)}"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/circle_yellow_fbc" />
+
+            <ImageView
+                imageRes="@{ObjectUtils.getDiscoverRes()}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(180)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(180)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+
     </RelativeLayout>
 </layout>

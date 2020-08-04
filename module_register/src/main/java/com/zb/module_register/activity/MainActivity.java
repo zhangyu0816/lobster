@@ -17,6 +17,7 @@ import com.zb.module_register.vm.MainViewModel;
 public class MainActivity extends RegisterBaseActivity {
 
     private long exitTime = 0;
+    private MainViewModel viewModel;
 
     @Override
     public int getRes() {
@@ -26,12 +27,18 @@ public class MainActivity extends RegisterBaseActivity {
     @Override
     public void initUI() {
         fitComprehensiveScreen();
-        MainViewModel viewModel = new MainViewModel();
+        viewModel = new MainViewModel();
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
         RegisterMainBinding binding = (RegisterMainBinding) mBinding;
         AdapterBinding.viewSize(binding.ivBoy, ObjectUtils.getViewSizeByWidth(300f / 1080f), ObjectUtils.getViewSizeByWidth(300f / 1080f));
         AdapterBinding.viewSize(binding.ivGirl, ObjectUtils.getViewSizeByWidth(300f / 1080f), ObjectUtils.getViewSizeByWidth(300f / 1080f));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 
     @Override

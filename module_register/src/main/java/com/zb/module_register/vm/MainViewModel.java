@@ -1,12 +1,15 @@
 package com.zb.module_register.vm;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.model.RegisterInfo;
@@ -22,6 +25,7 @@ import androidx.databinding.ViewDataBinding;
 public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
     private AMapLocation aMapLocation;
+    private BaseReceiver bindPhoneReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -32,6 +36,17 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         if (MineApp.cityName.isEmpty()) {
             getPermissions();
         }
+
+        bindPhoneReceiver = new BaseReceiver(activity, "lobster_bindPhone") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+            }
+        };
+    }
+
+    public void onDestroy() {
+        bindPhoneReceiver.unregisterReceiver();
     }
 
     @Override

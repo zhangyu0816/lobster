@@ -227,23 +227,23 @@ public class ActivityUtils {
     /*********************** 相册 **************************/
 
     // 相册主页
-    public static void getCameraMain(RxAppCompatActivity activity, boolean isMore, boolean showBottom) {
-        ARouter.getInstance().build(RouteUtils.Camera_Main).withBoolean("isMore", isMore).withBoolean("showBottom", showBottom).navigation(activity, 1001);
+    public static void getCameraMain(RxAppCompatActivity activity, boolean isMore, boolean showBottom, boolean showVideo) {
+        ARouter.getInstance().build(RouteUtils.Camera_Main).withBoolean("isMore", isMore).withBoolean("showBottom", showBottom).withBoolean("showVideo", showVideo).navigation(activity, 1001);
     }
 
     // 拍视频
-    public static void getCameraVideo() {
-        ARouter.getInstance().build(RouteUtils.Camera_Video).navigation();
+    public static void getCameraVideo(boolean showBottom) {
+        ARouter.getInstance().build(RouteUtils.Camera_Video).withBoolean("showBottom", showBottom).navigation();
     }
 
     // 拍照
-    public static void getCameraPhoto(boolean isMore, boolean showBottom) {
-        ARouter.getInstance().build(RouteUtils.Camera_Photo).withBoolean("isMore", isMore).withBoolean("showBottom", showBottom).navigation();
+    public static void getCameraPhoto(boolean isMore, boolean showBottom, boolean showVideo) {
+        ARouter.getInstance().build(RouteUtils.Camera_Photo).withBoolean("isMore", isMore).withBoolean("showBottom", showBottom).withBoolean("showVideo", showVideo).navigation();
     }
 
     // 选择视频
-    public static void getCameraVideos() {
-        ARouter.getInstance().build(RouteUtils.Camera_Videos).navigation();
+    public static void getCameraVideos(boolean showBottom) {
+        ARouter.getInstance().build(RouteUtils.Camera_Videos).withBoolean("showBottom", showBottom).navigation();
     }
 
     // 视频播放

@@ -83,6 +83,13 @@ public class MineApp extends MultiDexApplication {
 
     private static LinkedList<Activity> mActivityList = new LinkedList<>();
 
+    public static boolean toPublish = false;
+    public static boolean toContinue = false;
+    public static int cameraType = 0;
+    public static String filePath = "";
+    public static boolean isMore = false;
+    public static long time = 0;
+
     static {
         //设置全局的Header构建器
         SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {

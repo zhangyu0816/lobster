@@ -32,6 +32,10 @@
             name="showBottom"
             type="boolean" />
 
+        <variable
+            name="showVideo"
+            type="boolean" />
+
     </data>
 
     <RelativeLayout
@@ -152,7 +156,7 @@
             android:layout_alignParentBottom="true"
             android:gravity="center"
             android:orientation="horizontal"
-            android:visibility="@{isMore==showBottom?View.VISIBLE:View.GONE}">
+            android:visibility="@{showBottom?View.VISIBLE:View.GONE}">
 
             <TextView
                 android:layout_width="0dp"
@@ -160,9 +164,9 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="相册"
-                android:textStyle="bold"
                 android:textColor="@android:color/white"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="0dp"
@@ -173,7 +177,7 @@
                 android:text="拍视频"
                 android:textColor="@color/white_cc"
                 android:textSize="16sp"
-                android:visibility="@{showBottom?View.VISIBLE:View.GONE}" />
+                android:visibility="@{(isMore&amp;&amp;showVideo)?View.VISIBLE:View.GONE}" />
 
             <TextView
                 android:layout_width="0dp"

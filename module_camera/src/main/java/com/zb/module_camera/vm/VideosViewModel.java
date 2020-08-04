@@ -28,7 +28,7 @@ import androidx.databinding.ViewDataBinding;
 
 
 public class VideosViewModel extends BaseViewModel implements VideosVMInterface {
-
+    public boolean showBottom;
     private CameraVideosBinding videosBinding;
     public CameraAdapter adapter;
     private List<VideoInfo> videoInfoList = new ArrayList<>();
@@ -134,7 +134,7 @@ public class VideosViewModel extends BaseViewModel implements VideosVMInterface 
         }
         videosBinding.videoView.stopPlayback();//停止播放视频,并且释放
         videosBinding.videoView.suspend();//在任何状态下释放媒体播放器
-        ActivityUtils.getCameraVideo();
+        ActivityUtils.getCameraVideo(showBottom);
         activity.finish();
     }
 
@@ -142,11 +142,19 @@ public class VideosViewModel extends BaseViewModel implements VideosVMInterface 
     public void upload(View view) {
         videosBinding.videoView.stopPlayback();//停止播放视频,并且释放
         videosBinding.videoView.suspend();//在任何状态下释放媒体播放器
-        Intent data = new Intent("lobster_camera");
-        data.putExtra("cameraType", 1);
-        data.putExtra("filePath", videoInfo.getPath());
-        data.putExtra("time", (long) duration);
-        activity.sendBroadcast(data);
+        if (MineApp.toPublish&&!MineApp.toContinue) {
+            MineApp.cameraType = 1;
+            MineApp.isMore = false;
+            MineApp.filePath = videoInfo.getPath();
+            MineApp.time = (long) duration;
+            ActivityUtils.getHomePublishImage();
+        } else {
+            Intent data = new Intent("lobster_camera");
+            data.putExtra("cameraType", 1);
+            data.putExtra("filePath", videoInfo.getPath());
+            data.putExtra("time", (long) duration);
+            activity.sendBroadcast(data);
+        }
         activity.finish();
     }
 

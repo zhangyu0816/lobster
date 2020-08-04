@@ -2,6 +2,7 @@ package com.zb.module_camera.activity;
 
 import android.view.KeyEvent;
 
+import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
@@ -13,6 +14,8 @@ import com.zb.module_camera.vm.VideosViewModel;
 
 @Route(path = RouteUtils.Camera_Videos)
 public class VideosActivity extends CameraBaseActivity {
+    @Autowired(name = "showBottom")
+    boolean showBottom;
 
     private VideosViewModel viewModel;
 
@@ -24,6 +27,7 @@ public class VideosActivity extends CameraBaseActivity {
     @Override
     public void initUI() {
         viewModel = new VideosViewModel();
+        viewModel.showBottom = showBottom;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         AdapterBinding.viewSize(((CameraVideosBinding) mBinding).imagesList, MineApp.W, (int) (MineApp.H * 0.4f));

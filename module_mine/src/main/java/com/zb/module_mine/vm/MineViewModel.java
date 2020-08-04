@@ -45,8 +45,8 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mineInfo = mineInfoDb.getMineInfo();
-
         mBinding = (MineFragBinding) binding;
+        playAnimator(mBinding.circleView);
         mBinding.setMineNewsCount(MineApp.mineNewsCount);
         if (MineApp.contactNum != null) {
             mBinding.setContactNum(MineApp.contactNum);

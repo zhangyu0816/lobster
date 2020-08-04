@@ -15,6 +15,8 @@ public class PhotoActivity extends CameraBaseActivity {
     boolean isMore;
     @Autowired(name = "showBottom")
     boolean showBottom;
+    @Autowired(name = "showVideo")
+    boolean showVideo;
 
     private PhotoViewModel viewModel;
 
@@ -28,10 +30,12 @@ public class PhotoActivity extends CameraBaseActivity {
         viewModel = new PhotoViewModel();
         viewModel.isMore = isMore;
         viewModel.showBottom = showBottom;
+        viewModel.showVideo = showVideo;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.isMore, isMore);
         mBinding.setVariable(BR.showBottom, showBottom);
+        mBinding.setVariable(BR.showVideo, showVideo);
     }
 
     @Override

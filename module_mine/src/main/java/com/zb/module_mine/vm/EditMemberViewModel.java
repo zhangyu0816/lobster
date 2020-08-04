@@ -226,6 +226,6 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     }
 
     private void setPermissions() {
-        ActivityUtils.getCameraMain(activity, false, false);
+        ActivityUtils.getCameraMain(activity, false, true, false);
     }
 }

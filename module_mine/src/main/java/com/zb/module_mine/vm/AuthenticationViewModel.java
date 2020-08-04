@@ -168,6 +168,6 @@ public class AuthenticationViewModel extends BaseViewModel implements Authentica
     }
 
     private void setPermissions() {
-        ActivityUtils.getCameraMain(activity, false, false);
+        ActivityUtils.getCameraMain(activity, false, true, false);
     }
 }

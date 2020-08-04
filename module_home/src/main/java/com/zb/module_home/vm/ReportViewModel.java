@@ -170,6 +170,6 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
     }
 
     private void setPermissions() {
-        ActivityUtils.getCameraMain(activity, true, false);
+        ActivityUtils.getCameraMain(activity, true, false, false);
     }
 }

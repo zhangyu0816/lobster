@@ -148,6 +148,6 @@ public class AddFeedbackViewModel extends BaseViewModel implements AddFeedbackVM
     }
 
     private void setPermissions() {
-        ActivityUtils.getCameraMain(activity, true, false);
+        ActivityUtils.getCameraMain(activity, true, false, false);
     }
 }

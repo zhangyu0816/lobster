@@ -1,5 +1,8 @@
 package com.zb.lib_base.vm;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.text.InputFilter;
 import android.text.SpannableString;
@@ -7,6 +10,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -86,6 +90,8 @@ public class BaseViewModel implements BaseVMInterface {
     }
 
     public void initTabLayout(String[] tabNames, TabLayout tabLayout, ViewPager viewPager, int selectColor, int color, int index) {
+        if (tabLayout == null)
+            return;
         tabLayout.setupWithViewPager(viewPager);
 
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
@@ -160,6 +166,26 @@ public class BaseViewModel implements BaseVMInterface {
                 imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
             }
         }
+    }
+
+
+    public void playAnimator(View view) {
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 0.5f, 1).setDuration(2000);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 0.5f, 1).setDuration(2000);
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(view, "alpha", 1, 0).setDuration(2000);
+
+        scaleX.setRepeatCount(2000);
+        scaleX.setRepeatMode(ValueAnimator.RESTART);
+
+        scaleY.setRepeatCount(2000);
+        scaleY.setRepeatMode(ValueAnimator.RESTART);
+
+        alpha.setRepeatCount(2000);
+        alpha.setRepeatMode(ValueAnimator.RESTART);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.playTogether(scaleX, scaleY, alpha);//同时执行
+        animatorSet.start();
     }
 
     /**

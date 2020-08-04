@@ -50,6 +50,19 @@ public class PhoneViewModel extends BaseViewModel implements PhoneVMInterface {
         }
     }
 
+    @Override
+    public void right(View view) {
+        super.right(view);
+        String phone = ((RegisterPhoneBinding) mBinding).getPhone();
+        if (!phone.matches(MineApp.PHONE_NUMBER_REG)) {
+            SCToastUtil.showToast(activity, "手机号不正确", false);
+            return;
+        }
+        MineApp.registerInfo.setPhone(phone);
+        ActivityUtils.getRegisterLogin();
+        activity.finish();
+    }
+
     @SuppressLint("HardwareIds")
     private void initPhone() {
         tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);

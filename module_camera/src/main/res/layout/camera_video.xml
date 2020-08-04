@@ -32,7 +32,9 @@
             name="videoPath"
             type="String" />
 
-
+        <variable
+            name="showBottom"
+            type="boolean" />
     </data>
 
     <RelativeLayout
@@ -184,9 +186,9 @@
                 roundSize="@{4}"
                 viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
-                android:scaleType="fitXY"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY" />
         </RelativeLayout>
 
         <LinearLayout
@@ -195,7 +197,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="@{showBottom?View.VISIBLE:View.INVISIBLE}">
 
             <TextView
                 android:layout_width="0dp"
@@ -213,9 +216,9 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="拍视频"
-                android:textStyle="bold"
                 android:textColor="@android:color/white"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="0dp"

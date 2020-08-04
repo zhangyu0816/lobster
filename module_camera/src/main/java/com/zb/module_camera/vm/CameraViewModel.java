@@ -53,6 +53,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
     private int selectIndex = -1;
     public boolean isMore = false;
     public boolean showBottom = false;
+    public boolean showVideo;
 
     private Map<Integer, CutImageView> tempMap = new HashMap<>();
     private boolean selectMore = false;
@@ -96,9 +97,9 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
     @Override
     public void selectIndex(int index) {
         if (index == 1) {
-            ActivityUtils.getCameraVideo();
+            ActivityUtils.getCameraVideo(true);
         } else if (index == 2) {
-            ActivityUtils.getCameraPhoto(isMore, showBottom);
+            ActivityUtils.getCameraPhoto(isMore, showBottom, showVideo);
         }
         activity.finish();
     }
@@ -244,12 +245,21 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                         }
                     }
                 }
-                Intent data = new Intent("lobster_camera");
-                data.putExtra("cameraType", 0);
-                data.putExtra("isMore", true);
-                data.putExtra("filePath", TextUtils.join(",", imageList));
-                activity.sendBroadcast(data);
-                activity.finish();
+
+                if (MineApp.toPublish&&!MineApp.toContinue) {
+                    MineApp.cameraType = 0;
+                    MineApp.isMore = true;
+                    MineApp.filePath = TextUtils.join(",", imageList);
+                    ActivityUtils.getHomePublishImage();
+                    activity.finish();
+                } else {
+                    Intent data = new Intent("lobster_camera");
+                    data.putExtra("cameraType", 0);
+                    data.putExtra("isMore", true);
+                    data.putExtra("filePath", TextUtils.join(",", imageList));
+                    activity.sendBroadcast(data);
+                    activity.finish();
+                }
             }).start();
         } else {
             Bitmap bitmap = mainBinding.ivCut.getCutBitmap();
@@ -309,6 +319,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
 
         for (FileModel item : fileList) {
             List<String> temp = imageMap.get(item.getFileName());
+            if (temp.size() == 0) return;
             Collections.reverse(temp);
             item.setImage(temp.get(0));
             item.setSize(temp.size());

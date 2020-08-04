@@ -29,6 +29,7 @@ import java.util.List;
 import androidx.databinding.ViewDataBinding;
 
 public class VideoViewModel extends BaseViewModel implements VideoVMInterface, View.OnTouchListener {
+    public boolean showBottom;
     private CameraVideoBinding videoBinding;
     private Camera mCamera;
     private CameraPreview preview;
@@ -106,11 +107,19 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
 
     @Override
     public void upload(View view) {
-        Intent data = new Intent("lobster_camera");
-        data.putExtra("cameraType", 1);
-        data.putExtra("filePath", preview.videoPath);
-        data.putExtra("time", time);
-        activity.sendBroadcast(data);
+        if (MineApp.toPublish&&!MineApp.toContinue) {
+            MineApp.cameraType = 1;
+            MineApp.isMore = false;
+            MineApp.filePath = preview.videoPath;
+            MineApp.time = time;
+            ActivityUtils.getHomePublishImage();
+        } else {
+            Intent data = new Intent("lobster_camera");
+            data.putExtra("cameraType", 1);
+            data.putExtra("filePath", preview.videoPath);
+            data.putExtra("time", time);
+            activity.sendBroadcast(data);
+        }
         preview.releaseCamera();
         preview.releaseMediaRecorder();
         activity.finish();
@@ -195,9 +204,9 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
     public void selectIndex(int index) {
         if (!videoBinding.getIsRecorder() && !videoBinding.getIsFinish()) {
             if (index == 0) {
-                ActivityUtils.getCameraMain(activity, true, true);
+                ActivityUtils.getCameraMain(activity, true, true, true);
             } else if (index == 2) {
-                ActivityUtils.getCameraPhoto(true, true);
+                ActivityUtils.getCameraPhoto(true, true, true);
             }
             back(null);
         }
@@ -205,7 +214,7 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
 
     @Override
     public void selectVideo(View view) {
-        ActivityUtils.getCameraVideos();
+        ActivityUtils.getCameraVideos(showBottom);
         back(view);
     }
 

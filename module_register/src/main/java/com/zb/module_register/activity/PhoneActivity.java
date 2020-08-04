@@ -38,6 +38,8 @@ public class PhoneActivity extends RegisterBaseActivity {
         RegisterPhoneBinding binding = (RegisterPhoneBinding) mBinding;
         binding.setBtnName("获取验证码");
         binding.setRemark(isLogin ? "" : "您的手机号将获取验证码");
+        if (isLogin)
+            binding.setRight("密码登录");
         // 步骤进度跳
         AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 5);
         AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W / 2, 5);
@@ -46,10 +48,10 @@ public class PhoneActivity extends RegisterBaseActivity {
         KeyBroadUtils.controlKeyboardLayout(binding.btnLayout, binding.tvNext);
         // 初始化手机号
         if (isLogin) {
-            if(MineApp.registerInfo.getPhone().isEmpty()){
+            if (MineApp.registerInfo.getPhone().isEmpty()) {
                 binding.edPhone.setText(PreferenceUtil.readStringValue(activity, "userName"));
                 binding.setPhone(PreferenceUtil.readStringValue(activity, "userName"));
-            }else{
+            } else {
                 binding.edPhone.setText(MineApp.registerInfo.getPhone());
                 binding.setPhone(MineApp.registerInfo.getPhone());
             }

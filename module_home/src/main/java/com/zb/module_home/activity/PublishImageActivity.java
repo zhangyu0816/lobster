@@ -32,39 +32,47 @@ public class PublishImageActivity extends HomeBaseActivity {
         mBinding.setVariable(BR.title, "");
         mBinding.setVariable(BR.content, "");
         mBinding.setVariable(BR.cityName, MineApp.cityName);
-        viewModel.setAdapter();
 
         cameraReceiver = new BaseReceiver(activity, "lobster_camera") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                viewModel.cameraType = intent.getIntExtra("cameraType", 0);
+                int cameraType = intent.getIntExtra("cameraType", 0);
                 boolean isMore = intent.getBooleanExtra("isMore", false);
                 String path = intent.getStringExtra("filePath");
                 long time = intent.getLongExtra("time", 0);
-                viewModel.videoUrl = "";
-                viewModel.videoTime = 0;
-                if (viewModel.cameraType == 0) {
-                    // 相册
-                    if (isMore) {
-                        viewModel.images.clear();
-                        viewModel.images.addAll(Arrays.asList(path.split(",")));
-                        viewModel.images.add("add_image_icon");
-                        viewModel.adapter.notifyDataSetChanged();
-                    }
-                } else if (viewModel.cameraType == 1) {
-                    // 视频
-                    viewModel.images.clear();
-                    viewModel.images.add(path);
-                    viewModel.adapter.notifyDataSetChanged();
-                    viewModel.videoTime = time;
-                    viewModel.videoUrl = path;
-                } else if (viewModel.cameraType == 2) {
-                    // 拍照
-                    viewModel.images.add(viewModel.images.size() - 1, path);
-                    viewModel.adapter.notifyDataSetChanged();
-                }
+                updateUI(cameraType, isMore, path, time);
             }
         };
+        updateUI(MineApp.cameraType, MineApp.isMore, MineApp.filePath, MineApp.time);
+    }
+
+    private void updateUI(int cameraType, boolean isMore, String path, long time) {
+        viewModel.cameraType = cameraType;
+        viewModel.videoUrl = "";
+        viewModel.videoTime = 0;
+        if (cameraType == 0) {
+            // 相册
+            if (isMore) {
+                viewModel.images.clear();
+                viewModel.images.addAll(Arrays.asList(path.split(",")));
+                viewModel.images.add("add_image_icon");
+                viewModel.adapter.notifyDataSetChanged();
+            }
+        } else if (cameraType == 1) {
+            // 视频
+            MineApp.selectMap.clear();
+            MineApp.selectPathMap.clear();
+            MineApp.cutImageViewMap.clear();
+            viewModel.images.clear();
+            viewModel.images.add(path);
+            viewModel.adapter.notifyDataSetChanged();
+            viewModel.videoTime = time;
+            viewModel.videoUrl = path;
+        } else if (cameraType == 2) {
+            // 拍照
+            viewModel.images.add(viewModel.images.size() - 1, path);
+            viewModel.adapter.notifyDataSetChanged();
+        }
     }
 
     @Override

@@ -31,6 +31,10 @@
         <variable
             name="showBottom"
             type="boolean" />
+
+        <variable
+            name="showVideo"
+            type="boolean" />
     </data>
 
     <RelativeLayout
@@ -153,7 +157,7 @@
                 android:text="拍视频"
                 android:textColor="@color/white_cc"
                 android:textSize="16sp"
-                android:visibility="@{showBottom?View.VISIBLE:View.GONE}" />
+                android:visibility="@{(isMore&amp;&amp;showVideo)?View.VISIBLE:View.GONE}" />
 
             <TextView
                 android:layout_width="0dp"

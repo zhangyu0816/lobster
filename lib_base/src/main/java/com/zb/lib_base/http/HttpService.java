@@ -45,6 +45,8 @@ import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -99,6 +101,31 @@ public interface HttpService {
                                                            @Query("deviceSysVersion") String deviceSysVersion, @Query("deviceCode") String deviceCode,
                                                            @Query("channelId") String channelId, @Query("usePl") int usePl, @Query("appVersion") String appVersion,
                                                            @Query("deviceHardwareInfo") String deviceHardwareInfo);
+
+    // 快捷登录
+    @FormUrlEncoded
+    @POST("api/Union_loginByUnion")
+    Observable<BaseResultEntity<LoginInfo>> loginByUnion(@Field("openId") String openId, @Field("unionId") String unionId, @Field("unionNick") String unionNick,
+                                                         @Field("unionImage") String unionImage, @Field("unionSex") int unionSex, @Field("unionType") int unionType,
+                                                         @Field("device") String device, @Field("deviceSysVersion") String deviceSysVersion,
+                                                         @Field("deviceCode") String deviceCode, @Field("channelId") String channelId,
+                                                         @Field("usePl") int usePl, @Field("appVersion") String appVersion,
+                                                         @Field("deviceHardwareInfo") String deviceHardwareInfo);
+
+    // 快捷登录注册
+    @FormUrlEncoded
+    @POST("api/Union_registByUnion")
+    Observable<BaseResultEntity<LoginInfo>> registerByUnion(@Field("openId") String openId, @Field("unionId") String unionId, @Field("unionNick") String unionNick,
+                                                            @Field("unionImage") String unionImage, @Field("unionSex") int unionSex,
+                                                            @Field("unionType") int unionType, @Field("device") String device,
+                                                            @Field("deviceSysVersion") String deviceSysVersion, @Field("deviceCode") String deviceCode,
+                                                            @Field("channelId") String channelId, @Field("usePl") int usePl, @Field("appVersion") String appVersion,
+                                                            @Field("deviceHardwareInfo") String deviceHardwareInfo,
+                                                            @Field("userName") String userName, @Field("captcha") String captcha);
+
+    @FormUrlEncoded
+    @POST("api/Union_bindingPhone")
+    Observable<BaseResultEntity> bindingPhone(@Field("userName") String userName, @Field("captcha") String captcha);
 
     // 用户注册验证码
     @GET("api/Login_registCaptcha")

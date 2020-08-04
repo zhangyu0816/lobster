@@ -29,6 +29,7 @@ import androidx.databinding.ViewDataBinding;
 public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, View.OnTouchListener {
     public boolean isMore;
     public boolean showBottom;
+    public boolean showVideo;
     private CameraPhotoBinding photoBinding;
     private Camera mCamera;
     private CameraPreview preview;
@@ -153,9 +154,9 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
     @Override
     public void selectIndex(int index) {
         if (index == 0) {
-            ActivityUtils.getCameraMain(activity, isMore, showBottom);
+            ActivityUtils.getCameraMain(activity, isMore, showBottom, showVideo);
         } else if (index == 1) {
-            ActivityUtils.getCameraVideo();
+            ActivityUtils.getCameraVideo(true);
         }
         back(null);
     }
@@ -195,12 +196,17 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
             if (fos != null) {
                 try {
                     fos.close();
-
-                    Intent data = new Intent("lobster_camera");
-                    data.putExtra("cameraType", 2);
-                    data.putExtra("filePath", imagePath);
-                    activity.sendBroadcast(data);
-
+                    if (MineApp.toPublish&&!MineApp.toContinue) {
+                        MineApp.cameraType = 2;
+                        MineApp.isMore = false;
+                        MineApp.filePath = imagePath;
+                        ActivityUtils.getHomePublishImage();
+                    } else {
+                        Intent data = new Intent("lobster_camera");
+                        data.putExtra("cameraType", 2);
+                        data.putExtra("filePath", imagePath);
+                        activity.sendBroadcast(data);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
