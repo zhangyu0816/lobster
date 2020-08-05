@@ -14,7 +14,11 @@ public class VideoPlayActivity extends CameraBaseActivity {
     private VideoPlayViewModel viewModel;
 
     @Autowired(name = "filePath")
-    String filePath;
+    String filePath = "";
+    @Autowired(name = "isUpload")
+    boolean isUpload;
+    @Autowired(name = "isDelete")
+    boolean isDelete;
 
     @Override
     public int getRes() {
@@ -25,7 +29,11 @@ public class VideoPlayActivity extends CameraBaseActivity {
     public void initUI() {
         viewModel = new VideoPlayViewModel();
         viewModel.filePath = filePath;
+        viewModel.isUpload = isUpload;
+        viewModel.isDelete = isDelete;
         mBinding.setVariable(BR.viewModel, viewModel);
+        mBinding.setVariable(BR.isUpload, isUpload);
+        mBinding.setVariable(BR.isDelete, isDelete);
         viewModel.setBinding(mBinding);
     }
 

@@ -178,7 +178,7 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
                     ivProgress.setVisibility(View.GONE);
                     if (animator != null)
                         animator.cancel();
-                    ActivityUtils.getCameraVideoPlay(filePath);
+                    ActivityUtils.getCameraVideoPlay(filePath, false, false);
                 }
 
                 @Override

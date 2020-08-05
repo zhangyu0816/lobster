@@ -6,8 +6,6 @@ public interface VideoVMInterface {
 
     void reset(View view);
 
-    void upload(View view);
-
     void changeSizeIndex(int index);
 
     void changeCameraId(View view);

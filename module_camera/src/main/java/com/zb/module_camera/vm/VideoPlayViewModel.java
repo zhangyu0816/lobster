@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -18,6 +19,9 @@ import androidx.databinding.ViewDataBinding;
 public class VideoPlayViewModel extends BaseViewModel implements VideoPlayVMInterface {
     private CameraVideoPlayBinding mBinding;
     public String filePath = "";
+    public boolean isUpload = false;
+    public boolean isDelete = false;
+    private long duration;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -30,14 +34,41 @@ public class VideoPlayViewModel extends BaseViewModel implements VideoPlayVMInte
     public void back(View view) {
         mBinding.videoView.stopPlayback();//停止播放视频,并且释放
         mBinding.videoView.suspend();//在任何状态下释放媒体播放器
+
+        if (isUpload) {
+            if (MineApp.isLocation) {
+                ActivityUtils.getCameraVideos(MineApp.showBottom);
+            } else {
+                ActivityUtils.getCameraVideo(MineApp.showBottom);
+            }
+        }
         activity.finish();
     }
 
     @Override
     public void right(View view) {
         super.right(view);
-        activity.sendBroadcast(new Intent("lobster_deleteVideo"));
-        back(null);
+        if (isUpload) {
+            if (MineApp.toPublish && !MineApp.toContinue) {
+                MineApp.cameraType = 1;
+                MineApp.isMore = false;
+                MineApp.filePath = filePath;
+                MineApp.time = (long) duration;
+                ActivityUtils.getHomePublishImage();
+            } else {
+                Intent data = new Intent("lobster_camera");
+                data.putExtra("cameraType", 1);
+                data.putExtra("filePath", filePath);
+                data.putExtra("time", (long) duration);
+                activity.sendBroadcast(data);
+            }
+        }
+        if (isDelete)
+            activity.sendBroadcast(new Intent("lobster_deleteVideo"));
+
+        mBinding.videoView.stopPlayback();//停止播放视频,并且释放
+        mBinding.videoView.suspend();//在任何状态下释放媒体播放器
+        activity.finish();
     }
 
     @Override
@@ -55,6 +86,7 @@ public class VideoPlayViewModel extends BaseViewModel implements VideoPlayVMInte
     private void initVideo() {
         //视频加载完成,准备好播放视频的回调
         mBinding.videoView.setOnPreparedListener(mp -> {
+            duration = mp.getDuration();
             mBinding.progress.setVisibility(View.GONE);
             mBinding.videoPlay.setVisibility(View.GONE);
             //尺寸变化回调

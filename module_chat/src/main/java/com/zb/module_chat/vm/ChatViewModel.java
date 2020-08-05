@@ -473,7 +473,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                     ivProgress.setVisibility(View.GONE);
                     if (animator != null)
                         animator.cancel();
-                    ActivityUtils.getCameraVideoPlay(filePath);
+                    ActivityUtils.getCameraVideoPlay(filePath, false, false);
                 }
 
                 @Override

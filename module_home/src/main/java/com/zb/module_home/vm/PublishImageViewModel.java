@@ -94,6 +94,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
         deleteVideoReceiver = new BaseReceiver(activity, "lobster_deleteVideo") {
             @Override
             public void onReceive(Context context, Intent intent) {
+                MineApp.filePath = "";
                 images.clear();
                 images.add("add_image_icon");
                 adapter.notifyDataSetChanged();
@@ -113,10 +114,10 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     @Override
     public void previewImage(int position) {
         if (cameraType == 1) {
-            if (TextUtils.equals(images.get(0),"add_image_icon")) {
+            if (TextUtils.equals(images.get(0), "add_image_icon")) {
                 getPermissions();
             } else {
-                ActivityUtils.getCameraVideoPlay(images.get(0));
+                ActivityUtils.getCameraVideoPlay(images.get(0), false, true);
             }
         } else {
             if (position == images.size() - 1) {

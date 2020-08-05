@@ -4,9 +4,19 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.zb.module_camera.vm.VideoPlayViewModel" />
+
+        <variable
+            name="isDelete"
+            type="boolean" />
+
+        <variable
+            name="isUpload"
+            type="boolean" />
 
     </data>
 
@@ -64,7 +74,22 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:padding="15dp"
-                android:src="@mipmap/iv_delete_image" />
+                android:src="@mipmap/iv_delete_image"
+                android:visibility="@{isDelete?View.VISIBLE:View.GONE}" />
+
+            <TextView
+                onClickDelayed="@{viewModel::right}"
+                android:layout_width="60dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/btn_bg_purple_7a4_radius60"
+                android:gravity="center"
+                android:text="上传"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:visibility="@{isUpload?View.VISIBLE:View.GONE}" />
         </RelativeLayout>
     </RelativeLayout>
 </layout>

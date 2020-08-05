@@ -83,6 +83,8 @@ public class MineApp extends MultiDexApplication {
 
     private static LinkedList<Activity> mActivityList = new LinkedList<>();
 
+    public static boolean isLocation = false;
+    public static boolean showBottom = false;
     public static boolean toPublish = false;
     public static boolean toContinue = false;
     public static int cameraType = 0;

@@ -248,8 +248,8 @@ public class ActivityUtils {
     }
 
     // 视频播放
-    public static void getCameraVideoPlay(String filePath) {
-        ARouter.getInstance().build(RouteUtils.Camera_Video_Play).withString("filePath", filePath).navigation();
+    public static void getCameraVideoPlay(String filePath, boolean isUpload, boolean isDelete) {
+        ARouter.getInstance().build(RouteUtils.Camera_Video_Play).withString("filePath", filePath).withBoolean("isUpload", isUpload).withBoolean("isDelete", isDelete).navigation();
     }
 
     /*********************** 漂流瓶 **************************/

@@ -4,12 +4,9 @@ import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.zb.lib_base.adapter.AdapterBinding;
-import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_camera.BR;
 import com.zb.module_camera.R;
-import com.zb.module_camera.databinding.CameraVideosBinding;
 import com.zb.module_camera.vm.VideosViewModel;
 
 @Route(path = RouteUtils.Camera_Videos)
@@ -30,7 +27,6 @@ public class VideosActivity extends CameraBaseActivity {
         viewModel.showBottom = showBottom;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
-        AdapterBinding.viewSize(((CameraVideosBinding) mBinding).imagesList, MineApp.W, (int) (MineApp.H * 0.4f));
     }
 
     @Override

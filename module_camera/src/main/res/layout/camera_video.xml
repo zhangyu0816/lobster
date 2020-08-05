@@ -59,20 +59,6 @@
                 android:onClick="@{viewModel::reset}"
                 android:padding="15dp"
                 app:srcCompat="@mipmap/back_black_icon" />
-
-            <TextView
-                onClickDelayed="@{viewModel::upload}"
-                android:layout_width="60dp"
-                android:layout_height="24dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/btn_bg_purple_7a4_radius60"
-                android:gravity="center"
-                android:text="上传"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:visibility="@{isFinish?View.VISIBLE:View.GONE}" />
         </RelativeLayout>
 
         <RelativeLayout

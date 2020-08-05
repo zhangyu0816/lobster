@@ -1,7 +1,6 @@
 package com.zb.module_camera.vm;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.os.Environment;
@@ -106,26 +105,6 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
     }
 
     @Override
-    public void upload(View view) {
-        if (MineApp.toPublish&&!MineApp.toContinue) {
-            MineApp.cameraType = 1;
-            MineApp.isMore = false;
-            MineApp.filePath = preview.videoPath;
-            MineApp.time = time;
-            ActivityUtils.getHomePublishImage();
-        } else {
-            Intent data = new Intent("lobster_camera");
-            data.putExtra("cameraType", 1);
-            data.putExtra("filePath", preview.videoPath);
-            data.putExtra("time", time);
-            activity.sendBroadcast(data);
-        }
-        preview.releaseCamera();
-        preview.releaseMediaRecorder();
-        activity.finish();
-    }
-
-    @Override
     public void changeSizeIndex(int index) {
         mBinding.setVariable(BR.sizeIndex, index);
         preview.releaseCamera();
@@ -194,10 +173,14 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
 
     @Override
     public void stopRecorder(View view) {
-        mBinding.setVariable(BR.isRecorder, false);
-        mBinding.setVariable(BR.isFinish, true);
         preview.stopRecord();
         handler.removeCallbacks(runnable);
+        preview.releaseCamera();
+        preview.releaseMediaRecorder();
+        MineApp.isLocation = false;
+        MineApp.showBottom = showBottom;
+        ActivityUtils.getCameraVideoPlay(preview.videoPath, true, false);
+        activity.finish();
     }
 
     @Override
