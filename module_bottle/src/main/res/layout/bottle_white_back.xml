@@ -13,10 +13,6 @@
         <variable
             name="title"
             type="String" />
-
-        <variable
-            name="showBtn"
-            type="boolean" />
     </data>
 
     <RelativeLayout
@@ -31,8 +27,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginTop="22dp"
-            android:visibility="@{showBtn?View.VISIBLE:View.GONE}">
+            android:layout_marginTop="22dp">
 
             <ImageView
                 android:id="@+id/imageView"

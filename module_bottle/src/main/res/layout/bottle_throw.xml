@@ -16,10 +16,6 @@
             type="String" />
 
         <variable
-            name="showBtn"
-            type="boolean" />
-
-        <variable
             name="noReadNum"
             type="Integer" />
 
@@ -32,7 +28,6 @@
 
         <include
             layout="@layout/bottle_white_back"
-            showBtn="@{showBtn}"
             title="@{title}"
             viewModel="@{viewModel}" />
 
@@ -67,7 +62,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:visibility="@{showBtn?View.VISIBLE:View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <TextView

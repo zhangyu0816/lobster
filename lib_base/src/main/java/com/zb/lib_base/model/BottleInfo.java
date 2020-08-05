@@ -1,12 +1,16 @@
 package com.zb.lib_base.model;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.zb.lib_base.BR;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
-public class BottleInfo extends BaseObservable {
+public class
+BottleInfo extends BaseObservable implements Parcelable {
     long driftBottleId;//漂流瓶id
     long userId;
     String text = ""; //内容
@@ -18,6 +22,35 @@ public class BottleInfo extends BaseObservable {
     String modifyTime = "";
     String createTime = "";
     int destroyType;  // 0未销毁  1 单方销毁 所属人  2 单方销毁 拾起人  3 双方销毁
+
+    public BottleInfo() {
+    }
+
+    protected BottleInfo(Parcel in) {
+        driftBottleId = in.readLong();
+        userId = in.readLong();
+        text = in.readString();
+        driftBottleType = in.readInt();
+        noReadNum = in.readInt();
+        otherHeadImage = in.readString();
+        otherNick = in.readString();
+        otherUserId = in.readLong();
+        modifyTime = in.readString();
+        createTime = in.readString();
+        destroyType = in.readInt();
+    }
+
+    public static final Creator<BottleInfo> CREATOR = new Creator<BottleInfo>() {
+        @Override
+        public BottleInfo createFromParcel(Parcel in) {
+            return new BottleInfo(in);
+        }
+
+        @Override
+        public BottleInfo[] newArray(int size) {
+            return new BottleInfo[size];
+        }
+    };
 
     @Bindable
     public long getDriftBottleId() {
@@ -127,5 +160,25 @@ public class BottleInfo extends BaseObservable {
     public void setDestroyType(int destroyType) {
         this.destroyType = destroyType;
         notifyPropertyChanged(BR.destroyType);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(driftBottleId);
+        parcel.writeLong(userId);
+        parcel.writeString(text);
+        parcel.writeInt(driftBottleType);
+        parcel.writeInt(noReadNum);
+        parcel.writeString(otherHeadImage);
+        parcel.writeString(otherNick);
+        parcel.writeLong(otherUserId);
+        parcel.writeString(modifyTime);
+        parcel.writeString(createTime);
+        parcel.writeInt(destroyType);
     }
 }

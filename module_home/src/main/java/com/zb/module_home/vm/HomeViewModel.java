@@ -1,13 +1,8 @@
 package com.zb.module_home.vm;
 
 import android.Manifest;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.annotation.SuppressLint;
 import android.os.Build;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;

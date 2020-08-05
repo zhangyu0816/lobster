@@ -129,4 +129,6 @@ public class RouteUtils {
     public static final String Bottle_List = "/bottle/BottleListActivity";
     // 漂流瓶聊天
     public static final String Bottle_Chat = "/bottle/BottleChatActivity";
+    // 捡、扔 漂流瓶
+    public static final String Bottle_Content = "/bottle/BottleContentActivity";
 }

@@ -24,7 +24,6 @@ public class BottleThrowActivity extends BottleBaseActivity {
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.title, "我的漂流瓶");
-        mBinding.setVariable(BR.showBtn, true);
         mBinding.setVariable(BR.noReadNum, MineApp.noReadBottleNum);
     }
 

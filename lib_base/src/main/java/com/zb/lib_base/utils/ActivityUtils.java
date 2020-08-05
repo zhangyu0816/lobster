@@ -3,6 +3,7 @@ package com.zb.lib_base.utils;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.model.Authentication;
+import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.FeedbackInfo;
 
 public class ActivityUtils {
@@ -271,5 +272,10 @@ public class ActivityUtils {
     // 漂流瓶主页
     public static void getBottleChat(long driftBottleId) {
         ARouter.getInstance().build(RouteUtils.Bottle_Chat).withLong("driftBottleId", driftBottleId).navigation();
+    }
+
+    // 漂流瓶主页
+    public static void getBottleContent(BottleInfo bottleInfo) {
+        ARouter.getInstance().build(RouteUtils.Bottle_Content).withParcelable("bottleInfo", bottleInfo).navigation();
     }
 }
