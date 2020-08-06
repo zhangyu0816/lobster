@@ -106,6 +106,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
+        MineApp.sex = mineInfo.getSex() == 0 ? 1 : 0;
+
         areaDb = new AreaDb(Realm.getDefaultInstance());
         likeDb = new LikeDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
@@ -300,9 +302,9 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 }
             }
         }, activity)
-                .setSex(mineInfo.getSex() == 0 ? 1 : 0)
-                .setMaxAge(100)
-                .setMinAge(0);
+                .setSex(MineApp.sex)
+                .setMaxAge(MineApp.maxAge)
+                .setMinAge(MineApp.minAge);
         api.setShowProgress(needProgress);
         HttpManager.getInstance().doHttpDeal(api);
     }

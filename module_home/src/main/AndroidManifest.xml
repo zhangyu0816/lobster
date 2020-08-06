@@ -10,6 +10,7 @@
         <activity android:name=".activity.RewardListActivity" />
         <activity android:name=".activity.ReportActivity" />
         <activity android:name=".activity.DiscoverVideoActivity" />
+        <activity android:name=".activity.SearchActivity" />
     </application>
 
 </manifest>

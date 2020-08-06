@@ -93,6 +93,11 @@ public class MineApp extends MultiDexApplication {
     public static long time = 0;
     public static String aspect = "";
 
+    public static int sex = 0;
+    public static int maxAge = 100;
+    public static int minAge = 0;
+
+
     static {
         //设置全局的Header构建器
         SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {

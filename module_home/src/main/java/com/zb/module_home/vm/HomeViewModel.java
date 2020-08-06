@@ -28,6 +28,11 @@ public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
         getPermissions();
     }
 
+    @Override
+    public void toSearch(View view) {
+        ActivityUtils.getHomeSearch();
+    }
+
     /**
      * 权限
      */

@@ -297,6 +297,12 @@ public interface HttpService {
     @GET("api/Collect_cancelAttention")
     Observable<BaseResultEntity> cancelAttention(@Query("otherUserId") long otherUserId);
 
+    // 搜索
+    @GET("api/SimpleRent_search")
+    Observable<BaseResultEntity<List<MemberInfo>>> search(@Query("pageNo") int pageNo, @Query("keyWord") String keyWord,
+                                                          @Query("cityId") long cityId, @Query("sex") int sex,
+                                                          @Query("minAge") int minAge, @Query("maxAge") int maxAge);
+
     /******************************* 卡片 **********************************/
     // 加入匹配池 (提交当前位置)
     @GET("api/Pair_joinPairPool")

@@ -122,6 +122,6 @@ public class CardItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
 
     @Override
     public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
-        return 0.2f;
+        return 0.1f;
     }
 }
