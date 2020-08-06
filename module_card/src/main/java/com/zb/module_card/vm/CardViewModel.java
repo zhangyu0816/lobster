@@ -106,11 +106,10 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        MineApp.sex = mineInfo.getSex() == 0 ? 1 : 0;
-
         areaDb = new AreaDb(Realm.getDefaultInstance());
         likeDb = new LikeDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
+        MineApp.sex = mineInfo.getSex() == 0 ? 1 : 0;
         aMapLocation = new AMapLocation(activity);
         cardFragBinding = (CardFragBinding) binding;
         // 详情页操作后滑动卡片

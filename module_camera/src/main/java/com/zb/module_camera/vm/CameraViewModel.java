@@ -282,6 +282,8 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                 String fileName = cur.getString(1);
                 boolean hasName = false;
                 for (FileModel fileModel : fileList) {
+                    if(fileName==null)
+                        break;
                     if (fileModel.getFileName().equals(fileName)) {
                         hasName = true;
                         break;

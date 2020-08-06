@@ -1,7 +1,9 @@
 package com.zb.module_mine.vm;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
@@ -115,12 +117,13 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
 
     @Override
     public void publishDiscover(View view) {
-        MineApp.toPublish = false;
-        MineApp.cameraType = 0;
-        MineApp.filePath = "";
-        MineApp.isMore = false;
-        MineApp.time = 0;
-        ActivityUtils.getHomePublishImage();
+//        MineApp.toPublish = false;
+//        MineApp.cameraType = 0;
+//        MineApp.filePath = "";
+//        MineApp.isMore = false;
+//        MineApp.time = 0;
+//        ActivityUtils.getHomePublishImage();
+        getPermissions();
     }
 
     @Override
@@ -169,5 +172,36 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 权限
+     */
+    private void getPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            performCodeWithPermission("虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
+                        @Override
+                        public void hasPermission() {
+                            setPermissions();
+                        }
+
+                        @Override
+                        public void noPermission() {
+                        }
+                    }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO);
+        } else {
+            setPermissions();
+        }
+    }
+
+    private void setPermissions() {
+        MineApp.toPublish = true;
+        MineApp.toContinue = false;
+        if (mBinding.viewPage.getCurrentItem() == 1) {
+            ActivityUtils.getCameraVideo(false);
+        } else {
+            ActivityUtils.getCameraMain(activity, true, true, false);
+        }
     }
 }

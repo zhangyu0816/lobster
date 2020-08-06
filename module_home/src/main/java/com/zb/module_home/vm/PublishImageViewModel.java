@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -349,22 +350,36 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
      */
     private Bitmap textToBitmap(String text) {
 
-        TextView tv = new TextView(activity);
+        LinearLayout layout = new LinearLayout(activity);
+        layout.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-        tv.setLayoutParams(layoutParams);
+        layout.setLayoutParams(layoutParams);
+        layout.setBackgroundColor(Color.TRANSPARENT);
+
+        ImageView iv = new ImageView(activity);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.leftMargin = 0;
+        params.rightMargin = MineApp.W;
+        params.gravity = Gravity.START;
+        iv.setLayoutParams(params);
+        iv.setImageResource(R.mipmap.water_icon);
+        layout.addView(iv);
+
+        TextView tv = new TextView(activity);
         tv.setText(text);
-        tv.setTextSize(14);
-        tv.setGravity(Gravity.CENTER_HORIZONTAL);
-        tv.setDrawingCacheEnabled(true);
+        tv.setTextSize(9);
         tv.setTextColor(Color.WHITE);
         tv.setBackgroundColor(Color.TRANSPARENT);
-        tv.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+        layout.addView(tv);
+
+        layout.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        tv.layout(0, 0, tv.getMeasuredWidth(), tv.getMeasuredHeight());
-        tv.buildDrawingCache();
-        Bitmap bitmap = tv.getDrawingCache();
+        layout.layout(0, 0, layout.getMeasuredWidth(), layout.getMeasuredHeight());
+        layout.buildDrawingCache();
+        Bitmap bitmap = layout.getDrawingCache();
         return Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), false);
     }
 
@@ -380,39 +395,12 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     }
 
     private String[] addWaterMark(String imageUrl, String videoUrl, String outputUrl) {
-//        String content = "-i " + videoUrl + " -i " + imageUrl +
-//                " -filter_complex overlay=20:20 -y -strict -2 -vcodec libx264 -preset ultrafast" +
-//                " -crf 29 -threads 2 -acodec aac -ar 44100 -ac 2 -b:a 32k " + outputUrl;
-        String[] commands = new String[26];
-        commands[0] = "-i";
-        commands[1] = videoUrl;
-        commands[2] = "-i";
-        commands[3] = imageUrl;
-        commands[4] = "-filter_complex";
-        commands[5] = "overlay=20:20";
-        commands[6] = "-y";
-        commands[7] = "-strict";
-        commands[8] = "-2";
-        commands[9] = "-vcodec";
-        commands[10] = "libx264";
-        commands[11] = "-preset";
-        commands[12] = "ultrafast";
+        String content = "-i " + videoUrl +
+                " -i " + imageUrl + " -filter_complex overlay=10:10" +
+                " -y -strict -2 -vcodec libx264 -preset ultrafast -crf 10 -threads 2 -acodec aac -ar 44100 -ac 2 -b:a 32k " + outputUrl;
         //-crf  用于指定输出视频的质量，取值范围是0-51，默认值为23，数字越小输出视频的质量越高。
         // 这个选项会直接影响到输出视频的码率。一般来说，压制480p我会用20左右，压制720p我会用16-18
-        commands[13] = "-crf";
-        commands[14] = "10";
-        commands[15] = "-threads";
-        commands[16] = "2";
-        commands[17] = "-acodec";
-        commands[18] = "aac";
-        commands[19] = "-ar";
-        commands[20] = "44100";
-        commands[21] = "-ac";
-        commands[22] = "2";
-        commands[23] = "-b:a";
-        commands[24] = "32k";
-        commands[25] = outputUrl;
-        return commands;
+        return content.split(" ");
     }
 
     // 添加水印

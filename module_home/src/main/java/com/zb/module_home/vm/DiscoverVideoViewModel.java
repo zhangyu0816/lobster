@@ -68,6 +68,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     private List<String> selectorList = new ArrayList<>();
     private MineInfo mineInfo;
     private LikeDb likeDb;
+    private String downloadFileUrl = "";
 
     @Override
     public void back(View view) {
@@ -185,11 +186,14 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                     } else {
                         new VipAdPW(activity, mBinding.getRoot(), false, 3);
                     }
-                } else {
+                } else if (position == 1) {
                     // 举报
                     mBinding.setIsPlay(false);
                     mBinding.videoView.pause();
                     ActivityUtils.getHomeReport(discoverInfo.getUserId());
+                } else {
+
+                    DownLoad.downloadLocation(downloadFileUrl, filePath -> SCToastUtil.showToast(activity, "下载成功", true));
                 }
             }
         });
@@ -243,12 +247,14 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             @Override
             public void onNext(DiscoverInfo o) {
                 discoverInfo = o;
+                downloadFileUrl = discoverInfo.getVideoUrl();
                 if (discoverInfo.getUserId() == BaseActivity.userId) {
                     selectorList.add("查看礼物");
                     selectorList.add("删除动态");
                 } else {
                     selectorList.add("超级喜欢");
                     selectorList.add("举报");
+                    selectorList.add("下载视频");
                 }
                 DownLoad.getFilePath(discoverInfo.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), new DownLoad.CallBack() {
                     @Override
