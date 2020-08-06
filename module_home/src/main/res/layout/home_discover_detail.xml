@@ -32,21 +32,71 @@
             type="Integer" />
 
         <variable
-            name="showBg"
-            type="boolean" />
-
-        <variable
             name="isAttention"
             type="boolean" />
     </data>
 
     <RelativeLayout
+        android:id="@+id/main_relative"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <RelativeLayout
+            android:id="@+id/top_relative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                onClickDelayed="@{viewModel::back}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="15dp"
+                app:srcCompat="@mipmap/back_black_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="动态"
+                android:textColor="@color/black_252"
+                android:textSize="18sp"
+                tools:text="杀杀杀" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/iv_more"
+                android:background="@drawable/btn_bg_purple_7a4_radius60"
+                android:gravity="center"
+                android:onClick="@{viewModel::follow}"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@{isAttention?@string/attention_false:@string/attention_true}"
+                android:textColor="@android:color/white"
+                android:textSize="13sp"
+                android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
+
+            <ImageView
+                android:id="@+id/iv_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:onClick="@{viewModel::more}"
+                android:padding="15dp"
+                app:srcCompat="@mipmap/back_more_icon" />
+        </RelativeLayout>
+
         <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/coordinator"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@+id/bottom_layout"
+            android:layout_below="@+id/top_relative"
             android:splitMotionEvents="false">
 
             <com.google.android.material.appbar.AppBarLayout
@@ -55,15 +105,15 @@
                 android:layout_height="wrap_content"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:elevation="0dp">
-
+                <!--                android:minHeight="82dp"-->
+                <!--                app:layout_scrollFlags="scroll|exitUntilCollapsed"-->
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/white"
-                    android:minHeight="82dp"
                     app:contentInsetStart="0dp"
-                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -74,6 +124,7 @@
                             android:id="@+id/banner"
                             android:layout_width="match_parent"
                             android:layout_height="300dp"
+                            android:layout_gravity="center_horizontal"
                             android:background="@color/black_efe" />
 
                         <RelativeLayout
@@ -146,24 +197,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="15dp"
-                            android:layout_marginEnd="15dp"
-                            android:background="@{viewModel.discoverInfo==null?@drawable/default_bg:@drawable/empty_bg}"
-                            android:text="@{viewModel.discoverInfo.friendTitle}"
-                            android:textColor="@color/black_4d4"
-                            android:textSize="14sp"
-                            android:visibility="@{viewModel.discoverInfo.friendTitle.isEmpty()?View.GONE:View.VISIBLE}"
-                            tools:text="标题" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="15dp"
                             android:layout_marginTop="5dp"
                             android:layout_marginEnd="15dp"
                             android:background="@{viewModel.discoverInfo==null?@drawable/default_bg:@drawable/empty_bg}"
                             android:text="@{viewModel.discoverInfo.text}"
                             android:textColor="@color/black_827"
-                            android:textSize="13sp"
+                            android:textSize="14sp"
                             android:visibility="@{viewModel.discoverInfo.text.isEmpty()?View.GONE:View.VISIBLE}"
                             tools:text="文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职" />
 
@@ -243,7 +282,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
-                        android:layout_marginTop="22dp"
+                        android:layout_marginTop="15dp"
                         android:layout_marginEnd="5dp"
                         android:layout_marginBottom="15dp"
                         android:text="评论"
@@ -253,7 +292,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="22dp"
+                        android:layout_marginTop="15dp"
                         android:text='@{String.format("(%d)",viewModel.discoverInfo.reviews)}'
                         android:textColor="@color/black_827"
                         android:textSize="12sp"
@@ -268,7 +307,6 @@
                 onRefreshListener="@{viewModel}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="60dp"
                 android:background="@android:color/white"
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
@@ -276,15 +314,14 @@
                     adapter="@{viewModel.reviewAdapter}"
                     recyclerType="@{0}"
                     size="@{0}"
+                    android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
-
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <LinearLayout
-            android:id="@+id/main_layout"
+            android:id="@+id/bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -298,7 +335,6 @@
                 android:background="@color/black_efe" />
 
             <RelativeLayout
-                android:id="@+id/bottom_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/white">
@@ -328,6 +364,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        onClickDelayed="@{viewModel::closeAt}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
@@ -389,67 +426,5 @@
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@{showBg?@color/black_252:@android:color/transparent}"
-            android:orientation="vertical">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="22dp" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp">
-
-                <ImageView
-                    android:id="@+id/iv_back"
-                    onClickDelayed="@{viewModel::back}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:padding="15dp"
-                    app:srcCompat="@mipmap/back_white_icon" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@+id/iv_back"
-                    android:text="@{viewModel.discoverInfo.nick}"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp"
-                    android:visibility="@{showBg?View.VISIBLE:View.GONE}"
-                    tools:text="杀杀杀" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toStartOf="@+id/iv_more"
-                    android:background="@drawable/btn_bg_white_radius60"
-                    android:gravity="center"
-                    android:onClick="@{viewModel::follow}"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:text="@{isAttention?@string/attention_false:@string/attention_true}"
-                    android:textColor="@{isAttention?@color/black_827:@color/black_4d4}"
-                    android:textSize="13sp"
-                    android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
-
-                <ImageView
-                    android:id="@+id/iv_more"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:onClick="@{viewModel::more}"
-                    android:padding="15dp"
-                    app:srcCompat="@mipmap/more_icon" />
-            </RelativeLayout>
-        </LinearLayout>
-
     </RelativeLayout>
 </layout>

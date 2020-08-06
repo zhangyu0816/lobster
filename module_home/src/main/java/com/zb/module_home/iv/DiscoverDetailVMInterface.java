@@ -33,6 +33,8 @@ public interface DiscoverDetailVMInterface {
 
     void selectReview(Review review);
 
+    void closeAt(View view);
+
     void toReviewList(View view);
 
     void attentionStatus();

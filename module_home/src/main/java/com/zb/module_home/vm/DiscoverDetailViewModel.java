@@ -1,10 +1,11 @@
 package com.zb.module_home.vm;
 
-import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
@@ -43,10 +44,7 @@ import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.model.Reward;
 import com.zb.lib_base.utils.ActivityUtils;
-import com.zb.lib_base.utils.DisplayUtils;
-import com.zb.lib_base.utils.KeyboardStateObserver;
 import com.zb.lib_base.utils.ObjectUtils;
-import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.CountUsedPW;
@@ -88,15 +86,16 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     private long reviewId = 0;
     private int goodNum = 0;
     private BaseReceiver finishRefreshReceiver;
-    private ObjectAnimator translateYUp, translateYDown;
+    private boolean isFirst = true;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (HomeDiscoverDetailBinding) binding;
         mineInfo = mineInfoDb.getMineInfo();
         likeDb = new LikeDb(Realm.getDefaultInstance());
-        AdapterBinding.viewSize(mBinding.banner, MineApp.W, ObjectUtils.getLogoHeight(1.0f));
+        AdapterBinding.viewSize(mBinding.banner, ObjectUtils.getViewSizeByWidth(0.8f), ObjectUtils.getLogoHeight(0.8f));
         mBinding.setContent("");
         mBinding.setName("");
         mBinding.setListNum(10);
@@ -118,27 +117,23 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             }
         };
 
-        KeyboardStateObserver.getKeyboardStateObserver(activity).
-                setKeyboardVisibilityListener(new KeyboardStateObserver.OnKeyboardVisibilityListener() {
-                    @Override
-                    public void onKeyboardHeight(int height) {
-                        PreferenceUtil.saveIntValue(activity, "keyboardHeight", height);
-                        translateYUp = ObjectAnimator.ofFloat(mBinding.mainLayout, "translationY", 0, -height).setDuration(100);
-                        translateYDown = ObjectAnimator.ofFloat(mBinding.mainLayout, "translationY", -height, 0).setDuration(100);
-                        translateYUp.start();
-                    }
+        mBinding.coordinator.setOnTouchListener((view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_MOVE && isSoftShowing() && isFirst) {
+                isFirst = false;
+                hintKeyBoard();
+                new Handler().postDelayed(() -> isFirst = true,500);
+            }
+            return false;
+        });
 
-                    @Override
-                    public void onKeyboardHide() {
-                        if (translateYDown != null)
-                            translateYDown.start();
-                    }
-                }, true);
-
-        new Handler().postDelayed(() -> {
-            int height = DisplayUtils.dip2px(82) - mBinding.banner.getHeight();
-            mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> mBinding.setShowBg(verticalOffset <= height));
-        }, 300);
+        mBinding.recyclerView.setOnTouchListener((view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_MOVE && isSoftShowing() && isFirst) {
+                isFirst = false;
+                hintKeyBoard();
+                new Handler().postDelayed(() -> isFirst = true,500);
+            }
+            return false;
+        });
     }
 
     @Override
@@ -152,10 +147,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void back(View view) {
         super.back(view);
-        if (translateYUp != null)
-            translateYUp.cancel();
-        if (translateYDown != null)
-            translateYDown.cancel();
         finishRefreshReceiver.unregisterReceiver();
         activity.finish();
     }
@@ -438,6 +429,12 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     }
 
     @Override
+    public void closeAt(View view) {
+        reviewId = 0;
+        mBinding.setVariable(BR.name, "");
+    }
+
+    @Override
     public void toReviewList(View view) {
         mBinding.appbar.setExpanded(false);
     }
@@ -529,7 +526,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         mBinding.banner.setImageScaleType(ImageView.ScaleType.FIT_XY)
                 .setAds(adList)
                 .setImageLoader((context, ads, image, position) -> AdapterBinding.loadImage(image, ads.getSmallImage(), 0,
-                        ObjectUtils.getDefaultRes(), MineApp.W, ObjectUtils.getLogoHeight(1.0f),
+                        ObjectUtils.getDefaultRes(), ObjectUtils.getViewSizeByWidth(0.8f), ObjectUtils.getLogoHeight(0.8f),
                         false, false, 0, false, 0, false))
                 .setBannerTypes(XBanner.CIRCLE_INDICATOR_TITLE)
                 .setIndicatorGravity(XBanner.INDICATOR_START)

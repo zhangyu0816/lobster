@@ -26,17 +26,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:elevation="0dp"
-               >
+                app:elevation="0dp">
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/white"
+                    android:visibility="@{viewModel.otherUserId==0?View.VISIBLE:View.GONE}"
                     app:contentInsetStart="0dp"
-                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-                    android:visibility="@{viewModel.otherUserId==0?View.VISIBLE:View.GONE}">
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
                     <ImageView
                         onClickDelayed="@{viewModel::entryBottle}"

@@ -120,6 +120,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     private BaseReceiver chatReceiver;
     private int soundPosition = -1;
     private boolean needLink = false;
+    private boolean isFirst = true;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -234,6 +235,14 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                 }, false);
         AdapterBinding.viewSize(mBinding.emojiList, MineApp.W, PreferenceUtil.readIntValue(activity, "keyboardHeight") == 0 ? MineApp.H / 3 : PreferenceUtil.readIntValue(activity, "keyboardHeight"));
 
+        mBinding.chatList.setOnTouchListener((view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_MOVE && isSoftShowing() && isFirst) {
+                isFirst = false;
+                hintKeyBoard();
+                new Handler().postDelayed(() -> isFirst = true, 500);
+            }
+            return false;
+        });
     }
 
     @Override
