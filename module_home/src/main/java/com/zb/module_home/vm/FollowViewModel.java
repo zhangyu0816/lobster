@@ -127,11 +127,6 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
         onRefreshForNet(null);
     }
 
-    @Override
-    public void entryBottle(View view) {
-        ActivityUtils.getBottleMain();
-    }
-
     private int index = 0;
     private int start;
 

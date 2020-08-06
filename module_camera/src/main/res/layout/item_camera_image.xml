@@ -41,7 +41,6 @@
             android:onClick="@{v->viewModel.selectImage(position)}" />
 
         <TextView
-            onClickDelayed="@{v->viewModel.selectImageByMore(position)}"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignParentEnd="true"

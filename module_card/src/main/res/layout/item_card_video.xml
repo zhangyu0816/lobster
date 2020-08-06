@@ -54,7 +54,7 @@
             android:layout_alignParentBottom="true"
             android:padding="10dp"
             android:singleLine="true"
-            android:text="@{item.friendTitle}"
+            android:text="@{item.text}"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold" />

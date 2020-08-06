@@ -155,6 +155,11 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     }
 
     @Override
+    public void entryBottle(View view) {
+        ActivityUtils.getBottleMain();
+    }
+
+    @Override
     public void dynPiazzaList() {
         dynPiazzaListApi api = new dynPiazzaListApi(new HttpOnNextListener<List<DiscoverInfo>>() {
             @Override

@@ -93,7 +93,7 @@ public class BaseViewModel implements BaseVMInterface {
         if (tabLayout == null)
             return;
         tabLayout.setupWithViewPager(viewPager);
-
+        viewPager.setCurrentItem(index);
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
             if (tab != null) {

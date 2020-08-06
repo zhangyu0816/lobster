@@ -51,6 +51,7 @@ public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
 
     private void setPermissions() {
         MineApp.toPublish = true;
+        MineApp.toContinue = false;
         if (mBinding.viewPage.getCurrentItem() == 2) {
             ActivityUtils.getCameraVideo(false);
         } else {

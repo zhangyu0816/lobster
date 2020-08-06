@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
+        <import type="android.view.View" />
 
         <variable
             name="viewModel"
@@ -13,52 +16,87 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/refresh"
-            onLoadMoreListener="@{viewModel}"
-            onRefreshListener="@{viewModel}"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/black_efe">
+            android:splitMotionEvents="false">
 
-            <androidx.recyclerview.widget.RecyclerView
-                adapter="@{viewModel.adapter}"
-                recyclerType="@{4}"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"/>
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/no_net_linear"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-
-            <LinearLayout
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:elevation="0dp"
+               >
 
-                <ImageView
-                    android:layout_width="wrap_content"
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@mipmap/no_net_icon" />
+                    android:background="@android:color/white"
+                    app:contentInsetStart="0dp"
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+                    android:visibility="@{viewModel.otherUserId==0?View.VISIBLE:View.GONE}">
 
-                <TextView
-                    onClickDelayed="@{viewModel::onRefreshForNet}"
-                    android:layout_width="80dp"
-                    android:layout_height="38dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/btn_bg_black_252_radius60"
-                    android:gravity="center"
-                    android:text="刷新"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+                    <ImageView
+                        onClickDelayed="@{viewModel::entryBottle}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        app:srcCompat="@mipmap/drift_bg_icon" />
+                </androidx.appcompat.widget.Toolbar>
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                android:id="@+id/refresh"
+                onLoadMoreListener="@{viewModel}"
+                onRefreshListener="@{viewModel}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black_efe"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    adapter="@{viewModel.adapter}"
+                    recyclerType="@{4}"
+                    size="@{7}"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp" />
+            </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/no_net_linear"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@mipmap/no_net_icon" />
+
+                    <TextView
+                        onClickDelayed="@{viewModel::onRefreshForNet}"
+                        android:layout_width="80dp"
+                        android:layout_height="38dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/btn_bg_black_252_radius60"
+                        android:gravity="center"
+                        android:text="刷新"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </RelativeLayout>
 </layout>

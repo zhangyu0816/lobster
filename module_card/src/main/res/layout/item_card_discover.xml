@@ -70,20 +70,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{item.friendTitle}"
+                    android:text="@{item.text}"
                     android:textColor="@color/black_252"
                     android:textSize="14sp"
-                    android:visibility="@{item.friendTitle.isEmpty()?View.GONE:View.VISIBLE}" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:text="@{item.text}"
-                    android:textColor="@color/black_4d4"
-                    android:textSize="12sp"
+                    android:textStyle="bold"
                     android:visibility="@{item.text.isEmpty()?View.GONE:View.VISIBLE}" />
 
                 <RelativeLayout

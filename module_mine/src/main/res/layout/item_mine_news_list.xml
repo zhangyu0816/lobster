@@ -88,7 +88,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:singleLine="true"
-                android:text="@{String.format(@string/dyn_text,item.friendDynamicTitle)}"
+                android:text="@{String.format(@string/dyn_text,item.friendDynamicText)}"
                 android:textColor="@color/black_4d4"
                 android:textSize="12sp"
                 android:visibility="@{viewModel.reviewType==3?View.VISIBLE:View.GONE}" />
@@ -100,7 +100,7 @@
                 android:background="@drawable/btn_bg_black_efe_radius5"
                 android:padding="10dp"
                 android:singleLine="true"
-                android:text="@{String.format(@string/dyn_text,item.friendDynamicTitle)}"
+                android:text="@{String.format(@string/dyn_text,item.friendDynamicText)}"
                 android:textColor="@color/black_4d4"
                 android:textSize="12sp"
                 android:visibility="@{viewModel.reviewType==3?View.GONE:View.VISIBLE}" />

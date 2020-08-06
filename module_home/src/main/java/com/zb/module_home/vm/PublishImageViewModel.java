@@ -43,7 +43,6 @@ import com.zero.smallvideorecord.model.AutoVBRMode;
 import com.zero.smallvideorecord.model.LocalMediaConfig;
 import com.zero.smallvideorecord.model.OnlyCompressOverBean;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -176,8 +175,8 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
 
     @Override
     public void publish(View view) {
-        if (publicImageBinding.getTitle().isEmpty()) {
-            SCToastUtil.showToast(activity, "请填写动态标题", true);
+        if (publicImageBinding.getContent().isEmpty()) {
+            SCToastUtil.showToast(activity, "请填写动态内容", true);
             return;
         }
 
@@ -252,19 +251,6 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
         }).start();
     }
 
-    private void saveBitmapFile(Bitmap bitmap) {
-        videoImageFile = BaseActivity.getImageFile();//将要保存图片的路径
-        try {
-            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(videoImageFile));
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-            bos.flush();
-            bos.close();
-            handler.sendEmptyMessage(1);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     private Handler handler = new Handler(msg -> {
         switch (msg.what) {
             case 0:
@@ -301,7 +287,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
             }
         }, activity)
                 .setText(publicImageBinding.getContent())
-                .setFriendTitle(publicImageBinding.getTitle())
+                .setFriendTitle("")
                 .setImages(images)
                 .setResTime((int) videoTime / 1000)
                 .setVideoUrl(videoUrl)

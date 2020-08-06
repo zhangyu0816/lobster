@@ -124,6 +124,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
             }
         });
         if (isMore) {
+            selectMore = true;
             mainBinding.cutLayout.removeAllViews();
             CutImageView cutImageView;
             if (tempMap.containsKey(position)) {
@@ -147,18 +148,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
         }
     }
 
-    @Override
-    public void selectImageByMore(int position) {
-        if (selectIndex != position) {
-            selectMore = true;
-            selectImage(position);
-        } else {
-            selectMoreImage(position);
-        }
-    }
-
     private void selectMoreImage(int position) {
-
         if (MineApp.selectMap.containsKey(images.get(position))) {
             int count = MineApp.selectMap.get(images.get(position));
             selectCount--;
@@ -246,7 +236,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                     }
                 }
 
-                if (MineApp.toPublish&&!MineApp.toContinue) {
+                if (MineApp.toPublish && !MineApp.toContinue) {
                     MineApp.cameraType = 0;
                     MineApp.isMore = true;
                     MineApp.filePath = TextUtils.join(",", imageList);
@@ -324,6 +314,5 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
             item.setImage(temp.get(0));
             item.setSize(temp.size());
         }
-        selectImage(0);
     }
 }

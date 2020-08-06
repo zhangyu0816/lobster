@@ -29,7 +29,6 @@ public class PublishImageActivity extends HomeBaseActivity {
         viewModel = new PublishImageViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
-        mBinding.setVariable(BR.title, "");
         mBinding.setVariable(BR.content, "");
         mBinding.setVariable(BR.cityName, MineApp.cityName);
 
