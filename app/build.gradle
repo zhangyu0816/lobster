@@ -34,6 +34,9 @@ android {
                 GETUI_APP_KEY   : "CH9PAvBiZh9D4iyAMmghb5",
                 GETUI_APP_SECRET: "U0fFTRQ05270lMFvBmWp46"
         ]
+        ndk {
+            abiFilters "armeabi","armeabi-v7a","x86"
+        }
     }
     signingConfigs {
         debug {
@@ -66,11 +69,16 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    sourceSets.main {
+        assets.srcDirs = ['assets']
+        jniLibs.srcDirs = ['libs']//指定jniLibs文件夹路径
+        jni.srcDirs = []//不编译jni
+
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     testImplementation 'junit:junit:4.13'
@@ -94,6 +102,6 @@ dependencies {
     if (isNeedBottleModule.toBoolean()) {
         implementation project(':module_bottle')
     }
-
     implementation project(':lib_base')
+
 }

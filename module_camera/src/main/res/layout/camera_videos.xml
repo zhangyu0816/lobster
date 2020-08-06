@@ -15,12 +15,14 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/black_efe">
 
         <RelativeLayout
             android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="50dp"
+            android:background="@color/black">
 
             <ImageView
                 android:id="@+id/iv_back"

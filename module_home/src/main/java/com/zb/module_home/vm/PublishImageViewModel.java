@@ -4,12 +4,17 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
+import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
 import com.maning.imagebrowserlibrary.MNImage;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
@@ -26,12 +31,13 @@ import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.module_camera.utils.Compressor;
+import com.zb.module_camera.utils.InitListener;
 import com.zb.module_home.BR;
 import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
 import com.zb.module_home.databinding.HomePublicImageBinding;
 import com.zb.module_home.iv.PublishImageVMInterface;
-import com.zero.smallvideorecord.JianXiCamera;
 import com.zero.smallvideorecord.LocalMediaCompress;
 import com.zero.smallvideorecord.model.AutoVBRMode;
 import com.zero.smallvideorecord.model.LocalMediaConfig;
@@ -59,6 +65,11 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     private BaseReceiver locationReceiver;
     private BaseReceiver deleteVideoReceiver;
 
+    /* 水印 */
+    private String outPutUrl = "";
+    private String imageUrl = "";
+    private Compressor mCompressor;
+
     @Override
     public void back(View view) {
         locationReceiver.unregisterReceiver();
@@ -75,15 +86,16 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         publicImageBinding = (HomePublicImageBinding) binding;
+
+        BaseActivity.createJianXiCameraFile();
+        BaseActivity.createFfmpegFile();
+        outPutUrl = BaseActivity.getVideoFile().getAbsolutePath();
+        imageUrl = BaseActivity.getImageFile().getAbsolutePath();
+
         photoManager = new PhotoManager(activity, () -> {
             publishDyn(photoManager.jointWebUrl(","));
             photoManager.deleteAllFile();
         });
-        File videoPath = new File(activity.getCacheDir(), "videos");
-        if (!videoPath.exists()) {
-            videoPath.mkdirs();
-        }
-        JianXiCamera.setVideoCachePath(videoPath.getPath() + "/");
 
         locationReceiver = new BaseReceiver(activity, "lobster_location") {
             @Override
@@ -100,9 +112,18 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                 adapter.notifyDataSetChanged();
             }
         };
-
-
         setAdapter();
+
+        mCompressor = new Compressor(activity);
+        mCompressor.loadBinary(new InitListener() {
+            @Override
+            public void onLoadSuccess() {
+            }
+
+            @Override
+            public void onLoadFail(String reason) {
+            }
+        });
     }
 
     @Override
@@ -173,17 +194,15 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
             }
             photoManager.addFiles(imageList, () -> photoManager.reUploadByUnSuccess());
         } else {
-            CustomProgressDialog.showLoading(activity, "正在压缩视频", true);
+            CustomProgressDialog.showLoading(activity, "正在处理视频", true);
             if (isChinese(videoUrl)) {
-                SCToastUtil.showToast(activity, "视频链接含中文路径，压缩失败", true);
-                CustomProgressDialog.stopLoading();
+                handler.sendEmptyMessage(4);
             } else {
                 File file = new File(videoUrl);
                 if (file.length() > 3 * 1024 * 1024) {
                     compress(videoUrl);
                 } else {
-                    uploadVideo();
-//                    saveBitmapFile(ThumbnailUtils.createVideoThumbnail(videoUrl, MediaStore.Video.Thumbnails.MINI_KIND));
+                    createWater();
                 }
             }
         }
@@ -247,34 +266,30 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     }
 
     private Handler handler = new Handler(msg -> {
-        Log.e("msg", "" + msg.what);
-        CustomProgressDialog.stopLoading();
         switch (msg.what) {
             case 0:
-                SCToastUtil.showToast(activity, "压缩视频失败", true);
+                SCToastUtil.showToast(activity, "视频处理失败", true);
+                CustomProgressDialog.stopLoading();
                 break;
             case 1:
+                createWater();
+                break;
+            case 3:
                 uploadVideo();
+                break;
+            case 4:
+                SCToastUtil.showToast(activity, "视频链接含中文路径，处理失败", true);
+                CustomProgressDialog.stopLoading();
                 break;
         }
         return false;
     });
 
-    private void uploadVideo() {
-        uploadVideoApi api = new uploadVideoApi(new HttpOnNextListener<ResourceUrl>() {
-            @Override
-            public void onNext(ResourceUrl o) {
-                videoUrl = o.getUrl();
-                publishDyn("");
-            }
-        }, activity).setFile(new File(videoUrl));
-        HttpUploadManager.getInstance().doHttpDeal(api);
-    }
-
     private void publishDyn(String images) {
         publishDynApi api = new publishDynApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
+                CustomProgressDialog.stopLoading();
                 activity.sendBroadcast(new Intent("lobster_publish"));
                 SCToastUtil.showToast(activity, "发布成功", true);
                 MineApp.toPublish = false;
@@ -292,6 +307,17 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                 .setVideoUrl(videoUrl)
                 .setAddressInfo(publicImageBinding.getCityName());
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void uploadVideo() {
+        uploadVideoApi api = new uploadVideoApi(new HttpOnNextListener<ResourceUrl>() {
+            @Override
+            public void onNext(ResourceUrl o) {
+                videoUrl = o.getUrl();
+                publishDyn("");
+            }
+        }, activity).setFile(new File(outPutUrl));
+        HttpUploadManager.getInstance().doHttpDeal(api);
     }
 
     /**
@@ -326,5 +352,111 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
         } else {
             ActivityUtils.getCameraMain(activity, true, true, true);
         }
+    }
+
+    /*****************水印功能******************/
+    /**
+     * 文本转成Bitmap
+     *
+     * @param text 文本内容
+     * @return 图片的bitmap
+     */
+    private Bitmap textToBitmap(String text) {
+
+        TextView tv = new TextView(activity);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        tv.setLayoutParams(layoutParams);
+        tv.setText(text);
+        tv.setTextSize(14);
+        tv.setGravity(Gravity.CENTER_HORIZONTAL);
+        tv.setDrawingCacheEnabled(true);
+        tv.setTextColor(Color.WHITE);
+        tv.setBackgroundColor(Color.TRANSPARENT);
+        tv.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        tv.layout(0, 0, tv.getMeasuredWidth(), tv.getMeasuredHeight());
+        tv.buildDrawingCache();
+        Bitmap bitmap = tv.getDrawingCache();
+        return Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), false);
+    }
+
+    private void getImage(Bitmap bitmap) {
+        try {
+            FileOutputStream os = new FileOutputStream(new File(imageUrl));
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String[] addWaterMark(String imageUrl, String videoUrl, String outputUrl) {
+//        String content = "-i " + videoUrl + " -i " + imageUrl +
+//                " -filter_complex overlay=20:20 -y -strict -2 -vcodec libx264 -preset ultrafast" +
+//                " -crf 29 -threads 2 -acodec aac -ar 44100 -ac 2 -b:a 32k " + outputUrl;
+        String[] commands = new String[26];
+        commands[0] = "-i";
+        commands[1] = videoUrl;
+        commands[2] = "-i";
+        commands[3] = imageUrl;
+        commands[4] = "-filter_complex";
+        commands[5] = "overlay=20:20";
+        commands[6] = "-y";
+        commands[7] = "-strict";
+        commands[8] = "-2";
+        commands[9] = "-vcodec";
+        commands[10] = "libx264";
+        commands[11] = "-preset";
+        commands[12] = "ultrafast";
+        //-crf  用于指定输出视频的质量，取值范围是0-51，默认值为23，数字越小输出视频的质量越高。
+        // 这个选项会直接影响到输出视频的码率。一般来说，压制480p我会用20左右，压制720p我会用16-18
+        commands[13] = "-crf";
+        commands[14] = "10";
+        commands[15] = "-threads";
+        commands[16] = "2";
+        commands[17] = "-acodec";
+        commands[18] = "aac";
+        commands[19] = "-ar";
+        commands[20] = "44100";
+        commands[21] = "-ac";
+        commands[22] = "2";
+        commands[23] = "-b:a";
+        commands[24] = "32k";
+        commands[25] = outputUrl;
+        return commands;
+    }
+
+    // 添加水印
+    private void createWater() {
+        Bitmap bitmap = textToBitmap("虾菇号：" + BaseActivity.userId);
+        getImage(bitmap);
+
+        String[] common = addWaterMark(imageUrl, videoUrl, outPutUrl);
+        FFmpeg.getInstance(activity).execute(common, new FFmpegExecuteResponseHandler() {
+            @Override
+            public void onSuccess(String message) {
+                handler.sendEmptyMessage(3);
+            }
+
+            @Override
+            public void onProgress(String message) {
+            }
+
+            @Override
+            public void onFailure(String message) {
+                handler.sendEmptyMessage(0);
+            }
+
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onFinish() {
+            }
+        });
     }
 }

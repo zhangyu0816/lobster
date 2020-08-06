@@ -11,7 +11,6 @@ import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_camera.R;
 import com.zb.module_camera.adapter.CameraAdapter;
-import com.zb.module_camera.databinding.CameraVideosBinding;
 import com.zb.module_camera.iv.VideosVMInterface;
 
 import java.io.File;
@@ -24,7 +23,6 @@ import androidx.databinding.ViewDataBinding;
 
 public class VideosViewModel extends BaseViewModel implements VideosVMInterface {
     public boolean showBottom;
-    private CameraVideosBinding videosBinding;
     public CameraAdapter adapter;
     private List<VideoInfo> videoInfoList = new ArrayList<>();
     private VideoInfo videoInfo;
@@ -34,7 +32,6 @@ public class VideosViewModel extends BaseViewModel implements VideosVMInterface 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        videosBinding = (CameraVideosBinding) binding;
         setAdapter();
         getVideoFile(Environment.getExternalStorageDirectory());
     }

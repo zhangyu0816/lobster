@@ -34,7 +34,6 @@ public class VideoPlayViewModel extends BaseViewModel implements VideoPlayVMInte
     public void back(View view) {
         mBinding.videoView.stopPlayback();//停止播放视频,并且释放
         mBinding.videoView.suspend();//在任何状态下释放媒体播放器
-
         if (isUpload) {
             if (MineApp.isLocation) {
                 ActivityUtils.getCameraVideos(MineApp.showBottom);
@@ -53,13 +52,13 @@ public class VideoPlayViewModel extends BaseViewModel implements VideoPlayVMInte
                 MineApp.cameraType = 1;
                 MineApp.isMore = false;
                 MineApp.filePath = filePath;
-                MineApp.time = (long) duration;
+                MineApp.time = duration;
                 ActivityUtils.getHomePublishImage();
             } else {
                 Intent data = new Intent("lobster_camera");
                 data.putExtra("cameraType", 1);
                 data.putExtra("filePath", filePath);
-                data.putExtra("time", (long) duration);
+                data.putExtra("time", duration);
                 activity.sendBroadcast(data);
             }
         }
@@ -94,7 +93,6 @@ public class VideoPlayViewModel extends BaseViewModel implements VideoPlayVMInte
         });
         //视频播放完成后的回调
         mBinding.videoView.setOnCompletionListener(mp -> {
-
             mBinding.videoPlay.setVisibility(View.VISIBLE);
             mBinding.videoView.stopPlayback();//停止播放视频,并且释放
             mBinding.videoView.suspend();//在任何状态下释放媒体播放器
@@ -124,6 +122,7 @@ public class VideoPlayViewModel extends BaseViewModel implements VideoPlayVMInte
                     mBinding.videoPlay.setVisibility(View.GONE);
                 }
                 return true;
+            } else if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
             }
 //                what 对应返回的值如下
 //                public static final int MEDIA_INFO_UNKNOWN = 1;  媒体信息未知
@@ -153,8 +152,10 @@ public class VideoPlayViewModel extends BaseViewModel implements VideoPlayVMInte
 
         if (ObjectUtils.getViewSizeByHeight(0.9f) * width / height > MineApp.W) {
             AdapterBinding.viewSize(mBinding.videoView, MineApp.W, (MineApp.W * height / width));
+            AdapterBinding.viewSize(mBinding.playLayout, MineApp.W, (MineApp.W * height / width));
         } else {
             AdapterBinding.viewSize(mBinding.videoView, (ObjectUtils.getViewSizeByHeight(0.9f) * width / height), ObjectUtils.getViewSizeByHeight(0.9f));
+            AdapterBinding.viewSize(mBinding.playLayout, (ObjectUtils.getViewSizeByHeight(0.9f) * width / height), ObjectUtils.getViewSizeByHeight(0.9f));
         }
     }
 }

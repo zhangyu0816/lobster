@@ -18,6 +18,7 @@ import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.PwsPerformBinding;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
+import com.zero.smallvideorecord.JianXiCamera;
 
 import java.io.File;
 import java.util.Random;
@@ -97,6 +98,21 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         }
         File newFile = new File(videoPath, randomString(15) + ".mp4");
         return newFile;
+    }
+
+    public static void createFfmpegFile() {
+        File videoPath = new File(activity.getFilesDir(), "ffmpeg");
+        if (!videoPath.exists()) {
+            videoPath.mkdirs();
+        }
+    }
+
+    public static void createJianXiCameraFile() {
+        File file = new File(activity.getCacheDir(), "videos");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        JianXiCamera.setVideoCachePath(file.getPath() + "/");
     }
 
     /**

@@ -91,6 +91,7 @@ public class MineApp extends MultiDexApplication {
     public static String filePath = "";
     public static boolean isMore = false;
     public static long time = 0;
+    public static String aspect = "";
 
     static {
         //设置全局的Header构建器

@@ -23,7 +23,7 @@ android {
         }
         ndk {
             //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
-            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a"
+            abiFilters "armeabi", "armeabi-v7a"
         }
 
     }
@@ -48,6 +48,7 @@ dependencies {
     api 'com.squareup.retrofit2:converter-gson:2.5.0'
     api 'com.squareup.retrofit2:adapter-rxjava:2.3.0'
     implementation project(':xbanner')
+    api project(path: ':FFmpegAndroid')
     // RxAppCompatActivity
     api 'com.trello:rxlifecycle-components:1.0'
     // 路由包
