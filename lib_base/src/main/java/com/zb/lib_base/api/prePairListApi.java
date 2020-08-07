@@ -6,7 +6,9 @@ import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.model.BaseEntity;
 import com.zb.lib_base.model.PairInfo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import rx.Observable;
 
@@ -37,6 +39,12 @@ public class prePairListApi extends BaseEntity<List<PairInfo>> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.prePairList(sex, minAge, maxAge);
+        Map<String, String> map = new HashMap<>();
+        if (sex != -1) {
+            map.put("sex", sex + "");
+        }
+        map.put("minAge", minAge + "");
+        map.put("maxAge", maxAge + "");
+        return methods.prePairList(map);
     }
 }

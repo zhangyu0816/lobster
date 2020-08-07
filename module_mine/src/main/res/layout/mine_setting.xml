@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:attr="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -27,6 +29,14 @@
             name="walletInfo"
             type="com.zb.lib_base.model.WalletInfo" />
 
+        <variable
+            name="sexName"
+            type="String" />
+
+        <variable
+            name="ageName"
+            type="String" />
+
     </data>
 
     <LinearLayout
@@ -49,6 +59,108 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:background="@drawable/btn_bg_white_radius5"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:text="筛选设置"
+                        android:textColor="@color/black_4d4"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:background="@color/black_efe" />
+
+                    <RelativeLayout
+                        onClickDelayed="@{viewModel::toSex}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="给我展示"
+                            android:textColor="@color/black_4d4"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:drawableEnd="@mipmap/arrow_small_right_icon"
+                            android:drawablePadding="5dp"
+                            android:gravity="center"
+                            android:text="@{sexName}"
+                            android:textColor="@color/black_827"
+                            android:textSize="14sp"
+                            tools:text="只有男士" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:background="@color/black_efe" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp">
+
+                        <TextView
+                            android:id="@+id/tv_age_temp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="年龄"
+                            android:textColor="@color/black_4d4"
+                            android:textSize="14sp" />
+
+                        <com.zb.module_mine.views.DoubleHeadedDragonBar
+                            android:id="@+id/ratting_age"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginTop="-10dp"
+                            android:layout_toStartOf="@+id/tv_age"
+                            android:layout_toEndOf="@+id/tv_age_temp"
+                            attr:bg_color="@color/black_efe"
+                            attr:button_height="20dp"
+                            attr:button_img="@mipmap/ratting_icon"
+                            attr:button_width="20dp"
+                            attr:seek_height="4dp"
+                            attr:text_color="#000"
+                            attr:value_color="@color/purple_7a4" />
+
+                        <TextView
+                            android:id="@+id/tv_age"
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:gravity="center"
+                            android:text="@{ageName}"
+                            android:textColor="@color/red_fe4"
+                            android:textSize="14sp"
+                            tools:text="30-50+" />
+                    </RelativeLayout>
+                </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"

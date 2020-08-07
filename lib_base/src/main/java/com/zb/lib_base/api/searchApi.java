@@ -6,7 +6,9 @@ import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.model.BaseEntity;
 import com.zb.lib_base.model.MemberInfo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import rx.Observable;
 
@@ -55,6 +57,14 @@ public class searchApi extends BaseEntity<List<MemberInfo>> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.search(pageNo, keyWord, cityId, sex, minAge, maxAge);
+        Map<String, String> map = new HashMap<>();
+        if (sex != -1)
+            map.put("sex", sex + "");
+        map.put("pageNo", pageNo + "");
+        map.put("keyWord", keyWord);
+        map.put("cityId", cityId + "");
+        map.put("minAge", minAge + "");
+        map.put("maxAge", maxAge + "");
+        return methods.search(map);
     }
 }

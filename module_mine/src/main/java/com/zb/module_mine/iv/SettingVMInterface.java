@@ -3,6 +3,9 @@ package com.zb.module_mine.iv;
 import android.view.View;
 
 public interface SettingVMInterface {
+
+    void toSex(View view);
+
     void toRealName(View view);
 
     void toWallet(View view);

@@ -15,6 +15,7 @@ import java.io.File;
 public class SettingActivity extends MineBaseActivity {
     private SettingViewModel viewModel;
 
+
     @Override
     public int getRes() {
         return R.layout.mine_setting;
@@ -27,6 +28,7 @@ public class SettingActivity extends MineBaseActivity {
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.title, "设置");
         mBinding.setVariable(BR.cacheSize, DataCleanManager.getCacheSize(new File(String.valueOf(activity.getCacheDir()))));
+
     }
 
     @Override

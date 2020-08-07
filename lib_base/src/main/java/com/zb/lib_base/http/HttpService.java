@@ -299,9 +299,7 @@ public interface HttpService {
 
     // 搜索
     @GET("api/SimpleRent_search")
-    Observable<BaseResultEntity<List<MemberInfo>>> search(@Query("pageNo") int pageNo, @Query("keyWord") String keyWord,
-                                                          @Query("cityId") long cityId, @Query("sex") int sex,
-                                                          @Query("minAge") int minAge, @Query("maxAge") int maxAge);
+    Observable<BaseResultEntity<List<MemberInfo>>> search(@QueryMap Map<String,String> map);
 
     /******************************* 卡片 **********************************/
     // 加入匹配池 (提交当前位置)
@@ -318,7 +316,7 @@ public interface HttpService {
 
     // 预匹配列表
     @GET("api/Pair_prePairList")
-    Observable<BaseResultEntity<List<PairInfo>>> prePairList(@Query("sex") int sex, @Query("minAge") int minAge, @Query("maxAge") int maxAge);
+    Observable<BaseResultEntity<List<PairInfo>>> prePairList(@QueryMap Map<String, String> map);
 
     // 匹配列表
     @GET("api/Pair_pairList")

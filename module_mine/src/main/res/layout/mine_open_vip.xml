@@ -15,47 +15,25 @@
 
     </data>
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/scroll_view"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:paddingBottom="78dp"
+            android:scrollbars="none">
 
             <LinearLayout
+                android:id="@+id/top_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/gradient_black_bg"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="22dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <ImageView
-                        onClickDelayed="@{viewModel::back}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="15dp"
-                        app:srcCompat="@mipmap/back_white_icon" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="我的权益"
-                        android:textColor="@android:color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-                </RelativeLayout>
+                android:orientation="vertical"
+                android:paddingTop="78dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -117,12 +95,12 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="20dp"
                         android:layout_marginEnd="15dp"
+                        android:alpha="0.8"
                         android:gravity="right"
                         android:text='@{viewModel.mineInfo.memberExpireTime.isEmpty()?"":String.format(@string/member_expire_time,viewModel.mineInfo.memberExpireTime.substring(0,10))}'
                         android:textColor="@android:color/white"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        android:alpha="0.8"
                         android:visibility="@{viewModel.mineInfo.memberType==2?View.VISIBLE:View.GONE}" />
 
                     <TextView
@@ -136,74 +114,77 @@
                         android:textColor="@color/white_cc"
                         android:textSize="14sp" />
 
-                    <TextView
-                        onClickDelayed="@{v->viewModel.getVip(0)}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="38dp"
-                        android:layout_below="@+id/tv_nick"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginTop="15dp"
-                        android:layout_marginEnd="15dp"
-                        android:background="@drawable/gradient_yellow_ffc_ff9"
-                        android:gravity="center"
-                        android:paddingStart="25dp"
-                        android:paddingEnd="25dp"
-                        android:text="@{viewModel.mineInfo.memberType==2?@string/pay_vip:@string/open_vip}"
-                        android:textColor="@android:color/white"
-                        android:textSize="16sp"
-                        android:textStyle="bold"/>
+                    <!--                <TextView-->
+                    <!--                    onClickDelayed="@{v->viewModel.getVip(0)}"-->
+                    <!--                    android:layout_width="wrap_content"-->
+                    <!--                    android:layout_height="38dp"-->
+                    <!--                    android:layout_below="@+id/tv_nick"-->
+                    <!--                    android:layout_alignParentEnd="true"-->
+                    <!--                    android:layout_marginTop="15dp"-->
+                    <!--                    android:layout_marginEnd="15dp"-->
+                    <!--                    android:background="@drawable/gradient_yellow_ffc_ff9"-->
+                    <!--                    android:gravity="center"-->
+                    <!--                    android:paddingStart="25dp"-->
+                    <!--                    android:paddingEnd="25dp"-->
+                    <!--                    android:text="@{viewModel.mineInfo.memberType==2?@string/pay_vip:@string/open_vip}"-->
+                    <!--                    android:textColor="@android:color/white"-->
+                    <!--                    android:textSize="16sp"-->
+                    <!--                    android:textStyle="bold" />-->
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-30dp"
+                    android:background="@android:color/white">
+
+                    <ImageView
+                        viewHeightSize="@{ObjectUtils.getVipIntroHeight()}"
+                        viewWidthSize="@{-1}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/vip_intro_icon" />
+
                 </RelativeLayout>
 
             </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp">
 
             <ImageView
-                viewHeightSize="@{ObjectUtils.getVipIntroHeight()}"
-                viewWidthSize="@{-1}"
-                android:layout_width="match_parent"
+                onClickDelayed="@{viewModel::back}"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-30dp"
-                android:background="@mipmap/vip_intro_icon" />
+                android:padding="15dp"
+                app:srcCompat="@mipmap/back_white_icon" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="5dp"
-                android:background="@color/black_efe" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="15dp">
+                android:layout_centerInParent="true"
+                android:text="我的权益"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="VIP套餐"
-                    android:textColor="#827F9A"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <com.zb.lib_base.views.MyRecyclerView
-                    adapter="@{viewModel.adapter}"
-                    recyclerType="@{1}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="15dp" />
-
-                <TextView
-                    onClickDelayed="@{v->viewModel.getVip(1)}"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:background="@drawable/gradient_purple_6d5_ae7"
-                    android:gravity="center"
-                    android:text="@{viewModel.mineInfo.memberType==2?@string/pay_btn:@string/open_btn}"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-
-            </LinearLayout>
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+        <TextView
+            onClickDelayed="@{v->viewModel.getVip(1)}"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/gradient_purple_6d5_ae7"
+            android:gravity="center"
+            android:text="@{viewModel.mineInfo.memberType==2?@string/pay_btn:@string/open_btn}"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 </layout>

@@ -204,4 +204,5 @@ public class VipAdPW extends BasePopupWindow {
         super.cancel(view);
         dismiss();
     }
+
 }

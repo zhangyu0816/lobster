@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DoubleHeadedDragonBar">
+        <!--进度条按钮宽高-->
+        <attr format="dimension" name="button_width"/>
+        <attr format="dimension" name="button_height"/>
+        <!--进图条按钮图片-->
+        <attr format="reference" name="button_img"/>
+        <!--单位字体颜色-->
+        <attr format="color" name="text_color"/>
+        <!--进图条背景颜色-->
+        <attr format="color" name="bg_color"/>
+        <!--进度条颜色-->
+        <attr format="color" name="value_color"/>
+        <!--进度条宽-->
+        <attr format="dimension" name="seek_height"/>
+    </declare-styleable>
+</resources>

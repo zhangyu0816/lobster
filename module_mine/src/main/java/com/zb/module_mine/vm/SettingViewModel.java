@@ -19,10 +19,15 @@ import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.SelectorPW;
 import com.zb.lib_base.windows.TextPW;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.databinding.MineSettingBinding;
 import com.zb.module_mine.iv.SettingVMInterface;
+import com.zb.module_mine.views.DoubleHeadedDragonBar;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
 
@@ -30,6 +35,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     private MineInfo mineInfo;
     private BaseReceiver updateWalletReceiver;
     private MineSettingBinding mBinding;
+    private List<String> selectList = new ArrayList<>();
 
     @Override
     public void back(View view) {
@@ -50,10 +56,47 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
                 mBinding.setVariable(BR.walletInfo, MineApp.walletInfo);
             }
         };
+        selectList.add("只有女士");
+        selectList.add("只有男士");
+        selectList.add("全部");
+
+        mBinding.setSexName(selectList.get(MineApp.sex == -1 ? 2 : MineApp.sex));
+
+
+        mBinding.rattingAge.setMinValue(MineApp.minAge);
+        mBinding.rattingAge.setMaxValue(MineApp.maxAge);
+        mBinding.setAgeName(MineApp.minAge + "-" + MineApp.maxAge + "+");
+        mBinding.rattingAge.setCallBack(new DoubleHeadedDragonBar.DhdBarCallBack() {
+            //结束触摸 按百分比返回选择值，范围 0~100
+            @Override
+            public void onEndTouch(float minPercentage, float maxPercentage) {
+                MineApp.minAge = (int) minPercentage;
+                MineApp.maxAge = (int) maxPercentage;
+                mBinding.setAgeName(MineApp.minAge + "-" + MineApp.maxAge + "+");
+                activity.sendBroadcast(new Intent("lobster_location"));
+            }
+
+            @Override
+            public void setValue(int minValue, int maxValue) {
+                super.setValue(minValue, maxValue);
+                MineApp.minAge = minValue;
+                MineApp.maxAge = maxValue;
+                mBinding.setAgeName(MineApp.minAge + "-" + MineApp.maxAge + "+");
+            }
+        });
     }
 
     public void onDestroy() {
         updateWalletReceiver.unregisterReceiver();
+    }
+
+    @Override
+    public void toSex(View view) {
+        new SelectorPW(activity, mBinding.getRoot(), selectList, position -> {
+            mBinding.setSexName(selectList.get(position));
+            MineApp.sex = position == 2 ? -1 : position;
+            activity.sendBroadcast(new Intent("lobster_location"));
+        });
     }
 
     @Override
