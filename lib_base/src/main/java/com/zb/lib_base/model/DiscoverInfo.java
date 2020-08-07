@@ -28,6 +28,7 @@ public class DiscoverInfo extends BaseObservable {
     private String friendTitle = "";
     private String addressInfo = "";
 
+
     @Bindable
     public long getFriendDynId() {
         return friendDynId;
@@ -227,4 +228,5 @@ public class DiscoverInfo extends BaseObservable {
         this.addressInfo = addressInfo;
         notifyPropertyChanged(BR.addressInfo);
     }
+
 }

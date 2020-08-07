@@ -64,7 +64,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     public GoodDb goodDb;
     private HomeDiscoverVideoBinding mBinding;
     private ObjectAnimator animator;
-    private int goodNum = 0;
     private List<String> selectorList = new ArrayList<>();
     private MineInfo mineInfo;
     private LikeDb likeDb;
@@ -87,6 +86,10 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
         goodDb = new GoodDb(Realm.getDefaultInstance());
         mBinding.setIsPlay(true);
         mBinding.setIsProgress(false);
+//        animator = ObjectAnimator.ofFloat(mBinding.ivProgress, "rotation", 0, 360).setDuration(700);
+//        animator.setRepeatMode(ValueAnimator.RESTART);
+//        animator.setRepeatCount(Animation.INFINITE);
+//        animator.start();
         dynDetail();
     }
 
@@ -256,6 +259,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                     selectorList.add("举报");
                     selectorList.add("下载视频");
                 }
+//                initVideo();
                 DownLoad.getFilePath(discoverInfo.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), new DownLoad.CallBack() {
                     @Override
                     public void success(String filePath) {
@@ -362,7 +366,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             @Override
             public void onNext(Object o) {
                 goodDb.saveGood(new CollectID(friendDynId));
-                goodNum = discoverInfo.getGoodNum() + 1;
+                int goodNum = discoverInfo.getGoodNum() + 1;
                 mBinding.setViewModel(DiscoverVideoViewModel.this);
                 Intent data = new Intent("lobster_doGood");
                 data.putExtra("goodNum", goodNum);
@@ -392,7 +396,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             @Override
             public void onNext(Object o) {
                 goodDb.deleteGood(friendDynId);
-                goodNum = discoverInfo.getGoodNum() - 1;
+                int goodNum = discoverInfo.getGoodNum() - 1;
                 mBinding.setViewModel(DiscoverVideoViewModel.this);
                 Intent data = new Intent("lobster_doGood");
                 data.putExtra("goodNum", goodNum);
@@ -432,17 +436,23 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                 mBinding.videoView.suspend();//在任何状态下释放媒体播放器
                 return true;
             } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-                // 缓冲开始
-                mBinding.setIsPlay(true);
+//                // 缓冲开始
+//                mBinding.setIsPlay(true);
+//                mBinding.setIsProgress(true);
+
                 return true;
             } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
                 // 缓冲结束,此接口每次回调完START就回调END,若不加上判断就会出现缓冲图标一闪一闪的卡顿现象
                 if (mp.isPlaying()) {
                     mBinding.setIsPlay(true);
+                    mBinding.setIsProgress(false);
                 }
                 return true;
             } else if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
                 mBinding.setIsPlay(true);
+                mBinding.setIsProgress(false);
+//                if (animator != null)
+//                    animator.cancel();
             }
             return false; //如果方法处理了信息，则为true；如果没有，则为false。返回false或根本没有OnInfoListener，将导致丢弃该信息。
         });
@@ -459,8 +469,13 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
 
         if (ObjectUtils.getViewSizeByHeight(1.0f) * width / height > MineApp.W) {
             AdapterBinding.viewSize(mBinding.videoView, MineApp.W, (MineApp.W * height / width));
+//            AdapterBinding.loadImage(mBinding.ivVideo, discoverInfo.getVideoUrl(), 0, ObjectUtils.getDefaultRes(), MineApp.W, (MineApp.W * height / width),
+//                    false, false, 0, false, 0, false);
         } else {
             AdapterBinding.viewSize(mBinding.videoView, (ObjectUtils.getViewSizeByHeight(1.0f) * width / height), ObjectUtils.getViewSizeByHeight(1.0f));
+//            AdapterBinding.loadImage(mBinding.ivVideo, discoverInfo.getVideoUrl(), 0,
+//                    ObjectUtils.getDefaultRes(), (ObjectUtils.getViewSizeByHeight(1.0f) * width / height), ObjectUtils.getViewSizeByHeight(1.0f),
+//                    false, false, 0, false, 0, false);
         }
     }
 }

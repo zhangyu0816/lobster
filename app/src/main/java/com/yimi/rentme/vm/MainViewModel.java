@@ -37,6 +37,7 @@ import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.BottleCacheDb;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.db.HistoryMsgDb;
+import com.zb.lib_base.db.ResFileDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -99,6 +100,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private BaseReceiver newDynMsgAllNumReceiver;
     private AreaDb areaDb;
     private HistoryMsgDb historyMsgDb;
+    private ResFileDb resFileDb;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -108,6 +110,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         areaDb = new AreaDb(Realm.getDefaultInstance());
         chatListDb = new ChatListDb(Realm.getDefaultInstance());
         historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
+        resFileDb = new ResFileDb(Realm.getDefaultInstance());
+        resFileDb.deleteAll();
         mBinding = (AcMainBinding) binding;
         mBinding.tvTitle.setTypeface(MineApp.simplifiedType);
         mBinding.tvContent.setTypeface(MineApp.simplifiedType);

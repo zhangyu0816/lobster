@@ -22,6 +22,7 @@ import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.log.LogUtil;
 import com.zb.lib_base.model.BankInfo;
 import com.zb.lib_base.model.ContactNum;
+import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.MineNewsCount;
@@ -97,6 +98,7 @@ public class MineApp extends MultiDexApplication {
     public static int maxAge = 100;
     public static int minAge = 0;
 
+    public static List<DiscoverInfo> discoverInfoList = new ArrayList<>();
 
     static {
         //设置全局的Header构建器

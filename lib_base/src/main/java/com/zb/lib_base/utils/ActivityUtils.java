@@ -4,7 +4,11 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.model.Authentication;
 import com.zb.lib_base.model.BottleInfo;
+import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.FeedbackInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ActivityUtils {
     /*********************** app **************************/
@@ -42,6 +46,11 @@ public class ActivityUtils {
     // 礼物列表
     public static void getHomeSearch() {
         ARouter.getInstance().build(RouteUtils.Home_Search).navigation();
+    }
+
+    // 礼物列表
+    public static void getHomeVideoList(int position, int pageNo) {
+        ARouter.getInstance().build(RouteUtils.Home_Video_List).withInt("position", position).withInt("pageNo", pageNo).navigation();
     }
 
     /*********************** 卡片 **************************/
