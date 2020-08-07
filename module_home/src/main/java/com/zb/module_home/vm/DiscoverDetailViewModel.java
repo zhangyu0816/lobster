@@ -86,6 +86,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     private long reviewId = 0;
     private int goodNum = 0;
     private BaseReceiver finishRefreshReceiver;
+    private BaseReceiver attentionReceiver;
     private boolean isFirst = true;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -95,7 +96,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         mBinding = (HomeDiscoverDetailBinding) binding;
         mineInfo = mineInfoDb.getMineInfo();
         likeDb = new LikeDb(Realm.getDefaultInstance());
-        AdapterBinding.viewSize(mBinding.banner, ObjectUtils.getViewSizeByWidth(0.8f), ObjectUtils.getLogoHeight(0.8f));
+        AdapterBinding.viewSize(mBinding.banner, MineApp.W, ObjectUtils.getLogoHeight(1.0f));
         mBinding.setContent("");
         mBinding.setName("");
         mBinding.setListNum(10);
@@ -117,11 +118,18 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             }
         };
 
+        attentionReceiver = new BaseReceiver(activity,"lobster_attention") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.setIsAttention(intent.getBooleanExtra("isAttention",false));
+            }
+        };
+
         mBinding.coordinator.setOnTouchListener((view, motionEvent) -> {
             if (motionEvent.getAction() == MotionEvent.ACTION_MOVE && isSoftShowing() && isFirst) {
                 isFirst = false;
                 hintKeyBoard();
-                new Handler().postDelayed(() -> isFirst = true,500);
+                new Handler().postDelayed(() -> isFirst = true, 500);
             }
             return false;
         });
@@ -130,7 +138,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             if (motionEvent.getAction() == MotionEvent.ACTION_MOVE && isSoftShowing() && isFirst) {
                 isFirst = false;
                 hintKeyBoard();
-                new Handler().postDelayed(() -> isFirst = true,500);
+                new Handler().postDelayed(() -> isFirst = true, 500);
             }
             return false;
         });
@@ -148,6 +156,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     public void back(View view) {
         super.back(view);
         finishRefreshReceiver.unregisterReceiver();
+        attentionReceiver.unregisterReceiver();
         activity.finish();
     }
 
@@ -526,7 +535,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         mBinding.banner.setImageScaleType(ImageView.ScaleType.FIT_XY)
                 .setAds(adList)
                 .setImageLoader((context, ads, image, position) -> AdapterBinding.loadImage(image, ads.getSmallImage(), 0,
-                        ObjectUtils.getDefaultRes(), ObjectUtils.getViewSizeByWidth(0.8f), ObjectUtils.getLogoHeight(0.8f),
+                        ObjectUtils.getDefaultRes(), MineApp.W, ObjectUtils.getLogoHeight(1.0f),
                         false, false, 0, false, 0, false))
                 .setBannerTypes(XBanner.CIRCLE_INDICATOR_TITLE)
                 .setIndicatorGravity(XBanner.INDICATOR_START)

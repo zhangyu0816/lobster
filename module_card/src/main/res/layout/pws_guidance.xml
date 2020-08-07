@@ -119,19 +119,19 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentBottom="true"
                         android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="38dp"
+                        android:layout_marginBottom="54dp"
                         android:background="@mipmap/guidance_return"
                         android:visibility="@{position==4?View.VISIBLE:View.GONE}" />
 
                     <ImageView
                         android:id="@+id/iv_super_like"
-                        viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(480,235)}"
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(480)}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(497,263)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(497)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="12dp"
                         android:layout_marginBottom="12dp"
                         android:background="@mipmap/guidance_super"
                         android:visibility="@{position==5?View.VISIBLE:View.INVISIBLE}" />

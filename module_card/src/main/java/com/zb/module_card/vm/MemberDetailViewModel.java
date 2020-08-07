@@ -1,7 +1,6 @@
 package com.zb.module_card.vm;
 
 import android.content.Intent;
-import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -30,7 +29,6 @@ import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
-import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -77,16 +75,12 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             selectorList.add("超级喜欢");
             selectorList.add("举报");
         }
-
         selectorList.add("分享");
         mBinding = (CardMemberDetailBinding) binding;
         mBinding.setVariable(BR.baseInfo, "");
+        mBinding.setIsAttention(false);
         AdapterBinding.viewSize(mBinding.banner, MineApp.W, ObjectUtils.getLogoHeight(1.0f));
 
-        new Handler().postDelayed(() -> {
-            int height = DisplayUtils.dip2px(82) - mBinding.topLinear.getHeight();
-            mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> mBinding.setShowBg(verticalOffset <= height));
-        }, 300);
         setAdapter();
         initFragments();
         otherInfo();
@@ -102,7 +96,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         fragments.add(FragmentUtils.getCardMemberDiscoverFragment(otherUserId));
         fragments.add(FragmentUtils.getCardMemberVideoFragment(otherUserId));
         mBinding.viewPage.setAdapter(new FragmentAdapter(activity.getSupportFragmentManager(), fragments));
-        initTabLayout(new String[]{"动态", "小视频"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_4d4, R.color.black_c3b,0);
+        initTabLayout(new String[]{"动态", "小视频"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_4d4, R.color.black_c3b, 0);
     }
 
     @Override
@@ -180,8 +174,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             @Override
             public void onNext(Object o) {
                 if (o == null) {
-                    mBinding.tvFollow.setText("取消关注");
-                    mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                    mBinding.setIsAttention(true);
                     attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 } else {
                     attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
@@ -196,18 +189,19 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         attentionOtherApi api = new attentionOtherApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                mBinding.tvFollow.setText("取消关注");
-                mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                mBinding.setIsAttention(true);
                 attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
+                Intent intent = new Intent("lobster_attention");
+                intent.putExtra("isAttention", mBinding.getIsAttention());
+                activity.sendBroadcast(intent);
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
                     if (e.getMessage().equals("已经关注过")) {
-                        mBinding.tvFollow.setText("取消关注");
-                        mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                        mBinding.setIsAttention(true);
                         attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                         activity.sendBroadcast(new Intent("lobster_attentionList"));
                     }
@@ -222,10 +216,12 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         cancelAttentionApi api = new cancelAttentionApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                mBinding.tvFollow.setText("关注");
-                mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_4d4));
+                mBinding.setIsAttention(false);
                 attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
+                Intent intent = new Intent("lobster_attention");
+                intent.putExtra("isAttention", mBinding.getIsAttention());
+                activity.sendBroadcast(intent);
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
@@ -330,7 +326,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     @Override
     public void follow(View view) {
         super.follow(view);
-        if (mBinding.tvFollow.getText().toString().equals("关注")) {
+        if (!mBinding.getIsAttention()) {
             attentionOther();
         } else {
             cancelAttention();

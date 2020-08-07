@@ -24,18 +24,68 @@
             type="boolean" />
 
         <variable
-            name="showBg"
+            name="isAttention"
             type="boolean" />
-
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <RelativeLayout
+            android:id="@+id/top_relative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white">
+
+            <ImageView
+                android:id="@+id/iv_back"
+                onClickDelayed="@{viewModel::back}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="15dp"
+                app:srcCompat="@mipmap/back_black_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@{viewModel.memberInfo.remark.isEmpty()?viewModel.memberInfo.nick:viewModel.memberInfo.remark}"
+                android:textColor="@color/black_252"
+                android:textSize="18sp"
+                tools:text="杀杀杀" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/iv_more"
+                android:background="@drawable/btn_bg_purple_7a4_radius60"
+                android:gravity="center"
+                android:onClick="@{viewModel::follow}"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@{isAttention?@string/attention_false:@string/attention_true}"
+                android:textColor="@android:color/white"
+                android:textSize="13sp"
+                android:visibility="@{viewModel.otherUserId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
+
+            <ImageView
+                android:id="@+id/iv_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:onClick="@{viewModel::more}"
+                android:padding="15dp"
+                app:srcCompat="@mipmap/back_more_icon" />
+        </RelativeLayout>
+
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@+id/top_relative"
             android:splitMotionEvents="false">
 
             <com.google.android.material.appbar.AppBarLayout
@@ -51,12 +101,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/white"
-                    android:minHeight="60dp"
                     app:contentInsetStart="0dp"
-                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
                     <LinearLayout
-
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
@@ -64,10 +112,7 @@
                         <RelativeLayout
                             android:id="@+id/top_linear"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
+                            android:layout_height="wrap_content">
 
                             <com.app.abby.xbanner.XBanner
                                 android:id="@+id/banner"
@@ -83,8 +128,8 @@
                                 android:layout_alignBottom="@+id/banner"
                                 android:layout_alignParentEnd="true"
                                 android:layout_margin="15dp"
-                                app:srcCompat="@mipmap/super_like_icon"
-                                android:visibility="@{viewModel.mineInfo.userId==viewModel.otherUserId?View.GONE:View.VISIBLE}"/>
+                                android:visibility="@{viewModel.mineInfo.userId==viewModel.otherUserId?View.GONE:View.VISIBLE}"
+                                app:srcCompat="@mipmap/super_like_icon" />
                         </RelativeLayout>
 
                         <LinearLayout
@@ -187,38 +232,23 @@
                     </LinearLayout>
                 </androidx.appcompat.widget.Toolbar>
 
-                <RelativeLayout
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tab_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <com.google.android.material.tabs.TabLayout
-                        android:id="@+id/tab_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="22dp"
-                        app:tabBackground="@android:color/transparent"
-                        app:tabGravity="center"
-                        app:tabIndicator="@drawable/indicator"
-                        app:tabIndicatorColor="@color/purple_7a4"
-                        app:tabIndicatorFullWidth="false"
-                        app:tabIndicatorHeight="3dp"
-                        app:tabMaxWidth="0dp"
-                        app:tabMinWidth="82dp"
-                        app:tabMode="fixed"
-                        app:tabPaddingBottom="-15dp"
-                        app:tabRippleColor="@android:color/transparent"
-                        app:tabSelectedTextColor="@color/black_4d4"
-                        app:tabTextColor="@color/black_c3b" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1px"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginTop="22dp"
-                        android:layout_marginEnd="15dp"
-                        android:background="@color/black_efe" />
-                </RelativeLayout>
-
+                    android:layout_height="50dp"
+                    app:tabBackground="@android:color/transparent"
+                    app:tabGravity="center"
+                    app:tabIndicator="@drawable/indicator"
+                    app:tabIndicatorColor="@color/purple_7a4"
+                    app:tabIndicatorFullWidth="false"
+                    app:tabIndicatorHeight="3dp"
+                    app:tabMaxWidth="0dp"
+                    app:tabMinWidth="82dp"
+                    app:tabMode="fixed"
+                    app:tabPaddingBottom="-15dp"
+                    app:tabRippleColor="@android:color/transparent"
+                    app:tabSelectedTextColor="@color/black_4d4"
+                    app:tabTextColor="@color/black_c3b" />
 
             </com.google.android.material.appbar.AppBarLayout>
 
@@ -248,68 +278,6 @@
             android:layout_margin="15dp"
             android:visibility="@{showLike?View.VISIBLE:View.GONE}"
             app:srcCompat="@mipmap/like_icon" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@{showBg?@color/black_252:@android:color/transparent}"
-            android:orientation="vertical">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="22dp" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp">
-
-                <ImageView
-                    android:id="@+id/iv_back"
-                    onClickDelayed="@{viewModel::back}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:padding="15dp"
-                    app:srcCompat="@mipmap/back_white_icon" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@+id/iv_back"
-                    android:text="@{viewModel.memberInfo.remark.isEmpty()?viewModel.memberInfo.nick:viewModel.memberInfo.remark}"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp"
-                    android:visibility="@{showBg?View.VISIBLE:View.GONE}"
-                    tools:text="杀杀杀" />
-
-                <TextView
-                    android:id="@+id/tv_follow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"
-                    android:layout_centerVertical="true"
-                    android:layout_toStartOf="@+id/iv_more"
-                    android:background="@drawable/btn_bg_white_radius60"
-                    android:gravity="center"
-                    android:onClick="@{viewModel::follow}"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:text="关注"
-                    android:textColor="@color/black_4d4"
-                    android:textSize="13sp"
-                    android:visibility="@{viewModel.otherUserId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
-
-                <ImageView
-                    android:id="@+id/iv_more"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:onClick="@{viewModel::more}"
-                    android:padding="15dp"
-                    app:srcCompat="@mipmap/more_icon" />
-            </RelativeLayout>
-        </LinearLayout>
     </RelativeLayout>
 
 </layout>
