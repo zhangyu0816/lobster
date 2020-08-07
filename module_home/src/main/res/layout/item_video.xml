@@ -22,15 +22,6 @@
         <variable
             name="viewModel"
             type="com.zb.module_home.vm.VideoListViewModel" />
-
-        <variable
-            name="memberInfo"
-            type="com.zb.lib_base.model.MemberInfo" />
-
-        <variable
-            name="binding"
-            type="androidx.databinding.ViewDataBinding" />
-
     </data>
 
     <RelativeLayout
@@ -70,7 +61,7 @@
                     defaultRes="@{ObjectUtils.getDefaultRes()}"
                     imageUrl="@{item.image}"
                     isCircle="@{true}"
-                    onClickDelayed="@{v->viewModel.toMemberDetail(binding,item)}"
+                    onClickDelayed="@{v->viewModel.toMemberDetail(item)}"
                     viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.08f)}"
                     viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.08f)}"
                     android:layout_width="30dp"
@@ -88,11 +79,11 @@
                     android:layout_marginBottom="-5dp"
                     android:layout_toEndOf="@+id/iv_logo"
                     android:background="@mipmap/vip_small_icon"
-                    android:visibility="@{memberInfo.memberType==2?View.VISIBLE:View.GONE}" />
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_nick"
-                    onClickDelayed="@{v->viewModel.toMemberDetail(binding,item)}"
+                    onClickDelayed="@{v->viewModel.toMemberDetail(item)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -113,7 +104,7 @@
                     android:layout_toEndOf="@+id/tv_nick"
                     android:background="@drawable/btn_bg_white_radius60"
                     android:gravity="center"
-                    android:onClick="@{viewModel::follow}"
+                    android:onClick="@{v->viewModel.follow(item)}"
                     android:paddingStart="15dp"
                     android:paddingEnd="15dp"
                     android:text="关注"
@@ -128,7 +119,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:onClick="@{viewModel::more}"
+                android:onClick="@{v->viewModel.more(item)}"
                 android:padding="15dp"
                 app:srcCompat="@mipmap/more_icon" />
         </RelativeLayout>
@@ -199,6 +190,7 @@
                         android:textColor="@android:color/white" />
 
                     <TextView
+                        android:id="@+id/tv_reviews"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_alignEnd="@+id/tv_review"
@@ -223,6 +215,7 @@
 
                 <ImageView
                     onClickDelayed="@{v->viewModel.doGood(position)}"
+                    android:id="@+id/iv_good"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="15dp"

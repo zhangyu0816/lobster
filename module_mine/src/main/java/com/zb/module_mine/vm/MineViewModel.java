@@ -117,13 +117,13 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
 
     @Override
     public void publishDiscover(View view) {
-//        MineApp.toPublish = false;
-//        MineApp.cameraType = 0;
-//        MineApp.filePath = "";
-//        MineApp.isMore = false;
-//        MineApp.time = 0;
-//        ActivityUtils.getHomePublishImage();
-        getPermissions();
+        MineApp.toPublish = false;
+        MineApp.cameraType = 0;
+        MineApp.filePath = "";
+        MineApp.isMore = false;
+        MineApp.time = 0;
+        ActivityUtils.getHomePublishImage();
+//        getPermissions();
     }
 
     @Override

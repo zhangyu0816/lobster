@@ -4,11 +4,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.model.Authentication;
 import com.zb.lib_base.model.BottleInfo;
-import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.FeedbackInfo;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ActivityUtils {
     /*********************** app **************************/

@@ -18,6 +18,8 @@ public class VideoListActivity extends BaseActivity {
     @Autowired(name = "pageNo")
     int pageNo;
 
+    private boolean isFirst = true;
+    private VideoListViewModel viewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.HomeVideoTheme);
@@ -31,10 +33,19 @@ public class VideoListActivity extends BaseActivity {
 
     @Override
     public void initUI() {
-        VideoListViewModel viewModel = new VideoListViewModel();
+         viewModel = new VideoListViewModel();
         viewModel.position = position;
         viewModel.pageNo = pageNo;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!isFirst){
+            viewModel.onResume();
+        }
+        isFirst = false;
     }
 }

@@ -27,7 +27,7 @@ public class DiscoverInfo extends BaseObservable {
     private int privateRedPageNum = 0; //私密红包数量
     private String friendTitle = "";
     private String addressInfo = "";
-
+    private String videoPath = "";
 
     @Bindable
     public long getFriendDynId() {
@@ -229,4 +229,13 @@ public class DiscoverInfo extends BaseObservable {
         notifyPropertyChanged(BR.addressInfo);
     }
 
+    @Bindable
+    public String getVideoPath() {
+        return videoPath;
+    }
+
+    public void setVideoPath(String videoPath) {
+        this.videoPath = videoPath;
+        notifyPropertyChanged(BR.videoPath);
+    }
 }

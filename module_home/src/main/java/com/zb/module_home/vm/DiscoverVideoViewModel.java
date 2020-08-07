@@ -195,7 +195,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                     mBinding.videoView.pause();
                     ActivityUtils.getHomeReport(discoverInfo.getUserId());
                 } else {
-
                     DownLoad.downloadLocation(downloadFileUrl, filePath -> SCToastUtil.showToast(activity, "下载成功", true));
                 }
             }
