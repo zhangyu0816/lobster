@@ -235,6 +235,11 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Register_Images).navigation();
     }
 
+    // 相册主页
+    public static void getBindingPhone(RxAppCompatActivity activity) {
+        ARouter.getInstance().build(RouteUtils.Register_Binding_Phone).navigation(activity, 1002);
+    }
+
     /*********************** 相册 **************************/
 
     // 相册主页

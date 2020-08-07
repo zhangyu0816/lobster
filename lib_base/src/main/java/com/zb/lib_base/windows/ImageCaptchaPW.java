@@ -1,18 +1,17 @@
-package com.zb.module_mine.windows;
+package com.zb.lib_base.windows;
 
 import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.zb.lib_base.BR;
+import com.zb.lib_base.R;
 import com.zb.lib_base.api.findImageCaptchaApi;
+import com.zb.lib_base.databinding.PwsImageCapptchaBinding;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.ImageCaptcha;
 import com.zb.lib_base.utils.SCToastUtil;
-import com.zb.lib_base.windows.BasePopupWindow;
-import com.zb.module_mine.BR;
-import com.zb.module_mine.R;
-import com.zb.module_mine.databinding.PwsImageCapptchaBinding;
 
 public class ImageCaptchaPW extends BasePopupWindow {
 

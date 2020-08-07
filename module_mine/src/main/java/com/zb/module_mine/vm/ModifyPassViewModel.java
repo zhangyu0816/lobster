@@ -16,10 +16,10 @@ import com.zb.lib_base.model.ImageCaptcha;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.ImageCaptchaPW;
 import com.zb.module_mine.R;
 import com.zb.module_mine.databinding.MineModifyPassBinding;
 import com.zb.module_mine.iv.ModifyPassVMInterface;
-import com.zb.module_mine.windows.ImageCaptchaPW;
 
 import androidx.databinding.ViewDataBinding;
 
@@ -95,7 +95,7 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
                 SCToastUtil.showToast(activity, "请输入旧密码", true);
                 return;
             }
-            if (!TextUtils.equals(mBinding.getOldPass(), PreferenceUtil.readStringValue(activity, "login_pass"))) {
+            if (!TextUtils.equals(mBinding.getOldPass(), PreferenceUtil.readStringValue(activity, "loginPass"))) {
                 SCToastUtil.showToast(activity, "旧密码错误", true);
                 return;
             }
@@ -127,7 +127,7 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
             modifyPassApi api = new modifyPassApi(new HttpOnNextListener() {
                 @Override
                 public void onNext(Object o) {
-                    PreferenceUtil.saveStringValue(activity, "login_pass", mBinding.getNewPass());
+                    PreferenceUtil.saveStringValue(activity, "loginPass", mBinding.getNewPass());
                     SCToastUtil.showToast(activity, "修改成功", true);
                     activity.finish();
                 }
@@ -192,7 +192,7 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
         findPassWordApi api = new findPassWordApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                PreferenceUtil.saveStringValue(activity, "login_pass", mBinding.getNewPass());
+                PreferenceUtil.saveStringValue(activity, "loginPass", mBinding.getNewPass());
                 SCToastUtil.showToast(activity, "修改成功", true);
                 activity.finish();
             }

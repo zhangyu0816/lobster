@@ -46,8 +46,8 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface {
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         loginBinding = (RegisterLoginBinding) binding;
-        loginBinding.setPass(PreferenceUtil.readStringValue(activity, "login_pass"));
-        loginBinding.edPass.setText(PreferenceUtil.readStringValue(activity, "login_pass"));
+        loginBinding.setPass(PreferenceUtil.readStringValue(activity, "loginPass"));
+        loginBinding.edPass.setText(PreferenceUtil.readStringValue(activity, "loginPass"));
         if (!loginBinding.getPass().isEmpty()) {
             loginBinding.edPass.setSelection(loginBinding.getPass().length());
             loginBinding.tvNext.setBackgroundResource(R.drawable.btn_bg_white_radius60);
@@ -71,7 +71,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface {
                 PreferenceUtil.saveLongValue(activity, "userId", o.getId());
                 PreferenceUtil.saveStringValue(activity, "sessionId", o.getSessionId());
                 PreferenceUtil.saveStringValue(activity, "userName", o.getUserName());
-                PreferenceUtil.saveStringValue(activity, "login_pass", loginBinding.getPass());
+                PreferenceUtil.saveStringValue(activity, "loginPass", loginBinding.getPass());
                 BaseActivity.update();
                 myInfo();
             }
@@ -89,10 +89,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface {
             public void onNext(MineInfo o) {
                 SCToastUtil.showToast(activity, "登录成功", true);
                 mineInfoDb.saveMineInfo(o);
-                if (!MineApp.isLogin) {
-                    ActivityUtils.getMainActivity();
-                }
-                activity.sendBroadcast(new Intent("lobster_mainSelect"));
                 loginHelper = LoginSampleHelper.getInstance();
                 loginHelper.loginOut_Sample();
                 myImAccountInfoApi();
@@ -111,6 +107,11 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface {
             public void onNext(ImAccount o) {
                 loginHelper.loginOut_Sample();
                 loginHelper.login_Sample(activity, o.getImUserId(), o.getImPassWord());
+                if (MineApp.isLogin) {
+                    activity.sendBroadcast(new Intent("lobster_mainSelect"));
+                }else {
+                    ActivityUtils.getMainActivity();
+                }
                 activity.finish();
             }
         }, activity);

@@ -127,6 +127,10 @@ public interface HttpService {
     @POST("api/Union_bindingPhone")
     Observable<BaseResultEntity> bindingPhone(@Field("userName") String userName, @Field("captcha") String captcha);
 
+    @GET("api/Union_banderCaptcha")
+    Observable<BaseResultEntity> banderCaptcha(@Query("userName") String userName, @Query("imageCaptchaToken") String imageCaptchaToken,
+                                               @Query("imageCaptchaCode") String imageCaptchaCode);
+
     // 用户注册验证码
     @GET("api/Login_registCaptcha")
     Observable<BaseResultEntity> registerCaptcha(@Query("userName") String userName);

@@ -120,10 +120,11 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
             public void onNext(MineInfo o) {
                 SCToastUtil.showToast(activity, "注册成功", true);
                 mineInfoDb.saveMineInfo(o);
-                if (!MineApp.isLogin) {
+                if (MineApp.isLogin) {
+                    activity.sendBroadcast(new Intent("lobster_mainSelect"));
+                }else {
                     ActivityUtils.getMainActivity();
                 }
-                activity.sendBroadcast(new Intent("lobster_mainSelect"));
                 activity.finish();
             }
         }, activity);

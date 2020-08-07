@@ -133,10 +133,6 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
             public void onNext(MineInfo o) {
                 SCToastUtil.showToast(activity, "登录成功", true);
                 mineInfoDb.saveMineInfo(o);
-                if (!MineApp.isLogin) {
-                    ActivityUtils.getMainActivity();
-                }
-                activity.sendBroadcast(new Intent("lobster_mainSelect"));
                 loginHelper = LoginSampleHelper.getInstance();
                 loginHelper.loginOut_Sample();
                 myImAccountInfoApi();
@@ -155,6 +151,11 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
             public void onNext(ImAccount o) {
                 loginHelper.loginOut_Sample();
                 loginHelper.login_Sample(activity, o.getImUserId(), o.getImPassWord());
+                if (MineApp.isLogin) {
+                    activity.sendBroadcast(new Intent("lobster_mainSelect"));
+                }else {
+                    ActivityUtils.getMainActivity();
+                }
                 activity.finish();
             }
         }, activity);

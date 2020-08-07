@@ -13,6 +13,7 @@
         <activity android:name=".activity.CodeActivity" />
         <activity android:name=".activity.LogoActivity" />
         <activity android:name=".activity.ImagesActivity" />
+        <activity android:name=".activity.BindingPhoneActivity" />
     </application>
 
 </manifest>

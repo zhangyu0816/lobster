@@ -9,4 +9,12 @@ public interface MainVMInterface {
     void toLogin(View view);
 
     void changeUrl(View view);
+
+    void registerByUnion(String userName, String captcha);
+
+    void loginByUnion();
+
+    void toQQ(View view);
+
+    void toWX(View view);
 }
