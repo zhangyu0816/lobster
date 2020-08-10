@@ -36,7 +36,7 @@
             android:background="@drawable/btn_bg_black_efe_radius5"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="@{item.isEmpty()?View.VISIBLE:View.GONE}">
+            android:visibility="@{item.empty?View.VISIBLE:View.GONE}">
 
             <ImageView
                 android:id="@+id/imageView"
@@ -55,7 +55,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:visibility="@{item.isEmpty()?View.GONE:View.VISIBLE}"/>
+            android:visibility="@{item.empty?View.GONE:View.VISIBLE}"/>
     </RelativeLayout>
 
 </layout>

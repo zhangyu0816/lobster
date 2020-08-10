@@ -15,6 +15,7 @@ public class BottleViewModel extends BaseViewModel implements BottleVMInterface 
             SCToastUtil.showToast(activity, "当前网络异常，请检查是否连接", true);
             return;
         }
+        openBottle();
         ActivityUtils.getBottleThrow();
     }
 

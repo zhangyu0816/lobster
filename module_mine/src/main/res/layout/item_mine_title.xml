@@ -31,5 +31,5 @@
         android:textColor="@color/black_252"
         android:textSize="16sp"
         tools:text="金融保险"
-        android:background="@{isSelect?@android:color/white:@color/black_efe}"/>
+        android:background="@{isSelect?@color/white:@color/black_efe}"/>
 </layout>

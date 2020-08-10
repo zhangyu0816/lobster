@@ -22,4 +22,6 @@
     <string name="open_btn">获取VIP特权</string>
     <string name="pay_btn">立即续费VIP特权</string>
     <string name="mp3">.mp3</string>
+    <string name="add">+</string>
+    <string name="sub">-</string>
 </resources>

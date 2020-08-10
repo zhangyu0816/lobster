@@ -213,9 +213,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/iv_lobster"
-                android:layout_toStartOf="@+id/right_linear"
                 android:layout_marginEnd="15dp"
+                android:layout_toStartOf="@+id/right_linear"
+                android:layout_toEndOf="@+id/iv_lobster"
                 android:orientation="vertical">
 
                 <TextView
@@ -248,7 +248,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text='@{mineNewsCount.createTime.isEmpty()?"":mineNewsCount.createTime.substring(11,16)}'
+                    android:text='@{mineNewsCount.createTime.empty?"":mineNewsCount.createTime.substring(11,16)}'
                     android:textColor="@color/black_827"
                     android:textSize="12sp" />
 

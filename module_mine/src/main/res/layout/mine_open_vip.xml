@@ -82,7 +82,7 @@
                         android:layout_toStartOf="@+id/tv_open"
                         android:layout_toEndOf="@+id/image_relative"
                         android:singleLine="true"
-                        android:text='@{String.format(@string/member_nick,viewModel.mineInfo.nick)}'
+                        android:text="@{String.format(@string/member_nick, viewModel.mineInfo.nick)}"
                         android:textColor="@android:color/white"
                         android:textSize="18sp"
                         android:textStyle="bold"
@@ -97,7 +97,7 @@
                         android:layout_marginEnd="15dp"
                         android:alpha="0.8"
                         android:gravity="right"
-                        android:text='@{viewModel.mineInfo.memberExpireTime.isEmpty()?"":String.format(@string/member_expire_time,viewModel.mineInfo.memberExpireTime.substring(0,10))}'
+                        android:text='@{viewModel.mineInfo.memberExpireTime.empty ? String.valueOf("") : String.format(@string/member_expire_time, viewModel.mineInfo.memberExpireTime.substring(0,10))}'
                         android:textColor="@android:color/white"
                         android:textSize="12sp"
                         android:textStyle="bold"

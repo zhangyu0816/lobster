@@ -1,0 +1,7 @@
+<resources>
+    <string name="symbol_money">￥</string>
+    <string name="symbol_money_">￥ </string>
+    <string name="price_moth">￥%.1f/月</string>
+    <string name="price_save">省%.1f元</string>
+    <string name="quotation">’’</string>
+</resources>

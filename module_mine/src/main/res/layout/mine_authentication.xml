@@ -38,7 +38,7 @@
             android:text="@{String.format(@string/authen_fail,viewModel.authentication.mark)}"
             android:textColor="#F7BF00"
             android:textSize="12sp"
-            android:visibility="@{viewModel.authentication.mark.isEmpty()?View.GONE:View.VISIBLE}" />
+            android:visibility="@{viewModel.authentication.mark.empty?View.GONE:View.VISIBLE}" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"

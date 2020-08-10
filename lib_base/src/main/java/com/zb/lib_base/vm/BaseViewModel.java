@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -28,6 +29,7 @@ import com.zb.lib_base.db.MineInfoDb;
 import com.zb.lib_base.iv.BaseVMInterface;
 import com.zb.lib_base.windows.BottleQuestionPW;
 
+import java.io.IOException;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -198,6 +200,22 @@ public class BaseViewModel implements BaseVMInterface {
         animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
         animatorSet.playTogether(scaleX, scaleY, alpha);//同时执行
         animatorSet.start();
+    }
+
+    public void openBottle() {
+        // 播放声音
+        MediaPlayer mPlayer = MediaPlayer.create(activity, R.raw.open_bottle);
+        try {
+            if (mPlayer != null) {
+                mPlayer.stop();
+            }
+            mPlayer.prepare();
+            mPlayer.start();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

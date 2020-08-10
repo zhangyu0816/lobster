@@ -53,7 +53,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="2dp"
-                    android:text='@{String.format("%d",item.dayCount/30)}'
+                    android:text='@{String.format("%d",(item.dayCount/30))}'
                     android:textColor="@{isSelect?@color/red_fe4:@color/black_252}"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -72,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text='@{String.format("￥ %.1f",item.price)}'
+                android:text='@{@string/symbol_money_ + String.format("%.1f",item.price)}'
                 android:textColor="@{isSelect?@color/red_fe4:@color/black_252}"
                 android:textSize="12sp"
                 tools:text="￥ 28" />
@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="15dp"
-                android:text='@{String.format("￥%.1f/月",item.price/(item.dayCount/30))}'
+                android:text='@{String.format(@string/price_moth, item.price/(item.dayCount/30))}'
                 android:textColor="@{isSelect?@color/red_fe4:@color/black_827}"
                 android:textSize="9sp"
                 tools:text="￥28/月" />
@@ -96,7 +96,7 @@
             android:layout_centerHorizontal="true"
             android:background="@drawable/btn_bg_red_fe4_radius18"
             android:gravity="center"
-            android:text='@{String.format("省%.1f元",item.originalPrice-item.price)}'
+            android:text='@{String.format(@string/price_save, item.originalPrice-item.price)}'
             android:textColor="@android:color/white"
             android:textSize="10sp"
             android:visibility="@{isSelect?View.VISIBLE:View.GONE}"

@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:text='@{String.format((item.useType==1?"+":"-")+"%.2f",item.tranMoney)}'
+            android:text='@{String.format((item.useType == 1 ? @string/add : @string/sub) + "%.2f", item.tranMoney)}'
             android:textColor="@{item.useType==1?@color/red_fe4:@color/black_4d4}"
             android:textSize="18sp"
             android:textStyle="bold"

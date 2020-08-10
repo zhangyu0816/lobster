@@ -2,6 +2,8 @@ package com.zb.module_bottle.vm;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.os.Handler;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseReceiver;
@@ -13,12 +15,14 @@ import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_bottle.BR;
+import com.zb.module_bottle.R;
 import com.zb.module_bottle.iv.BottleThrowVMInterface;
 
 import androidx.databinding.ViewDataBinding;
 
 public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVMInterface {
     private BaseReceiver updateContactNumReceiver;
+    private MediaPlayer mPlayer;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -32,10 +36,35 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
                 }
             }
         };
+
+        mPlayer = MediaPlayer.create(activity, R.raw.sea_wave);
+        new Handler().postDelayed(() -> appSound(), 200);
     }
 
     public void onDestroy() {
         updateContactNumReceiver.unregisterReceiver();
+        if (mPlayer != null) {
+            mPlayer.stop();
+        }
+    }
+
+    public void onResume() {
+        if (!mPlayer.isPlaying())
+            appSound();
+    }
+
+    private void appSound() {
+        // 播放声音
+        try {
+            if (mPlayer != null) {
+                mPlayer.stop();
+            }
+            mPlayer.prepare();
+            mPlayer.setLooping(true);
+            mPlayer.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -51,11 +80,16 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
 
     @Override
     public void throwBottle(View view) {
+        openBottle();
         ActivityUtils.getBottleContent(new BottleInfo());
     }
 
     @Override
     public void myBottle(View view) {
+        if (mPlayer != null) {
+            mPlayer.stop();
+        }
+        openBottle();
         ActivityUtils.getBottleList();
     }
 
@@ -64,6 +98,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         findBottleApi api = new findBottleApi(new HttpOnNextListener<BottleInfo>() {
             @Override
             public void onNext(BottleInfo o) {
+                openBottle();
                 ActivityUtils.getBottleContent(o);
             }
         }, activity);

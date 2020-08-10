@@ -27,6 +27,7 @@
         android:layout_height="match_parent">
 
         <include
+            android:id="@+id/bottle_white_back"
             layout="@layout/bottle_white_back"
             title="@{title}"
             viewModel="@{viewModel}" />

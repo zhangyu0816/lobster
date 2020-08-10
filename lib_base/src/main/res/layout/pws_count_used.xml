@@ -60,7 +60,7 @@
                 android:text="@{content}"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
-                android:visibility="@{content.isEmpty()?View.GONE:View.VISIBLE}" />
+                android:visibility="@{content.empty?View.GONE:View.VISIBLE}" />
 
             <ImageView
                 android:layout_width="wrap_content"

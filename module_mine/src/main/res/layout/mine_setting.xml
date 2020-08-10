@@ -244,7 +244,7 @@
                             android:drawableEnd="@mipmap/arrow_small_right_icon"
                             android:drawablePadding="5dp"
                             android:gravity="center"
-                            android:text='@{String.format("￥%.2f",walletInfo.wallet)}'
+                            android:text='@{@string/symbol_money + String.format("%.2f",walletInfo.wallet)}'
                             android:textColorHint="@color/black_827"
                             android:textSize="14sp" />
                     </RelativeLayout>

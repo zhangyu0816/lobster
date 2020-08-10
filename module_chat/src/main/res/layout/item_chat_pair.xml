@@ -92,7 +92,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
-            android:text='@{(item==null||item.creationDate.isEmpty())?"":item.creationDate.substring(11,16)}'
+            android:text='@{item.creationDate.empty?String.valueOf(""):item.creationDate.substring(11,16)}'
             android:textColor="@color/black_827"
             android:textSize="12sp"
             tools:text="20:02" />

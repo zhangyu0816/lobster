@@ -66,7 +66,7 @@
                 <ImageView
                     countSize="@{true}"
                     defaultRes="@{ObjectUtils.getDefaultRes()}"
-                    imageUrl='@{item.resLink.contains(@string/mp3)?"":item.resLink}'
+                    imageUrl='@{item.resLink.contains(@string/mp3)?String.valueOf(""):item.resLink}'
                     isRound="@{true}"
                     roundSize="@{20}"
                     viewHeightSize="@{0}"
@@ -119,7 +119,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
-                        android:text='@{String.format("%d’’",item.resTime)}'
+                        android:text='@{String.format("%d",item.resTime) + @string/quotation}'
                         android:textColor="@color/black_827"
                         android:textSize="14sp"
                         android:visibility="@{item.msgType==3?View.VISIBLE:View.GONE}"

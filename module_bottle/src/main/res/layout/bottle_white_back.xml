@@ -19,10 +19,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
+        <com.zb.module_bottle.windows.BottleBGView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@mipmap/bottle_big_bg" />
+            android:layout_height="match_parent"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -58,5 +57,7 @@
                 android:padding="15dp"
                 app:srcCompat="@mipmap/question_white_icon" />
         </RelativeLayout>
+
     </RelativeLayout>
+
 </layout>
