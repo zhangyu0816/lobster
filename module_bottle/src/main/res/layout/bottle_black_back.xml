@@ -4,8 +4,6 @@
 
     <data>
 
-        <import type="com.zb.lib_base.utils.ObjectUtils" />
-
         <variable
             name="viewModel"
             type="com.zb.lib_base.vm.BaseViewModel" />
@@ -51,14 +49,5 @@
                 android:padding="15dp"
                 app:srcCompat="@mipmap/question_black_icon" />
         </RelativeLayout>
-
-        <ImageView
-            viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(1575)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(992)}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="15dp"
-            android:background="@mipmap/bottle_small_bg" />
     </LinearLayout>
 </layout>

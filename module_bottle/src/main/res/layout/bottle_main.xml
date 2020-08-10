@@ -3,6 +3,8 @@
 
     <data>
 
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
         <variable
             name="viewModel"
             type="com.zb.module_bottle.vm.BottleViewModel" />
@@ -19,9 +21,35 @@
         <include
             android:id="@+id/include"
             layout="@layout/bottle_black_back"
-            viewModel="@{viewModel}"/>
+            viewModel="@{viewModel}" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_bg"
+                viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(1575)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(992)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15dp"
+                android:background="@mipmap/bottle_small_bg" />
+
+            <ImageView
+                android:id="@+id/iv_star"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="34dp"
+                android:layout_marginTop="100dp"
+                android:background="@mipmap/bottle_star_icon" />
+
+        </RelativeLayout>
 
         <TextView
+            android:id="@+id/tv_btn"
             onClickDelayed="@{viewModel::entryBottle}"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
