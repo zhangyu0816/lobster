@@ -435,14 +435,14 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         videoView.setOnCompletionListener(mp -> {
             videoView.stopPlayback();//停止播放视频,并且释放
             videoView.suspend();//在任何状态下释放媒体播放器
-            videoView.setVideoPath(discoverInfo.getVideoPath());
-            videoView.start();
         });
         //异常回调
         videoView.setOnErrorListener((mp, what, extra) -> {
             return true;//如果方法处理了错误，则为true；否则为false。返回false或根本没有OnErrorListener，将导致调用OnCompletionListener。
         });
-
+        videoView.setOnPreparedListener(mp -> {
+            mp.setLooping(true);//让电影循环播放
+        });
         //信息回调
         videoView.setOnInfoListener((mp, what, extra) -> {
             if (what == MediaPlayer.MEDIA_INFO_UNKNOWN || what == MediaPlayer.MEDIA_INFO_NOT_SEEKABLE) {

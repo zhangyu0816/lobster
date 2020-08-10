@@ -14,6 +14,7 @@ import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
 import com.zb.module_home.databinding.HomeSearchBinding;
 import com.zb.module_home.iv.SearchVMInterface;
@@ -62,7 +63,7 @@ public class SearchViewModel extends BaseViewModel implements SearchVMInterface,
 
     @Override
     public void setAdapter() {
-
+        adapter = new HomeAdapter<>(activity, R.layout.item_search,memberInfoList,this);
     }
 
     @Override

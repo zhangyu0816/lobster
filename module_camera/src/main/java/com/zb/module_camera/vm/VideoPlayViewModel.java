@@ -101,7 +101,9 @@ public class VideoPlayViewModel extends BaseViewModel implements VideoPlayVMInte
         mBinding.videoView.setOnErrorListener((mp, what, extra) -> {
             return true;//如果方法处理了错误，则为true；否则为false。返回false或根本没有OnErrorListener，将导致调用OnCompletionListener。
         });
-
+        mBinding.videoView.setOnPreparedListener(mp -> {
+            mp.setLooping(true);//让电影循环播放
+        });
         //信息回调
         mBinding.videoView.setOnInfoListener((mp, what, extra) -> {
             if (what == MediaPlayer.MEDIA_INFO_UNKNOWN || what == MediaPlayer.MEDIA_INFO_NOT_SEEKABLE) {

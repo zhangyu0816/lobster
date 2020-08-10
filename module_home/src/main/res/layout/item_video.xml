@@ -22,6 +22,12 @@
         <variable
             name="viewModel"
             type="com.zb.module_home.vm.VideoListViewModel" />
+
+        <variable
+            name="memberType"
+            type="Integer" />
+
+
     </data>
 
     <RelativeLayout
@@ -79,7 +85,7 @@
                     android:layout_marginBottom="-5dp"
                     android:layout_toEndOf="@+id/iv_logo"
                     android:background="@mipmap/vip_small_icon"
-                    android:visibility="gone" />
+                    android:visibility="@{memberType==2?View.VISIBLE:View.GONE}" />
 
                 <TextView
                     android:id="@+id/tv_nick"
@@ -214,8 +220,8 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    onClickDelayed="@{v->viewModel.doGood(position)}"
                     android:id="@+id/iv_good"
+                    onClickDelayed="@{v->viewModel.doGood(position)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="15dp"
