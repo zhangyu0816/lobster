@@ -175,6 +175,17 @@
                             android:layout_marginStart="15dp"
                             android:layout_marginEnd="15dp"
                             android:background="@{viewModel.memberInfo==null?@drawable/default_bg:@drawable/empty_bg}"
+                            android:text="@{String.format(@string/user_id,viewModel.otherUserId)}"
+                            android:textColor="@color/black_252"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginEnd="15dp"
+                            android:background="@{viewModel.memberInfo==null?@drawable/default_bg:@drawable/empty_bg}"
                             android:text="@{baseInfo}"
                             android:textColor="@color/black_827"
                             android:textSize="14sp" />

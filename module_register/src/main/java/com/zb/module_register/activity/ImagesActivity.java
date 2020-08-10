@@ -35,8 +35,8 @@ public class ImagesActivity extends RegisterBaseActivity {
 
         RegisterImagesBinding binding = (RegisterImagesBinding) mBinding;
         // 步骤进度跳
-        AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 5);
-        AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W, 5);
+        AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 10);
+        AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W, 10);
         // 列表宽
         AdapterBinding.viewSize(binding.imagesList, ObjectUtils.getViewSizeByWidth(0.9f), ObjectUtils.getLogoHeight(0.6f));
 

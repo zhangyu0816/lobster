@@ -41,8 +41,7 @@ import com.zb.lib_base.utils.OnViewPagerListener;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.CountUsedPW;
-import com.zb.lib_base.windows.SelectorPW;
-import com.zb.lib_base.windows.SharePW;
+import com.zb.lib_base.windows.FunctionPW;
 import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_home.R;
@@ -186,15 +185,6 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     }
 
     @Override
-    public void doShare(DiscoverInfo discoverInfo) {
-        String sharedName = discoverInfo.getNick();
-        String content = discoverInfo.getText();
-        String sharedUrl = HttpManager.BASE_URL + "mobile/Dyn_dynDetail?friendDynId=" + discoverInfo.getFriendDynId();
-        UMImage umImage = new UMImage(activity, discoverInfo.getImage().replace("YM0000", "430X430"));
-        new SharePW(activity, mBinding.getRoot(), umImage, sharedName, content, sharedUrl);
-    }
-
-    @Override
     public void doReward(DiscoverInfo discoverInfo) {
         new GiftPW(activity, mBinding.getRoot(), giftInfo ->
                 new GiftPayPW(activity, mBinding.getRoot(), giftInfo, discoverInfo.getFriendDynId(), () -> {
@@ -212,39 +202,42 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
 
     @Override
     public void more(DiscoverInfo discoverInfo) {
-        selectorList.clear();
-        if (discoverInfo.getUserId() == BaseActivity.userId) {
-            selectorList.add("查看礼物");
-//            selectorList.add("删除动态");
-        } else {
-            selectorList.add("超级喜欢");
-            selectorList.add("举报");
-            selectorList.add("下载视频");
-        }
-        new SelectorPW(activity, mBinding.getRoot(), selectorList, position -> {
-            if (discoverInfo.getUserId() == BaseActivity.userId) {
-                if (position == 0) {
-                    // 查看礼物
-                    videoView.pause();
-                    ActivityUtils.getHomeRewardList(discoverInfo.getFriendDynId());
-                }
-//                else {
-//                    new TextPW(activity, mBinding.getRoot(), "删除动态", "删除后，动态不可找回！", "删除", () -> deleteDyn(discoverInfo));
-//                }
-            } else {
-                if (position == 0) {
-                    // 超级喜欢
-                    if (mineInfo.getMemberType() == 2) {
-                        makeEvaluate(discoverInfo);
-                    } else {
-                        new VipAdPW(activity, mBinding.getRoot(), false, 3);
-                    }
-                } else if (position == 1) {
-                    // 举报
-                    videoView.pause();
-                    ActivityUtils.getHomeReport(discoverInfo.getUserId());
+        String sharedName = discoverInfo.getNick();
+        String content = discoverInfo.getText();
+        String sharedUrl = HttpManager.BASE_URL + "mobile/Dyn_dynDetail?friendDynId=" + discoverInfo.getFriendDynId();
+        UMImage umImage = new UMImage(activity, discoverInfo.getImage().replace("YM0000", "430X430"));
+        new FunctionPW(activity, mBinding.getRoot(), umImage, sharedName, content, sharedUrl,
+                discoverInfo.getUserId() == BaseActivity.userId, true, true, new FunctionPW.CallBack() {
+            @Override
+            public void gift() {
+                // 查看礼物
+                videoView.pause();
+                ActivityUtils.getHomeRewardList(discoverInfo.getFriendDynId());
+            }
+
+            @Override
+            public void delete() {
+            }
+
+            @Override
+            public void report() {
+                // 举报
+                videoView.pause();
+                ActivityUtils.getHomeReport(discoverInfo.getUserId());
+            }
+
+            @Override
+            public void download() {
+                DownLoad.downloadLocation(discoverInfo.getVideoUrl(), filePath -> SCToastUtil.showToast(activity, "下载成功", true));
+            }
+
+            @Override
+            public void like() {
+                // 超级喜欢
+                if (mineInfo.getMemberType() == 2) {
+                    makeEvaluate(discoverInfo);
                 } else {
-                    DownLoad.downloadLocation(discoverInfo.getVideoUrl(), filePath -> SCToastUtil.showToast(activity, "下载成功", true));
+                    new VipAdPW(activity, mBinding.getRoot(), false, 3);
                 }
             }
         });

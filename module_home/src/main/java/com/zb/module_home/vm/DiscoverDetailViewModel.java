@@ -48,8 +48,7 @@ import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.CountUsedPW;
-import com.zb.lib_base.windows.SelectorPW;
-import com.zb.lib_base.windows.SharePW;
+import com.zb.lib_base.windows.FunctionPW;
 import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.TextPW;
 import com.zb.lib_base.windows.VipAdPW;
@@ -76,7 +75,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     public HomeAdapter rewardAdapter;
     private LikeDb likeDb;
 
-    private List<String> selectorList = new ArrayList<>();
     private List<Review> reviewList = new ArrayList<>();
     private int pageNo = 1;
     private List<Reward> rewardList = new ArrayList<>();
@@ -118,10 +116,10 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             }
         };
 
-        attentionReceiver = new BaseReceiver(activity,"lobster_attention") {
+        attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                mBinding.setIsAttention(intent.getBooleanExtra("isAttention",false));
+                mBinding.setIsAttention(intent.getBooleanExtra("isAttention", false));
             }
         };
 
@@ -163,24 +161,40 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void more(View view) {
         super.more(view);
-        new SelectorPW(activity, mBinding.getRoot(), selectorList, position -> {
-            if (discoverInfo.getUserId() == BaseActivity.userId) {
-                if (position == 0) {
-                    memberInfoConf();
-                } else if (position == 1) {
-                    new TextPW(activity, mBinding.getRoot(), "删除动态", "删除后，动态不可找回！", "删除", this::deleteDyn);
-                }
-            } else {
-                if (position == 0) {
-                    if (mineInfo.getMemberType() == 2) {
-                        makeEvaluate();
-                    } else {
-                        new VipAdPW(activity, mBinding.getRoot(), false, 3);
-                    }
-                } else if (position == 1) {
-                    ActivityUtils.getHomeReport(discoverInfo.getUserId());
-                } else if (position == 2) {
-                    memberInfoConf();
+        if (discoverInfo == null) return;
+        String sharedName = discoverInfo.getNick();
+        String content = discoverInfo.getText();
+        String sharedUrl = HttpManager.BASE_URL + "mobile/Dyn_dynDetail?friendDynId=" + friendDynId;
+        UMImage umImage = new UMImage(activity, discoverInfo.getImage().replace("YM0000", "430X430"));
+
+        new FunctionPW(activity, mBinding.getRoot(), umImage, sharedName, content, sharedUrl,
+                discoverInfo.getUserId() == BaseActivity.userId, false, false, new FunctionPW.CallBack() {
+            @Override
+            public void gift() {
+
+            }
+
+            @Override
+            public void delete() {
+                new TextPW(activity, mBinding.getRoot(), "删除动态", "删除后，动态不可找回！", "删除", () -> deleteDyn());
+            }
+
+            @Override
+            public void report() {
+                ActivityUtils.getHomeReport(discoverInfo.getUserId());
+            }
+
+            @Override
+            public void download() {
+
+            }
+
+            @Override
+            public void like() {
+                if (mineInfo.getMemberType() == 2) {
+                    makeEvaluate();
+                } else {
+                    new VipAdPW(activity, mBinding.getRoot(), false, 3);
                 }
             }
         });
@@ -223,14 +237,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             public void onNext(DiscoverInfo o) {
                 discoverInfo = o;
                 mBinding.setViewModel(DiscoverDetailViewModel.this);
-                if (discoverInfo.getUserId() == BaseActivity.userId) {
-                    selectorList.add("分享");
-                    selectorList.add("删除");
-                } else {
-                    selectorList.add("超级喜欢");
-                    selectorList.add("举报");
-                    selectorList.add("分享");
-                }
                 otherInfo();
                 List<Ads> adsList = new ArrayList<>();
                 if (!discoverInfo.getImages().isEmpty()) {
@@ -501,16 +507,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             }
         }, activity).setOtherUserId(discoverInfo.getUserId());
         HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
-    public void memberInfoConf() {
-        if (discoverInfo == null) return;
-        String sharedName = discoverInfo.getNick();
-        String content = discoverInfo.getText();
-        String sharedUrl = HttpManager.BASE_URL + "mobile/Dyn_dynDetail?friendDynId=" + friendDynId;
-        UMImage umImage = new UMImage(activity, discoverInfo.getImage().replace("YM0000", "430X430"));
-        new SharePW(activity, mBinding.getRoot(), umImage, sharedName, content, sharedUrl);
     }
 
     @Override

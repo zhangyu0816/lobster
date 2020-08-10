@@ -12,8 +12,6 @@ public interface VideoListVMInterface {
 
     void doGood(int position);
 
-    void doShare(DiscoverInfo discoverInfo);
-
     void doReward(DiscoverInfo discoverInfo);
 
     void follow(DiscoverInfo discoverInfo);

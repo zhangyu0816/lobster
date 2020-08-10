@@ -64,11 +64,11 @@ public class DownLoad {
     }
 
     public static void downloadLocation(String fileUrl, CallBack callBack) {
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath(), "xiagu");
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
         if (!file.exists()) {
             file.mkdirs();
         }
-        String filePath = file.getAbsolutePath() + "/" + BaseActivity.randomString(15) + ".mp4";
+        String filePath = file.getAbsolutePath() + "/xg_" + BaseActivity.randomString(15) + ".mp4";
 
         back = new RequestCallBack<File>() {
 

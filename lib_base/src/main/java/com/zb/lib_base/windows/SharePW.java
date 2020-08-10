@@ -54,9 +54,9 @@ public class SharePW extends BasePopupWindow {
         mediaMap.put(SHARE_MEDIA.WEIXIN_CIRCLE, "朋友圈");
         mediaMap.put(SHARE_MEDIA.QQ, "QQ");
         mediaMap.put(SHARE_MEDIA.QZONE, "QQ空间");
-        shareItemList.add(new ShareItem(R.mipmap.share_wx_ico, "微信"));
+        shareItemList.add(new ShareItem(R.mipmap.share_wx_ico, "微信好友"));
         shareItemList.add(new ShareItem(R.mipmap.share_wxcircle_ico, "朋友圈"));
-        shareItemList.add(new ShareItem(R.mipmap.share_qq_ico, "QQ"));
+        shareItemList.add(new ShareItem(R.mipmap.share_qq_ico, "QQ好友"));
         shareItemList.add(new ShareItem(R.mipmap.share_qqzore_ico, "QQ空间"));
         shareItemList.add(new ShareItem(R.mipmap.share_copy_ico, "复制链接"));
         adapter = new BaseAdapter<>(activity, R.layout.item_share, shareItemList, this);

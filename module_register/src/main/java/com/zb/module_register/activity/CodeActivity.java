@@ -68,9 +68,9 @@ public class CodeActivity extends RegisterBaseActivity implements KeyBroadUtils.
                 }
                 if (content.length() == 4) {
                     binding.tvNext.setBackgroundResource(R.drawable.btn_bg_white_radius60);
-                    binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_7a4));
+                    binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.black_252));
                     binding.tvNext2.setBackgroundResource(R.drawable.btn_bg_white_radius60);
-                    binding.tvNext2.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_7a4));
+                    binding.tvNext2.setTextColor(MineApp.getInstance().getResources().getColor(R.color.black_252));
                 } else {
                     binding.tvNext.setBackgroundResource(R.drawable.btn_bg_purple_af9_radius60);
                     binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_cab));
@@ -89,8 +89,8 @@ public class CodeActivity extends RegisterBaseActivity implements KeyBroadUtils.
             width = MineApp.W * 2 / 3;
             binding.setRight("");
         }
-        AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 5);
-        AdapterBinding.viewSize(binding.includeLayout.whiteView, width, 5);
+        AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 10);
+        AdapterBinding.viewSize(binding.includeLayout.whiteView, width, 10);
 
         mOnGlobalLayoutListener = KeyBroadUtils.observeSoftKeyboard(this, this);
     }

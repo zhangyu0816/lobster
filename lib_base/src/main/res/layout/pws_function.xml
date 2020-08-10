@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="pw"
+            type="com.zb.lib_base.windows.FunctionPW" />
+
+        <variable
+            name="isVideo"
+            type="boolean" />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.5"
+            android:background="@color/black" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/tv_cancel"
+                android:background="@{isVideo?@drawable/btn_bg_black_252_radius_top10_90:@drawable/btn_bg_black_efe_radius_top10_90}"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="分享到"
+                    android:layout_marginBottom="15dp"
+                    android:textColor="@{isVideo?@android:color/white:@color/black_252}"
+                    android:layout_gravity="center_horizontal"
+                    android:textSize="12sp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    adapter="@{pw.topAdapter}"
+                    gridNum="@{4}"
+                    recyclerType="@{2}"
+                    size="@{15}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@android:color/white" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    adapter="@{pw.bottomAdapter}"
+                    recyclerType="@{1}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_cancel"
+                onClickDelayed="@{pw::cancel}"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_alignParentBottom="true"
+                android:background="@{isVideo?@color/black_4d4:@android:color/white}"
+                android:gravity="center"
+                android:text="取消"
+                android:textColor="@{isVideo?@android:color/white:@color/black_252}"
+                android:textSize="18sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+</layout>

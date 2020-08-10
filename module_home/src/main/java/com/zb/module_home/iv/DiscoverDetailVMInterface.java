@@ -43,5 +43,4 @@ public interface DiscoverDetailVMInterface {
 
     void cancelAttention();
 
-    void memberInfoConf();
 }

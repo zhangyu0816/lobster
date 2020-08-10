@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <variable
+            name="item"
+            type="com.zb.lib_base.model.ShareItem" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="pw"
+            type="com.zb.lib_base.windows.FunctionPW" />
+
+    </data>
+
+    <LinearLayout
+        onClickDelayed="@{v->pw.selectBottom(item)}"
+        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.23f)}"
+        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.23f)}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            imageRes="@{item.shareRes}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(135)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(135)}"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@{item.shareName}"
+            android:textColor="@color/black_4d4"
+            android:textSize="14sp"
+            tools:text="微信" />
+    </LinearLayout>
+</layout>

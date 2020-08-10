@@ -34,8 +34,7 @@ import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.CountUsedPW;
-import com.zb.lib_base.windows.SelectorPW;
-import com.zb.lib_base.windows.SharePW;
+import com.zb.lib_base.windows.FunctionPW;
 import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_card.BR;
@@ -60,7 +59,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     public CardAdapter tagAdapter;
     private List<String> tagList = new ArrayList<>();
     private List<Fragment> fragments = new ArrayList<>();
-    private List<String> selectorList = new ArrayList<>();
     private AreaDb areaDb;
     public MineInfo mineInfo;
     private LikeDb likeDb;
@@ -71,11 +69,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         areaDb = new AreaDb(Realm.getDefaultInstance());
         likeDb = new LikeDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
-        if (otherUserId != BaseActivity.userId) {
-            selectorList.add("超级喜欢");
-            selectorList.add("举报");
-        }
-        selectorList.add("分享");
+
         mBinding = (CardMemberDetailBinding) binding;
         mBinding.setVariable(BR.baseInfo, "");
         mBinding.setIsAttention(false);
@@ -283,7 +277,33 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 UMImage umImage = new UMImage(activity, memberInfo.getImage().replace("YM0000", "430X430"));
                 String content = memberInfo.getServiceTags().substring(1, memberInfo.getServiceTags().length() - 1);
                 content = "兴趣：" + content.replace("#", ",");
-                new SharePW(activity, mBinding.getRoot(), umImage, sharedName, content, sharedUrl);
+
+                new FunctionPW(activity, mBinding.getRoot(), umImage, sharedName, content, sharedUrl,
+                        otherUserId == BaseActivity.userId, false, false, new FunctionPW.CallBack() {
+                    @Override
+                    public void gift() {
+
+                    }
+
+                    @Override
+                    public void delete() {
+                    }
+
+                    @Override
+                    public void report() {
+                        ActivityUtils.getHomeReport(otherUserId);
+                    }
+
+                    @Override
+                    public void download() {
+
+                    }
+
+                    @Override
+                    public void like() {
+                        superLike(null);
+                    }
+                });
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
@@ -308,19 +328,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     @Override
     public void more(View view) {
         super.more(view);
-        new SelectorPW(activity, mBinding.getRoot(), selectorList, position -> {
-            if (position == 0) {
-                if (otherUserId != BaseActivity.userId) {
-                    superLike(null);
-                } else {
-                    memberInfoConf();
-                }
-            } else if (position == 1) {
-                ActivityUtils.getHomeReport(otherUserId);
-            } else if (position == 2) {
-                memberInfoConf();
-            }
-        });
+        memberInfoConf();
     }
 
     @Override

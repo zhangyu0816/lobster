@@ -37,8 +37,7 @@ import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.CountUsedPW;
-import com.zb.lib_base.windows.SelectorPW;
-import com.zb.lib_base.windows.SharePW;
+import com.zb.lib_base.windows.FunctionPW;
 import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.TextPW;
 import com.zb.lib_base.windows.VipAdPW;
@@ -49,9 +48,6 @@ import com.zb.module_home.iv.DiscoverVideoVMInterface;
 import com.zb.module_home.windows.GiftPW;
 import com.zb.module_home.windows.GiftPayPW;
 import com.zb.module_home.windows.ReviewPW;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
@@ -64,7 +60,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     public GoodDb goodDb;
     private HomeDiscoverVideoBinding mBinding;
     private ObjectAnimator animator;
-    private List<String> selectorList = new ArrayList<>();
     private MineInfo mineInfo;
     private LikeDb likeDb;
     private String downloadFileUrl = "";
@@ -86,10 +81,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
         goodDb = new GoodDb(Realm.getDefaultInstance());
         mBinding.setIsPlay(true);
         mBinding.setIsProgress(false);
-//        animator = ObjectAnimator.ofFloat(mBinding.ivProgress, "rotation", 0, 360).setDuration(700);
-//        animator.setRepeatMode(ValueAnimator.RESTART);
-//        animator.setRepeatCount(Animation.INFINITE);
-//        animator.start();
         dynDetail();
     }
 
@@ -142,16 +133,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     }
 
     @Override
-    public void doShare(View view) {
-        if (discoverInfo == null) return;
-        String sharedName = discoverInfo.getNick();
-        String content = discoverInfo.getText();
-        String sharedUrl = HttpManager.BASE_URL + "mobile/Dyn_dynDetail?friendDynId=" + friendDynId;
-        UMImage umImage = new UMImage(activity, discoverInfo.getImage().replace("YM0000", "430X430"));
-        new SharePW(activity, mBinding.getRoot(), umImage, sharedName, content, sharedUrl);
-    }
-
-    @Override
     public void doReward(View view) {
         new GiftPW(activity, mBinding.getRoot(), giftInfo ->
                 new GiftPayPW(activity, mBinding.getRoot(), giftInfo, friendDynId, () -> {
@@ -173,29 +154,43 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     @Override
     public void more(View view) {
         super.more(view);
-        new SelectorPW(activity, mBinding.getRoot(), selectorList, position -> {
-            if (discoverInfo.getUserId() == BaseActivity.userId) {
-                if (position == 0) {
-                    // 查看礼物
-                    toRewards(null);
+        if (discoverInfo == null) return;
+        String sharedName = discoverInfo.getNick();
+        String content = discoverInfo.getText();
+        String sharedUrl = HttpManager.BASE_URL + "mobile/Dyn_dynDetail?friendDynId=" + friendDynId;
+        UMImage umImage = new UMImage(activity, discoverInfo.getImage().replace("YM0000", "430X430"));
+        new FunctionPW(activity, mBinding.getRoot(), umImage, sharedName, content, sharedUrl,
+                discoverInfo.getUserId() == BaseActivity.userId, true, false, new FunctionPW.CallBack() {
+            @Override
+            public void gift() {
+                toRewards(null);
+            }
+
+            @Override
+            public void delete() {
+                toDelete(null);
+            }
+
+            @Override
+            public void report() {
+                // 举报
+                mBinding.setIsPlay(false);
+                mBinding.videoView.pause();
+                ActivityUtils.getHomeReport(discoverInfo.getUserId());
+            }
+
+            @Override
+            public void download() {
+                DownLoad.downloadLocation(downloadFileUrl, filePath -> SCToastUtil.showToast(activity, "下载成功", true));
+            }
+
+            @Override
+            public void like() {
+                // 超级喜欢
+                if (mineInfo.getMemberType() == 2) {
+                    makeEvaluate();
                 } else {
-                    toDelete(null);
-                }
-            } else {
-                if (position == 0) {
-                    // 超级喜欢
-                    if (mineInfo.getMemberType() == 2) {
-                        makeEvaluate();
-                    } else {
-                        new VipAdPW(activity, mBinding.getRoot(), false, 3);
-                    }
-                } else if (position == 1) {
-                    // 举报
-                    mBinding.setIsPlay(false);
-                    mBinding.videoView.pause();
-                    ActivityUtils.getHomeReport(discoverInfo.getUserId());
-                } else {
-                    DownLoad.downloadLocation(downloadFileUrl, filePath -> SCToastUtil.showToast(activity, "下载成功", true));
+                    new VipAdPW(activity, mBinding.getRoot(), false, 3);
                 }
             }
         });
@@ -250,15 +245,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             public void onNext(DiscoverInfo o) {
                 discoverInfo = o;
                 downloadFileUrl = discoverInfo.getVideoUrl();
-                if (discoverInfo.getUserId() == BaseActivity.userId) {
-                    selectorList.add("查看礼物");
-                    selectorList.add("删除动态");
-                } else {
-                    selectorList.add("超级喜欢");
-                    selectorList.add("举报");
-                    selectorList.add("下载视频");
-                }
-//                initVideo();
                 DownLoad.getFilePath(discoverInfo.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), new DownLoad.CallBack() {
                     @Override
                     public void success(String filePath) {
@@ -409,13 +395,11 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     private void initVideo() {
         //视频加载完成,准备好播放视频的回调
         mBinding.videoView.setOnPreparedListener(mp -> {
-//            mBinding.setIsPlay(false);
             //尺寸变化回调
             mp.setOnVideoSizeChangedListener((mp1, width, height) -> changeVideoSize(mp1));
         });
         //视频播放完成后的回调
         mBinding.videoView.setOnCompletionListener(mp -> {
-//            mBinding.setIsPlay(false);
             mBinding.videoView.stopPlayback();//停止播放视频,并且释放
             mBinding.videoView.suspend();//在任何状态下释放媒体播放器
             mBinding.videoView.setVideoPath(discoverInfo.getVideoUrl());
@@ -436,12 +420,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                 mBinding.videoView.stopPlayback();//停止播放视频,并且释放
                 mBinding.videoView.suspend();//在任何状态下释放媒体播放器
                 return true;
-            } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-//                // 缓冲开始
-//                mBinding.setIsPlay(true);
-//                mBinding.setIsProgress(true);
-
-                return true;
             } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
                 // 缓冲结束,此接口每次回调完START就回调END,若不加上判断就会出现缓冲图标一闪一闪的卡顿现象
                 if (mp.isPlaying()) {
@@ -452,8 +430,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             } else if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
                 mBinding.setIsPlay(true);
                 mBinding.setIsProgress(false);
-//                if (animator != null)
-//                    animator.cancel();
             }
             return false; //如果方法处理了信息，则为true；如果没有，则为false。返回false或根本没有OnInfoListener，将导致丢弃该信息。
         });
@@ -470,13 +446,8 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
 
         if (ObjectUtils.getViewSizeByHeight(1.0f) * width / height > MineApp.W) {
             AdapterBinding.viewSize(mBinding.videoView, MineApp.W, (MineApp.W * height / width));
-//            AdapterBinding.loadImage(mBinding.ivVideo, discoverInfo.getVideoUrl(), 0, ObjectUtils.getDefaultRes(), MineApp.W, (MineApp.W * height / width),
-//                    false, false, 0, false, 0, false);
         } else {
             AdapterBinding.viewSize(mBinding.videoView, (ObjectUtils.getViewSizeByHeight(1.0f) * width / height), ObjectUtils.getViewSizeByHeight(1.0f));
-//            AdapterBinding.loadImage(mBinding.ivVideo, discoverInfo.getVideoUrl(), 0,
-//                    ObjectUtils.getDefaultRes(), (ObjectUtils.getViewSizeByHeight(1.0f) * width / height), ObjectUtils.getViewSizeByHeight(1.0f),
-//                    false, false, 0, false, 0, false);
         }
     }
 }

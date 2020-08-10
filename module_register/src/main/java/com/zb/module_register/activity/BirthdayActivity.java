@@ -29,8 +29,8 @@ public class BirthdayActivity extends RegisterBaseActivity {
 
         RegisterBirthdayBinding binding = (RegisterBirthdayBinding) mBinding;
         // 步骤进度跳
-        AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 5);
-        AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W / 3, 5);
+        AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 10);
+        AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W / 3, 10);
 
         binding.setBirthday(MineApp.registerInfo.getBirthday());
         binding.setTitle("嗨 " + MineApp.registerInfo.getName() + "！\n您的生日是？");

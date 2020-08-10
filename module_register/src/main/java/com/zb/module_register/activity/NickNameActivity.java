@@ -31,8 +31,8 @@ public class NickNameActivity extends RegisterBaseActivity {
         RegisterNickBinding binding = (RegisterNickBinding) mBinding;
 
         // 步骤进度跳
-        AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 5);
-        AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W / 6, 5);
+        AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 10);
+        AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W / 6, 10);
 
         // 按钮向上移
         KeyBroadUtils.controlKeyboardLayout(binding.btnLayout, binding.tvNext);

@@ -11,8 +11,6 @@ public interface DiscoverVideoVMInterface {
 
     void doGood(View view);
 
-    void doShare(View view);
-
     void doReward(View view);
 
     void toRewards(View view);

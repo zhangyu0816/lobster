@@ -5,7 +5,7 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowEnableSplitTouch">false</item>
         <item name="android:splitMotionEvents">false</item>
-        <item name="android:windowBackground">@drawable/gradient_purple</item>
+        <item name="android:windowBackground">@mipmap/register_bg</item>
     </style>
     <!-- Base application theme. -->
     <style name="WhiteTheme" parent="Theme.AppCompat.Light.NoActionBar">

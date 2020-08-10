@@ -156,6 +156,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_toStartOf="@+id/right_linear"
+                android:layout_marginEnd="15dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -243,26 +244,15 @@
                     onClickDelayed="@{viewModel::doGood}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingStart="15dp"
                     android:paddingEnd="15dp"
                     android:paddingBottom="15dp"
                     android:src="@{viewModel.goodDb.hasGood(viewModel.friendDynId)?@drawable/video_play_good_pressed:@drawable/video_play_good_unpressed}"
                     android:visibility="@{viewModel.memberInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
 
                 <ImageView
-                    onClickDelayed="@{viewModel::doShare}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="15dp"
-                    android:paddingEnd="15dp"
-                    android:paddingBottom="15dp"
-                    android:src="@mipmap/video_play_share" />
-
-                <ImageView
                     onClickDelayed="@{viewModel::doReward}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingStart="15dp"
                     android:paddingEnd="15dp"
                     android:paddingBottom="15dp"
                     android:src="@mipmap/video_play_reward"

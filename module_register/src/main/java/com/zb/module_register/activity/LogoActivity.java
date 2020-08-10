@@ -35,8 +35,8 @@ public class LogoActivity extends RegisterBaseActivity {
 
         binding = (RegisterLogoBinding) mBinding;
         // 步骤进度跳
-        AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 5);
-        AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W * 5 / 6, 5);
+        AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 10);
+        AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W * 5 / 6, 10);
 
         // 上传头像
         AdapterBinding.viewSize(binding.uploadRelative, ObjectUtils.getViewSizeByWidth(0.4f), ObjectUtils.getLogoHeight(0.4f));
@@ -49,7 +49,7 @@ public class LogoActivity extends RegisterBaseActivity {
                 String path = intent.getStringExtra("filePath");
                 mBinding.setVariable(BR.imageUrl, path);
                 binding.tvNext.setBackgroundResource(R.drawable.btn_bg_white_radius60);
-                binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_7a4));
+                binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.black_252));
             }
         };
     }
@@ -61,7 +61,7 @@ public class LogoActivity extends RegisterBaseActivity {
             String fileName = data.getStringExtra("fileName");
             mBinding.setVariable(BR.imageUrl, fileName);
             binding.tvNext.setBackgroundResource(R.drawable.btn_bg_white_radius60);
-            binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_7a4));
+            binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.black_252));
         }
     }
 

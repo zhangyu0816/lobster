@@ -16,7 +16,7 @@
 
         <variable
             name="pw"
-            type="com.zb.lib_base.windows.SharePW" />
+            type="com.zb.lib_base.windows.FunctionPW" />
 
     </data>
 

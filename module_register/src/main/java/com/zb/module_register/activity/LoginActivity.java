@@ -32,8 +32,8 @@ public class LoginActivity extends RegisterBaseActivity {
         RegisterLoginBinding binding = (RegisterLoginBinding) mBinding;
         binding.setRight("验证码登录");
         // 步骤进度跳
-        AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 5);
-        AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W, 5);
+        AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 10);
+        AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W, 10);
 
         // 按钮向上移
         KeyBroadUtils.controlKeyboardLayout(binding.btnLayout, binding.tvNext);
@@ -54,7 +54,7 @@ public class LoginActivity extends RegisterBaseActivity {
                 String content = binding.edPass.getText().toString();
                 if (content.length() >= 6) {
                     binding.tvNext.setBackgroundResource(R.drawable.btn_bg_white_radius60);
-                    binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_7a4));
+                    binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.black_252));
                 } else {
                     binding.tvNext.setBackgroundResource(R.drawable.btn_bg_purple_af9_radius60);
                     binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_cab));
