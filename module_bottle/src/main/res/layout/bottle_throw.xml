@@ -7,6 +7,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
         <variable
             name="viewModel"
             type="com.zb.module_bottle.vm.BottleThrowViewModel" />
@@ -68,7 +70,7 @@
             <TextView
                 onClickDelayed="@{viewModel::throwBottle}"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="42dp"
                 android:layout_margin="40dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_bg_white_radius60"
@@ -87,7 +89,7 @@
                 <TextView
                     onClickDelayed="@{viewModel::myBottle}"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="42dp"
                     android:background="@drawable/btn_bg_white_radius60"
                     android:gravity="center"
                     android:text="我的漂流瓶"
@@ -109,5 +111,32 @@
             </RelativeLayout>
 
         </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/first_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/iv_bg"
+                viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(1575)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(992)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="15dp"
+                android:background="@mipmap/bottle_small_bg" />
+
+            <ImageView
+                android:id="@+id/iv_star"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="34dp"
+                android:layout_marginTop="100dp"
+                android:background="@mipmap/bottle_star_icon" />
+
+        </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

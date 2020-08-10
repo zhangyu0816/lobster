@@ -156,7 +156,8 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
 
     @Override
     public void entryBottle(View view) {
-        ActivityUtils.getBottleMain();
+        openBottle();
+        ActivityUtils.getBottleThrow();
     }
 
     @Override

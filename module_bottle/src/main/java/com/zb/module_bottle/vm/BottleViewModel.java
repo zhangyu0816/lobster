@@ -8,7 +8,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.ActivityUtils;
-import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -20,7 +19,7 @@ import androidx.databinding.ViewDataBinding;
 public class BottleViewModel extends BaseViewModel implements BottleVMInterface {
     private BottleMainBinding mBinding;
     private AnimatorSet animatorSet = new AnimatorSet();
-    private long time=800;
+    private long time = 800;
 
     @Override
     public void setBinding(ViewDataBinding binding) {

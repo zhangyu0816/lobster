@@ -44,6 +44,10 @@ public class ObjectUtils {
         return (int) (getViewSizeByWidthFromMax750(width) * (float) height / (float) width);
     }
 
+    public static int getBottleBgHeight(float height) {
+        return (int) (height * MineApp.W / 1095f);
+    }
+
     public static int getLogoHeight(float scale) {
         return (int) (getViewSizeByWidth(scale) * 510f / 345f);
     }

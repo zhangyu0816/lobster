@@ -60,7 +60,6 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     private SimpleItemTouchHelperCallback callback;
     private BottleCacheDb bottleCacheDb;
     private BaseReceiver singleBottleCacheReceiver;
-    private int prePosition = -1;
     private HistoryMsgDb historyMsgDb;
 
     @Override
@@ -148,7 +147,6 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
 
     @Override
     public void selectIndex(int position) {
-        prePosition = position;
         BottleInfo bottleInfo = bottleInfoList.get(position);
         bottleInfo.setNoReadNum(0);
         adapter.notifyItemChanged(position);
