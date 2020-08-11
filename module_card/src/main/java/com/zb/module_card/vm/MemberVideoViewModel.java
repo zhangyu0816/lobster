@@ -72,9 +72,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
                 int goodNum = intent.getIntExtra("goodNum", 0);
                 for (int i = 0; i < discoverInfoList.size(); i++) {
                     if (discoverInfoList.get(i).getFriendDynId() == friendDynId) {
-                        if (goodNum != 0) {
-                            discoverInfoList.get(i).setGoodNum(goodNum);
-                        }
+                        discoverInfoList.get(i).setGoodNum(goodNum);
                         adapter.notifyItemChanged(i);
                         break;
                     }
@@ -223,7 +221,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
             ActivityUtils.getHomeDiscoverDetail(discoverInfo.getFriendDynId());
         else {
             if (discoverInfo.getUserId() == BaseActivity.userId) {
-                ActivityUtils.getHomeDiscoverVideo(discoverInfo.getFriendDynId());
+                ActivityUtils.getHomeDiscoverVideoL2(discoverInfo.getFriendDynId());
             } else {
                 MineApp.discoverInfoList.clear();
                 MineApp.discoverInfoList.addAll(discoverInfoList);

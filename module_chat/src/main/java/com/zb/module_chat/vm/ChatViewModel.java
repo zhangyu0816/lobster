@@ -630,7 +630,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                 if (o.getVideoUrl().isEmpty()) {
                     ActivityUtils.getHomeDiscoverDetail(discoverId);
                 } else {
-                    ActivityUtils.getHomeDiscoverVideo(discoverId);
+                    ActivityUtils.getHomeDiscoverVideoL2(discoverId);
                 }
             }
         }, activity).setFriendDynId(discoverId);

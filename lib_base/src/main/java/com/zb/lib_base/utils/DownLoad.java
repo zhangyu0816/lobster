@@ -68,7 +68,7 @@ public class DownLoad {
         if (!file.exists()) {
             file.mkdirs();
         }
-        String filePath = file.getAbsolutePath() + "/xg_" + BaseActivity.randomString(15) + ".mp4";
+        String filePath = file.getAbsolutePath() + "/Camera/xg_" + BaseActivity.randomString(15) + ".mp4";
 
         back = new RequestCallBack<File>() {
 

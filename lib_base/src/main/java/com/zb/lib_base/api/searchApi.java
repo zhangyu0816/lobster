@@ -30,11 +30,6 @@ public class searchApi extends BaseEntity<List<MemberInfo>> {
         return this;
     }
 
-    public searchApi setCityId(long cityId) {
-        this.cityId = cityId;
-        return this;
-    }
-
     public searchApi setSex(int sex) {
         this.sex = sex;
         return this;
@@ -62,7 +57,6 @@ public class searchApi extends BaseEntity<List<MemberInfo>> {
             map.put("sex", sex + "");
         map.put("pageNo", pageNo + "");
         map.put("keyWord", keyWord);
-        map.put("cityId", cityId + "");
         map.put("minAge", minAge + "");
         map.put("maxAge", maxAge + "");
         return methods.search(map);

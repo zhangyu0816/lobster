@@ -207,7 +207,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
         if (discoverInfo.getVideoUrl().isEmpty())
             ActivityUtils.getHomeDiscoverDetail(discoverInfo.getFriendDynId());
         else
-            ActivityUtils.getHomeDiscoverVideo(discoverInfo.getFriendDynId());
+            ActivityUtils.getHomeDiscoverVideoL2(discoverInfo.getFriendDynId());
     }
 
     @Override

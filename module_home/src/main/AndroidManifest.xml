@@ -12,6 +12,7 @@
         <activity android:name=".activity.DiscoverVideoActivity" />
         <activity android:name=".activity.SearchActivity" />
         <activity android:name=".activity.VideoListActivity" />
+        <activity android:name=".activity.DiscoverVideoL2Activity" />
     </application>
 
 </manifest>

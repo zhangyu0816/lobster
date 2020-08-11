@@ -29,7 +29,6 @@ import io.realm.Realm;
 public class SearchViewModel extends BaseViewModel implements SearchVMInterface, OnRefreshListener, OnLoadMoreListener {
     private HomeSearchBinding mBinding;
     public HomeAdapter adapter;
-    private AreaDb areaDb;
     private List<MemberInfo> memberInfoList = new ArrayList<>();
     private int pageNo = 1;
     private String keyWord = "";
@@ -38,7 +37,6 @@ public class SearchViewModel extends BaseViewModel implements SearchVMInterface,
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (HomeSearchBinding) binding;
-        areaDb = new AreaDb(Realm.getDefaultInstance());
         mBinding.setNoData(false);
         setAdapter();
 
@@ -107,7 +105,6 @@ public class SearchViewModel extends BaseViewModel implements SearchVMInterface,
                 }
             }
         }, activity)
-                .setCityId(areaDb.getCityId(PreferenceUtil.readStringValue(activity, "cityName")))
                 .setKeyWord(keyWord)
                 .setPageNo(pageNo)
                 .setMaxAge(100)

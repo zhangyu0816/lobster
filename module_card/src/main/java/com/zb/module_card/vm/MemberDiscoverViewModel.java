@@ -78,9 +78,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 int goodNum = intent.getIntExtra("goodNum", 0);
                 for (int i = 0; i < discoverInfoList.size(); i++) {
                     if (discoverInfoList.get(i).getFriendDynId() == friendDynId) {
-                        if (goodNum != 0) {
-                            discoverInfoList.get(i).setGoodNum(goodNum);
-                        }
+                        discoverInfoList.get(i).setGoodNum(goodNum);
                         adapter.notifyItemChanged(i);
                         break;
                     }
@@ -274,7 +272,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
         if (discoverInfo.getVideoUrl().isEmpty())
             ActivityUtils.getHomeDiscoverDetail(discoverInfo.getFriendDynId());
         else
-            ActivityUtils.getHomeDiscoverVideo(discoverInfo.getFriendDynId());
+            ActivityUtils.getHomeDiscoverVideoL2(discoverInfo.getFriendDynId());
     }
 
     @Override

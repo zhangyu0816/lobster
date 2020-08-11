@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_home.vm.DiscoverVideoL2ViewModel" />
+
+        <variable
+            name="discoverInfo"
+            type="com.zb.lib_base.model.DiscoverInfo" />
+
+        <variable
+            name="memberInfo"
+            type="com.zb.lib_base.model.MemberInfo" />
+
+        <variable
+            name="isAttention"
+            type="boolean" />
+
+        <variable
+            name="isProgress"
+            type="boolean" />
+
+        <variable
+            name="goodDb"
+            type="com.zb.lib_base.db.GoodDb" />
+
+        <variable
+            name="isMine"
+            type="boolean" />
+
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <VideoView
+            android:id="@+id/video_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true" />
+
+        <ImageView
+            android:id="@+id/iv_progress"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:background="@mipmap/loading_icon"
+            android:visibility="@{isProgress?View.VISIBLE:View.GONE}" />
+
+        <View
+            viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(180)}"
+            viewWidthSize="@{-1}"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:background="@drawable/gradient_black_00_80" />
+
+        <View
+            viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(360)}"
+            viewWidthSize="@{-1}"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/gradient_black_80_00" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="15dp"
+            android:layout_toStartOf="@+id/right_layout"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:text="@{String.format(@string/at_nick,discoverInfo.nick)}"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="zhangyu" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:text="@{discoverInfo.text}"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                tools:text="我看见佛二五九佛微积分围殴就佛为访问哦哦ij" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    onClickDelayed="@{viewModel::back}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:src="@mipmap/video_play_back_ico" />
+
+                <TextView
+                    onClickDelayed="@{viewModel::toReviews}"
+                    android:layout_width="match_parent"
+                    android:layout_height="37dp"
+                    android:background="@drawable/btn_bg_white_radius60"
+                    android:gravity="center_vertical"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:text="写点什么…"
+                    android:textColor="@color/black_827"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/right_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="15dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="19dp">
+
+                <View
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/circle_white" />
+
+                <ImageView
+                    onClickDelayed="@{viewModel::toMemberDetail}"
+                    imageUrl="@{discoverInfo.image}"
+                    isCircle="@{true}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(107)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(107)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+
+                <ImageView
+                    onClickDelayed="@{v->viewModel.attentionOther()}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="30dp"
+                    android:paddingStart="11dp"
+                    android:paddingEnd="11dp"
+                    android:src="@mipmap/attention_icon"
+                    android:visibility="@{isAttention?View.INVISIBLE:View.VISIBLE}" />
+
+            </RelativeLayout>
+
+            <ImageView
+                onClickDelayed="@{viewModel::toGood}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@{goodDb.hasGood(viewModel.friendDynId)?@drawable/video_play_zan_pressed:@drawable/video_play_zan_unpressed}" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:ellipsize="end"
+                android:maxLength="4"
+                android:singleLine="true"
+                android:text="@{discoverInfo.goodNumStr}"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                tools:text="1.1万" />
+
+            <ImageView
+                onClickDelayed="@{viewModel::toReviews}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@mipmap/video_reviews_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:ellipsize="end"
+                android:maxLength="4"
+                android:singleLine="true"
+                android:text="@{discoverInfo.reviewsStr}"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                tools:text="1.1万" />
+
+            <ImageView
+                onClickDelayed="@{viewModel::toShare}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:background="@mipmap/video_play_share" />
+
+            <ImageView
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginTop="15dp"
+                android:background="@mipmap/gift_icon"
+                android:visibility="@{isMine?View.GONE:View.VISIBLE}"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+</layout>

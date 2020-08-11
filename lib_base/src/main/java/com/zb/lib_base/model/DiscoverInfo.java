@@ -28,6 +28,8 @@ public class DiscoverInfo extends BaseObservable {
     private String friendTitle = "";
     private String addressInfo = "";
     private String videoPath = "";
+    private String goodNumStr = "";
+    private String reviewsStr = "";
 
     @Bindable
     public long getFriendDynId() {
@@ -167,6 +169,26 @@ public class DiscoverInfo extends BaseObservable {
     public void setGoodNum(int goodNum) {
         this.goodNum = goodNum;
         notifyPropertyChanged(BR.goodNum);
+    }
+
+    @Bindable
+    public String getGoodNumStr() {
+        return goodNum < 10000 ? goodNum + "" : (String.format("%0.1f万", goodNum / 10000f));
+    }
+
+    public void setGoodNumStr(String goodNumStr) {
+        this.goodNumStr = goodNumStr;
+        notifyPropertyChanged(BR.goodNumStr);
+    }
+
+    @Bindable
+    public String getReviewsStr() {
+        return reviews < 10000 ? reviews + "" : (String.format("%0.1f万", reviews / 10000f));
+    }
+
+    public void setReviewsStr(String reviewsStr) {
+        this.reviewsStr = reviewsStr;
+        notifyPropertyChanged(BR.reviewsStr);
     }
 
     @Bindable

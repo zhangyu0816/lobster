@@ -15,6 +15,7 @@ public class RouteUtils {
     public static final String Home_Discover_Video = "/home/DiscoverVideoActivity";
     public static final String Home_Search = "/home/SearchActivity";
     public static final String Home_Video_List = "/home/VideoListActivity";
+    public static final String Home_Discover_Video_L2 = "/home/DiscoverVideoL2Activity";
 
 
     /*********************** 卡片 **************************/

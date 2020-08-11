@@ -70,7 +70,7 @@ public class NotifivationActivity extends RxAppCompatActivity {
                     if (dynType == 1) {
                         ActivityUtils.getHomeDiscoverDetail(discoverId);
                     } else if (dynType == 2) {
-                        ActivityUtils.getHomeDiscoverVideo(discoverId);
+                        ActivityUtils.getHomeDiscoverVideoL2(discoverId);
                     }
                 } else if (TextUtils.equals(activity, "NewsListActivity")) {
                     ActivityUtils.getMineNewsList(reviewType);

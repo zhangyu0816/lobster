@@ -40,6 +40,11 @@ public class ActivityUtils {
     }
 
     // 礼物列表
+    public static void getHomeDiscoverVideoL2(long friendDynId) {
+        ARouter.getInstance().build(RouteUtils.Home_Discover_Video_L2).withLong("friendDynId", friendDynId).navigation();
+    }
+
+    // 礼物列表
     public static void getHomeSearch() {
         ARouter.getInstance().build(RouteUtils.Home_Search).navigation();
     }
