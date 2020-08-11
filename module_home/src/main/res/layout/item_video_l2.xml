@@ -4,39 +4,27 @@
 
     <data>
 
-        <import type="com.zb.lib_base.utils.ObjectUtils" />
-
         <import type="android.view.View" />
 
-        <variable
-            name="viewModel"
-            type="com.zb.module_home.vm.DiscoverVideoL2ViewModel" />
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="com.zb.lib_base.activity.BaseActivity" />
 
         <variable
-            name="discoverInfo"
+            name="item"
             type="com.zb.lib_base.model.DiscoverInfo" />
 
         <variable
-            name="memberInfo"
-            type="com.zb.lib_base.model.MemberInfo" />
+            name="position"
+            type="Integer" />
 
         <variable
-            name="isAttention"
-            type="boolean" />
+            name="viewModel"
+            type="com.zb.module_home.vm.VideoListViewModel" />
 
         <variable
-            name="isProgress"
-            type="boolean" />
-
-        <variable
-            name="goodDb"
-            type="com.zb.lib_base.db.GoodDb" />
-
-        <variable
-            name="isMine"
-            type="boolean" />
-
-
+            name="memberType"
+            type="Integer" />
     </data>
 
     <RelativeLayout
@@ -54,8 +42,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerInParent="true"
-            android:background="@mipmap/loading_icon"
-            android:visibility="@{isProgress?View.VISIBLE:View.GONE}" />
+            android:background="@mipmap/loading_icon" />
 
         <View
             viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(180)}"
@@ -85,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="15dp"
-                android:text="@{String.format(@string/at_nick,discoverInfo.nick)}"
+                android:text="@{String.format(@string/at_nick,item.nick)}"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -96,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
-                android:text="@{discoverInfo.text}"
+                android:text="@{item.text}"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 tools:text="我看见佛二五九佛微积分围殴就佛为访问哦哦ij" />
@@ -115,7 +102,7 @@
                     android:src="@mipmap/video_play_back_ico" />
 
                 <TextView
-                    onClickDelayed="@{viewModel::toReviews}"
+                    onClickDelayed="@{v->viewModel.toReviews(position)}"
                     android:layout_width="match_parent"
                     android:layout_height="37dp"
                     android:layout_marginTop="15dp"
@@ -155,9 +142,9 @@
                     android:background="@drawable/circle_white" />
 
                 <ImageView
-                    imageUrl="@{discoverInfo.image}"
+                    imageUrl="@{item.image}"
                     isCircle="@{true}"
-                    onClickDelayed="@{viewModel::toMemberDetail}"
+                    onClickDelayed="@{v->viewModel.toMemberDetail(item)}"
                     viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(107)}"
                     viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(107)}"
                     android:layout_width="wrap_content"
@@ -165,41 +152,43 @@
                     android:layout_centerInParent="true" />
 
                 <ImageView
-                    onClickDelayed="@{v->viewModel.attentionOther()}"
+                    android:id="@+id/iv_attention"
+                    onClickDelayed="@{v->viewModel.attentionOther(item)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="30dp"
                     android:paddingStart="11dp"
                     android:paddingEnd="11dp"
-                    android:src="@mipmap/attention_icon"
-                    android:visibility="@{isAttention?View.INVISIBLE:View.VISIBLE}" />
+                    android:src="@mipmap/attention_icon" />
 
             </RelativeLayout>
 
             <ImageView
-                onClickDelayed="@{viewModel::toGood}"
+                android:id="@+id/iv_good"
+                onClickDelayed="@{v->viewModel.doGood(position)}"
                 viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:background="@{goodDb.hasGood(viewModel.friendDynId)?@drawable/video_play_zan_pressed:@drawable/video_play_zan_unpressed}" />
+                android:background="@{viewModel.goodDb.hasGood(item.friendDynId)?@drawable/video_play_zan_pressed:@drawable/video_play_zan_unpressed}" />
 
             <TextView
+                android:id="@+id/tv_good"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="30dp"
                 android:ellipsize="end"
                 android:maxLength="4"
                 android:singleLine="true"
-                android:text="@{discoverInfo.goodNumStr}"
+                android:text="@{item.goodNumStr}"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 tools:text="1.1万" />
 
             <ImageView
-                onClickDelayed="@{viewModel::toReviews}"
+                onClickDelayed="@{v->viewModel.toReviews(position)}"
                 viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
                 android:layout_width="wrap_content"
@@ -208,19 +197,20 @@
                 android:background="@mipmap/video_reviews_icon" />
 
             <TextView
+                android:id="@+id/tv_reviews"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="30dp"
                 android:ellipsize="end"
                 android:maxLength="4"
                 android:singleLine="true"
-                android:text="@{discoverInfo.reviewsStr}"
+                android:text="@{item.reviewsStr}"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 tools:text="1.1万" />
 
             <ImageView
-                onClickDelayed="@{viewModel::toShare}"
+                onClickDelayed="@{v->viewModel.more(item)}"
                 viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
                 android:layout_width="wrap_content"
@@ -229,6 +219,7 @@
                 android:background="@mipmap/video_play_share" />
 
             <ImageView
+                onClickDelayed="@{v->viewModel.doReward(item)}"
                 viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
                 android:layout_width="wrap_content"
@@ -236,7 +227,7 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
                 android:background="@mipmap/gift_icon"
-                android:visibility="@{isMine?View.GONE:View.VISIBLE}" />
+                android:visibility="@{(item.userId==BaseActivity.userId)?View.GONE:View.VISIBLE}" />
         </LinearLayout>
 
     </RelativeLayout>

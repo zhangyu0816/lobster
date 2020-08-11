@@ -94,7 +94,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
 
     @Override
     public void setAdapter() {
-        adapter = new HomeAdapter<>(activity, R.layout.item_video, MineApp.discoverInfoList, this);
+        adapter = new HomeAdapter<>(activity, R.layout.item_video_l2, MineApp.discoverInfoList, this);
 
         douYinLayoutManager = new DouYinLayoutManager(activity, OrientationHelper.VERTICAL, false);
         mBinding.videoList.setLayoutManager(douYinLayoutManager);
@@ -193,7 +193,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
 
     @Override
     public void follow(DiscoverInfo discoverInfo) {
-        if (tvFollow.getText().toString().equals("关注")) {
+        if (ivAttention.getVisibility() == View.INVISIBLE) {
             attentionOther(discoverInfo);
         } else {
             cancelAttention(discoverInfo);
@@ -248,8 +248,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             @Override
             public void onNext(Object o) {
                 if (o == null) {
-                    tvFollow.setText("取消关注");
-                    tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                    ivAttention.setVisibility(View.INVISIBLE);
                     attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), true, BaseActivity.userId));
                 } else {
                     attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), false, BaseActivity.userId));
@@ -259,13 +258,12 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    private void attentionOther(DiscoverInfo discoverInfo) {
+    public void attentionOther(DiscoverInfo discoverInfo) {
         if (discoverInfo == null) return;
         attentionOtherApi api = new attentionOtherApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                tvFollow.setText("取消关注");
-                tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                ivAttention.setVisibility(View.INVISIBLE);
                 attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), true, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
             }
@@ -274,8 +272,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
                     if (e.getMessage().equals("已经关注过")) {
-                        tvFollow.setText("取消关注");
-                        tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
+                        ivAttention.setVisibility(View.INVISIBLE);
                         attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), true, BaseActivity.userId));
                         activity.sendBroadcast(new Intent("lobster_attentionList"));
                     }
@@ -290,8 +287,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         cancelAttentionApi api = new cancelAttentionApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                tvFollow.setText("关注");
-                tvFollow.setTextColor(activity.getResources().getColor(R.color.black_4d4));
+                ivAttention.setVisibility(View.VISIBLE);
                 attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), false, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
             }
@@ -345,9 +341,14 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             @Override
             public void onNext(Object o) {
                 goodDb.saveGood(new CollectID(discoverInfo.getFriendDynId()));
-                ivGood.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.drawable.video_play_good_pressed));
+                ivGood.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.drawable.video_play_zan_pressed));
+
+                int goodNum = discoverInfo.getGoodNum() + 1;
+                discoverInfo.setGoodNum(goodNum);
+                tvGood.setText(discoverInfo.getGoodNumStr());
+
                 Intent data = new Intent("lobster_doGood");
-                data.putExtra("goodNum", discoverInfo.getGoodNum() + 1);
+                data.putExtra("goodNum", goodNum);
                 data.putExtra("friendDynId", discoverInfo.getFriendDynId());
                 activity.sendBroadcast(data);
             }
@@ -357,7 +358,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
                     if (TextUtils.equals(e.getMessage(), "已经赞过了")) {
                         goodDb.saveGood(new CollectID(discoverInfo.getFriendDynId()));
-                        ivGood.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.drawable.video_play_good_pressed));
+                        ivGood.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.drawable.video_play_zan_pressed));
                         Intent data = new Intent("lobster_doGood");
                         data.putExtra("friendDynId", discoverInfo.getFriendDynId());
                         activity.sendBroadcast(data);
@@ -373,9 +374,14 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             @Override
             public void onNext(Object o) {
                 goodDb.deleteGood(discoverInfo.getFriendDynId());
-                ivGood.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.drawable.video_play_good_unpressed));
+                ivGood.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.drawable.video_play_zan_unpressed));
+
+                int goodNum = discoverInfo.getGoodNum() - 1;
+                discoverInfo.setGoodNum(goodNum);
+                tvGood.setText(discoverInfo.getGoodNumStr());
+
                 Intent data = new Intent("lobster_doGood");
-                data.putExtra("goodNum", discoverInfo.getGoodNum() - 1);
+                data.putExtra("goodNum", goodNum);
                 data.putExtra("friendDynId", discoverInfo.getFriendDynId());
                 activity.sendBroadcast(data);
             }
@@ -388,8 +394,9 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     private ObjectAnimator animator;
     private DiscoverInfo discoverInfo;
     private ImageView ivGood;
+    private TextView tvGood;
     private TextView tvReviews;
-    private TextView tvFollow;
+    private ImageView ivAttention;
 
     private void playVideo(View view) {
         discoverInfo = MineApp.discoverInfoList.get(position);
@@ -397,8 +404,9 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         videoView = view.findViewById(R.id.video_view);
         ivProgress = view.findViewById(R.id.iv_progress);
         ivGood = view.findViewById(R.id.iv_good);
+        tvGood = view.findViewById(R.id.tv_good);
         tvReviews = view.findViewById(R.id.tv_reviews);
-        tvFollow = view.findViewById(R.id.tv_follow);
+        ivAttention = view.findViewById(R.id.iv_attention);
 
         attentionStatus(discoverInfo);
 

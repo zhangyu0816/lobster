@@ -6,6 +6,7 @@ import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.utils.RouteUtils;
+import com.zb.lib_base.utils.StatusBarUtil;
 import com.zb.module_home.BR;
 import com.zb.module_home.R;
 import com.zb.module_home.vm.VideoListViewModel;
@@ -24,6 +25,7 @@ public class VideoListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.HomeVideoTheme);
         super.onCreate(savedInstanceState);
+        StatusBarUtil.setStatusBarColor(activity, R.color.black);
     }
 
     @Override

@@ -51,10 +51,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="@{viewModel.memberInfo.remark.isEmpty()?viewModel.memberInfo.nick:viewModel.memberInfo.remark}"
+                android:text="用户详情"
                 android:textColor="@color/black_252"
-                android:textSize="18sp"
-                tools:text="杀杀杀" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
