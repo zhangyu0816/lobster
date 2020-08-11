@@ -3,6 +3,7 @@ package com.zb.module_card.vm;
 import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -10,6 +11,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.CycleInterpolator;
 import android.widget.ImageView;
@@ -97,7 +99,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     private AnimatorSet animatorSet;
     private ObjectAnimator translate = null;
     private ObjectAnimator alphaA = null;
-    private int _direction = 0;
     private List<PairInfo> disLikeList = new ArrayList<>();
     private CardAdapter disListAdapter;
     private List<String> imageList = new ArrayList<>();
@@ -176,6 +177,14 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
         initArea();
         setAdapter();
+
+        if (TextUtils.equals(PreferenceUtil.readStringValue(activity, "exposureTime"), DateUtil.getNow(DateUtil.yyyy_MM_dd))) {
+            cardFragBinding.ivExposure.setVisibility(View.VISIBLE);
+            ObjectAnimator animator = ObjectAnimator.ofFloat(cardFragBinding.ivExposure, "rotation", 0, 360).setDuration(3000);
+            animator.setRepeatMode(ValueAnimator.RESTART);
+            animator.setRepeatCount(Animation.INFINITE);
+            animator.start();
+        }
     }
 
     @Override

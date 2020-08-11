@@ -47,7 +47,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="20dp">
+        android:paddingTop="30dp">
 
         <TextView
             android:id="@+id/textView"
@@ -67,14 +67,32 @@
             android:textSize="14sp"
             android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/imageView2"
+        <RelativeLayout
             onClickDelayed="@{viewModel::exposure}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:padding="15dp"
-            app:srcCompat="@mipmap/exposure_icon" />
+            android:padding="15dp">
+
+            <ImageView
+                android:id="@+id/iv_exposure"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(76)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(76)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/exposured_icon"
+                android:visibility="gone"/>
+
+            <ImageView
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(70)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(70)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/exposure_icon" />
+        </RelativeLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             adapter="@{viewModel.adapter}"
