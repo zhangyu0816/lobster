@@ -95,8 +95,8 @@ public class MineApp extends MultiDexApplication {
     public static String aspect = "";
 
     public static int sex = 0;
-    public static int maxAge = 100;
-    public static int minAge = 0;
+    public static int maxAge = 70;
+    public static int minAge = 18;
 
     public static List<DiscoverInfo> discoverInfoList = new ArrayList<>();
 

@@ -415,6 +415,10 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         openedMemberPriceListApi api = new openedMemberPriceListApi(new HttpOnNextListener<List<VipInfo>>() {
             @Override
             public void onNext(List<VipInfo> o) {
+                VipInfo vipInfo = o.get(0);
+                o.get(0).setOriginalPrice(vipInfo.getPrice());
+                o.get(1).setOriginalPrice(vipInfo.getPrice() * 3);
+                o.get(2).setOriginalPrice(vipInfo.getPrice() * 12);
                 MineApp.vipInfoList.clear();
                 MineApp.vipInfoList.addAll(o);
             }

@@ -48,7 +48,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
-                    android:hint="搜索"
+                    android:hint="输入虾菇号"
                     android:imeOptions="actionSearch"
                     android:padding="10dp"
                     android:singleLine="true"
