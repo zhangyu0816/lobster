@@ -64,7 +64,10 @@
             viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(748)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="65dp"
             android:background="@mipmap/bottle_title_text_icon" />
+
     </RelativeLayout>
+
 </layout>

@@ -57,11 +57,11 @@ public class DoubleHeadedDragonBar extends View {
     /**
      * 百分比
      */
-    int max = 100;
+    int max = 70;
     //最小值的百分比
-    private int minValue = 0;
+    private int minValue = 18;
     //最大值的百分比
-    private int maxValue = 100;
+    private int maxValue = 70;
 
     boolean isMinMode = true;//选择最小值模式
 
@@ -84,8 +84,8 @@ public class DoubleHeadedDragonBar extends View {
      * @param minValue
      */
     public void setMinValue(int minValue) {
-        if (minValue < 0) {
-            minValue = 0;
+        if (minValue < 18) {
+            minValue = 18;
         } else if (minValue > max) {
             minValue = max;
         }
@@ -103,8 +103,8 @@ public class DoubleHeadedDragonBar extends View {
      * @param maxValue
      */
     public void setMaxValue(int maxValue) {
-        if (maxValue < 0) {
-            maxValue = 0;
+        if (maxValue < 18) {
+            maxValue = 18;
         } else if (maxValue > max) {
             maxValue = max;
         }
@@ -433,8 +433,8 @@ public class DoubleHeadedDragonBar extends View {
         int t = (int) (max * x / seekWidth);
         if (isMinMode) {
 
-            if (t < 0) {
-                minValue = 0;
+            if (t < 18) {
+                minValue = 18;
             } else if (t > maxValue) {
                 minValue = maxValue;
             } else {
