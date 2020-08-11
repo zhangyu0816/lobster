@@ -12,6 +12,7 @@ import com.zb.module_bottle.BR;
 import com.zb.module_bottle.R;
 import com.zb.module_bottle.vm.BottleChatViewModel;
 
+
 @Route(path = RouteUtils.Bottle_Chat)
 public class BottleChatActivity extends BaseActivity {
     @Autowired(name = "driftBottleId")

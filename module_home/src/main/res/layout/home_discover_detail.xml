@@ -200,6 +200,7 @@
                             android:layout_marginTop="5dp"
                             android:layout_marginEnd="15dp"
                             android:background="@{viewModel.discoverInfo==null?@drawable/default_bg:@drawable/empty_bg}"
+                            android:lineSpacingExtra="3dp"
                             android:text="@{viewModel.discoverInfo.text}"
                             android:textColor="@color/black_827"
                             android:textSize="14sp"
@@ -311,10 +312,10 @@
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view"
                     adapter="@{viewModel.reviewAdapter}"
                     recyclerType="@{0}"
                     size="@{0}"
-                    android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>

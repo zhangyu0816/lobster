@@ -31,7 +31,7 @@ public class FunctionPW extends BasePopupWindow {
     private List<ShareItem> shareItemList = new ArrayList<>();
     private List<ShareItem> shareItemBottomList = new ArrayList<>();
     private boolean isMine = false;
-    private boolean isVideo = false;
+    public boolean isVideo = false;
     private boolean isList = false;
     private UMImage umImage;
     private String sharedName;

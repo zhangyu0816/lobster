@@ -141,8 +141,8 @@ public class VipAdPW extends BasePopupWindow {
             mBinding.setVariable(BR.vipAd, vipAdList.get(0));
         binding = (PwsVipAdBinding) mBinding;
 
-        AdapterBinding.viewSize(binding.bannerLinear, ObjectUtils.getViewSizeByWidthFromMax(900), ObjectUtils.getVipExposureHeight(900));
-        AdapterBinding.viewSize(binding.banner, ObjectUtils.getViewSizeByWidthFromMax(900), ObjectUtils.getVipExposureHeight(900));
+        AdapterBinding.viewSize(binding.bannerLinear, ObjectUtils.getViewSizeByWidthFromMax(1000), ObjectUtils.getVipExposureHeight(1000));
+        AdapterBinding.viewSize(binding.banner, ObjectUtils.getViewSizeByWidthFromMax(1000), ObjectUtils.getVipExposureHeight(1000));
 
         binding.banner.setImageScaleType(ImageView.ScaleType.FIT_XY)
                 .setAds(adsList)
@@ -150,7 +150,7 @@ public class VipAdPW extends BasePopupWindow {
                     @Override
                     public void loadImages(Context context, Ads ads, ImageView image, int position) {
                         AdapterBinding.loadImage(image, "", ads.getAdRes(),
-                                ObjectUtils.getDefaultRes(), ObjectUtils.getViewSizeByWidthFromMax(900), ObjectUtils.getVipExposureHeight(900),
+                                ObjectUtils.getDefaultRes(), ObjectUtils.getViewSizeByWidthFromMax(1000), ObjectUtils.getVipExposureHeight(1000),
                                 false, false, 0, false, 0, false);
                     }
 

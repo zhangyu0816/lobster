@@ -9,7 +9,6 @@ import com.zb.module_chat.iv.ChatFragVMInterface;
 public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterface {
     @Override
     public void entryBottle(View view) {
-        openBottle();
         ActivityUtils.getBottleThrow();
     }
 }

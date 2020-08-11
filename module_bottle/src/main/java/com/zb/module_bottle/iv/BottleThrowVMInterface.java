@@ -11,4 +11,10 @@ public interface BottleThrowVMInterface {
     void myBottle(View view);
 
     void findBottle();
+
+    void sure(View view);
+
+    void cancel(View view);
+
+    void close(View view);
 }

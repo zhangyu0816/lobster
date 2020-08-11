@@ -52,7 +52,6 @@ import com.zb.module_home.windows.GiftPW;
 import com.zb.module_home.windows.GiftPayPW;
 import com.zb.module_home.windows.ReviewPW;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -69,7 +68,6 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     private AreaDb areaDb;
     private boolean isUp = false;
     private boolean isOver = false;
-    private List<String> selectorList = new ArrayList<>();
     private MineInfo mineInfo;
     private LikeDb likeDb;
 
@@ -397,6 +395,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     private TextView tvGood;
     private TextView tvReviews;
     private ImageView ivAttention;
+    private ImageView ivImage;
 
     private void playVideo(View view) {
         discoverInfo = MineApp.discoverInfoList.get(position);
@@ -407,14 +406,15 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         tvGood = view.findViewById(R.id.tv_good);
         tvReviews = view.findViewById(R.id.tv_reviews);
         ivAttention = view.findViewById(R.id.iv_attention);
-
+        ivImage = view.findViewById(R.id.iv_image);
+        ivImage.setVisibility(View.VISIBLE);
         attentionStatus(discoverInfo);
-
         animator.start();
         ivProgress.setVisibility(View.VISIBLE);
         DownLoad.getFilePath(discoverInfo.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), filePath -> {
             discoverInfo.setVideoPath(filePath);
             ivProgress.setVisibility(View.GONE);
+            ivImage.setVisibility(View.GONE);
             if (animator != null)
                 animator.cancel();
             initVideo();
@@ -459,6 +459,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 return true;
             } else if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
                 ivProgress.setVisibility(View.GONE);
+                ivImage.setVisibility(View.GONE);
             }
             return false; //如果方法处理了信息，则为true；如果没有，则为false。返回false或根本没有OnInfoListener，将导致丢弃该信息。
         });

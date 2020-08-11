@@ -9,6 +9,14 @@
         <item name="colorPrimaryDark">@android:color/white</item>
     </style>
 
+    <!-- Base application theme. -->
+    <style name="MineBlackTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowEnableSplitTouch">false</item>
+        <item name="android:splitMotionEvents">false</item>
+        <item name="colorPrimaryDark">#232227</item>
+    </style>
+
     <style name="MySwitch" parent="Theme.AppCompat.Light">
         <!-- Active thumb color & Active track color(30% transparency) switch 打开时的拇指按钮的颜色 轨迹颜色默认为30%这个颜色 -->
         <item name="colorControlActivated">#49c265</item>

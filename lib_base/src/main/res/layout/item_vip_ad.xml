@@ -30,7 +30,7 @@
     <RelativeLayout
         onClickDelayed="@{v->pw.selectIndex(position)}"
         viewHeightSize="@{-2}"
-        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.235f)}"
+        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.265f)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp">

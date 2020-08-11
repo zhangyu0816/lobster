@@ -110,7 +110,8 @@
                 android:layout_marginEnd="63dp"
                 android:background="@drawable/btn_bg_white_radius60_70"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="120dp"
@@ -132,7 +133,8 @@
                 android:layout_marginEnd="63dp"
                 android:background="@drawable/btn_bg_white_radius60_70"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="120dp"

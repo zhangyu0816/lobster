@@ -21,7 +21,7 @@ public class BottleContentActivity extends BottleBaseActivity {
 
     @Override
     public void initUI() {
-        fitComprehensiveScreen();
+        fitScreen();
         BottleContentViewModel viewModel = new BottleContentViewModel();
         viewModel.bottleInfo = bottleInfo;
         viewModel.setBinding(mBinding);

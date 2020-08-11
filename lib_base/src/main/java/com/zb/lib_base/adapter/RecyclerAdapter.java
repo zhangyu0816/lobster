@@ -25,6 +25,11 @@ public abstract class RecyclerAdapter<T, B extends ViewDataBinding> extends Recy
         this.layoutId = layoutId;
     }
 
+    public void setList(List<T> mList) {
+        this.mList = mList;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public RecyclerHolder<B> onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

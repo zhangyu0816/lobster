@@ -44,7 +44,6 @@ public class BottleViewModel extends BaseViewModel implements BottleVMInterface 
         animatorSet.start();
 
         new Handler().postDelayed(() -> {
-            openBottle();
             ActivityUtils.getBottleThrow();
             activity.finish();
         }, time);

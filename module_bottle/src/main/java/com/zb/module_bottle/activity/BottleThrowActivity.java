@@ -19,7 +19,7 @@ public class BottleThrowActivity extends BottleBaseActivity {
 
     @Override
     public void initUI() {
-        fitComprehensiveScreen();
+        fitScreen();
         viewModel = new BottleThrowViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
@@ -36,6 +36,18 @@ public class BottleThrowActivity extends BottleBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        viewModel.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        viewModel.onPause();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
         viewModel.onResume();
     }
 }

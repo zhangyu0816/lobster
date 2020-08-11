@@ -93,6 +93,7 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
     public T call(BaseResultEntity<T> httpResult) {
         //未登录
         if (httpResult.getCode() == HttpTimeException.NOT_LOGIN) {
+            getRxAppCompatActivity().sendBroadcast(new Intent("lobster_closeSound"));
             new TextPW(getRxAppCompatActivity(), getRxAppCompatActivity().getWindow().getDecorView(),
                     "安全提示", "您的账号已在另一个设备上登录，若不是本人操作，请重新登录且请往设置中修改密码！",
                     "重新登录", false, new TextPW.CallBack() {
@@ -107,6 +108,7 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
 
                 @Override
                 public void cancel() {
+                    getRxAppCompatActivity().sendBroadcast(new Intent("lobster_resumeSound"));
                     if (TextUtils.equals(dialogTitle, "loadingNotLogin")) {
                         getRxAppCompatActivity().finish();
                     }

@@ -275,8 +275,13 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 String sharedName = o.getText().replace("{userId}", memberInfo.getUserId() + "");
                 sharedName = sharedName.replace("{nick}", memberInfo.getNick());
                 UMImage umImage = new UMImage(activity, memberInfo.getImage().replace("YM0000", "430X430"));
-                String content = memberInfo.getServiceTags().substring(1, memberInfo.getServiceTags().length() - 1);
-                content = "兴趣：" + content.replace("#", ",");
+                String content = "";
+                if (memberInfo.getServiceTags().isEmpty()) {
+                    content = o.getText();
+                }else{
+                    content = memberInfo.getServiceTags().substring(1, memberInfo.getServiceTags().length() - 1);
+                    content = "兴趣：" + content.replace("#", ",");
+                }
 
                 new FunctionPW(activity, mBinding.getRoot(), umImage, sharedName, content, sharedUrl,
                         otherUserId == BaseActivity.userId, false, false, new FunctionPW.CallBack() {

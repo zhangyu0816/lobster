@@ -97,7 +97,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="10dp"
                         android:background="@mipmap/guidance_right"
                         android:visibility="@{position==2?View.VISIBLE:View.GONE}" />
 
@@ -118,7 +117,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="12dp"
                         android:layout_marginBottom="54dp"
                         android:background="@mipmap/guidance_return"
                         android:visibility="@{position==4?View.VISIBLE:View.GONE}" />

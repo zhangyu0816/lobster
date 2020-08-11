@@ -17,12 +17,34 @@
         android:scaleType="fitXY"
         android:src="@drawable/dengta" />
 
-    <ImageView
-        android:id="@+id/hd_s"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@drawable/haidi1" />
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_wang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@mipmap/wang_icon"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/iv_wang_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@mipmap/wang_back_icon"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/hd_s"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/haidi1" />
+    </RelativeLayout>
+
 
     <ImageView
         android:id="@+id/plp_d"

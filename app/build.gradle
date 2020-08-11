@@ -42,13 +42,13 @@ android {
         debug {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
-            storeFile file('D:\\work\\Lobster-project\\Lobster\\rentme.keystore')
+            storeFile file('C:\\Users\\yu\\Documents\\AndroidStudioProjects\\Lobster\\rentme.keystore')
             storePassword 'android'
         }
         release {
             keyAlias 'rm'
             keyPassword 'yimi2015yuwei'
-            storeFile file('D:\\work\\Lobster-project\\Lobster\\rentme.keystore')
+            storeFile file('C:\\Users\\yu\\Documents\\rentme.keystore')
             storePassword 'yimi2015yuwei'
         }
         android.applicationVariants.all { variant ->

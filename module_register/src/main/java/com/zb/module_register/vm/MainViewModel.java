@@ -178,11 +178,12 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
         @Override
         public void onStart(SHARE_MEDIA share_media) {
-            CustomProgressDialog.showLoading(activity, "授权成功，正在登录中...");
+
         }
 
         @Override
         public void onComplete(SHARE_MEDIA platform, int status, Map<String, String> info) {
+            CustomProgressDialog.showLoading(activity, "授权成功，正在登录中...");
             if (status == 2) {
                 unionNick = "";
                 unionImage = "";

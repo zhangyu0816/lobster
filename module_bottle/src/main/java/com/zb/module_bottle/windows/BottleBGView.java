@@ -3,13 +3,16 @@ package com.zb.module_bottle.windows;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.module_bottle.R;
 
 import androidx.annotation.Nullable;
@@ -21,7 +24,7 @@ import androidx.annotation.Nullable;
  */
 public class BottleBGView extends LinearLayout {
 
-    private ImageView lsxq, hd_s, plp_d, bl, dg, plp, hd_q, jg, xx, fsxq;
+    private ImageView lsxq, hd_s, plp_d, bl, dg, plp, hd_q, jg, xx, fsxq, ivWang, ivWangBack;
 
     public BottleBGView(Context context) {
         super(context);
@@ -58,6 +61,10 @@ public class BottleBGView extends LinearLayout {
         jg = findViewById(R.id.jg);
         xx = findViewById(R.id.xx);
         fsxq = findViewById(R.id.fsxq);
+        ivWang = findViewById(R.id.iv_wang);
+        ivWangBack = findViewById(R.id.iv_wang_back);
+        fsxq.setVisibility(GONE);
+        new Handler().postDelayed(() -> fsxq.setVisibility(VISIBLE), 1300);
     }
 
     private void setAnim() {
@@ -66,12 +73,6 @@ public class BottleBGView extends LinearLayout {
                 ObjectAnimator.ofFloat(lsxq, "translationY", 0f, 50f, 0f);
         anim_lsxq.setDuration(5000);
         anim_lsxq.setRepeatCount(Animation.INFINITE);
-
-//        ObjectAnimator anim_dg =
-//                ObjectAnimator.ofFloat(dg, "rotation", 0f, 45f, 0f)
-//                .setDuration(3000);
-//        anim_dg.setRepeatCount(Animation.INFINITE);
-//        anim_dg.start();
 
         //星星
         ObjectAnimator anim_xx =
@@ -150,5 +151,35 @@ public class BottleBGView extends LinearLayout {
                 anim_plp_translationY,
                 anim_plp_translationX);
         set.start();
+    }
+
+    public void startWang(CallBack callBack) {
+        ivWang.setVisibility(View.VISIBLE);
+        AnimatorSet animatorSet = new AnimatorSet();
+
+        ObjectAnimator translateY = ObjectAnimator.ofFloat(ivWang, "translationY", 0, ObjectUtils.getViewSizeByWidthFromMax(600)).setDuration(1000);
+        ObjectAnimator translateX = ObjectAnimator.ofFloat(ivWang, "translationX", 0, ObjectUtils.getViewSizeByWidthFromMax(100), 0).setDuration(1000);
+        ObjectAnimator translateBackY = ObjectAnimator.ofFloat(ivWangBack, "translationY", 0, ObjectUtils.getViewSizeByWidthFromMax(600)).setDuration(1000);
+        ObjectAnimator translateBackX = ObjectAnimator.ofFloat(ivWangBack, "translationX", 0, ObjectUtils.getViewSizeByWidthFromMax(100), 0).setDuration(1000);
+        ObjectAnimator translateBackY2 = ObjectAnimator.ofFloat(ivWangBack, "translationY", ObjectUtils.getViewSizeByWidthFromMax(600), 0).setDuration(1000);
+
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.play(translateY).with(translateBackY);
+        animatorSet.play(translateX).with(translateBackX).after(translateY);
+        animatorSet.play(translateBackY2).after(translateX);
+        animatorSet.start();
+
+        new Handler().postDelayed(() -> {
+            ivWangBack.setVisibility(View.VISIBLE);
+            ivWang.setVisibility(View.GONE);
+        }, 2000);
+        new Handler().postDelayed(() -> {
+            ivWangBack.setVisibility(View.GONE);
+            callBack.success();
+        }, 3000);
+    }
+
+    public interface CallBack{
+        void success();
     }
 }

@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
@@ -38,7 +37,6 @@ import com.zb.lib_base.model.PairInfo;
 import com.zb.lib_base.model.ProvinceInfo;
 import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.ActivityUtils;
-import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -50,13 +48,13 @@ import com.zb.lib_base.views.card.OnSwipeListener;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.CountUsedPW;
 import com.zb.lib_base.windows.SuperLikePW;
+import com.zb.lib_base.windows.TextPW;
 import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;
 import com.zb.module_card.adapter.CardAdapter;
 import com.zb.module_card.databinding.CardFragBinding;
 import com.zb.module_card.iv.CardVMInterface;
-import com.zb.module_card.windows.ExposurePW;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -178,13 +176,19 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         initArea();
         setAdapter();
 
-        if (TextUtils.equals(PreferenceUtil.readStringValue(activity, "exposureTime"), DateUtil.getNow(DateUtil.yyyy_MM_dd))) {
+        if (mineInfo.getMemberType() == 2) {
             cardFragBinding.ivExposure.setVisibility(View.VISIBLE);
             ObjectAnimator animator = ObjectAnimator.ofFloat(cardFragBinding.ivExposure, "rotation", 0, 360).setDuration(3000);
             animator.setRepeatMode(ValueAnimator.RESTART);
             animator.setRepeatCount(Animation.INFINITE);
             animator.start();
         }
+//        else {
+//            ObjectAnimator animator = ObjectAnimator.ofFloat(cardFragBinding.tvCity, "rotation", -10, 10, -10, 10).setDuration(1000);
+//            animator.setRepeatMode(ValueAnimator.RESTART);
+//            animator.setRepeatCount(Animation.INFINITE);
+//            animator.start();
+//        }
     }
 
     @Override
@@ -233,13 +237,16 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     @Override
     public void exposure(View view) {
         if (mineInfo.getMemberType() == 2) {
-            if (!TextUtils.equals(PreferenceUtil.readStringValue(activity, "exposureTime"), DateUtil.getNow(DateUtil.yyyy_MM_dd))) {
-                new ExposurePW(activity, mBinding.getRoot(), e -> {
-                    if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
-                        mBinding.setVariable(BR.isOutLine, true);
-                    }
-                });
-            }
+            new TextPW(activity, mBinding.getRoot(), "VIP专享", "虾菇每日自动为你增加曝光度，让10的人优先看到你", "明白了", () -> {
+
+            });
+//            if (!TextUtils.equals(PreferenceUtil.readStringValue(activity, "exposureTime"), DateUtil.getNow(DateUtil.yyyy_MM_dd))) {
+//                new ExposurePW(activity, mBinding.getRoot(), e -> {
+//                    if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
+//                        mBinding.setVariable(BR.isOutLine, true);
+//                    }
+//                });
+//            }
         } else {
             new VipAdPW(activity, mBinding.getRoot(), false, 1);
         }

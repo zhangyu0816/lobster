@@ -68,6 +68,12 @@
             android:layout_marginTop="65dp"
             android:background="@mipmap/bottle_title_text_icon" />
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/iv_bg"
+            android:background="@mipmap/bottle_bottom" />
+
     </RelativeLayout>
 
 </layout>

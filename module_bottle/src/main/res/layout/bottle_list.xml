@@ -97,13 +97,13 @@
             android:orientation="vertical"
             app:layout_constraintTop_toTopOf="parent">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="22dp" />
+<!--            <View-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="22dp" />-->
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/imageView"
