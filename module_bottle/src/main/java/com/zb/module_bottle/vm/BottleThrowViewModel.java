@@ -26,6 +26,7 @@ import com.zb.module_bottle.R;
 import com.zb.module_bottle.adapter.BottleAdapter;
 import com.zb.module_bottle.databinding.BottleThrowBinding;
 import com.zb.module_bottle.iv.BottleThrowVMInterface;
+import com.zb.module_bottle.windows.BottleBGView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,6 +52,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         super.setBinding(binding);
         mBinding = (BottleThrowBinding) binding;
         mBinding.setIsBottle(false);
+        mBinding.setShowBtn(true);
         updateContactNumReceiver = new BaseReceiver(activity, "lobster_updateContactNum") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -79,7 +81,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         mPlayer = MediaPlayer.create(activity, R.raw.sea_wave);
         new Handler().postDelayed(() -> appSound(), 200);
 
-        ObjectAnimator translateX = ObjectAnimator.ofFloat(mBinding.ivStar, "translationX", 0, MineApp.W - ObjectUtils.getViewSizeByWidthFromMax(559)).setDuration(time);
+        ObjectAnimator translateX = ObjectAnimator.ofFloat(mBinding.ivStar, "translationX", 0, MineApp.W - ObjectUtils.getViewSizeByWidthFromMax(450)).setDuration(time);
 
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(mBinding.ivBg, "scaleX", 1, 1.5f).setDuration(time);
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(mBinding.ivBg, "scaleY", 1, 1.5f).setDuration(time);
@@ -152,6 +154,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         mBinding.setTitle("扔一个瓶子");
         mBinding.setBottleInfo(bottleInfo);
         mBinding.setIsBottle(true);
+        mBinding.setShowBtn(false);
     }
 
     @Override
@@ -167,6 +170,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     public void findBottle() {
         textList.clear();
         adapter.notifyDataSetChanged();
+        mBinding.setShowBtn(false);
         findBottleApi api = new findBottleApi(new HttpOnNextListener<BottleInfo>() {
             @Override
             public void onNext(BottleInfo o) {
@@ -204,6 +208,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     public void close(View view) {
         mBinding.setTitle("我的漂流瓶");
         mBinding.setIsBottle(false);
+        mBinding.setShowBtn(true);
     }
 
     // 创建漂流瓶
@@ -211,8 +216,8 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         castBottleApi api = new castBottleApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToast(activity, "扔到海里了", true);
-                close(null);
+                mBinding.setIsBottle(false);
+                mBinding.bottleWhiteBack.bottleBg.throwBottle(() -> close(null));
             }
         }, activity).setText(mBinding.edContent.getText().toString());
         HttpManager.getInstance().doHttpDeal(api);
@@ -223,10 +228,13 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         pickBottleApi api = new pickBottleApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                if (driftBottleType == 2) {
+                if (driftBottleType == 1) {
+                    mBinding.setIsBottle(false);
+                    mBinding.bottleWhiteBack.bottleBg.throwBottle(() -> close(null));
+                } else if (driftBottleType == 2) {
                     ActivityUtils.getBottleChat(bottleInfo.getDriftBottleId());
+                    close(null);
                 }
-                close(null);
             }
         }, activity).setDriftBottleId(bottleInfo.getDriftBottleId()).setDriftBottleType(driftBottleType);
         HttpManager.getInstance().doHttpDeal(api);

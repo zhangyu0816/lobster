@@ -70,13 +70,13 @@
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
                 android:layout_toStartOf="@+id/iv_more"
-                android:background="@drawable/btn_bg_purple_7a4_radius60"
+                android:background="@{isAttention?@drawable/btn_bg_black_c3b_white_radius60:@drawable/btn_bg_purple_7a4_radius60}"
                 android:gravity="center"
                 android:onClick="@{viewModel::follow}"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:text="@{isAttention?@string/attention_false:@string/attention_true}"
-                android:textColor="@android:color/white"
+                android:textColor="@{isAttention?@color/black_827:@color/white}"
                 android:textSize="13sp"
                 android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
 
@@ -356,7 +356,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="10dp"
-                    android:layout_marginEnd="15dp"
                     android:layout_marginBottom="10dp"
                     android:layout_toStartOf="@+id/right_layout"
                     android:layout_toEndOf="@+id/iv_gift"
@@ -400,15 +399,37 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="15dp"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal">
+
+                    <RelativeLayout
+                        onClickDelayed="@{viewModel::dynLike}"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="5dp">
+
+                        <ImageView
+                            android:id="@+id/iv_unLike"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/like_unselect_icon"
+                            android:visibility="gone" />
+
+                        <ImageView
+                            android:id="@+id/iv_like"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/like_select_icon"
+                            android:visibility="gone" />
+                    </RelativeLayout>
 
                     <TextView
                         onClickDelayed="@{viewModel::dynLike}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="15dp"
-                        android:drawableStart="@{viewModel.goodDb.hasGood(viewModel.discoverInfo.friendDynId)?@drawable/like_select_icon:@drawable/like_unselect_icon}"
-                        android:drawablePadding="5dp"
                         android:text='@{String.format("%d",viewModel.discoverInfo.goodNum)}'
                         android:textColor="@color/black_4d4"
                         android:textSize="14sp"

@@ -6,16 +6,25 @@
 
     <ImageView
         android:id="@+id/lsxq"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@drawable/lansexingqiu" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:src="@mipmap/lansexingqiu" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
         android:src="@drawable/dengta" />
+
+    <ImageView
+        android:id="@+id/iv_bottle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginBottom="50dp"
+        android:src="@mipmap/bottle_info_icon"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -27,7 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:background="@mipmap/wang_icon"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/iv_wang_back"
@@ -44,7 +53,6 @@
             android:scaleType="fitXY"
             android:src="@drawable/haidi1" />
     </RelativeLayout>
-
 
     <ImageView
         android:id="@+id/plp_d"
@@ -76,17 +84,12 @@
 
     <ImageView
         android:id="@+id/plp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="100dp"
         android:scaleType="fitXY"
-        android:src="@drawable/plp" />
-
-    <ImageView
-        android:id="@+id/hd_q"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@drawable/haidi" />
+        android:src="@mipmap/plp" />
 
     <ImageView
         android:layout_width="match_parent"
@@ -95,17 +98,28 @@
         android:src="@drawable/xingyun" />
 
     <ImageView
+        android:id="@+id/fsxq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="110dp"
+        android:layout_marginEnd="-65dp"
+        android:scaleType="fitXY"
+        android:src="@mipmap/bottle_star_icon" />
+
+    <ImageView
+        android:id="@+id/hd_q"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/haidi" />
+
+
+    <ImageView
         android:id="@+id/jg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
         android:src="@drawable/jg" />
-
-    <ImageView
-        android:id="@+id/fsxq"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@drawable/fensexingqiu" />
 
 </FrameLayout>

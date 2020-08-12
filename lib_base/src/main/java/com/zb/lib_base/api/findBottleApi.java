@@ -12,7 +12,7 @@ public class findBottleApi extends BaseEntity<BottleInfo> {
 
     public findBottleApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
-        setDialogTitle("打捞漂流瓶");
+        setShowProgress(false);
     }
 
     @Override

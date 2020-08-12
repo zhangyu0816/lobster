@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -127,7 +128,11 @@ public class BaseViewModel implements BaseVMInterface {
 
             }
         });
-        changeTab(Objects.requireNonNull(tabLayout.getTabAt(index)), 18, selectColor);
+        try {
+            changeTab(tabLayout.getTabAt(index), 18, selectColor);
+        } catch (Exception e) {
+
+        }
     }
 
     // 改变选中状态
@@ -200,6 +205,39 @@ public class BaseViewModel implements BaseVMInterface {
         animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
         animatorSet.playTogether(scaleX, scaleY, alpha);//同时执行
         animatorSet.start();
+    }
+
+    private long time = 400;
+    private float scale = 1.4f;
+
+    public void like(View view) {
+
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 1, scale).setDuration(time);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 1, scale).setDuration(time);
+        ObjectAnimator scaleBackX = ObjectAnimator.ofFloat(view, "scaleX", scale, 1).setDuration(100);
+        ObjectAnimator scaleBackY = ObjectAnimator.ofFloat(view, "scaleY", scale, 1).setDuration(100);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.play(scaleX).with(scaleY);
+        animatorSet.play(scaleBackX).with(scaleBackY).after(scaleX);
+        animatorSet.start();
+    }
+
+    public void unlike(View view) {
+
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 1, 0).setDuration(time);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 1, 0).setDuration(time);
+        ObjectAnimator scaleBackX = ObjectAnimator.ofFloat(view, "scaleX", 0, 1).setDuration(100);
+        ObjectAnimator scaleBackY = ObjectAnimator.ofFloat(view, "scaleY", 0, 1).setDuration(100);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.play(scaleX).with(scaleY);
+        animatorSet.play(scaleBackX).with(scaleBackY).after(scaleX);
+        animatorSet.start();
+
+        new Handler().postDelayed(() -> view.setVisibility(View.GONE), time);
     }
 
     public void openBottle() {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -25,6 +26,11 @@
         <variable
             name="memberType"
             type="Integer" />
+
+        <variable
+            name="goodDb"
+            type="com.zb.lib_base.db.GoodDb" />
+
     </data>
 
     <RelativeLayout
@@ -34,10 +40,20 @@
 
         <VideoView
             android:id="@+id/video_view"
+            onClickDelayed="@{v->viewModel.videoPlay(item)}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            android:background="@color/black_252"/>
+            android:background="@color/black_252" />
+
+        <ImageView
+            android:id="@+id/iv_play"
+            onClickDelayed="@{v->viewModel.videoPlay(item)}"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            app:srcCompat="@mipmap/video_play_icon" />
 
         <ImageView
             android:id="@+id/iv_image"
@@ -75,7 +91,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="15dp"
             android:layout_toStartOf="@+id/right_layout"
             android:orientation="vertical">
 
@@ -137,14 +152,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="15dp"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="19dp">
+                android:layout_height="wrap_content">
 
                 <View
                     viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
@@ -173,24 +186,43 @@
                     android:layout_marginTop="30dp"
                     android:paddingStart="11dp"
                     android:paddingEnd="11dp"
-                    android:src="@mipmap/attention_icon" />
+                    android:src="@mipmap/attention_icon"
+                    android:visibility="invisible" />
 
             </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/iv_good"
-                onClickDelayed="@{v->viewModel.doGood(position)}"
-                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@{viewModel.goodDb.hasGood(item.friendDynId)?@drawable/video_play_zan_pressed:@drawable/video_play_zan_unpressed}" />
+            <RelativeLayout
+                android:layout_width="80dp"
+                android:layout_height="80dp">
+
+                <ImageView
+                    android:id="@+id/iv_unLike"
+                    onClickDelayed="@{v->viewModel.doGood(position)}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/video_play_zan_unpressed"
+                    android:visibility="@{goodDb.hasGood(item.friendDynId)?View.GONE:View.VISIBLE}" />
+
+                <ImageView
+                    android:id="@+id/iv_like"
+                    onClickDelayed="@{v->viewModel.doGood(position)}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/video_play_zan_pressed"
+                    android:visibility="@{goodDb.hasGood(item.friendDynId)?View.VISIBLE:View.GONE}" />
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/tv_good"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="-13dp"
                 android:layout_marginBottom="30dp"
                 android:ellipsize="end"
                 android:maxLength="4"

@@ -82,7 +82,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     private MemberInfo memberInfo;
 
     private long reviewId = 0;
-    private int goodNum = 0;
     private BaseReceiver finishRefreshReceiver;
     private BaseReceiver attentionReceiver;
     private boolean isFirst = true;
@@ -99,6 +98,12 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         mBinding.setName("");
         mBinding.setListNum(10);
         mBinding.setIsAttention(false);
+
+        if (goodDb.hasGood(friendDynId)) {
+            mBinding.ivLike.setVisibility(View.VISIBLE);
+        } else {
+            mBinding.ivUnLike.setVisibility(View.VISIBLE);
+        }
         setAdapter();
         dynDetail();
         // 发送
@@ -392,7 +397,11 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(Object o) {
                 goodDb.saveGood(new CollectID(friendDynId));
-                goodNum = discoverInfo.getGoodNum() + 1;
+
+                mBinding.ivUnLike.setVisibility(View.GONE);
+                mBinding.ivLike.setVisibility(View.VISIBLE);
+                like(mBinding.ivLike);
+                int goodNum = discoverInfo.getGoodNum() + 1;
                 discoverInfo.setGoodNum(goodNum);
                 mBinding.setViewModel(DiscoverDetailViewModel.this);
 
@@ -406,6 +415,11 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
                     if (TextUtils.equals(e.getMessage(), "已经赞过了")) {
+
+                        mBinding.ivUnLike.setVisibility(View.GONE);
+                        mBinding.ivLike.setVisibility(View.VISIBLE);
+                        like(mBinding.ivLike);
+
                         goodDb.saveGood(new CollectID(friendDynId));
                         mBinding.setViewModel(DiscoverDetailViewModel.this);
                         Intent data = new Intent("lobster_doGood");
@@ -418,13 +432,17 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+
     @Override
     public void dynCancelLike() {
         dynCancelLikeApi api = new dynCancelLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
                 goodDb.deleteGood(friendDynId);
-                goodNum = discoverInfo.getGoodNum() - 1;
+                mBinding.ivUnLike.setVisibility(View.VISIBLE);
+                unlike(mBinding.ivLike);
+
+                int goodNum = discoverInfo.getGoodNum() - 1;
                 discoverInfo.setGoodNum(goodNum);
                 mBinding.setViewModel(DiscoverDetailViewModel.this);
                 Intent data = new Intent("lobster_doGood");

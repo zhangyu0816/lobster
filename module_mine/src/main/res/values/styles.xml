@@ -7,6 +7,7 @@
         <item name="android:splitMotionEvents">false</item>
         <item name="android:windowBackground">@android:color/white</item>
         <item name="colorPrimaryDark">@android:color/white</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <!-- Base application theme. -->
@@ -15,6 +16,7 @@
         <item name="android:windowEnableSplitTouch">false</item>
         <item name="android:splitMotionEvents">false</item>
         <item name="colorPrimaryDark">#232227</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="MySwitch" parent="Theme.AppCompat.Light">

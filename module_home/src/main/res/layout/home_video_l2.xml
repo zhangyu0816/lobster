@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -36,6 +37,9 @@
             name="isMine"
             type="boolean" />
 
+        <variable
+            name="isPlay"
+            type="boolean" />
 
     </data>
 
@@ -45,10 +49,19 @@
 
         <VideoView
             android:id="@+id/video_view"
+            onClickDelayed="@{viewModel::videoPlay}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            android:background="@color/black_252"/>
+            android:background="@color/black_252" />
+
+        <ImageView
+            onClickDelayed="@{viewModel::videoPlay}"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:visibility="@{isPlay?View.GONE:View.VISIBLE}"
+            app:srcCompat="@mipmap/video_play_icon" />
 
         <ImageView
             android:id="@+id/iv_image"
@@ -87,7 +100,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="15dp"
             android:layout_toStartOf="@+id/right_layout"
             android:orientation="vertical">
 
@@ -107,10 +119,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
+                android:maxLines="4"
                 android:text="@{discoverInfo.text}"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                android:maxLines="4"
                 tools:text="我看见佛二五九佛微积分围殴就佛为访问哦哦ij" />
 
             <LinearLayout
@@ -149,14 +161,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="15dp"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="19dp">
+                android:layout_height="wrap_content">
 
                 <View
                     viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
@@ -189,18 +199,37 @@
 
             </RelativeLayout>
 
-            <ImageView
-                onClickDelayed="@{viewModel::toGood}"
-                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@{goodDb.hasGood(viewModel.friendDynId)?@drawable/video_play_zan_pressed:@drawable/video_play_zan_unpressed}" />
+            <RelativeLayout
+                android:layout_width="80dp"
+                android:layout_height="80dp">
+
+                <ImageView
+                    android:id="@+id/iv_unLike"
+                    onClickDelayed="@{viewModel::toGood}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/video_play_zan_unpressed"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/iv_like"
+                    onClickDelayed="@{viewModel::toGood}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(111)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/video_play_zan_pressed"
+                    android:visibility="gone" />
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="-13dp"
                 android:layout_marginBottom="30dp"
                 android:ellipsize="end"
                 android:maxLength="4"

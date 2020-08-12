@@ -4,6 +4,8 @@ import com.zb.lib_base.model.DiscoverInfo;
 
 public interface VideoListVMInterface {
 
+    void videoPlay(DiscoverInfo discoverInfo);
+
     void dynPiazzaList();
 
     void toMemberDetail(DiscoverInfo discoverInfo);

@@ -41,6 +41,8 @@ public class MemberInfo extends BaseObservable {
     private int newDycType; // 最新的动态类型       配上对应的文字
     private int attentionStatus; //关注关系  1 关注  0 未关注
     private String distance = "";
+    private String singleImage = "";
+
 
     @Bindable
     public int getAge() {
@@ -380,5 +382,15 @@ public class MemberInfo extends BaseObservable {
     public void setDistance(String distance) {
         this.distance = distance;
         notifyPropertyChanged(BR.distance);
+    }
+
+    @Bindable
+    public String getSingleImage() {
+        return singleImage;
+    }
+
+    public void setSingleImage(String singleImage) {
+        this.singleImage = singleImage;
+        notifyPropertyChanged(BR.singleImage);
     }
 }

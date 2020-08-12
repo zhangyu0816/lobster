@@ -18,7 +18,7 @@ public class castBottleApi extends BaseEntity<BaseResultEntity> {
 
     public castBottleApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
-        setDialogTitle("正在给你的信找瓶子");
+        setShowProgress(false);
     }
 
     @Override

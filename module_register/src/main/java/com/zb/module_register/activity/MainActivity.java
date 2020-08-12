@@ -5,14 +5,11 @@ import android.content.Intent;
 import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.module_register.BR;
 import com.zb.module_register.R;
-import com.zb.module_register.databinding.RegisterMainBinding;
 import com.zb.module_register.vm.MainViewModel;
 
 import androidx.annotation.Nullable;
@@ -34,9 +31,6 @@ public class MainActivity extends RegisterBaseActivity {
         viewModel = new MainViewModel();
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
-        RegisterMainBinding binding = (RegisterMainBinding) mBinding;
-        AdapterBinding.viewSize(binding.ivBoy, ObjectUtils.getViewSizeByWidth(300f / 1080f), ObjectUtils.getViewSizeByWidth(300f / 1080f));
-        AdapterBinding.viewSize(binding.ivGirl, ObjectUtils.getViewSizeByWidth(300f / 1080f), ObjectUtils.getViewSizeByWidth(300f / 1080f));
     }
 
     @Override

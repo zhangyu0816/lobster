@@ -29,6 +29,11 @@
             name="isBottle"
             type="boolean" />
 
+        <variable
+            name="showBtn"
+            type="boolean" />
+
+
     </data>
 
     <RelativeLayout
@@ -48,7 +53,7 @@
             android:layout_centerInParent="true"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:visibility="@{isBottle?View.GONE:View.VISIBLE}">
+            android:visibility="@{showBtn?View.VISIBLE:View.GONE}">
 
             <ImageView
                 android:id="@+id/imageView3"
@@ -71,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal"
-            android:visibility="@{isBottle?View.GONE:View.VISIBLE}">
+            android:visibility="@{showBtn?View.VISIBLE:View.GONE}">
 
             <TextView
                 onClickDelayed="@{viewModel::throwBottle}"

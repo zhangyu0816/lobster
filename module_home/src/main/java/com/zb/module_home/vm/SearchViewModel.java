@@ -13,7 +13,7 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.MemberInfo;
-import com.zb.lib_base.utils.PreferenceUtil;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
@@ -112,12 +112,16 @@ public class SearchViewModel extends BaseViewModel implements SearchVMInterface,
                 }
             }
         }, activity)
-                .setCityId(areaDb.getCityId(PreferenceUtil.readStringValue(activity, "cityName")))
                 .setKeyWord(keyWord)
                 .setPageNo(pageNo)
                 .setMaxAge(100)
                 .setMinAge(0)
                 .setSex(-1);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void toMemberDetail(long userId) {
+        ActivityUtils.getCardMemberDetail(userId, false);
     }
 }

@@ -12,6 +12,7 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.module_bottle.R;
 
@@ -24,7 +25,7 @@ import androidx.annotation.Nullable;
  */
 public class BottleBGView extends LinearLayout {
 
-    private ImageView lsxq, hd_s, plp_d, bl, dg, plp, hd_q, jg, xx, fsxq, ivWang, ivWangBack;
+    private ImageView lsxq, hd_s, plp_d, bl, dg, plp, hd_q, jg, xx, fsxq, ivWang, ivWangBack, ivBottle;
 
     public BottleBGView(Context context) {
         super(context);
@@ -63,6 +64,7 @@ public class BottleBGView extends LinearLayout {
         fsxq = findViewById(R.id.fsxq);
         ivWang = findViewById(R.id.iv_wang);
         ivWangBack = findViewById(R.id.iv_wang_back);
+        ivBottle = findViewById(R.id.iv_bottle);
         fsxq.setVisibility(GONE);
         new Handler().postDelayed(() -> fsxq.setVisibility(VISIBLE), 1300);
     }
@@ -179,7 +181,21 @@ public class BottleBGView extends LinearLayout {
         }, 3000);
     }
 
-    public interface CallBack{
+    public void throwBottle(CallBack callBack) {
+        ivBottle.setVisibility(VISIBLE);
+        int time = 1000;
+        ObjectAnimator translateY = ObjectAnimator.ofFloat(ivBottle, "translationY", 0, -ObjectUtils.getViewSizeByWidthFromMax(400), MineApp.H).setDuration(time);
+        ObjectAnimator translateX = ObjectAnimator.ofFloat(ivBottle, "translationX", 0, -(MineApp.W / 2), -MineApp.W).setDuration(time);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(ivBottle, "rotation", 0, -900).setDuration(time);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.play(translateY).with(translateX).with(animator);
+        animatorSet.start();
+
+        new Handler().postDelayed(() -> callBack.success(), time);
+    }
+
+    public interface CallBack {
         void success();
     }
 }

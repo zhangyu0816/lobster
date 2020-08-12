@@ -21,6 +21,7 @@ public class VideoListActivity extends BaseActivity {
 
     private boolean isFirst = true;
     private VideoListViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.HomeVideoTheme);
@@ -35,7 +36,7 @@ public class VideoListActivity extends BaseActivity {
 
     @Override
     public void initUI() {
-         viewModel = new VideoListViewModel();
+        viewModel = new VideoListViewModel();
         viewModel.position = position;
         viewModel.pageNo = pageNo;
         viewModel.setBinding(mBinding);
@@ -43,9 +44,15 @@ public class VideoListActivity extends BaseActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        if(!isFirst){
+        if (!isFirst) {
             viewModel.onResume();
         }
         isFirst = false;

@@ -151,7 +151,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     }
                 } else {
                     Ads ads = new Ads();
-                    ads.setSmallImage(memberInfo.getImage());
+                    ads.setSmallImage(memberInfo.getSingleImage());
                     adsList.add(ads);
                 }
                 showBanner(adsList);

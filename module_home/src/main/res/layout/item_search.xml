@@ -4,6 +4,8 @@
 
     <data>
 
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
         <variable
             name="item"
             type="com.zb.lib_base.model.MemberInfo" />
@@ -12,18 +14,25 @@
             name="position"
             type="Integer" />
 
+        <variable
+            name="viewModel"
+            type="com.zb.module_home.vm.SearchViewModel" />
+
     </data>
 
     <LinearLayout
+        onClickDelayed="@{v->viewModel.toMemberDetail(item.userId)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:gravity="bottom"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="15dp">
 
         <ImageView
-            imgUrl="@{item.image}"
+            imageUrl="@{item.image}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(150)}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(150)}"
             android:layout_width="60dp"
             android:layout_height="60dp"
             tools:src="@mipmap/ic_launcher" />
@@ -47,8 +56,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:paddingVertical="2dp"
-                android:paddingStart="12dp"
-                android:paddingEnd="3dp"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
                 android:text="@{String.valueOf(item.age)}"
                 android:textColor="@color/white"
                 android:textSize="12sp"

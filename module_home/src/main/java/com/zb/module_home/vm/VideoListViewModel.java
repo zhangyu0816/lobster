@@ -2,11 +2,10 @@ package com.zb.module_home.vm;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.MediaPlayer;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
@@ -16,6 +15,7 @@ import android.widget.VideoView;
 
 import com.umeng.socialize.media.UMImage;
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.attentionOtherApi;
 import com.zb.lib_base.api.attentionStatusApi;
@@ -72,6 +72,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     private boolean isOver = false;
     private MineInfo mineInfo;
     private LikeDb likeDb;
+    private BaseReceiver attentionReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -81,6 +82,22 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         likeDb = new LikeDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
         setAdapter();
+
+        attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                boolean isAttention = intent.getBooleanExtra("isAttention", false);
+                if (isAttention) {
+                    ivAttention.setVisibility(View.INVISIBLE);
+                } else {
+                    ivAttention.setVisibility(View.VISIBLE);
+                }
+            }
+        };
+    }
+
+    public void onDestroy() {
+        attentionReceiver.unregisterReceiver();
     }
 
     @Override
@@ -122,6 +139,18 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 }
             }
         });
+    }
+
+    @Override
+    public void videoPlay(DiscoverInfo discoverInfo) {
+        if (ivPlay.getVisibility() == View.GONE) {
+            ivPlay.setVisibility(View.VISIBLE);
+            videoView.pause();
+        } else {
+            ivPlay.setVisibility(View.GONE);
+            videoView.setVideoPath(discoverInfo.getVideoUrl());
+            videoView.start();
+        }
     }
 
     @Override
@@ -253,6 +282,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                     ivAttention.setVisibility(View.INVISIBLE);
                     attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), true, BaseActivity.userId));
                 } else {
+                    ivAttention.setVisibility(View.VISIBLE);
                     attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), false, BaseActivity.userId));
                 }
             }
@@ -343,7 +373,9 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             @Override
             public void onNext(Object o) {
                 goodDb.saveGood(new CollectID(discoverInfo.getFriendDynId()));
-                ivGood.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.drawable.video_play_zan_pressed));
+                ivUnLike.setVisibility(View.GONE);
+                ivLike.setVisibility(View.VISIBLE);
+                like(ivLike);
 
                 int goodNum = discoverInfo.getGoodNum() + 1;
                 discoverInfo.setGoodNum(goodNum);
@@ -359,8 +391,11 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
                     if (TextUtils.equals(e.getMessage(), "已经赞过了")) {
+                        ivUnLike.setVisibility(View.GONE);
+                        ivLike.setVisibility(View.VISIBLE);
+                        like(ivLike);
+
                         goodDb.saveGood(new CollectID(discoverInfo.getFriendDynId()));
-                        ivGood.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.drawable.video_play_zan_pressed));
                         Intent data = new Intent("lobster_doGood");
                         data.putExtra("friendDynId", discoverInfo.getFriendDynId());
                         activity.sendBroadcast(data);
@@ -375,9 +410,9 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         dynCancelLikeApi api = new dynCancelLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
+                ivUnLike.setVisibility(View.VISIBLE);
+                unlike(ivLike);
                 goodDb.deleteGood(discoverInfo.getFriendDynId());
-                ivGood.setImageBitmap(BitmapFactory.decodeResource(activity.getResources(), R.drawable.video_play_zan_unpressed));
-
                 int goodNum = discoverInfo.getGoodNum() - 1;
                 discoverInfo.setGoodNum(goodNum);
                 tvGood.setText(discoverInfo.getGoodNumStr());
@@ -395,24 +430,25 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     private ImageView ivProgress;
     private ObjectAnimator animator;
     private DiscoverInfo discoverInfo;
-    private ImageView ivGood;
+    private ImageView ivUnLike, ivLike;
     private TextView tvGood;
     private TextView tvReviews;
     private ImageView ivAttention;
     private ImageView ivImage;
-    private Handler handler;
-    private Runnable runnable;
+    private ImageView ivPlay;
 
     private void playVideo(View view) {
         discoverInfo = MineApp.discoverInfoList.get(position);
 
         videoView = view.findViewById(R.id.video_view);
         ivProgress = view.findViewById(R.id.iv_progress);
-        ivGood = view.findViewById(R.id.iv_good);
+        ivUnLike = view.findViewById(R.id.iv_unLike);
+        ivLike = view.findViewById(R.id.iv_like);
         tvGood = view.findViewById(R.id.tv_good);
         tvReviews = view.findViewById(R.id.tv_reviews);
         ivAttention = view.findViewById(R.id.iv_attention);
         ivImage = view.findViewById(R.id.iv_image);
+        ivPlay = view.findViewById(R.id.iv_play);
         attentionStatus(discoverInfo);
         animator = ObjectAnimator.ofFloat(ivProgress, "rotation", 0, 360).setDuration(700);
         animator.setRepeatMode(ValueAnimator.RESTART);
@@ -421,10 +457,14 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         ivProgress.setVisibility(View.VISIBLE);
         ivImage.setVisibility(View.VISIBLE);
         videoView.setBackgroundColor(activity.getResources().getColor(R.color.black_252));
-//        handler = new Handler();
-//        runnable = () -> ivImage.setVisibility(View.VISIBLE);
-//        handler.postDelayed(runnable,2000);
-
+        ivLike.setVisibility(View.GONE);
+        ivUnLike.setVisibility(View.GONE);
+        if (goodDb.hasGood(discoverInfo.getFriendDynId())) {
+            ivLike.setVisibility(View.VISIBLE);
+        } else {
+            ivUnLike.setVisibility(View.VISIBLE);
+        }
+        ivPlay.setVisibility(View.GONE);
         DownLoad.getFilePath(discoverInfo.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), filePath -> {
             discoverInfo.setVideoPath(filePath);
             ivProgress.setVisibility(View.GONE);

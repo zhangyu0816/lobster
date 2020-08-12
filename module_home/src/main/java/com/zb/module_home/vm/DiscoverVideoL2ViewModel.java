@@ -2,6 +2,7 @@ package com.zb.module_home.vm;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
@@ -11,6 +12,7 @@ import android.view.animation.Animation;
 
 import com.umeng.socialize.media.UMImage;
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.attentionOtherApi;
 import com.zb.lib_base.api.attentionStatusApi;
@@ -61,7 +63,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
     private GoodDb goodDb;
     private MineInfo mineInfo;
     private LikeDb likeDb;
-
+    private BaseReceiver attentionReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -76,6 +78,19 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
         animator.start();
         mBinding.setIsProgress(true);
         mBinding.setGoodDb(goodDb);
+        mBinding.setIsPlay(true);
+
+        if (goodDb.hasGood(friendDynId)) {
+            mBinding.ivLike.setVisibility(View.VISIBLE);
+        } else {
+            mBinding.ivUnLike.setVisibility(View.VISIBLE);
+        }
+        attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.setIsAttention(intent.getBooleanExtra("isAttention", false));
+            }
+        };
         dynDetail();
     }
 
@@ -85,11 +100,21 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
         activity.finish();
     }
 
+    public void onDestroy() {
+        attentionReceiver.unregisterReceiver();
+    }
 
     @Override
     public void videoPlay(View view) {
-        mBinding.videoView.setVideoPath(discoverInfo.getVideoUrl());
-        mBinding.videoView.start();
+        if (mBinding.getIsPlay()) {
+            mBinding.setIsPlay(false);
+            mBinding.videoView.pause();
+        } else {
+            if (discoverInfo == null) return;
+            mBinding.setIsPlay(true);
+            mBinding.videoView.setVideoPath(discoverInfo.getVideoUrl());
+            mBinding.videoView.start();
+        }
     }
 
     @Override
@@ -208,8 +233,6 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
             public void onNext(Object o) {
                 if (o == null) {
                     mBinding.setIsAttention(true);
-//                    mBinding.tvFollow.setText("取消关注");
-//                    mBinding.tvFollow.setTextColor(activity.getResources().getColor(R.color.black_827));
                     attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 } else {
                     attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
@@ -267,6 +290,10 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
         dynDoLikeApi api = new dynDoLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
+                mBinding.ivUnLike.setVisibility(View.GONE);
+                mBinding.ivLike.setVisibility(View.VISIBLE);
+                like(mBinding.ivLike);
+
                 goodDb.saveGood(new CollectID(friendDynId));
                 int goodNum = discoverInfo.getGoodNum() + 1;
                 discoverInfo.setGoodNum(goodNum);
@@ -283,9 +310,12 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
                     if (TextUtils.equals(e.getMessage(), "已经赞过了")) {
+                        mBinding.ivUnLike.setVisibility(View.GONE);
+                        mBinding.ivLike.setVisibility(View.VISIBLE);
+                        like(mBinding.ivLike);
+
                         goodDb.saveGood(new CollectID(friendDynId));
                         mBinding.setGoodDb(goodDb);
-
                         Intent data = new Intent("lobster_doGood");
                         data.putExtra("friendDynId", friendDynId);
                         activity.sendBroadcast(data);
@@ -301,6 +331,9 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
         dynCancelLikeApi api = new dynCancelLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
+                mBinding.ivUnLike.setVisibility(View.VISIBLE);
+                unlike(mBinding.ivLike);
+
                 goodDb.deleteGood(friendDynId);
                 int goodNum = discoverInfo.getGoodNum() - 1;
                 discoverInfo.setGoodNum(goodNum);

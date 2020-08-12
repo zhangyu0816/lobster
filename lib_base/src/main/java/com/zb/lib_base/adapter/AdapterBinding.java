@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
@@ -21,13 +20,11 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.R;
-import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.model.PairInfo;
 import com.zb.lib_base.utils.BlurTransformation;
 import com.zb.lib_base.utils.GlideRoundTransform;
 import com.zb.lib_base.utils.GridSpacingItemDecoration;
 import com.zb.lib_base.utils.MyDecoration;
-import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.views.card.CardItemTouchHelperCallback;
 import com.zb.lib_base.views.card.CardLayoutManager;
 import com.zb.lib_base.views.card.OnRecyclerItemClickListener;
@@ -220,27 +217,4 @@ public class AdapterBinding {
         }
     }
 
-
-    // 加载图片
-    @BindingAdapter("imgUrl")
-    public static void loadImage(ImageView view, String imgUrl) {
-        Glide.with(view.getContext()).load(imgUrl).into(view);
-    }
-
-    // 加载视频首图
-    @BindingAdapter(value = {"videoUrl"}, requireAll = false)
-    public static void video(VideoView view, String videoUrl) {
-        Glide.with(view.getContext()).asBitmap().load(videoUrl).into(new SimpleTarget<Bitmap>() {
-            @Override
-            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                float width = (float) resource.getWidth();
-                float height = (float) resource.getHeight();
-                if (ObjectUtils.getViewSizeByHeight(0.9f) * width / height > MineApp.W) {
-                    viewSize(view, MineApp.W, (int) (MineApp.W * height / width));
-                } else {
-                    viewSize(view, (int) (ObjectUtils.getViewSizeByHeight(0.9f) * width / height), ObjectUtils.getViewSizeByHeight(0.9f));
-                }
-            }
-        });
-    }
 }
