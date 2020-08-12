@@ -2,15 +2,18 @@ package com.zb.module_home.vm;
 
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.LinearLayout;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.api.searchApi;
+import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
@@ -22,10 +25,14 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import io.realm.Realm;
 
 public class SearchViewModel extends BaseViewModel implements SearchVMInterface, OnRefreshListener, OnLoadMoreListener {
     private HomeSearchBinding mBinding;
     public HomeAdapter adapter;
+    private AreaDb areaDb;
     private List<MemberInfo> memberInfoList = new ArrayList<>();
     private int pageNo = 1;
     private String keyWord = "";
@@ -34,6 +41,7 @@ public class SearchViewModel extends BaseViewModel implements SearchVMInterface,
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (HomeSearchBinding) binding;
+        areaDb = new AreaDb(Realm.getDefaultInstance());
         mBinding.setNoData(false);
         setAdapter();
 
@@ -58,7 +66,9 @@ public class SearchViewModel extends BaseViewModel implements SearchVMInterface,
 
     @Override
     public void setAdapter() {
-        adapter = new HomeAdapter<>(activity, R.layout.item_search,memberInfoList,this);
+        adapter = new HomeAdapter<>(activity, R.layout.item_search, memberInfoList, this);
+        mBinding.recyclerView.addItemDecoration(new DividerItemDecoration(mBinding.getRoot().getContext(), LinearLayout.VERTICAL));
+        mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(mBinding.getRoot().getContext()));
     }
 
     @Override
@@ -102,6 +112,7 @@ public class SearchViewModel extends BaseViewModel implements SearchVMInterface,
                 }
             }
         }, activity)
+                .setCityId(areaDb.getCityId(PreferenceUtil.readStringValue(activity, "cityName")))
                 .setKeyWord(keyWord)
                 .setPageNo(pageNo)
                 .setMaxAge(100)
