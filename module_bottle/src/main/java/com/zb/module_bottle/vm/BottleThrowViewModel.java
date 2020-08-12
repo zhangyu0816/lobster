@@ -45,6 +45,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     public BottleAdapter adapter;
     private BottleInfo bottleInfo;
     private List<String> textList = new ArrayList<>();
+    private boolean isFirst = true;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -92,6 +93,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
 
         new Handler().postDelayed(() -> {
             mBinding.firstLayout.setVisibility(View.GONE);
+            mBinding.bottleWhiteBack.bottleBg.startBg();
         }, time);
 
         setAdapter();
@@ -109,11 +111,16 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         if (mPlayer != null) {
             mPlayer.stop();
         }
+        mBinding.bottleWhiteBack.bottleBg.stopBg();
     }
 
     public void onResume() {
         if (!mPlayer.isPlaying())
             appSound();
+        if (!isFirst) {
+            mBinding.bottleWhiteBack.bottleBg.startBg();
+        }
+        isFirst = false;
     }
 
     public void onPause() {
@@ -154,6 +161,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         mBinding.setBottleInfo(bottleInfo);
         mBinding.setIsBottle(true);
         mBinding.setShowBtn(false);
+        mBinding.bottleWhiteBack.bottleBg.stopBg();
     }
 
     @Override
@@ -161,6 +169,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         if (mPlayer != null) {
             mPlayer.stop();
         }
+        mBinding.bottleWhiteBack.bottleBg.stopBg();
         openBottle();
         ActivityUtils.getBottleList();
     }
@@ -170,6 +179,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         textList.clear();
         adapter.notifyDataSetChanged();
         mBinding.setShowBtn(false);
+        mBinding.bottleWhiteBack.bottleBg.stopBg();
         findBottleApi api = new findBottleApi(new HttpOnNextListener<BottleInfo>() {
             @Override
             public void onNext(BottleInfo o) {
@@ -179,6 +189,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
                     textList.addAll(Arrays.asList(bottleInfo.getText().split("")));
                     adapter.notifyDataSetChanged();
                     mBinding.setIsBottle(true);
+                    mBinding.bottleWhiteBack.bottleBg.startBg();
                 });
             }
         }, activity);
@@ -205,9 +216,11 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
 
     @Override
     public void close(View view) {
+        hintKeyBoard();
         mBinding.setTitle("我的漂流瓶");
         mBinding.setIsBottle(false);
         mBinding.setShowBtn(true);
+        mBinding.bottleWhiteBack.bottleBg.startBg();
     }
 
     // 创建漂流瓶

@@ -26,7 +26,7 @@ import androidx.annotation.Nullable;
 public class BottleBGView extends LinearLayout {
 
     private ImageView lsxq, hd_s, plp_d, bl, dg, plp, hd_q, jg, xx, fsxq, ivWang, ivWangBack, ivBottle;
-
+    private AnimatorSet set = new AnimatorSet();
     public BottleBGView(Context context) {
         super(context);
         init(context);
@@ -139,7 +139,7 @@ public class BottleBGView extends LinearLayout {
                         .setDuration(4000);
         anim_plp_translationX.setRepeatCount(Animation.INFINITE);
 
-        AnimatorSet set = new AnimatorSet();
+
         set.playTogether(anim_lsxq,
                 anim_xx, anim_fsxq,
                 anim_hd_s,
@@ -152,7 +152,15 @@ public class BottleBGView extends LinearLayout {
                 anim_jg_translationY,
                 anim_plp_translationY,
                 anim_plp_translationX);
+
+    }
+
+    public void startBg(){
         set.start();
+    }
+
+    public  void stopBg(){
+        set.cancel();
     }
 
     public void startWang(CallBack callBack) {
