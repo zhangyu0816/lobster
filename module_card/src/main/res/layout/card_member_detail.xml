@@ -119,7 +119,7 @@
                                 android:layout_height="300dp"
                                 android:background="@color/black_efe" />
 
-                            <ImageView
+                            <com.zb.lib_base.views.SuperLikeView
                                 android:id="@+id/iv_super_like"
                                 onClickDelayed="@{viewModel::superLike}"
                                 android:layout_width="wrap_content"
@@ -127,8 +127,7 @@
                                 android:layout_alignBottom="@+id/banner"
                                 android:layout_alignParentEnd="true"
                                 android:layout_margin="15dp"
-                                android:visibility="@{viewModel.mineInfo.userId==viewModel.otherUserId?View.GONE:View.VISIBLE}"
-                                app:srcCompat="@mipmap/super_like_icon" />
+                                android:visibility="@{viewModel.mineInfo.userId==viewModel.otherUserId?View.GONE:View.VISIBLE}" />
                         </RelativeLayout>
 
                         <LinearLayout

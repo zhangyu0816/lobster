@@ -1,10 +1,12 @@
 package com.zb.module_mine.vm;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.zb.lib_base.db.JobInfoDb;
 import com.zb.lib_base.model.JobInfo;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.R;
 import com.zb.module_mine.adapter.MineAdapter;
@@ -19,6 +21,7 @@ import io.realm.Realm;
 public class SelectJobViewModel extends BaseViewModel implements SelectJobVMInterface {
     public MineAdapter titleAdapter;
     public MineAdapter adapter;
+    public String job = "";
     private List<String> titleList = new ArrayList<>();
     private List<JobInfo> jobInfoList = new ArrayList<>();
     private JobInfoDb jobInfoDb;
@@ -51,6 +54,10 @@ public class SelectJobViewModel extends BaseViewModel implements SelectJobVMInte
 
     @Override
     public void select(View view) {
+        if (_position == -1) {
+            SCToastUtil.showToast(activity, "请选择职业", true);
+            return;
+        }
         Intent data = new Intent("lobster_member");
         data.putExtra("type", 1);
         data.putExtra("content", jobInfoList.get(_position).getJob());
@@ -64,7 +71,17 @@ public class SelectJobViewModel extends BaseViewModel implements SelectJobVMInte
         titleAdapter = new MineAdapter<>(activity, R.layout.item_mine_title, titleList, this);
         titleAdapter.setSelectIndex(0);
         jobInfoList.addAll(jobInfoDb.getJobList(titleList.get(0)));
+
         adapter = new MineAdapter<>(activity, R.layout.item_mine_job, jobInfoList, this);
+        _position = -1;
+        for (int i = 0; i < jobInfoList.size(); i++) {
+            if (TextUtils.equals(job, jobInfoList.get(i).getJob())) {
+                _position = i;
+                break;
+            }
+        }
+        adapter.setSelectIndex(_position);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -74,8 +91,16 @@ public class SelectJobViewModel extends BaseViewModel implements SelectJobVMInte
         titleAdapter.setSelectIndex(position);
         titleAdapter.notifyDataSetChanged();
         jobInfoList.clear();
+        adapter.notifyDataSetChanged();
+
         jobInfoList.addAll(jobInfoDb.getJobList(titleList.get(position)));
         _position = -1;
+        for (int i = 0; i < jobInfoList.size(); i++) {
+            if (TextUtils.equals(job, jobInfoList.get(i).getJob())) {
+                _position = i;
+                break;
+            }
+        }
         adapter.setSelectIndex(_position);
         adapter.notifyDataSetChanged();
     }

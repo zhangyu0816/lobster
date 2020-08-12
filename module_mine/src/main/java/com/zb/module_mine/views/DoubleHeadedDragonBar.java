@@ -435,20 +435,22 @@ public class DoubleHeadedDragonBar extends View {
 
             if (t < 18) {
                 minValue = 18;
-            } else if (t > maxValue) {
-                minValue = maxValue;
+            } else if (t >= maxValue - 10) {
+                minValue = maxValue - 10;
             } else {
                 minValue = t;
             }
 
         } else {
-            if (t < minValue) {
-                maxValue = minValue;
-            } else if (t > max) {
+            if (t > max) {
                 maxValue = max;
+            } else if (t <= minValue + 10) {
+                maxValue = minValue + 10;
             } else {
                 maxValue = t;
             }
+
+
         }
     }
 
@@ -542,8 +544,8 @@ public class DoubleHeadedDragonBar extends View {
     }
 
     private void drawBg(Canvas canvas) {
-
-        canvas.drawRoundRect(new RectF(buttonWidth / 2, buttonHeight - bgHeight / 2, viewWidth - buttonWidth / 2, buttonHeight + bgHeight / 2),
+        float minx = seekWidth * 18 / max;
+        canvas.drawRoundRect(new RectF(buttonWidth / 2 + minx, buttonHeight - bgHeight / 2, viewWidth - buttonWidth / 2, buttonHeight + bgHeight / 2),
                 bgHeight / 2,
                 bgHeight / 2
                 , bgPaint);

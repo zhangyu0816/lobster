@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+    </data>
+
+    <RelativeLayout
+        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(300)}"
+        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(300)}"
+        android:layout_width="100dp"
+        android:layout_height="100dp">
+
+        <ImageView
+            android:id="@+id/iv_super_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:background="@mipmap/super_like_icon" />
+
+        <ImageView
+            android:id="@+id/iv_star1"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(30)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(30)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/iv_super_like"
+            android:layout_alignBottom="@+id/iv_super_like"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="25dp"
+            android:background="@drawable/like_red_icon"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/iv_star2"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(30)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(30)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/iv_super_like"
+            android:layout_alignBottom="@+id/iv_super_like"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="25dp"
+            android:background="@drawable/like_red_icon"
+            android:visibility="gone"/>
+    </RelativeLayout>
+</layout>

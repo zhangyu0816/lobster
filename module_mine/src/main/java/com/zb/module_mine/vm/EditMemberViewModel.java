@@ -160,7 +160,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
 
     @Override
     public void toSelectJob(View view) {
-        ActivityUtils.getMineSelectJob();
+        ActivityUtils.getMineSelectJob(mineInfo.getJob());
     }
 
     @Override

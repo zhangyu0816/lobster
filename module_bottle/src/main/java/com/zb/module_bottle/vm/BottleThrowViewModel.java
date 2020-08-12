@@ -26,7 +26,6 @@ import com.zb.module_bottle.R;
 import com.zb.module_bottle.adapter.BottleAdapter;
 import com.zb.module_bottle.databinding.BottleThrowBinding;
 import com.zb.module_bottle.iv.BottleThrowVMInterface;
-import com.zb.module_bottle.windows.BottleBGView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -217,7 +216,10 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
             @Override
             public void onNext(Object o) {
                 mBinding.setIsBottle(false);
-                mBinding.bottleWhiteBack.bottleBg.throwBottle(() -> close(null));
+                mBinding.bottleWhiteBack.bottleBg.throwBottle(() -> {
+                    mBinding.edContent.setText("");
+                    close(null);
+                });
             }
         }, activity).setText(mBinding.edContent.getText().toString());
         HttpManager.getInstance().doHttpDeal(api);

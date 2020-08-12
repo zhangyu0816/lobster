@@ -58,7 +58,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
         };
         selectList.add("只有女士");
         selectList.add("只有男士");
-        selectList.add("全部");
+        selectList.add("不限");
 
         mBinding.setSexName(selectList.get(MineApp.sex == -1 ? 2 : MineApp.sex));
 

@@ -143,8 +143,8 @@ public class ActivityUtils {
     }
 
     // 选择工作
-    public static void getMineSelectJob() {
-        ARouter.getInstance().build(RouteUtils.Mine_Select_Job).navigation();
+    public static void getMineSelectJob(String job) {
+        ARouter.getInstance().build(RouteUtils.Mine_Select_Job).withString("job", job).navigation();
     }
 
     // 编辑信息
