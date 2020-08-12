@@ -47,6 +47,17 @@
             android:id="@+id/video_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:background="@color/black_252"/>
+
+        <ImageView
+            android:id="@+id/iv_image"
+            countSize="@{true}"
+            imageUrl="@{discoverInfo.videoUrl}"
+            viewHeightSize="@{0}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(1f)}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true" />
 
         <ImageView
@@ -99,6 +110,7 @@
                 android:text="@{discoverInfo.text}"
                 android:textColor="@color/white"
                 android:textSize="14sp"
+                android:maxLines="4"
                 tools:text="我看见佛二五九佛微积分围殴就佛为访问哦哦ij" />
 
             <LinearLayout

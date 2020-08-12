@@ -4,7 +4,9 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
@@ -78,9 +80,6 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         areaDb = new AreaDb(Realm.getDefaultInstance());
         likeDb = new LikeDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
-        animator = ObjectAnimator.ofFloat(ivProgress, "rotation", 0, 360).setDuration(700);
-        animator.setRepeatMode(ValueAnimator.RESTART);
-        animator.setRepeatCount(Animation.INFINITE);
         setAdapter();
     }
 
@@ -103,14 +102,19 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             @Override
             public void onPageRelease(boolean isNest, View view) {
                 VideoView videoView = view.findViewById(R.id.video_view);
+                ImageView ivImage = view.findViewById(R.id.iv_image);
                 videoView.stopPlayback();//停止播放视频,并且释放
                 videoView.suspend();//在任何状态下释放媒体播放器
+                ivImage.setVisibility(View.VISIBLE);
+                videoView.setBackgroundColor(activity.getResources().getColor(R.color.black_252));
             }
 
             @Override
             public void onPageSelected(boolean isButton, View view) {
                 isUp = douYinLayoutManager.getDrift() >= 0;
                 position = douYinLayoutManager.findFirstCompletelyVisibleItemPosition();
+                if (position == -1)
+                    return;
                 playVideo(view);
                 if (!isOver && position == MineApp.discoverInfoList.size() - 1 && isUp) {
                     pageNo++;
@@ -396,6 +400,8 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     private TextView tvReviews;
     private ImageView ivAttention;
     private ImageView ivImage;
+    private Handler handler;
+    private Runnable runnable;
 
     private void playVideo(View view) {
         discoverInfo = MineApp.discoverInfoList.get(position);
@@ -407,14 +413,21 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         tvReviews = view.findViewById(R.id.tv_reviews);
         ivAttention = view.findViewById(R.id.iv_attention);
         ivImage = view.findViewById(R.id.iv_image);
-        ivImage.setVisibility(View.VISIBLE);
         attentionStatus(discoverInfo);
+        animator = ObjectAnimator.ofFloat(ivProgress, "rotation", 0, 360).setDuration(700);
+        animator.setRepeatMode(ValueAnimator.RESTART);
+        animator.setRepeatCount(Animation.INFINITE);
         animator.start();
         ivProgress.setVisibility(View.VISIBLE);
+        ivImage.setVisibility(View.VISIBLE);
+        videoView.setBackgroundColor(activity.getResources().getColor(R.color.black_252));
+//        handler = new Handler();
+//        runnable = () -> ivImage.setVisibility(View.VISIBLE);
+//        handler.postDelayed(runnable,2000);
+
         DownLoad.getFilePath(discoverInfo.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), filePath -> {
             discoverInfo.setVideoPath(filePath);
             ivProgress.setVisibility(View.GONE);
-            ivImage.setVisibility(View.GONE);
             if (animator != null)
                 animator.cancel();
             initVideo();
@@ -460,6 +473,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             } else if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
                 ivProgress.setVisibility(View.GONE);
                 ivImage.setVisibility(View.GONE);
+                videoView.setBackgroundColor(Color.TRANSPARENT);
             }
             return false; //如果方法处理了信息，则为true；如果没有，则为false。返回false或根本没有OnInfoListener，将导致丢弃该信息。
         });

@@ -3,6 +3,7 @@ package com.zb.module_home.vm;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.text.TextUtils;
 import android.view.View;
@@ -391,6 +392,8 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
                 return true;
             } else if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
                 mBinding.setIsProgress(false);
+                mBinding.ivImage.setVisibility(View.GONE);
+                mBinding.videoView.setBackgroundColor(Color.TRANSPARENT);
             }
             return false; //如果方法处理了信息，则为true；如果没有，则为false。返回false或根本没有OnInfoListener，将导致丢弃该信息。
         });
