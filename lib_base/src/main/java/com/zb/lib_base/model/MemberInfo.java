@@ -14,6 +14,7 @@ public class MemberInfo extends BaseObservable {
     private String personalitySign = "";//个性签名
     private String shopUrl = "";    //网店地址
     private String birthday = "";    //生日
+    private int age;        //年龄
     private int sex;       //性别  0女  1男
     private int height;       //身高 CM
     private int weight;      //体重 公斤
@@ -40,6 +41,16 @@ public class MemberInfo extends BaseObservable {
     private int newDycType; // 最新的动态类型       配上对应的文字
     private int attentionStatus; //关注关系  1 关注  0 未关注
     private String distance = "";
+
+    @Bindable
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+        notifyPropertyChanged(BR.age);
+    }
 
     @Bindable
     public long getUserId() {

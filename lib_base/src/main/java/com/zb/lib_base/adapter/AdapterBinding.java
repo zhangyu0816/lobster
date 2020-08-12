@@ -220,6 +220,13 @@ public class AdapterBinding {
         }
     }
 
+
+    // 加载图片
+    @BindingAdapter("imgUrl")
+    public static void loadImage(ImageView view, String imgUrl) {
+        Glide.with(view.getContext()).load(imgUrl).into(view);
+    }
+
     // 加载视频首图
     @BindingAdapter(value = {"videoUrl"}, requireAll = false)
     public static void video(VideoView view, String videoUrl) {

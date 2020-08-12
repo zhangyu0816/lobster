@@ -2,6 +2,7 @@ package com.zb.module_home.vm;
 
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.LinearLayout;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -24,6 +25,8 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import io.realm.Realm;
 
 public class SearchViewModel extends BaseViewModel implements SearchVMInterface, OnRefreshListener, OnLoadMoreListener {
@@ -63,7 +66,9 @@ public class SearchViewModel extends BaseViewModel implements SearchVMInterface,
 
     @Override
     public void setAdapter() {
-        adapter = new HomeAdapter<>(activity, R.layout.item_search,memberInfoList,this);
+        adapter = new HomeAdapter<>(activity, R.layout.item_search, memberInfoList, this);
+        mBinding.recyclerView.addItemDecoration(new DividerItemDecoration(mBinding.getRoot().getContext(), LinearLayout.VERTICAL));
+        mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(mBinding.getRoot().getContext()));
     }
 
     @Override

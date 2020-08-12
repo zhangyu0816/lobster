@@ -83,6 +83,7 @@
             android:visibility="@{noData?View.GONE:View.VISIBLE}">
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
                 adapter="@{viewModel.adapter}"
                 recyclerType="@{4}"
                 android:layout_width="match_parent"

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -13,9 +14,61 @@
 
     </data>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:padding="15dp">
 
-    </RelativeLayout>
+        <ImageView
+            imgUrl="@{item.image}"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            tools:src="@mipmap/ic_launcher" />
+
+        <LinearLayout
+            android:layout_marginStart="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:text="@{item.nick}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                tools:text="白熊仙女" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:paddingVertical="2dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="3dp"
+                android:text="@{String.valueOf(item.age)}"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:background="@{item.sex == 0 ? @drawable/age_pink_bg : @drawable/age_blue_bg}"
+                tools:background="@drawable/age_pink_bg"
+                tools:text="23" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:paddingEnd="3dp"
+                android:singleLine="true"
+                android:text="@{item.serviceTags}"
+                android:textColor="@color/black_9"
+                android:textSize="14sp"
+                tools:text="无个性，不签名" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 </layout>
