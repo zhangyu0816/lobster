@@ -322,7 +322,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                         imageList.addAll(Arrays.asList(pairInfo.getMoreImages().split("#")));
                     }
                     if (imageList.size() == 0) {
-                        imageList.add(pairInfo.getHeadImage());
+                        imageList.add(pairInfo.getSingleImage());
                     }
                     pairInfo.setImageList(imageList);
                     pairInfoList.add(pairInfo);
