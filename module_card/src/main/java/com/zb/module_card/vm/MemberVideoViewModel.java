@@ -231,13 +231,22 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
     }
 
     @Override
-    public void doLike(int position) {
+    public void doLike(View view, int position) {
         prePosition = position;
         discoverInfo = discoverInfoList.get(position);
         friendDynId = discoverInfo.getFriendDynId();
-        if (goodDb.hasGood(friendDynId)) {
+//        ImageView ivLike = view.findViewById(R.id.iv_like);
+//        ImageView ivUnLike = view.findViewById(R.id.iv_unLike);
+
+        if (goodDb.hasGood(discoverInfo.getFriendDynId())) {
+//            ivUnLike.setVisibility(View.VISIBLE);
+//            unlike(ivLike, this::dynCancelLike);
+
             dynCancelLike();
         } else {
+//            ivUnLike.setVisibility(View.GONE);
+//            ivLike.setVisibility(View.VISIBLE);
+//            like(ivLike, this::dynDoLike);
             dynDoLike();
         }
     }
@@ -273,6 +282,16 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
                 goodDb.deleteGood(friendDynId);
                 discoverInfo.setGoodNum(discoverInfo.getGoodNum() - 1);
                 adapter.notifyItemChanged(prePosition);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
+                    if (TextUtils.equals(e.getMessage(), "已经取消过")) {
+                        goodDb.deleteGood(friendDynId);
+                        adapter.notifyItemChanged(prePosition);
+                    }
+                }
             }
         }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);

@@ -206,10 +206,14 @@ public class BaseViewModel implements BaseVMInterface {
         animatorSet.start();
     }
 
-    private long time = 400;
+    private long time = 200;
     private float scale = 1.4f;
 
-    public void like(View view) {
+    public interface CallBack {
+        void success();
+    }
+
+    public void like(View view, CallBack callBack) {
 
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 1, scale).setDuration(time);
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 1, scale).setDuration(time);
@@ -221,22 +225,21 @@ public class BaseViewModel implements BaseVMInterface {
         animatorSet.play(scaleX).with(scaleY);
         animatorSet.play(scaleBackX).with(scaleBackY).after(scaleX);
         animatorSet.start();
+
+        new Handler().postDelayed(callBack::success, time + 100);
     }
 
-    public void unlike(View view) {
+    public void unlike(View view, CallBack callBack) {
 
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 1, 0).setDuration(time);
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 1, 0).setDuration(time);
-        ObjectAnimator scaleBackX = ObjectAnimator.ofFloat(view, "scaleX", 0, 1).setDuration(100);
-        ObjectAnimator scaleBackY = ObjectAnimator.ofFloat(view, "scaleY", 0, 1).setDuration(100);
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
         animatorSet.play(scaleX).with(scaleY);
-        animatorSet.play(scaleBackX).with(scaleBackY).after(scaleX);
         animatorSet.start();
 
-        new Handler().postDelayed(() -> view.setVisibility(View.GONE), time);
+        new Handler().postDelayed(callBack::success, time);
     }
 
     public void openBottle() {

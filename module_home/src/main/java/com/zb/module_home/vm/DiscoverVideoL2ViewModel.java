@@ -128,9 +128,12 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
     @Override
     public void toGood(View view) {
         if (goodDb.hasGood(friendDynId)) {
-            dynCancelLike();
+            mBinding.ivUnLike.setVisibility(View.VISIBLE);
+            unlike(mBinding.ivLike, this::dynCancelLike);
         } else {
-            dynDoLike();
+            mBinding.ivUnLike.setVisibility(View.GONE);
+            mBinding.ivLike.setVisibility(View.VISIBLE);
+            like(mBinding.ivLike, this::dynDoLike);
         }
     }
 
@@ -290,10 +293,6 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
         dynDoLikeApi api = new dynDoLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                mBinding.ivUnLike.setVisibility(View.GONE);
-                mBinding.ivLike.setVisibility(View.VISIBLE);
-                like(mBinding.ivLike);
-
                 goodDb.saveGood(new CollectID(friendDynId));
                 int goodNum = discoverInfo.getGoodNum() + 1;
                 discoverInfo.setGoodNum(goodNum);
@@ -310,10 +309,6 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
                     if (TextUtils.equals(e.getMessage(), "已经赞过了")) {
-                        mBinding.ivUnLike.setVisibility(View.GONE);
-                        mBinding.ivLike.setVisibility(View.VISIBLE);
-                        like(mBinding.ivLike);
-
                         goodDb.saveGood(new CollectID(friendDynId));
                         mBinding.setGoodDb(goodDb);
                         Intent data = new Intent("lobster_doGood");
@@ -331,20 +326,32 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
         dynCancelLikeApi api = new dynCancelLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                mBinding.ivUnLike.setVisibility(View.VISIBLE);
-                unlike(mBinding.ivLike);
-
                 goodDb.deleteGood(friendDynId);
+                mBinding.setGoodDb(goodDb);
+
                 int goodNum = discoverInfo.getGoodNum() - 1;
                 discoverInfo.setGoodNum(goodNum);
                 mBinding.setDiscoverInfo(discoverInfo);
-                mBinding.setGoodDb(goodDb);
 
                 Intent data = new Intent("lobster_doGood");
                 data.putExtra("goodNum", goodNum);
                 data.putExtra("friendDynId", friendDynId);
                 activity.sendBroadcast(data);
 
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
+                    if (TextUtils.equals(e.getMessage(), "已经取消过")) {
+                        goodDb.deleteGood(friendDynId);
+                        mBinding.setGoodDb(goodDb);
+                        Intent data = new Intent("lobster_doGood");
+                        data.putExtra("goodNum", discoverInfo.getGoodNum());
+                        data.putExtra("friendDynId", friendDynId);
+                        activity.sendBroadcast(data);
+                    }
+                }
             }
         }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);

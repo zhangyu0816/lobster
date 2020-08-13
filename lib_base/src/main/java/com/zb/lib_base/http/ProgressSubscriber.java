@@ -1,5 +1,7 @@
 package com.zb.lib_base.http;
 
+import android.text.TextUtils;
+
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.utils.SCToastUtil;
 
@@ -7,7 +9,6 @@ import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.util.Objects;
 
 import rx.Subscriber;
 
@@ -104,7 +105,8 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
             HttpTimeException exception = (HttpTimeException) e;
             switch (exception.getCode()) {
                 case HttpTimeException.ERROR:
-                    SCToastUtil.showToast(context, Objects.requireNonNull(e.getMessage()), position == 0);
+                    if (!TextUtils.equals(exception.getMessage(), "已经赞过了") && !TextUtils.equals("已经取消过", exception.getMessage()))
+                        SCToastUtil.showToast(context, exception.getMessage(), position == 0);
                     break;
                 default:
                     break;

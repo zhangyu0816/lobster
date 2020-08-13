@@ -297,8 +297,14 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 }
                 int start = pairInfoList.size();
                 for (PairInfo pairInfo : o) {
-                    if (!pairInfo.getMoreImages().isEmpty())
-                        pairInfo.setImageList(Arrays.asList(pairInfo.getMoreImages().split("#")));
+                    List<String> imageList = new ArrayList<>();
+                    if (!pairInfo.getMoreImages().isEmpty()) {
+                        imageList.addAll(Arrays.asList(pairInfo.getMoreImages().split("#")));
+                    }
+                    if (imageList.size() == 0) {
+                        imageList.add(pairInfo.getHeadImage());
+                    }
+                    pairInfo.setImageList(imageList);
                     pairInfoList.add(pairInfo);
                 }
                 adapter.notifyItemRangeChanged(start, pairInfoList.size());

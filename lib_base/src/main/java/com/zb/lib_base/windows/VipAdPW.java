@@ -55,8 +55,8 @@ public class VipAdPW extends BasePopupWindow {
                     ads.setAdRes(R.mipmap.vip_ad_3);
                 } else if (i == 3) {
                     vipAd.setTopRes(R.mipmap.vip_ad_4);
-                    vipAd.setTitle("谁喜欢我");
-                    vipAd.setContent("第一时间查看喜欢你的人！立即匹配哦~");
+                    vipAd.setTitle("立即查看谁喜欢我？");
+                    vipAd.setContent("第一时间查看喜欢你的人！立即匹配哦～");
                     ads.setAdRes(R.mipmap.vip_ad_4);
                 } else {
                     vipAd.setTopRes(R.mipmap.vip_ad_5);
@@ -80,7 +80,7 @@ public class VipAdPW extends BasePopupWindow {
             VipAd vipAd = new VipAd();
             Ads ads = new Ads();
             vipAd.setTopRes(R.mipmap.vip_ad_4);
-            vipAd.setTitle("谁喜欢我");
+            vipAd.setTitle("立即查看谁喜欢我？");
             vipAd.setContent("第一时间查看喜欢你的人！立即匹配哦~");
             ads.setAdRes(R.mipmap.vip_ad_4);
             vipAdList.add(vipAd);

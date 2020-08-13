@@ -388,6 +388,20 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                 data.putExtra("friendDynId", friendDynId);
                 activity.sendBroadcast(data);
             }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
+                    if (TextUtils.equals(e.getMessage(), "已经取消过")) {
+                        goodDb.deleteGood(friendDynId);
+                        mBinding.setViewModel(DiscoverVideoViewModel.this);
+                        Intent data = new Intent("lobster_doGood");
+                        data.putExtra("goodNum", discoverInfo.getGoodNum());
+                        data.putExtra("friendDynId", friendDynId);
+                        activity.sendBroadcast(data);
+                    }
+                }
+            }
         }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);
     }

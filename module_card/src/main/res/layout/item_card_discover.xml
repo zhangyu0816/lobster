@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -70,9 +71,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:maxLines="2"
                     android:text="@{item.text}"
                     android:textColor="@color/black_252"
-                    android:maxLines="2"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:visibility="@{item.text.isEmpty()?View.GONE:View.VISIBLE}" />
@@ -80,7 +81,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp">
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="-8dp">
 
                     <ImageView
                         android:id="@+id/iv_logo"
@@ -90,14 +92,15 @@
                         viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.05f)}"
                         viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.05f)}"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="5dp"
-                        android:layout_toStartOf="@+id/tv_good"
+                        android:layout_toStartOf="@+id/good_layout"
                         android:layout_toEndOf="@+id/iv_logo"
                         android:ellipsize="end"
                         android:singleLine="true"
@@ -105,18 +108,49 @@
                         android:textColor="@color/black_827"
                         android:textSize="12sp" />
 
-                    <TextView
-                        android:id="@+id/tv_good"
+                    <LinearLayout
+                        android:id="@+id/good_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:drawableStart="@{viewModel.goodDb.hasGood(item.friendDynId)?@drawable/like_red_icon:@drawable/like_grey_icon}"
-                        android:drawablePadding="5dp"
-                        android:onClick="@{v->viewModel.doLike(position)}"
-                        android:text='@{String.format("%d",item.goodNum)}'
-                        android:textColor="@color/black_827"
-                        android:textSize="14sp" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:onClick="@{v->viewModel.doLike(v,position)}">
+
+                            <ImageView
+                                android:id="@+id/iv_unLike"
+                                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(45)}"
+                                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(45)}"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:background="@drawable/like_unselect_icon"
+                                android:visibility="@{viewModel.goodDb.hasGood(item.friendDynId)?View.GONE:View.VISIBLE}" />
+
+                            <ImageView
+                                android:id="@+id/iv_like"
+                                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(45)}"
+                                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(45)}"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:background="@drawable/like_select_icon"
+                                android:visibility="@{viewModel.goodDb.hasGood(item.friendDynId)?View.VISIBLE:View.GONE}" />
+                        </RelativeLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="-5dp"
+                            android:text='@{String.format("%d",item.goodNum)}'
+                            android:textColor="@color/black_4d4"
+                            android:textSize="14sp"
+                            tools:text="7" />
+                    </LinearLayout>
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
 
         <variable
             name="viewModel"
@@ -16,6 +19,12 @@
         <variable
             name="item"
             type="com.zb.lib_base.model.DiscoverInfo" />
+
+        <variable
+            name="hasGood"
+            type="boolean" />
+
+
     </data>
 
     <RelativeLayout
@@ -36,17 +45,48 @@
             android:layout_width="match_parent"
             android:layout_height="200dp" />
 
-        <TextView
-            android:onClick="@{v->viewModel.doLike(position)}"
+        <LinearLayout
+            android:id="@+id/good_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_margin="10dp"
-            android:drawableStart="@{viewModel.goodDb.hasGood(item.friendDynId)?@drawable/like_red_icon:@drawable/like_white_icon}"
-            android:drawablePadding="5dp"
-            android:text='@{String.format("%d",item.goodNum)}'
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:layout_marginEnd="15dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:onClick="@{v->viewModel.doLike(v,position)}">
+
+                <ImageView
+                    android:id="@+id/iv_like"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/like_select_icon"
+                    android:visibility="@{hasGood?View.VISIBLE:View.GONE}" />
+
+                <ImageView
+                    android:id="@+id/iv_unLike"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/like_unselect_icon"
+                    android:visibility="@{hasGood?View.GONE:View.VISIBLE}" />
+
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-5dp"
+                android:text='@{String.format("%d",item.goodNum)}'
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                tools:text="7" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"

@@ -11,7 +11,7 @@ public interface MemberVideoVMInterface {
 
     void clickItem(int position);
 
-    void doLike(int position);
+    void doLike(View view, int position);
 
     void dynDoLike();
 

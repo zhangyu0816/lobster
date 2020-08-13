@@ -113,6 +113,11 @@ public class AdapterBinding {
             view.addOnItemTouchListener(new OnRecyclerItemClickListener(view, touchHelper) {
             });
         }
+        try {
+            if (view.getItemAnimator() != null)
+                view.getItemAnimator().setChangeDuration(0);
+        } catch (Exception e) {
+        }
     }
 
     // 下拉刷新
