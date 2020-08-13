@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -192,13 +193,13 @@ public class BaseViewModel implements BaseVMInterface {
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 0.5f, 1).setDuration(2000);
         ObjectAnimator alpha = ObjectAnimator.ofFloat(view, "alpha", 1, 0).setDuration(2000);
 
-        scaleX.setRepeatCount(2000);
+        scaleX.setRepeatCount(Animation.INFINITE);
         scaleX.setRepeatMode(ValueAnimator.RESTART);
 
-        scaleY.setRepeatCount(2000);
+        scaleY.setRepeatCount(Animation.INFINITE);
         scaleY.setRepeatMode(ValueAnimator.RESTART);
 
-        alpha.setRepeatCount(2000);
+        alpha.setRepeatCount(Animation.INFINITE);
         alpha.setRepeatMode(ValueAnimator.RESTART);
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());

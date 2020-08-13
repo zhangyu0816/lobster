@@ -8,9 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.CycleInterpolator;
 import android.widget.ImageView;
@@ -102,6 +102,9 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     private List<String> imageList = new ArrayList<>();
     private boolean canReturn = false;
 
+    private RelativeLayout.LayoutParams dislikeParams;
+    private RelativeLayout.LayoutParams likeParams;
+
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
@@ -177,22 +180,39 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         setAdapter();
 
         if (mineInfo.getMemberType() == 2) {
-            cardFragBinding.ivExposure.setVisibility(View.VISIBLE);
-            ObjectAnimator animator = ObjectAnimator.ofFloat(cardFragBinding.ivExposure, "rotation", 0, 360).setDuration(3000);
-            animator.setRepeatMode(ValueAnimator.RESTART);
-            animator.setRepeatCount(Animation.INFINITE);
-            animator.start();
+            cardFragBinding.ivExposured.setVisibility(View.VISIBLE);
+            cardFragBinding.ivExposure.setVisibility(View.GONE);
         }
-//        else {
-//            ObjectAnimator animator = ObjectAnimator.ofFloat(cardFragBinding.tvCity, "rotation", -10, 10, -10, 10).setDuration(1000);
-//            animator.setRepeatMode(ValueAnimator.RESTART);
-//            animator.setRepeatCount(Animation.INFINITE);
-//            animator.start();
-//        }
+        playExposure();
+        mHandler.sendEmptyMessageDelayed(0, 5000);
+    }
+
+    private Handler mHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message message) {
+            playExposure();
+            mHandler.sendEmptyMessageDelayed(0, 5000);
+            return false;
+        }
+    });
+
+    private void playExposure() {
+        ObjectAnimator animator;
+        if (mineInfo.getMemberType() == 2) {
+            animator = ObjectAnimator.ofFloat(cardFragBinding.ivExposured, "rotation", -15, 15).setDuration(800);
+        } else {
+            animator = ObjectAnimator.ofFloat(cardFragBinding.tvCity, "rotation", 0, -5, 0, 5).setDuration(400);
+        }
+        animator.setRepeatMode(ValueAnimator.REVERSE);
+        animator.setRepeatCount(3);
+        animator.start();
     }
 
     @Override
     public void setAdapter() {
+        dislikeParams = (RelativeLayout.LayoutParams) cardFragBinding.ivDislike.getLayoutParams();
+        likeParams = (RelativeLayout.LayoutParams) cardFragBinding.ivLike.getLayoutParams();
+
         adapter = new CardAdapter<>(activity, R.layout.item_card, pairInfoList, this);
         cardCallback = new CardItemTouchHelperCallback<>(adapter, pairInfoList);
         cardCallback.setOnSwipedListener(this);
@@ -308,18 +328,19 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     pairInfoList.add(pairInfo);
                 }
                 adapter.notifyItemRangeChanged(start, pairInfoList.size());
-                cardFragBinding.setIsOutLine(false);
-                cardFragBinding.setNoData(false);
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    int start = pairInfoList.size();
+                    pairInfoList.add(createNoData());
+                    adapter.notifyItemRangeChanged(start, pairInfoList.size());
+                } else if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
                     pairInfoList.clear();
                     adapter.notifyDataSetChanged();
-                    cardFragBinding.setNoData(true);
-                } else if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
-                    cardFragBinding.setIsOutLine(true);
+                    pairInfoList.add(createOutLike());
+                    adapter.notifyDataSetChanged();
                 }
             }
         }, activity)
@@ -332,6 +353,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void makeEvaluate(PairInfo pairInfo, int likeOtherStatus) {
+        if (pairInfo.getOtherUserId() == 0)
+            return;
         //  likeOtherStatus  0 不喜欢  1 喜欢  2.超级喜欢 （非会员提示开通会员）
         makeEvaluateApi api = new makeEvaluateApi(new HttpOnNextListener<Integer>() {
             @Override
@@ -374,18 +397,32 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             @Override
             public void onError(Throwable e) {
                 if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
-                    mBinding.setVariable(BR.isOutLine, true);
+                    pairInfoList.clear();
+                    adapter.notifyDataSetChanged();
+                    pairInfoList.add(createOutLike());
+                    adapter.notifyDataSetChanged();
                 }
             }
         }, activity).setOtherUserId(pairInfo.getOtherUserId()).setLikeOtherStatus(likeOtherStatus);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    private PairInfo createNoData() {
+        PairInfo pairInfo = new PairInfo();
+        pairInfo.setHeadImage("card_no_data_icon");
+        return pairInfo;
+    }
+
+    private PairInfo createOutLike() {
+        PairInfo pairInfo = new PairInfo();
+        pairInfo.setHeadImage("card_out_line_bg");
+        return pairInfo;
+    }
+
     @Override
     public void onRefresh(View view) {
         pairInfoList.clear();
         adapter.notifyDataSetChanged();
-        mBinding.setVariable(BR.isOutLine, false);
         prePairList(true);
     }
 
@@ -442,29 +479,55 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         cardFragBinding.ivLike.setAlpha(0f);
     }
 
+    private int movedWidth = (int) (MineApp.W / 2f - ObjectUtils.getViewSizeByWidthFromMax(264) / 2f);
+
+    private Handler moveHandler = new Handler();
+    private Runnable ra = this::onReset;
+
     @Override
     public void onSwiping(View view, float ratio, int direction) {
+//        if (ratio == 0) {
+//            isAnimation = true;
+//        }
         if (direction == CardConfig.SWIPING_LEFT) {
-            if (isAnimation) {
-                startAnimation(cardFragBinding.ivDislike, MineApp.W / 2f + ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 100);
-            }
+            cardFragBinding.ivDislike.setVisibility(View.VISIBLE);
+            cardFragBinding.ivLike.setVisibility(View.GONE);
+            likeParams.setMarginEnd(0);
+            dislikeParams.setMarginStart((int) (movedWidth * Math.abs(ratio)));
+            cardFragBinding.ivDislike.setLayoutParams(dislikeParams);
+            cardFragBinding.ivLike.setLayoutParams(likeParams);
+//            if (isAnimation) {
+//                startAnimation(cardFragBinding.ivDislike, MineApp.W / 2f + ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 100);
+//            }
         } else if (direction == CardConfig.SWIPING_RIGHT) {
-            if (isAnimation) {
-                startAnimation(cardFragBinding.ivLike, 0 - MineApp.W / 2f - ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 100);
-            }
+//            if (isAnimation) {
+//                startAnimation(cardFragBinding.ivLike, 0 - MineApp.W / 2f - ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 100);
+//            }
+            cardFragBinding.ivDislike.setVisibility(View.GONE);
+            cardFragBinding.ivLike.setVisibility(View.VISIBLE);
+            likeParams.setMarginEnd((int) (movedWidth * Math.abs(ratio)));
+            dislikeParams.setMarginStart(0);
+            cardFragBinding.ivDislike.setLayoutParams(dislikeParams);
+            cardFragBinding.ivLike.setLayoutParams(likeParams);
         }
+        moveHandler.removeCallbacks(ra);
+        moveHandler.postDelayed(ra, 1000);
     }
 
 
     @Override
     public void onSwiped(View view, PairInfo pairInfo, int direction) {
-        initAnimation();
+//        initAnimation();
         int likeOtherStatus = 1;
         if (direction == CardConfig.SWIPED_LEFT) {
             canReturn = true;
             likeOtherStatus = 0;
             disLikeList.add(0, pairInfo);
         }
+
+        onReset();
+        moveHandler.removeCallbacks(ra);
+        moveHandler.postDelayed(ra, 1000);
         makeEvaluate(pairInfo, likeOtherStatus);
     }
 
@@ -475,7 +538,12 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void onReset() {
-        initAnimation();
+        cardFragBinding.ivDislike.setVisibility(View.GONE);
+        cardFragBinding.ivLike.setVisibility(View.GONE);
+        likeParams.setMarginEnd(0);
+        dislikeParams.setMarginStart(0);
+        cardFragBinding.ivDislike.setLayoutParams(dislikeParams);
+        cardFragBinding.ivLike.setLayoutParams(likeParams);
     }
 
     /**
@@ -483,9 +551,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
      */
     private void setCardAnimationLeftToRight(PairInfo pairInfo) {
         mBinding.setVariable(BR.pairInfo, pairInfo);
-        for (String image : pairInfo.getImageList()) {
-            imageList.add(image);
-        }
+        imageList.addAll(pairInfo.getImageList());
         disListAdapter.notifyDataSetChanged();
 
         cardFragBinding.cardRelative.startAnimation(AnimationUtils.loadAnimation(activity,

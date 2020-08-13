@@ -27,23 +27,13 @@ public class CardItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
         return t;
     }
 
-    public void setDataList(List<T> dataList) {
-        this.dataList = dataList;
-    }
-
     public void setOnSwipedListener(OnSwipeListener<T> mListener) {
         this.mListener = mListener;
     }
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        int dragFlags = 0;
-        int swipeFlags = 0;
-        RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-        if (layoutManager instanceof CardLayoutManager) {
-            swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
-        }
-        return makeMovementFlags(dragFlags, swipeFlags);
+        return makeMovementFlags(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
     }
 
     @Override
@@ -124,4 +114,6 @@ public class CardItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
     public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
         return 0.1f;
     }
+
+
 }

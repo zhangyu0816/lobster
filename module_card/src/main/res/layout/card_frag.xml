@@ -32,16 +32,6 @@
         <variable
             name="cityName"
             type="String" />
-
-        <variable
-            name="isOutLine"
-            type="boolean" />
-
-        <variable
-            name="noData"
-            type="boolean" />
-
-
     </data>
 
     <RelativeLayout
@@ -50,7 +40,7 @@
         android:paddingTop="30dp">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tv_city"
             onClickDelayed="@{viewModel::selectCity}"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
@@ -75,24 +65,24 @@
             android:padding="15dp">
 
             <ImageView
-                android:id="@+id/iv_exposure"
+                android:id="@+id/iv_exposured"
                 viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(76)}"
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(76)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:background="@mipmap/exposured_icon"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <ImageView
-                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(70)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(70)}"
+                android:id="@+id/iv_exposure"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(76)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(76)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:background="@mipmap/exposure_icon" />
         </RelativeLayout>
-
 
         <androidx.recyclerview.widget.RecyclerView
             adapter="@{viewModel.adapter}"
@@ -100,8 +90,7 @@
             recyclerType="@{6}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/textView"
-            android:visibility="@{(isOutLine||noData)?View.GONE:View.VISIBLE}" />
+            android:layout_below="@+id/tv_city" />
 
         <ImageView
             android:id="@+id/iv_dislike"
@@ -110,8 +99,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:alpha="0"
-            android:background="@mipmap/dislike_icon" />
+            android:background="@mipmap/dislike_icon"
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/iv_like"
@@ -121,14 +110,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:alpha="0"
-            android:background="@mipmap/like_icon" />
+            android:background="@mipmap/like_icon"
+            android:visibility="gone"/>
 
         <LinearLayout
             android:id="@+id/card_relative"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/textView"
+            android:layout_below="@+id/tv_city"
             android:alpha="0"
             android:gravity="center"
             android:orientation="vertical">
@@ -299,52 +288,5 @@
                     android:background="@mipmap/super_like_icon" />
             </RelativeLayout>
         </LinearLayout>
-
-        <RelativeLayout
-            viewHeightSize="@{ObjectUtils.getLogoHeight(0.92f)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.92f)}"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/textView"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:visibility="@{isOutLine?View.VISIBLE:View.GONE}">
-
-            <ImageView
-                android:id="@+id/iv_out"
-                viewHeightSize="@{ObjectUtils.getLogoHeight(0.92f)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.92f)}"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@mipmap/card_out_line_bg" />
-
-            <TextView
-                onClickDelayed="@{viewModel::onRefresh}"
-                android:layout_width="80dp"
-                android:layout_height="38dp"
-                android:layout_alignBottom="@+id/iv_out"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="30dp"
-                android:background="@drawable/btn_bg_black_4d4_radius60"
-                android:gravity="center"
-                android:text="刷新"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/tv_city"
-            onClickDelayed="@{viewModel::onRefresh}"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:text="暂无数据"
-            android:textColor="@color/black_252"
-            android:textSize="16sp"
-            android:visibility="@{noData?View.VISIBLE:View.GONE}" />
-
     </RelativeLayout>
 </layout>

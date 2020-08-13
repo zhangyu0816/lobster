@@ -7,6 +7,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
 import com.zb.lib_base.R;
@@ -19,7 +20,7 @@ public class BottleTitleView extends RelativeLayout {
     private BottleTitleBinding mBinding;
     private AnimatorSet animatorSet = new AnimatorSet();
     private long time = 10000;
-    private int repeat = 50000;
+    private int repeat = Animation.INFINITE;
     private int Y = 30;
 
     public BottleTitleView(Context context) {

@@ -6,4 +6,6 @@
     <string name="attention_true">关注</string>
     <string name="attention_false">取消关注</string>
     <string name="user_id">虾菇号：%d</string>
+    <string name="no_data">card_no_data_icon</string>
+    <string name="out_line">card_out_line_bg</string>
 </resources>

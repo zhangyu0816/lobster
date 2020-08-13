@@ -26,6 +26,7 @@ public class PairInfo extends BaseObservable {
     private long cityId = 0;   //地区id
     private long districtId = 0;
     private String distance = "";
+    private String singleImage = "";
     private List<String> imageList = new ArrayList<>();
 
     @Bindable
@@ -36,6 +37,16 @@ public class PairInfo extends BaseObservable {
     public void setUserId(long userId) {
         this.userId = userId;
         notifyPropertyChanged(BR.userId);
+    }
+
+    @Bindable
+    public String getSingleImage() {
+        return singleImage;
+    }
+
+    public void setSingleImage(String singleImage) {
+        this.singleImage = singleImage;
+        notifyPropertyChanged(BR.singleImage);
     }
 
     @Bindable

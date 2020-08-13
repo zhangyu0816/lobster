@@ -213,6 +213,10 @@ public class AdapterBinding {
                     builder.load(R.mipmap.bottle_logo_icon).into(view);
                 } else if (imageUrl != null && imageUrl.equals("review_tag_icon")) {
                     builder.load(R.mipmap.review_tag_icon).into(view);
+                } else if (imageUrl != null && imageUrl.equals("card_no_data_icon")) {
+                    builder.load(R.mipmap.card_no_data_icon).into(view);
+                } else if (imageUrl != null && imageUrl.equals("card_out_line_bg")) {
+                    builder.load(R.mipmap.card_out_line_bg).into(view);
                 } else {
                     if (imageUrl != null && imageUrl.contains(".mp3"))
                         imageUrl = "";

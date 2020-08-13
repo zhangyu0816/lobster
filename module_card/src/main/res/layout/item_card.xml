@@ -33,217 +33,241 @@
     </data>
 
     <RelativeLayout
-        android:id="@+id/card_relative"
-        viewHeightSize="@{ObjectUtils.getLogoHeight(0.92f)}"
-        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.92f)}"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/iv_big_image"
-            defaultRes="@{ObjectUtils.getDefaultRes()}"
-            imageUrl="@{item.headImage}"
-            isRound="@{true}"
-            roundSize="@{10}"
-            viewHeightSize="@{ObjectUtils.getLogoHeight(0.92f)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.92f)}"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:scaleType="centerCrop" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/info_relative"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:alpha="0"
-                android:onClick="@{v->viewModel.leftBtn(currentView,adapter)}" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:alpha="0"
-                android:onClick="@{v->viewModel.rightBtn(currentView,adapter)}" />
-        </LinearLayout>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <RelativeLayout
-            android:id="@+id/info_relative"
-            onClickDelayed="@{v->viewModel.selectCard(currentView)}"
-            android:layout_width="match_parent"
+            android:id="@+id/card_relative"
+            viewHeightSize="@{ObjectUtils.getLogoHeight(0.92f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.92f)}"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/gradient_black"
-            android:orientation="vertical">
+            android:layout_centerInParent="true">
+
+            <ImageView
+                android:id="@+id/iv_big_image"
+                defaultRes="@{ObjectUtils.getDefaultRes()}"
+                imageUrl="@{item.singleImage}"
+                isRound="@{true}"
+                roundSize="@{10}"
+                viewHeightSize="@{ObjectUtils.getLogoHeight(0.92f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.92f)}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:scaleType="centerCrop" />
 
             <LinearLayout
-                android:id="@+id/nick_linear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/info_relative"
                 android:orientation="horizontal"
-                android:padding="15dp">
+                android:visibility="@{(item.headImage.equals(@string/no_data)||item.headImage.equals(@string/out_line))?View.GONE:View.VISIBLE}">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:ellipsize="end"
-                    android:maxWidth="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
-                    android:singleLine="true"
-                    android:text="@{item.nick}"
-                    android:textColor="@android:color/white"
-                    android:textSize="25sp"
-                    android:textStyle="bold"
-                    tools:text="租我吧租我吧租我吧" />
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:alpha="0"
+                    android:onClick="@{v->viewModel.leftBtn(currentView,adapter)}" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="10dp"
-                    android:visibility="@{item.memberType==2?View.VISIBLE:View.GONE}"
-                    app:srcCompat="@mipmap/vip_icon" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:visibility="@{item.faceAttest==1?View.VISIBLE:View.GONE}"
-                    app:srcCompat="@mipmap/real_icon" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:alpha="0"
+                    android:onClick="@{v->viewModel.rightBtn(currentView,adapter)}" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/area_linear"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/info_relative"
+                onClickDelayed="@{v->viewModel.selectCard(currentView)}"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/nick_linear"
-                android:gravity="bottom"
-                android:layout_marginStart="12dp"
-                android:orientation="horizontal">
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/gradient_black"
+                android:orientation="vertical"
+                android:visibility="@{(item.headImage.equals(@string/no_data)||item.headImage.equals(@string/out_line))?View.GONE:View.VISIBLE}">
 
                 <LinearLayout
+                    android:id="@+id/nick_linear"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="bottom"
-                    android:visibility="@{item.distance.isEmpty()?View.GONE:View.VISIBLE}">
+                    android:padding="15dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text='@{String.format("%.1f",item.distance.isEmpty()?0f:(Float.valueOf(item.distance)/1000f))}'
-                        android:textColor="#FFD358"
-                        android:textSize="16sp"
+                        android:layout_marginEnd="10dp"
+                        android:ellipsize="end"
+                        android:maxWidth="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
+                        android:singleLine="true"
+                        android:text="@{item.nick}"
+                        android:textColor="@android:color/white"
+                        android:textSize="25sp"
                         android:textStyle="bold"
-                        tools:text="1.0" />
+                        tools:text="租我吧租我吧租我吧" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="10dp"
+                        android:visibility="@{item.memberType==2?View.VISIBLE:View.GONE}"
+                        app:srcCompat="@mipmap/vip_icon" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:visibility="@{item.faceAttest==1?View.VISIBLE:View.GONE}"
+                        app:srcCompat="@mipmap/real_icon" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/area_linear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/nick_linear"
+                    android:layout_marginStart="12dp"
+                    android:gravity="bottom"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:orientation="horizontal"
+                        android:visibility="@{item.distance.isEmpty()?View.GONE:View.VISIBLE}">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text='@{String.format("%.1f",item.distance.isEmpty()?0f:(Float.valueOf(item.distance)/1000f))}'
+                            android:textColor="#FFD358"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            tools:text="1.0" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="5dp"
+                            android:text="km"
+                            android:textColor="@android:color/white"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
-                        android:text="km"
+                        android:text="@{viewModel.areaDb.getCityName(item.cityId)}"
                         android:textColor="@android:color/white"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
+                        android:textSize="14sp"
+                        tools:text="温州市" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:text="@{viewModel.areaDb.getDistrictName(item.districtId)}"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp"
+                        tools:text="鹿城区" />
                 </LinearLayout>
 
-                <TextView
+                <LinearLayout
+                    android:id="@+id/info_linear"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
-                    android:text="@{viewModel.areaDb.getCityName(item.cityId)}"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    tools:text="温州市" />
+                    android:layout_below="@+id/area_linear"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:text="@{item.sex==0?@string/sex_0:@string/sex_1}"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp"
+                        tools:text="女" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:text="@{DateUtil.getConstellations(item.birthday)}"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp"
+                        tools:text="巨蟹座" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="80dp"
+                        android:singleLine="true"
+                        android:text="@{item.personalitySign}"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp"
+                        tools:text="我的个性签名我的个性签名我的个性签名我的个性签名我的个性签名我的个性签名" />
+                </LinearLayout>
+
+                <com.zb.lib_base.views.MyRecyclerView
+                    android:id="@+id/image_list"
+                    adapter="@{adapter}"
+                    recyclerType="@{1}"
+                    viewHeightSize="@{-2}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.6f)}"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
-                    android:text="@{viewModel.areaDb.getDistrictName(item.districtId)}"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    tools:text="鹿城区" />
-            </LinearLayout>
+                    android:layout_below="@+id/info_linear"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:visibility="@{item.imageList.size()==0?View.GONE:View.VISIBLE}" />
+            </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/info_linear"
+            <ImageView
+                android:id="@+id/iv_return"
+                onClickDelayed="@{viewModel::returnView}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/area_linear"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="6dp"
-                android:orientation="horizontal">
+                android:layout_above="@+id/iv_super_like"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="-40dp"
+                android:background="@mipmap/return_icon"
+                android:visibility="@{(item.headImage.equals(@string/no_data)||item.headImage.equals(@string/out_line))?View.GONE:View.VISIBLE}" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
-                    android:text="@{item.sex==0?@string/sex_0:@string/sex_1}"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    tools:text="女" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
-                    android:text="@{DateUtil.getConstellations(item.birthday)}"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    tools:text="巨蟹座" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="80dp"
-                    android:singleLine="true"
-                    android:text="@{item.personalitySign}"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    tools:text="我的个性签名我的个性签名我的个性签名我的个性签名我的个性签名我的个性签名" />
-            </LinearLayout>
-
-            <com.zb.lib_base.views.MyRecyclerView
-                android:id="@+id/image_list"
-                adapter="@{adapter}"
-                recyclerType="@{1}"
-                viewHeightSize="@{-2}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.6f)}"
-                android:layout_width="match_parent"
+            <com.zb.lib_base.views.SuperLikeView
+                android:id="@+id/iv_super_like"
+                onClickDelayed="@{v->viewModel.superLike(currentView,item)}"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/info_linear"
-                android:layout_marginStart="15dp"
-                android:layout_marginBottom="15dp"
-                android:visibility="@{item.imageList.size()==0?View.GONE:View.VISIBLE}" />
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="15dp"
+                android:visibility="@{(item.headImage.equals(@string/no_data)||item.headImage.equals(@string/out_line))?View.GONE:View.VISIBLE}" />
+
+            <TextView
+                onClickDelayed="@{viewModel::onRefresh}"
+                android:layout_width="80dp"
+                android:layout_height="38dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="30dp"
+                android:background="@drawable/btn_bg_black_4d4_radius60"
+                android:gravity="center"
+                android:text="刷新"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="@{(item.headImage.equals(@string/no_data)||item.headImage.equals(@string/out_line))?View.VISIBLE:View.GONE}" />
         </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/iv_return"
-            onClickDelayed="@{viewModel::returnView}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/iv_super_like"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="-40dp"
-            android:layout_marginEnd="15dp"
-            android:background="@mipmap/return_icon" />
-
-        <com.zb.lib_base.views.SuperLikeView
-            android:id="@+id/iv_super_like"
-            onClickDelayed="@{v->viewModel.superLike(currentView,item)}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="15dp"/>
-
     </RelativeLayout>
 </layout>
