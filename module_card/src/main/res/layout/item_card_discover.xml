@@ -30,16 +30,16 @@
         <LinearLayout
             onClickDelayed="@{v->viewModel.clickItem(position)}"
             viewHeightSize="@{-2}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.47f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.48f)}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="7dp"
             android:orientation="vertical">
 
             <RelativeLayout
                 viewHeightSize="@{-2}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.47f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.48f)}"
                 android:layout_width="match_parent"
                 android:layout_height="200dp">
 
@@ -49,13 +49,13 @@
                     defaultRes="@{ObjectUtils.getDefaultRes()}"
                     imageUrl='@{item.images.isEmpty()?item.image:item.images.split(",")[0]}'
                     viewHeightSize="@{0}"
-                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.47f)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.48f)}"
                     android:layout_width="match_parent"
                     android:layout_height="200dp" />
 
                 <ImageView
                     viewHeightSize="@{-2}"
-                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.47f)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.48f)}"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:background="@mipmap/image_src_icon" />

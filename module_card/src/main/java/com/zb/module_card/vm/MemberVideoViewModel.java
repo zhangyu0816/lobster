@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -235,19 +236,19 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
         prePosition = position;
         discoverInfo = discoverInfoList.get(position);
         friendDynId = discoverInfo.getFriendDynId();
-//        ImageView ivLike = view.findViewById(R.id.iv_like);
-//        ImageView ivUnLike = view.findViewById(R.id.iv_unLike);
+        ImageView ivLike = view.findViewById(R.id.iv_like);
+        ImageView ivUnLike = view.findViewById(R.id.iv_unLike);
 
         if (goodDb.hasGood(discoverInfo.getFriendDynId())) {
-//            ivUnLike.setVisibility(View.VISIBLE);
-//            unlike(ivLike, this::dynCancelLike);
+            ivUnLike.setVisibility(View.VISIBLE);
+            unlike(ivLike, this::dynCancelLike);
 
-            dynCancelLike();
+//            dynCancelLike();
         } else {
-//            ivUnLike.setVisibility(View.GONE);
-//            ivLike.setVisibility(View.VISIBLE);
-//            like(ivLike, this::dynDoLike);
-            dynDoLike();
+            ivUnLike.setVisibility(View.GONE);
+            ivLike.setVisibility(View.VISIBLE);
+            like(ivLike, this::dynDoLike);
+//            dynDoLike();
         }
     }
 
