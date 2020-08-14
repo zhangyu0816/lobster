@@ -10,6 +10,7 @@ public class LoginInfo extends BaseObservable {
     long id;      //星号
     String userName = "";  //手机号 用户
     String sessionId = "";//sessionId
+    String phoneNum = "";
 
     @Bindable
     public long getId() {
@@ -21,7 +22,8 @@ public class LoginInfo extends BaseObservable {
         notifyPropertyChanged(BR.id);
     }
 
-    @Bindable public String getUserName() {
+    @Bindable
+    public String getUserName() {
         return userName;
     }
 
@@ -30,12 +32,23 @@ public class LoginInfo extends BaseObservable {
         notifyPropertyChanged(BR.userName);
     }
 
-    @Bindable public String getSessionId() {
+    @Bindable
+    public String getSessionId() {
         return sessionId;
     }
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
         notifyPropertyChanged(BR.sessionId);
+    }
+
+    @Bindable
+    public String getPhoneNum() {
+        return phoneNum;
+    }
+
+    public void setPhoneNum(String phoneNum) {
+        this.phoneNum = phoneNum;
+        notifyPropertyChanged(BR.phoneNum);
     }
 }

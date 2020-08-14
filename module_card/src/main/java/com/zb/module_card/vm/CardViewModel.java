@@ -407,13 +407,13 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     private PairInfo createNoData() {
         PairInfo pairInfo = new PairInfo();
-        pairInfo.setHeadImage("card_no_data_icon");
+        pairInfo.setSingleImage("card_no_data_icon");
         return pairInfo;
     }
 
     private PairInfo createOutLike() {
         PairInfo pairInfo = new PairInfo();
-        pairInfo.setHeadImage("card_out_line_bg");
+        pairInfo.setSingleImage("card_out_line_bg");
         return pairInfo;
     }
 
@@ -470,29 +470,42 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         }, duration);
     }
 
-
-    private Handler moveHandler = new Handler();
-    private Runnable ra = this::onReset;
+    private int count = 0;
+    private int mDirection = CardConfig.SWIPING_NONE;
+    private boolean isShow = false;
 
     @Override
     public void onSwiping(View view, float ratio, int direction) {
-        if (direction == CardConfig.SWIPING_LEFT) {
-            mBinding.ivDislike.setVisibility(View.VISIBLE);
-            mBinding.ivLike.setVisibility(View.GONE);
-            likeParams.setMarginEnd(0);
-            dislikeParams.setMarginStart((int) (movedWidth * Math.abs(ratio)));
-            mBinding.ivDislike.setLayoutParams(dislikeParams);
-            mBinding.ivLike.setLayoutParams(likeParams);
-        } else if (direction == CardConfig.SWIPING_RIGHT) {
-            mBinding.ivDislike.setVisibility(View.GONE);
-            mBinding.ivLike.setVisibility(View.VISIBLE);
-            likeParams.setMarginEnd((int) (movedWidth * Math.abs(ratio)));
-            dislikeParams.setMarginStart(0);
-            mBinding.ivDislike.setLayoutParams(dislikeParams);
-            mBinding.ivLike.setLayoutParams(likeParams);
+        if (mDirection != direction) {
+            mDirection = direction;
+            count++;
         }
-        moveHandler.removeCallbacks(ra);
-        moveHandler.postDelayed(ra, 1000);
+        if (count >= 5) {
+            if (!isShow) {
+                isShow = true;
+                mBinding.ivDislike.setVisibility(View.GONE);
+                mBinding.ivLike.setVisibility(View.GONE);
+                new TextPW(activity, mBinding.getRoot(), "温馨提示", "心动不如行动，让心怡的TA知道你的存在！", false, this::onReset);
+            }
+        } else {
+            if (direction == CardConfig.SWIPING_LEFT) {
+                mBinding.ivDislike.setVisibility(View.VISIBLE);
+                mBinding.ivLike.setVisibility(View.GONE);
+                likeParams.setMarginEnd(0);
+                dislikeParams.setMarginStart((int) (movedWidth * Math.abs(ratio)));
+                mBinding.ivDislike.setLayoutParams(dislikeParams);
+                mBinding.ivLike.setLayoutParams(likeParams);
+            } else if (direction == CardConfig.SWIPING_RIGHT) {
+                mBinding.ivDislike.setVisibility(View.GONE);
+                mBinding.ivLike.setVisibility(View.VISIBLE);
+                likeParams.setMarginEnd((int) (movedWidth * Math.abs(ratio)));
+                dislikeParams.setMarginStart(0);
+                mBinding.ivDislike.setLayoutParams(dislikeParams);
+                mBinding.ivLike.setLayoutParams(likeParams);
+            } else {
+                onReset();
+            }
+        }
     }
 
     @Override
@@ -503,10 +516,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             likeOtherStatus = 0;
             disLikeList.add(0, pairInfo);
         }
-
         onReset();
-        moveHandler.removeCallbacks(ra);
-        moveHandler.postDelayed(ra, 1000);
         makeEvaluate(pairInfo, likeOtherStatus);
     }
 
@@ -517,6 +527,9 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void onReset() {
+        isShow = false;
+        count = 0;
+        mDirection = CardConfig.SWIPING_NONE;
         mBinding.ivDislike.setVisibility(View.GONE);
         mBinding.ivLike.setVisibility(View.GONE);
         likeParams.setMarginEnd(0);

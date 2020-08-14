@@ -19,6 +19,40 @@ public class RegisterInfo extends BaseObservable {
     String moreImages = "";
     List<String> imageList = new ArrayList<>();
 
+    String openId;
+    String unionId;
+    int unionType;
+
+    @Bindable
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+        notifyPropertyChanged(BR.openId);
+    }
+
+    @Bindable
+    public String getUnionId() {
+        return unionId;
+    }
+
+    public void setUnionId(String unionId) {
+        this.unionId = unionId;
+        notifyPropertyChanged(BR.unionId);
+    }
+
+    @Bindable
+    public int getUnionType() {
+        return unionType;
+    }
+
+    public void setUnionType(int unionType) {
+        this.unionType = unionType;
+        notifyPropertyChanged(BR.unionType);
+    }
+
     @Bindable
     public String getName() {
         return name;
@@ -29,7 +63,8 @@ public class RegisterInfo extends BaseObservable {
         notifyPropertyChanged(BR.name);
     }
 
-    @Bindable public int getSex() {
+    @Bindable
+    public int getSex() {
         return sex;
     }
 
@@ -38,7 +73,8 @@ public class RegisterInfo extends BaseObservable {
         notifyPropertyChanged(BR.sex);
     }
 
-    @Bindable public String getPhone() {
+    @Bindable
+    public String getPhone() {
         return phone;
     }
 
@@ -47,7 +83,8 @@ public class RegisterInfo extends BaseObservable {
         notifyPropertyChanged(BR.phone);
     }
 
-    @Bindable public String getBirthday() {
+    @Bindable
+    public String getBirthday() {
         return birthday;
     }
 
@@ -56,7 +93,8 @@ public class RegisterInfo extends BaseObservable {
         notifyPropertyChanged(BR.birthday);
     }
 
-    @Bindable public String getPass() {
+    @Bindable
+    public String getPass() {
         return pass;
     }
 
@@ -65,7 +103,8 @@ public class RegisterInfo extends BaseObservable {
         notifyPropertyChanged(BR.pass);
     }
 
-    @Bindable public String getCaptcha() {
+    @Bindable
+    public String getCaptcha() {
         return captcha;
     }
 
@@ -74,7 +113,8 @@ public class RegisterInfo extends BaseObservable {
         notifyPropertyChanged(BR.captcha);
     }
 
-    @Bindable public String getMoreImages() {
+    @Bindable
+    public String getMoreImages() {
         return moreImages;
     }
 
@@ -83,7 +123,8 @@ public class RegisterInfo extends BaseObservable {
         notifyPropertyChanged(BR.moreImages);
     }
 
-    @Bindable public List<String> getImageList() {
+    @Bindable
+    public List<String> getImageList() {
         return imageList;
     }
 

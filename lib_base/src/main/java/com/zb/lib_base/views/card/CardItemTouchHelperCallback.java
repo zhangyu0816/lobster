@@ -63,6 +63,10 @@ public class CardItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
         }
     }
 
+    /**
+     * 是否可以删除
+     * @return
+     */
     @Override
     public boolean isItemViewSwipeEnabled() {
         return false;

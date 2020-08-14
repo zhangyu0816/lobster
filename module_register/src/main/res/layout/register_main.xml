@@ -5,9 +5,15 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.zb.module_register.vm.MainViewModel" />
+
+        <variable
+            name="isThree"
+            type="boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -82,11 +88,24 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="请完善个人资料"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="@{isThree?View.VISIBLE:View.GONE}"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
+            android:visibility="@{isThree?View.GONE:View.VISIBLE}"
             app:layout_constraintBottom_toTopOf="@+id/textView5"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 

@@ -29,6 +29,15 @@ public class TextPW extends BasePopupWindow {
         initUI();
     }
 
+    public TextPW(RxAppCompatActivity activity, View parentView, String title, String content, boolean canClick, CallBack callBack) {
+        super(activity, parentView, canClick);
+        this.title = title;
+        this.content = content;
+        this.btnName = "明白了";
+        mCallBack = callBack;
+        initUI();
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     public TextPW(RxAppCompatActivity activity, View parentView, String title, String content, String btnName, boolean canClick, CallBack callBack) {
         super(activity, parentView, canClick);

@@ -37,6 +37,7 @@ import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.RulePW;
+import com.zb.module_register.databinding.RegisterMainBinding;
 import com.zb.module_register.iv.MainVMInterface;
 
 import org.json.JSONException;
@@ -64,10 +65,13 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private UMShareAPI umShareAPI;
 
     private LoginSampleHelper loginHelper;
+    private RegisterMainBinding mBinding;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
+        mBinding = (RegisterMainBinding) binding;
+        mBinding.setIsThree(false);
         aMapLocation = new AMapLocation(activity);
         MineApp.registerInfo = new RegisterInfo();
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
@@ -81,7 +85,12 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         bindPhoneReceiver = new BaseReceiver(activity, "lobster_bindPhone") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                ActivityUtils.getBindingPhone(activity);
+                MineApp.registerInfo.setOpenId(openId);
+                MineApp.registerInfo.setUnionId(unionId);
+                MineApp.registerInfo.setUnionType(unionType);
+                MineApp.registerInfo.setName(unionNick);
+                MineApp.registerInfo.getImageList().add(unionImage);
+                mBinding.setIsThree(true);
             }
         };
     }
@@ -147,8 +156,17 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 PreferenceUtil.saveStringValue(activity, "sessionId", o.getSessionId());
                 PreferenceUtil.saveStringValue(activity, "userName", "");
                 PreferenceUtil.saveStringValue(activity, "loginPass", "");
-                BaseActivity.update();
-                myInfo();
+                if (o.getPhoneNum().isEmpty()) {
+                    MineApp.registerInfo.setOpenId(openId);
+                    MineApp.registerInfo.setUnionId(unionId);
+                    MineApp.registerInfo.setUnionType(unionType);
+                    MineApp.registerInfo.setName(unionNick);
+                    MineApp.registerInfo.getImageList().add(unionImage);
+                    mBinding.setIsThree(true);
+                } else {
+                    BaseActivity.update();
+                    myInfo();
+                }
             }
         }, activity)
                 .setOpenId(openId)

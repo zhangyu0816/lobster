@@ -52,6 +52,7 @@ public abstract class OnRecyclerItemClickListener implements RecyclerView.OnItem
                 RecyclerView.ViewHolder vh = recyclerView.getChildViewHolder(child);
                 if (MotionEventCompat.getActionMasked(e) == MotionEvent.ACTION_DOWN) {
                     mItemTouchHelper.startSwipe(vh);
+                    return false;
                 }
             }
             return false;
