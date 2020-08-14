@@ -4,15 +4,24 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Environment;
+import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
+import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
 import com.umeng.socialize.media.UMImage;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
@@ -28,6 +37,7 @@ import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.LikeDb;
+import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -36,6 +46,7 @@ import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.DouYinLayoutManager;
 import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.utils.ObjectUtils;
@@ -54,6 +65,8 @@ import com.zb.module_home.windows.GiftPW;
 import com.zb.module_home.windows.GiftPayPW;
 import com.zb.module_home.windows.ReviewPW;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -73,6 +86,8 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     private MineInfo mineInfo;
     private LikeDb likeDb;
     private BaseReceiver attentionReceiver;
+    private String downloadPath = "";
+    private int videoWidth, videoHeight;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -263,7 +278,10 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
 
             @Override
             public void download() {
-                DownLoad.downloadLocation(discoverInfo.getVideoUrl(), filePath -> SCToastUtil.showToast(activity, "下载成功", true));
+                DownLoad.downloadLocation(discoverInfo.getVideoUrl(), filePath -> {
+                    downloadPath = filePath;
+                    createWater();
+                });
             }
 
             @Override
@@ -488,11 +506,6 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     }
 
     private void initVideo() {
-        //视频加载完成,准备好播放视频的回调
-        videoView.setOnPreparedListener(mp -> {
-            //尺寸变化回调
-            mp.setOnVideoSizeChangedListener((mp1, width, height) -> changeVideoSize(mp1));
-        });
         //视频播放完成后的回调
         videoView.setOnCompletionListener(mp -> {
             videoView.stopPlayback();//停止播放视频,并且释放
@@ -519,6 +532,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 }
                 return true;
             } else if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
+                changeVideoSize(mp);
                 ivProgress.setVisibility(View.GONE);
                 ivImage.setVisibility(View.GONE);
                 videoView.setBackgroundColor(Color.TRANSPARENT);
@@ -533,13 +547,137 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
      * 修改预览View的大小,以用来适配屏幕
      */
     private void changeVideoSize(@NonNull MediaPlayer mMediaPlayer) {
-        int width = mMediaPlayer.getVideoWidth();
-        int height = mMediaPlayer.getVideoHeight();
+        videoWidth = mMediaPlayer.getVideoWidth();
+        videoHeight = mMediaPlayer.getVideoHeight();
 
-        if (ObjectUtils.getViewSizeByHeight(1.0f) * width / height > MineApp.W) {
-            AdapterBinding.viewSize(videoView, MineApp.W, (MineApp.W * height / width));
+        if (ObjectUtils.getViewSizeByHeight(1.0f) * videoWidth / videoHeight > MineApp.W) {
+            AdapterBinding.viewSize(videoView, MineApp.W, (MineApp.W * videoHeight / videoWidth));
         } else {
-            AdapterBinding.viewSize(videoView, (ObjectUtils.getViewSizeByHeight(1.0f) * width / height), ObjectUtils.getViewSizeByHeight(1.0f));
+            AdapterBinding.viewSize(videoView, (ObjectUtils.getViewSizeByHeight(1.0f) * videoWidth / videoHeight), ObjectUtils.getViewSizeByHeight(1.0f));
         }
     }
+
+    /*****************水印功能******************/
+
+    /* 水印 */
+    private String outPutUrl = "";
+    private String imageUrl = "";
+
+    /**
+     * 文本转成Bitmap
+     *
+     * @param text 文本内容
+     * @return 图片的bitmap
+     */
+    private Bitmap textToBitmap(String text) {
+
+        LinearLayout layout = new LinearLayout(activity);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(videoWidth, videoHeight);
+        layout.setLayoutParams(layoutParams);
+        layout.setBackgroundColor(Color.TRANSPARENT);
+
+        ImageView iv = new ImageView(activity);
+        int w = (int) (87f * 2 * (float) videoWidth / (float) MineApp.W);
+        int h = (int) (39f * 2 * (float) videoWidth / (float) MineApp.W);
+        int size = (int) (9f * 2 * (float) videoWidth / (float) MineApp.W);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(w, h);
+        params.leftMargin = 0;
+        params.rightMargin = MineApp.W;
+        params.gravity = Gravity.START;
+        iv.setLayoutParams(params);
+        iv.setImageResource(R.mipmap.water_icon);
+        layout.addView(iv);
+
+        TextView tv = new TextView(activity);
+        tv.setText(text);
+        tv.setTextSize(size);
+        tv.setTextColor(Color.WHITE);
+        tv.setBackgroundColor(Color.TRANSPARENT);
+        layout.addView(tv);
+
+        layout.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        layout.layout(0, 0, layout.getMeasuredWidth(), layout.getMeasuredHeight());
+        layout.buildDrawingCache();
+        Bitmap bitmap = layout.getDrawingCache();
+        return Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), false);
+    }
+
+    private void getImage(Bitmap bitmap) {
+        try {
+            FileOutputStream os = new FileOutputStream(new File(imageUrl));
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String[] addWaterMark(String imageUrl, String videoUrl, String outputUrl) {
+        String content = "-i " + videoUrl +
+                " -i " + imageUrl + " -filter_complex overlay=10:10" +
+                " -y -strict -2 -vcodec libx264 -preset ultrafast -crf 10 -threads 2 -acodec aac -ar 44100 -ac 2 -b:a 32k " + outputUrl;
+        //-crf  用于指定输出视频的质量，取值范围是0-51，默认值为23，数字越小输出视频的质量越高。
+        // 这个选项会直接影响到输出视频的码率。一般来说，压制480p我会用20左右，压制720p我会用16-18
+        return content.split(" ");
+    }
+
+    // 添加水印
+    private void createWater() {
+        CustomProgressDialog.showLoading(activity, "正在处理视频");
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        outPutUrl = file.getAbsolutePath() + "/Camera/xg_" + BaseActivity.randomString(15) + ".mp4";
+        imageUrl = BaseActivity.getImageFile().getAbsolutePath();
+        Bitmap bitmap = textToBitmap("虾菇号：" + BaseActivity.userId);
+        getImage(bitmap);
+
+        String[] common = addWaterMark(imageUrl, downloadPath, outPutUrl);
+        FFmpeg.getInstance(activity).execute(common, new FFmpegExecuteResponseHandler() {
+            @Override
+            public void onSuccess(String message) {
+                handler.sendEmptyMessage(1);
+            }
+
+            @Override
+            public void onProgress(String message) {
+                Log.e("onProgress", "111111111111111 = = = = = = = " + message);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                handler.sendEmptyMessage(0);
+            }
+
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onFinish() {
+            }
+        });
+    }
+
+    private Handler handler = new Handler(msg -> {
+        switch (msg.what) {
+            case 0:
+                SCToastUtil.showToast(activity, "视频下载失败", true);
+                CustomProgressDialog.stopLoading();
+                break;
+            case 1:
+                DataCleanManager.deleteFile(new File(downloadPath));
+                // 最后通知图库更新
+                MineApp.getInstance().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                        Uri.parse("file://" + outPutUrl)));
+                SCToastUtil.showToast(activity, "下载成功", true);
+                CustomProgressDialog.stopLoading();
+                break;
+        }
+        return false;
+    });
 }

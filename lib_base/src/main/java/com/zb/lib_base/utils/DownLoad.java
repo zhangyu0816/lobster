@@ -1,14 +1,11 @@
 package com.zb.lib_base.utils;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Environment;
 
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.zb.lib_base.activity.BaseActivity;
-import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.ResFileDb;
 import com.zb.lib_base.http.DownLoadRetrofitHelper;
 import com.zb.lib_base.model.ResFile;
@@ -78,9 +75,6 @@ public class DownLoad {
             @Override
             public void onSuccess(ResponseInfo<File> file) {
                 callBack.success(file.result.getAbsolutePath());
-                // 最后通知图库更新
-                MineApp.getInstance().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                        Uri.parse("file://" + file.result.getAbsolutePath())));
             }
 
             @Override

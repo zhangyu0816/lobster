@@ -850,7 +850,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
 
     private void setPermissions(int type) {
         if (type == 1) {
-            ActivityUtils.getCameraMain(activity, false, true, false);
+            ActivityUtils.getCameraMain(activity, false, true, true);
         } else if (type == 3) {
             soundView.start();
             stopPlayer();

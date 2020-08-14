@@ -3,19 +3,11 @@ package com.zb.module_home.vm;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
-import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
 import com.maning.imagebrowserlibrary.MNImage;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
@@ -45,7 +37,6 @@ import com.zero.smallvideorecord.model.LocalMediaConfig;
 import com.zero.smallvideorecord.model.OnlyCompressOverBean;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +48,6 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     public ArrayList<String> images = new ArrayList<>();
     public long videoTime = 0;
     public String videoUrl = "";
-    private File videoImageFile;
     public int cameraType = 0;
     private HomePublicImageBinding publicImageBinding;
     private PhotoManager photoManager;
@@ -65,9 +55,6 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     private BaseReceiver locationReceiver;
     private BaseReceiver deleteVideoReceiver;
 
-    /* 水印 */
-    private String outPutUrl = "";
-    private String imageUrl = "";
     private Compressor mCompressor;
 
     @Override
@@ -89,8 +76,6 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
 
         BaseActivity.createJianXiCameraFile();
         BaseActivity.createFfmpegFile();
-        outPutUrl = BaseActivity.getVideoFile().getAbsolutePath();
-        imageUrl = BaseActivity.getImageFile().getAbsolutePath();
 
         photoManager = new PhotoManager(activity, () -> {
             publishDyn(photoManager.jointWebUrl(","));
@@ -196,13 +181,13 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
         } else {
             CustomProgressDialog.showLoading(activity, "正在处理视频", true);
             if (isChinese(videoUrl)) {
-                handler.sendEmptyMessage(4);
+                handler.sendEmptyMessage(1);
             } else {
                 File file = new File(videoUrl);
                 if (file.length() > 3 * 1024 * 1024) {
                     compress(videoUrl);
                 } else {
-                    createWater();
+                    uploadVideo();
                 }
             }
         }
@@ -242,8 +227,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                     handler.sendEmptyMessage(0);
                 } else {
                     videoUrl = onlyCompressOverBean.getVideoPath();
-                    videoImageFile = new File(onlyCompressOverBean.getPicPath());
-                    handler.sendEmptyMessage(1);
+                    uploadVideo();
                 }
             } catch (Exception e) {
                 handler.sendEmptyMessage(0);
@@ -255,16 +239,10 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     private Handler handler = new Handler(msg -> {
         switch (msg.what) {
             case 0:
-                SCToastUtil.showToast(activity, "视频处理失败", true);
+                SCToastUtil.showToast(activity, "视频压缩失败", true);
                 CustomProgressDialog.stopLoading();
                 break;
             case 1:
-                createWater();
-                break;
-            case 3:
-                uploadVideo();
-                break;
-            case 4:
                 SCToastUtil.showToast(activity, "视频链接含中文路径，处理失败", true);
                 CustomProgressDialog.stopLoading();
                 break;
@@ -303,7 +281,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                 videoUrl = o.getUrl();
                 publishDyn("");
             }
-        }, activity).setFile(new File(outPutUrl));
+        }, activity).setFile(new File(videoUrl));
         HttpUploadManager.getInstance().doHttpDeal(api);
     }
 
@@ -339,98 +317,5 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
         } else {
             ActivityUtils.getCameraMain(activity, true, true, true);
         }
-    }
-
-    /*****************水印功能******************/
-    /**
-     * 文本转成Bitmap
-     *
-     * @param text 文本内容
-     * @return 图片的bitmap
-     */
-    private Bitmap textToBitmap(String text) {
-
-        LinearLayout layout = new LinearLayout(activity);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        layout.setLayoutParams(layoutParams);
-        layout.setBackgroundColor(Color.TRANSPARENT);
-
-        ImageView iv = new ImageView(activity);
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.leftMargin = 0;
-        params.rightMargin = MineApp.W;
-        params.gravity = Gravity.START;
-        iv.setLayoutParams(params);
-        iv.setImageResource(R.mipmap.water_icon);
-        layout.addView(iv);
-
-        TextView tv = new TextView(activity);
-        tv.setText(text);
-        tv.setTextSize(9);
-        tv.setTextColor(Color.WHITE);
-        tv.setBackgroundColor(Color.TRANSPARENT);
-        layout.addView(tv);
-
-        layout.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        layout.layout(0, 0, layout.getMeasuredWidth(), layout.getMeasuredHeight());
-        layout.buildDrawingCache();
-        Bitmap bitmap = layout.getDrawingCache();
-        return Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), false);
-    }
-
-    private void getImage(Bitmap bitmap) {
-        try {
-            FileOutputStream os = new FileOutputStream(new File(imageUrl));
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
-            os.flush();
-            os.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String[] addWaterMark(String imageUrl, String videoUrl, String outputUrl) {
-        String content = "-i " + videoUrl +
-                " -i " + imageUrl + " -filter_complex overlay=10:10" +
-                " -y -strict -2 -vcodec libx264 -preset ultrafast -crf 10 -threads 2 -acodec aac -ar 44100 -ac 2 -b:a 32k " + outputUrl;
-        //-crf  用于指定输出视频的质量，取值范围是0-51，默认值为23，数字越小输出视频的质量越高。
-        // 这个选项会直接影响到输出视频的码率。一般来说，压制480p我会用20左右，压制720p我会用16-18
-        return content.split(" ");
-    }
-
-    // 添加水印
-    private void createWater() {
-        Bitmap bitmap = textToBitmap("虾菇号：" + BaseActivity.userId);
-        getImage(bitmap);
-
-        String[] common = addWaterMark(imageUrl, videoUrl, outPutUrl);
-        FFmpeg.getInstance(activity).execute(common, new FFmpegExecuteResponseHandler() {
-            @Override
-            public void onSuccess(String message) {
-                handler.sendEmptyMessage(3);
-            }
-
-            @Override
-            public void onProgress(String message) {
-            }
-
-            @Override
-            public void onFailure(String message) {
-                handler.sendEmptyMessage(0);
-            }
-
-            @Override
-            public void onStart() {
-            }
-
-            @Override
-            public void onFinish() {
-            }
-        });
     }
 }

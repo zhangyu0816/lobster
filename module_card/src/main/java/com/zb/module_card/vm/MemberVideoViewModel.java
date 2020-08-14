@@ -221,12 +221,12 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
         if (discoverInfo.getVideoUrl().isEmpty())
             ActivityUtils.getHomeDiscoverDetail(discoverInfo.getFriendDynId());
         else {
-            if (discoverInfo.getUserId() == BaseActivity.userId) {
-                ActivityUtils.getHomeDiscoverVideoL2(discoverInfo.getFriendDynId());
-            } else {
+            if (otherUserId == 0) {
                 MineApp.discoverInfoList.clear();
                 MineApp.discoverInfoList.addAll(discoverInfoList);
                 ActivityUtils.getHomeVideoList(position, pageNo);
+            } else {
+                ActivityUtils.getHomeDiscoverVideoL2(discoverInfo.getFriendDynId());
             }
         }
     }
@@ -238,17 +238,13 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
         friendDynId = discoverInfo.getFriendDynId();
         ImageView ivLike = view.findViewById(R.id.iv_like);
         ImageView ivUnLike = view.findViewById(R.id.iv_unLike);
-
         if (goodDb.hasGood(discoverInfo.getFriendDynId())) {
             ivUnLike.setVisibility(View.VISIBLE);
             unlike(ivLike, this::dynCancelLike);
-
-//            dynCancelLike();
         } else {
             ivUnLike.setVisibility(View.GONE);
             ivLike.setVisibility(View.VISIBLE);
             like(ivLike, this::dynDoLike);
-//            dynDoLike();
         }
     }
 
