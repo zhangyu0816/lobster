@@ -73,7 +73,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         mBinding = (CardMemberDetailBinding) binding;
         mBinding.setVariable(BR.baseInfo, "");
         mBinding.setIsAttention(false);
-        AdapterBinding.viewSize(mBinding.banner, MineApp.W, ObjectUtils.getLogoHeight(1.0f));
+        AdapterBinding.viewSize(mBinding.banner, MineApp.W, MineApp.W);
 
         setAdapter();
         initFragments();
@@ -351,7 +351,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         mBinding.banner.setImageScaleType(ImageView.ScaleType.FIT_XY)
                 .setAds(adList)
                 .setImageLoader((context, ads, image, position) -> AdapterBinding.loadImage(image, ads.getSmallImage(), 0,
-                        ObjectUtils.getDefaultRes(), MineApp.W, ObjectUtils.getLogoHeight(1.0f),
+                        ObjectUtils.getDefaultRes(), MineApp.W, MineApp.W,
                         false, false, 0, false, 0, false))
                 .setBannerTypes(XBanner.CIRCLE_INDICATOR_TITLE)
                 .setIndicatorGravity(XBanner.INDICATOR_START)

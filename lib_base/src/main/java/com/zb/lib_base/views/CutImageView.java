@@ -150,13 +150,13 @@ public class CutImageView extends androidx.appcompat.widget.AppCompatImageView {
             double widthScale = (double) mWidth / (double) mBitmapWidth;
             double heightScale = (double) mHeight / (double) mBitmapHeight;
             if (mBitmapWidth <= mWidth && mBitmapHeight <= mHeight) {
-                mScaleX = mScaleY = (widthScale > heightScale ? heightScale : widthScale);
-            } else if (mBitmapWidth <= mWidth && mBitmapHeight > mHeight) {
+                mScaleX = mScaleY = (Math.min(widthScale, heightScale));
+            } else if (mBitmapWidth <= mWidth) {
                 mScaleX = mScaleY = heightScale;
-            } else if (mBitmapWidth > mWidth && mBitmapHeight <= mHeight) {
+            } else if (mBitmapHeight <= mHeight) {
                 mScaleX = mScaleY = widthScale;
-            } else if (mBitmapWidth > mWidth && mBitmapHeight > mHeight) {
-                mScaleX = mScaleY = (widthScale > heightScale ? heightScale : widthScale);
+            } else {
+                mScaleX = mScaleY = (Math.min(widthScale, heightScale));
             }
             setFloatRect();
         }
@@ -168,13 +168,13 @@ public class CutImageView extends androidx.appcompat.widget.AppCompatImageView {
     private void setFloatRect() {
         float width = mBitmapWidth * (float) mScaleX;
         float height = mBitmapHeight * (float) mScaleY;
-        float newWidth = height * 345f / 510f;
         float newHeight = width * 510f / 345f;
+        float newWidth = newHeight;
 
         if (newWidth > width) {
-            newWidth = width;
+            newWidth = newHeight = width;
         } else if (newHeight > height) {
-            newHeight = height;
+            newWidth = newHeight = height;
         }
 
 

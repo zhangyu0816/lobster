@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import com.app.abby.xbanner.Ads;
 import com.app.abby.xbanner.XBanner;
+import com.google.android.material.appbar.AppBarLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -85,6 +86,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     private BaseReceiver finishRefreshReceiver;
     private BaseReceiver attentionReceiver;
     private boolean isFirst = true;
+    private AppBarLayout.LayoutParams params;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -145,6 +147,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             }
             return false;
         });
+        params = (AppBarLayout.LayoutParams) mBinding.toolbar.getLayoutParams();
     }
 
     @Override
@@ -294,6 +297,10 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 reviewAdapter.notifyItemRangeChanged(start, reviewList.size());
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
+                if (params.getScrollFlags() == 0) {
+                    params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS_COLLAPSED|AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);//0不能伸缩
+                    mBinding.toolbar.setLayoutParams(params);
+                }
             }
 
             @Override
@@ -302,6 +309,10 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
                     mBinding.refresh.finishLoadMore();
+                    if (reviewList.size() == 0) {
+                        params.setScrollFlags(0);//0不能伸缩
+                        mBinding.toolbar.setLayoutParams(params);
+                    }
                 }
             }
         }, activity).setFriendDynId(friendDynId).setTimeSortType(1).setPageNo(pageNo);
