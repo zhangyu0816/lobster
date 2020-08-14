@@ -17,34 +17,28 @@
             android:id="@+id/iv_super_like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:background="@mipmap/super_like_icon" />
 
         <ImageView
             android:id="@+id/iv_star1"
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(30)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(30)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/iv_super_like"
             android:layout_alignBottom="@+id/iv_super_like"
-            android:layout_marginEnd="25dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="25dp"
-            android:background="@drawable/like_red_icon"
+            android:background="@mipmap/star_left_icon"
             android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/iv_star2"
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(30)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(30)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/iv_super_like"
             android:layout_alignBottom="@+id/iv_super_like"
-            android:layout_marginEnd="25dp"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="25dp"
-            android:background="@drawable/like_red_icon"
+            android:background="@mipmap/star_right_icon"
             android:visibility="gone"/>
     </RelativeLayout>
 </layout>

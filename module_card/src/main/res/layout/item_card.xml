@@ -114,15 +114,16 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="10dp"
-                        android:visibility="@{item.memberType==2?View.VISIBLE:View.GONE}"
-                        app:srcCompat="@mipmap/vip_icon" />
+                        android:visibility="@{item.faceAttest==1?View.VISIBLE:View.GONE}"
+                        app:srcCompat="@mipmap/real_icon" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:visibility="@{item.faceAttest==1?View.VISIBLE:View.GONE}"
-                        app:srcCompat="@mipmap/real_icon" />
+                        android:visibility="@{item.memberType==2?View.VISIBLE:View.GONE}"
+                        app:srcCompat="@mipmap/vip_icon" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -130,7 +131,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/nick_linear"
-                    android:layout_marginStart="12dp"
+                    android:layout_marginStart="15dp"
                     android:gravity="bottom"
                     android:orientation="horizontal">
 
@@ -250,8 +251,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
+                android:layout_marginEnd="-5dp"
                 android:layout_alignParentBottom="true"
-                android:layout_margin="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginBottom="15dp"
                 android:visibility="@{(item.singleImage.equals(@string/no_data)||item.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}" />
 
             <TextView

@@ -18,8 +18,7 @@ import java.util.Random;
 import androidx.databinding.DataBindingUtil;
 
 public class SuperLikeView extends RelativeLayout {
-    private long time = 2000;
-    private int repeat = 50000;
+    private long time = 1000;
     private AnimatorSet animatorSet = new AnimatorSet();
     private Random ra = new Random();
     private float scale = 2;
@@ -52,33 +51,18 @@ public class SuperLikeView extends RelativeLayout {
     private void play() {
         mBinding.ivStar1.setVisibility(VISIBLE);
         mBinding.ivStar2.setVisibility(VISIBLE);
-        ivStar1X = ObjectAnimator.ofFloat(mBinding.ivStar1, "translationX", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(300)-150) + 50)).setDuration(time);
-        ivStar1Y = ObjectAnimator.ofFloat(mBinding.ivStar1, "translationY", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(300)-150) + 50)).setDuration(time);
+        ivStar1X = ObjectAnimator.ofFloat(mBinding.ivStar1, "translationX", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(300)-200) + 50)).setDuration(time);
+        ivStar1Y = ObjectAnimator.ofFloat(mBinding.ivStar1, "translationY", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(300)-200) + 50)).setDuration(time);
 
-        ivStar2X = ObjectAnimator.ofFloat(mBinding.ivStar2, "translationX", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(300)-150) + 50)).setDuration(time);
-        ivStar2Y = ObjectAnimator.ofFloat(mBinding.ivStar2, "translationY", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(300)-150)+ 50)).setDuration(time);
-
-        ivStar1A = ObjectAnimator.ofFloat(mBinding.ivStar1, "alpha", 1, 0.3f).setDuration(time);
-        ivStar2A = ObjectAnimator.ofFloat(mBinding.ivStar2, "alpha", 1, 0.3f).setDuration(time);
-
-        scale1X = ObjectAnimator.ofFloat(mBinding.ivStar1, "scaleX", 1, scale).setDuration(time);
-        scale1Y = ObjectAnimator.ofFloat(mBinding.ivStar1, "scaleY", 1, scale).setDuration(time);
-
-        scale2X = ObjectAnimator.ofFloat(mBinding.ivStar2, "scaleX", 1, scale).setDuration(time);
-        scale2Y = ObjectAnimator.ofFloat(mBinding.ivStar2, "scaleY", 1, scale).setDuration(time);
+        ivStar2X = ObjectAnimator.ofFloat(mBinding.ivStar2, "translationX", 0, (ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(300)-200) + 50)).setDuration(time);
+        ivStar2Y = ObjectAnimator.ofFloat(mBinding.ivStar2, "translationY", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(300)-200)+ 50)).setDuration(time);
 
 
         animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
         animatorSet.play(ivStar1X)
                 .with(ivStar1Y)
                 .with(ivStar2X)
-                .with(ivStar2Y)
-                .with(ivStar1A)
-                .with(ivStar2A)
-                .with(scale1X)
-                .with(scale1Y)
-                .with(scale2X)
-                .with(scale2Y);
+                .with(ivStar2Y);
         animatorSet.start();
 
         new Handler().postDelayed(() -> {
