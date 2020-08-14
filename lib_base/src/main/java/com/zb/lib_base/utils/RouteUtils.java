@@ -12,7 +12,6 @@ public class RouteUtils {
     public static final String Home_Discover_Detail = "/home/DiscoverDetailActivity";
     public static final String Home_Reward_List = "/home/RewardListActivity";
     public static final String Home_Report = "/home/ReportActivity";
-    public static final String Home_Discover_Video = "/home/DiscoverVideoActivity";
     public static final String Home_Search = "/home/SearchActivity";
     public static final String Home_Video_List = "/home/VideoListActivity";
     public static final String Home_Discover_Video_L2 = "/home/DiscoverVideoL2Activity";
@@ -126,14 +125,10 @@ public class RouteUtils {
     public static final String Camera_Video_Play = "/camera/VideoPlayActivity";
 
     /*********************** 漂流瓶 **************************/
-    // 漂流瓶主页
-    public static final String Bottle_Main = "/bottle/MainActivity";
     // 漂流操作页
     public static final String Bottle_Throw = "/bottle/BottleThrowActivity";
     // 漂流列表
     public static final String Bottle_List = "/bottle/BottleListActivity";
     // 漂流瓶聊天
     public static final String Bottle_Chat = "/bottle/BottleChatActivity";
-    // 捡、扔 漂流瓶
-    public static final String Bottle_Content = "/bottle/BottleContentActivity";
 }

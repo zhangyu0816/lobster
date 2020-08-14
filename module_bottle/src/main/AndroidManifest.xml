@@ -3,11 +3,9 @@
     package="com.zb.module_bottle">
 
     <application android:theme="@style/BottleTheme">
-        <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.BottleThrowActivity" />
         <activity android:name=".activity.BottleListActivity" />
         <activity android:name=".activity.BottleChatActivity" />
-        <activity android:name=".activity.BottleContentActivity" />
     </application>
 
 </manifest>

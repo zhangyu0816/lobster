@@ -13,14 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/BottleTheme"
         tools:replace="android:theme">
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.BottleThrowActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.BottleThrowActivity" />
         <activity android:name=".activity.BottleListActivity" />
         <activity android:name=".activity.BottleChatActivity" />
     </application>

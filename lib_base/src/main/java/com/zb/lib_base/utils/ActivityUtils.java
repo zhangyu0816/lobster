@@ -3,7 +3,6 @@ package com.zb.lib_base.utils;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.model.Authentication;
-import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.FeedbackInfo;
 
 public class ActivityUtils {
@@ -32,11 +31,6 @@ public class ActivityUtils {
     // 礼物列表
     public static void getHomeReport(long otherUserId) {
         ARouter.getInstance().build(RouteUtils.Home_Report).withLong("otherUserId", otherUserId).navigation();
-    }
-
-    // 礼物列表
-    public static void getHomeDiscoverVideo(long friendDynId) {
-        ARouter.getInstance().build(RouteUtils.Home_Discover_Video).withLong("friendDynId", friendDynId).navigation();
     }
 
     // 礼物列表
@@ -275,11 +269,6 @@ public class ActivityUtils {
     /*********************** 漂流瓶 **************************/
 
     // 漂流瓶主页
-    public static void getBottleMain() {
-        ARouter.getInstance().build(RouteUtils.Bottle_Main).navigation();
-    }
-
-    // 漂流瓶主页
     public static void getBottleThrow() {
         ARouter.getInstance().build(RouteUtils.Bottle_Throw).navigation();
     }
@@ -292,10 +281,5 @@ public class ActivityUtils {
     // 漂流瓶主页
     public static void getBottleChat(long driftBottleId) {
         ARouter.getInstance().build(RouteUtils.Bottle_Chat).withLong("driftBottleId", driftBottleId).navigation();
-    }
-
-    // 漂流瓶主页
-    public static void getBottleContent(BottleInfo bottleInfo) {
-        ARouter.getInstance().build(RouteUtils.Bottle_Content).withParcelable("bottleInfo", bottleInfo).navigation();
     }
 }
