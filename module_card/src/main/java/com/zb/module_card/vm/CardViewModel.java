@@ -1,7 +1,6 @@
 package com.zb.module_card.vm;
 
 import android.Manifest;
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -10,7 +9,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnimationUtils;
 import android.view.animation.CycleInterpolator;
 import android.widget.ImageView;
@@ -78,7 +76,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     public CardAdapter adapter;
     private List<PairInfo> pairInfoList = new ArrayList<>();
     private PairInfo pairInfo;
-    private static CardFragBinding cardFragBinding;
+    private CardFragBinding mBinding;
     private CardItemTouchHelperCallback<PairInfo> cardCallback;
     private View currentView;
     private AMapLocation aMapLocation;
@@ -93,10 +91,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     public BaseReceiver locationReceiver;
     public BaseReceiver openVipReceiver;
     public BaseReceiver mainSelectReceiver;
-    private boolean isAnimation = true;
-    private AnimatorSet animatorSet;
-    private ObjectAnimator translate = null;
-    private ObjectAnimator alphaA = null;
     private List<PairInfo> disLikeList = new ArrayList<>();
     private CardAdapter disListAdapter;
     private List<String> imageList = new ArrayList<>();
@@ -104,6 +98,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     private RelativeLayout.LayoutParams dislikeParams;
     private RelativeLayout.LayoutParams likeParams;
+    private int movedWidth = (int) (MineApp.W / 2f - ObjectUtils.getViewSizeByWidthFromMax(264) / 2f);
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -113,7 +108,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         mineInfo = mineInfoDb.getMineInfo();
         MineApp.sex = mineInfo.getSex() == 0 ? 1 : 0;
         aMapLocation = new AMapLocation(activity);
-        cardFragBinding = (CardFragBinding) binding;
+        mBinding = (CardFragBinding) binding;
         // 详情页操作后滑动卡片
         cardReceiver = new BaseReceiver(activity, "lobster_card") {
             @Override
@@ -122,21 +117,24 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 int direction = intent.getIntExtra("direction", 0);
                 if (direction == 0) {
                     // 不喜欢
+                    mBinding.ivDislike.setVisibility(View.VISIBLE);
                     currentView.startAnimation(AnimationUtils.loadAnimation(activity,
                             R.anim.view_left_out));
-                    startAnimation(cardFragBinding.ivDislike, MineApp.W / 2f + ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 280);
+                    startAnimation(mBinding.ivDislike, movedWidth, 280);
                     currentView.postDelayed(() -> cardCallback.swiped(currentView, ItemTouchHelper.LEFT), 800);
                 } else if (direction == 1) {
                     // 喜欢
+                    mBinding.ivLike.setVisibility(View.VISIBLE);
                     currentView.startAnimation(AnimationUtils.loadAnimation(activity,
                             R.anim.view_right_out));
-                    startAnimation(cardFragBinding.ivLike, 0 - MineApp.W / 2f - ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 280);
+                    startAnimation(mBinding.ivLike, -movedWidth, 280);
                     currentView.postDelayed(() -> cardCallback.swiped(currentView, ItemTouchHelper.RIGHT), 800);
                 } else {
                     // 超级喜欢
+                    mBinding.ivLike.setVisibility(View.VISIBLE);
                     currentView.startAnimation(AnimationUtils.loadAnimation(activity,
                             R.anim.view_right_out));
-                    startAnimation(cardFragBinding.ivLike, 0 - MineApp.W / 2f - ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 280);
+                    startAnimation(mBinding.ivLike, 0 - MineApp.W / 2f - ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 280);
                     currentView.postDelayed(() -> cardCallback.swiped(currentView, ItemTouchHelper.RIGHT), 800);
                     String myHead = mineInfo.getImage();
                     String otherHead = pairInfo.getMoreImages().split("#")[0];
@@ -168,20 +166,20 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 prePairList(true);
             }
         };
-        RelativeLayout.LayoutParams paramsS = (RelativeLayout.LayoutParams) cardFragBinding.ivDislike.getLayoutParams();
+        RelativeLayout.LayoutParams paramsS = (RelativeLayout.LayoutParams) mBinding.ivDislike.getLayoutParams();
         paramsS.setMarginStart(0 - ObjectUtils.getViewSizeByWidthFromMax(200));
-        cardFragBinding.ivDislike.setLayoutParams(paramsS);
+        mBinding.ivDislike.setLayoutParams(paramsS);
 
-        RelativeLayout.LayoutParams paramsE = (RelativeLayout.LayoutParams) cardFragBinding.ivLike.getLayoutParams();
+        RelativeLayout.LayoutParams paramsE = (RelativeLayout.LayoutParams) mBinding.ivLike.getLayoutParams();
         paramsE.setMarginEnd(0 - ObjectUtils.getViewSizeByWidthFromMax(200));
-        cardFragBinding.ivLike.setLayoutParams(paramsE);
+        mBinding.ivLike.setLayoutParams(paramsE);
 
         initArea();
         setAdapter();
 
         if (mineInfo.getMemberType() == 2) {
-            cardFragBinding.ivExposured.setVisibility(View.VISIBLE);
-            cardFragBinding.ivExposure.setVisibility(View.GONE);
+            mBinding.ivExposured.setVisibility(View.VISIBLE);
+            mBinding.ivExposure.setVisibility(View.GONE);
         }
         playExposure();
         mHandler.sendEmptyMessageDelayed(0, 5000);
@@ -199,9 +197,9 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     private void playExposure() {
         ObjectAnimator animator;
         if (mineInfo.getMemberType() == 2) {
-            animator = ObjectAnimator.ofFloat(cardFragBinding.ivExposured, "rotation", -15, 15).setDuration(800);
+            animator = ObjectAnimator.ofFloat(mBinding.ivExposured, "rotation", -15, 15).setDuration(800);
         } else {
-            animator = ObjectAnimator.ofFloat(cardFragBinding.tvCity, "rotation", 0, -5, 0, 5).setDuration(400);
+            animator = ObjectAnimator.ofFloat(mBinding.tvCity, "rotation", 0, -5, 0, 5).setDuration(400);
         }
         animator.setRepeatMode(ValueAnimator.REVERSE);
         animator.setRepeatCount(3);
@@ -210,8 +208,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void setAdapter() {
-        dislikeParams = (RelativeLayout.LayoutParams) cardFragBinding.ivDislike.getLayoutParams();
-        likeParams = (RelativeLayout.LayoutParams) cardFragBinding.ivLike.getLayoutParams();
+        dislikeParams = (RelativeLayout.LayoutParams) mBinding.ivDislike.getLayoutParams();
+        likeParams = (RelativeLayout.LayoutParams) mBinding.ivLike.getLayoutParams();
 
         adapter = new CardAdapter<>(activity, R.layout.item_card, pairInfoList, this);
         cardCallback = new CardItemTouchHelperCallback<>(adapter, pairInfoList);
@@ -462,62 +460,43 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     }
 
     private void startAnimation(View view, float x, int duration) {
-        translate = ObjectAnimator.ofFloat(view, "translationX", 0, x);
-        alphaA = ObjectAnimator.ofFloat(view, "alpha", 0, 1);
-        animatorSet = new AnimatorSet();
-        animatorSet.setDuration(duration);
-        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-        //播放多条动画
-        animatorSet.playTogether(translate, alphaA);
-        animatorSet.start();
-        isAnimation = false;
+        ObjectAnimator translate = ObjectAnimator.ofFloat(view, "translationX", 0, x);
+        translate.setDuration(duration);
+        translate.start();
+
+        new Handler().postDelayed(() -> {
+            mBinding.ivDislike.setVisibility(View.GONE);
+            mBinding.ivLike.setVisibility(View.GONE);
+        }, duration);
     }
 
-    private void initAnimation() {
-        isAnimation = true;
-        cardFragBinding.ivDislike.setAlpha(0f);
-        cardFragBinding.ivLike.setAlpha(0f);
-    }
-
-    private int movedWidth = (int) (MineApp.W / 2f - ObjectUtils.getViewSizeByWidthFromMax(264) / 2f);
 
     private Handler moveHandler = new Handler();
     private Runnable ra = this::onReset;
 
     @Override
     public void onSwiping(View view, float ratio, int direction) {
-//        if (ratio == 0) {
-//            isAnimation = true;
-//        }
         if (direction == CardConfig.SWIPING_LEFT) {
-            cardFragBinding.ivDislike.setVisibility(View.VISIBLE);
-            cardFragBinding.ivLike.setVisibility(View.GONE);
+            mBinding.ivDislike.setVisibility(View.VISIBLE);
+            mBinding.ivLike.setVisibility(View.GONE);
             likeParams.setMarginEnd(0);
             dislikeParams.setMarginStart((int) (movedWidth * Math.abs(ratio)));
-            cardFragBinding.ivDislike.setLayoutParams(dislikeParams);
-            cardFragBinding.ivLike.setLayoutParams(likeParams);
-//            if (isAnimation) {
-//                startAnimation(cardFragBinding.ivDislike, MineApp.W / 2f + ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 100);
-//            }
+            mBinding.ivDislike.setLayoutParams(dislikeParams);
+            mBinding.ivLike.setLayoutParams(likeParams);
         } else if (direction == CardConfig.SWIPING_RIGHT) {
-//            if (isAnimation) {
-//                startAnimation(cardFragBinding.ivLike, 0 - MineApp.W / 2f - ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 100);
-//            }
-            cardFragBinding.ivDislike.setVisibility(View.GONE);
-            cardFragBinding.ivLike.setVisibility(View.VISIBLE);
+            mBinding.ivDislike.setVisibility(View.GONE);
+            mBinding.ivLike.setVisibility(View.VISIBLE);
             likeParams.setMarginEnd((int) (movedWidth * Math.abs(ratio)));
             dislikeParams.setMarginStart(0);
-            cardFragBinding.ivDislike.setLayoutParams(dislikeParams);
-            cardFragBinding.ivLike.setLayoutParams(likeParams);
+            mBinding.ivDislike.setLayoutParams(dislikeParams);
+            mBinding.ivLike.setLayoutParams(likeParams);
         }
         moveHandler.removeCallbacks(ra);
         moveHandler.postDelayed(ra, 1000);
     }
 
-
     @Override
     public void onSwiped(View view, PairInfo pairInfo, int direction) {
-//        initAnimation();
         int likeOtherStatus = 1;
         if (direction == CardConfig.SWIPED_LEFT) {
             canReturn = true;
@@ -538,12 +517,12 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void onReset() {
-        cardFragBinding.ivDislike.setVisibility(View.GONE);
-        cardFragBinding.ivLike.setVisibility(View.GONE);
+        mBinding.ivDislike.setVisibility(View.GONE);
+        mBinding.ivLike.setVisibility(View.GONE);
         likeParams.setMarginEnd(0);
         dislikeParams.setMarginStart(0);
-        cardFragBinding.ivDislike.setLayoutParams(dislikeParams);
-        cardFragBinding.ivLike.setLayoutParams(likeParams);
+        mBinding.ivDislike.setLayoutParams(dislikeParams);
+        mBinding.ivLike.setLayoutParams(likeParams);
     }
 
     /**
@@ -554,18 +533,18 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         imageList.addAll(pairInfo.getImageList());
         disListAdapter.notifyDataSetChanged();
 
-        cardFragBinding.cardRelative.startAnimation(AnimationUtils.loadAnimation(activity,
+        mBinding.cardRelative.startAnimation(AnimationUtils.loadAnimation(activity,
                 R.anim.card_left_out));
 
-        cardFragBinding.cardRelative.postDelayed(() -> {
-            cardFragBinding.cardRelative.setAlpha(1f);
-            cardFragBinding.cardRelative.startAnimation(AnimationUtils.loadAnimation(activity,
+        mBinding.cardRelative.postDelayed(() -> {
+            mBinding.cardRelative.setAlpha(1f);
+            mBinding.cardRelative.startAnimation(AnimationUtils.loadAnimation(activity,
                     R.anim.card_left_in));
 
-            cardFragBinding.cardRelative.postDelayed(() -> {
-                cardFragBinding.cardRelative.setAlpha(0f);
+            mBinding.cardRelative.postDelayed(() -> {
+                mBinding.cardRelative.setAlpha(0f);
 
-                cardFragBinding.cardRelative.postDelayed(() -> {
+                mBinding.cardRelative.postDelayed(() -> {
                     canReturn = true;
                     pairInfoList.add(0, pairInfo);
                     adapter.notifyDataSetChanged();
