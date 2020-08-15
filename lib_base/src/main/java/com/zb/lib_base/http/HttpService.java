@@ -303,7 +303,7 @@ public interface HttpService {
 
     // 搜索
     @GET("api/SimpleRent_search")
-    Observable<BaseResultEntity<List<MemberInfo>>> search(@QueryMap Map<String,String> map);
+    Observable<BaseResultEntity<List<MemberInfo>>> search(@QueryMap Map<String, String> map);
 
     /******************************* 卡片 **********************************/
     // 加入匹配池 (提交当前位置)

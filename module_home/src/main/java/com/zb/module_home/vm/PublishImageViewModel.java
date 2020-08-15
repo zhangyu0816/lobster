@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.maning.imagebrowserlibrary.MNImage;
@@ -41,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.databinding.ViewDataBinding;
 
 public class PublishImageViewModel extends BaseViewModel implements PublishImageVMInterface {
@@ -275,11 +277,23 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     }
 
     private void uploadVideo() {
+        View view = publicImageBinding.recyclerView.getLayoutManager().findViewByPosition(0);
+        ContentLoadingProgressBar progressBar = view.findViewById(R.id.progress);
+        progressBar.setVisibility(View.VISIBLE);
+
+
         uploadVideoApi api = new uploadVideoApi(new HttpOnNextListener<ResourceUrl>() {
             @Override
             public void onNext(ResourceUrl o) {
                 videoUrl = o.getUrl();
                 publishDyn("");
+            }
+
+            @Override
+            public void onLoading(long contentLength, long bytesWritten) {
+                super.onLoading(contentLength, bytesWritten);
+                progressBar.setMax((int) contentLength);
+                progressBar.setProgress((int) bytesWritten);
             }
         }, activity).setFile(new File(videoUrl));
         HttpUploadManager.getInstance().doHttpDeal(api);

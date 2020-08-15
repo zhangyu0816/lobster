@@ -1,6 +1,7 @@
 package com.zb.lib_base.api;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.zb.lib_base.http.FileRequestBody;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.model.BaseEntity;
@@ -23,13 +24,14 @@ public class uploadVideoApi extends BaseEntity<ResourceUrl> {
 
     public uploadVideoApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
-        setDialogTitle("正在上传视频");
+        setShowProgress(false);
     }
 
     @Override
     public Observable getObservable(HttpService methods) {
         RequestBody requestFile = RequestBody.create(MediaType.parse("video/mp4"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+        FileRequestBody fileRequest = new FileRequestBody(requestFile, getListener());
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), fileRequest);
         return methods.uploadVideo(RequestBody.create(MediaType.parse("multipart/form-data"), file.getName()), body);
     }
 }
