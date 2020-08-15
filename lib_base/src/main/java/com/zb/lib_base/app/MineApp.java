@@ -62,6 +62,7 @@ public class MineApp extends MultiDexApplication {
     public static Map<String, CutImageView> cutImageViewMap = new HashMap<>();
     public static Typeface type;
     public static Typeface simplifiedType;
+    public static Typeface QingSongShouXieTiType;
 
     public static String cityName = "";
     public static String versionName;
@@ -170,6 +171,7 @@ public class MineApp extends MultiDexApplication {
         H = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
         type = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/semibold.ttf");
         simplifiedType = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/simplified.ttf");
+        QingSongShouXieTiType = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/QingSongShouXieTi.ttf");
         initRouter(this);
         initRealm();
         DisplayUtils.init(this);

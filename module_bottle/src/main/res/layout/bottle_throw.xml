@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -33,6 +32,13 @@
             name="showBtn"
             type="boolean" />
 
+        <variable
+            name="memberInfo"
+            type="com.zb.lib_base.model.MemberInfo" />
+
+        <variable
+            name="info"
+            type="String" />
 
     </data>
 
@@ -50,17 +56,11 @@
             android:id="@+id/linearLayout2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_above="@+id/bottom_layout"
+            android:layout_centerHorizontal="true"
             android:gravity="center_horizontal"
             android:orientation="vertical"
             android:visibility="@{showBtn?View.VISIBLE:View.GONE}">
-
-            <ImageView
-                android:id="@+id/imageView3"
-                onClickDelayed="@{viewModel::collectBottle}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@mipmap/throw_bottle_icon" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -69,42 +69,59 @@
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/imageView3"
+                onClickDelayed="@{v->viewModel.findBottle()}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/throw_bottle_icon"
+                android:gravity="center"
+                android:text="捡一个瓶子"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal"
+            android:paddingBottom="40dp"
             android:visibility="@{showBtn?View.VISIBLE:View.GONE}">
 
             <TextView
                 onClickDelayed="@{viewModel::throwBottle}"
                 android:layout_width="0dp"
                 android:layout_height="42dp"
-                android:layout_margin="40dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_bg_white_radius60"
+                android:background="@drawable/btn_bg_black_252_7f_radius60"
                 android:gravity="center"
                 android:text="扔一个瓶子"
-                android:textColor="@color/black_252"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="40dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
                 android:layout_weight="1">
 
                 <TextView
                     onClickDelayed="@{viewModel::myBottle}"
                     android:layout_width="match_parent"
                     android:layout_height="42dp"
-                    android:background="@drawable/btn_bg_white_radius60"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/btn_bg_black_252_7f_radius60"
                     android:gravity="center"
                     android:text="我的漂流瓶"
-                    android:textColor="@color/black_252"
+                    android:textColor="@color/white"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -145,7 +162,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="34dp"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="150dp"
                 android:background="@mipmap/bottle_star_icon" />
 
         </RelativeLayout>
@@ -160,78 +177,145 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <LinearLayout
-                viewHeightSize="@{-2}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(980)}"
+            <RelativeLayout
+                android:id="@+id/top_layout"
+                viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(240)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(1035)}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:background="@mipmap/bottle_content_bg"
-                android:orientation="vertical">
+                android:layout_marginTop="82dp"
+                android:visibility="@{bottleInfo.driftBottleId==0?View.INVISIBLE:View.VISIBLE}">
 
-                <RelativeLayout
+                <ImageView
+                    imageRes="@{ObjectUtils.getBottleTopRes()}"
+                    isBlur="@{true}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(340)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(1035)}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="30dp">
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        adapter="@{viewModel.adapter}"
-                        recyclerType="@{5}"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="@{bottleInfo.driftBottleId==0?View.GONE:View.VISIBLE}" />
+                <RelativeLayout
+                    android:id="@+id/logo_layout"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(180)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(180)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="30dp">
 
-                    <EditText
-                        android:id="@+id/ed_content"
-                        android:layout_width="match_parent"
+                    <View
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(180)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(180)}"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/circle_white" />
+
+                    <ImageView
+                        defaultRes="@{ObjectUtils.getDefaultRes()}"
+                        imageUrl="@{memberInfo.image}"
+                        isBlur="@{true}"
+                        isCircle="@{true}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(176)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(176)}"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:gravity="top"
-                        android:hint="在这里写下你想说的话...(100字)"
-                        android:lineSpacingExtra="10dp"
-                        android:maxLength="100"
-                        android:maxLines="10"
-                        android:minLines="5"
-                        android:textColor="@color/black_4d4"
-                        android:textColorHint="#C3BDCD"
-                        android:textCursorDrawable="@drawable/cursor_color_black_4d4"
-                        android:textSize="16sp"
-                        android:visibility="@{bottleInfo.driftBottleId==0?View.VISIBLE:View.GONE}" />
+                        android:layout_centerInParent="true" />
                 </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/tv_sure"
-                    onClickDelayed="@{viewModel::sure}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="30dp"
-                    android:background="@drawable/gradient_purple_6d5_ae7"
-                    android:gravity="center"
-                    android:paddingStart="30dp"
-                    android:paddingEnd="30dp"
-                    android:text="@{bottleInfo.driftBottleId==0?@string/bottle_throw:@string/bottle_reply}"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_toStartOf="@+id/tv_read"
+                    android:layout_toEndOf="@+id/logo_layout"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="5dp"
+                            android:singleLine="true"
+                            android:text="@{memberInfo.nick}"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@mipmap/vip_icon" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{info}"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/tv_cancel"
-                    onClickDelayed="@{viewModel::cancel}"
+                    android:id="@+id/tv_read"
+                    onClickDelayed="@{viewModel::sure}"
                     android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="30dp"
-                    android:background="@drawable/btn_bg_black_e5e_radius60"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="30dp"
+                    android:background="@drawable/gradient_purple_6d5_ae7"
                     android:gravity="center"
-                    android:paddingStart="30dp"
-                    android:paddingEnd="30dp"
-                    android:text="扔回海里"
-                    android:textColor="@color/black_4d4"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:visibility="@{bottleInfo.driftBottleId==0?View.GONE:View.VISIBLE}" />
-            </LinearLayout>
+                    android:paddingStart="11dp"
+                    android:paddingEnd="11dp"
+                    android:text="立即回复"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/ed_content"
+                viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(1200)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(1050)}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/top_layout"
+                android:layout_centerHorizontal="true"
+                android:background="@mipmap/bottle_content_bg"
+                android:gravity="top"
+                android:hint="在这里写下你想说的话...(100字)"
+                android:lineSpacingExtra="15dp"
+                android:maxLength="100"
+                android:minLines="5"
+                android:paddingStart="30dp"
+                android:paddingTop="80dp"
+                android:paddingEnd="30dp"
+                android:paddingBottom="80dp"
+                android:textColor="@color/black_252"
+                android:textColorHint="@color/black_9"
+                android:textCursorDrawable="@drawable/cursor_color_black_4d4"
+                android:textSize="20sp"
+                tools:text="是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类" />
+
+            <ImageView
+                onClickDelayed="@{viewModel::cancel}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(204)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(600)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ed_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:background="@mipmap/throw_back_icon" />
         </RelativeLayout>
 
     </RelativeLayout>

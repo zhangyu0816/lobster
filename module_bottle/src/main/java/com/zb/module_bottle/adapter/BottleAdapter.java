@@ -4,11 +4,9 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.adapter.BindingItemAdapter;
 import com.zb.lib_base.adapter.ItemTouchHelperAdapter;
 import com.zb.lib_base.adapter.RecyclerHolder;
-import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_bottle.BR;
-import com.zb.module_bottle.databinding.ItemBottleContentBinding;
 import com.zb.module_bottle.vm.BottleListViewModel;
 
 import java.util.List;
@@ -44,9 +42,6 @@ public class BottleAdapter<T> extends BindingItemAdapter<T> implements ItemTouch
         holder.binding.setVariable(BR.item, t);
         holder.binding.setVariable(BR.position, position);
         holder.binding.setVariable(BR.isSelect, position == selectIndex);
-        if (holder.binding instanceof ItemBottleContentBinding) {
-            ((ItemBottleContentBinding) holder.binding).tvBottle.setTypeface(MineApp.type);
-        }
         if (viewModel != null) {
             holder.binding.setVariable(BR.viewModel, viewModel);
         }

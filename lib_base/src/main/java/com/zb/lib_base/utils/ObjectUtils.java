@@ -97,6 +97,16 @@ public class ObjectUtils {
         return R.mipmap.emoji_delete;
     }
 
+    // 漂流瓶顶部背景图
+    public static int getBottleTopRes() {
+        return R.mipmap.bottle_top_icon;
+    }
+
+    // 漂流瓶顶部背景图
+    public static int getHaidi1Res() {
+        return R.mipmap.haidi1;
+    }
+
     // 线条颜色
     public static int getLineColor() {
         return R.color.black_efe;

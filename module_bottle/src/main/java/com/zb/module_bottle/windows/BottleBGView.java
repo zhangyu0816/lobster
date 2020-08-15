@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.ObjectUtils;
@@ -23,7 +23,7 @@ import androidx.annotation.Nullable;
  * @date: 2020/8/7 0007
  * @describe:
  */
-public class BottleBGView extends LinearLayout {
+public class BottleBGView extends RelativeLayout {
 
     private ImageView lsxq, hd_s, plp_d, bl, dg, plp, hd_q, jg, xx, fsxq, ivWang, ivWangBack, ivBottle;
     private AnimatorSet set = new AnimatorSet();

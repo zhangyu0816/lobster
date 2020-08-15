@@ -12,24 +12,22 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.castBottleApi;
 import com.zb.lib_base.api.findBottleApi;
+import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.pickBottleApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.BottleInfo;
+import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_bottle.BR;
 import com.zb.module_bottle.R;
-import com.zb.module_bottle.adapter.BottleAdapter;
 import com.zb.module_bottle.databinding.BottleThrowBinding;
 import com.zb.module_bottle.iv.BottleThrowVMInterface;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
 
@@ -42,9 +40,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     private AnimatorSet animatorSet = new AnimatorSet();
     private long time = 1500;
 
-    public BottleAdapter adapter;
     private BottleInfo bottleInfo;
-    private List<String> textList = new ArrayList<>();
     private boolean isFirst = true;
 
     @Override
@@ -53,6 +49,9 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         mBinding = (BottleThrowBinding) binding;
         mBinding.setIsBottle(false);
         mBinding.setShowBtn(true);
+        mBinding.edContent.setTypeface(MineApp.QingSongShouXieTiType);
+        mBinding.setMemberInfo(new MemberInfo());
+        mBinding.setInfo("");
         updateContactNumReceiver = new BaseReceiver(activity, "lobster_updateContactNum") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -81,7 +80,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         mPlayer = MediaPlayer.create(activity, R.raw.sea_wave);
         new Handler().postDelayed(() -> appSound(), 200);
 
-        ObjectAnimator translateX = ObjectAnimator.ofFloat(mBinding.ivStar, "translationX", 0, MineApp.W - ObjectUtils.getViewSizeByWidthFromMax(450)).setDuration(time);
+        ObjectAnimator translateX = ObjectAnimator.ofFloat(mBinding.ivStar, "translationX", 0, MineApp.W - ObjectUtils.getViewSizeByWidthFromMax(250)).setDuration(time);
 
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(mBinding.ivBg, "scaleX", 1, 1.5f).setDuration(time);
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(mBinding.ivBg, "scaleY", 1, 1.5f).setDuration(time);
@@ -96,12 +95,6 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
             mBinding.bottleWhiteBack.bottleBg.startBg();
         }, time);
 
-        setAdapter();
-    }
-
-    @Override
-    public void setAdapter() {
-        adapter = new BottleAdapter<>(activity, R.layout.item_bottle_content, textList);
     }
 
     public void onDestroy() {
@@ -150,17 +143,14 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     }
 
     @Override
-    public void collectBottle(View view) {
-        findBottle();
-    }
-
-    @Override
     public void throwBottle(View view) {
         bottleInfo = new BottleInfo();
         mBinding.setTitle("扔一个瓶子");
         mBinding.setBottleInfo(bottleInfo);
         mBinding.setIsBottle(true);
         mBinding.setShowBtn(false);
+        mBinding.edContent.setText("");
+        mBinding.edContent.setEnabled(true);
         mBinding.bottleWhiteBack.bottleBg.stopBg();
     }
 
@@ -176,23 +166,32 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
 
     @Override
     public void findBottle() {
-        textList.clear();
-        adapter.notifyDataSetChanged();
-        mBinding.setShowBtn(false);
-        mBinding.bottleWhiteBack.bottleBg.stopBg();
         findBottleApi api = new findBottleApi(new HttpOnNextListener<BottleInfo>() {
             @Override
             public void onNext(BottleInfo o) {
+                mBinding.setShowBtn(false);
+                mBinding.bottleWhiteBack.bottleBg.stopBg();
                 bottleInfo = o;
                 mBinding.setBottleInfo(bottleInfo);
+                otherInfo(bottleInfo.getUserId());
                 mBinding.bottleWhiteBack.bottleBg.startWang(() -> {
-                    textList.addAll(Arrays.asList(bottleInfo.getText().split("")));
-                    adapter.notifyDataSetChanged();
+                    mBinding.edContent.setText(bottleInfo.getText());
+                    mBinding.edContent.setEnabled(false);
                     mBinding.setIsBottle(true);
-                    mBinding.bottleWhiteBack.bottleBg.startBg();
                 });
             }
         }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void otherInfo(long otherUserId) {
+        otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
+            @Override
+            public void onNext(MemberInfo o) {
+                mBinding.setMemberInfo(o);
+                mBinding.setInfo((o.getSex() == 0 ? "女 " : "男 ") + o.getAge() + "岁 " + DateUtil.getConstellations(o.getBirthday()));
+            }
+        }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -229,10 +228,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
             @Override
             public void onNext(Object o) {
                 mBinding.setIsBottle(false);
-                mBinding.bottleWhiteBack.bottleBg.throwBottle(() -> {
-                    mBinding.edContent.setText("");
-                    close(null);
-                });
+                mBinding.bottleWhiteBack.bottleBg.throwBottle(() -> close(null));
             }
         }, activity).setText(mBinding.edContent.getText().toString());
         HttpManager.getInstance().doHttpDeal(api);
