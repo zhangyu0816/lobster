@@ -161,27 +161,12 @@
                                     tools:text="温州市" />
 
                                 <TextView
-                                    android:id="@+id/tv_time"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_marginEnd="15dp"
-                                    android:background="@{viewModel.discoverInfo==null?@drawable/default_bg:@drawable/empty_bg}"
-                                    android:minWidth="30dp"
-                                    android:text="@{viewModel.discoverInfo.createTime.substring(11,16)}"
-                                    android:textColor="@color/black_c3b"
-                                    android:textSize="12sp"
-                                    android:textStyle="bold"
-                                    tools:text="20:00" />
-
-
-                                <TextView
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_width="wrap_content"
-                                    android:layout_below="@+id/tv_time"
                                     android:layout_height="24dp"
-                                    android:layout_marginEnd="15dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
                                     android:layout_marginTop="5dp"
+                                    android:layout_marginEnd="15dp"
                                     android:background="@{isAttention?@drawable/btn_bg_black_c3b_radius60:@drawable/btn_bg_purple_7a4_radius60}"
                                     android:gravity="center"
                                     android:onClick="@{viewModel::follow}"
@@ -209,6 +194,20 @@
                             android:textSize="14sp"
                             android:visibility="@{viewModel.discoverInfo.text.isEmpty()?View.GONE:View.VISIBLE}"
                             tools:text="文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职文职" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="15dp"
+                            android:layout_gravity="end"
+                            android:layout_marginTop="15dp"
+                            android:background="@{viewModel.discoverInfo==null?@drawable/default_bg:@drawable/empty_bg}"
+                            android:minWidth="30dp"
+                            android:text="@{viewModel.discoverInfo.createTime.substring(5,16)}"
+                            android:textColor="@color/black_c3b"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            tools:text="20:00" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
