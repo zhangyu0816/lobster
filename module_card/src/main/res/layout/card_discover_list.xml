@@ -5,33 +5,32 @@
 
     <data>
 
-        <import type="com.zb.lib_base.utils.ObjectUtils" />
+        <import type="com.zb.lib_base.activity.BaseActivity" />
 
         <import type="android.view.View" />
 
-        <variable
-            name="viewModel"
-            type="com.zb.module_mine.vm.MineViewModel" />
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
 
         <variable
-            name="hasNewBeLike"
+            name="viewModel"
+            type="com.zb.module_card.vm.DiscoverListViewModel" />
+
+        <variable
+            name="isAttention"
             type="boolean" />
 
         <variable
-            name="mineNewsCount"
-            type="com.zb.lib_base.model.MineNewsCount" />
+            name="memberInfo"
+            type="com.zb.lib_base.model.MemberInfo" />
 
         <variable
             name="contactNum"
             type="com.zb.lib_base.model.ContactNum" />
 
-        <variable
-            name="mineInfo"
-            type="com.zb.lib_base.model.MineInfo" />
 
     </data>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -40,72 +39,56 @@
             android:id="@+id/top_relative"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp">
+            android:background="@android:color/white">
 
             <ImageView
-                android:id="@+id/iv_news"
-                onClickDelayed="@{viewModel::toNews}"
+                android:id="@+id/iv_back"
+                onClickDelayed="@{viewModel::back}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:padding="20dp"
-                app:srcCompat="@mipmap/news_icon" />
+                android:padding="15dp"
+                app:srcCompat="@mipmap/back_black_icon" />
 
             <TextView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_alignEnd="@+id/iv_news"
-                android:layout_marginTop="13dp"
-                android:layout_marginEnd="13dp"
-                android:background="@drawable/circle_white_red"
-                android:gravity="center"
-                android:text="@{ObjectUtils.count(mineNewsCount.friendDynamicGoodNum+mineNewsCount.friendDynamicReviewNum+mineNewsCount.friendDynamicGiftNum+mineNewsCount.systemNewsNum)}"
-                android:textColor="@android:color/white"
-                android:textSize="10sp"
-                android:visibility="@{(mineNewsCount.friendDynamicGoodNum+mineNewsCount.friendDynamicReviewNum+mineNewsCount.friendDynamicGiftNum+mineNewsCount.systemNewsNum)==0?View.GONE:View.VISIBLE}"
-                tools:text="···" />
-
-            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@{memberInfo.nick}"
+                android:textColor="@color/black_252"
+                android:textSize="18sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{mineInfo.nick}"
-                    android:textColor="@color/black_252"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    tools:text="租我吧" />
-
-                <ImageView
-                    onClickDelayed="@{viewModel::openVip}"
-                    viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(105)}"
-                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(183)}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="3dp"
-                    android:background="@mipmap/vip_icon"
-                    android:visibility="@{mineInfo.memberType==2?View.VISIBLE:View.GONE}" />
-            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="29dp"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/iv_more"
+                android:background="@{isAttention?@drawable/btn_bg_black_c3b_radius60:@drawable/btn_bg_purple_7a4_radius60}"
+                android:gravity="center"
+                android:onClick="@{viewModel::follow}"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@{isAttention?@string/attention_false:@string/attention_true}"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:visibility="@{viewModel.otherUserId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
 
             <ImageView
-                onClickDelayed="@{viewModel::toSetting}"
+                android:id="@+id/iv_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
+                android:onClick="@{viewModel::more}"
                 android:padding="15dp"
-                app:srcCompat="@mipmap/set_icon" />
+                app:srcCompat="@mipmap/back_more_icon" />
         </RelativeLayout>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/top_relative"
             android:splitMotionEvents="false">
 
             <com.google.android.material.appbar.AppBarLayout
@@ -141,9 +124,8 @@
                             <ImageView
                                 android:id="@+id/iv_image"
                                 defaultRes="@{ObjectUtils.getDefaultRes()}"
-                                imageUrl="@{mineInfo.image}"
+                                imageUrl="@{memberInfo.image}"
                                 isCircle="@{true}"
-                                onClickDelayed="@{viewModel::toEditMember}"
                                 viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(220)}"
                                 viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(220)}"
                                 android:layout_width="76dp"
@@ -156,7 +138,7 @@
                                 android:layout_alignParentBottom="true"
                                 android:layout_centerHorizontal="true"
                                 android:background="@mipmap/real_icon"
-                                android:visibility="@{mineInfo.faceAttest==1?View.VISIBLE:View.GONE}" />
+                                android:visibility="@{memberInfo.faceAttest==1?View.VISIBLE:View.GONE}" />
                         </RelativeLayout>
 
                         <LinearLayout
@@ -168,7 +150,6 @@
                             android:orientation="horizontal">
 
                             <LinearLayout
-                                onClickDelayed="@{v->viewModel.contactNumDetail(0)}"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -202,7 +183,6 @@
                             </LinearLayout>
 
                             <LinearLayout
-                                onClickDelayed="@{v->viewModel.contactNumDetail(1)}"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -229,7 +209,6 @@
                             </LinearLayout>
 
                             <LinearLayout
-                                onClickDelayed="@{v->viewModel.contactNumDetail(2)}"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -242,29 +221,16 @@
                                     android:gravity="center"
                                     android:orientation="vertical">
 
-                                    <RelativeLayout
+                                    <TextView
+                                        android:id="@+id/tv_beLike"
                                         android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content">
-
-                                        <TextView
-                                            android:id="@+id/tv_beLike"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:singleLine="true"
-                                            android:text='@{String.format("%d",contactNum.beLikeCount)}'
-                                            android:textColor="@color/black_252"
-                                            android:textSize="18sp"
-                                            android:textStyle="bold"
-                                            tools:text="3124125" />
-
-                                        <TextView
-                                            android:layout_width="5dp"
-                                            android:layout_height="5dp"
-                                            android:layout_alignEnd="@+id/tv_beLike"
-                                            android:layout_marginTop="5dp"
-                                            android:background="@drawable/circle_red"
-                                            android:visibility="@{hasNewBeLike?View.VISIBLE:View.GONE}" />
-                                    </RelativeLayout>
+                                        android:layout_height="wrap_content"
+                                        android:singleLine="true"
+                                        android:text='@{String.format("%d",contactNum.beLikeCount)}'
+                                        android:textColor="@color/black_252"
+                                        android:textSize="18sp"
+                                        android:textStyle="bold"
+                                        tools:text="3124125" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
@@ -286,23 +252,11 @@
                             android:layout_marginTop="10dp"
                             android:layout_toEndOf="@+id/image_layout"
                             android:singleLine="true"
-                            android:text="@{mineInfo.personalitySign.empty?@string/mine_sign_content:mineInfo.personalitySign}"
+                            android:text="@{memberInfo.personalitySign.empty?@string/mine_sign_content:memberInfo.personalitySign}"
                             android:textColor="@color/black_4d4"
                             android:textSize="14sp"
                             android:textStyle="bold"
                             tools:text="为了减肥了我劳务纠纷另外二九六我来我家 " />
-
-                        <ImageView
-                            onClickDelayed="@{viewModel::openVip}"
-                            viewHeightSize="@{ObjectUtils.getVipBgHeight(0.95f)}"
-                            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.95f)}"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/image_layout"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="15dp"
-                            android:background="@mipmap/vip_long_icon"
-                            android:visibility="@{mineInfo.memberType==2?View.GONE:View.VISIBLE}" />
                     </RelativeLayout>
                 </androidx.appcompat.widget.Toolbar>
 
@@ -340,34 +294,5 @@
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-        <RelativeLayout
-            onClickDelayed="@{viewModel::publishDiscover}"
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(237)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(237)}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="15dp">
-
-            <View
-                android:id="@+id/circle_view"
-                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(237)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(237)}"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerInParent="true"
-                android:background="@drawable/circle_yellow_fbc" />
-
-            <ImageView
-                imageRes="@{ObjectUtils.getDiscoverRes()}"
-                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(180)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(180)}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
-        </RelativeLayout>
-    </RelativeLayout>
+    </LinearLayout>
 </layout>

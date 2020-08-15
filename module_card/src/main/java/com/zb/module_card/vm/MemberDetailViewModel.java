@@ -1,21 +1,24 @@
 package com.zb.module_card.vm;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.app.abby.xbanner.Ads;
 import com.app.abby.xbanner.XBanner;
+import com.maning.imagebrowserlibrary.MNImage;
 import com.umeng.socialize.media.UMImage;
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
-import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.api.attentionOtherApi;
 import com.zb.lib_base.api.attentionStatusApi;
 import com.zb.lib_base.api.cancelAttentionApi;
 import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.memberInfoConfApi;
 import com.zb.lib_base.api.otherInfoApi;
+import com.zb.lib_base.api.personOtherDynApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.LikeDb;
@@ -24,12 +27,12 @@ import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.CollectID;
+import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
-import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -48,7 +51,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
-import androidx.fragment.app.Fragment;
 import io.realm.Realm;
 
 public class MemberDetailViewModel extends BaseViewModel implements MemberDetailVMInterface {
@@ -57,11 +59,13 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     public boolean showLike;
     public MemberInfo memberInfo;
     public CardAdapter tagAdapter;
+    public CardAdapter discoverAdapter;
     private List<String> tagList = new ArrayList<>();
-    private List<Fragment> fragments = new ArrayList<>();
+    private List<DiscoverInfo> discoverInfoList = new ArrayList<>();
     private AreaDb areaDb;
-    public MineInfo mineInfo;
+    private MineInfo mineInfo;
     private LikeDb likeDb;
+    private BaseReceiver attentionReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -71,26 +75,31 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         mineInfo = mineInfoDb.getMineInfo();
 
         mBinding = (CardMemberDetailBinding) binding;
-        mBinding.setVariable(BR.baseInfo, "");
+        mBinding.setConstellation("");
         mBinding.setIsAttention(false);
+        mBinding.setInfo("");
         AdapterBinding.viewSize(mBinding.banner, MineApp.W, MineApp.W);
 
+        attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.setIsAttention(intent.getBooleanExtra("isAttention", false));
+            }
+        };
+
         setAdapter();
-        initFragments();
         otherInfo();
     }
 
     @Override
     public void setAdapter() {
         tagAdapter = new CardAdapter<>(activity, R.layout.item_card_tag, tagList, this);
+
+        discoverAdapter = new CardAdapter<>(activity, R.layout.item_card_discover_image, discoverInfoList, this);
     }
 
-    private void initFragments() {
-        fragments.clear();
-        fragments.add(FragmentUtils.getCardMemberDiscoverFragment(otherUserId));
-        fragments.add(FragmentUtils.getCardMemberVideoFragment(otherUserId));
-        mBinding.viewPage.setAdapter(new FragmentAdapter(activity.getSupportFragmentManager(), fragments));
-        initTabLayout(new String[]{"动态", "小视频"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_4d4, R.color.black_c3b, 0);
+    public void onDestroy() {
+        attentionReceiver.unregisterReceiver();
     }
 
     @Override
@@ -118,6 +127,11 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     }
 
     @Override
+    public void toDiscoverList(View view) {
+        ActivityUtils.getCardDiscoverList(otherUserId, mBinding.getIsAttention(), memberInfo);
+    }
+
+    @Override
     public void otherInfo() {
         otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
             @Override
@@ -128,16 +142,17 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     tagList.addAll(Arrays.asList(tags.split("#")));
                     tagAdapter.notifyDataSetChanged();
                 }
+                mBinding.setConstellation(DateUtil.getConstellations(memberInfo.getBirthday()));
+
                 String distant = "";
                 if (!memberInfo.getDistance().isEmpty()) {
                     distant = String.format("%.1f", Float.parseFloat(memberInfo.getDistance()) / 1000f) + "km/";
                 }
 
-                String sex = memberInfo.getSex() == 0 ? "女/" : "男/";
-                String constellation = DateUtil.getConstellations(memberInfo.getBirthday()) + "/";
                 String cityName = areaDb.getCityName(memberInfo.getCityId()) + " ";
                 String districtName = areaDb.getDistrictName(memberInfo.getDistrictId());
-                mBinding.setVariable(BR.baseInfo, distant + sex + constellation + cityName + districtName);
+
+                mBinding.setInfo(distant + (memberInfo.getSex() == 0 ? "女/" : "男/") + cityName + " " + districtName);
 
                 List<Ads> adsList = new ArrayList<>();
                 if (!memberInfo.getMoreImages().isEmpty()) {
@@ -156,9 +171,33 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 }
                 showBanner(adsList);
                 attentionStatus();
+                personOtherDyn();
                 mBinding.setVariable(BR.viewModel, MemberDetailViewModel.this);
             }
         }, activity).setOtherUserId(otherUserId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void personOtherDyn() {
+        personOtherDynApi api = new personOtherDynApi(new HttpOnNextListener<List<DiscoverInfo>>() {
+            @Override
+            public void onNext(List<DiscoverInfo> o) {
+                mBinding.discoverLayout.setVisibility(View.VISIBLE);
+                discoverInfoList.addAll(o);
+                discoverAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    mBinding.discoverLayout.setVisibility(View.GONE);
+                }
+            }
+        }, activity)
+                .setDynType(-4)
+                .setOtherUserId(otherUserId)
+                .setPageNo(1);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -278,7 +317,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 String content = "";
                 if (memberInfo.getServiceTags().isEmpty()) {
                     content = o.getText();
-                }else{
+                } else {
                     content = memberInfo.getServiceTags().substring(1, memberInfo.getServiceTags().length() - 1);
                     content = "兴趣：" + content.replace("#", ",");
                 }
@@ -348,11 +387,16 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
 
     // 显示相册
     private void showBanner(List<Ads> adList) {
+        ArrayList<String> imageList = new ArrayList<>();
+        for (Ads item : adList) {
+            imageList.add(item.getSmallImage());
+        }
         mBinding.banner.setImageScaleType(ImageView.ScaleType.FIT_XY)
                 .setAds(adList)
                 .setImageLoader((context, ads, image, position) -> AdapterBinding.loadImage(image, ads.getSmallImage(), 0,
                         ObjectUtils.getDefaultRes(), MineApp.W, MineApp.W,
                         false, false, 0, false, 0, false))
+                .setBannerPageListener(item -> MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, item, false, null))
                 .setBannerTypes(XBanner.CIRCLE_INDICATOR_TITLE)
                 .setIndicatorGravity(XBanner.INDICATOR_START)
                 .setDelay(3000)

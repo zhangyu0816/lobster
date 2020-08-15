@@ -11,6 +11,6 @@ public abstract class CardBaseActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.CardTheme);
         super.onCreate(savedInstanceState);
-        StatusBarUtil.statusBarLightMode(this);
+        StatusBarUtil.statusBarLightModeNotFull(this);
     }
 }

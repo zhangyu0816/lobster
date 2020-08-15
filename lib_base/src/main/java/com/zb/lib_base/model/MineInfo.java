@@ -23,6 +23,7 @@ public class MineInfo extends RealmObject {
     long cityId;    //城市ID
     long districtId;   //地区id
     String serviceTags = "";
+    int faceAttest;
 
     public long getUserId() {
         return userId;
@@ -166,5 +167,13 @@ public class MineInfo extends RealmObject {
 
     public void setServiceTags(String serviceTags) {
         this.serviceTags = serviceTags;
+    }
+
+    public int getFaceAttest() {
+        return faceAttest;
+    }
+
+    public void setFaceAttest(int faceAttest) {
+        this.faceAttest = faceAttest;
     }
 }

@@ -18,10 +18,9 @@ import java.util.Random;
 import androidx.databinding.DataBindingUtil;
 
 public class SuperLikeView extends RelativeLayout {
-    private long time = 1000;
+    private long time = 500;
     private AnimatorSet animatorSet = new AnimatorSet();
     private Random ra = new Random();
-    private float scale = 2;
     private SuperLikeBinding mBinding;
 
     public SuperLikeView(Context context) {
@@ -39,7 +38,7 @@ public class SuperLikeView extends RelativeLayout {
         init(context);
     }
 
-    private ObjectAnimator ivStar1X, ivStar1Y, ivStar2X, ivStar2Y, ivStar1A, ivStar2A, scale1X, scale1Y, scale2X, scale2Y;
+    private ObjectAnimator ivStar1X, ivStar1Y, ivStar2X, ivStar2Y;
 
     private void init(Context context) {
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.super_like, null, false);
@@ -70,7 +69,7 @@ public class SuperLikeView extends RelativeLayout {
             mBinding.ivStar2.setVisibility(GONE);
         }, time);
 
-        new Handler().postDelayed(this::play, (time + 3000));
+        new Handler().postDelayed(this::play, (time + 2000));
     }
 
 }

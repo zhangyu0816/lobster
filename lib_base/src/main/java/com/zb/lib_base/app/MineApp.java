@@ -99,6 +99,7 @@ public class MineApp extends MultiDexApplication {
     public static int minAge = 18;
 
     public static List<DiscoverInfo> discoverInfoList = new ArrayList<>();
+    public static Map<String,Integer> constellationMap =  new HashMap<>();
 
     static {
         //设置全局的Header构建器
@@ -146,6 +147,19 @@ public class MineApp extends MultiDexApplication {
         tranStatusMap.put(40, "待卖家发货");
         tranStatusMap.put(46, "待买家确定收货");
         tranStatusMap.put(200, "交易成功");
+
+        constellationMap.put("摩羯座", R.drawable.btn_bg_moxie_radius2);
+        constellationMap.put("水瓶座", R.drawable.btn_bg_shuiping_radius2);
+        constellationMap.put("双鱼座", R.drawable.btn_bg_shuangyu_radius2);
+        constellationMap.put("白羊座", R.drawable.btn_bg_baiyang_radius2);
+        constellationMap.put("金牛座", R.drawable.btn_bg_jinniu_radius2);
+        constellationMap.put("双子座", R.drawable.btn_bg_shuangzi_radius2);
+        constellationMap.put("巨蟹座", R.drawable.btn_bg_juxie_radius2);
+        constellationMap.put("狮子座", R.drawable.btn_bg_shizi_radius2);
+        constellationMap.put("处女座", R.drawable.btn_bg_chunv_radius2);
+        constellationMap.put("天秤座", R.drawable.btn_bg_tianping_radius2);
+        constellationMap.put("天蝎座", R.drawable.btn_bg_tianxie_radius2);
+        constellationMap.put("射手座", R.drawable.btn_bg_sheshou_radius2);
     }
 
     @Override

@@ -3,7 +3,12 @@
     package="com.zb.module_card">
 
     <application android:theme="@style/CardTheme">
-        <activity android:name=".activity.MemberDetailActivity" />
+        <activity
+            android:name=".activity.MemberDetailActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.DiscoverListActivity"
+            android:launchMode="singleTask" />
     </application>
 
 </manifest>

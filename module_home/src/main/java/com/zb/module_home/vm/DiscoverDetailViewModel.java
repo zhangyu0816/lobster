@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import com.app.abby.xbanner.Ads;
 import com.app.abby.xbanner.XBanner;
 import com.google.android.material.appbar.AppBarLayout;
+import com.maning.imagebrowserlibrary.MNImage;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -95,7 +96,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         mBinding = (HomeDiscoverDetailBinding) binding;
         mineInfo = mineInfoDb.getMineInfo();
         likeDb = new LikeDb(Realm.getDefaultInstance());
-        AdapterBinding.viewSize(mBinding.banner, MineApp.W, ObjectUtils.getLogoHeight(1.0f));
+        AdapterBinding.viewSize(mBinding.banner, MineApp.W, MineApp.W);
         mBinding.setContent("");
         mBinding.setName("");
         mBinding.setListNum(10);
@@ -298,7 +299,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
                 if (params.getScrollFlags() == 0) {
-                    params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS_COLLAPSED|AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);//0不能伸缩
+                    params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS_COLLAPSED | AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);//0不能伸缩
                     mBinding.toolbar.setLayoutParams(params);
                 }
             }
@@ -561,11 +562,16 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 
     // 显示相册
     private void showBanner(List<Ads> adList) {
+        ArrayList<String> imageList = new ArrayList<>();
+        for (Ads item : adList) {
+            imageList.add(item.getSmallImage());
+        }
         mBinding.banner.setImageScaleType(ImageView.ScaleType.FIT_XY)
                 .setAds(adList)
                 .setImageLoader((context, ads, image, position) -> AdapterBinding.loadImage(image, ads.getSmallImage(), 0,
-                        ObjectUtils.getDefaultRes(), MineApp.W, ObjectUtils.getLogoHeight(1.0f),
+                        ObjectUtils.getDefaultRes(), MineApp.W, MineApp.W,
                         false, false, 0, false, 0, false))
+                .setBannerPageListener(item -> MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, item, false, null))
                 .setBannerTypes(XBanner.CIRCLE_INDICATOR_TITLE)
                 .setIndicatorGravity(XBanner.INDICATOR_START)
                 .setDelay(3000)

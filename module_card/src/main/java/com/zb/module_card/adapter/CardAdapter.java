@@ -11,6 +11,7 @@ import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;
+import com.zb.module_card.vm.CardViewModel;
 import com.zb.module_card.vm.MemberVideoViewModel;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
     private int selectImageIndex = 0;
     private int selectIndex = -1;
     private View currentView;
+    private boolean isPlay = false;
 
     public void setSelectIndex(int selectIndex) {
         this.selectIndex = selectIndex;
@@ -36,6 +38,10 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
 
     public void setCurrentView(View currentView) {
         this.currentView = currentView;
+    }
+
+    public void setIsPlay(boolean isPlay) {
+        this.isPlay = isPlay;
     }
 
     public CardAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
@@ -82,6 +88,9 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
             DiscoverInfo discoverInfo = (DiscoverInfo) t;
             boolean hasGood = viewModel.goodDb.hasGood(discoverInfo.getFriendDynId());
             holder.binding.setVariable(BR.hasGood, hasGood);
+        }
+        if (viewModel instanceof CardViewModel) {
+            holder.binding.setVariable(BR.isPlay, isPlay);
         }
         holder.binding.executePendingBindings();
     }

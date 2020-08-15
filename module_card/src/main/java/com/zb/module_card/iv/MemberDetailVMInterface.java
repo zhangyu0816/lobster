@@ -8,7 +8,11 @@ public interface MemberDetailVMInterface {
 
     void like(View view);
 
+    void toDiscoverList(View view);
+
     void otherInfo();
+
+    void personOtherDyn();
 
     void attentionStatus();
 

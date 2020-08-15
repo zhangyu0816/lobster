@@ -4,8 +4,11 @@
     <string name="sex_1">男</string>
     <string name="sign_content">未填写签名</string>
     <string name="attention_true">关注</string>
-    <string name="attention_false">取消关注</string>
+    <string name="attention_false">已关注</string>
     <string name="user_id">虾菇号：%d</string>
     <string name="no_data">card_no_data_icon</string>
     <string name="out_line">card_out_line_bg</string>
+    <string name="card_progress">card_progress_icon</string>
+    <string name="text_age">%d岁</string>
+    <string name="mine_sign_content">未填写签名</string>
 </resources>

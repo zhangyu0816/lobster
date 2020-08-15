@@ -67,13 +67,11 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    testImplementation 'junit:junit:4.13'
     // 需要重新在子模块中再引用一次，否则报错
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
     implementation project(':lib_base')
     implementation project(':xbanner')
+    implementation project(':imagebrowserlib')
     if (!isNeedCardModule.toBoolean()) {
         if (isNeedHomeModule.toBoolean()) {
             implementation project(':module_home')

@@ -217,6 +217,8 @@ public class AdapterBinding {
                     builder.load(R.mipmap.card_no_data_icon).into(view);
                 } else if (imageUrl != null && imageUrl.equals("card_out_line_bg")) {
                     builder.load(R.mipmap.card_out_line_bg).into(view);
+                } else if (imageUrl != null && imageUrl.equals("card_progress_icon")) {
+                    builder.load(R.mipmap.card_progress_icon).into(view);
                 } else {
                     if (imageUrl != null && imageUrl.contains(".mp3"))
                         imageUrl = "";

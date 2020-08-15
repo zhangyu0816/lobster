@@ -4,6 +4,7 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.model.Authentication;
 import com.zb.lib_base.model.FeedbackInfo;
+import com.zb.lib_base.model.MemberInfo;
 
 public class ActivityUtils {
     /*********************** app **************************/
@@ -52,6 +53,11 @@ public class ActivityUtils {
     // 用户详情
     public static void getCardMemberDetail(long userId, boolean showLike) {
         ARouter.getInstance().build(RouteUtils.Card_Member_Detail).withLong("userId", userId).withBoolean("showLike", showLike).navigation();
+    }
+
+    // 用户详情
+    public static void getCardDiscoverList(long userId, boolean isAttention, MemberInfo memberInfo) {
+        ARouter.getInstance().build(RouteUtils.Card_Discover_List).withLong("userId", userId).withBoolean("isAttention", isAttention).withParcelable("memberInfo",memberInfo).navigation();
     }
 
     /*********************** 对话 **************************/

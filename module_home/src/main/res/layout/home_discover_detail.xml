@@ -65,21 +65,6 @@
                 android:textSize="18sp"
                 tools:text="杀杀杀" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/iv_more"
-                android:background="@{isAttention?@drawable/btn_bg_black_c3b_white_radius60:@drawable/btn_bg_purple_7a4_radius60}"
-                android:gravity="center"
-                android:onClick="@{viewModel::follow}"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:text="@{isAttention?@string/attention_false:@string/attention_true}"
-                android:textColor="@{isAttention?@color/black_827:@color/white}"
-                android:textSize="13sp"
-                android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
-
             <ImageView
                 android:id="@+id/iv_more"
                 android:layout_width="wrap_content"
@@ -165,20 +150,6 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentEnd="true"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginEnd="15dp"
-                                    android:background="@{viewModel.discoverInfo==null?@drawable/default_bg:@drawable/empty_bg}"
-                                    android:minWidth="30dp"
-                                    android:text="@{viewModel.discoverInfo.createTime.substring(11,16)}"
-                                    android:textColor="@color/black_c3b"
-                                    android:textSize="12sp"
-                                    android:textStyle="bold"
-                                    tools:text="20:00" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
                                     android:layout_below="@+id/tv_nick"
                                     android:layout_marginTop="5dp"
                                     android:drawableStart="@mipmap/address_small_icon"
@@ -188,6 +159,38 @@
                                     android:textColor="@color/black_827"
                                     android:textSize="11sp"
                                     tools:text="温州市" />
+
+                                <TextView
+                                    android:id="@+id/tv_time"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_marginEnd="15dp"
+                                    android:background="@{viewModel.discoverInfo==null?@drawable/default_bg:@drawable/empty_bg}"
+                                    android:minWidth="30dp"
+                                    android:text="@{viewModel.discoverInfo.createTime.substring(11,16)}"
+                                    android:textColor="@color/black_c3b"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold"
+                                    tools:text="20:00" />
+
+
+                                <TextView
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_width="wrap_content"
+                                    android:layout_below="@+id/tv_time"
+                                    android:layout_height="24dp"
+                                    android:layout_marginEnd="15dp"
+                                    android:layout_marginTop="5dp"
+                                    android:background="@{isAttention?@drawable/btn_bg_black_c3b_radius60:@drawable/btn_bg_purple_7a4_radius60}"
+                                    android:gravity="center"
+                                    android:onClick="@{viewModel::follow}"
+                                    android:paddingStart="20dp"
+                                    android:paddingEnd="20dp"
+                                    android:text="@{isAttention?@string/attention_false:@string/attention_true}"
+                                    android:textColor="@color/white"
+                                    android:textSize="14sp"
+                                    android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
 
                             </RelativeLayout>
 

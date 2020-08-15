@@ -34,7 +34,7 @@ public class prePairListApi extends BaseEntity<List<PairInfo>> {
 
     public prePairListApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
-        setDialogTitle("加载匹配池信息");
+        setShowProgress(false);
     }
 
     @Override

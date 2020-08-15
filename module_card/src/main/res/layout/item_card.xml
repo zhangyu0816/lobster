@@ -30,6 +30,12 @@
         <variable
             name="adapter"
             type="com.zb.module_card.adapter.CardAdapter" />
+
+        <variable
+            name="isPlay"
+            type="boolean" />
+
+
     </data>
 
     <RelativeLayout
@@ -62,7 +68,7 @@
                 android:layout_height="match_parent"
                 android:layout_above="@+id/info_relative"
                 android:orientation="horizontal"
-                android:visibility="@{(item.singleImage.equals(@string/no_data)||item.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}">
+                android:visibility="@{(item.singleImage.equals(@string/no_data)||item.singleImage.equals(@string/card_progress)||item.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}">
 
                 <TextView
                     android:layout_width="0dp"
@@ -87,7 +93,7 @@
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/gradient_black"
                 android:orientation="vertical"
-                android:visibility="@{(item.singleImage.equals(@string/no_data)||item.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}">
+                android:visibility="@{(item.singleImage.equals(@string/no_data)||item.singleImage.equals(@string/card_progress)||item.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}">
 
                 <LinearLayout
                     android:id="@+id/nick_linear"
@@ -243,7 +249,7 @@
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="-40dp"
                 android:background="@mipmap/return_icon"
-                android:visibility="@{(item.singleImage.equals(@string/no_data)||item.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}" />
+                android:visibility="@{(item.singleImage.equals(@string/no_data)||item.singleImage.equals(@string/card_progress)||item.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}" />
 
             <com.zb.lib_base.views.SuperLikeView
                 android:id="@+id/iv_super_like"
@@ -251,12 +257,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="-5dp"
                 android:layout_alignParentBottom="true"
-                android:layout_marginTop="15dp"
                 android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="-5dp"
                 android:layout_marginBottom="15dp"
-                android:visibility="@{(item.singleImage.equals(@string/no_data)||item.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}" />
+                android:visibility="@{(item.singleImage.equals(@string/no_data)||item.singleImage.equals(@string/card_progress)||item.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}" />
 
             <TextView
                 onClickDelayed="@{viewModel::onRefresh}"
@@ -272,6 +278,14 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:visibility="@{(item.singleImage.equals(@string/no_data)||item.singleImage.equals(@string/out_line))?View.VISIBLE:View.GONE}" />
+
+            <com.zb.module_card.views.ProgressView
+                android:id="@+id/progress_view"
+                isPlay="@{isPlay}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="@{item.singleImage.equals(@string/card_progress)?View.VISIBLE:View.GONE}" />
         </RelativeLayout>
     </RelativeLayout>
 </layout>

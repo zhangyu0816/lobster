@@ -128,14 +128,11 @@ public class ObjectUtils {
         }
     }
 
-    public static int getRewardBgRanking(int position) {
-        if (position == 0) {
-            return R.mipmap.crown_bg_1;
-        } else if (position == 1) {
-            return R.mipmap.crown_bg_2;
-        } else {
-            return R.mipmap.crown_bg_3;
-        }
+    public static Drawable getConstellationBg(String constellation) {
+        if (constellation.isEmpty())
+            return null;
+        else
+            return MineApp.getInstance().getResources().getDrawable(MineApp.constellationMap.get(constellation));
     }
 
     public static Drawable getRealCheck(int isChecked) {

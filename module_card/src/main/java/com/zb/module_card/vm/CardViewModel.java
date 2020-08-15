@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.CycleInterpolator;
@@ -306,12 +307,22 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void prePairList(boolean needProgress) {
+        if (needProgress) {
+            pairInfoList.clear();
+            adapter.notifyDataSetChanged();
+            pairInfoList.add(createProgress());
+            adapter.setIsPlay(true);
+            adapter.notifyDataSetChanged();
+        }
         prePairListApi api = new prePairListApi(new HttpOnNextListener<List<PairInfo>>() {
             @Override
             public void onNext(List<PairInfo> o) {
-                if (needProgress) {
-                    pairInfoList.clear();
-                    adapter.notifyDataSetChanged();
+                if (pairInfoList.size() > 0) {
+                    if (TextUtils.equals(pairInfoList.get(0).getSingleImage(), "card_progress_icon")) {
+                        adapter.setIsPlay(false);
+                        pairInfoList.clear();
+                        adapter.notifyDataSetChanged();
+                    }
                 }
                 int start = pairInfoList.size();
                 for (PairInfo pairInfo : o) {
@@ -331,10 +342,19 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    if (pairInfoList.size() > 0) {
+                        if (TextUtils.equals(pairInfoList.get(0).getSingleImage(), "card_progress_icon")) {
+                            adapter.setIsPlay(false);
+                            pairInfoList.clear();
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+
                     int start = pairInfoList.size();
                     pairInfoList.add(createNoData());
                     adapter.notifyItemRangeChanged(start, pairInfoList.size());
                 } else if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
+                    adapter.setIsPlay(false);
                     pairInfoList.clear();
                     adapter.notifyDataSetChanged();
                     pairInfoList.add(createOutLike());
@@ -345,7 +365,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 .setSex(MineApp.sex)
                 .setMaxAge(MineApp.maxAge)
                 .setMinAge(MineApp.minAge);
-        api.setShowProgress(needProgress);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -414,6 +433,12 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     private PairInfo createOutLike() {
         PairInfo pairInfo = new PairInfo();
         pairInfo.setSingleImage("card_out_line_bg");
+        return pairInfo;
+    }
+
+    private PairInfo createProgress() {
+        PairInfo pairInfo = new PairInfo();
+        pairInfo.setSingleImage("card_progress_icon");
         return pairInfo;
     }
 

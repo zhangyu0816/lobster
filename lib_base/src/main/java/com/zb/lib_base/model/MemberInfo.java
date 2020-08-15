@@ -1,12 +1,15 @@
 package com.zb.lib_base.model;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.zb.lib_base.BR;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
-public class MemberInfo extends BaseObservable {
+public class MemberInfo extends BaseObservable implements Parcelable {
     private long userId;      //userId
     private String nick = "";        //昵称
     private String image = "";       //头像
@@ -43,6 +46,58 @@ public class MemberInfo extends BaseObservable {
     private String distance = "";
     private String singleImage = "";
 
+    public MemberInfo() {
+    }
+
+    protected MemberInfo(Parcel in) {
+        userId = in.readLong();
+        nick = in.readString();
+        image = in.readString();
+        moreImages = in.readString();
+        personalitySign = in.readString();
+        shopUrl = in.readString();
+        birthday = in.readString();
+        age = in.readInt();
+        sex = in.readInt();
+        height = in.readInt();
+        weight = in.readInt();
+        constellation = in.readInt();
+        bloodType = in.readInt();
+        job = in.readString();
+        education = in.readInt();
+        provinceId = in.readLong();
+        cityId = in.readLong();
+        districtId = in.readLong();
+        rstatus = in.readInt();
+        remark = in.readString();
+        attentionQuantity = in.readInt();
+        fansQuantity = in.readInt();
+        popularity = in.readInt();
+        pollQuantity = in.readInt();
+        rentQuantity = in.readInt();
+        beLikeQuantity = in.readInt();
+        memberType = in.readInt();
+        serviceTags = in.readString();
+        newDycCreateTime = in.readString();
+        idAttest = in.readInt();
+        faceAttest = in.readInt();
+        newDycType = in.readInt();
+        attentionStatus = in.readInt();
+        distance = in.readString();
+        singleImage = in.readString();
+    }
+
+    public static final Creator<MemberInfo> CREATOR = new Creator<MemberInfo>() {
+        @Override
+        public MemberInfo createFromParcel(Parcel in) {
+            return new MemberInfo(in);
+        }
+
+        @Override
+        public MemberInfo[] newArray(int size) {
+            return new MemberInfo[size];
+        }
+    };
 
     @Bindable
     public int getAge() {
@@ -392,5 +447,49 @@ public class MemberInfo extends BaseObservable {
     public void setSingleImage(String singleImage) {
         this.singleImage = singleImage;
         notifyPropertyChanged(BR.singleImage);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(userId);
+        parcel.writeString(nick);
+        parcel.writeString(image);
+        parcel.writeString(moreImages);
+        parcel.writeString(personalitySign);
+        parcel.writeString(shopUrl);
+        parcel.writeString(birthday);
+        parcel.writeInt(age);
+        parcel.writeInt(sex);
+        parcel.writeInt(height);
+        parcel.writeInt(weight);
+        parcel.writeInt(constellation);
+        parcel.writeInt(bloodType);
+        parcel.writeString(job);
+        parcel.writeInt(education);
+        parcel.writeLong(provinceId);
+        parcel.writeLong(cityId);
+        parcel.writeLong(districtId);
+        parcel.writeInt(rstatus);
+        parcel.writeString(remark);
+        parcel.writeInt(attentionQuantity);
+        parcel.writeInt(fansQuantity);
+        parcel.writeInt(popularity);
+        parcel.writeInt(pollQuantity);
+        parcel.writeInt(rentQuantity);
+        parcel.writeInt(beLikeQuantity);
+        parcel.writeInt(memberType);
+        parcel.writeString(serviceTags);
+        parcel.writeString(newDycCreateTime);
+        parcel.writeInt(idAttest);
+        parcel.writeInt(faceAttest);
+        parcel.writeInt(newDycType);
+        parcel.writeInt(attentionStatus);
+        parcel.writeString(distance);
+        parcel.writeString(singleImage);
     }
 }

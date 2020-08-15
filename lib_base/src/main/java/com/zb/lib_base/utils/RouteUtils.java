@@ -21,6 +21,7 @@ public class RouteUtils {
     // 卡片主Fragment
     public static final String Card_Fragment = "/card/CardFragment";
     public static final String Card_Member_Detail = "/card/MemberDetailActivity";
+    public static final String Card_Discover_List = "/card/DiscoverListActivity";
     public static final String Card_Member_Discover_Fragment = "/card/MemberDiscoverFragment";
     public static final String Card_Member_Video_Fragment = "/card/MemberVideoFragment";
 

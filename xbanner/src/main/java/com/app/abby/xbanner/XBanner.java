@@ -888,12 +888,15 @@ public class XBanner extends RelativeLayout {
      * the listener interface for banner event,includeing clicked,dragging and idled
      * the index starts from 0,which item's value starts from 0
      */
+    @FunctionalInterface
     public interface BannerPageListener {
         void onBannerClick(int item);
 
-        void onBannerDragging(int item);
+        default void onBannerDragging(int item) {
+        }
 
-        void onBannerIdle(int item);
+        default void onBannerIdle(int item) {
+        }
     }
 
 
