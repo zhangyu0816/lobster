@@ -46,6 +46,7 @@ import java.util.Map;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
@@ -104,13 +105,8 @@ public interface HttpService {
 
     // 快捷登录
     @FormUrlEncoded
-    @POST("api/Union_loginByUnion")
-    Observable<BaseResultEntity<LoginInfo>> loginByUnion(@Field("openId") String openId, @Field("unionId") String unionId, @Field("unionNick") String unionNick,
-                                                         @Field("unionImage") String unionImage, @Field("unionSex") int unionSex, @Field("unionType") int unionType,
-                                                         @Field("device") String device, @Field("deviceSysVersion") String deviceSysVersion,
-                                                         @Field("deviceCode") String deviceCode, @Field("channelId") String channelId,
-                                                         @Field("usePl") int usePl, @Field("appVersion") String appVersion,
-                                                         @Field("deviceHardwareInfo") String deviceHardwareInfo);
+    @POST("api/Union_loginByUnionV2")
+    Observable<BaseResultEntity<LoginInfo>> loginByUnion(@FieldMap Map<String, String> map);
 
     // 快捷登录注册
     @FormUrlEncoded

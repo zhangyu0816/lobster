@@ -32,7 +32,8 @@ public class LogoActivity extends RegisterBaseActivity {
         viewModel = new LogoViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
-
+        if (MineApp.registerInfo.getImageList().size() > 0)
+            mBinding.setVariable(BR.imageUrl, MineApp.registerInfo.getImageList().get(0));
         binding = (RegisterLogoBinding) mBinding;
         // 步骤进度跳
         AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 10);

@@ -19,8 +19,8 @@ public class RegisterInfo extends BaseObservable {
     String moreImages = "";
     List<String> imageList = new ArrayList<>();
 
-    String openId;
-    String unionId;
+    String openId = "";
+    String unionId = "";
     int unionType;
 
     @Bindable

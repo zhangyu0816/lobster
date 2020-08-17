@@ -21,6 +21,7 @@ public class HttpTimeException extends RuntimeException {
     public static final int NOT_BIND_PHONE = 8;// 手机未绑定
 
     public static final int OPENVIP = 10;// 开通会员
+    public static final int NOT_REGISTER = 301;//未注册
 
     public int getCode() {
         return code;

@@ -118,7 +118,7 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
         }
 
         //手机未绑定
-        if (httpResult.getCode() == HttpTimeException.NOT_BIND_PHONE) {
+        if (httpResult.getCode() == HttpTimeException.NOT_REGISTER) {
             getRxAppCompatActivity().sendBroadcast(new Intent("lobster_bindPhone"));
             throw new HttpTimeException(httpResult.getCode());
         }

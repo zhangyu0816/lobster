@@ -50,11 +50,11 @@ public class SuperLikeView extends RelativeLayout {
     private void play() {
         mBinding.ivStar1.setVisibility(VISIBLE);
         mBinding.ivStar2.setVisibility(VISIBLE);
-        ivStar1X = ObjectAnimator.ofFloat(mBinding.ivStar1, "translationX", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(300)-200) + 50)).setDuration(time);
-        ivStar1Y = ObjectAnimator.ofFloat(mBinding.ivStar1, "translationY", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(300)-200) + 50)).setDuration(time);
+        ivStar1X = ObjectAnimator.ofFloat(mBinding.ivStar1, "translationX", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(100)) + 50)).setDuration(time);
+        ivStar1Y = ObjectAnimator.ofFloat(mBinding.ivStar1, "translationY", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(100)) + 50)).setDuration(time);
 
-        ivStar2X = ObjectAnimator.ofFloat(mBinding.ivStar2, "translationX", 0, (ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(300)-200) + 50)).setDuration(time);
-        ivStar2Y = ObjectAnimator.ofFloat(mBinding.ivStar2, "translationY", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(300)-200)+ 50)).setDuration(time);
+        ivStar2X = ObjectAnimator.ofFloat(mBinding.ivStar2, "translationX", 0, (ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(100)) + 50)).setDuration(time);
+        ivStar2Y = ObjectAnimator.ofFloat(mBinding.ivStar2, "translationY", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(100))+ 50)).setDuration(time);
 
 
         animatorSet.setInterpolator(new LinearInterpolator());

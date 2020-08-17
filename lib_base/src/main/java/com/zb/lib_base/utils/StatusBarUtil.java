@@ -84,9 +84,9 @@ public class StatusBarUtil {
     public static int statusBarLightModeNotFull(RxAppCompatActivity activity) {
         int result = 0;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (MIUISetStatusBarLightMode(activity, true)) {
+            if (MIUISetStatusBarLightMode(activity, false)) {
                 result = 1;
-            } else if (FlymeSetStatusBarLightMode(activity.getWindow(), true)) {
+            } else if (FlymeSetStatusBarLightMode(activity.getWindow(), false)) {
                 result = 2;
             } else {
                 activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);

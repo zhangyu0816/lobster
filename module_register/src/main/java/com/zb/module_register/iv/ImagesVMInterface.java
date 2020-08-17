@@ -15,4 +15,7 @@ public interface ImagesVMInterface {
 
     default void register(RegisterInfo registerInfo) {
     }
+
+    default void loginByUnion(RegisterInfo registerInfo) {
+    }
 }

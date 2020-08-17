@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.maning.imagebrowserlibrary.MNImage;
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.api.loginByUnionApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.registerApi;
 import com.zb.lib_base.app.MineApp;
@@ -66,7 +67,10 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
         photoManager = new PhotoManager(activity, () -> {
             MineApp.registerInfo.setMoreImages(photoManager.jointWebUrl("#"));
             photoManager.deleteAllFile();
-            register(MineApp.registerInfo);
+            if (MineApp.registerInfo.getOpenId().isEmpty())
+                register(MineApp.registerInfo);
+            else
+                loginByUnion(MineApp.registerInfo);
         });
     }
 
@@ -114,6 +118,37 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
     }
 
     @Override
+    public void loginByUnion(RegisterInfo registerInfo) {
+        loginByUnionApi api = new loginByUnionApi(new HttpOnNextListener<LoginInfo>() {
+            @Override
+            public void onNext(LoginInfo o) {
+                PreferenceUtil.saveLongValue(activity, "userId", o.getId());
+                PreferenceUtil.saveStringValue(activity, "sessionId", o.getSessionId());
+                PreferenceUtil.saveStringValue(activity, "userName", o.getUserName());
+                BaseActivity.update();
+                DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
+                myInfo();
+            }
+        }, activity)
+                .setOpenId(registerInfo.getOpenId())
+                .setUnionId(registerInfo.getUnionId())
+                .setUnionImage(registerInfo.getMoreImages().split("#")[0])
+                .setUnionNick(registerInfo.getName())
+                .setUnionSex(registerInfo.getSex())
+                .setUnionType(registerInfo.getUnionType())
+                .setUserName(registerInfo.getPhone())
+                .setCaptcha(registerInfo.getCaptcha())
+                .setNick(registerInfo.getName())
+                .setBirthday(registerInfo.getBirthday())
+                .setMoreImages(registerInfo.getMoreImages())
+                .setSex(registerInfo.getSex())
+                .setProvinceId(areaDb.getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
+                .setCityId(areaDb.getCityId(MineApp.cityName))
+                .setDistrictId(areaDb.getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
     public void myInfo() {
         myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
             @Override
@@ -122,7 +157,7 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
                 mineInfoDb.saveMineInfo(o);
                 if (MineApp.isLogin) {
                     activity.sendBroadcast(new Intent("lobster_mainSelect"));
-                }else {
+                } else {
                     ActivityUtils.getMainActivity();
                 }
                 activity.finish();

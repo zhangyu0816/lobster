@@ -71,7 +71,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (RegisterMainBinding) binding;
-        mBinding.setIsThree(false);
+        mBinding.setIsThree(!MineApp.registerInfo.getOpenId().isEmpty());
+
         aMapLocation = new AMapLocation(activity);
         MineApp.registerInfo = new RegisterInfo();
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
