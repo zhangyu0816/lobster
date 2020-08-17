@@ -101,6 +101,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     private RelativeLayout.LayoutParams likeParams;
     private int movedWidth = (int) (MineApp.W / 2f - ObjectUtils.getViewSizeByWidthFromMax(264) / 2f);
 
+    private int superLikeStatus = 0;
+
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
@@ -136,6 +138,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     currentView.startAnimation(AnimationUtils.loadAnimation(activity,
                             R.anim.view_right_out));
                     startAnimation(mBinding.ivLike, 0 - MineApp.W / 2f - ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 280);
+                    superLikeStatus = 2;
                     currentView.postDelayed(() -> cardCallback.swiped(currentView, ItemTouchHelper.RIGHT), 800);
                     String myHead = mineInfo.getImage();
                     String otherHead = pairInfo.getMoreImages().split("#")[0];
@@ -219,6 +222,10 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
         disListAdapter = new CardAdapter<>(activity, R.layout.item_card_image, imageList, this);
         mBinding.setVariable(BR.adapter, disListAdapter);
+        if (mineInfo.getMemberType() == 2 || mineInfo.getSurplusToDayLikeNumber() == 0) {
+            adapter.setShowCount(false);
+        }
+        adapter.setLikeCount(mineInfo.getSurplusToDayLikeNumber());
         prePairList(true);
     }
 
@@ -312,6 +319,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             adapter.notifyDataSetChanged();
             pairInfoList.add(createProgress());
             adapter.setIsPlay(true);
+            adapter.setShowCount(false);
             adapter.notifyDataSetChanged();
         }
         prePairListApi api = new prePairListApi(new HttpOnNextListener<List<PairInfo>>() {
@@ -336,6 +344,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     pairInfo.setImageList(imageList);
                     pairInfoList.add(pairInfo);
                 }
+                if (mineInfo.getMemberType() == 1 && mineInfo.getSurplusToDayLikeNumber() > 0)
+                    adapter.setShowCount(true);
                 adapter.notifyItemRangeChanged(start, pairInfoList.size());
             }
 
@@ -352,12 +362,14 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
                     int start = pairInfoList.size();
                     pairInfoList.add(createNoData());
+                    adapter.setShowCount(false);
                     adapter.notifyItemRangeChanged(start, pairInfoList.size());
                 } else if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
                     adapter.setIsPlay(false);
                     pairInfoList.clear();
                     adapter.notifyDataSetChanged();
                     pairInfoList.add(createOutLike());
+                    adapter.setShowCount(false);
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -365,7 +377,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 .setSex(MineApp.sex)
                 .setMaxAge(MineApp.maxAge)
                 .setMinAge(MineApp.minAge);
-        HttpManager.getInstance().doHttpDeal(api);
+        new Handler().postDelayed(() -> HttpManager.getInstance().doHttpDeal(api), 300);
+
     }
 
     @Override
@@ -383,6 +396,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     // 不喜欢成功  喜欢成功  超级喜欢成功
                     if (likeOtherStatus == 1) {
                         likeDb.saveLike(new CollectID(pairInfo.getOtherUserId()));
+                        updateCount(adapter.getLikeCount() - 1);
                     } else if (likeOtherStatus == 2) {
                         Intent data = new Intent("lobster_card");
                         data.putExtra("direction", 2);
@@ -393,6 +407,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 } else if (o == 2) {
                     // 匹配成功
                     likeDb.saveLike(new CollectID(pairInfo.getOtherUserId()));
+                    updateCount(adapter.getLikeCount() - 1);
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), pairInfo.getSex(), () -> ActivityUtils.getChatActivity(pairInfo.getOtherUserId()));
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                 } else if (o == 3) {
@@ -417,6 +432,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     pairInfoList.clear();
                     adapter.notifyDataSetChanged();
                     pairInfoList.add(createOutLike());
+                    adapter.setShowCount(false);
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -535,14 +551,25 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void onSwiped(View view, PairInfo pairInfo, int direction) {
+        onReset();
+        if (pairInfo.getUserId() == 0)
+            return;
+
         int likeOtherStatus = 1;
         if (direction == CardConfig.SWIPED_LEFT) {
             canReturn = true;
             likeOtherStatus = 0;
             disLikeList.add(0, pairInfo);
         }
-        onReset();
-        makeEvaluate(pairInfo, likeOtherStatus);
+        makeEvaluate(pairInfo, superLikeStatus == 0 ? likeOtherStatus : superLikeStatus);
+        superLikeStatus = 0;
+    }
+
+    private void updateCount(int likeCount) {
+        if (likeCount >= 0) {
+            adapter.setLikeCount(likeCount);
+            adapter.setShowCount(likeCount != 0);
+        }
     }
 
     @Override
@@ -649,6 +676,9 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             public void onNext(MineInfo o) {
                 mineInfo = o;
                 mineInfoDb.saveMineInfo(o);
+                if (mineInfo.getMemberType() == 2) {
+                    adapter.setShowCount(false);
+                }
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

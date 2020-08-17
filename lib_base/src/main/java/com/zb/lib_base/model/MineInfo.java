@@ -25,6 +25,9 @@ public class MineInfo extends RealmObject {
     String serviceTags = "";
     int faceAttest;
 
+    int surplusToDayLikeNumber; //当日剩余喜欢次数  如果是vip 无视
+    int surplusToDaySuperLikeNumber; //当日剩余超级喜欢次数  如果是普通用户  无视
+
     public long getUserId() {
         return userId;
     }
@@ -175,5 +178,21 @@ public class MineInfo extends RealmObject {
 
     public void setFaceAttest(int faceAttest) {
         this.faceAttest = faceAttest;
+    }
+
+    public int getSurplusToDayLikeNumber() {
+        return surplusToDayLikeNumber;
+    }
+
+    public void setSurplusToDayLikeNumber(int surplusToDayLikeNumber) {
+        this.surplusToDayLikeNumber = surplusToDayLikeNumber;
+    }
+
+    public int getSurplusToDaySuperLikeNumber() {
+        return surplusToDaySuperLikeNumber;
+    }
+
+    public void setSurplusToDaySuperLikeNumber(int surplusToDaySuperLikeNumber) {
+        this.surplusToDaySuperLikeNumber = surplusToDaySuperLikeNumber;
     }
 }

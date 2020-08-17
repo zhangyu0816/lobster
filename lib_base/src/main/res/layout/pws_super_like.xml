@@ -108,7 +108,7 @@
 
             <ImageView
                 android:id="@+id/iv_super_like1"
-                imageRes="@{ObjectUtils.getSuperLikeRes()}"
+                imageRes="@{ObjectUtils.getSuperLikeRes(isPair)}"
                 isCircle="@{true}"
                 viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(150)}"
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(150)}"
@@ -119,7 +119,7 @@
 
             <ImageView
                 android:id="@+id/iv_super_like2"
-                imageRes="@{ObjectUtils.getSuperLikeRes()}"
+                imageRes="@{ObjectUtils.getSuperLikeRes(isPair)}"
                 isCircle="@{true}"
                 viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(150)}"
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(150)}"
@@ -132,62 +132,50 @@
 
         <ImageView
             android:id="@+id/iv_star1"
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(60)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(60)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@drawable/like_red_icon"
+            android:background="@mipmap/star_left_icon"
             android:visibility="gone" />
 
         <ImageView
             android:id="@+id/iv_star2"
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(60)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(60)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@drawable/like_red_icon"
+            android:background="@mipmap/star_right_icon"
             android:visibility="gone" />
 
         <ImageView
             android:id="@+id/iv_star3"
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(60)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(60)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@drawable/like_red_icon"
+            android:background="@mipmap/star_left_icon"
             android:visibility="gone" />
 
         <ImageView
             android:id="@+id/iv_star4"
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(60)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(60)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@drawable/like_red_icon"
+            android:background="@mipmap/star_right_icon"
             android:visibility="gone" />
 
         <ImageView
             android:id="@+id/iv_star5"
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(60)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(60)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@drawable/like_red_icon"
+            android:background="@mipmap/star_left_icon"
             android:visibility="gone" />
 
         <ImageView
             android:id="@+id/iv_star6"
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(60)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(60)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@drawable/like_red_icon"
+            android:background="@mipmap/star_right_icon"
             android:visibility="gone" />
     </RelativeLayout>
 </layout>

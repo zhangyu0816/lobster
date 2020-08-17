@@ -11,7 +11,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.AdapterBinding;
@@ -114,7 +114,7 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
         animatorSet = new AnimatorSet();
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(mBinding.tvTime, "scaleX", 0, 1).setDuration(700);
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(mBinding.tvTime, "scaleY", 0, 1).setDuration(700);
-        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.play(scaleX).with(scaleY);
 
 

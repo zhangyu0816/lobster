@@ -78,8 +78,8 @@ public class ObjectUtils {
     }
 
     // 超级喜欢
-    public static int getSuperLikeRes() {
-        return R.mipmap.super_like_icon;
+    public static int getSuperLikeRes(boolean isPair) {
+        return isPair ? R.mipmap.like_tag_icon : R.mipmap.super_like_icon;
     }
 
     // 客服头像

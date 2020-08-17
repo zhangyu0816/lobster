@@ -102,11 +102,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         mBinding.setListNum(10);
         mBinding.setIsAttention(false);
 
-        if (goodDb.hasGood(friendDynId)) {
-            mBinding.ivLike.setVisibility(View.VISIBLE);
-        } else {
-            mBinding.ivUnLike.setVisibility(View.VISIBLE);
-        }
         setAdapter();
         dynDetail();
         // 发送
@@ -397,12 +392,11 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void dynLike(View view) {
         if (goodDb.hasGood(friendDynId)) {
-            mBinding.ivUnLike.setVisibility(View.VISIBLE);
-            unlike(mBinding.ivLike, this::dynCancelLike);
+            mBinding.goodView.playUnlike();
+            dynCancelLike();
         } else {
-            mBinding.ivUnLike.setVisibility(View.GONE);
-            mBinding.ivLike.setVisibility(View.VISIBLE);
-            like(mBinding.ivLike, this::dynDoLike);
+            mBinding.goodView.playLike();
+            dynDoLike();
         }
     }
 

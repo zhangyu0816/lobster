@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.castBottleApi;
@@ -86,7 +86,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(mBinding.ivBg, "scaleY", 1, 1.5f).setDuration(time);
         ObjectAnimator alpha = ObjectAnimator.ofFloat(mBinding.firstLayout, "alpha", 1, 0).setDuration(time);
 
-        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.playTogether(scaleX, scaleY, translateX, alpha);//同时执行
         animatorSet.start();
 

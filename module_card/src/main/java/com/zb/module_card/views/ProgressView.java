@@ -6,8 +6,8 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
 
 import com.zb.module_card.R;
@@ -50,7 +50,7 @@ public class ProgressView extends RelativeLayout {
     }
 
     public static void play() {
-        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.play(scaleX).with(scaleY);
         animatorSet.start();
     }

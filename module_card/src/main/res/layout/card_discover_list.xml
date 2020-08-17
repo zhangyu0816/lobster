@@ -51,29 +51,28 @@
                 app:srcCompat="@mipmap/back_black_icon" />
 
             <TextView
+                android:id="@+id/tv_nick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@{memberInfo.nick}"
+                android:layout_marginEnd="5dp"
                 android:textColor="@color/black_252"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                tools:text="哈哈哈"/>
 
-            <TextView
+            <ImageView
+                viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(105)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(183)}"
                 android:layout_width="wrap_content"
-                android:layout_height="29dp"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/tv_nick"
                 android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/iv_more"
-                android:background="@{isAttention?@drawable/btn_bg_black_c3b_radius60:@drawable/btn_bg_purple_7a4_radius60}"
-                android:gravity="center"
-                android:onClick="@{viewModel::follow}"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:text="@{isAttention?@string/attention_false:@string/attention_true}"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:visibility="@{viewModel.otherUserId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
+                android:layout_marginStart="3dp"
+                android:background="@mipmap/vip_icon"
+                android:visibility="@{memberInfo.memberType==2?View.VISIBLE:View.GONE}" />
 
             <ImageView
                 android:id="@+id/iv_more"
@@ -110,9 +109,9 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
                         android:paddingStart="15dp"
-                        android:paddingEnd="15dp"
-                        android:layout_marginTop="15dp">
+                        android:paddingEnd="15dp">
 
                         <RelativeLayout
                             android:id="@+id/image_layout"
@@ -245,6 +244,7 @@
                         </LinearLayout>
 
                         <TextView
+                            android:id="@+id/tv_intro"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/num_linear"
@@ -257,6 +257,23 @@
                             android:textSize="14sp"
                             android:textStyle="bold"
                             tools:text="为了减肥了我劳务纠纷另外二九六我来我家 " />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="29dp"
+                            android:layout_below="@+id/tv_intro"
+                            android:layout_marginStart="50dp"
+                            android:layout_marginTop="15dp"
+                            android:layout_toEndOf="@+id/image_layout"
+                            android:background="@{isAttention?@drawable/btn_bg_black_c3b_radius60:@drawable/btn_bg_purple_7a4_radius60}"
+                            android:gravity="center"
+                            android:onClick="@{viewModel::follow}"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="20dp"
+                            android:text="@{isAttention?@string/attention_false:@string/attention_true}"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:visibility="@{viewModel.otherUserId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
                     </RelativeLayout>
                 </androidx.appcompat.widget.Toolbar>
 

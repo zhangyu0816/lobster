@@ -9,7 +9,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
 
 import com.alibaba.mobileim.conversation.YWMessage;
@@ -726,7 +726,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         ObjectAnimator scaleXEnd = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleX", 1, 0).setDuration(500);
         ObjectAnimator scaleYEnd = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleY", 1, 0).setDuration(500);
 
-        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.play(scaleX).with(scaleY).after(5000);
         animatorSet.play(translateY).after(scaleY);
         animatorSet.play(scaleXEnd).with(scaleYEnd).after(translateY).after(10000);

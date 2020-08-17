@@ -147,11 +147,14 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
     public void toGood(View view) {
         if (goodDb.hasGood(friendDynId)) {
             mBinding.ivUnLike.setVisibility(View.VISIBLE);
-            unlike(mBinding.ivLike, this::dynCancelLike);
+            mBinding.ivLike.setVisibility(View.GONE);
+            likeOrNot(mBinding.ivUnLike);
+            dynCancelLike();
         } else {
             mBinding.ivUnLike.setVisibility(View.GONE);
             mBinding.ivLike.setVisibility(View.VISIBLE);
-            like(mBinding.ivLike, this::dynDoLike);
+            likeOrNot(mBinding.ivLike);
+            dynDoLike();
         }
     }
 
@@ -497,9 +500,9 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
         layout.setBackgroundColor(Color.TRANSPARENT);
 
         ImageView iv = new ImageView(activity);
-        int w = (int) (87f*2 * (float) videoWidth / (float) MineApp.W);
-        int h = (int) (39f*2 * (float) videoWidth / (float) MineApp.W);
-        int size = (int) (9f*2 * (float) videoWidth / (float) MineApp.W);
+        int w = (int) (87f * 2 * (float) videoWidth / (float) MineApp.W);
+        int h = (int) (39f * 2 * (float) videoWidth / (float) MineApp.W);
+        int size = (int) (9f * 2 * (float) videoWidth / (float) MineApp.W);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(w, h);
         params.leftMargin = 0;
         params.rightMargin = MineApp.W;

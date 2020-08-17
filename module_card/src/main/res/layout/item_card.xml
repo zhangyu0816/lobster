@@ -35,6 +35,14 @@
             name="isPlay"
             type="boolean" />
 
+        <variable
+            name="likeCount"
+            type="Integer" />
+
+        <variable
+            name="showCount"
+            type="boolean" />
+
 
     </data>
 
@@ -286,6 +294,36 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:visibility="@{item.singleImage.equals(@string/card_progress)?View.VISIBLE:View.GONE}" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/card_top_bg"
+                android:orientation="vertical"
+                android:visibility="@{showCount?View.VISIBLE:View.GONE}">
+
+                <com.zb.lib_base.views.LeanTextView
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginTop="1dp"
+                    android:gravity="center"
+                    android:text='@{String.format("%d",likeCount)}'
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+                <com.zb.lib_base.views.LeanTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="-26dp"
+                    android:gravity="center"
+                    android:text="剩余喜欢"
+                    android:textColor="@color/white_99"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+
         </RelativeLayout>
     </RelativeLayout>
 </layout>

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.maning.imagebrowserlibrary.MNImage;

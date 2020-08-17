@@ -6,7 +6,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
 
 import com.zb.lib_base.R;
@@ -57,7 +57,7 @@ public class SuperLikeView extends RelativeLayout {
         ivStar2Y = ObjectAnimator.ofFloat(mBinding.ivStar2, "translationY", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(300)-200)+ 50)).setDuration(time);
 
 
-        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.play(ivStar1X)
                 .with(ivStar1Y)
                 .with(ivStar2X)

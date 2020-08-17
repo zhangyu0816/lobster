@@ -27,6 +27,8 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
     private int selectIndex = -1;
     private View currentView;
     private boolean isPlay = false;
+    private int likeCount = 50;
+    private boolean showCount = false;
 
     public void setSelectIndex(int selectIndex) {
         this.selectIndex = selectIndex;
@@ -42,6 +44,18 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
 
     public void setIsPlay(boolean isPlay) {
         this.isPlay = isPlay;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setShowCount(boolean showCount) {
+        this.showCount = showCount;
     }
 
     public CardAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
@@ -91,6 +105,8 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
         }
         if (viewModel instanceof CardViewModel) {
             holder.binding.setVariable(BR.isPlay, isPlay);
+            holder.binding.setVariable(BR.likeCount, likeCount);
+            holder.binding.setVariable(BR.showCount, showCount);
         }
         holder.binding.executePendingBindings();
     }

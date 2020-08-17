@@ -224,13 +224,16 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     public void doGood(int position) {
         DiscoverInfo discoverInfo = MineApp.discoverInfoList.get(position);
         if (goodDb.hasGood(discoverInfo.getFriendDynId())) {
-            ivUnLike.setVisibility(View.VISIBLE);
-            unlike(ivLike, () -> dynCancelLike(discoverInfo, position));
 
+            ivUnLike.setVisibility(View.VISIBLE);
+            ivLike.setVisibility(View.GONE);
+            likeOrNot(ivUnLike);
+            dynCancelLike(discoverInfo, position);
         } else {
             ivUnLike.setVisibility(View.GONE);
             ivLike.setVisibility(View.VISIBLE);
-            like(ivLike, () -> dynDoLike(discoverInfo, position));
+            likeOrNot(ivLike);
+            dynDoLike(discoverInfo, position);
         }
     }
 

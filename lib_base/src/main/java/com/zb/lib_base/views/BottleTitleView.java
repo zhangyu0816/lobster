@@ -6,8 +6,8 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
 
 import com.zb.lib_base.R;
@@ -63,7 +63,7 @@ public class BottleTitleView extends RelativeLayout {
         ivLightY.setRepeatCount(repeat);
         ivLightY.setRepeatMode(ValueAnimator.RESTART);
 
-        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.playTogether(ivBackY, ivFrontY, ivBottleY, ivLightY);//同时执行
         animatorSet.start();
     }

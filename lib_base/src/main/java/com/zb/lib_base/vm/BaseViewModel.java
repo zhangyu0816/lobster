@@ -6,15 +6,14 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
-import android.os.Handler;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -202,45 +201,21 @@ public class BaseViewModel implements BaseVMInterface {
         alpha.setRepeatCount(Animation.INFINITE);
         alpha.setRepeatMode(ValueAnimator.RESTART);
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.playTogether(scaleX, scaleY, alpha);//同时执行
         animatorSet.start();
     }
 
-    private long time = 200;
-    private float scale = 1.4f;
+    public void likeOrNot(View view) {
 
-    public interface CallBack {
-        void success();
-    }
-
-    public void like(View view, CallBack callBack) {
-
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 1, scale).setDuration(time);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 1, scale).setDuration(time);
-        ObjectAnimator scaleBackX = ObjectAnimator.ofFloat(view, "scaleX", scale, 1).setDuration(100);
-        ObjectAnimator scaleBackY = ObjectAnimator.ofFloat(view, "scaleY", scale, 1).setDuration(100);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 0, 1, 0.8f, 1).setDuration(500);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 0, 1, 0.8f, 1).setDuration(500);
 
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-        animatorSet.play(scaleX).with(scaleY);
-        animatorSet.play(scaleBackX).with(scaleBackY).after(scaleX);
-        animatorSet.start();
-
-        new Handler().postDelayed(callBack::success, time + 100);
-    }
-
-    public void unlike(View view, CallBack callBack) {
-
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 1, 0).setDuration(time);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 1, 0).setDuration(time);
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.play(scaleX).with(scaleY);
         animatorSet.start();
 
-        new Handler().postDelayed(callBack::success, time);
     }
 
     public void openBottle() {

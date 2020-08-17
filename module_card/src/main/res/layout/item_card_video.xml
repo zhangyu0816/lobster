@@ -38,9 +38,9 @@
             viewHeightSize="@{-2}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.48f)}"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="7dp"
-            android:layout_height="wrap_content">
+            android:layout_marginTop="7dp">
 
             <ImageView
                 android:id="@+id/roundImageView"
@@ -62,28 +62,14 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <RelativeLayout
+                <com.zb.lib_base.views.GoodView
+                    android:id="@+id/good_view"
+                    isLike="@{hasGood}"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:onClick="@{v->viewModel.doLike(v,position)}">
-
-                    <ImageView
-                        android:id="@+id/iv_like"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/like_select_icon"
-                        android:visibility="@{hasGood?View.VISIBLE:View.GONE}" />
-
-                    <ImageView
-                        android:id="@+id/iv_unLike"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/like_unselect_icon"
-                        android:visibility="@{hasGood?View.GONE:View.VISIBLE}" />
-
-                </RelativeLayout>
+                    android:layout_marginStart="5dp"
+                    android:gravity="center"
+                    android:onClick="@{v->viewModel.doLike(v,position)}" />
 
                 <TextView
                     android:layout_width="wrap_content"

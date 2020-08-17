@@ -7,8 +7,8 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -173,7 +173,7 @@ public class BottleBGView extends RelativeLayout {
         ObjectAnimator translateBackX = ObjectAnimator.ofFloat(ivWangBack, "translationX", 0, ObjectUtils.getViewSizeByWidthFromMax(100), 0).setDuration(1000);
         ObjectAnimator translateBackY2 = ObjectAnimator.ofFloat(ivWangBack, "translationY", ObjectUtils.getViewSizeByWidthFromMax(600), 0).setDuration(1000);
 
-        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.play(translateY).with(translateBackY);
         animatorSet.play(translateX).with(translateBackX).after(translateY);
         animatorSet.play(translateBackY2).after(translateX);
@@ -196,7 +196,7 @@ public class BottleBGView extends RelativeLayout {
         ObjectAnimator translateX = ObjectAnimator.ofFloat(ivBottle, "translationX", 0, -(MineApp.W / 2), -MineApp.W).setDuration(time);
         ObjectAnimator animator = ObjectAnimator.ofFloat(ivBottle, "rotation", 0, -900).setDuration(time);
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.play(translateY).with(translateX).with(animator);
         animatorSet.start();
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -26,6 +25,7 @@ import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.views.GoodView;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_card.R;
 import com.zb.module_card.adapter.CardAdapter;
@@ -281,16 +281,14 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
         discoverInfo = discoverInfoList.get(position);
         friendDynId = discoverInfo.getFriendDynId();
 
-        ImageView ivLike = view.findViewById(R.id.iv_like);
-        ImageView ivUnLike = view.findViewById(R.id.iv_unLike);
+        GoodView goodView = (GoodView) view;
 
         if (goodDb.hasGood(discoverInfo.getFriendDynId())) {
-            ivUnLike.setVisibility(View.VISIBLE);
-            unlike(ivLike, this::dynCancelLike);
+            goodView.playUnlike();
+            dynCancelLike();
         } else {
-            ivUnLike.setVisibility(View.GONE);
-            ivLike.setVisibility(View.VISIBLE);
-            like(ivLike, this::dynDoLike);
+            goodView.playLike();
+            dynDoLike();
         }
     }
 

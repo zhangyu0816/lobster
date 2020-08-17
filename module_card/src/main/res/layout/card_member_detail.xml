@@ -82,6 +82,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="200dp"
                 android:orientation="vertical">
 
                 <com.app.abby.xbanner.XBanner

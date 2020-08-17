@@ -198,9 +198,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="15dp"
                             android:layout_gravity="end"
                             android:layout_marginTop="15dp"
+                            android:layout_marginEnd="15dp"
                             android:background="@{viewModel.discoverInfo==null?@drawable/default_bg:@drawable/empty_bg}"
                             android:minWidth="30dp"
                             android:text="@{viewModel.discoverInfo.createTime.substring(5,16)}"
@@ -404,27 +404,14 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
-                    <RelativeLayout
-                        onClickDelayed="@{viewModel::dynLike}"
+                    <com.zb.lib_base.views.GoodView
+                        android:id="@+id/good_view"
+                        isLike="@{viewModel.goodDb.hasGood(viewModel.discoverInfo.friendDynId)}"
                         android:layout_width="40dp"
-                        android:layout_height="40dp">
-
-                        <ImageView
-                            android:id="@+id/iv_unLike"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:background="@drawable/like_unselect_icon"
-                            android:visibility="gone" />
-
-                        <ImageView
-                            android:id="@+id/iv_like"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:background="@drawable/like_select_icon"
-                            android:visibility="gone" />
-                    </RelativeLayout>
+                        android:layout_height="40dp"
+                        android:layout_marginStart="5dp"
+                        android:gravity="center"
+                        android:onClick="@{viewModel::dynLike}" />
 
                     <TextView
                         onClickDelayed="@{viewModel::dynLike}"
