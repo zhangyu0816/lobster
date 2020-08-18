@@ -35,11 +35,10 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <RelativeLayout
-                viewHeightSize="@{-2}"
+                viewHeightSize="@{ObjectUtils.getVipExposureHeight(900)}"
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(900)}"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_bg_yellow_f6f_radius_top10">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     viewHeightSize="@{ObjectUtils.getVipExposureHeight(900)}"
@@ -56,29 +55,10 @@
                 android:background="@drawable/btn_bg_white_radius_bottom10"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="15dp"
-                    android:text="开通会员增加曝光量"
-                    android:textColor="@color/black_4d4"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="10dp"
-                    android:text="30分钟内10倍的人优先看到你"
-                    android:textColor="@color/black_827"
-                    android:textSize="12sp" />
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_marginTop="7dp"
+                    android:layout_marginTop="15dp"
                     android:background="@color/black_efe" />
 
                 <TextView

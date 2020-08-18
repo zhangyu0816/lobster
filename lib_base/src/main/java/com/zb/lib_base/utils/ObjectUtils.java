@@ -69,7 +69,7 @@ public class ObjectUtils {
     }
 
     public static int getVipExposureHeight(int width) {
-        return (int) (getViewSizeByWidthFromMax(width) * 579f / 810f);
+        return (int) (getViewSizeByWidthFromMax(width) * 900f / 1035f);
     }
 
     // 默认图片

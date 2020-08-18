@@ -13,6 +13,10 @@
             name="viewModel"
             type="com.zb.module_mine.vm.OpenVipViewModel" />
 
+        <variable
+            name="vipInfo"
+            type="com.zb.lib_base.model.VipInfo" />
+
     </data>
 
     <RelativeLayout
@@ -133,9 +137,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/top_layout"
-            android:overScrollMode="never"
             android:layout_marginTop="-30dp"
             android:layout_marginBottom="78dp"
+            android:overScrollMode="never"
             android:scrollbars="none">
 
             <LinearLayout
@@ -164,7 +168,7 @@
             android:layout_marginBottom="15dp"
             android:background="@drawable/gradient_purple_6d5_ae7"
             android:gravity="center"
-            android:text="@{viewModel.mineInfo.memberType==2?@string/pay_btn:@string/open_btn}"
+            android:text="@{viewModel.mineInfo.memberType==2?@string/pay_btn:String.format(@string/open_btn,vipInfo.price)}"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="bold" />

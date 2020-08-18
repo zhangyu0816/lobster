@@ -29,6 +29,10 @@ public class Ads {
     public Ads() {
     }
 
+    public Ads(int adRes) {
+        this.adRes = adRes;
+    }
+
     public Ads(Long adId, String smallImage, String bigImage, String webImage, String outLink, String adTitle) {
         this.adId = adId;
         this.smallImage = smallImage;

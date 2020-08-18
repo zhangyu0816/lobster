@@ -21,6 +21,14 @@
         android:layout_height="match_parent"
         tools:context=".activity.MainActivity">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:onClick="@{viewModel::changeUrl}"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -16,7 +16,7 @@ public interface CodeVMInterface {
     default void registerCaptcha() {
     }
 
-    default void loginCaptchaApi() {
+    default void loginCaptcha() {
 
     }
 }

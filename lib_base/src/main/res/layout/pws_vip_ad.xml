@@ -4,19 +4,23 @@
 
     <data>
 
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
         <variable
             name="pw"
             type="com.zb.lib_base.windows.BasePopupWindow" />
 
         <variable
-            name="vipAd"
-            type="com.zb.lib_base.model.VipAd" />
-
-        <variable
             name="adapter"
             type="com.zb.lib_base.adapter.BaseAdapter" />
 
-        <import type="com.zb.lib_base.utils.ObjectUtils" />
+        <variable
+            name="vipInfo"
+            type="com.zb.lib_base.model.VipInfo" />
+
+        <variable
+            name="mineInfo"
+            type="com.zb.lib_base.model.MineInfo" />
 
     </data>
 
@@ -41,44 +45,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
-                android:id="@+id/banner_linear"
+            <com.app.abby.xbanner.XBanner
+                android:id="@+id/banner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@{vipAd.topBgRes}"
-                android:orientation="vertical">
-
-                <com.app.abby.xbanner.XBanner
-                    android:id="@+id/banner"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp" />
-            </LinearLayout>
-
+                android:layout_height="200dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_bg_white_radius_bottom10"
                 android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="15dp"
-                    android:text="@{vipAd.title}"
-                    android:textColor="@color/black_4d4"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="10dp"
-                    android:text="@{vipAd.content}"
-                    android:textColor="@color/black_827"
-                    android:textSize="12sp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     adapter="@{adapter}"
@@ -97,10 +73,12 @@
                     onClickDelayed="@{pw::sure}"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
+                    android:layout_margin="15dp"
+                    android:background="@drawable/gradient_purple_6d5_ae7"
                     android:gravity="center"
-                    android:text="获取特权"
-                    android:textColor="@color/black_252"
-                    android:textSize="16sp"
+                    android:text="@{mineInfo.memberType==2?@string/pay_btn:String.format(@string/open_btn,vipInfo.price)}"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -108,9 +86,9 @@
                 onClickDelayed="@{pw::cancel}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/close_icon"
+                android:layout_gravity="center_horizontal"
                 android:padding="15dp"
-                android:layout_gravity="center_horizontal"/>
+                android:src="@mipmap/close_icon" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

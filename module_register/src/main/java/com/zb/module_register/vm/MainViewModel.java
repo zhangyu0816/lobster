@@ -71,10 +71,9 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (RegisterMainBinding) binding;
-        mBinding.setIsThree(!MineApp.registerInfo.getOpenId().isEmpty());
-
-        aMapLocation = new AMapLocation(activity);
+        mBinding.setIsThree(false);
         MineApp.registerInfo = new RegisterInfo();
+        aMapLocation = new AMapLocation(activity);
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
         getPermissions();
 
@@ -121,6 +120,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             exitTime = 0;
             HttpManager.BASE_URL = TextUtils.equals(HttpManager.BASE_URL, "http://192.168.1.88:8090/") ? "https://xgapi.zuwo.la/" : "http://192.168.1.88:8090/";
             HttpManager.INSTANCE = null;
+
+            SCToastUtil.showToast(activity, HttpManager.BASE_URL, true);
         }
     }
 

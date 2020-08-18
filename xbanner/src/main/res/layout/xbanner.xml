@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <data>
-
-        <variable
-            name="position"
-            type="Integer" />
-
-    </data>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -16,9 +8,7 @@
         <com.app.abby.xbanner.XBannerViewPager
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@{position==-1?@drawable/empty_bg:(position==0?@drawable/btn_bg_yellow_f6f_radius_top10:(position==1?@drawable/btn_bg_red_f5d_radius_top10:(position==2?@drawable/btn_bg_blue_d5d_radius_top10:(position==3?@drawable/btn_bg_yellow_faf_radius_top10:@drawable/btn_bg_blue_ccd_radius_top10))))}" />
-
+            android:layout_height="match_parent" />
 
         <LinearLayout
             android:id="@+id/indicator_container"

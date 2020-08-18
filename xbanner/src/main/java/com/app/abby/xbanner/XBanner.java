@@ -1,8 +1,11 @@
 package com.app.abby.xbanner;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -29,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.IntDef;
+import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
 import androidx.viewpager.widget.ViewPager;
 
@@ -573,11 +577,22 @@ public class XBanner extends RelativeLayout {
     }
 
     private XbannerBinding binding;
+    private GradientDrawable gradientDrawable;
+    private int[] colors = {0x00000000, 0x00000000};
 
+    @SuppressLint("WrongConstant")
     private void bindView() {
         binding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.xbanner, this, true);
-        int position = type - 1;
-        binding.setVariable(BR.position, position);
+        gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, colors);
+        float[] radii = new float[8];
+        radii[0] = radii[1] = 20f;
+        radii[2] = radii[3] = 20f;
+        radii[4] = radii[5] = 0f;
+        radii[6] = radii[7] = 0f;
+        gradientDrawable.setCornerRadii(radii);
+        gradientDrawable.setGradientType(GradientDrawable.RECTANGLE);
+
+        setBgRes(type - 1);
         if (mIsTitlebgAlpha) {
             binding.indicatorContainer.setBackgroundColor(Color.TRANSPARENT);
         }
@@ -585,6 +600,14 @@ public class XBanner extends RelativeLayout {
 
     private boolean showBg = false;
     private int type = 0;
+
+
+    public void setBannerBg(int position) {
+        if (showBg && type == 0) {
+            setBgRes(position - 1);
+            mImageLoader.getPosition(position - 1);
+        }
+    }
 
     public XBanner setShowBg(boolean showBg) {
         this.showBg = showBg;
@@ -596,13 +619,23 @@ public class XBanner extends RelativeLayout {
         return this;
     }
 
-    public void setBannerBg(int position) {
-        if (showBg && type == 0) {
-            binding.setVariable(BR.position, position - 1);
-            mImageLoader.getPosition(position - 1);
+    private void setBgRes(int position) {
+        if (position == -1) {
+            colors = new int[]{Color.argb(0, 0, 0, 0), Color.argb(0, 0, 0, 0)};
+        } else if (position == 0) {
+            colors = new int[]{Color.argb(255, 255, 221, 176), Color.argb(255, 255, 255, 255)};
+        } else if (position == 1) {
+            colors = new int[]{Color.argb(255, 176, 193, 255), Color.argb(255, 255, 255, 255)};
+        } else if (position == 2) {
+            colors = new int[]{Color.argb(255, 255, 176, 190), Color.argb(255, 255, 255, 255)};
+        } else if (position == 3) {
+            colors = new int[]{Color.argb(255, 194, 176, 255), Color.argb(255, 255, 255, 255)};
+        } else {
+            colors = new int[]{Color.argb(255, 198, 255, 176), Color.argb(255, 255, 255, 255)};
         }
+        gradientDrawable.setColors(colors);
+        binding.viewpager.setBackground(gradientDrawable);
     }
-
 
     private void initViewPagerAdapter() {
 
@@ -657,17 +690,65 @@ public class XBanner extends RelativeLayout {
      * Config the viewpager listener to the viewpager
      * Only if the image count is greater than 1
      */
+
+    private void setBg(int position, float positionOffset) {
+        if (positionOffset == 0) return;
+//        if (position == -1) {
+//            colors = new int[]{Color.argb(0, 0, 0, 0), Color.argb(0, 0, 0, 0)};
+//        } else if (position == 0) {
+//            colors = new int[]{Color.argb(255, 255, 221, 176), Color.argb(255, 255, 255, 255)};
+//        } else if (position == 1) {
+//            colors = new int[]{Color.argb(255, 176, 193, 255), Color.argb(255, 255, 255, 255)};
+//        } else if (position == 2) {
+//            colors = new int[]{Color.argb(255, 255, 176, 190), Color.argb(255, 255, 255, 255)};
+//        } else if (position == 3) {
+//            colors = new int[]{Color.argb(255, 194, 176, 255), Color.argb(255, 255, 255, 255)};
+//        } else {
+//            colors = new int[]{Color.argb(255, 198, 255, 176), Color.argb(255, 255, 255, 255)};
+//        }
+        if (position == 0) {
+            int red = (int) ((255 - 198) * positionOffset);
+            int green = (int) ((255 - 221) * positionOffset);
+            colors = new int[]{Color.argb(255, 198 + red, 255 - green, 176), Color.argb(255, 255, 255, 255)};
+        } else if (position == 1) {
+            int red = (int) ((255 - 176) * positionOffset);
+            int green = (int) ((221 - 193) * positionOffset);
+            int blue = (int) ((255 - 176) * positionOffset);
+            colors = new int[]{Color.argb(255, 255 - red, 221 - green, 176 + blue), Color.argb(255, 255, 255, 255)};
+        } else if (position == 2) {
+            int red = (int) ((255 - 176) * positionOffset);
+            int green = (int) ((193 - 176) * positionOffset);
+            int blue = (int) ((255 - 190) * positionOffset);
+            colors = new int[]{Color.argb(255, 176 + red, 193 - green, 255 - blue), Color.argb(255, 255, 255, 255)};
+        } else if (position == 3) {
+            int red = (int) ((255 - 194) * positionOffset);
+            int blue = (int) ((255 - 190) * positionOffset);
+            colors = new int[]{Color.argb(255, 255 - red, 176, 190 + blue), Color.argb(255, 255, 255, 255)};
+        } else if (position == 4) {
+            int red = (int) ((198 - 194) * positionOffset);
+            int green = (int) ((255 - 176) * positionOffset);
+            int blue = (int) ((255 - 176) * positionOffset);
+            colors = new int[]{Color.argb(255, 194 + red, 176 + green, 255 - blue), Color.argb(255, 255, 255, 255)};
+        } else if (position == 5) {
+            int red = (int) ((255 - 198) * positionOffset);
+            int green = (int) ((255 - 221) * positionOffset);
+            colors = new int[]{Color.argb(255, 198 + red, 255 - green, 176), Color.argb(255, 255, 255, 255)};
+        }
+
+        gradientDrawable.setColors(colors);
+        binding.viewpager.setBackground(gradientDrawable);
+    }
+
     private void applyViewPagerAdapterListener() {
-
-
         if (mImageCount <= 1) {
             return;
         }
-
         binding.viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+                if (showBg)
+                    setBg(position, positionOffset);
             }
 
             @Override
@@ -677,9 +758,7 @@ public class XBanner extends RelativeLayout {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
                 int current = binding.viewpager.getCurrentItem();
-
                 switch (state) {
                     case ViewPager.SCROLL_STATE_DRAGGING:
                         if (mBannerPageListner != null) {
@@ -715,8 +794,6 @@ public class XBanner extends RelativeLayout {
                 }
             }
         });
-
-
     }
 
     private void onIndicatorChange(int position) {

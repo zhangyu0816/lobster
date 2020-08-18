@@ -4,4 +4,8 @@ import android.view.View;
 
 public interface PhoneVMInterface {
     void next(View view);
+
+    void registerCaptcha();
+
+    void loginCaptcha();
 }

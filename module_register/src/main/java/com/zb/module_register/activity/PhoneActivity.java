@@ -36,7 +36,7 @@ public class PhoneActivity extends RegisterBaseActivity {
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         RegisterPhoneBinding binding = (RegisterPhoneBinding) mBinding;
-        binding.setBtnName("获取验证码");
+        binding.setBtnName("获取" + (isLogin ? "登录" : "注册") + "验证码");
         binding.setRemark(isLogin ? "" : "您的手机号将获取验证码");
         if (isLogin)
             binding.setRight("密码登录");

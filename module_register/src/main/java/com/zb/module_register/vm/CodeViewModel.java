@@ -41,6 +41,7 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (RegisterCodeBinding) binding;
+        mBinding.setRemark("验证码没收到？重新试试！");
         timer = new CountDownTimer(second * 1000, 1000) {
             public void onTick(long millisUntilFinished) {
                 getCode = false;
@@ -53,13 +54,6 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
                 getCode = true;
             }
         };
-
-        // 验证码
-        if (isLogin) {
-            loginCaptchaApi();
-        } else {
-            registerCaptcha();
-        }
     }
 
     @Override
@@ -85,7 +79,7 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
         // 注册验证码
         if (getCode)
             if (isLogin) {
-                loginCaptchaApi();
+                loginCaptcha();
             } else {
                 registerCaptcha();
             }
@@ -179,7 +173,7 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
     }
 
     @Override
-    public void loginCaptchaApi() {
+    public void loginCaptcha() {
         loginCaptchaApi api = new loginCaptchaApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
