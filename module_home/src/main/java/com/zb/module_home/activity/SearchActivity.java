@@ -28,7 +28,8 @@ public class SearchActivity extends BaseActivity {
     public void initUI() {
         SearchViewModel viewModel = new SearchViewModel();
         viewModel.setBinding(mBinding);
-        mBinding.setVariable(BR.viewModel,viewModel);
+        mBinding.setVariable(BR.viewModel, viewModel);
+        mBinding.setVariable(BR.searchKey, "");
 
     }
 }

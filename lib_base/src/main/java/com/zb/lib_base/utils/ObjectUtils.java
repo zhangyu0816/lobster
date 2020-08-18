@@ -61,7 +61,7 @@ public class ObjectUtils {
     }
 
     public static int getVipIntroHeight() {
-        return (int) (MineApp.W * 2111f / 1125f);
+        return (int) (MineApp.W * 2082 / 1125f);
     }
 
     public static int getVipIntroBgHeight(float scale) {
@@ -248,9 +248,9 @@ public class ObjectUtils {
         if (position == 2) {
             return likeDb.hasLike(otherUserId) ? "已喜欢" : "喜欢Ta";
         } else if (position == 1) {
-            return attentionDb.isAttention(otherUserId) ? "取消关注" : "回粉";
+            return attentionDb.isAttention(otherUserId) ? "已关注" : "回粉";
         } else {
-            return attentionDb.isAttention(otherUserId) ? "取消关注" : "关注Ta";
+            return attentionDb.isAttention(otherUserId) ? "已关注" : "关注Ta";
         }
     }
 

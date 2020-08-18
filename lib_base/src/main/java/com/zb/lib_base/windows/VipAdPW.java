@@ -60,7 +60,7 @@ public class VipAdPW extends BasePopupWindow {
             Ads ads = new Ads(R.mipmap.vip_ad_5);
             adsList.add(ads);
         } else if (type == 4) {
-            Ads ads = new Ads(sex == 1 ? R.mipmap.vip_ad_4 : R.mipmap.vip_ad_4_male);
+            Ads ads = new Ads(sex == 0 ? R.mipmap.vip_ad_4 : R.mipmap.vip_ad_4_male);
             adsList.add(ads);
         } else if (type == 3) {
             Ads ads = new Ads(R.mipmap.vip_ad_3);
@@ -69,7 +69,7 @@ public class VipAdPW extends BasePopupWindow {
             Ads ads = new Ads(sex == 1 ? R.mipmap.vip_ad_2 : R.mipmap.vip_ad_2_male);
             adsList.add(ads);
         } else if (type == 1) {
-            Ads ads = new Ads(sex == 1 ? R.mipmap.vip_ad_1 : R.mipmap.vip_ad_1_male);
+            Ads ads = new Ads(sex == 0 ? R.mipmap.vip_ad_1 : R.mipmap.vip_ad_1_male);
             adsList.add(ads);
         }
         initUI();

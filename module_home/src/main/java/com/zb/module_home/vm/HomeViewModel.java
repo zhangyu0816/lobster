@@ -1,10 +1,13 @@
 package com.zb.module_home.vm;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -15,12 +18,24 @@ import androidx.databinding.ViewDataBinding;
 
 public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
     private HomeFragBinding mBinding;
+    private BaseReceiver homeBottleReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (HomeFragBinding) binding;
         playAnimator(mBinding.circleView);
+        mBinding.setShowBottle(true);
+        homeBottleReceiver = new BaseReceiver(activity, "lobster_homeBottle") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.setShowBottle(intent.getIntExtra("index", 1) == 1);
+            }
+        };
+    }
+
+    public void onDestroy() {
+        homeBottleReceiver.unregisterReceiver();
     }
 
     @Override
@@ -31,6 +46,11 @@ public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
     @Override
     public void toSearch(View view) {
         ActivityUtils.getHomeSearch();
+    }
+
+    @Override
+    public void entryBottle(View view) {
+        ActivityUtils.getBottleThrow();
     }
 
     /**

@@ -90,13 +90,14 @@ public class PhoneViewModel extends BaseViewModel implements PhoneVMInterface {
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 12) {
-                    new TextPW(activity, mBinding.getRoot(), "账号提示", "该手机号已注册过，是否前往登录？", "去登录", new TextPW.CallBack() {
+                    new TextPW(activity, mBinding.getRoot(), "温馨提示", "该手机号已注册过，是否前往登录？", "去登录", new TextPW.CallBack() {
                         @Override
                         public void sure() {
                             isLogin = true;
                             mBinding.setRemark("");
                             mBinding.setRight("密码登录");
                             mBinding.setBtnName("获取登录验证码");
+                            loginCaptcha();
                         }
                     });
                 }

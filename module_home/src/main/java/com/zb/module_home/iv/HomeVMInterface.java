@@ -7,4 +7,6 @@ public interface HomeVMInterface {
     void publishDiscover(View view);
 
     void toSearch(View view);
+
+    void entryBottle(View view);
 }

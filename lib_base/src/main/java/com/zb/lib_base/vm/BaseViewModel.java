@@ -4,6 +4,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.text.InputFilter;
@@ -115,6 +116,11 @@ public class BaseViewModel implements BaseVMInterface {
                 MineApp.chatSelectIndex = tab.getPosition();
                 viewPager.setCurrentItem(tab.getPosition());
                 changeTab(tab, 18, selectColor);
+                if (tabNames[0].equals("关注")) {
+                    Intent data = new Intent("lobster_homeBottle");
+                    data.putExtra("index", tab.getPosition());
+                    activity.sendBroadcast(data);
+                }
             }
 
             @Override

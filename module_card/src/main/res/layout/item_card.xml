@@ -247,18 +247,6 @@
                     android:visibility="@{item.imageList.size()==0?View.GONE:View.VISIBLE}" />
             </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/iv_return"
-                onClickDelayed="@{viewModel::returnView}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/iv_super_like"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="-40dp"
-                android:background="@mipmap/return_icon"
-                android:visibility="@{(item.singleImage.equals(@string/no_data)||item.singleImage.equals(@string/card_progress)||item.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}" />
-
             <com.zb.lib_base.views.SuperLikeView
                 android:id="@+id/iv_super_like"
                 onClickDelayed="@{v->viewModel.superLike(currentView,item)}"
@@ -270,6 +258,18 @@
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="-5dp"
                 android:layout_marginBottom="15dp"
+                android:visibility="@{(item.singleImage.equals(@string/no_data)||item.singleImage.equals(@string/card_progress)||item.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}" />
+
+            <ImageView
+                android:id="@+id/iv_return"
+                onClickDelayed="@{viewModel::returnView}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/iv_super_like"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="-40dp"
+                android:background="@mipmap/return_icon"
                 android:visibility="@{(item.singleImage.equals(@string/no_data)||item.singleImage.equals(@string/card_progress)||item.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}" />
 
             <TextView

@@ -82,14 +82,28 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="200dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingBottom="200dp">
 
-                <com.app.abby.xbanner.XBanner
-                    android:id="@+id/banner"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:background="@color/black_efe" />
+                    android:layout_height="wrap_content">
+
+                    <com.app.abby.xbanner.XBanner
+                        android:id="@+id/banner"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:background="@color/black_efe" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_margin="15dp"
+                        android:visibility="@{viewModel.memberInfo.faceAttest==1?View.VISIBLE:View.GONE}"
+                        app:srcCompat="@mipmap/real_icon" />
+                </RelativeLayout>
+
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -147,7 +161,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/btn_bg_blue_37a_radius2"
+                        android:background="@{viewModel.memberInfo.sex==0?@drawable/btn_bg_red_fe5_radius2:@drawable/btn_bg_blue_37a_radius2}"
                         android:paddingStart="7dp"
                         android:paddingTop="2dp"
                         android:paddingEnd="7dp"
@@ -205,6 +219,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:layout_marginEnd="10dp"
                         android:text="我的动态"
                         android:textColor="@color/black_252"
                         android:textSize="14sp"
@@ -302,15 +317,14 @@
             android:visibility="@{showLike?View.VISIBLE:View.GONE}"
             app:srcCompat="@mipmap/dislike_icon" />
 
-        <ImageView
+        <com.zb.lib_base.views.SuperLikeView
+            android:id="@+id/iv_super_like"
             onClickDelayed="@{viewModel::superLike}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_margin="15dp"
-            android:visibility="@{showLike?View.VISIBLE:View.GONE}"
-            app:srcCompat="@mipmap/super_like_icon2" />
+            android:layout_margin="15dp" />
 
         <ImageView
             onClickDelayed="@{viewModel::like}"

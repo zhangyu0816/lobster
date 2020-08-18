@@ -14,7 +14,7 @@ import rx.Observable;
 
 public class searchApi extends BaseEntity<List<MemberInfo>> {
     int pageNo;
-    String keyWord;
+    String keyWord = "";
     long cityId;
     int sex;
     int minAge;

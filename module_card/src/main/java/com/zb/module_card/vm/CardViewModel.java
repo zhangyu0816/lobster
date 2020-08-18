@@ -45,7 +45,6 @@ import com.zb.lib_base.views.card.CardConfig;
 import com.zb.lib_base.views.card.CardItemTouchHelperCallback;
 import com.zb.lib_base.views.card.OnSwipeListener;
 import com.zb.lib_base.vm.BaseViewModel;
-import com.zb.lib_base.windows.CountUsedPW;
 import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.TextPW;
 import com.zb.lib_base.windows.VipAdPW;
@@ -416,7 +415,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 } else if (o == 4) {
                     // 超级喜欢时，非会员或超级喜欢次数用尽
                     if (mineInfo.getMemberType() == 2) {
-                        new CountUsedPW(activity, mBinding.getRoot(), 2);
+                        SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
+//                        new CountUsedPW(activity, mBinding.getRoot(), 2);
                     } else {
                         new VipAdPW(activity, mBinding.getRoot(), false, 3);
                     }

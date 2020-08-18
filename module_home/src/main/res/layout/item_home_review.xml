@@ -25,12 +25,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{v->viewModel.selectReview(item)}">
+        >
 
         <ImageView
             android:id="@+id/iv_logo"
             defaultRes="@{ObjectUtils.getDefaultRes()}"
             imageUrl="@{item.image}"
+            onClickDelayed="@{v->viewModel.toReviewMemberDetail(item)}"
             isCircle="@{true}"
             viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
@@ -43,6 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
+            android:onClick="@{v->viewModel.selectReview(item)}"
             android:layout_toEndOf="@+id/iv_logo"
             android:orientation="vertical">
 

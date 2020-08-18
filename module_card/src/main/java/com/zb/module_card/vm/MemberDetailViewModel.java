@@ -36,7 +36,6 @@ import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
-import com.zb.lib_base.windows.CountUsedPW;
 import com.zb.lib_base.windows.FunctionPW;
 import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.VipAdPW;
@@ -277,7 +276,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                         data.putExtra("direction", 2);
                         activity.sendBroadcast(data);
                     } else {
-
                         new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
                     }
                 } else if (o == 2) {
@@ -291,7 +289,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 } else if (o == 4) {
                     // 超级喜欢时，非会员或超级喜欢次数用尽
                     if (mineInfo.getMemberType() == 2) {
-                        new CountUsedPW(activity, mBinding.getRoot(), 2);
+                        SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
+//                        new CountUsedPW(activity, mBinding.getRoot(), 2);
                     } else {
                         new VipAdPW(activity, mBinding.getRoot(), false, 3);
                     }
@@ -323,7 +322,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 }
 
                 new FunctionPW(activity, mBinding.getRoot(), umImage, sharedName, content, sharedUrl,
-                        otherUserId == BaseActivity.userId, false, false, new FunctionPW.CallBack() {
+                        otherUserId == BaseActivity.userId, false, false, false, new FunctionPW.CallBack() {
                     @Override
                     public void gift() {
 

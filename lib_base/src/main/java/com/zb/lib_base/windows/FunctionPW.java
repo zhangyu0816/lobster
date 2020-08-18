@@ -41,9 +41,10 @@ public class FunctionPW extends BasePopupWindow {
     private SHARE_MEDIA media;
     private Map<SHARE_MEDIA, String> mediaMap = new HashMap<>();
     private CallBack callBack;
+    private boolean isDiscover = false;
 
     public FunctionPW(RxAppCompatActivity activity, View parentView, UMImage umImage, String sharedName, String content, String sharedUrl,
-                      boolean isMine, boolean isVideo, boolean isList, CallBack callBack) {
+                      boolean isMine, boolean isVideo, boolean isDiscover, boolean isList, CallBack callBack) {
         super(activity, parentView, true);
         this.umImage = umImage;
         this.sharedName = sharedName;
@@ -52,6 +53,7 @@ public class FunctionPW extends BasePopupWindow {
         this.isMine = isMine;
         this.isVideo = isVideo;
         this.isList = isList;
+        this.isDiscover = isDiscover;
         this.callBack = callBack;
         initUI();
     }
@@ -74,15 +76,18 @@ public class FunctionPW extends BasePopupWindow {
         topAdapter = new BaseAdapter<>(activity, R.layout.item_share, shareItemList, this);
 
         if (isMine) {
-            shareItemBottomList.add(new ShareItem(isVideo?R.mipmap.share_gift_ico:R.mipmap.share_gift_white_ico, "查看礼物"));
-            if (!isList)
-                shareItemBottomList.add(new ShareItem(isVideo?R.mipmap.share_delete_ico:R.mipmap.share_delete_white_ico, "删除动态"));
+            if (isDiscover) {
+                shareItemBottomList.add(new ShareItem(isVideo ? R.mipmap.share_gift_ico : R.mipmap.share_gift_white_ico, "查看礼物"));
+                if (!isList)
+                    shareItemBottomList.add(new ShareItem(isVideo ? R.mipmap.share_delete_ico : R.mipmap.share_delete_white_ico, "删除动态"));
+            }
+            shareItemBottomList.add(new ShareItem(isVideo ? R.mipmap.share_copy_ico : R.mipmap.share_copy_white_ico, "复制链接"));
         } else {
-            shareItemBottomList.add(new ShareItem(isVideo?R.mipmap.share_report_ico:R.mipmap.share_report_white_ico, "举报"));
+            shareItemBottomList.add(new ShareItem(isVideo ? R.mipmap.share_report_ico : R.mipmap.share_report_white_ico, "举报"));
             if (isVideo)
                 shareItemBottomList.add(new ShareItem(R.mipmap.share_download_ico, "保存至相册"));
-            shareItemBottomList.add(new ShareItem(isVideo?R.mipmap.share_copy_ico:R.mipmap.share_copy_white_ico, "复制链接"));
-            shareItemBottomList.add(new ShareItem(isVideo?R.mipmap.share_like_ico:R.mipmap.share_like_white_ico, "超级喜欢"));
+            shareItemBottomList.add(new ShareItem(isVideo ? R.mipmap.share_copy_ico : R.mipmap.share_copy_white_ico, "复制链接"));
+            shareItemBottomList.add(new ShareItem(isVideo ? R.mipmap.share_like_ico : R.mipmap.share_like_white_ico, "超级喜欢"));
         }
 
         bottomAdapter = new BaseAdapter<>(activity, R.layout.item_share_bottom, shareItemBottomList, this);

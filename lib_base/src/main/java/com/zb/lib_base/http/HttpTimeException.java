@@ -20,7 +20,7 @@ public class HttpTimeException extends RuntimeException {
 
     public static final int NOT_BIND_PHONE = 8;// 手机未绑定
 
-    public static final int OPENVIP = 10;// 开通会员
+    public static final int OPEN_VIP = 10;// 开通会员
     public static final int NOT_REGISTER = 301;//未注册
 
     public int getCode() {
@@ -53,6 +53,9 @@ public class HttpTimeException extends RuntimeException {
                 break;
             case NOT_BIND_PHONE:
                 message = "手机未绑定";
+                break;
+            case OPEN_VIP:
+                message = "成为VIP,才能使用高级搜索";
                 break;
             default:
                 message = "error";

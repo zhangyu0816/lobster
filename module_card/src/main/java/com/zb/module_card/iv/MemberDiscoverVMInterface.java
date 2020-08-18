@@ -4,8 +4,6 @@ import android.view.View;
 
 public interface MemberDiscoverVMInterface {
 
-    void entryBottle(View view);
-
     void dynPiazzaList();
 
     void personOtherDyn();

@@ -3,18 +3,24 @@ package com.zb.module_card.vm;
 import android.content.Intent;
 import android.view.View;
 
+import com.umeng.socialize.media.UMImage;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.api.attentionOtherApi;
 import com.zb.lib_base.api.cancelAttentionApi;
 import com.zb.lib_base.api.contactNumApi;
+import com.zb.lib_base.api.memberInfoConfApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.ContactNum;
+import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.model.ShareInfo;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.FunctionPW;
 import com.zb.module_card.R;
 import com.zb.module_card.databinding.CardDiscoverListBinding;
 import com.zb.module_card.iv.DiscoverListVMInterface;
@@ -29,6 +35,7 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
     public long otherUserId;
     private CardDiscoverListBinding mBinding;
     private List<Fragment> fragments = new ArrayList<>();
+    public MemberInfo memberInfo;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -52,6 +59,11 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
         activity.finish();
     }
 
+    @Override
+    public void more(View view) {
+        super.more(view);
+        memberInfoConf();
+    }
 
     @Override
     public void follow(View view) {
@@ -114,6 +126,55 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
                 mBinding.setContactNum(o);
             }
         }, activity).setOtherUserId(otherUserId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void memberInfoConf() {
+        memberInfoConfApi api = new memberInfoConfApi(new HttpOnNextListener<ShareInfo>() {
+            @Override
+            public void onNext(ShareInfo o) {
+                String sharedUrl = HttpManager.BASE_URL + "render/" + otherUserId + ".html?sharetextId="
+                        + o.getSharetextId();
+                String sharedName = o.getText().replace("{userId}", memberInfo.getUserId() + "");
+                sharedName = sharedName.replace("{nick}", memberInfo.getNick());
+                UMImage umImage = new UMImage(activity, memberInfo.getImage().replace("YM0000", "430X430"));
+                String content = "";
+                if (memberInfo.getServiceTags().isEmpty()) {
+                    content = o.getText();
+                } else {
+                    content = memberInfo.getServiceTags().substring(1, memberInfo.getServiceTags().length() - 1);
+                    content = "兴趣：" + content.replace("#", ",");
+                }
+
+                new FunctionPW(activity, mBinding.getRoot(), umImage, sharedName, content, sharedUrl,
+                        otherUserId == BaseActivity.userId, false, false, false, new FunctionPW.CallBack() {
+                    @Override
+                    public void gift() {
+
+                    }
+
+                    @Override
+                    public void delete() {
+                    }
+
+                    @Override
+                    public void report() {
+                        ActivityUtils.getHomeReport(otherUserId);
+                    }
+
+                    @Override
+                    public void download() {
+
+                    }
+
+                    @Override
+                    public void like() {
+                        superLike(null);
+                    }
+                });
+            }
+        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

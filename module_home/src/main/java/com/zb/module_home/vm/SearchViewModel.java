@@ -14,6 +14,7 @@ import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
@@ -48,6 +49,10 @@ public class SearchViewModel extends BaseViewModel implements SearchVMInterface,
         // 发送
         mBinding.edSearch.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                if (mBinding.getSearchKey().isEmpty()) {
+                    SCToastUtil.showToast(activity, "请输入搜索内容", true);
+                    return true;
+                }
                 pageNo = 1;
                 memberInfoList.clear();
                 adapter.notifyDataSetChanged();

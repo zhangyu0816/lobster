@@ -154,16 +154,12 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     }
 
     @Override
-    public void entryBottle(View view) {
-        ActivityUtils.getBottleThrow();
-    }
-
-    @Override
     public void dynPiazzaList() {
         dynPiazzaListApi api = new dynPiazzaListApi(new HttpOnNextListener<List<DiscoverInfo>>() {
             @Override
             public void onNext(List<DiscoverInfo> o) {
                 mBinding.noNetLinear.setVisibility(View.GONE);
+                mBinding.refresh.setVisibility(View.VISIBLE);
                 int start = discoverInfoList.size();
                 discoverInfoList.addAll(o);
                 adapter.notifyItemRangeChanged(start, discoverInfoList.size());
@@ -175,6 +171,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
             public void onError(Throwable e) {
                 if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
                     mBinding.noNetLinear.setVisibility(View.VISIBLE);
+                    mBinding.refresh.setVisibility(View.GONE);
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
                     mBinding.refresh.finishLoadMore();

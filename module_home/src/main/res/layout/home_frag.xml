@@ -6,9 +6,16 @@
 
         <import type="com.zb.lib_base.utils.ObjectUtils" />
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.zb.module_home.vm.HomeViewModel" />
+
+        <variable
+            name="showBottle"
+            type="boolean" />
+
 
     </data>
 
@@ -27,8 +34,8 @@
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_toStartOf="@+id/i_search"
                 android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/i_search"
                 app:tabBackground="@android:color/transparent"
                 app:tabGravity="start"
                 app:tabIndicator="@drawable/indicator"
@@ -54,11 +61,20 @@
                 android:src="@mipmap/search_icon" />
         </RelativeLayout>
 
+        <com.zb.lib_base.views.BottleTitleView
+            onClickDelayed="@{viewModel::entryBottle}"
+            android:id="@+id/bottle_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/top_relative"
+            android:layout_margin="5dp"
+            android:visibility="@{showBottle?View.VISIBLE:View.GONE}" />
+
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_page"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/top_relative" />
+            android:layout_below="@+id/bottle_layout" />
 
         <RelativeLayout
             onClickDelayed="@{viewModel::publishDiscover}"

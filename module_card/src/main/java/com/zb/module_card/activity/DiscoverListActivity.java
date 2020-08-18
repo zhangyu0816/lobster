@@ -26,6 +26,7 @@ public class DiscoverListActivity extends CardBaseActivity {
     public void initUI() {
         DiscoverListViewModel viewModel = new DiscoverListViewModel();
         viewModel.otherUserId = userId;
+        viewModel.memberInfo = memberInfo;
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.isAttention, isAttention);
         mBinding.setVariable(BR.memberInfo, memberInfo);

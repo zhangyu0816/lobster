@@ -105,6 +105,7 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
             HttpTimeException exception = (HttpTimeException) e;
             switch (exception.getCode()) {
                 case HttpTimeException.ERROR:
+                case HttpTimeException.OPEN_VIP:
                     if (!TextUtils.equals(exception.getMessage(), "已经赞过了") && !TextUtils.equals("已经取消过", exception.getMessage()))
                         SCToastUtil.showToast(context, exception.getMessage(), position == 0);
                     break;

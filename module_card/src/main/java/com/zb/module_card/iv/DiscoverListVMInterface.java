@@ -7,4 +7,6 @@ public interface DiscoverListVMInterface {
     void cancelAttention();
 
     void contactNum();
+
+    void memberInfoConf();
 }

@@ -52,7 +52,6 @@ import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
-import com.zb.lib_base.windows.CountUsedPW;
 import com.zb.lib_base.windows.FunctionPW;
 import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.TextPW;
@@ -166,7 +165,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
         String sharedUrl = HttpManager.BASE_URL + "mobile/Dyn_dynDetail?friendDynId=" + friendDynId;
         UMImage umImage = new UMImage(activity, discoverInfo.getImage().replace("YM0000", "430X430"));
         new FunctionPW(activity, mBinding.getRoot(), umImage, sharedName, content, sharedUrl,
-                discoverInfo.getUserId() == BaseActivity.userId, true, false, new FunctionPW.CallBack() {
+                discoverInfo.getUserId() == BaseActivity.userId, true, true, false, new FunctionPW.CallBack() {
             @Override
             public void gift() {
                 mBinding.videoView.pause();
@@ -413,7 +412,8 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
                     // 喜欢次数用尽
                     SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else if (o == 4) {
-                    new CountUsedPW(activity, mBinding.getRoot(), 2);
+                    SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
+//                    new CountUsedPW(activity, mBinding.getRoot(), 2);
                 } else {
                     SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
                 }

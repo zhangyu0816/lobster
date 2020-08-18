@@ -83,7 +83,7 @@
                     android:layout_below="@+id/recyclerView"
                     android:background="@null"
                     android:gravity="top"
-                    android:hint="输入内容会有更多赞哦～"
+                    android:hint="输入你想说的话…"
                     android:maxLength="200"
                     android:maxLines="10"
                     android:minLines="6"
