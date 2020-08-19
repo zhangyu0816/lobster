@@ -82,6 +82,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
     private String downloadPath = "";
     private int videoWidth, videoHeight;
 
+
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
@@ -108,7 +109,17 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
                 mBinding.setIsAttention(intent.getBooleanExtra("isAttention", false));
             }
         };
+
+        initGood(mBinding.viewClick, mBinding.ivGood, () -> videoPlay(null), () -> {
+            if (!goodDb.hasGood(friendDynId)) {
+                mBinding.ivUnLike.setVisibility(View.GONE);
+                mBinding.ivLike.setVisibility(View.VISIBLE);
+                dynDoLike();
+            }
+        });
         dynDetail();
+
+
     }
 
     @Override
@@ -400,7 +411,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
             public void onNext(Integer o) {
                 // 1喜欢成功 2匹配成功 3喜欢次数用尽
                 String myHead = mineInfo.getImage();
-                String otherHead = memberInfo.getMoreImages().split("#")[0];
+                String otherHead = memberInfo.getImage();
                 if (o == 1) {
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
                 } else if (o == 2) {
@@ -423,16 +434,6 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
     }
 
     private void initVideo() {
-//        //视频加载完成,准备好播放视频的回调
-//        mBinding.videoView.setOnPreparedListener(mp -> {
-//            //尺寸变化回调
-//            mp.setOnVideoSizeChangedListener((mp1, width, height) -> changeVideoSize(mp1));
-//        });
-//        //视频播放完成后的回调
-//        mBinding.videoView.setOnCompletionListener(mp -> {
-//            mBinding.videoView.stopPlayback();//停止播放视频,并且释放
-//            mBinding.videoView.suspend();//在任何状态下释放媒体播放器
-//        });
         //异常回调
         mBinding.videoView.setOnErrorListener((mp, what, extra) -> {
             return true;//如果方法处理了错误，则为true；否则为false。返回false或根本没有OnErrorListener，将导致调用OnCompletionListener。

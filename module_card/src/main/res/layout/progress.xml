@@ -3,7 +3,13 @@
 
     <data>
 
+        <variable
+            name="mineInfo"
+            type="com.zb.lib_base.model.MineInfo" />
+
         <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+
     </data>
 
     <RelativeLayout
@@ -21,13 +27,29 @@
             android:layout_centerInParent="true"
             android:background="@drawable/card_progress" />
 
-        <ImageView
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(300)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(300)}"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_centerInParent="true"
-            android:background="@drawable/card_progress_in" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <View
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(300)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(300)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/circle_white" />
+
+            <ImageView
+                imageUrl="@{mineInfo.image}"
+                isCircle="@{true}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(280)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(280)}"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+
 
     </RelativeLayout>
 </layout>

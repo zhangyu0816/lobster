@@ -24,14 +24,14 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="@{v->pw.selectReview(item)}">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/iv_logo"
             defaultRes="@{ObjectUtils.getDefaultRes()}"
             imageUrl="@{item.image}"
             isCircle="@{true}"
+            onClickDelayed="@{v->pw.toMemberDetail(item)}"
             viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
             android:layout_width="40dp"
@@ -44,6 +44,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
             android:layout_toEndOf="@+id/iv_logo"
+            android:onClick="@{v->pw.selectReview(item)}"
             android:orientation="vertical">
 
             <TextView

@@ -352,17 +352,14 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     if (pairInfoList.size() > 0) {
-                        if (TextUtils.equals(pairInfoList.get(0).getSingleImage(), "card_progress_icon")) {
-                            adapter.setIsPlay(false);
-                            pairInfoList.clear();
-                            adapter.notifyDataSetChanged();
+                        if (!TextUtils.equals(pairInfoList.get(0).getSingleImage(), "card_progress_icon")) {
+                            int start = pairInfoList.size();
+                            pairInfoList.add(createProgress());
+                            adapter.setIsPlay(true);
+                            adapter.setShowCount(false);
+                            adapter.notifyItemRangeChanged(start, pairInfoList.size());
                         }
                     }
-
-                    int start = pairInfoList.size();
-                    pairInfoList.add(createNoData());
-                    adapter.setShowCount(false);
-                    adapter.notifyItemRangeChanged(start, pairInfoList.size());
                 } else if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
                     adapter.setIsPlay(false);
                     pairInfoList.clear();
@@ -376,8 +373,11 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 .setSex(MineApp.sex)
                 .setMaxAge(MineApp.maxAge)
                 .setMinAge(MineApp.minAge);
-        new Handler().postDelayed(() -> HttpManager.getInstance().doHttpDeal(api), 300);
-
+        if (needProgress) {
+            new Handler().postDelayed(() -> HttpManager.getInstance().doHttpDeal(api), 1000);
+        } else {
+            HttpManager.getInstance().doHttpDeal(api);
+        }
     }
 
     @Override
@@ -390,7 +390,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             public void onNext(Integer o) {
                 // 1喜欢成功 2匹配成功 3喜欢次数用尽
                 String myHead = mineInfo.getImage();
-                String otherHead = pairInfo.getMoreImages().split("#")[0];
+                String otherHead = pairInfo.getHeadImage();
                 if (o == 1) {
                     // 不喜欢成功  喜欢成功  超级喜欢成功
                     if (likeOtherStatus == 1) {

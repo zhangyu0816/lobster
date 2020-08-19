@@ -3,15 +3,18 @@ package com.zb.lib_base.vm;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -29,6 +32,7 @@ import com.zb.lib_base.db.AttentionDb;
 import com.zb.lib_base.db.GoodDb;
 import com.zb.lib_base.db.MineInfoDb;
 import com.zb.lib_base.iv.BaseVMInterface;
+import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.windows.BottleQuestionPW;
 
 import java.io.IOException;
@@ -238,6 +242,43 @@ public class BaseViewModel implements BaseVMInterface {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private ObjectAnimator scaleX, scaleY, scaleAfterX, scaleAfterY, alpha;
+    private AnimatorSet animatorSet = new AnimatorSet();
+    private Handler mHandler = new Handler();
+
+    private long exitTime = 0;
+
+    @SuppressLint("ClickableViewAccessibility")
+    public void initGood(View clickView, View imageView, Runnable ra,Runnable successRa) {
+        imageView.setRotation(45f);
+        scaleX = ObjectAnimator.ofFloat(imageView, "scaleX", 2f, 1.8f, 2f).setDuration(300);
+        scaleY = ObjectAnimator.ofFloat(imageView, "scaleY", 2f, 1.8f, 2f).setDuration(300);
+        scaleAfterX = ObjectAnimator.ofFloat(imageView, "scaleX", 2f, 3f).setDuration(200);
+        scaleAfterY = ObjectAnimator.ofFloat(imageView, "scaleY", 2f, 3f).setDuration(200);
+        alpha = ObjectAnimator.ofFloat(imageView, "alpha", 1, 0).setDuration(200);
+
+        clickView.setOnTouchListener((view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                if ((System.currentTimeMillis() - exitTime) > 500) {
+                    exitTime = System.currentTimeMillis();
+                    mHandler.postDelayed(ra, 500);
+                } else {
+                    exitTime = 0;
+                    mHandler.removeCallbacks(ra);
+                    imageView.setX(motionEvent.getX() - ObjectUtils.getViewSizeByWidthFromMax(102));
+                    imageView.setY(motionEvent.getY() - ObjectUtils.getViewSizeByWidthFromMax(102));
+                    imageView.setAlpha(1f);
+                    animatorSet.setInterpolator(new LinearInterpolator());
+                    animatorSet.play(scaleX).with(scaleY);
+                    animatorSet.play(scaleAfterX).with(scaleAfterY).with(alpha).after(scaleX).after(100);
+                    animatorSet.start();
+                    mHandler.postDelayed(successRa,600);
+                }
+            }
+            return false;
+        });
     }
 
     /**

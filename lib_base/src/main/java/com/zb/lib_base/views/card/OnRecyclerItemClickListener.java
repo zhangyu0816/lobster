@@ -57,5 +57,7 @@ public abstract class OnRecyclerItemClickListener implements RecyclerView.OnItem
             }
             return false;
         }
+
+
     }
 }

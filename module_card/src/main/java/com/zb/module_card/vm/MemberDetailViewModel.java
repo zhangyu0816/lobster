@@ -266,7 +266,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             @Override
             public void onNext(Integer o) {
                 String myHead = mineInfo.getImage();
-                String otherHead = memberInfo.getMoreImages().split("#")[0];
+                String otherHead = memberInfo.getImage();
                 // 1喜欢成功 2匹配成功 3喜欢次数用尽
                 if (o == 1) {
                     if (showLike) {

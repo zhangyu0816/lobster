@@ -223,16 +223,15 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     public void doGood(int position) {
         DiscoverInfo discoverInfo = MineApp.discoverInfoList.get(position);
         if (goodDb.hasGood(discoverInfo.getFriendDynId())) {
-
             ivUnLike.setVisibility(View.VISIBLE);
             ivLike.setVisibility(View.GONE);
             likeOrNot(ivUnLike);
-            dynCancelLike(discoverInfo, position);
+            dynCancelLike(discoverInfo);
         } else {
             ivUnLike.setVisibility(View.GONE);
             ivLike.setVisibility(View.VISIBLE);
             likeOrNot(ivLike);
-            dynDoLike(discoverInfo, position);
+            dynDoLike(discoverInfo);
         }
     }
 
@@ -393,7 +392,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    private void dynDoLike(DiscoverInfo discoverInfo, int position) {
+    private void dynDoLike(DiscoverInfo discoverInfo) {
         dynDoLikeApi api = new dynDoLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
@@ -423,7 +422,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    private void dynCancelLike(DiscoverInfo discoverInfo, int position) {
+    private void dynCancelLike(DiscoverInfo discoverInfo) {
         dynCancelLikeApi api = new dynCancelLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
@@ -465,6 +464,8 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     private ImageView ivAttention;
     private ImageView ivImage;
     private ImageView ivPlay;
+    private View viewClick;
+    private ImageView ivGood;
 
     private void playVideo(View view) {
         discoverInfo = MineApp.discoverInfoList.get(position);
@@ -478,6 +479,9 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         ivAttention = view.findViewById(R.id.iv_attention);
         ivImage = view.findViewById(R.id.iv_image);
         ivPlay = view.findViewById(R.id.iv_play);
+        viewClick = view.findViewById(R.id.view_click);
+        ivGood = view.findViewById(R.id.iv_good);
+
         attentionStatus(discoverInfo);
         animator = ObjectAnimator.ofFloat(ivProgress, "rotation", 0, 360).setDuration(700);
         animator.setRepeatMode(ValueAnimator.RESTART);
@@ -500,6 +504,14 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             if (animator != null)
                 animator.cancel();
             initVideo();
+        });
+
+        initGood(viewClick, ivGood, () -> videoPlay(discoverInfo), () -> {
+            if (!goodDb.hasGood(discoverInfo.getFriendDynId())) {
+                ivUnLike.setVisibility(View.GONE);
+                ivLike.setVisibility(View.VISIBLE);
+                dynDoLike(discoverInfo);
+            }
         });
     }
 

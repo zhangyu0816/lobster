@@ -9,18 +9,25 @@ import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.api.attentionOtherApi;
 import com.zb.lib_base.api.cancelAttentionApi;
 import com.zb.lib_base.api.contactNumApi;
+import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.memberInfoConfApi;
+import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.AttentionInfo;
+import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.FragmentUtils;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.FunctionPW;
+import com.zb.lib_base.windows.SuperLikePW;
+import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_card.R;
 import com.zb.module_card.databinding.CardDiscoverListBinding;
 import com.zb.module_card.iv.DiscoverListVMInterface;
@@ -30,17 +37,22 @@ import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
+import io.realm.Realm;
 
 public class DiscoverListViewModel extends BaseViewModel implements DiscoverListVMInterface {
     public long otherUserId;
     private CardDiscoverListBinding mBinding;
     private List<Fragment> fragments = new ArrayList<>();
     public MemberInfo memberInfo;
+    private MineInfo mineInfo;
+    private LikeDb likeDb;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (CardDiscoverListBinding) binding;
+        likeDb = new LikeDb(Realm.getDefaultInstance());
+        mineInfo = mineInfoDb.getMineInfo();
         contactNum();
         initFragments();
     }
@@ -175,6 +187,52 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
                 });
             }
         }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void superLike(View view) {
+        super.superLike(view);
+        if (mineInfo.getMemberType() == 2) {
+            makeEvaluate();
+        } else {
+            new VipAdPW(activity, mBinding.getRoot(), false, 3);
+        }
+    }
+
+    @Override
+    public void makeEvaluate() {
+        //  likeOtherStatus  0 不喜欢  1 喜欢  2.超级喜欢 （非会员提示开通会员）
+        makeEvaluateApi api = new makeEvaluateApi(new HttpOnNextListener<Integer>() {
+            @Override
+            public void onNext(Integer o) {
+                String myHead = mineInfo.getImage();
+                String otherHead = memberInfo.getImage();
+                // 1喜欢成功 2匹配成功 3喜欢次数用尽
+                if (o == 1) {
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
+                } else if (o == 2) {
+                    // 匹配成功
+                    likeDb.saveLike(new CollectID(memberInfo.getUserId()));
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), memberInfo.getSex(), () -> ActivityUtils.getChatActivity(memberInfo.getUserId()));
+                    activity.sendBroadcast(new Intent("lobster_pairList"));
+                } else if (o == 3) {
+                    // 喜欢次数用尽
+                    SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
+                } else if (o == 4) {
+                    // 超级喜欢时，非会员或超级喜欢次数用尽
+                    if (mineInfo.getMemberType() == 2) {
+                        SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
+//                        new CountUsedPW(activity, mBinding.getRoot(), 2);
+                    } else {
+                        new VipAdPW(activity, mBinding.getRoot(), false, 3);
+                    }
+                } else {
+                    SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
+                }
+
+            }
+        }, activity).setOtherUserId(otherUserId).setLikeOtherStatus(2);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

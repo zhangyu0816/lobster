@@ -38,6 +38,7 @@ public class DiscoverVideoL2Activity extends BaseActivity {
         viewModel.friendDynId = friendDynId;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
+
     }
 
     @Override
@@ -63,5 +64,4 @@ public class DiscoverVideoL2Activity extends BaseActivity {
         }
         return false;
     }
-
 }

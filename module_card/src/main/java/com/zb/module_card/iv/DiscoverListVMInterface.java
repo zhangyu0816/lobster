@@ -9,4 +9,6 @@ public interface DiscoverListVMInterface {
     void contactNum();
 
     void memberInfoConf();
+
+    void makeEvaluate();
 }

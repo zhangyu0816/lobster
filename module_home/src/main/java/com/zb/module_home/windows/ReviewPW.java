@@ -15,6 +15,7 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.Review;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_home.BR;
@@ -138,6 +139,10 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
     public void selectReview(Review review) {
         reviewId = reviewId == review.getReviewId() ? 0 : review.getReviewId();
         mBinding.setVariable(BR.name, reviewId == 0 ? "" : review.getNick());
+    }
+
+    public void toMemberDetail(Review review) {
+        ActivityUtils.getCardMemberDetail(review.getUserId(), false);
     }
 
     public interface CallBack {

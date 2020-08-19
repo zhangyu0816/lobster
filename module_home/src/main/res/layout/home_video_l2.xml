@@ -49,14 +49,12 @@
 
         <VideoView
             android:id="@+id/video_view"
-            onClickDelayed="@{viewModel::videoPlay}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:background="@color/black_252" />
 
         <ImageView
-            onClickDelayed="@{viewModel::videoPlay}"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerInParent="true"
@@ -74,12 +72,24 @@
             android:layout_centerInParent="true" />
 
         <ImageView
+            android:id="@+id/iv_good"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            android:background="@drawable/video_play_good_pressed" />
+
+        <ImageView
             android:id="@+id/iv_progress"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerInParent="true"
             android:background="@mipmap/loading_icon"
             android:visibility="@{isProgress?View.VISIBLE:View.GONE}" />
+
+        <View
+            android:id="@+id/view_click"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <View
             viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(180)}"

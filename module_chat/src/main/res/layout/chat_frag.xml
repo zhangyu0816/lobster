@@ -4,6 +4,8 @@
 
     <data>
 
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
         <variable
             name="viewModel"
             type="com.zb.module_chat.vm.ChatFragViewModel" />
@@ -73,5 +75,87 @@
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:background="@mipmap/recommend_bg"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp">
+
+                <View
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(104)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(104)}"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/circle_white" />
+
+                <ImageView
+                    imageUrl="@{viewModel.mineInfo.image}"
+                    isCircle="@{true}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(96)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(96)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp">
+
+                <View
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(104)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(104)}"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/circle_red" />
+
+                <ImageView
+                    imageUrl="@{viewModel.mineInfo.image}"
+                    isCircle="@{true}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(96)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(96)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="优质推荐"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="每日优质用户推荐"
+                    android:textColor="@color/white"
+                    android:textSize="11sp" />
+            </LinearLayout>
+        </LinearLayout>
     </RelativeLayout>
 </layout>

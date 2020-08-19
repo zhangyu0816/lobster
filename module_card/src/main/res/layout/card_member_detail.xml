@@ -317,7 +317,7 @@
             android:visibility="@{showLike?View.VISIBLE:View.GONE}"
             app:srcCompat="@mipmap/dislike_icon" />
 
-        <com.zb.lib_base.views.SuperLikeView
+        <com.zb.lib_base.views.SuperLikeBigView
             android:id="@+id/iv_super_like"
             onClickDelayed="@{viewModel::superLike}"
             android:layout_width="wrap_content"

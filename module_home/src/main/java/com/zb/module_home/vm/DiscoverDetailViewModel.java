@@ -321,7 +321,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             public void onNext(Integer o) {
                 // 1喜欢成功 2匹配成功 3喜欢次数用尽
                 String myHead = mineInfo.getImage();
-                String otherHead = memberInfo.getMoreImages().split("#")[0];
+                String otherHead = memberInfo.getImage();
                 if (o == 1) {
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
                 } else if (o == 2) {
