@@ -90,42 +90,13 @@
             android:layout_above="@+id/linearLayout2"
             android:layout_below="@+id/relativeLayout">
 
-            <RelativeLayout
-                android:id="@+id/cut_relative"
-                viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.5f)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(1f)}"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <com.zb.lib_base.views.CutImageView
-                    android:id="@+id/iv_cut"
-                    viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.5f)}"
-                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(1f)}"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:visibility="@{isMore?View.GONE:View.VISIBLE}" />
-
-                <LinearLayout
-                    android:id="@+id/cut_layout"
-                    viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.5f)}"
-                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(1f)}"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@color/black"
-                    android:orientation="vertical"
-                    android:visibility="@{isMore?View.VISIBLE:View.GONE}" />
-            </RelativeLayout>
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/images_list"
                 adapter="@{viewModel.adapter}"
                 gridNum="@{4}"
                 recyclerType="@{2}"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/cut_relative" />
+                android:layout_height="match_parent"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"

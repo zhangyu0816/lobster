@@ -3,6 +3,7 @@ package com.zb.module_home.vm;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.MotionEvent;
@@ -12,7 +13,11 @@ import android.widget.ImageView;
 
 import com.app.abby.xbanner.Ads;
 import com.app.abby.xbanner.XBanner;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.maning.imagebrowserlibrary.MNImage;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -65,6 +70,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.ViewDataBinding;
 import io.realm.Realm;
 
@@ -87,6 +93,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     private BaseReceiver attentionReceiver;
     private boolean isFirst = true;
     private AppBarLayout.LayoutParams params;
+    private int bannerWidth = ObjectUtils.getViewSizeByWidth(0.9f);
+    private int bannerHeight = (int) (ObjectUtils.getViewSizeByWidth(0.9f) * 1.3);
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -95,7 +103,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         mBinding = (HomeDiscoverDetailBinding) binding;
         mineInfo = mineInfoDb.getMineInfo();
         likeDb = new LikeDb(Realm.getDefaultInstance());
-        AdapterBinding.viewSize(mBinding.banner, MineApp.W, MineApp.W);
+        AdapterBinding.viewSize(mBinding.banner, bannerWidth, bannerHeight);
         mBinding.setContent("");
         mBinding.setName("");
         mBinding.setListNum(10);
@@ -565,11 +573,23 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         for (Ads item : adList) {
             imageList.add(item.getSmallImage());
         }
-        mBinding.banner.setImageScaleType(ImageView.ScaleType.FIT_XY)
+        mBinding.banner.setImageScaleType(ImageView.ScaleType.FIT_CENTER)
                 .setAds(adList)
-                .setImageLoader((context, ads, image, position) -> AdapterBinding.loadImage(image, ads.getSmallImage(), 0,
-                        ObjectUtils.getDefaultRes(), MineApp.W, MineApp.W,
-                        false, false, 0, false, 0, false))
+                .setImageLoader((context, ads, image, position) ->
+                        Glide.with(activity).asBitmap().load(ads.getSmallImage()).into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                int w = resource.getWidth();
+                                int h = resource.getHeight();
+                                if (w >= h) {
+                                    AdapterBinding.viewSize(image, bannerWidth, (int) ((float) bannerWidth * h / w));
+                                } else {
+                                    AdapterBinding.viewSize(image, (int) ((float) bannerHeight * w / h), bannerHeight);
+                                }
+                                image.setImageBitmap(resource);
+                            }
+                        })
+                )
                 .setBannerPageListener(item -> MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, item, false, null))
                 .setBannerTypes(XBanner.CIRCLE_INDICATOR_TITLE)
                 .setIndicatorGravity(XBanner.INDICATOR_START)

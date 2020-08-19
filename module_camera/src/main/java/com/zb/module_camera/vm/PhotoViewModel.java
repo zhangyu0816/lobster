@@ -196,7 +196,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
             if (fos != null) {
                 try {
                     fos.close();
-                    if (MineApp.toPublish&&!MineApp.toContinue) {
+                    if (MineApp.toPublish && !MineApp.toContinue && !MineApp.isChat) {
                         MineApp.cameraType = 2;
                         MineApp.isMore = false;
                         MineApp.filePath = imagePath;

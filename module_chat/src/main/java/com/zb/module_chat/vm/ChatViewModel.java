@@ -40,6 +40,7 @@ import com.zb.lib_base.api.readOverHistoryMsgApi;
 import com.zb.lib_base.api.thirdHistoryMsgListApi;
 import com.zb.lib_base.api.thirdReadChatApi;
 import com.zb.lib_base.api.uploadSoundApi;
+import com.zb.lib_base.api.uploadVideoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.db.HistoryMsgDb;
@@ -647,6 +648,16 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         photoManager.addFileUpload(0, new File(fileName));
     }
 
+    public void uploadVideo(String fileName, long time) {
+        uploadVideoApi api = new uploadVideoApi(new HttpOnNextListener<ResourceUrl>() {
+            @Override
+            public void onNext(ResourceUrl o) {
+                sendChatMessage(4, "", o.getUrl(), (int) (time / 1000), "【视频】");
+            }
+        }, activity).setFile(new File(fileName));
+        HttpChatUploadManager.getInstance().doHttpDeal(api);
+    }
+
     /**
      * 清空用户消息
      */
@@ -851,7 +862,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     private void setPermissions(int type) {
         if (type == 1) {
             MineApp.isChat = true;
-            ActivityUtils.getCameraMain(activity, false, true, false);
+            MineApp.toPublish = false;
+            ActivityUtils.getCameraMain(activity, false, true, true);
         } else if (type == 3) {
             soundView.start();
             stopPlayer();

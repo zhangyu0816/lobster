@@ -36,6 +36,5 @@ public class MainActivity extends CameraBaseActivity {
         mBinding.setVariable(BR.isMore, isMore);
         mBinding.setVariable(BR.showBottom, showBottom);
         mBinding.setVariable(BR.showVideo, showVideo);
-        AdapterBinding.viewSize(((CameraMainBinding) mBinding).imagesList, MineApp.W, (int) (MineApp.H * 0.4f));
     }
 }

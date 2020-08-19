@@ -16,7 +16,6 @@ public class CameraAdapter<T> extends BindingItemAdapter<T> {
 
     public void setSelectIndex(int selectIndex) {
         this.selectIndex = selectIndex;
-        notifyDataSetChanged();
     }
 
     public CameraAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {

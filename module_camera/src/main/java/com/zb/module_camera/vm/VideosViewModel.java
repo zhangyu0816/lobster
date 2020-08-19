@@ -50,7 +50,7 @@ public class VideosViewModel extends BaseViewModel implements VideosVMInterface 
     @Override
     public void selectVideo(int position) {
         mThread.interrupt();
-        adapter.setSelectIndex(position);
+
         videoInfo = videoInfoList.get(position);
         MineApp.isLocation = true;
         MineApp.showBottom = showBottom;
@@ -74,7 +74,7 @@ public class VideosViewModel extends BaseViewModel implements VideosVMInterface 
                         vi.setName(file1.getName());
                         vi.setPath(file1.getAbsolutePath());
                         videoInfoList.add(vi);
-                        mHandler.sendEmptyMessage(0);
+                        mHandler.sendEmptyMessageDelayed(0, 200);
 
                         return true;
                     }

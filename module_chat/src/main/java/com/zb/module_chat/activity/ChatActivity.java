@@ -48,7 +48,12 @@ public class ChatActivity extends BaseActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 MineApp.isChat = false;
-                viewModel.uploadImage(intent.getStringExtra("filePath"));
+                int cameraType = intent.getIntExtra("cameraType", 0);
+                if (cameraType == 0 || cameraType == 2)
+                    viewModel.uploadImage(intent.getStringExtra("filePath"));
+                else if (cameraType == 1) {
+                    viewModel.uploadVideo(intent.getStringExtra("filePath"), intent.getLongExtra("time", 0));
+                }
             }
         };
 

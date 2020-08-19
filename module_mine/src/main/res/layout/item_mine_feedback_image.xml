@@ -24,8 +24,8 @@
         isRound="@{true}"
         onClickDelayed="@{v->viewModel.selectPosition(position)}"
         roundSize="@{7}"
-        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.3f)}"
-        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.3f)}"
+        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.28f)}"
+        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.28f)}"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:scaleType="centerCrop" />

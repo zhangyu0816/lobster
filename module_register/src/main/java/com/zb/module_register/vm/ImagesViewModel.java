@@ -209,6 +209,7 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
     }
 
     private void setPermissions() {
+        MineApp.toPublish = false;
         ActivityUtils.getCameraMain(activity, false, true, false);
     }
 }

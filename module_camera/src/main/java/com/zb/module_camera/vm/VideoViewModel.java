@@ -98,10 +98,7 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
     public void reset(View view) {
         mBinding.setVariable(BR.isRecorder, false);
         mBinding.setVariable(BR.isFinish, false);
-        DataCleanManager.deleteFile(new File(preview.videoPath));
-        preview.releaseCamera();
-        preview.releaseMediaRecorder();
-        initCamera();
+        mCamera.startPreview();
     }
 
     @Override
@@ -184,8 +181,10 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
         preview.releaseMediaRecorder();
         MineApp.isLocation = false;
         MineApp.showBottom = showBottom;
-        ActivityUtils.getCameraVideoPlay(preview.videoPath, true, false);
-        activity.finish();
+        new Handler().postDelayed(() -> {
+            ActivityUtils.getCameraVideoPlay(preview.videoPath, true, false);
+            activity.finish();
+        }, 500);
     }
 
     @Override

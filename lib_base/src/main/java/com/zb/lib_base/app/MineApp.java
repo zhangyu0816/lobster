@@ -59,8 +59,6 @@ public class MineApp extends MultiDexApplication {
     public static String EMAIL_REG = "^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
     public static Map<Integer, String> tranTypeMap = new HashMap<>();
     public static Map<String, Integer> selectMap = new HashMap<>();
-    public static Map<String, String> selectPathMap = new HashMap<>();
-    public static Map<String, CutImageView> cutImageViewMap = new HashMap<>();
     public static Typeface type;
     public static Typeface simplifiedType;
     public static Typeface QingSongShouXieTiType;

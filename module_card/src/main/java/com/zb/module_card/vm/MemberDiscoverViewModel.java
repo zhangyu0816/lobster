@@ -222,7 +222,8 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
                     mBinding.refresh.finishLoadMore();
-                    if (otherUserId == 1) {
+
+                    if (otherUserId == 1 && discoverInfoList.size() == 0) {
                         mBinding.ivNoData.setVisibility(View.VISIBLE);
                     }
                 }

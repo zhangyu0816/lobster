@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.upRealNameInfoApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.Authentication;
@@ -168,6 +169,7 @@ public class AuthenticationViewModel extends BaseViewModel implements Authentica
     }
 
     private void setPermissions() {
+        MineApp.toPublish = false;
         ActivityUtils.getCameraMain(activity, false, true, false);
     }
 }

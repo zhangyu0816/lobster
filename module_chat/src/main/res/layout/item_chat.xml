@@ -96,7 +96,7 @@
                     imageUrl='@{item.resLink.contains(@string/mp3)?"":item.resLink}'
                     isRound="@{true}"
                     roundSize="@{10}"
-                    viewHeightSize="@{0}"
+                    viewHeightSize="@{ObjectUtils.getLogoHeight(0.4f)}"
                     viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.4f)}"
                     android:layout_width="100dp"
                     android:layout_height="200dp"
@@ -266,7 +266,7 @@
                     imageUrl='@{item.resLink.contains(@string/mp3)?"":item.resLink}'
                     isRound="@{true}"
                     roundSize="@{10}"
-                    viewHeightSize="@{0}"
+                    viewHeightSize="@{ObjectUtils.getLogoHeight(0.4f)}"
                     viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.4f)}"
                     android:layout_width="100dp"
                     android:layout_height="200dp"

@@ -6,7 +6,6 @@ import android.widget.LinearLayout;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.api.searchApi;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.http.HttpManager;
@@ -30,7 +29,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import io.realm.Realm;
 
-public class SearchViewModel extends BaseViewModel implements SearchVMInterface, OnRefreshListener, OnLoadMoreListener {
+public class SearchViewModel extends BaseViewModel implements SearchVMInterface, OnLoadMoreListener {
     private HomeSearchBinding mBinding;
     public HomeAdapter adapter;
     private AreaDb areaDb;
@@ -79,14 +78,6 @@ public class SearchViewModel extends BaseViewModel implements SearchVMInterface,
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         pageNo++;
-        search();
-    }
-
-    @Override
-    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        pageNo = 1;
-        memberInfoList.clear();
-        adapter.notifyDataSetChanged();
         search();
     }
 

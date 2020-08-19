@@ -53,6 +53,7 @@ public class PublishImageActivity extends HomeBaseActivity {
             // 相册
             if (isMore) {
                 viewModel.images.clear();
+                if(!path.isEmpty())
                 viewModel.images.addAll(Arrays.asList(path.split(",")));
                 viewModel.images.add("add_image_icon");
                 viewModel.adapter.notifyDataSetChanged();
@@ -60,8 +61,6 @@ public class PublishImageActivity extends HomeBaseActivity {
         } else if (cameraType == 1) {
             // 视频
             MineApp.selectMap.clear();
-            MineApp.selectPathMap.clear();
-            MineApp.cutImageViewMap.clear();
             viewModel.images.clear();
             viewModel.images.add(path);
             viewModel.adapter.notifyDataSetChanged();

@@ -32,23 +32,23 @@
         android:padding="15dp">
 
         <ImageView
-            imageUrl="@{item.image}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(150)}"
+            imageUrl="@{item.singleImage}"
             viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(150)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(150)}"
             android:layout_width="60dp"
             android:layout_height="60dp"
             tools:src="@mipmap/ic_launcher" />
 
         <LinearLayout
-            android:layout_marginStart="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:orientation="vertical">
 
             <TextView
-                android:text="@{item.nick}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{item.nick}"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 tools:text="白熊仙女" />
@@ -57,13 +57,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
+                android:background="@{item.sex == 0 ? @drawable/age_pink_bg : @drawable/age_blue_bg}"
                 android:paddingVertical="2dp"
                 android:paddingStart="6dp"
                 android:paddingEnd="6dp"
                 android:text='@{String.format("%d",DateUtil.getAge(item.birthday,item.age))}'
                 android:textColor="@color/white"
                 android:textSize="12sp"
-                android:background="@{item.sex == 0 ? @drawable/age_pink_bg : @drawable/age_blue_bg}"
                 tools:background="@drawable/age_pink_bg"
                 tools:text="23" />
 
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:singleLine="true"
-                android:text='@{item.serviceTags.substring(1).replace("#"," ")}'
+                android:text='@{item.serviceTags.isEmpty()?"":item.serviceTags.substring(1).replace("#"," ")}'
                 android:textColor="@color/black_9"
                 android:textSize="14sp"
                 tools:text="无个性，不签名" />

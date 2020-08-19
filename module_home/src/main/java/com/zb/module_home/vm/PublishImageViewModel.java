@@ -60,11 +60,14 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
 
     @Override
     public void back(View view) {
+        MineApp.toPublish = false;
+        MineApp.cameraType = 0;
+        MineApp.isMore = false;
+        MineApp.filePath = "";
+        MineApp.time = 0;
         locationReceiver.unregisterReceiver();
         deleteVideoReceiver.unregisterReceiver();
         MineApp.selectMap.clear();
-        MineApp.selectPathMap.clear();
-        MineApp.cutImageViewMap.clear();
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "videos"));
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
         activity.finish();
@@ -136,9 +139,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                 }
                 MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, true, position12 -> {
                     try {
-                        int count = MineApp.selectMap.remove(MineApp.selectPathMap.get(images.get(position12)));
-                        MineApp.cutImageViewMap.remove(MineApp.selectPathMap.get(images.get(position12)));
-                        MineApp.selectPathMap.remove(images.get(position12));
+                        int count = MineApp.selectMap.remove(images.get(position12));
                         for (Map.Entry<String, Integer> entry : MineApp.selectMap.entrySet()) {
                             if (entry.getValue() > count) {
                                 MineApp.selectMap.put(entry.getKey(), entry.getValue() - 1);
@@ -258,11 +259,6 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                 CustomProgressDialog.stopLoading();
                 activity.sendBroadcast(new Intent("lobster_publish"));
                 SCToastUtil.showToast(activity, "发布成功", true);
-                MineApp.toPublish = false;
-                MineApp.cameraType = 0;
-                MineApp.isMore = false;
-                MineApp.filePath = "";
-                MineApp.time = 0;
                 back(null);
             }
         }, activity)

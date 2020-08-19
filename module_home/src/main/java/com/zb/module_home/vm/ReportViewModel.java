@@ -51,8 +51,6 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
     public void back(View view) {
         super.back(view);
         MineApp.selectMap.clear();
-        MineApp.selectPathMap.clear();
-        MineApp.cutImageViewMap.clear();
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
         activity.finish();
     }
@@ -113,9 +111,7 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
             }
             MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, true, position12 -> {
                 try {
-                    int count = MineApp.selectMap.remove(MineApp.selectPathMap.get(images.get(position12)));
-                    MineApp.cutImageViewMap.remove(MineApp.selectPathMap.get(images.get(position12)));
-                    MineApp.selectPathMap.remove(images.get(position12));
+                    int count = MineApp.selectMap.remove(images.get(position12));
                     for (Map.Entry<String, Integer> entry : MineApp.selectMap.entrySet()) {
                         if (entry.getValue() > count) {
                             MineApp.selectMap.put(entry.getKey(), entry.getValue() - 1);
@@ -170,6 +166,7 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
     }
 
     private void setPermissions() {
+        MineApp.toPublish = false;
         ActivityUtils.getCameraMain(activity, true, false, false);
     }
 }
