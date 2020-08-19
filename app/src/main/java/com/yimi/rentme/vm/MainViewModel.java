@@ -30,6 +30,7 @@ import com.zb.lib_base.api.newDynMsgAllNumApi;
 import com.zb.lib_base.api.openedMemberPriceListApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.rechargeDiscountListApi;
+import com.zb.lib_base.api.recommendRankingListApi;
 import com.zb.lib_base.api.systemChatApi;
 import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
@@ -50,8 +51,10 @@ import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.RechargeInfo;
+import com.zb.lib_base.model.RecommendInfo;
 import com.zb.lib_base.model.Report;
 import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.model.VipInfo;
@@ -97,8 +100,10 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private BaseReceiver newsCountReceiver;
     private BaseReceiver unReadCountReceiver;
     private BaseReceiver newDynMsgAllNumReceiver;
+    private BaseReceiver recommendReceiver;
     private AreaDb areaDb;
     private HistoryMsgDb historyMsgDb;
+    private MineInfo mineInfo;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -115,6 +120,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         mBinding.setUnReadCount(0);
         mBinding.setNewsCount(0);
 
+        mineInfo = mineInfoDb.getMineInfo();
+
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
 
         loginHelper = LoginSampleHelper.getInstance();
@@ -125,6 +132,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
         initFragments();
         giftList();
+        recommendRankingList();
 
         rechargeReceiver = new BaseReceiver(activity, "lobster_recharge") {
             @Override
@@ -288,6 +296,13 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onReceive(Context context, Intent intent) {
                 mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
+            }
+        };
+
+        recommendReceiver = new BaseReceiver(activity,"lobster_recommend") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                recommendRankingList();
             }
         };
 
@@ -711,7 +726,18 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    public void startAnimator(String title, String content, String subContent, String logo) {
+    @Override
+    public void recommendRankingList() {
+        recommendRankingListApi api = new recommendRankingListApi(new HttpOnNextListener<List<RecommendInfo>>() {
+            @Override
+            public void onNext(List<RecommendInfo> o) {
+                MineApp.recommendInfoList.addAll(o);
+            }
+        }, activity).setCityId(areaDb.getCityId(PreferenceUtil.readStringValue(activity, "cityName"))).setSex(mineInfo.getSex() == 0 ? 1 : 0);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void startAnimator(String title, String content, String subContent, String logo) {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBinding.remindRelative.getLayoutParams();
         params.setMarginEnd(ObjectUtils.getViewSizeByWidthFromMax(220));
         mBinding.remindRelative.setLayoutParams(params);

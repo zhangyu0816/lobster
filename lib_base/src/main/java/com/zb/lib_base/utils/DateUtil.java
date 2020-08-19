@@ -483,7 +483,7 @@ public class DateUtil {
      * @param time
      */
     public static String getConstellations(String time) {
-        if(time.isEmpty()){
+        if (time.isEmpty()) {
             return "";
         }
         String[] data = time.split("-");
@@ -494,5 +494,14 @@ public class DateUtil {
         } else {
             return cl1[0];
         }
+    }
+
+    public static int getAge(String birthday, int age) {
+        if (birthday == null || birthday.isEmpty())
+            return age + 1;
+        String now = getNow(yyyy_MM_dd);
+        int nowYear = Integer.parseInt(now.substring(0, 4));
+        int birthYear = Integer.parseInt(birthday.substring(0, 4));
+        return nowYear - birthYear + 1;
     }
 }

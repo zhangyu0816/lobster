@@ -33,4 +33,6 @@ public interface MainVMInterface {
     void noReadBottleNum(boolean isUpdate);
 
     void otherInfo(long otherUserId,  YWMessage ywMessage);
+
+    void recommendRankingList();
 }

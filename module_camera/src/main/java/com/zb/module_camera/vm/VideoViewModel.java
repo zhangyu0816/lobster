@@ -60,7 +60,6 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        MineApp.aspect = "16:9";
         videoBinding = (CameraVideoBinding) binding;
         mBinding.setVariable(BR.sizeIndex, 0);
         mBinding.setVariable(BR.isRecorder, false);
@@ -77,7 +76,6 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
         videoBinding.cameraLayout.removeAllViews();
         mCamera = Camera.open(_position);
         mRecorder = new MediaRecorder();
-        MineApp.aspect = x + ":" + y;
         preview = new CameraPreview(activity, mCamera, mRecorder, (int) x, (int) y);
         mOverCameraView = new OverCameraView(activity);
         videoBinding.cameraLayout.addView(preview);
@@ -175,6 +173,11 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
 
     @Override
     public void stopRecorder(View view) {
+        if (time < 1000) {
+            reset(view);
+            SCToastUtil.showToast(activity, "视频文件录制太短，请重新录制", true);
+            return;
+        }
         preview.stopRecord();
         handler.removeCallbacks(runnable);
         preview.releaseCamera();

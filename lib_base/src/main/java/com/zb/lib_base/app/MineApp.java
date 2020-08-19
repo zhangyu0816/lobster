@@ -27,6 +27,7 @@ import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.RechargeInfo;
+import com.zb.lib_base.model.RecommendInfo;
 import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.model.Report;
 import com.zb.lib_base.model.VipInfo;
@@ -85,6 +86,7 @@ public class MineApp extends MultiDexApplication {
 
     private static LinkedList<Activity> mActivityList = new LinkedList<>();
 
+    public static boolean isChat = false;
     public static boolean isLocation = false;
     public static boolean showBottom = false;
     public static boolean toPublish = false;
@@ -93,14 +95,15 @@ public class MineApp extends MultiDexApplication {
     public static String filePath = "";
     public static boolean isMore = false;
     public static long time = 0;
-    public static String aspect = "";
 
     public static int sex = 0;
     public static int maxAge = 70;
     public static int minAge = 18;
 
     public static List<DiscoverInfo> discoverInfoList = new ArrayList<>();
-    public static Map<String,Integer> constellationMap =  new HashMap<>();
+    public static Map<String, Integer> constellationMap = new HashMap<>();
+
+    public static List<RecommendInfo> recommendInfoList = new ArrayList<>();
 
     static {
         //设置全局的Header构建器

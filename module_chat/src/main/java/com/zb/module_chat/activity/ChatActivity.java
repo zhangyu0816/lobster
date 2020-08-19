@@ -9,6 +9,7 @@ import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.lib_base.utils.StatusBarUtil;
 import com.zb.module_chat.BR;
@@ -46,6 +47,7 @@ public class ChatActivity extends BaseActivity {
         cameraReceiver = new BaseReceiver(activity, "lobster_camera") {
             @Override
             public void onReceive(Context context, Intent intent) {
+                MineApp.isChat = false;
                 viewModel.uploadImage(intent.getStringExtra("filePath"));
             }
         };

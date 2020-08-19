@@ -11,6 +11,8 @@
 
         <import type="com.zb.lib_base.activity.BaseActivity" />
 
+        <import type="com.zb.lib_base.utils.DateUtil" />
+
         <variable
             name="viewModel"
             type="com.zb.module_card.vm.MemberDetailViewModel" />
@@ -118,7 +120,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="15dp"
                         android:background="@{viewModel.memberInfo==null?@drawable/default_bg:@drawable/empty_bg}"
-                        android:minWidth="60dp"
                         android:text="@{viewModel.memberInfo.remark.isEmpty()?viewModel.memberInfo.nick:viewModel.memberInfo.remark}"
                         android:textColor="@color/black_252"
                         android:textSize="25sp"
@@ -166,7 +167,7 @@
                         android:paddingTop="2dp"
                         android:paddingEnd="7dp"
                         android:paddingBottom="2dp"
-                        android:text="@{String.format(@string/text_age,viewModel.memberInfo.age)}"
+                        android:text="@{String.format(@string/text_age,DateUtil.getAge(viewModel.memberInfo.birthday,viewModel.memberInfo.age))}"
                         android:textColor="@color/white"
                         android:textSize="12sp"
                         tools:text="19岁" />

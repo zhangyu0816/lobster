@@ -53,7 +53,7 @@ public class VideoPlayViewModel extends BaseViewModel implements VideoPlayVMInte
     public void right(View view) {
         super.right(view);
         if (isUpload) {
-            if (MineApp.toPublish && !MineApp.toContinue) {
+            if (MineApp.toPublish && !MineApp.toContinue&& !MineApp.isChat) {
                 MineApp.cameraType = 1;
                 MineApp.isMore = false;
                 MineApp.filePath = filePath;

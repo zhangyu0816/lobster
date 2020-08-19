@@ -194,6 +194,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
             @Override
             public void onNext(List<DiscoverInfo> o) {
                 mBinding.noNetLinear.setVisibility(View.GONE);
+                mBinding.ivNoData.setVisibility(View.GONE);
                 int start = discoverInfoList.size();
                 for (DiscoverInfo item : o) {
                     if (otherUserId == 1) {
@@ -221,6 +222,9 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
                     mBinding.refresh.finishLoadMore();
+                    if (otherUserId == 1) {
+                        mBinding.ivNoData.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         }, activity)

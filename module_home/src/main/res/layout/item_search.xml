@@ -6,6 +6,8 @@
 
         <import type="com.zb.lib_base.utils.ObjectUtils" />
 
+        <import type="com.zb.lib_base.utils.DateUtil" />
+
         <variable
             name="item"
             type="com.zb.lib_base.model.MemberInfo" />
@@ -58,7 +60,7 @@
                 android:paddingVertical="2dp"
                 android:paddingStart="6dp"
                 android:paddingEnd="6dp"
-                android:text="@{String.valueOf(item.age)}"
+                android:text='@{String.format("%d",DateUtil.getAge(item.birthday,item.age))}'
                 android:textColor="@color/white"
                 android:textSize="12sp"
                 android:background="@{item.sex == 0 ? @drawable/age_pink_bg : @drawable/age_blue_bg}"
@@ -69,9 +71,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
-                android:paddingEnd="3dp"
                 android:singleLine="true"
-                android:text="@{item.serviceTags}"
+                android:text='@{item.serviceTags.substring(1).replace("#"," ")}'
                 android:textColor="@color/black_9"
                 android:textSize="14sp"
                 tools:text="无个性，不签名" />

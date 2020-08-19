@@ -62,5 +62,14 @@
                     android:textStyle="bold" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
+
+        <ImageView
+            android:id="@+id/iv_no_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:background="@mipmap/my_no_discover_data"
+            android:visibility="gone"/>
     </RelativeLayout>
 </layout>

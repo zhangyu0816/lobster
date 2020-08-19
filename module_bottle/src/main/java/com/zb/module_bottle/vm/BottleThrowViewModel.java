@@ -151,6 +151,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         mBinding.setShowBtn(false);
         mBinding.edContent.setText("");
         mBinding.edContent.setEnabled(true);
+        mBinding.ivThrow.setBackgroundResource(R.mipmap.throw_icon);
         mBinding.bottleWhiteBack.bottleBg.stopBg();
     }
 
@@ -177,6 +178,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
                 mBinding.bottleWhiteBack.bottleBg.startWang(() -> {
                     mBinding.edContent.setText(bottleInfo.getText());
                     mBinding.edContent.setEnabled(false);
+                    mBinding.ivThrow.setBackgroundResource(R.mipmap.throw_back_icon);
                     mBinding.setIsBottle(true);
                 });
             }
@@ -189,7 +191,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
             @Override
             public void onNext(MemberInfo o) {
                 mBinding.setMemberInfo(o);
-                mBinding.setInfo((o.getSex() == 0 ? "女 " : "男 ") + o.getAge() + "岁 " + DateUtil.getConstellations(o.getBirthday()));
+                mBinding.setInfo((o.getSex() == 0 ? "女 " : "男 ") + DateUtil.getAge(o.getBirthday(), o.getAge()) + "岁 " + DateUtil.getConstellations(o.getBirthday()));
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
@@ -197,20 +199,20 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
 
     @Override
     public void sure(View view) {
-        if (bottleInfo.getDriftBottleId() == 0) {
+        pickBottle(2);
+    }
+
+    @Override
+    public void cancel(View view) {
+        if(mBinding.edContent.isEnabled()){
             if (mBinding.edContent.getText().toString().trim().isEmpty()) {
                 SCToastUtil.showToast(activity, "漂流瓶内容不能为空", true);
                 return;
             }
             castBottle();
-        } else {
-            pickBottle(2);
+        }else{
+            pickBottle(1);
         }
-    }
-
-    @Override
-    public void cancel(View view) {
-        pickBottle(1);
     }
 
     @Override

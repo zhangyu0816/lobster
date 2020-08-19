@@ -176,6 +176,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
             @Override
             public void onNext(List<DiscoverInfo> o) {
                 mBinding.noNetLinear.setVisibility(View.GONE);
+                mBinding.ivNoData.setVisibility(View.GONE);
                 int start = discoverInfoList.size();
                 discoverInfoList.addAll(o);
                 adapter.notifyItemRangeChanged(start, discoverInfoList.size());
@@ -194,6 +195,9 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
                     mBinding.refresh.finishLoadMore();
+                    if (otherUserId == 1) {
+                        mBinding.ivNoData.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         }, activity)

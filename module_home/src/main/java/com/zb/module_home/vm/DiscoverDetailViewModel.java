@@ -174,7 +174,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 discoverInfo.getUserId() == BaseActivity.userId, false, true, false, new FunctionPW.CallBack() {
             @Override
             public void gift() {
-
+                ActivityUtils.getHomeRewardList(friendDynId);
             }
 
             @Override

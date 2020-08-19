@@ -29,6 +29,7 @@ import com.zb.lib_base.model.OrderTran;
 import com.zb.lib_base.model.PairInfo;
 import com.zb.lib_base.model.PrivateMsg;
 import com.zb.lib_base.model.RechargeInfo;
+import com.zb.lib_base.model.RecommendInfo;
 import com.zb.lib_base.model.Report;
 import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.model.Review;
@@ -333,6 +334,10 @@ public interface HttpService {
     // 超级曝光
     @GET("api/Pair_superExposure")
     Observable<BaseResultEntity> superExposure();
+
+    // 超级曝光
+    @GET("api/UserPopularityDetail_recommendRankingList")
+    Observable<BaseResultEntity<List<RecommendInfo>>> recommendRankingList(@Query("cityId") long cityId, @Query("sex")int sex);
 
     /******************************* 对话 **********************************/
 
