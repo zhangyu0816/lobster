@@ -34,7 +34,6 @@ import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.UIUtils;
-import com.zb.lib_base.views.CutImageView;
 
 import java.util.ArrayList;
 import java.util.HashMap;

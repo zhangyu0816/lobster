@@ -26,7 +26,6 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
     private int selectImageIndex = 0;
     private int selectIndex = -1;
     private View currentView;
-    private boolean isPlay = false;
     private int likeCount = 50;
     private boolean showCount = false;
 
@@ -40,10 +39,6 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
 
     public void setCurrentView(View currentView) {
         this.currentView = currentView;
-    }
-
-    public void setIsPlay(boolean isPlay) {
-        this.isPlay = isPlay;
     }
 
     public void setLikeCount(int likeCount) {
@@ -104,7 +99,6 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
             holder.binding.setVariable(BR.hasGood, hasGood);
         }
         if (viewModel instanceof CardViewModel) {
-            holder.binding.setVariable(BR.isPlay, isPlay);
             holder.binding.setVariable(BR.likeCount, likeCount);
             holder.binding.setVariable(BR.showCount, showCount);
         }

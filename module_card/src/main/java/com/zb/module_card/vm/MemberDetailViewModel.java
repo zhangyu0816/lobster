@@ -23,7 +23,6 @@ import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.memberInfoConfApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.personOtherDynApi;
-import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;

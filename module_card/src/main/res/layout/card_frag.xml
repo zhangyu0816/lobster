@@ -32,6 +32,10 @@
         <variable
             name="cityName"
             type="String" />
+
+        <variable
+            name="isPlay"
+            type="boolean" />
     </data>
 
     <RelativeLayout
@@ -100,7 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:background="@mipmap/dislike_icon"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/iv_like"
@@ -111,7 +115,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:background="@mipmap/like_icon"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/card_relative"
@@ -131,7 +135,7 @@
                 <ImageView
                     android:id="@+id/iv_big_image"
                     defaultRes="@{ObjectUtils.getDefaultRes()}"
-                    imageUrl="@{pairInfo.headImage}"
+                    imageUrl="@{pairInfo.singleImage}"
                     isRound="@{true}"
                     roundSize="@{10}"
                     viewHeightSize="@{ObjectUtils.getLogoHeight(0.92f)}"
@@ -147,7 +151,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/gradient_black"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="@{(pairInfo.singleImage.equals(@string/card_progress)||pairInfo.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}">
 
                     <LinearLayout
                         android:id="@+id/nick_linear"
@@ -160,17 +165,30 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="10dp"
+                            android:ellipsize="end"
+                            android:maxWidth="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
+                            android:singleLine="true"
                             android:text="@{pairInfo.nick}"
                             android:textColor="@android:color/white"
                             android:textSize="25sp"
                             android:textStyle="bold"
-                            tools:text="租我吧" />
+                            tools:text="租我吧租我吧租我吧" />
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="10dp"
+                            android:visibility="@{pairInfo.faceAttest==1?View.VISIBLE:View.GONE}"
                             app:srcCompat="@mipmap/real_icon" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:visibility="@{pairInfo.memberType==2?View.VISIBLE:View.GONE}"
+                            app:srcCompat="@mipmap/vip_icon" />
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -178,26 +196,35 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/nick_linear"
-                        android:layout_marginStart="12dp"
+                        android:layout_marginStart="15dp"
+                        android:gravity="bottom"
                         android:orientation="horizontal">
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text='@{pairInfo==null?"0":String.format("%.1f",pairInfo.distance.isEmpty()?0f:(Float.valueOf(pairInfo.distance)/1000f))}'
-                            android:textColor="#FFD358"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            tools:text="1.0" />
+                            android:gravity="bottom"
+                            android:orientation="horizontal"
+                            android:visibility="@{pairInfo.distance.isEmpty()?View.GONE:View.VISIBLE}">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="km"
-                            android:textColor="@android:color/white"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text='@{String.format("%.1f",pairInfo.distance.isEmpty()?0f:(Float.valueOf(pairInfo.distance)/1000f))}'
+                                android:textColor="#FFD358"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                tools:text="1.0" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="5dp"
+                                android:text="km"
+                                android:textColor="@android:color/white"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -225,6 +252,7 @@
                         android:layout_below="@+id/area_linear"
                         android:layout_marginStart="15dp"
                         android:layout_marginTop="6dp"
+                        android:layout_marginBottom="6dp"
                         android:orientation="horizontal">
 
                         <TextView
@@ -233,16 +261,16 @@
                             android:layout_marginEnd="5dp"
                             android:text="@{pairInfo.sex==0?@string/sex_0:@string/sex_1}"
                             android:textColor="@android:color/white"
-                            android:textSize="12sp"
+                            android:textSize="14sp"
                             tools:text="女" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="5dp"
-                            android:text='@{pairInfo==null?"":DateUtil.getConstellations(pairInfo.birthday)}'
+                            android:text="@{DateUtil.getConstellations(pairInfo.birthday)}"
                             android:textColor="@android:color/white"
-                            android:textSize="12sp"
+                            android:textSize="14sp"
                             tools:text="巨蟹座" />
 
                         <TextView
@@ -250,9 +278,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="80dp"
                             android:singleLine="true"
-                            android:text='@{pairInfo==null?"":pairInfo.personalitySign}'
+                            android:text="@{pairInfo.personalitySign}"
                             android:textColor="@android:color/white"
-                            android:textSize="12sp"
+                            android:textSize="14sp"
                             tools:text="我的个性签名我的个性签名我的个性签名我的个性签名我的个性签名我的个性签名" />
                     </LinearLayout>
 
@@ -266,9 +294,32 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/info_linear"
                         android:layout_marginStart="15dp"
-                        android:layout_marginTop="6dp"
-                        android:layout_marginBottom="15dp" />
+                        android:layout_marginBottom="15dp"
+                        android:visibility="@{pairInfo.imageList.size()==0?View.GONE:View.VISIBLE}" />
                 </RelativeLayout>
+
+                <TextView
+                    onClickDelayed="@{viewModel::onRefresh}"
+                    android:layout_width="80dp"
+                    android:layout_height="38dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="30dp"
+                    android:background="@drawable/btn_bg_black_4d4_radius60"
+                    android:gravity="center"
+                    android:text="刷新"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:visibility="@{(pairInfo.singleImage.equals(@string/out_line))?View.VISIBLE:View.GONE}" />
+
+                <com.zb.module_card.views.ProgressView
+                    android:id="@+id/progress_view"
+                    isPlay="@{isPlay}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="@{pairInfo.singleImage.equals(@string/card_progress)?View.VISIBLE:View.GONE}" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -276,7 +327,8 @@
                     android:layout_above="@+id/iv_super_like"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="15dp"
-                    android:background="@mipmap/return_icon" />
+                    android:background="@mipmap/return_icon"
+                    android:visibility="@{(pairInfo.singleImage.equals(@string/card_progress)||pairInfo.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}" />
 
                 <ImageView
                     android:id="@+id/iv_super_like"
@@ -285,7 +337,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
                     android:layout_margin="15dp"
-                    android:background="@mipmap/super_like_icon" />
+                    android:background="@mipmap/super_like_icon"
+                    android:visibility="@{(pairInfo.singleImage.equals(@string/card_progress)||pairInfo.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}" />
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>

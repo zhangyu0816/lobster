@@ -1,6 +1,7 @@
 package com.zb.module_card.vm;
 
 import android.Manifest;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -8,10 +9,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.CycleInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -316,21 +317,13 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         if (needProgress) {
             pairInfoList.clear();
             adapter.notifyDataSetChanged();
-            pairInfoList.add(createProgress());
-            adapter.setIsPlay(true);
-            adapter.setShowCount(false);
-            adapter.notifyDataSetChanged();
+            createProgress();
         }
         prePairListApi api = new prePairListApi(new HttpOnNextListener<List<PairInfo>>() {
             @Override
             public void onNext(List<PairInfo> o) {
-                if (pairInfoList.size() > 0) {
-                    if (TextUtils.equals(pairInfoList.get(0).getSingleImage(), "card_progress_icon")) {
-                        adapter.setIsPlay(false);
-                        pairInfoList.clear();
-                        adapter.notifyDataSetChanged();
-                    }
-                }
+                mBinding.cardRelative.setAlpha(0f);
+                mBinding.setIsPlay(false);
                 int start = pairInfoList.size();
                 for (PairInfo pairInfo : o) {
                     List<String> imageList = new ArrayList<>();
@@ -351,22 +344,11 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    if (pairInfoList.size() > 0) {
-                        if (!TextUtils.equals(pairInfoList.get(0).getSingleImage(), "card_progress_icon")) {
-                            int start = pairInfoList.size();
-                            pairInfoList.add(createProgress());
-                            adapter.setIsPlay(true);
-                            adapter.setShowCount(false);
-                            adapter.notifyItemRangeChanged(start, pairInfoList.size());
-                        }
+                    if (pairInfoList.size() == 0) {
+                        createProgress();
                     }
                 } else if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
-                    adapter.setIsPlay(false);
-                    pairInfoList.clear();
-                    adapter.notifyDataSetChanged();
-                    pairInfoList.add(createOutLike());
-                    adapter.setShowCount(false);
-                    adapter.notifyDataSetChanged();
+                    createOutLike();
                 }
             }
         }, activity)
@@ -429,33 +411,32 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             @Override
             public void onError(Throwable e) {
                 if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
-                    pairInfoList.clear();
-                    adapter.notifyDataSetChanged();
-                    pairInfoList.add(createOutLike());
-                    adapter.setShowCount(false);
-                    adapter.notifyDataSetChanged();
+                    createOutLike();
                 }
             }
         }, activity).setOtherUserId(pairInfo.getOtherUserId()).setLikeOtherStatus(likeOtherStatus);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    private PairInfo createNoData() {
-        PairInfo pairInfo = new PairInfo();
-        pairInfo.setSingleImage("card_no_data_icon");
-        return pairInfo;
-    }
-
-    private PairInfo createOutLike() {
+    private void createOutLike() {
+        pairInfoList.clear();
+        mBinding.cardRelative.setAlpha(1f);
+        mBinding.setIsPlay(false);
+        adapter.setShowCount(false);
+        adapter.notifyDataSetChanged();
         PairInfo pairInfo = new PairInfo();
         pairInfo.setSingleImage("card_out_line_bg");
-        return pairInfo;
+        mBinding.setPairInfo(pairInfo);
     }
 
-    private PairInfo createProgress() {
+    private void createProgress() {
+        mBinding.cardRelative.setAlpha(1f);
+        mBinding.setIsPlay(true);
+        adapter.setShowCount(false);
+        adapter.notifyDataSetChanged();
         PairInfo pairInfo = new PairInfo();
         pairInfo.setSingleImage("card_progress_icon");
-        return pairInfo;
+        mBinding.setPairInfo(pairInfo);
     }
 
     @Override
@@ -552,7 +533,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     @Override
     public void onSwiped(View view, PairInfo pairInfo, int direction) {
         onReset();
-        if (pairInfo.getUserId() == 0)
+        if (pairInfo.getOtherUserId() == 0)
             return;
 
         int likeOtherStatus = 1;
@@ -595,27 +576,27 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
      */
     private void setCardAnimationLeftToRight(PairInfo pairInfo) {
         mBinding.setVariable(BR.pairInfo, pairInfo);
+        imageList.clear();
         imageList.addAll(pairInfo.getImageList());
         disListAdapter.notifyDataSetChanged();
 
-        mBinding.cardRelative.startAnimation(AnimationUtils.loadAnimation(activity,
-                R.anim.card_left_out));
+        ObjectAnimator rotation = ObjectAnimator.ofFloat(mBinding.cardRelative, "rotation", -45, 0).setDuration(500);
+        ObjectAnimator translationX = ObjectAnimator.ofFloat(mBinding.cardRelative, "translationX", -MineApp.W, 0).setDuration(500);
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(mBinding.cardRelative, "alpha", 0, 1).setDuration(500);
 
-        mBinding.cardRelative.postDelayed(() -> {
-            mBinding.cardRelative.setAlpha(1f);
-            mBinding.cardRelative.startAnimation(AnimationUtils.loadAnimation(activity,
-                    R.anim.card_left_in));
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setInterpolator(new LinearInterpolator());
+        animatorSet.play(rotation).with(translationX).with(alpha);
+        animatorSet.start();
 
-            mBinding.cardRelative.postDelayed(() -> {
-                mBinding.cardRelative.setAlpha(0f);
-
-                mBinding.cardRelative.postDelayed(() -> {
-                    canReturn = true;
-                    pairInfoList.add(0, pairInfo);
-                    adapter.notifyDataSetChanged();
-                }, 10);
-            }, 300);
-        }, 50);
+        new Handler().postDelayed(() -> {
+            canReturn = true;
+            pairInfoList.add(0, pairInfo);
+            adapter.notifyDataSetChanged();
+        }, 500);
+        new Handler().postDelayed(() -> {
+            mBinding.cardRelative.setAlpha(0f);
+        }, 600);
     }
 
     // 省市信息

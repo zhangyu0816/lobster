@@ -648,7 +648,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         }
         outPutUrl = file.getAbsolutePath() + "/Camera/xg_" + BaseActivity.randomString(15) + ".mp4";
         imageUrl = BaseActivity.getImageFile().getAbsolutePath();
-        Bitmap bitmap = textToBitmap("虾菇号：" + BaseActivity.userId);
+        Bitmap bitmap = textToBitmap("虾菇号：" + discoverInfo.getUserId());
         getImage(bitmap);
 
         String[] common = addWaterMark(imageUrl, downloadPath, outPutUrl);
