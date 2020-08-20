@@ -92,8 +92,13 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     private BaseReceiver attentionReceiver;
     private boolean isFirst = true;
     private AppBarLayout.LayoutParams params;
-    private int bannerWidth = ObjectUtils.getViewSizeByWidth(0.9f);
-    private int bannerHeight = (int) (ObjectUtils.getViewSizeByWidth(0.9f) * 1.3);
+    private int bannerWidth = ObjectUtils.getViewSizeByWidth(1f);
+    private int bannerHeight = (int) (ObjectUtils.getViewSizeByWidth(1f) * 1.3f);
+
+    private int mainW = 0;
+    private int mainH = 0;
+    private int index = 0;
+    private List<Ads> adsList = new ArrayList<>();
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -102,7 +107,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         mBinding = (HomeDiscoverDetailBinding) binding;
         mineInfo = mineInfoDb.getMineInfo();
         likeDb = new LikeDb(Realm.getDefaultInstance());
-        AdapterBinding.viewSize(mBinding.banner, bannerWidth, bannerHeight);
         mBinding.setContent("");
         mBinding.setName("");
         mBinding.setListNum(10);
@@ -247,8 +251,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             public void onNext(DiscoverInfo o) {
                 discoverInfo = o;
                 mBinding.setViewModel(DiscoverDetailViewModel.this);
-                otherInfo();
-                List<Ads> adsList = new ArrayList<>();
+
                 if (!discoverInfo.getImages().isEmpty()) {
                     String[] images = discoverInfo.getImages().split(",");
                     for (String image : images) {
@@ -263,12 +266,40 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     ads.setSmallImage(discoverInfo.getImage());
                     adsList.add(ads);
                 }
-                showBanner(adsList);
+                getWH();
+
+                otherInfo();
                 seeGiftRewards();
                 seeReviews();
             }
         }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void getWH() {
+        Glide.with(activity).asBitmap().load(adsList.get(index).getSmallImage()).into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                int h = resource.getHeight();
+                int w = resource.getWidth();
+                if (mainW < w && mainH < h) {
+                    mainW = w;
+                    mainH = h;
+                }
+                index++;
+                if (index < adsList.size()) {
+                    getWH();
+                } else {
+                    bannerWidth = MineApp.W;
+                    bannerHeight = (int) (MineApp.W * (float) mainH / (float) mainW);
+                    if (bannerHeight > ObjectUtils.getLogoHeight(1f)) {
+                        bannerHeight = ObjectUtils.getLogoHeight(1f);
+                    }
+                    AdapterBinding.viewSize(mBinding.banner, bannerWidth, bannerHeight);
+                    showBanner(adsList);
+                }
+            }
+        });
     }
 
     public void seeGiftRewards() {
@@ -580,6 +611,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                                 int w = resource.getWidth();
                                 int h = resource.getHeight();
+
                                 if (w >= h) {
                                     AdapterBinding.viewSize(image, bannerWidth, (int) ((float) bannerWidth * h / w));
                                 } else {

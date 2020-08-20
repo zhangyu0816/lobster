@@ -11,7 +11,6 @@ import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;
-import com.zb.module_card.vm.CardViewModel;
 import com.zb.module_card.vm.MemberVideoViewModel;
 
 import java.util.List;
@@ -24,14 +23,7 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
     private RxAppCompatActivity activity;
     private BasePopupWindow pw;
     private int selectImageIndex = 0;
-    private int selectIndex = -1;
     private View currentView;
-    private int likeCount = 50;
-    private boolean showCount = false;
-
-    public void setSelectIndex(int selectIndex) {
-        this.selectIndex = selectIndex;
-    }
 
     public View getCurrentView() {
         return currentView;
@@ -41,17 +33,6 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
         this.currentView = currentView;
     }
 
-    public void setLikeCount(int likeCount) {
-        this.likeCount = likeCount;
-    }
-
-    public int getLikeCount() {
-        return likeCount;
-    }
-
-    public void setShowCount(boolean showCount) {
-        this.showCount = showCount;
-    }
 
     public CardAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
         super(activity, layoutId, list);
@@ -97,10 +78,6 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
             DiscoverInfo discoverInfo = (DiscoverInfo) t;
             boolean hasGood = viewModel.goodDb.hasGood(discoverInfo.getFriendDynId());
             holder.binding.setVariable(BR.hasGood, hasGood);
-        }
-        if (viewModel instanceof CardViewModel) {
-            holder.binding.setVariable(BR.likeCount, likeCount);
-            holder.binding.setVariable(BR.showCount, showCount);
         }
         holder.binding.executePendingBindings();
     }

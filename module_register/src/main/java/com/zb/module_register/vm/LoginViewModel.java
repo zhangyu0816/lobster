@@ -87,7 +87,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface {
         myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
             @Override
             public void onNext(MineInfo o) {
-                SCToastUtil.showToast(activity, "登录成功", true);
+                SCToastUtil.showToast(activity, "登录成功", false);
                 mineInfoDb.saveMineInfo(o);
                 loginHelper = LoginSampleHelper.getInstance();
                 loginHelper.loginOut_Sample();

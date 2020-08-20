@@ -29,6 +29,7 @@ import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
+import com.zb.lib_base.iv.SuperLikeInterface;
 import com.zb.lib_base.model.CityInfo;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DistrictInfo;
@@ -70,7 +71,7 @@ import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import io.realm.Realm;
 
-public class CardViewModel extends BaseViewModel implements CardVMInterface, OnSwipeListener<PairInfo> {
+public class CardViewModel extends BaseViewModel implements CardVMInterface, OnSwipeListener<PairInfo>, SuperLikeInterface {
     public AreaDb areaDb;
     private LikeDb likeDb;
     private MineInfo mineInfo;
@@ -103,6 +104,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     private int superLikeStatus = 0;
 
+    private int likeCount = 50;
+
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
@@ -112,6 +115,11 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         MineApp.sex = mineInfo.getSex() == 0 ? 1 : 0;
         aMapLocation = new AMapLocation(activity);
         mBinding = (CardFragBinding) binding;
+
+        likeCount = mineInfo.getSurplusToDayLikeNumber();
+        mBinding.setLikeCount(likeCount);
+        mBinding.setShowCount(false);
+
         // 详情页操作后滑动卡片
         cardReceiver = new BaseReceiver(activity, "lobster_card") {
             @Override
@@ -222,10 +230,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
         disListAdapter = new CardAdapter<>(activity, R.layout.item_card_image, imageList, this);
         mBinding.setVariable(BR.adapter, disListAdapter);
-        if (mineInfo.getMemberType() == 2 || mineInfo.getSurplusToDayLikeNumber() == 0) {
-            adapter.setShowCount(false);
-        }
-        adapter.setLikeCount(mineInfo.getSurplusToDayLikeNumber());
         prePairList(true);
     }
 
@@ -237,7 +241,18 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     }
 
     @Override
-    public void returnView(View view) {
+    public void superLike(View currentView, PairInfo pairInfo) {
+        if (mineInfo.getMemberType() == 2) {
+            this.currentView = currentView;
+            this.pairInfo = pairInfo;
+            makeEvaluate(pairInfo, 2);
+        } else {
+            new VipAdPW(activity, mBinding.getRoot(), false, 3);
+        }
+    }
+
+    @Override
+    public void returnBack() {
         if (mineInfo.getMemberType() == 2) {
             if (canReturn && disLikeList.size() > 0) {
                 canReturn = false;
@@ -246,17 +261,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             }
         } else {
             new VipAdPW(activity, mBinding.getRoot(), false, 2);
-        }
-    }
-
-    @Override
-    public void superLike(View currentView, PairInfo pairInfo) {
-        if (mineInfo.getMemberType() == 2) {
-            this.currentView = currentView;
-            this.pairInfo = pairInfo;
-            makeEvaluate(pairInfo, 2);
-        } else {
-            new VipAdPW(activity, mBinding.getRoot(), false, 3);
         }
     }
 
@@ -336,9 +340,10 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     pairInfo.setImageList(imageList);
                     pairInfoList.add(pairInfo);
                 }
-                if (mineInfo.getMemberType() == 1 && mineInfo.getSurplusToDayLikeNumber() > 0)
-                    adapter.setShowCount(true);
                 adapter.notifyItemRangeChanged(start, pairInfoList.size());
+                if (mineInfo.getMemberType() == 1) {
+                    updateCount(likeCount);
+                }
             }
 
             @Override
@@ -377,7 +382,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     // 不喜欢成功  喜欢成功  超级喜欢成功
                     if (likeOtherStatus == 1) {
                         likeDb.saveLike(new CollectID(pairInfo.getOtherUserId()));
-                        updateCount(adapter.getLikeCount() - 1);
                     } else if (likeOtherStatus == 2) {
                         Intent data = new Intent("lobster_card");
                         data.putExtra("direction", 2);
@@ -388,7 +392,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 } else if (o == 2) {
                     // 匹配成功
                     likeDb.saveLike(new CollectID(pairInfo.getOtherUserId()));
-                    updateCount(adapter.getLikeCount() - 1);
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), pairInfo.getSex(), () -> ActivityUtils.getChatActivity(pairInfo.getOtherUserId()));
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                 } else if (o == 3) {
@@ -403,7 +406,9 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                         new VipAdPW(activity, mBinding.getRoot(), false, 3);
                     }
                 } else {
-                    if (likeOtherStatus == 2)
+                    if (likeOtherStatus == 1)
+                        SCToastUtil.showToast(activity, "你已喜欢过对方", true);
+                    else if (likeOtherStatus == 2)
                         SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
                 }
             }
@@ -420,10 +425,12 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     private void createOutLike() {
         pairInfoList.clear();
+        adapter.notifyDataSetChanged();
+
         mBinding.cardRelative.setAlpha(1f);
         mBinding.setIsPlay(false);
-        adapter.setShowCount(false);
-        adapter.notifyDataSetChanged();
+        mBinding.setShowCount(false);
+
         PairInfo pairInfo = new PairInfo();
         pairInfo.setSingleImage("card_out_line_bg");
         mBinding.setPairInfo(pairInfo);
@@ -432,8 +439,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     private void createProgress() {
         mBinding.cardRelative.setAlpha(1f);
         mBinding.setIsPlay(true);
-        adapter.setShowCount(false);
-        adapter.notifyDataSetChanged();
+        mBinding.setShowCount(false);
         PairInfo pairInfo = new PairInfo();
         pairInfo.setSingleImage("card_progress_icon");
         mBinding.setPairInfo(pairInfo);
@@ -542,14 +548,18 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             likeOtherStatus = 0;
             disLikeList.add(0, pairInfo);
         }
+        if (superLikeStatus == 0 && likeOtherStatus == 1) {
+            likeCount--;
+            updateCount(likeCount);
+        }
         makeEvaluate(pairInfo, superLikeStatus == 0 ? likeOtherStatus : superLikeStatus);
         superLikeStatus = 0;
     }
 
     private void updateCount(int likeCount) {
         if (likeCount >= 0) {
-            adapter.setLikeCount(likeCount);
-            adapter.setShowCount(likeCount != 0);
+            mBinding.setLikeCount(likeCount);
+            mBinding.setShowCount(likeCount != 0);
         }
     }
 
@@ -658,7 +668,9 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 mineInfo = o;
                 mineInfoDb.saveMineInfo(o);
                 if (mineInfo.getMemberType() == 2) {
-                    adapter.setShowCount(false);
+                    mBinding.setShowCount(false);
+                } else {
+                    updateCount(mineInfo.getSurplusToDayLikeNumber());
                 }
             }
         }, activity);

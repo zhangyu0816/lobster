@@ -31,7 +31,7 @@
         android:orientation="vertical">
 
         <include
-            layout="@layout/back_black_layout"
+            layout="@layout/register_back_black_layout"
             title="@{title}"
             viewModel="@{viewModel}" />
 
@@ -42,16 +42,20 @@
             android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp">
 
-            <TextView
+            <EditText
                 android:layout_width="match_parent"
-                android:layout_height="34dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/btn_bg_black_efe_radius10"
                 android:gravity="center_vertical"
                 android:maxLength="11"
                 android:paddingStart="15dp"
                 android:paddingEnd="15dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
                 android:singleLine="true"
                 android:text="@={phone}"
+                android:textColorHint="@color/black_c3b"
+                android:textCursorDrawable="@drawable/cursor_color_black_252"
                 android:textSize="14sp"
                 tools:text="18888888888" />
 
@@ -71,7 +75,7 @@
 
         <EditText
             android:layout_width="match_parent"
-            android:layout_height="34dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp"
@@ -81,6 +85,8 @@
             android:maxLength="4"
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
             android:singleLine="true"
             android:text="@={code}"
             android:textColorHint="@color/black_c3b"

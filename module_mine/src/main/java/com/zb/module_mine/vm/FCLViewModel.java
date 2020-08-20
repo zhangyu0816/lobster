@@ -214,9 +214,10 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 } else if (o == 3) {
                     SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else if (o == 5) {
-                    if (likeOtherStatus == 2) {
+                    if (likeOtherStatus == 1)
+                        SCToastUtil.showToast(activity, "你已喜欢过对方", true);
+                    else if (likeOtherStatus == 2)
                         SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
-                    }
                 }
             }
         }, activity).setOtherUserId(otherUserId).setLikeOtherStatus(likeOtherStatus);

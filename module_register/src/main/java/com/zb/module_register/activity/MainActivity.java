@@ -61,8 +61,7 @@ public class MainActivity extends RegisterBaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1002 && resultCode == Activity.RESULT_OK) {
-            assert data != null;
-            viewModel.registerByUnion(data.getStringExtra("userName"), data.getStringExtra("captcha"));
+           activity.finish();
         }
     }
 }

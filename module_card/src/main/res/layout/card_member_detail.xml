@@ -18,10 +18,6 @@
             type="com.zb.module_card.vm.MemberDetailViewModel" />
 
         <variable
-            name="showLike"
-            type="boolean" />
-
-        <variable
             name="isAttention"
             type="boolean" />
 
@@ -310,15 +306,6 @@
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <ImageView
-            onClickDelayed="@{viewModel::dislike}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="15dp"
-            android:visibility="@{showLike?View.VISIBLE:View.GONE}"
-            app:srcCompat="@mipmap/dislike_icon" />
-
         <com.zb.lib_base.views.SuperLikeBigView
             android:id="@+id/iv_super_like"
             onClickDelayed="@{viewModel::superLike}"
@@ -329,14 +316,22 @@
             android:layout_margin="15dp" />
 
         <ImageView
+            onClickDelayed="@{viewModel::dislike}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="15dp"
+            app:srcCompat="@mipmap/dislike_icon" />
+
+        <ImageView
             onClickDelayed="@{viewModel::like}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_margin="15dp"
-            android:visibility="@{showLike?View.VISIBLE:View.GONE}"
             app:srcCompat="@mipmap/like_icon" />
+
     </RelativeLayout>
 
 </layout>

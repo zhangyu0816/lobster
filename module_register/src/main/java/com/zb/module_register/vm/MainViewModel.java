@@ -158,15 +158,10 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 PreferenceUtil.saveStringValue(activity, "sessionId", o.getSessionId());
                 PreferenceUtil.saveStringValue(activity, "userName", "");
                 PreferenceUtil.saveStringValue(activity, "loginPass", "");
+                BaseActivity.update();
                 if (o.getPhoneNum().isEmpty()) {
-                    MineApp.registerInfo.setOpenId(openId);
-                    MineApp.registerInfo.setUnionId(unionId);
-                    MineApp.registerInfo.setUnionType(unionType);
-                    MineApp.registerInfo.setName(unionNick);
-                    MineApp.registerInfo.getImageList().add(unionImage);
-                    mBinding.setIsThree(true);
+                    ActivityUtils.getBindingPhone(activity);
                 } else {
-                    BaseActivity.update();
                     myInfo();
                 }
             }
@@ -270,7 +265,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
             @Override
             public void onNext(MineInfo o) {
-                SCToastUtil.showToast(activity, "登录成功", true);
+                SCToastUtil.showToast(activity, "登录成功", false);
                 mineInfoDb.saveMineInfo(o);
                 loginHelper = LoginSampleHelper.getInstance();
                 loginHelper.loginOut_Sample();

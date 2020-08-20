@@ -1,16 +1,21 @@
 package com.zb.module_register.vm;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.CountDownTimer;
 import android.view.View;
 
 import com.zb.lib_base.api.banderCaptchaApi;
 import com.zb.lib_base.api.bindingPhoneApi;
+import com.zb.lib_base.api.myImAccountInfoApi;
+import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.imcore.LoginSampleHelper;
+import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.ImageCaptcha;
+import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.ImageCaptchaPW;
@@ -25,6 +30,7 @@ public class BindingPhoneViewModel extends BaseViewModel implements BindingPhone
     private int second = 120;
     private CountDownTimer timer;
     private boolean isTimer = false;
+    private LoginSampleHelper loginHelper;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -119,14 +125,42 @@ public class BindingPhoneViewModel extends BaseViewModel implements BindingPhone
         bindingPhoneApi api = new bindingPhoneApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToast(activity, "绑定成功", true);
-                Intent data = new Intent();
-                data.putExtra("userName", mBinding.getPhone());
-                data.putExtra("captcha", mBinding.getCode());
-                activity.setResult(Activity.RESULT_OK, data);
-                activity.finish();
+                SCToastUtil.showToast(activity, "绑定成功,请前往我的--点击头像完成个人信息", false);
+                activity.setResult(Activity.RESULT_OK);
+                myInfo();
             }
         }, activity).setUserName(mBinding.getPhone()).setCaptcha(mBinding.getCode());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void myInfo() {
+        myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
+            @Override
+            public void onNext(MineInfo o) {
+                mineInfoDb.saveMineInfo(o);
+                loginHelper = LoginSampleHelper.getInstance();
+                loginHelper.loginOut_Sample();
+                myImAccountInfoApi();
+            }
+        }, activity);
+        api.setPosition(1);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 阿里百川登录账号
+     */
+    private void myImAccountInfoApi() {
+        myImAccountInfoApi api = new myImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
+            @Override
+            public void onNext(ImAccount o) {
+                loginHelper.loginOut_Sample();
+                loginHelper.login_Sample(activity, o.getImUserId(), o.getImPassWord());
+                ActivityUtils.getMainActivity();
+                activity.finish();
+            }
+        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

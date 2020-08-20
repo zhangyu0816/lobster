@@ -30,16 +30,6 @@
         <variable
             name="adapter"
             type="com.zb.module_card.adapter.CardAdapter" />
-
-        <variable
-            name="likeCount"
-            type="Integer" />
-
-        <variable
-            name="showCount"
-            type="boolean" />
-
-
     </data>
 
     <RelativeLayout
@@ -48,10 +38,8 @@
 
         <RelativeLayout
             android:id="@+id/card_relative"
-            viewHeightSize="@{ObjectUtils.getLogoHeight(0.92f)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.92f)}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true">
 
             <ImageView
@@ -60,8 +48,8 @@
                 imageUrl="@{item.singleImage}"
                 isRound="@{true}"
                 roundSize="@{10}"
-                viewHeightSize="@{ObjectUtils.getLogoHeight(0.92f)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.92f)}"
+                viewHeightSize="@{-1}"
+                viewWidthSize="@{-1}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
@@ -245,57 +233,18 @@
 
             <com.zb.lib_base.views.SuperLikeView
                 android:id="@+id/iv_super_like"
-                onClickDelayed="@{v->viewModel.superLike(currentView,item)}"
+                pairInfo="@{item}"
+                superLikeInterface="@{viewModel}"
+                currentView="@{currentView}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginEnd="-5dp"
+                android:layout_marginEnd="-8dp"
                 android:layout_marginBottom="15dp"
                 android:visibility="@{(item.singleImage.equals(@string/card_progress)||item.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}" />
-
-            <ImageView
-                android:id="@+id/iv_return"
-                onClickDelayed="@{viewModel::returnView}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/iv_super_like"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="-40dp"
-                android:background="@mipmap/return_icon"
-                android:visibility="@{(item.singleImage.equals(@string/card_progress)||item.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@mipmap/card_top_bg"
-                android:orientation="vertical"
-                android:visibility="@{showCount?View.VISIBLE:View.GONE}">
-
-                <com.zb.lib_base.views.LeanTextView
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="1dp"
-                    android:layout_marginTop="1dp"
-                    android:gravity="center"
-                    android:text='@{String.format("%d",likeCount)}'
-                    android:textColor="@color/white"
-                    android:textSize="20sp" />
-
-                <com.zb.lib_base.views.LeanTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="-26dp"
-                    android:gravity="center"
-                    android:text="剩余喜欢"
-                    android:textColor="@color/white_99"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
 
         </RelativeLayout>
     </RelativeLayout>

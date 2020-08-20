@@ -20,7 +20,7 @@ public interface MemberDetailVMInterface {
 
     void cancelAttention();
 
-    void makeEvaluate();
+    void makeEvaluate(int likeOtherStatus);
 
     void memberInfoConf();
 }

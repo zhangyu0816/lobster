@@ -36,6 +36,14 @@
         <variable
             name="isPlay"
             type="boolean" />
+
+        <variable
+            name="likeCount"
+            type="Integer" />
+
+        <variable
+            name="showCount"
+            type="boolean" />
     </data>
 
     <RelativeLayout
@@ -94,7 +102,11 @@
             recyclerType="@{6}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/tv_city" />
+            android:layout_below="@+id/tv_city"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="30dp" />
 
         <ImageView
             android:id="@+id/iv_dislike"
@@ -122,15 +134,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/tv_city"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="30dp"
             android:alpha="0"
             android:gravity="center"
             android:orientation="vertical">
 
             <RelativeLayout
-                viewHeightSize="@{ObjectUtils.getLogoHeight(0.92f)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.92f)}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/iv_big_image"
@@ -138,8 +152,8 @@
                     imageUrl="@{pairInfo.singleImage}"
                     isRound="@{true}"
                     roundSize="@{10}"
-                    viewHeightSize="@{ObjectUtils.getLogoHeight(0.92f)}"
-                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.92f)}"
+                    viewHeightSize="@{-1}"
+                    viewWidthSize="@{-1}"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_centerInParent="true"
@@ -321,25 +335,58 @@
                     android:layout_centerInParent="true"
                     android:visibility="@{pairInfo.singleImage.equals(@string/card_progress)?View.VISIBLE:View.GONE}" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/iv_super_like"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="15dp"
-                    android:background="@mipmap/return_icon"
-                    android:visibility="@{(pairInfo.singleImage.equals(@string/card_progress)||pairInfo.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}" />
-
-                <ImageView
+                <com.zb.lib_base.views.SuperLikeView
                     android:id="@+id/iv_super_like"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentBottom="true"
-                    android:layout_margin="15dp"
-                    android:background="@mipmap/super_like_icon"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="-8dp"
+                    android:layout_marginBottom="15dp"
                     android:visibility="@{(pairInfo.singleImage.equals(@string/card_progress)||pairInfo.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}" />
+
             </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tv_city"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="30dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/card_top_bg"
+                android:orientation="vertical"
+                android:visibility="@{showCount?View.VISIBLE:View.GONE}">
+
+                <com.zb.lib_base.views.LeanTextView
+                    android:layout_width="30dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="1dp"
+                    android:layout_marginTop="1dp"
+                    android:gravity="center"
+                    android:text='@{String.format("%d",likeCount)}'
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+
+                <com.zb.lib_base.views.LeanTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="-26dp"
+                    android:gravity="center"
+                    android:text="剩余喜欢"
+                    android:textColor="@color/white_99"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 </layout>

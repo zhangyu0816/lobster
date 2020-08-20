@@ -123,6 +123,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         mineInfo = mineInfoDb.getMineInfo();
 
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
+        MineApp.sex = mineInfo.getSex() == 0 ? 1 : 0;
 
         loginHelper = LoginSampleHelper.getInstance();
         loginHelper.loginOut_Sample();
@@ -299,7 +300,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             }
         };
 
-        recommendReceiver = new BaseReceiver(activity,"lobster_recommend") {
+        recommendReceiver = new BaseReceiver(activity, "lobster_recommend") {
             @Override
             public void onReceive(Context context, Intent intent) {
                 recommendRankingList();

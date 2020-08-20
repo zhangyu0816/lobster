@@ -9,10 +9,6 @@ public interface CardVMInterface {
 
     void selectCard(View currentView);
 
-    void returnView(View view);
-
-    void superLike(View currentView, PairInfo pairInfo);
-
     void exposure(View view);
 
     void leftBtn(View currentView, CardAdapter adapter);

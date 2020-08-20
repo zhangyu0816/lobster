@@ -23,6 +23,7 @@ import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.memberInfoConfApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.personOtherDynApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
@@ -70,8 +71,12 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     private MineInfo mineInfo;
     private LikeDb likeDb;
     private BaseReceiver attentionReceiver;
-    private int bannerWidth = ObjectUtils.getViewSizeByWidth(0.9f);
-    private int bannerHeight = (int) (ObjectUtils.getViewSizeByWidth(0.9f) * 1.3);
+    private int bannerWidth = ObjectUtils.getViewSizeByWidth(1f);
+    private int bannerHeight = (int) (ObjectUtils.getViewSizeByWidth(1f) * 1.3f);
+    private int mainW = 0;
+    private int mainH = 0;
+    private int index = 0;
+    private List<Ads> adsList = new ArrayList<>();
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -84,7 +89,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         mBinding.setConstellation("");
         mBinding.setIsAttention(false);
         mBinding.setInfo("");
-        AdapterBinding.viewSize(mBinding.banner, bannerWidth, bannerHeight);
 
         attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
             @Override
@@ -114,10 +118,15 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             SCToastUtil.showToast(activity, "网络异常，请检查网络是否链接", true);
             return;
         }
-        activity.finish();
-        Intent data = new Intent("lobster_card");
-        data.putExtra("direction", 0);
-        activity.sendBroadcast(data);
+
+        if (showLike) {
+            Intent data = new Intent("lobster_card");
+            data.putExtra("direction", 0);
+            activity.sendBroadcast(data);
+            activity.finish();
+        } else {
+            makeEvaluate(0);
+        }
     }
 
     @Override
@@ -126,10 +135,15 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             SCToastUtil.showToast(activity, "网络异常，请检查网络是否链接", true);
             return;
         }
-        activity.finish();
-        Intent data = new Intent("lobster_card");
-        data.putExtra("direction", 1);
-        activity.sendBroadcast(data);
+        if (showLike) {
+            activity.finish();
+            Intent data = new Intent("lobster_card");
+            data.putExtra("direction", 1);
+            activity.sendBroadcast(data);
+        } else {
+            makeEvaluate(1);
+        }
+
     }
 
     @Override
@@ -160,7 +174,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
 
                 mBinding.setInfo(distant + (memberInfo.getSex() == 0 ? "女/" : "男/") + cityName + " " + districtName);
 
-                List<Ads> adsList = new ArrayList<>();
                 if (!memberInfo.getMoreImages().isEmpty()) {
                     String[] images = memberInfo.getMoreImages().split("#");
                     for (String image : images) {
@@ -175,13 +188,39 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     ads.setSmallImage(memberInfo.getSingleImage());
                     adsList.add(ads);
                 }
-                showBanner(adsList);
+                getWH();
                 attentionStatus();
                 personOtherDyn();
                 mBinding.setVariable(BR.viewModel, MemberDetailViewModel.this);
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void getWH() {
+        Glide.with(activity).asBitmap().load(adsList.get(index).getSmallImage()).into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                int h = resource.getHeight();
+                int w = resource.getWidth();
+                if (mainW < w && mainH < h) {
+                    mainW = w;
+                    mainH = h;
+                }
+                index++;
+                if (index < adsList.size()) {
+                    getWH();
+                } else {
+                    bannerWidth = MineApp.W;
+                    bannerHeight = (int) (MineApp.W * (float) mainH / (float) mainW);
+                    if (bannerHeight > ObjectUtils.getLogoHeight(1f)) {
+                        bannerHeight = ObjectUtils.getLogoHeight(1f);
+                    }
+                    AdapterBinding.viewSize(mBinding.banner, bannerWidth, bannerHeight);
+                    showBanner(adsList);
+                }
+            }
+        });
     }
 
     @Override
@@ -267,7 +306,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     }
 
     @Override
-    public void makeEvaluate() {
+    public void makeEvaluate(int likeOtherStatus) {
         //  likeOtherStatus  0 不喜欢  1 喜欢  2.超级喜欢 （非会员提示开通会员）
         makeEvaluateApi api = new makeEvaluateApi(new HttpOnNextListener<Integer>() {
             @Override
@@ -276,19 +315,28 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 String otherHead = memberInfo.getImage();
                 // 1喜欢成功 2匹配成功 3喜欢次数用尽
                 if (o == 1) {
-                    if (showLike) {
-                        // 不喜欢成功  喜欢成功  超级喜欢成功
+                    // 不喜欢成功  喜欢成功  超级喜欢成功
+                    if (likeOtherStatus == 0) {
                         activity.finish();
-                        Intent data = new Intent("lobster_card");
-                        data.putExtra("direction", 2);
-                        activity.sendBroadcast(data);
-                    } else {
-                        new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
+                    } else if (likeOtherStatus == 1) {
+                        SCToastUtil.showToast(activity, "喜欢成功", true);
+                        likeDb.saveLike(new CollectID(otherUserId));
+                    } else if (likeOtherStatus == 2) {
+                        if (showLike) {
+                            // 不喜欢成功  喜欢成功  超级喜欢成功
+                            activity.finish();
+                            Intent data = new Intent("lobster_card");
+                            data.putExtra("direction", 2);
+                            activity.sendBroadcast(data);
+                        } else {
+                            new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
+                        }
                     }
                 } else if (o == 2) {
                     // 匹配成功
-                    likeDb.saveLike(new CollectID(memberInfo.getUserId()));
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), memberInfo.getSex(), () -> ActivityUtils.getChatActivity(memberInfo.getUserId()));
+                    likeDb.saveLike(new CollectID(otherUserId));
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), memberInfo.getSex(),
+                            () -> ActivityUtils.getChatActivity(otherUserId));
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                 } else if (o == 3) {
                     // 喜欢次数用尽
@@ -302,11 +350,13 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                         new VipAdPW(activity, mBinding.getRoot(), false, 3);
                     }
                 } else {
-                    SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
+                    if (likeOtherStatus == 1)
+                        SCToastUtil.showToast(activity, "你已喜欢过对方", true);
+                    else if (likeOtherStatus == 2)
+                        SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
                 }
-
             }
-        }, activity).setOtherUserId(otherUserId).setLikeOtherStatus(2);
+        }, activity).setOtherUserId(otherUserId).setLikeOtherStatus(likeOtherStatus);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -363,7 +413,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     public void superLike(View view) {
         super.superLike(view);
         if (mineInfo.getMemberType() == 2) {
-            makeEvaluate();
+            makeEvaluate(2);
         } else {
             new VipAdPW(activity, mBinding.getRoot(), false, 3);
         }
