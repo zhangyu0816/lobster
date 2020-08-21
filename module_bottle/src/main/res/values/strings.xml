@@ -6,4 +6,7 @@
     <string name="bottle_throw">立即扔海</string>
     <string name="get_bottle">我的漂流瓶</string>
     <string name="throw_bottle">扔一个瓶子</string>
+    <string name="throw_repeat">立即回复</string>
+    <string name="throw_check">查看动态</string>
+    <string name="tv_context">在这里写下你想说的话...(100字)</string>
 </resources>

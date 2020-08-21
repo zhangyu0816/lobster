@@ -291,7 +291,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 if (mineInfo.getMemberType() == 2) {
                     makeEvaluate(discoverInfo);
                 } else {
-                    new VipAdPW(activity, mBinding.getRoot(), false, 3);
+                    new VipAdPW(activity, mBinding.getRoot(), false, 3, discoverInfo.getImage());
                 }
             }
         });

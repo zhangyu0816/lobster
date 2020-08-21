@@ -110,6 +110,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 onRefreshForNet(null);
             }
         };
+        mBinding.ivNoData.setBackgroundResource(otherUserId == 1 ? R.mipmap.my_no_discover_data : R.mipmap.other_no_discover_data);
     }
 
     public void onDestroy() {
@@ -168,7 +169,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 for (DiscoverInfo item : o) {
                     try {
                         Bitmap bitmap = Glide.with(activity).asBitmap()
-                                .load(item.getImages().isEmpty()?item.getImage():item.getImages().split(",")[0])
+                                .load(item.getImages().isEmpty() ? item.getImage() : item.getImages().split(",")[0])
                                 .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
                         item.setWidth(bitmap.getWidth());
                         item.setHeight(bitmap.getHeight());
@@ -221,7 +222,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                     }
                     try {
                         Bitmap bitmap = Glide.with(activity).asBitmap()
-                                .load(item.getImages().isEmpty()?item.getImage():item.getImages().split(",")[0])
+                                .load(item.getImages().isEmpty() ? item.getImage() : item.getImages().split(",")[0])
                                 .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
                         item.setWidth(bitmap.getWidth());
                         item.setHeight(bitmap.getHeight());
@@ -247,7 +248,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                     mBinding.refresh.finishRefresh();
                     mBinding.refresh.finishLoadMore();
 
-                    if (otherUserId == 1 && discoverInfoList.size() == 0) {
+                    if (discoverInfoList.size() == 0) {
                         mBinding.ivNoData.setVisibility(View.VISIBLE);
                     }
                 }

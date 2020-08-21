@@ -17,6 +17,7 @@ import com.zb.lib_base.api.pickBottleApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.utils.ActivityUtils;
@@ -26,8 +27,12 @@ import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_bottle.BR;
 import com.zb.module_bottle.R;
+import com.zb.module_bottle.adapter.BottleAdapter;
 import com.zb.module_bottle.databinding.BottleThrowBinding;
 import com.zb.module_bottle.iv.BottleThrowVMInterface;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
 
@@ -42,6 +47,9 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
 
     private BottleInfo bottleInfo;
     private boolean isFirst = true;
+    private int throwIndex = 0;
+    public BottleAdapter adapter;
+    private List<String> imageList = new ArrayList<>();
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -94,7 +102,12 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
             mBinding.firstLayout.setVisibility(View.GONE);
             mBinding.bottleWhiteBack.bottleBg.startBg();
         }, time);
+        setAdapter();
+    }
 
+    @Override
+    public void setAdapter() {
+        adapter = new BottleAdapter<>(activity, R.layout.item_discover_image, imageList, this);
     }
 
     public void onDestroy() {
@@ -149,8 +162,12 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         mBinding.setBottleInfo(bottleInfo);
         mBinding.setIsBottle(true);
         mBinding.setShowBtn(false);
+        mBinding.setShowBottleTop(false);
         mBinding.edContent.setText("");
         mBinding.edContent.setEnabled(true);
+        throwIndex = 0;
+        mBinding.setThrowIndex(throwIndex);
+        mBinding.setHasImage(false);
         mBinding.ivThrow.setBackgroundResource(R.mipmap.throw_icon);
         mBinding.bottleWhiteBack.bottleBg.stopBg();
     }
@@ -167,23 +184,42 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
 
     @Override
     public void findBottle() {
-        findBottleApi api = new findBottleApi(new HttpOnNextListener<BottleInfo>() {
-            @Override
-            public void onNext(BottleInfo o) {
-                mBinding.setShowBtn(false);
-                mBinding.bottleWhiteBack.bottleBg.stopBg();
-                bottleInfo = o;
-                mBinding.setBottleInfo(bottleInfo);
-                otherInfo(bottleInfo.getUserId());
-                mBinding.bottleWhiteBack.bottleBg.startWang(() -> {
+        mBinding.setShowBtn(false);
+        mBinding.bottleWhiteBack.bottleBg.stopBg();
+        mBinding.bottleWhiteBack.bottleBg.startWang(() -> {
+            findBottleApi api = new findBottleApi(new HttpOnNextListener<BottleInfo>() {
+                @Override
+                public void onNext(BottleInfo o) {
+                    bottleInfo = o;
+                    mBinding.setBottleInfo(bottleInfo);
+                    otherInfo(bottleInfo.getUserId());
                     mBinding.edContent.setText(bottleInfo.getText());
+                    throwIndex = 1;
+                    mBinding.setThrowIndex(throwIndex);
                     mBinding.edContent.setEnabled(false);
                     mBinding.ivThrow.setBackgroundResource(R.mipmap.throw_back_icon);
                     mBinding.setIsBottle(true);
-                });
-            }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
+                    mBinding.setShowBottleTop(true);
+                    mBinding.setHasImage(false);
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
+                        mBinding.setIsBottle(true);
+                        mBinding.setShowBottleTop(true);
+                        throwIndex = 2;
+                        mBinding.setThrowIndex(throwIndex);
+                        mBinding.edContent.setEnabled(false);
+                        mBinding.ivThrow.setBackgroundResource(R.mipmap.throw_fan_icon);
+                        mBinding.setIsBottle(true);
+                        mBinding.setHasImage(true);
+                    }
+                }
+            }, activity);
+            HttpManager.getInstance().doHttpDeal(api);
+        });
+
     }
 
     private void otherInfo(long otherUserId) {
@@ -204,14 +240,16 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
 
     @Override
     public void cancel(View view) {
-        if(mBinding.edContent.isEnabled()){
+        if (throwIndex == 0) {
             if (mBinding.edContent.getText().toString().trim().isEmpty()) {
                 SCToastUtil.showToast(activity, "漂流瓶内容不能为空", true);
                 return;
             }
             castBottle();
-        }else{
+        } else if (throwIndex == 1) {
             pickBottle(1);
+        } else if (throwIndex == 2) {
+            close(null);
         }
     }
 

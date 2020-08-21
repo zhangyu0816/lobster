@@ -196,7 +196,8 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
         if (mineInfo.getMemberType() == 2) {
             makeEvaluate();
         } else {
-            new VipAdPW(activity, mBinding.getRoot(), false, 3);
+            if (memberInfo != null)
+                new VipAdPW(activity, mBinding.getRoot(), false, 3, memberInfo.getImage());
         }
     }
 
@@ -225,7 +226,7 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
                         SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
 //                        new CountUsedPW(activity, mBinding.getRoot(), 2);
                     } else {
-                        new VipAdPW(activity, mBinding.getRoot(), false, 3);
+                        new VipAdPW(activity, mBinding.getRoot(), false, 3, otherHead);
                     }
                 } else {
                     SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);

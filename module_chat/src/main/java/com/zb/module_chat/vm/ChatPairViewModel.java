@@ -193,7 +193,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 ActivityUtils.getMineFCL(2);
                 return;
             }
-            new VipAdPW(activity, mBinding.getRoot(), false, 4);
+            new VipAdPW(activity, mBinding.getRoot(), false, 4,"");
         } else if (chatList.getChatType() == 2) {
             // 漂流瓶
             ActivityUtils.getBottleList();

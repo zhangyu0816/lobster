@@ -279,30 +279,25 @@
                         tools:text="默认仓库" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="15dp"
+                    android:gravity="center_vertical"
+                    android:text="个性标签"
+                    android:textColor="@color/black_4d4"
+                    android:textSize="14sp"
+                    android:visibility="@{viewModel.memberInfo.getServiceTags().length() > 0?View.VISIBLE:View.GONE}" />
+
+                <com.zb.lib_base.views.MyRecyclerView
+                    adapter="@{viewModel.tagAdapter}"
+                    recyclerType="@{5}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
                     android:layout_marginEnd="15dp"
-                    android:orientation="horizontal"
-                    android:visibility="@{viewModel.memberInfo.getServiceTags().length() > 0?View.VISIBLE:View.GONE}">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="40dp"
-                        android:gravity="center_vertical"
-                        android:text="个性标签："
-                        android:textColor="@color/black_4d4"
-                        android:textSize="14sp" />
-
-                    <com.zb.lib_base.views.MyRecyclerView
-                        adapter="@{viewModel.tagAdapter}"
-                        recyclerType="@{5}"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
+                    android:visibility="@{viewModel.memberInfo.getServiceTags().length() > 0?View.VISIBLE:View.GONE}" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 

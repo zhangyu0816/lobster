@@ -128,7 +128,8 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
 
     @Override
     public void openVip(View view) {
-        ActivityUtils.getMineOpenVip();
+        if (MineApp.vipInfoList.size() > 0)
+            ActivityUtils.getMineOpenVip();
     }
 
     @Override
@@ -155,7 +156,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                 ActivityUtils.getMineFCL(2);
                 return;
             }
-            new VipAdPW(activity, mBinding.getRoot(), false, 4);
+            new VipAdPW(activity, mBinding.getRoot(), false, 4, "");
         } else {
             ActivityUtils.getMineFCL(position);
         }

@@ -37,7 +37,7 @@ public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterfac
 
     @Override
     public void getVip(int index) {
-        new VipAdPW( activity, mBinding.getRoot(), false, 0);
+        new VipAdPW(activity, mBinding.getRoot(), false, 0, "");
     }
 
     @Override

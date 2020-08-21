@@ -74,8 +74,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     private MineInfo mineInfo;
     private LikeDb likeDb;
     private BaseReceiver attentionReceiver;
-    private int bannerWidth = ObjectUtils.getViewSizeByWidth(1f);
-    private int bannerHeight = (int) (ObjectUtils.getViewSizeByWidth(1f) * 1.3f);
+    private int bannerWidth = MineApp.W;
+    private int bannerHeight = MineApp.W;
     private int mainW = 0;
     private int mainH = 0;
     private List<Ads> adsList = new ArrayList<>();
@@ -168,13 +168,15 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
 
                 String distant = "";
                 if (!memberInfo.getDistance().isEmpty()) {
-                    distant = String.format("%.1f", Float.parseFloat(memberInfo.getDistance()) / 1000f) + "km/";
+                    distant = String.format("%.1f", Float.parseFloat(memberInfo.getDistance()) / 1000f) + "km";
                 }
 
                 String cityName = areaDb.getCityName(memberInfo.getCityId()) + " ";
                 String districtName = areaDb.getDistrictName(memberInfo.getDistrictId());
-
-                mBinding.setInfo(distant + (memberInfo.getSex() == 0 ? "女/" : "男/") + cityName + " " + districtName);
+                if (cityName.trim().isEmpty())
+                    mBinding.setInfo(distant + (memberInfo.getSex() == 0 ? "/女" : "/男"));
+                else
+                    mBinding.setInfo(distant + (memberInfo.getSex() == 0 ? "/女/" : "/男/") + cityName + " " + districtName);
 
                 new Thread(() -> {
                     if (!memberInfo.getMoreImages().isEmpty()) {
@@ -361,7 +363,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                         SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
 //                        new CountUsedPW(activity, mBinding.getRoot(), 2);
                     } else {
-                        new VipAdPW(activity, mBinding.getRoot(), false, 3);
+                        new VipAdPW(activity, mBinding.getRoot(), false, 3, otherHead);
                     }
                 } else {
                     if (likeOtherStatus == 1)
@@ -429,7 +431,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         if (mineInfo.getMemberType() == 2) {
             makeEvaluate(2);
         } else {
-            new VipAdPW(activity, mBinding.getRoot(), false, 3);
+            if (memberInfo != null)
+                new VipAdPW(activity, mBinding.getRoot(), false, 3, memberInfo.getImage());
         }
     }
 

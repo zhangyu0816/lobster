@@ -207,6 +207,8 @@ public class AdapterBinding {
             } else {
                 if (imageUrl != null && imageUrl.equals("add_image_icon")) {
                     builder.load(R.mipmap.add_image_icon).into(view);
+                } else if (imageUrl != null && imageUrl.equals("empty_icon")) {
+                    builder.load(R.mipmap.empty_icon).into(view);
                 } else if (imageUrl != null && imageUrl.equals("be_like_logo_icon")) {
                     builder.load(R.mipmap.be_like_logo_icon).into(view);
                 } else if (imageUrl != null && imageUrl.equals("bottle_logo_icon")) {
@@ -219,6 +221,10 @@ public class AdapterBinding {
                     builder.load(R.mipmap.card_out_line_bg).into(view);
                 } else if (imageUrl != null && imageUrl.equals("card_progress_icon")) {
                     builder.load(R.mipmap.card_progress_icon).into(view);
+                } else if (imageUrl != null && imageUrl.equals("vip_ad_1_male_right")) {
+                    builder.load(R.drawable.vip_ad_1_male_right).into(view);
+                } else if (imageUrl != null && imageUrl.equals("vip_ad_3_male")) {
+                    builder.load(R.mipmap.vip_ad_3_male).into(view);
                 } else {
                     if (imageUrl != null && imageUrl.contains(".mp3"))
                         imageUrl = "";

@@ -18,7 +18,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
-import com.google.android.material.appbar.AppBarLayout;
 import com.maning.imagebrowserlibrary.MNImage;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -93,9 +92,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     private BaseReceiver finishRefreshReceiver;
     private BaseReceiver attentionReceiver;
     private boolean isFirst = true;
-    private AppBarLayout.LayoutParams params;
-    private int bannerWidth = ObjectUtils.getViewSizeByWidth(1f);
-    private int bannerHeight = (int) (ObjectUtils.getViewSizeByWidth(1f) * 1.3f);
+    private int bannerWidth = MineApp.W;
+    private int bannerHeight = MineApp.W;
 
     private int mainW = 0;
     private int mainH = 0;
@@ -154,7 +152,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             }
             return false;
         });
-        params = (AppBarLayout.LayoutParams) mBinding.toolbar.getLayoutParams();
     }
 
     @Override
@@ -209,7 +206,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 if (mineInfo.getMemberType() == 2) {
                     makeEvaluate();
                 } else {
-                    new VipAdPW(activity, mBinding.getRoot(), false, 3);
+                    new VipAdPW(activity, mBinding.getRoot(), false, 3, discoverInfo.getImage());
                 }
             }
         });
@@ -299,6 +296,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);
     }
+
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
@@ -341,10 +339,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 reviewAdapter.notifyItemRangeChanged(start, reviewList.size());
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
-                if (params.getScrollFlags() == 0) {
-                    params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS_COLLAPSED | AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);//0不能伸缩
-                    mBinding.toolbar.setLayoutParams(params);
-                }
             }
 
             @Override
@@ -353,10 +347,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
                     mBinding.refresh.finishLoadMore();
-                    if (reviewList.size() == 0) {
-                        params.setScrollFlags(0);//0不能伸缩
-                        mBinding.toolbar.setLayoutParams(params);
-                    }
                 }
             }
         }, activity).setFriendDynId(friendDynId).setTimeSortType(1).setPageNo(pageNo);

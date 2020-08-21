@@ -247,7 +247,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             this.pairInfo = pairInfo;
             makeEvaluate(pairInfo, 2);
         } else {
-            new VipAdPW(activity, mBinding.getRoot(), false, 3);
+            new VipAdPW(activity, mBinding.getRoot(), false, 3, pairInfo.getSingleImage());
         }
     }
 
@@ -260,7 +260,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 setCardAnimationLeftToRight(pairInfo);
             }
         } else {
-            new VipAdPW(activity, mBinding.getRoot(), false, 2);
+            new VipAdPW(activity, mBinding.getRoot(), false, 2, "");
         }
     }
 
@@ -278,7 +278,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 //                });
 //            }
         } else {
-            new VipAdPW(activity, mBinding.getRoot(), false, 1);
+            new VipAdPW(activity, mBinding.getRoot(), false, 1, "");
         }
     }
 
@@ -310,7 +310,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     @Override
     public void selectCity(View view) {
         if (mineInfo.getMemberType() == 1) {
-            new VipAdPW(activity, mBinding.getRoot(), false, 5);
+            new VipAdPW(activity, mBinding.getRoot(), false, 5, "");
             return;
         }
         ActivityUtils.getMineLocation(false);
@@ -377,7 +377,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             public void onNext(Integer o) {
                 // 1喜欢成功 2匹配成功 3喜欢次数用尽
                 String myHead = mineInfo.getImage();
-                String otherHead = pairInfo.getHeadImage();
+                String otherHead = pairInfo.getSingleImage();
                 if (o == 1) {
                     // 不喜欢成功  喜欢成功  超级喜欢成功
                     if (likeOtherStatus == 1) {
@@ -403,7 +403,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                         SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
 //                        new CountUsedPW(activity, mBinding.getRoot(), 2);
                     } else {
-                        new VipAdPW(activity, mBinding.getRoot(), false, 3);
+                        new VipAdPW(activity, mBinding.getRoot(), false, 3, otherHead);
                     }
                 } else {
                     if (likeOtherStatus == 1)

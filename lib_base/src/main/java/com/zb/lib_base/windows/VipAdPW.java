@@ -39,52 +39,91 @@ public class VipAdPW extends BasePopupWindow {
     private MineInfoDb mineInfoDb;
     private MineInfo mineInfo;
     private int sex;
+    private String otherImage = "";
 
-    public VipAdPW(RxAppCompatActivity activity, View parentView, boolean isAutoPlay, int type) {
+    public VipAdPW(RxAppCompatActivity activity, View parentView, boolean isAutoPlay, int type, String otherImage) {
         super(activity, parentView, false);
         mineInfoDb = new MineInfoDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
         sex = mineInfo.getSex();
         this.isAutoPlay = isAutoPlay;
         this.type = type;
+        this.otherImage = otherImage;
         if (type == 0) {
             for (int i = 0; i < 5; i++) {
                 Ads ads = new Ads();
                 if (i == 0) {
-                    ads.setView(adView(sex == 0 ? R.mipmap.vip_ad_1 : R.mipmap.vip_ad_1_male));
+                    ads.setView(adView(1));
                 } else if (i == 1) {
-                    ads.setView(adView(sex == 1 ? R.mipmap.vip_ad_2 : R.mipmap.vip_ad_2_male));
+                    ads.setView(adView(2));
                 } else if (i == 2) {
-                    ads.setView(adView(R.mipmap.vip_ad_3));
+                    ads.setView(adView(3));
                 } else if (i == 3) {
-                    ads.setView(adView(sex == 0 ? R.mipmap.vip_ad_4 : R.mipmap.vip_ad_4_male));
+                    ads.setView(adView(4));
                 } else {
-                    ads.setView(adView(R.mipmap.vip_ad_5));
+                    ads.setView(adView(5));
                 }
                 adsList.add(ads);
             }
         } else if (type == 5) {
-            Ads ads = new Ads(adView(R.mipmap.vip_ad_5));
+            Ads ads = new Ads(adView(type));
             adsList.add(ads);
         } else if (type == 4) {
-            Ads ads = new Ads(adView(sex == 0 ? R.mipmap.vip_ad_4 : R.mipmap.vip_ad_4_male));
+            Ads ads = new Ads(adView(type));
             adsList.add(ads);
         } else if (type == 3) {
-            Ads ads = new Ads(adView(R.mipmap.vip_ad_3));
+            Ads ads = new Ads(adView(type));
             adsList.add(ads);
         } else if (type == 2) {
-            Ads ads = new Ads(adView(sex == 1 ? R.mipmap.vip_ad_2 : R.mipmap.vip_ad_2_male));
+            Ads ads = new Ads(adView(type));
             adsList.add(ads);
         } else if (type == 1) {
-            Ads ads = new Ads(adView(sex == 0 ? R.mipmap.vip_ad_1 : R.mipmap.vip_ad_1_male));
+            Ads ads = new Ads(adView(type));
             adsList.add(ads);
         }
         initUI();
     }
 
-    private View adView(int res) {
+    private View adView(int type) {
         ItemAdBinding binding = DataBindingUtil.inflate(LayoutInflater.from(activity), R.layout.item_ad, null, false);
-        binding.ivBg.setBackgroundResource(res);
+        binding.setType(type);
+        binding.setSex(sex);
+        if (type == 1) {
+            binding.setTitle("超级曝光");
+            binding.setContent("增加10倍曝光度，让更多人先发现你");
+            binding.setMyHead(mineInfo.getImage());
+            binding.setOtherHead("empty_icon");
+            binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
+            binding.ivBg.setBackgroundResource(R.drawable.empty_bg);
+        } else if (type == 2) {
+            binding.setTitle("");
+            binding.setContent("");
+            binding.setMyHead("empty_icon");
+            binding.setOtherHead("empty_icon");
+            binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
+            binding.ivBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_2_male : R.mipmap.vip_ad_2);
+        } else if (type == 3) {
+            binding.setTitle("超级喜欢");
+            binding.setContent("每天10个超级喜欢，开通专属私信通道");
+            binding.setMyHead(mineInfo.getImage());
+            binding.setOtherHead(otherImage.isEmpty() ? (sex == 0 ? "vip_ad_3_male" : "vip_ad_1_male_right") : otherImage);
+            binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
+            binding.ivBg.setBackgroundResource(R.drawable.empty_bg);
+        } else if (type == 4) {
+            binding.setTitle("立即查看谁喜欢我？");
+            binding.setContent("第一时间查看喜欢你的人！立即匹配哦～");
+            binding.setMyHead(mineInfo.getImage());
+            binding.setOtherHead("empty_icon");
+            binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_4_male : R.mipmap.vip_ad_4);
+            binding.ivBg.setBackgroundResource(R.drawable.empty_bg);
+        } else if (type == 5) {
+            binding.setTitle("位置漫游");
+            binding.setContent("让你随时随地认识全世界的朋友！");
+            binding.setMyHead(mineInfo.getImage());
+            binding.setOtherHead("empty_icon");
+            binding.ivVipBg.setBackgroundResource(R.mipmap.vip_ad_5);
+            binding.ivBg.setBackgroundResource(R.drawable.empty_bg);
+        }
         return binding.getRoot();
     }
 
@@ -127,7 +166,7 @@ public class VipAdPW extends BasePopupWindow {
                     @Override
                     public void loadView(LinearLayout linearLayout, View adView) {
                         if (adView.getParent() != null) {
-                            ((ViewGroup)adView.getParent()).removeView(adView);
+                            ((ViewGroup) adView.getParent()).removeView(adView);
                         }
                         linearLayout.addView(adView);
                         AdapterBinding.viewSize(linearLayout, ObjectUtils.getViewSizeByWidthFromMax(1000), ObjectUtils.getVipExposureHeight(1000));

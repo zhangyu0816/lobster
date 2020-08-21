@@ -18,6 +18,7 @@ public class SCToastUtil {
     public static void showToast(RxAppCompatActivity activity, CharSequence text, boolean isTop) {
         mBinding = DataBindingUtil.inflate(activity.getLayoutInflater(), R.layout.toast_view, null, false);
         mBinding.setContent(text.toString());
+        mBinding.setIsTop(isTop);
         toast = new Toast(activity);
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(mBinding.getRoot()); //添加视图文件

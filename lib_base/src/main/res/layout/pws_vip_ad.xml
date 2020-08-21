@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -72,14 +73,17 @@
                 <TextView
                     onClickDelayed="@{pw::sure}"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_margin="15dp"
-                    android:background="@drawable/gradient_purple_6d5_ae7"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@mipmap/btn_bg_icon"
                     android:gravity="center"
                     android:text="@{mineInfo.memberType==2?@string/pay_btn:String.format(@string/open_btn,vipInfo.price)}"
                     android:textColor="@color/white"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:paddingBottom="12dp"
+                    android:textStyle="bold"
+                    tools:text="开通"/>
             </LinearLayout>
 
             <ImageView

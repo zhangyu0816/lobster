@@ -21,12 +21,10 @@
     <color name="white">#fff</color>
     <color name="white_99">#99ffffff</color>
     <color name="purple_7a4_10">#1a7A44F5</color>
-
-
     <color name="red_fe5">#FE5395</color>
+
+    <color name="red_ff3">#FF3158</color>
+    <color name="yellow_e89">#E89211</color>
     <color name="blue_37a">#37A0FF</color>
-
-
-
-
+    <color name="green_34c">#34CF17</color>
 </resources>

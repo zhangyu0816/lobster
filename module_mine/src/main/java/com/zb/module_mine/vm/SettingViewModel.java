@@ -118,7 +118,8 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     @Override
     public void toLocation(View view) {
         if (mineInfo.getMemberType() == 1) {
-            new TextPW(activity, mBinding.getRoot(), "VIP特权", "位置漫游服务为VIP用户专享功能", "开通会员", ActivityUtils::getMineOpenVip);
+            if (MineApp.vipInfoList.size() > 0)
+                new TextPW(activity, mBinding.getRoot(), "VIP特权", "位置漫游服务为VIP用户专享功能", "开通会员", ActivityUtils::getMineOpenVip);
             return;
         }
         ActivityUtils.getMineLocation(false);

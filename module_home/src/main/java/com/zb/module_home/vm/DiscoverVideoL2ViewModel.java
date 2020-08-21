@@ -209,7 +209,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
                 if (mineInfo.getMemberType() == 2) {
                     makeEvaluate();
                 } else {
-                    new VipAdPW(activity, mBinding.getRoot(), false, 3);
+                    new VipAdPW(activity, mBinding.getRoot(), false, 3, discoverInfo.getImage());
                 }
             }
         });

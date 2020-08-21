@@ -11,9 +11,11 @@ import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;
+import com.zb.module_card.vm.MemberDetailViewModel;
 import com.zb.module_card.vm.MemberVideoViewModel;
 
 import java.util.List;
+import java.util.Random;
 
 import androidx.databinding.ViewDataBinding;
 
@@ -24,6 +26,7 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
     private BasePopupWindow pw;
     private int selectImageIndex = 0;
     private View currentView;
+    private Random ra = new Random();
 
     public View getCurrentView() {
         return currentView;
@@ -78,6 +81,10 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
             DiscoverInfo discoverInfo = (DiscoverInfo) t;
             boolean hasGood = viewModel.goodDb.hasGood(discoverInfo.getFriendDynId());
             holder.binding.setVariable(BR.hasGood, hasGood);
+        }
+
+        if (viewModel instanceof MemberDetailViewModel) {
+            holder.binding.setVariable(BR.raIndex, ra.nextInt(4));
         }
         holder.binding.executePendingBindings();
     }

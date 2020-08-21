@@ -337,7 +337,7 @@ public interface HttpService {
 
     // 超级曝光
     @GET("api/UserPopularityDetail_recommendRankingList")
-    Observable<BaseResultEntity<List<RecommendInfo>>> recommendRankingList(@Query("cityId") long cityId, @Query("sex")int sex);
+    Observable<BaseResultEntity<List<RecommendInfo>>> recommendRankingList(@Query("cityId") long cityId, @Query("sex") int sex);
 
     /******************************* 对话 **********************************/
 
@@ -391,7 +391,7 @@ public interface HttpService {
 
     // 寻找漂流瓶
     @GET("api/DriftBottle_findBottle")
-    Observable<BaseResultEntity<BottleInfo>> findBottle();
+    Observable<BaseResultEntity<BottleInfo>> findBottle(@QueryMap Map<String, String> map);
 
     // 拾取漂流瓶(包括销毁漂流瓶)
     @GET("api/DriftBottle_pcikBottle")

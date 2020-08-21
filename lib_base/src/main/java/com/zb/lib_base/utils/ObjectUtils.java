@@ -79,7 +79,7 @@ public class ObjectUtils {
 
     // 超级喜欢
     public static int getSuperLikeRes(boolean isPair) {
-        return isPair ? R.mipmap.like_tag_icon : R.mipmap.super_like_icon;
+        return isPair ? R.mipmap.like_tag_icon : R.mipmap.super_like_small_icon;
     }
 
     // 客服头像
@@ -230,15 +230,15 @@ public class ObjectUtils {
     public static int textColor(LikeDb likeDb, AttentionDb attentionDb, long otherUserId, int position) {
         if (position == 2) {
             if (likeDb.hasLike(otherUserId)) {
-                return R.color.black_827;
+                return MineApp.getInstance().getResources().getColor(R.color.black_827);
             } else {
-                return R.color.purple_7a4;
+                return MineApp.getInstance().getResources().getColor(R.color.purple_7a4);
             }
         } else {
             if (attentionDb.isAttention(otherUserId)) {
-                return R.color.black_827;
+                return MineApp.getInstance().getResources().getColor(R.color.black_827);
             } else {
-                return R.color.purple_7a4;
+                return MineApp.getInstance().getResources().getColor(R.color.purple_7a4);
             }
         }
 
@@ -300,6 +300,30 @@ public class ObjectUtils {
             return "身份证反面";
         } else {
             return "手持身份证";
+        }
+    }
+
+    public static Drawable getTag(int position) {
+        if (position == 0) {
+            return MineApp.getInstance().getResources().getDrawable(R.drawable.btn_bg_red_ffe_radius40);
+        } else if (position == 1) {
+            return MineApp.getInstance().getResources().getDrawable(R.drawable.btn_bg_yellow_fff_radius40);
+        } else if (position == 2) {
+            return MineApp.getInstance().getResources().getDrawable(R.drawable.btn_bg_blue_e4f_radius40);
+        } else {
+            return MineApp.getInstance().getResources().getDrawable(R.drawable.btn_bg_green_e1f_radius40);
+        }
+    }
+
+    public static int getTagColor(int position) {
+        if (position == 0) {
+            return MineApp.getInstance().getResources().getColor(R.color.red_ff3);
+        } else if (position == 1) {
+            return MineApp.getInstance().getResources().getColor(R.color.yellow_e89);
+        } else if (position == 2) {
+            return MineApp.getInstance().getResources().getColor(R.color.blue_37a);
+        } else {
+            return MineApp.getInstance().getResources().getColor(R.color.green_34c);
         }
     }
 }

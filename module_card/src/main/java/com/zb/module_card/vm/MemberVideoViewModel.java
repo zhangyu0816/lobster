@@ -101,6 +101,8 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
                 onRefreshForNet(null);
             }
         };
+
+        mBinding.ivNoData.setBackgroundResource(otherUserId == 1 ? R.mipmap.my_no_discover_data : R.mipmap.other_no_discover_data);
     }
 
     public void onDestroy() {
@@ -195,7 +197,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
                     mBinding.refresh.finishLoadMore();
-                    if (otherUserId == 1 && discoverInfoList.size() == 0) {
+                    if (discoverInfoList.size() == 0) {
                         mBinding.ivNoData.setVisibility(View.VISIBLE);
                     }
                 }
