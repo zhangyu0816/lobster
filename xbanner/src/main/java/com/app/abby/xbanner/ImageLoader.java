@@ -1,7 +1,9 @@
 package com.app.abby.xbanner;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.VideoView;
 
 /**
@@ -17,6 +19,10 @@ public interface ImageLoader {
     }
 
     default void getPosition(int position) {
+
+    }
+
+    default void loadView(LinearLayout linearLayout, View adView) {
 
     }
 }

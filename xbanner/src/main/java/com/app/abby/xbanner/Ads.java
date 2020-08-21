@@ -1,5 +1,7 @@
 package com.app.abby.xbanner;
 
+import android.view.View;
+
 /**
  * Created by DIY on 2017-10-11.
  */
@@ -13,6 +15,7 @@ public class Ads {
     private String outLink = "";    //广告链接的地址
     private String adTitle = "";   //广告标题
     private int adRes = 0;
+    private View view;
 
     @Override
     public String toString() {
@@ -31,6 +34,10 @@ public class Ads {
 
     public Ads(int adRes) {
         this.adRes = adRes;
+    }
+
+    public Ads(View view) {
+        this.view = view;
     }
 
     public Ads(Long adId, String smallImage, String bigImage, String webImage, String outLink, String adTitle) {
@@ -96,5 +103,13 @@ public class Ads {
 
     public void setAdRes(int adRes) {
         this.adRes = adRes;
+    }
+
+    public View getView() {
+        return view;
+    }
+
+    public void setView(View view) {
+        this.view = view;
     }
 }

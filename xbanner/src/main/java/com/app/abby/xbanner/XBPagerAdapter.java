@@ -63,18 +63,21 @@ public class XBPagerAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
-        if (mData.get(position).getParent() != null) {
-            ((ViewGroup) mData.get(position).getParent()).removeView(mData.get(position));
+
+        try {
+            container.addView(mData.get(position));
+        } catch (IllegalStateException e) {
+            if (mData.get(position).getParent() != null) {
+                ((ViewGroup) mData.get(position).getParent()).removeView(mData.get(position));
+            }
+            container.addView(mData.get(position));
         }
-        container.addView(mData.get(position));
+
 
         view = mData.get(position);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mBannerPageListner != null) {
-                    mBannerPageListner.onBannerClick(getTruePos(position));
-                }
+        view.setOnClickListener(v -> {
+            if (mBannerPageListner != null) {
+                mBannerPageListner.onBannerClick(getTruePos(position));
             }
         });
         return mData.get(position);
@@ -83,9 +86,9 @@ public class XBPagerAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        if (mData != null && mData.size() > 0) {
-            container.removeView(mData.get(position));
-        }
+//        if (mData != null && mData.size() > 0) {
+//            container.removeView(mData.get(position));
+//        }
 
     }
 

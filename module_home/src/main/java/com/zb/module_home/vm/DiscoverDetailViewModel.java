@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.app.abby.xbanner.Ads;
 import com.app.abby.xbanner.XBanner;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.appbar.AppBarLayout;
 import com.maning.imagebrowserlibrary.MNImage;
@@ -97,7 +99,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 
     private int mainW = 0;
     private int mainH = 0;
-    private int index = 0;
     private List<Ads> adsList = new ArrayList<>();
 
     @SuppressLint("ClickableViewAccessibility")
@@ -252,22 +253,45 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 discoverInfo = o;
                 mBinding.setViewModel(DiscoverDetailViewModel.this);
 
-                if (!discoverInfo.getImages().isEmpty()) {
-                    String[] images = discoverInfo.getImages().split(",");
-                    for (String image : images) {
-                        if (!image.isEmpty()) {
-                            Ads ads = new Ads();
-                            ads.setSmallImage(image);
-                            adsList.add(ads);
+                new Thread(() -> {
+                    if (!discoverInfo.getImages().isEmpty()) {
+                        String[] images = discoverInfo.getImages().split(",");
+                        for (String image : images) {
+                            if (!image.isEmpty()) {
+                                Ads ads = new Ads();
+                                ads.setSmallImage(image);
+                                adsList.add(ads);
+                                try {
+                                    Bitmap bitmap = Glide.with(activity).asBitmap().load(ads.getSmallImage()).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+                                    int h = bitmap.getHeight();
+                                    int w = bitmap.getWidth();
+                                    if (mainW < w && mainH < h) {
+                                        mainW = w;
+                                        mainH = h;
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    } else {
+                        Ads ads = new Ads();
+                        ads.setSmallImage(discoverInfo.getImage());
+                        adsList.add(ads);
+                        try {
+                            Bitmap bitmap = Glide.with(activity).asBitmap().load(ads.getSmallImage()).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+                            int h = bitmap.getHeight();
+                            int w = bitmap.getWidth();
+                            if (mainW < w && mainH < h) {
+                                mainW = w;
+                                mainH = h;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
-                } else {
-                    Ads ads = new Ads();
-                    ads.setSmallImage(discoverInfo.getImage());
-                    adsList.add(ads);
-                }
-                getWH();
-
+                    handler.sendEmptyMessage(0);
+                }).start();
                 otherInfo();
                 seeGiftRewards();
                 seeReviews();
@@ -275,32 +299,19 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);
     }
-
-    private void getWH() {
-        Glide.with(activity).asBitmap().load(adsList.get(index).getSmallImage()).into(new SimpleTarget<Bitmap>() {
-            @Override
-            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                int h = resource.getHeight();
-                int w = resource.getWidth();
-                if (mainW < w && mainH < h) {
-                    mainW = w;
-                    mainH = h;
-                }
-                index++;
-                if (index < adsList.size()) {
-                    getWH();
-                } else {
-                    bannerWidth = MineApp.W;
-                    bannerHeight = (int) (MineApp.W * (float) mainH / (float) mainW);
-                    if (bannerHeight > ObjectUtils.getLogoHeight(1f)) {
-                        bannerHeight = ObjectUtils.getLogoHeight(1f);
-                    }
-                    AdapterBinding.viewSize(mBinding.banner, bannerWidth, bannerHeight);
-                    showBanner(adsList);
-                }
+    private Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message message) {
+            bannerWidth = MineApp.W;
+            bannerHeight = (int) (MineApp.W * (float) mainH / (float) mainW);
+            if (bannerHeight > ObjectUtils.getLogoHeight(1f)) {
+                bannerHeight = ObjectUtils.getLogoHeight(1f);
             }
-        });
-    }
+            AdapterBinding.viewSize(mBinding.banner, bannerWidth, bannerHeight);
+            showBanner(adsList);
+            return false;
+        }
+    });
 
     public void seeGiftRewards() {
         seeGiftRewardsApi api = new seeGiftRewardsApi(new HttpOnNextListener<List<Reward>>() {

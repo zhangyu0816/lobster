@@ -48,7 +48,7 @@
                     countSize="@{true}"
                     defaultRes="@{ObjectUtils.getDefaultRes()}"
                     imageUrl='@{item.images.isEmpty()?item.image:item.images.split(",")[0]}'
-                    viewHeightSize="@{0}"
+                    viewHeightSize="@{ObjectUtils.getImageHeight(0.48f, item.width, item.height)}"
                     viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.48f)}"
                     android:layout_width="match_parent"
                     android:layout_height="200dp" />
@@ -67,8 +67,8 @@
                 android:background="@drawable/btn_bg_white_radius_bottom5"
                 android:orientation="vertical"
                 android:paddingStart="10dp"
-                android:paddingEnd="10dp"
                 android:paddingTop="10dp"
+                android:paddingEnd="10dp"
                 android:paddingBottom="2dp">
 
                 <TextView

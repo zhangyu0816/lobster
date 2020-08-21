@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+    </data>
+
+    <LinearLayout
+        viewHeightSize="@{ObjectUtils.getVipExposureHeight(1000)}"
+        viewWidthSize="@{ ObjectUtils.getViewSizeByWidthFromMax(1000)}"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_bg"
+                viewHeightSize="@{ObjectUtils.getVipExposureHeight(1000)}"
+                viewWidthSize="@{ ObjectUtils.getViewSizeByWidthFromMax(1000)}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</layout>

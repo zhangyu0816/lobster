@@ -52,8 +52,8 @@ public class ObjectUtils {
         return (int) (getViewSizeByWidth(scale) * 510f / 345f);
     }
 
-    public static int getLogoWidth(float scale) {
-        return (int) (getViewSizeByHeight(scale) * 345f / 510f);
+    public static int getImageHeight(float scale, int width, int height) {
+        return (int) (getViewSizeByWidth(scale) * (float) height / (float) width);
     }
 
     public static int getVipBgHeight(float scale) {

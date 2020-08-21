@@ -2,9 +2,12 @@ package com.zb.module_home.vm;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -138,7 +141,17 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
             public void onNext(List<DiscoverInfo> o) {
                 mBinding.noNetLinear.setVisibility(View.GONE);
                 start = discoverInfoList.size();
-                discoverInfoList.addAll(o);
+                for (DiscoverInfo item : o) {
+                    try {
+                        Bitmap bitmap = Glide.with(activity).asBitmap().load(item.getVideoUrl().isEmpty() ? (item.getImages().isEmpty() ? attentionDb.getAttentionInfo(item.getOtherUserId()).getImage() : item.getImages().split(",")[0]) : item.getVideoUrl())
+                                .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+                        item.setWidth(bitmap.getWidth());
+                        item.setHeight(bitmap.getHeight());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    discoverInfoList.add(item);
+                }
                 setImage();
             }
 

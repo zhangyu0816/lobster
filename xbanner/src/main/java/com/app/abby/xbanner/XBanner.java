@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -103,6 +104,7 @@ public class XBanner extends RelativeLayout {
     private List<View> mBannerImages;
     private List<String> mTitles;
     private List<String> mUrls;
+    private List<View> adViewList;
     private BannerPageListener mBannerPageListner;
     private ImageLoader mImageLoader;
 
@@ -225,6 +227,7 @@ public class XBanner extends RelativeLayout {
         mBannerImages = new ArrayList<>();
         mTitles = new ArrayList<>();
         mUrls = new ArrayList<>();
+        adViewList = new ArrayList<>();
         adsList = new ArrayList<>();
 
         mIsPlaying = false;
@@ -410,6 +413,7 @@ public class XBanner extends RelativeLayout {
         this.adsList = adsList;
         for (Ads ads : adsList) {
             mUrls.add(ads.getSmallImage());
+            adViewList.add(ads.getView());
             mTitles.add("");
         }
         if (mImageCount == 0) {
@@ -605,7 +609,7 @@ public class XBanner extends RelativeLayout {
     public void setBannerBg(int position) {
         if (showBg && type == 0) {
             setBgRes(position - 1);
-            mImageLoader.getPosition(position - 1);
+//            mImageLoader.getPosition(position - 1);
         }
     }
 
@@ -693,19 +697,6 @@ public class XBanner extends RelativeLayout {
 
     private void setBg(int position, float positionOffset) {
         if (positionOffset == 0) return;
-//        if (position == -1) {
-//            colors = new int[]{Color.argb(0, 0, 0, 0), Color.argb(0, 0, 0, 0)};
-//        } else if (position == 0) {
-//            colors = new int[]{Color.argb(255, 255, 221, 176), Color.argb(255, 255, 255, 255)};
-//        } else if (position == 1) {
-//            colors = new int[]{Color.argb(255, 176, 193, 255), Color.argb(255, 255, 255, 255)};
-//        } else if (position == 2) {
-//            colors = new int[]{Color.argb(255, 255, 176, 190), Color.argb(255, 255, 255, 255)};
-//        } else if (position == 3) {
-//            colors = new int[]{Color.argb(255, 194, 176, 255), Color.argb(255, 255, 255, 255)};
-//        } else {
-//            colors = new int[]{Color.argb(255, 198, 255, 176), Color.argb(255, 255, 255, 255)};
-//        }
         if (position == 0) {
             int red = (int) ((255 - 198) * positionOffset);
             int green = (int) ((255 - 221) * positionOffset);
@@ -912,53 +903,72 @@ public class XBanner extends RelativeLayout {
         if (mImageLoader == null) {
             return;
         }
-        if (mBannerImages.isEmpty() && !mUrls.isEmpty()) {
-            if (mImageCount > 1) {
-
-                Ads ads = adsList.get(mImageCount - 1);
-                if (ads.getSmallImage().contains(".mp4"))
-                    mBannerImages.add(newVideoViewFroUrl(ads));
-                else
-                    mBannerImages.add(newImageFroUrl(ads, mImageCount - 1));
-
-                for (int i = 0; i < mUrls.size(); i++) {
-                    Ads ads1 = adsList.get(i);
-                    if (ads1.getSmallImage().contains(".mp4"))
-                        mBannerImages.add(newVideoViewFroUrl(ads1));
-                    else
-                        mBannerImages.add(newImageFroUrl(ads1, i));
+        if (showBg) {
+            if (mBannerImages.isEmpty() && !adViewList.isEmpty()) {
+                if (mImageCount > 1) {
+                    mBannerImages.add(newView(adsList.get(mImageCount - 1)));
+                    for (int i = 0; i < adViewList.size(); i++) {
+                        mBannerImages.add(newView(adsList.get(i)));
+                    }
+                    mBannerImages.add(newView(adsList.get(0)));
+                } else {
+                    mBannerImages.add(newView(adsList.get(0)));
                 }
-                Ads ads2 = adsList.get(0);
-                if (ads2.getSmallImage().contains(".mp4"))
-                    mBannerImages.add(newVideoViewFroUrl(ads2));
-                else
-                    mBannerImages.add(newImageFroUrl(ads2, 0));
-            } else {
-                Ads ads = adsList.get(0);
-                if (ads.getSmallImage().contains(".mp4"))
-                    mBannerImages.add(newVideoViewFroUrl(ads));
-                else
-                    mBannerImages.add(newImageFroUrl(ads, 0));
+            }
+        } else {
+            if (mBannerImages.isEmpty() && !mUrls.isEmpty()) {
+                if (mImageCount > 1) {
+
+                    Ads ads = adsList.get(mImageCount - 1);
+                    if (ads.getSmallImage().contains(".mp4"))
+                        mBannerImages.add(newVideoViewFroUrl(ads));
+                    else
+                        mBannerImages.add(newImageFroUrl(ads, mImageCount - 1));
+
+                    for (int i = 0; i < mUrls.size(); i++) {
+                        Ads ads1 = adsList.get(i);
+                        if (ads1.getSmallImage().contains(".mp4"))
+                            mBannerImages.add(newVideoViewFroUrl(ads1));
+                        else
+                            mBannerImages.add(newImageFroUrl(ads1, i));
+                    }
+                    Ads ads2 = adsList.get(0);
+                    if (ads2.getSmallImage().contains(".mp4"))
+                        mBannerImages.add(newVideoViewFroUrl(ads2));
+                    else
+                        mBannerImages.add(newImageFroUrl(ads2, 0));
+                } else {
+                    Ads ads = adsList.get(0);
+                    if (ads.getSmallImage().contains(".mp4"))
+                        mBannerImages.add(newVideoViewFroUrl(ads));
+                    else
+                        mBannerImages.add(newImageFroUrl(ads, 0));
+                }
             }
         }
     }
 
 
     private ImageView newImageFroUrl(Ads ads, int position) {
-        LinearLayout linearLayout = new LinearLayout(mContext);
         ImageView image = new ImageView(mContext);
+        image.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         image.setScaleType(mScaleType);
-        linearLayout.addView(image);
         mImageLoader.loadImages(mContext, ads, image, position);
         return image;
     }
 
     private VideoView newVideoViewFroUrl(Ads ads) {
-        LinearLayout linearLayout = new LinearLayout(mContext);
         VideoView videoView = new VideoView(mContext);
-        linearLayout.addView(videoView);
+        videoView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         mImageLoader.loadVideoViews(mContext, ads, videoView);
         return videoView;
+    }
+
+    private View newView(Ads ads) {
+        LinearLayout linearLayout = new LinearLayout(mContext);
+        linearLayout.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        mImageLoader.loadView(linearLayout, ads.getView());
+        return ads.getView();
     }
 
     /**

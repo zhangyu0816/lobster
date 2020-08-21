@@ -30,6 +30,8 @@ public class DiscoverInfo extends BaseObservable {
     private String videoPath = "";
     private String goodNumStr = "";
     private String reviewsStr = "";
+    private int width;
+    private int height;
 
     @Bindable
     public long getFriendDynId() {
@@ -259,5 +261,25 @@ public class DiscoverInfo extends BaseObservable {
     public void setVideoPath(String videoPath) {
         this.videoPath = videoPath;
         notifyPropertyChanged(BR.videoPath);
+    }
+
+    @Bindable
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+        notifyPropertyChanged(BR.width);
+    }
+
+    @Bindable
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+        notifyPropertyChanged(BR.height);
     }
 }

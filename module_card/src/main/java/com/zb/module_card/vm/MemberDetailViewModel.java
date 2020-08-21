@@ -3,6 +3,8 @@ package com.zb.module_card.vm;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -10,6 +12,7 @@ import com.app.abby.xbanner.Ads;
 import com.app.abby.xbanner.XBanner;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.maning.imagebrowserlibrary.MNImage;
 import com.umeng.socialize.media.UMImage;
@@ -75,7 +78,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     private int bannerHeight = (int) (ObjectUtils.getViewSizeByWidth(1f) * 1.3f);
     private int mainW = 0;
     private int mainH = 0;
-    private int index = 0;
     private List<Ads> adsList = new ArrayList<>();
 
     @Override
@@ -174,21 +176,45 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
 
                 mBinding.setInfo(distant + (memberInfo.getSex() == 0 ? "女/" : "男/") + cityName + " " + districtName);
 
-                if (!memberInfo.getMoreImages().isEmpty()) {
-                    String[] images = memberInfo.getMoreImages().split("#");
-                    for (String image : images) {
-                        if (!image.isEmpty()) {
-                            Ads ads = new Ads();
-                            ads.setSmallImage(image);
-                            adsList.add(ads);
+                new Thread(() -> {
+                    if (!memberInfo.getMoreImages().isEmpty()) {
+                        String[] images = memberInfo.getMoreImages().split("#");
+                        for (String image : images) {
+                            if (!image.isEmpty()) {
+                                Ads ads = new Ads();
+                                ads.setSmallImage(image);
+                                adsList.add(ads);
+                                try {
+                                    Bitmap bitmap = Glide.with(activity).asBitmap().load(ads.getSmallImage()).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+                                    int h = bitmap.getHeight();
+                                    int w = bitmap.getWidth();
+                                    if (mainW < w && mainH < h) {
+                                        mainW = w;
+                                        mainH = h;
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    } else {
+                        Ads ads = new Ads();
+                        ads.setSmallImage(memberInfo.getSingleImage());
+                        adsList.add(ads);
+                        try {
+                            Bitmap bitmap = Glide.with(activity).asBitmap().load(ads.getSmallImage()).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
+                            int h = bitmap.getHeight();
+                            int w = bitmap.getWidth();
+                            if (mainW < w && mainH < h) {
+                                mainW = w;
+                                mainH = h;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
-                } else {
-                    Ads ads = new Ads();
-                    ads.setSmallImage(memberInfo.getSingleImage());
-                    adsList.add(ads);
-                }
-                getWH();
+                    handler.sendEmptyMessage(0);
+                }).start();
                 attentionStatus();
                 personOtherDyn();
                 mBinding.setVariable(BR.viewModel, MemberDetailViewModel.this);
@@ -197,31 +223,19 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    private void getWH() {
-        Glide.with(activity).asBitmap().load(adsList.get(index).getSmallImage()).into(new SimpleTarget<Bitmap>() {
-            @Override
-            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                int h = resource.getHeight();
-                int w = resource.getWidth();
-                if (mainW < w && mainH < h) {
-                    mainW = w;
-                    mainH = h;
-                }
-                index++;
-                if (index < adsList.size()) {
-                    getWH();
-                } else {
-                    bannerWidth = MineApp.W;
-                    bannerHeight = (int) (MineApp.W * (float) mainH / (float) mainW);
-                    if (bannerHeight > ObjectUtils.getLogoHeight(1f)) {
-                        bannerHeight = ObjectUtils.getLogoHeight(1f);
-                    }
-                    AdapterBinding.viewSize(mBinding.banner, bannerWidth, bannerHeight);
-                    showBanner(adsList);
-                }
+    private Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message message) {
+            bannerWidth = MineApp.W;
+            bannerHeight = (int) (MineApp.W * (float) mainH / (float) mainW);
+            if (bannerHeight > ObjectUtils.getLogoHeight(1f)) {
+                bannerHeight = ObjectUtils.getLogoHeight(1f);
             }
-        });
-    }
+            AdapterBinding.viewSize(mBinding.banner, bannerWidth, bannerHeight);
+            showBanner(adsList);
+            return false;
+        }
+    });
 
     @Override
     public void personOtherDyn() {
@@ -240,7 +254,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 }
             }
         }, activity)
-                .setDynType(-4)
+                .setDynType(0)
                 .setOtherUserId(otherUserId)
                 .setPageNo(1);
         HttpManager.getInstance().doHttpDeal(api);
