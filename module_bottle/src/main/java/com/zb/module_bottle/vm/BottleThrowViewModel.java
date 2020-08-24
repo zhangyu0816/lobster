@@ -14,11 +14,13 @@ import com.zb.lib_base.api.castBottleApi;
 import com.zb.lib_base.api.findBottleApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.pickBottleApi;
+import com.zb.lib_base.api.randomNewDynApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.BottleInfo;
+import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
@@ -32,6 +34,7 @@ import com.zb.module_bottle.databinding.BottleThrowBinding;
 import com.zb.module_bottle.iv.BottleThrowVMInterface;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
@@ -50,6 +53,8 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     private int throwIndex = 0;
     public BottleAdapter adapter;
     private List<String> imageList = new ArrayList<>();
+
+    private long friendDynId = 0;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -206,20 +211,44 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
                 @Override
                 public void onError(Throwable e) {
                     if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
-                        mBinding.setIsBottle(true);
-                        mBinding.setShowBottleTop(true);
-                        throwIndex = 2;
-                        mBinding.setThrowIndex(throwIndex);
-                        mBinding.edContent.setEnabled(false);
-                        mBinding.ivThrow.setBackgroundResource(R.mipmap.throw_fan_icon);
-                        mBinding.setIsBottle(true);
-                        mBinding.setHasImage(true);
+                        randomNewDyn();
                     }
                 }
             }, activity);
             HttpManager.getInstance().doHttpDeal(api);
         });
 
+    }
+
+    private void randomNewDyn() {
+        randomNewDynApi api = new randomNewDynApi(new HttpOnNextListener<DiscoverInfo>() {
+            @Override
+            public void onNext(DiscoverInfo o) {
+                friendDynId = o.getFriendDynId();
+                mBinding.setIsBottle(true);
+                mBinding.setShowBottleTop(true);
+                throwIndex = 2;
+                mBinding.setThrowIndex(throwIndex);
+                mBinding.edContent.setEnabled(false);
+                mBinding.ivThrow.setBackgroundResource(R.mipmap.throw_fan_icon);
+                mBinding.setIsBottle(true);
+
+
+                MemberInfo memberInfo = new MemberInfo();
+                memberInfo.setNick(o.getNick());
+                memberInfo.setImage(o.getHeadImage());
+                mBinding.setMemberInfo(memberInfo);
+
+                mBinding.edContent.setText(o.getText().isEmpty() ? o.getFriendTitle() : o.getText());
+                mBinding.setHasImage(!o.getImages().isEmpty());
+                if (!o.getImages().isEmpty()) {
+                    imageList.addAll(Arrays.asList(o.getImages().split(",")));
+                    adapter.notifyDataSetChanged();
+                }
+                mBinding.setInfo((o.getSex() == 0 ? "女 " : "男 ") + DateUtil.getAge(o.getBirthday(), o.getAge()) + "岁 " + DateUtil.getConstellations(o.getBirthday()));
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     private void otherInfo(long otherUserId) {
@@ -235,7 +264,12 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
 
     @Override
     public void sure(View view) {
-        pickBottle(2);
+        if (friendDynId == 0)
+            pickBottle(2);
+        else {
+            ActivityUtils.getHomeDiscoverDetail(friendDynId);
+            close(null);
+        }
     }
 
     @Override
@@ -260,6 +294,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         mBinding.setIsBottle(false);
         mBinding.setShowBtn(true);
         mBinding.bottleWhiteBack.bottleBg.startBg();
+        friendDynId = 0;
     }
 
     // 创建漂流瓶

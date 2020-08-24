@@ -30,6 +30,7 @@ import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.TextPW;
+import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_mine.R;
 import com.zb.module_mine.adapter.MineAdapter;
 import com.zb.module_mine.databinding.MineFclBinding;
@@ -212,7 +213,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                     adapter.notifyItemChanged(_selectIndex);
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                 } else if (o == 3) {
-                    SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
+                    new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
                 } else if (o == 5) {
                     if (likeOtherStatus == 1)
                         SCToastUtil.showToast(activity, "你已喜欢过对方", true);

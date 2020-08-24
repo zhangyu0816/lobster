@@ -57,7 +57,9 @@ public class MineWebActivity extends MineBaseActivity {
         webSettings.setBuiltInZoomControls(true);
         setZoomControlGoneX(binding.webView.getSettings(), new Object[]{false});
         binding.webView.loadUrl(url);
-
+        binding.webView.removeJavascriptInterface("searchBoxJavaBridge_");
+        binding.webView.removeJavascriptInterface("accessibilityTraversal");
+        binding.webView.removeJavascriptInterface("accessibility");
         binding.webView.setWebViewClient(new WebViewClient() {
             @SuppressWarnings("deprecation")
             public void onReceivedError(WebView view, int errorCode,

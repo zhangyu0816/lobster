@@ -380,7 +380,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                 } else if (o == 3) {
                     // 喜欢次数用尽
-                    SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
+                    new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
                 } else if (o == 4) {
                     SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
 //                    new CountUsedPW(activity, mBinding.getRoot(), 2);

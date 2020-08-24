@@ -396,7 +396,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                 } else if (o == 3) {
                     // 喜欢次数用尽
-                    SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
+                    new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
                 } else if (o == 4) {
                     // 超级喜欢时，非会员或超级喜欢次数用尽
                     if (mineInfo.getMemberType() == 2) {

@@ -33,6 +33,12 @@ public class DiscoverInfo extends BaseObservable {
     private int width;
     private int height;
 
+    private String headImage = "";
+    private int sex;
+    private int constellation;
+    private String birthday = "";
+    private int age;
+
     @Bindable
     public long getFriendDynId() {
         return friendDynId;
@@ -281,5 +287,55 @@ public class DiscoverInfo extends BaseObservable {
     public void setHeight(int height) {
         this.height = height;
         notifyPropertyChanged(BR.height);
+    }
+
+    @Bindable
+    public String getHeadImage() {
+        return headImage;
+    }
+
+    public void setHeadImage(String headImage) {
+        this.headImage = headImage;
+        notifyPropertyChanged(BR.headImage);
+    }
+
+    @Bindable
+    public int getSex() {
+        return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
+        notifyPropertyChanged(BR.sex);
+    }
+
+    @Bindable
+    public int getConstellation() {
+        return constellation;
+    }
+
+    public void setConstellation(int constellation) {
+        this.constellation = constellation;
+        notifyPropertyChanged(BR.constellation);
+    }
+
+    @Bindable
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+        notifyPropertyChanged(BR.birthday);
+    }
+
+    @Bindable
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+        notifyPropertyChanged(BR.age);
     }
 }

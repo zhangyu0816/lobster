@@ -423,6 +423,10 @@ public interface HttpService {
     Observable<BaseResultEntity> readOverDriftBottleHistoryMsg(@Query("otherUserId") long otherUserId, @Query("driftBottleId") long driftBottleId,
                                                                @Query("messageId") long messageId);
 
+    // 随机获取一条最新动态
+    @GET("api/Interactive_randomNewDyn")
+    Observable<BaseResultEntity<DiscoverInfo>> randomNewDyn(@Query("sex") int sex);
+
     /******************************* 我的 **********************************/
 
     // 修改个人信息

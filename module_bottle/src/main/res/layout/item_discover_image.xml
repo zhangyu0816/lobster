@@ -11,14 +11,15 @@
     </data>
 
     <RelativeLayout
-        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(200)}"
-        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(200)}"
+        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(160)}"
+        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(160)}"
         android:layout_width="match_parent"
+        android:layout_marginEnd="15dp"
         android:layout_height="wrap_content">
 
         <ImageView
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(200)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(200)}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(160)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(160)}"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_centerInParent="true"
@@ -29,8 +30,8 @@
             imageUrl="@{item}"
             isRound="@{true}"
             roundSize="@{4}"
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(190)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(190)}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(150)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(150)}"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerInParent="true" />

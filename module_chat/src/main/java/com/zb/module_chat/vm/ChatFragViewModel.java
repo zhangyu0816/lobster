@@ -24,6 +24,8 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
     private Runnable ra = new Runnable() {
         @Override
         public void run() {
+            if (MineApp.recommendInfoList.size() == 0)
+                return;
             mBinding.recommendMainLayout.setVisibility(View.VISIBLE);
             recommendInfo = MineApp.recommendInfoList.remove(0);
             mBinding.setRecommendInfo(recommendInfo);

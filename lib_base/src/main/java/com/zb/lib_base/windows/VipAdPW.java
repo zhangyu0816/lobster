@@ -50,7 +50,7 @@ public class VipAdPW extends BasePopupWindow {
         this.type = type;
         this.otherImage = otherImage;
         if (type == 0) {
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 6; i++) {
                 Ads ads = new Ads();
                 if (i == 0) {
                     ads.setView(adView(1));
@@ -60,11 +60,16 @@ public class VipAdPW extends BasePopupWindow {
                     ads.setView(adView(3));
                 } else if (i == 3) {
                     ads.setView(adView(4));
-                } else {
+                } else if (i == 4) {
                     ads.setView(adView(5));
+                } else {
+                    ads.setView(adView(6));
                 }
                 adsList.add(ads);
             }
+        } else if (type == 6) {
+            Ads ads = new Ads(adView(type));
+            adsList.add(ads);
         } else if (type == 5) {
             Ads ads = new Ads(adView(type));
             adsList.add(ads);
@@ -94,35 +99,36 @@ public class VipAdPW extends BasePopupWindow {
             binding.setMyHead(mineInfo.getImage());
             binding.setOtherHead("empty_icon");
             binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
-            binding.ivBg.setBackgroundResource(R.drawable.empty_bg);
         } else if (type == 2) {
-            binding.setTitle("");
-            binding.setContent("");
+            binding.setTitle("划错反悔");
+            binding.setContent("手滑了？立即找回不要错过任何一个缘分！");
             binding.setMyHead("empty_icon");
             binding.setOtherHead("empty_icon");
-            binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
-            binding.ivBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_2_male : R.mipmap.vip_ad_2);
+            binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_2_male : R.mipmap.vip_ad_2);
         } else if (type == 3) {
             binding.setTitle("超级喜欢");
             binding.setContent("每天10个超级喜欢，开通专属私信通道");
             binding.setMyHead(mineInfo.getImage());
             binding.setOtherHead(otherImage.isEmpty() ? (sex == 0 ? "vip_ad_3_male" : "vip_ad_1_male_right") : otherImage);
             binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
-            binding.ivBg.setBackgroundResource(R.drawable.empty_bg);
         } else if (type == 4) {
             binding.setTitle("立即查看谁喜欢我？");
             binding.setContent("第一时间查看喜欢你的人！立即匹配哦～");
             binding.setMyHead(mineInfo.getImage());
             binding.setOtherHead("empty_icon");
             binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_4_male : R.mipmap.vip_ad_4);
-            binding.ivBg.setBackgroundResource(R.drawable.empty_bg);
         } else if (type == 5) {
             binding.setTitle("位置漫游");
             binding.setContent("让你随时随地认识全世界的朋友！");
             binding.setMyHead(mineInfo.getImage());
             binding.setOtherHead("empty_icon");
             binding.ivVipBg.setBackgroundResource(R.mipmap.vip_ad_5);
-            binding.ivBg.setBackgroundResource(R.drawable.empty_bg);
+        } else if (type == 6) {
+            binding.setTitle("无限次数喜欢");
+            binding.setContent("右滑喜欢不限次数，不要错过每个机会");
+            binding.setMyHead("empty_icon");
+            binding.setOtherHead("empty_icon");
+            binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_6_male : R.mipmap.vip_ad_6);
         }
         return binding.getRoot();
     }
