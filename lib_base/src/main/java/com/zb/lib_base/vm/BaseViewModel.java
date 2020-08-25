@@ -102,7 +102,6 @@ public class BaseViewModel implements BaseVMInterface {
 
     @Override
     public void question(View view) {
-        new BottleQuestionPW(activity, mBinding.getRoot());
     }
 
     public static class CreateTimeComparator implements Comparator<Review> {

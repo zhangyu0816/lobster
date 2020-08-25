@@ -188,7 +188,8 @@
             <View
                 onClickDelayed="@{viewModel::close}"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_marginTop="62dp"/>
 
             <RelativeLayout
                 android:id="@+id/top_layout"

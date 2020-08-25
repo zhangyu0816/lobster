@@ -27,6 +27,7 @@ import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.BottleQuestionPW;
 import com.zb.module_bottle.BR;
 import com.zb.module_bottle.R;
 import com.zb.module_bottle.adapter.BottleAdapter;
@@ -55,6 +56,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     private List<String> imageList = new ArrayList<>();
 
     private long friendDynId = 0;
+    private boolean canClose = true;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -161,6 +163,15 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     }
 
     @Override
+    public void question(View view) {
+        super.question(view);
+        if (canClose) {
+            close(null);
+            new BottleQuestionPW(activity, mBinding.getRoot());
+        }
+    }
+
+    @Override
     public void throwBottle(View view) {
         bottleInfo = new BottleInfo();
         mBinding.setTitle("扔一个瓶子");
@@ -189,12 +200,14 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
 
     @Override
     public void findBottle() {
+        canClose = false;
         mBinding.setShowBtn(false);
         mBinding.bottleWhiteBack.bottleBg.stopBg();
         mBinding.bottleWhiteBack.bottleBg.startWang(() -> {
             findBottleApi api = new findBottleApi(new HttpOnNextListener<BottleInfo>() {
                 @Override
                 public void onNext(BottleInfo o) {
+                    canClose = true;
                     bottleInfo = o;
                     mBinding.setBottleInfo(bottleInfo);
                     otherInfo(bottleInfo.getUserId());
@@ -224,6 +237,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         randomNewDynApi api = new randomNewDynApi(new HttpOnNextListener<DiscoverInfo>() {
             @Override
             public void onNext(DiscoverInfo o) {
+                canClose = true;
                 friendDynId = o.getFriendDynId();
                 mBinding.setIsBottle(true);
                 mBinding.setShowBottleTop(true);
@@ -232,7 +246,6 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
                 mBinding.edContent.setEnabled(false);
                 mBinding.ivThrow.setBackgroundResource(R.mipmap.throw_fan_icon);
                 mBinding.setIsBottle(true);
-
 
                 MemberInfo memberInfo = new MemberInfo();
                 memberInfo.setNick(o.getNick());
