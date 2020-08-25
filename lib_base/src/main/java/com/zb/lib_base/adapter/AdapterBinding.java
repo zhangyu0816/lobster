@@ -225,6 +225,10 @@ public class AdapterBinding {
                     builder.load(R.drawable.vip_ad_1_male_right).into(view);
                 } else if (imageUrl != null && imageUrl.equals("vip_ad_3_male")) {
                     builder.load(R.mipmap.vip_ad_3_male).into(view);
+                } else if (imageUrl != null && imageUrl.equals("vip_ad_3_logo")) {
+                    builder.load(R.drawable.vip_ad_3_logo).into(view);
+                } else if (imageUrl != null && imageUrl.equals("vip_ad_3_logo_male")) {
+                    builder.load(R.drawable.vip_ad_3_logo_male).into(view);
                 } else {
                     if (imageUrl != null && imageUrl.contains(".mp3"))
                         imageUrl = "";

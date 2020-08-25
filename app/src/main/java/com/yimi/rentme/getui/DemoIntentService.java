@@ -21,6 +21,7 @@ import com.igexin.sdk.message.GTTransmitMessage;
 import com.yimi.rentme.R;
 import com.yimi.rentme.activity.MainActivity;
 import com.yimi.rentme.activity.NotifivationActivity;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.PreferenceUtil;
 
 import org.json.JSONObject;
@@ -47,14 +48,12 @@ public class DemoIntentService extends GTIntentService {
         if (payload != null) {
             String data = new String(payload);
 
-            Log.d("GetuiSdkDemo", "receiver payload : " + data);
-
             payloadData.append(data);
             payloadData.append("\n");
             NotificationManager notificationManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationManagerCompat nmc = NotificationManagerCompat.from(context);
-            NotificationCompat.Builder builder = getNotificationBuilderByChannel(notificationManager, "com.yimi.mdcm");
+            NotificationCompat.Builder builder = getNotificationBuilderByChannel(notificationManager, MineApp.NOTIFICATION_CHANNEL_ID);
             JSONObject object;
             try {
                 object = new JSONObject(data);

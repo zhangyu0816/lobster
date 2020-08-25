@@ -1,11 +1,14 @@
 package com.zb.module_card.vm;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
 import com.app.abby.xbanner.Ads;
@@ -143,6 +146,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             data.putExtra("direction", 1);
             activity.sendBroadcast(data);
         } else {
+            isLike(mBinding.ivLike);
             makeEvaluate(1);
         }
 
@@ -201,7 +205,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                         }
                     } else {
                         Ads ads = new Ads();
-                        ads.setSmallImage(memberInfo.getSingleImage());
+                        ads.setSmallImage(memberInfo.getSingleImage().isEmpty() ? memberInfo.getImage() : memberInfo.getSingleImage());
                         adsList.add(ads);
                         try {
                             Bitmap bitmap = Glide.with(activity).asBitmap().load(ads.getSmallImage()).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
@@ -335,7 +339,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     if (likeOtherStatus == 0) {
                         activity.finish();
                     } else if (likeOtherStatus == 1) {
-                        SCToastUtil.showToast(activity, "喜欢成功", true);
                         likeDb.saveLike(new CollectID(otherUserId));
                     } else if (likeOtherStatus == 2) {
                         if (showLike) {
@@ -366,7 +369,9 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                         new VipAdPW(activity, mBinding.getRoot(), false, 3, otherHead);
                     }
                 } else {
-                    if (likeOtherStatus == 1)
+                    if (likeOtherStatus == 0) {
+                        activity.finish();
+                    } else if (likeOtherStatus == 1)
                         SCToastUtil.showToast(activity, "你已喜欢过对方", true);
                     else if (likeOtherStatus == 2)
                         SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
@@ -374,6 +379,18 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             }
         }, activity).setOtherUserId(otherUserId).setLikeOtherStatus(likeOtherStatus);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void isLike(View view) {
+
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 1, 1.1f, 1, 1.2f, 1).setDuration(500);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 1, 1.1f, 1, 1.2f, 1).setDuration(500);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setInterpolator(new LinearInterpolator());
+        animatorSet.play(scaleX).with(scaleY);
+        animatorSet.start();
+
     }
 
     @Override

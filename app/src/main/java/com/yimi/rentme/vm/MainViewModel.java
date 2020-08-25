@@ -1,5 +1,6 @@
 package com.yimi.rentme.vm;
 
+import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -13,6 +14,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
 
 import com.alibaba.mobileim.conversation.YWMessage;
+import com.yimi.rentme.activity.ForegroundLiveService;
 import com.yimi.rentme.databinding.AcMainBinding;
 import com.yimi.rentme.iv.MainVMInterface;
 import com.zb.lib_base.activity.BaseActivity;
@@ -320,7 +322,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 }, 1000);
             }
         }
-
+        getPermissions();
     }
 
     public void onDestroy() {
@@ -777,6 +779,28 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
+    /**
+     * 权限
+     */
+    private void getPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            performCodeWithPermission("虾菇需要访问显示通知权限", new BaseActivity.PermissionCallback() {
+                        @Override
+                        public void hasPermission() {
+                            setPermissions();
+                        }
 
+                        @Override
+                        public void noPermission() {
+                        }
+                    }, Manifest.permission.FOREGROUND_SERVICE);
+        } else {
+            setPermissions();
+        }
+    }
+
+    private void setPermissions() {
+        activity.startService(new Intent(activity, ForegroundLiveService.class));
+    }
 
 }

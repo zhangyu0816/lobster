@@ -7,16 +7,18 @@ import androidx.databinding.Bindable;
 
 public class Review extends BaseObservable {
     private long reviewId; // 评论id
-    private long userId; // 评论者id
-    private String nick = "";// 昵称
-    private String image = "";// 头像
+    private long userId; // 评论者id  or  点赞
+    private String nick = "";// 昵称  or  点赞
+    private String image = "";// 头像  or  点赞
     private String text = "";// 评论的消息
 
     // 被at 人的信息
     private long atUserId = 0;
     private String atUserNick = "";
     private String atUserImage = "";
-    private String createTime = "";
+    private String createTime = "";  // or  点赞
+
+    private int type = 0;
 
     @Bindable
     public long getReviewId() {
@@ -28,7 +30,8 @@ public class Review extends BaseObservable {
         notifyPropertyChanged(BR.reviewId);
     }
 
-    @Bindable public long getUserId() {
+    @Bindable
+    public long getUserId() {
         return userId;
     }
 
@@ -37,7 +40,8 @@ public class Review extends BaseObservable {
         notifyPropertyChanged(BR.userId);
     }
 
-    @Bindable public String getNick() {
+    @Bindable
+    public String getNick() {
         return nick;
     }
 
@@ -46,7 +50,8 @@ public class Review extends BaseObservable {
         notifyPropertyChanged(BR.nick);
     }
 
-    @Bindable public String getImage() {
+    @Bindable
+    public String getImage() {
         return image;
     }
 
@@ -55,7 +60,8 @@ public class Review extends BaseObservable {
         notifyPropertyChanged(BR.image);
     }
 
-    @Bindable public String getText() {
+    @Bindable
+    public String getText() {
         return text;
     }
 
@@ -64,7 +70,8 @@ public class Review extends BaseObservable {
         notifyPropertyChanged(BR.text);
     }
 
-    @Bindable public long getAtUserId() {
+    @Bindable
+    public long getAtUserId() {
         return atUserId;
     }
 
@@ -73,7 +80,8 @@ public class Review extends BaseObservable {
         notifyPropertyChanged(BR.atUserId);
     }
 
-    @Bindable public String getAtUserNick() {
+    @Bindable
+    public String getAtUserNick() {
         return atUserNick;
     }
 
@@ -82,7 +90,8 @@ public class Review extends BaseObservable {
         notifyPropertyChanged(BR.atUserNick);
     }
 
-    @Bindable public String getAtUserImage() {
+    @Bindable
+    public String getAtUserImage() {
         return atUserImage;
     }
 
@@ -91,12 +100,23 @@ public class Review extends BaseObservable {
         notifyPropertyChanged(BR.atUserImage);
     }
 
-    @Bindable public String getCreateTime() {
+    @Bindable
+    public String getCreateTime() {
         return createTime;
     }
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
         notifyPropertyChanged(BR.createTime);
+    }
+
+    @Bindable
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+        notifyPropertyChanged(BR.type);
     }
 }

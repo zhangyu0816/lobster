@@ -20,6 +20,9 @@
             name="viewModel"
             type="com.zb.module_mine.vm.SystemMsgViewModel" />
 
+        <variable
+            name="stanzaInfo"
+            type="com.zb.lib_base.model.StanzaInfo" />
     </data>
 
     <RelativeLayout
@@ -137,6 +140,69 @@
 
             </RelativeLayout>
 
+            <LinearLayout
+                onClickDelayed="@{v->viewModel.check(stanzaInfo)}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="30dp"
+                android:layout_toEndOf="@+id/iv_other_logo"
+                android:background="@drawable/btn_bg_white_radius10"
+                android:orientation="vertical"
+                android:visibility="@{item.msgType==112?View.VISIBLE:View.GONE}">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        imageUrl="@{stanzaInfo.image}"
+                        isCircle="@{true}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(100)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(100)}"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:text="@{stanzaInfo.title}"
+                        android:textColor="@color/black_252"
+                        android:textSize="16sp"
+                        tools:text="萨拉就乌克兰就f" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:text="@{stanzaInfo.content}"
+                    android:textColor="@color/black_4d4"
+                    android:textSize="13sp"
+                    tools:text="微积分礼物分文理科访问了" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@color/black_efe" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:text="@{stanzaInfo.linkContent}"
+                    android:textColor="#6d87b4"
+                    android:textSize="16sp"
+                    tools:text="查看" />
+            </LinearLayout>
 
         </RelativeLayout>
     </RelativeLayout>

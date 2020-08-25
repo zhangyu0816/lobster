@@ -536,5 +536,6 @@ public interface HttpService {
     @GET("api/SystemMsg_clearHistoryMsg")
     Observable<BaseResultEntity> clearHistoryMsg(@Query("messageId") long messageId);
 
-
+    @GET("api/Interactive_seeLikers")
+    Observable<BaseResultEntity<List<Review>>> seeLikers(@Query("friendDynId") long friendDynId, @Query("pageNo") int pageNo);
 }

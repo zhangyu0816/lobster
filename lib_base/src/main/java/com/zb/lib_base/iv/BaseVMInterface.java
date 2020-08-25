@@ -2,6 +2,8 @@ package com.zb.lib_base.iv;
 
 import android.view.View;
 
+import com.zb.lib_base.utils.ActivityUtils;
+
 import androidx.databinding.ViewDataBinding;
 
 @FunctionalInterface
@@ -31,6 +33,10 @@ public interface BaseVMInterface {
     }
 
     default void selectPosition(int position) {
+    }
+
+    default void visitMember(long userId) {
+        ActivityUtils.getCardMemberDetail(userId, false);
     }
 
     /********************** 公用网络请求 ***************************/

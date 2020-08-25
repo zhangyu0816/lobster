@@ -26,6 +26,9 @@
         android:theme="@style/AppTheme"
         tools:replace="android:theme">
 
+        <service android:name=".activity.ForegroundLiveService" />
+        <service android:name=".activity.ForegroundLiveService$InnerService" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.yimi.rentme.fileprovider"
@@ -75,7 +78,8 @@
         <service android:name=".getui.DemoIntentService" />
         <!-- 个推SDK配置结束 -->
 
-        <activity android:name=".activity.LoadingActivity"
+        <activity
+            android:name=".activity.LoadingActivity"
             android:theme="@style/StartingWindowTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

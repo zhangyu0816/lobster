@@ -90,10 +90,11 @@
                     android:layout_marginEnd="-30dp">
 
                     <ImageView
+                        android:id="@+id/iv_other"
                         imageUrl="@{otherHead}"
                         isCircle="@{true}"
-                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(414)}"
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(414)}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(305)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(305)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true" />

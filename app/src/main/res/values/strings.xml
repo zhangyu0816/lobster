@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">虾菇</string>
+    <string name="app_name_sub">虾菇</string>
+    <string name="app_name_running">虾菇正在运行</string>
 </resources>

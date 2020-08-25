@@ -109,7 +109,7 @@ public class VipAdPW extends BasePopupWindow {
             binding.setTitle("超级喜欢");
             binding.setContent("每天10个超级喜欢，开通专属私信通道");
             binding.setMyHead(mineInfo.getImage());
-            binding.setOtherHead(otherImage.isEmpty() ? (sex == 0 ? "vip_ad_3_male" : "vip_ad_1_male_right") : otherImage);
+            binding.setOtherHead(otherImage.isEmpty() ? (sex == 0 ? "vip_ad_3_logo_male" : "vip_ad_3_logo") : otherImage);
             binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
         } else if (type == 4) {
             binding.setTitle("立即查看谁喜欢我？");

@@ -42,7 +42,6 @@ public class HomeAdapter<T> extends BindingItemAdapter<T> {
             memberTypeDb = new MemberTypeDb(Realm.getDefaultInstance());
             goodDb = new GoodDb(Realm.getDefaultInstance());
         }
-
     }
 
     public void setSelectIndex(int selectIndex) {
@@ -63,24 +62,26 @@ public class HomeAdapter<T> extends BindingItemAdapter<T> {
             holder.binding.setVariable(BR.pw, pw);
         }
         if (viewModel instanceof VideoListViewModel) {
-            DiscoverInfo discoverInfo = (DiscoverInfo) t;
-            memberType = memberTypeDb.getMemberType(discoverInfo.getUserId());
-            if (memberType == null) {
-                otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
-                    @Override
-                    public void onNext(MemberInfo o) {
-                        memberType = new MemberType();
-                        memberType.setUserId(discoverInfo.getUserId());
-                        memberType.setMemberType(o.getMemberType());
-                        memberTypeDb.saveMemberType(memberType);
-                        holder.binding.setVariable(BR.memberType, memberType.getMemberType());
-                    }
-                }, mContext).setOtherUserId(discoverInfo.getUserId());
-                HttpManager.getInstance().doHttpDeal(api);
-            } else {
-                holder.binding.setVariable(BR.memberType, memberType.getMemberType());
+            if(t instanceof DiscoverInfo){
+                DiscoverInfo discoverInfo = (DiscoverInfo) t;
+                memberType = memberTypeDb.getMemberType(discoverInfo.getUserId());
+                if (memberType == null) {
+                    otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
+                        @Override
+                        public void onNext(MemberInfo o) {
+                            memberType = new MemberType();
+                            memberType.setUserId(discoverInfo.getUserId());
+                            memberType.setMemberType(o.getMemberType());
+                            memberTypeDb.saveMemberType(memberType);
+                            holder.binding.setVariable(BR.memberType, memberType.getMemberType());
+                        }
+                    }, mContext).setOtherUserId(discoverInfo.getUserId());
+                    HttpManager.getInstance().doHttpDeal(api);
+                } else {
+                    holder.binding.setVariable(BR.memberType, memberType.getMemberType());
+                }
+                holder.binding.setVariable(BR.goodDb, goodDb);
             }
-            holder.binding.setVariable(BR.goodDb, goodDb);
         }
         holder.binding.executePendingBindings();
     }

@@ -30,4 +30,8 @@ public interface DiscoverVideoL2VMInterface {
     void deleteDyn();
 
     void makeEvaluate();
+
+    void seeLikers(int pageNo);
+
+    void seeReviews(int pageNo);
 }

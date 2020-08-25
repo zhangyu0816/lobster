@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -34,6 +35,8 @@ import com.zb.lib_base.api.dynCancelLikeApi;
 import com.zb.lib_base.api.dynDoLikeApi;
 import com.zb.lib_base.api.dynPiazzaListApi;
 import com.zb.lib_base.api.makeEvaluateApi;
+import com.zb.lib_base.api.seeLikersApi;
+import com.zb.lib_base.api.seeReviewsApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.LikeDb;
@@ -45,6 +48,7 @@ import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.model.Review;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.DouYinLayoutManager;
@@ -52,6 +56,8 @@ import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.OnViewPagerListener;
 import com.zb.lib_base.utils.SCToastUtil;
+import com.zb.lib_base.utils.ScrollSpeedLinearLayoutManger;
+import com.zb.lib_base.views.AutoPollRecyclerView;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.FunctionPW;
 import com.zb.lib_base.windows.SuperLikePW;
@@ -66,6 +72,8 @@ import com.zb.module_home.windows.ReviewPW;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -134,10 +142,13 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             public void onPageRelease(boolean isNest, View view) {
                 VideoView videoView = view.findViewById(R.id.video_view);
                 ImageView ivImage = view.findViewById(R.id.iv_image);
+                AutoPollRecyclerView reviewList = view.findViewById(R.id.review_list);
                 videoView.stopPlayback();//停止播放视频,并且释放
                 videoView.suspend();//在任何状态下释放媒体播放器
                 ivImage.setVisibility(View.VISIBLE);
                 videoView.setBackgroundColor(activity.getResources().getColor(R.color.black_252));
+                reviewList.stop();
+                reviewList.setVisibility(View.GONE);
             }
 
             @Override
@@ -157,13 +168,15 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
 
     @Override
     public void videoPlay(DiscoverInfo discoverInfo) {
-        if (ivPlay.getVisibility() == View.GONE) {
+        if (videoView.isPlaying()) {
             ivPlay.setVisibility(View.VISIBLE);
             videoView.pause();
+            reviewListView.stop();
         } else {
             ivPlay.setVisibility(View.GONE);
             videoView.setVideoPath(discoverInfo.getVideoUrl());
             videoView.start();
+            reviewListView.start();
         }
     }
 
@@ -207,7 +220,18 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     @Override
     public void toMemberDetail(DiscoverInfo discoverInfo) {
         videoView.pause();
+        reviewListView.stop();
         ActivityUtils.getCardMemberDetail(discoverInfo.getUserId(), false);
+    }
+
+    @Override
+    public void visitMember(long userId) {
+        super.visitMember(userId);
+        if (userId != BaseActivity.userId) {
+            videoView.pause();
+            reviewListView.stop();
+            ActivityUtils.getCardMemberDetail(userId, false);
+        }
     }
 
     @Override
@@ -263,6 +287,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             public void gift() {
                 // 查看礼物
                 videoView.pause();
+                reviewListView.stop();
                 ActivityUtils.getHomeRewardList(discoverInfo.getFriendDynId());
             }
 
@@ -274,6 +299,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             public void report() {
                 // 举报
                 videoView.pause();
+                reviewListView.stop();
                 ActivityUtils.getHomeReport(discoverInfo.getUserId());
             }
 
@@ -405,6 +431,10 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 data.putExtra("goodNum", goodNum);
                 data.putExtra("friendDynId", discoverInfo.getFriendDynId());
                 activity.sendBroadcast(data);
+
+                reviewList.clear();
+                seeLikers(1);
+                reviewAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -466,8 +496,17 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     private ImageView ivPlay;
     private View viewClick;
     private ImageView ivGood;
+    private AutoPollRecyclerView reviewListView;
+    private HomeAdapter reviewAdapter;
+    private List<Review> reviewList = new ArrayList<>();
+    private VideoView lastVideoView;
 
     private void playVideo(View view) {
+        if (lastVideoView != null) {
+            lastVideoView.stopPlayback();//停止播放视频,并且释放
+            lastVideoView.suspend();//在任何状态下释放媒体播放器
+            lastVideoView = null;
+        }
         discoverInfo = MineApp.discoverInfoList.get(position);
 
         videoView = view.findViewById(R.id.video_view);
@@ -481,6 +520,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         ivPlay = view.findViewById(R.id.iv_play);
         viewClick = view.findViewById(R.id.view_click);
         ivGood = view.findViewById(R.id.iv_good);
+        reviewListView = view.findViewById(R.id.review_list);
 
         attentionStatus(discoverInfo);
         animator = ObjectAnimator.ofFloat(ivProgress, "rotation", 0, 360).setDuration(700);
@@ -498,12 +538,25 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             ivUnLike.setVisibility(View.VISIBLE);
         }
         ivPlay.setVisibility(View.GONE);
+        if (reviewAdapter == null)
+            reviewAdapter = new HomeAdapter<>(activity, R.layout.item_auto_review, reviewList, this);
+        reviewList.clear();
+        reviewAdapter.setMax(true);
+        reviewAdapter.notifyDataSetChanged();
+        reviewListView.setAdapter(reviewAdapter);
+        ScrollSpeedLinearLayoutManger layoutManager1 = new ScrollSpeedLinearLayoutManger(view.getContext());
+        layoutManager1.setSmoothScrollbarEnabled(true);
+        layoutManager1.setAutoMeasureEnabled(true);
+        reviewListView.setLayoutManager(layoutManager1);// 布局管理器。
+        reviewListView.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
+
         DownLoad.getFilePath(discoverInfo.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), filePath -> {
             discoverInfo.setVideoPath(filePath);
             ivProgress.setVisibility(View.GONE);
             if (animator != null)
                 animator.cancel();
             initVideo();
+            lastVideoView = videoView;
         });
 
         initGood(viewClick, ivGood, () -> videoPlay(discoverInfo), () -> {
@@ -515,9 +568,62 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         });
     }
 
+    private void seeLikers(int pageNo) {
+        seeLikersApi api = new seeLikersApi(new HttpOnNextListener<List<Review>>() {
+            @Override
+            public void onNext(List<Review> o) {
+                for (Review item : o) {
+                    item.setType(1);
+                    reviewList.add(item);
+                }
+                seeLikers(pageNo + 1);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    seeReviews(1);
+                }
+            }
+        }, activity).setFriendDynId(discoverInfo.getFriendDynId()).setPageNo(pageNo);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void seeReviews(int pageNo) {
+        seeReviewsApi api = new seeReviewsApi(new HttpOnNextListener<List<Review>>() {
+            @Override
+            public void onNext(List<Review> o) {
+                for (Review item : o) {
+                    item.setType(2);
+                    reviewList.add(item);
+                }
+                seeReviews(pageNo + 1);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    Collections.sort(reviewList, new CreateTimeComparator());
+                    if (reviewList.size() > 0) {
+                        reviewListView.setVisibility(View.VISIBLE);
+                        if (reviewList.size() > 4) {
+                            reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(650)));
+                            reviewListView.start();
+                        } else {
+                            reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
+                        }
+                        reviewAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        }, activity).setFriendDynId(discoverInfo.getFriendDynId()).setTimeSortType(1).setPageNo(pageNo);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
     public void onResume() {
         videoView.setVideoPath(discoverInfo.getVideoPath());
         videoView.start();
+        reviewListView.start();
     }
 
     private void initVideo() {
@@ -551,11 +657,16 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 ivProgress.setVisibility(View.GONE);
                 ivImage.setVisibility(View.GONE);
                 videoView.setBackgroundColor(Color.TRANSPARENT);
+                seeLikers(1);
             }
             return false; //如果方法处理了信息，则为true；如果没有，则为false。返回false或根本没有OnInfoListener，将导致丢弃该信息。
         });
-        videoView.setVideoPath(discoverInfo.getVideoPath());
-        videoView.start();
+        new Handler().postDelayed(() -> {
+            ivPlay.setVisibility(View.GONE);
+            videoView.setVideoPath(discoverInfo.getVideoPath());
+            videoView.start();
+        }, 200);
+
     }
 
     /**

@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
@@ -34,6 +35,8 @@ import com.zb.lib_base.api.dynDetailApi;
 import com.zb.lib_base.api.dynDoLikeApi;
 import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.otherInfoApi;
+import com.zb.lib_base.api.seeLikersApi;
+import com.zb.lib_base.api.seeReviewsApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.GoodDb;
 import com.zb.lib_base.db.LikeDb;
@@ -46,6 +49,7 @@ import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.model.Review;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.DownLoad;
@@ -57,12 +61,16 @@ import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.TextPW;
 import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_home.R;
+import com.zb.module_home.adapter.HomeAdapter;
 import com.zb.module_home.databinding.HomeVideoL2Binding;
 import com.zb.module_home.iv.DiscoverVideoL2VMInterface;
 import com.zb.module_home.windows.ReviewPW;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
@@ -70,7 +78,7 @@ import io.realm.Realm;
 
 public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverVideoL2VMInterface {
     public long friendDynId;
-
+    public HomeAdapter adapter;
     private HomeVideoL2Binding mBinding;
     public DiscoverInfo discoverInfo;
     private ObjectAnimator animator;
@@ -81,7 +89,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
     private BaseReceiver attentionReceiver;
     private String downloadPath = "";
     private int videoWidth, videoHeight;
-
+    private List<Review> reviewList = new ArrayList<>();
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -117,14 +125,19 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
                 dynDoLike();
             }
         });
+        setAdapter();
         dynDetail();
+    }
 
-
+    @Override
+    public void setAdapter() {
+        adapter = new HomeAdapter<>(activity, R.layout.item_auto_review, reviewList, this);
     }
 
     @Override
     public void back(View view) {
         super.back(view);
+        mBinding.reviewList.stop();
         activity.finish();
     }
 
@@ -137,11 +150,13 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
         if (mBinding.getIsPlay()) {
             mBinding.setIsPlay(false);
             mBinding.videoView.pause();
+            mBinding.reviewList.stop();
         } else {
             if (discoverInfo == null) return;
             mBinding.setIsPlay(true);
             mBinding.videoView.setVideoPath(discoverInfo.getVideoPath());
             mBinding.videoView.start();
+            mBinding.reviewList.start();
         }
     }
 
@@ -180,6 +195,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
             @Override
             public void gift() {
                 mBinding.videoView.pause();
+                mBinding.reviewList.stop();
                 ActivityUtils.getHomeRewardList(friendDynId);
             }
 
@@ -192,6 +208,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
             public void report() {
                 // 举报
                 mBinding.videoView.pause();
+                mBinding.reviewList.stop();
                 ActivityUtils.getHomeReport(discoverInfo.getUserId());
             }
 
@@ -219,7 +236,18 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
     public void toMemberDetail(View view) {
         if (discoverInfo != null) {
             mBinding.videoView.pause();
+            mBinding.reviewList.stop();
             ActivityUtils.getCardMemberDetail(discoverInfo.getUserId(), false);
+        }
+    }
+
+    @Override
+    public void visitMember(long userId) {
+        super.visitMember(userId);
+        if (userId != BaseActivity.userId) {
+            mBinding.videoView.pause();
+            mBinding.reviewList.stop();
+            ActivityUtils.getCardMemberDetail(userId, false);
         }
     }
 
@@ -230,7 +258,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
             public void onNext(DiscoverInfo o) {
                 discoverInfo = o;
                 mBinding.setDiscoverInfo(discoverInfo);
-
+                seeLikers(1);
                 DownLoad.getFilePath(discoverInfo.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), filePath -> {
                     discoverInfo.setVideoPath(filePath);
                     mBinding.setIsProgress(false);
@@ -336,6 +364,9 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
                 data.putExtra("goodNum", goodNum);
                 data.putExtra("friendDynId", friendDynId);
                 activity.sendBroadcast(data);
+                reviewList.clear();
+                seeLikers(1);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -430,6 +461,60 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
                 }
             }
         }, activity).setOtherUserId(discoverInfo.getUserId()).setLikeOtherStatus(2);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void seeLikers(int pageNo) {
+        seeLikersApi api = new seeLikersApi(new HttpOnNextListener<List<Review>>() {
+            @Override
+            public void onNext(List<Review> o) {
+                for (Review item : o) {
+                    item.setType(1);
+                    reviewList.add(item);
+                }
+                seeLikers(pageNo + 1);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    seeReviews(1);
+                }
+            }
+        }, activity).setFriendDynId(friendDynId).setPageNo(pageNo);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void seeReviews(int pageNo) {
+        seeReviewsApi api = new seeReviewsApi(new HttpOnNextListener<List<Review>>() {
+            @Override
+            public void onNext(List<Review> o) {
+                for (Review item : o) {
+                    item.setType(2);
+                    reviewList.add(item);
+                }
+                seeReviews(pageNo + 1);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    Collections.sort(reviewList, new CreateTimeComparator());
+                    if (reviewList.size() > 0) {
+                        mBinding.reviewList.setVisibility(View.VISIBLE);
+                        if (reviewList.size() > 4) {
+                            mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(650)));
+                            mBinding.reviewList.start();
+                        } else {
+                            mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        }, activity).setFriendDynId(friendDynId).setTimeSortType(1).setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

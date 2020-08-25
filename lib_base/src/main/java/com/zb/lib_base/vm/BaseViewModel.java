@@ -32,10 +32,13 @@ import com.zb.lib_base.db.AttentionDb;
 import com.zb.lib_base.db.GoodDb;
 import com.zb.lib_base.db.MineInfoDb;
 import com.zb.lib_base.iv.BaseVMInterface;
+import com.zb.lib_base.model.Review;
+import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.windows.BottleQuestionPW;
 
 import java.io.IOException;
+import java.util.Comparator;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -93,8 +96,24 @@ public class BaseViewModel implements BaseVMInterface {
     }
 
     @Override
+    public void visitMember(long userId) {
+
+    }
+
+    @Override
     public void question(View view) {
         new BottleQuestionPW(activity, mBinding.getRoot());
+    }
+
+    public static class CreateTimeComparator implements Comparator<Review> {
+        @Override
+        public int compare(Review o1, Review o2) {
+            if (o1.getCreateTime().isEmpty())
+                return -1;
+            if (o2.getCreateTime().isEmpty())
+                return -1;
+            return DateUtil.getDateCount(o2.getCreateTime(), o1.getCreateTime(), DateUtil.yyyy_MM_dd_HH_mm_ss, 1000f);
+        }
     }
 
     public void initTabLayout(String[] tabNames, TabLayout tabLayout, ViewPager viewPager, int selectColor, int color, int index) {
@@ -251,7 +270,7 @@ public class BaseViewModel implements BaseVMInterface {
     private long exitTime = 0;
 
     @SuppressLint("ClickableViewAccessibility")
-    public void initGood(View clickView, View imageView, Runnable ra,Runnable successRa) {
+    public void initGood(View clickView, View imageView, Runnable ra, Runnable successRa) {
         imageView.setRotation(45f);
         scaleX = ObjectAnimator.ofFloat(imageView, "scaleX", 2f, 1.8f, 2f).setDuration(300);
         scaleY = ObjectAnimator.ofFloat(imageView, "scaleY", 2f, 1.8f, 2f).setDuration(300);
@@ -274,10 +293,10 @@ public class BaseViewModel implements BaseVMInterface {
                     animatorSet.play(scaleX).with(scaleY);
                     animatorSet.play(scaleAfterX).with(scaleAfterY).with(alpha).after(scaleX).after(100);
                     animatorSet.start();
-                    mHandler.postDelayed(successRa,600);
+                    mHandler.postDelayed(successRa, 600);
                 }
             }
-            return false;
+            return true;
         });
     }
 

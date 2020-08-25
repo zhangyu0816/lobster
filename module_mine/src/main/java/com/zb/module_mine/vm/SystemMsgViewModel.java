@@ -2,7 +2,6 @@ package com.zb.module_mine.vm;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.view.View;
@@ -14,12 +13,9 @@ import com.alibaba.mobileim.contact.YWContactFactory;
 import com.alibaba.mobileim.conversation.IYWConversationService;
 import com.alibaba.mobileim.conversation.YWConversation;
 import com.maning.imagebrowserlibrary.MNImage;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
-import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.clearHistoryMsgApi;
+import com.zb.lib_base.api.dynDetailApi;
 import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.api.systemHistoryMsgListApi;
@@ -29,7 +25,9 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.imcore.LoginSampleHelper;
+import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.ImAccount;
+import com.zb.lib_base.model.StanzaInfo;
 import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DownLoad;
@@ -43,11 +41,10 @@ import com.zb.module_mine.iv.SystemMsgVMInterface;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
 import io.realm.Realm;
 
-public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInterface, OnRefreshListener, OnLoadMoreListener {
+public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInterface {
     public MineAdapter adapter;
     public ResFileDb resFileDb;
     private List<SystemMsg> systemMsgList = new ArrayList<>();
@@ -58,7 +55,6 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
     private int preDirection;
     private SoundView soundView;
     private ObjectAnimator animator;
-    private BaseReceiver finishRefreshReceiver;
     private LoginSampleHelper loginHelper;
     private String otherIMUserId;
     private YWConversation conversation;
@@ -71,23 +67,12 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
         resFileDb = new ResFileDb(Realm.getDefaultInstance());
         setAdapter();
         soundView = new SoundView(activity, view -> stopVoiceDrawable());
-        finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                mBinding.refresh.finishRefresh();
-                mBinding.refresh.finishLoadMore();
-            }
-        };
         loginHelper = LoginSampleHelper.getInstance();
         if (loginHelper.getImCore() == null) {
             myImAccountInfoApi();
         } else {
             otherImAccountInfoApi();
         }
-    }
-
-    public void onDestroy() {
-        finishRefreshReceiver.unregisterReceiver();
     }
 
     @Override
@@ -107,22 +92,6 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
     }
 
     @Override
-    public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        pageNo++;
-        systemHistoryMsgList();
-    }
-
-    @Override
-    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        // 下拉刷新
-        mBinding.refresh.setEnableLoadMore(true);
-        pageNo = 1;
-        systemMsgList.clear();
-        adapter.notifyDataSetChanged();
-        systemHistoryMsgList();
-    }
-
-    @Override
     public void systemHistoryMsgList() {
         systemHistoryMsgListApi api = new systemHistoryMsgListApi(new HttpOnNextListener<List<SystemMsg>>() {
             @Override
@@ -130,18 +99,16 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
                 int start = systemMsgList.size();
                 systemMsgList.addAll(o);
                 adapter.notifyItemRangeChanged(start, systemMsgList.size());
-                mBinding.refresh.finishRefresh();
-                mBinding.refresh.finishLoadMore();
-                if (pageNo == 1)
-                    clearHistoryMsg(o.get(0).getId());
+                pageNo++;
+                systemHistoryMsgList();
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    mBinding.refresh.setEnableLoadMore(false);
-                    mBinding.refresh.finishRefresh();
-                    mBinding.refresh.finishLoadMore();
+                    if (systemMsgList.size() > 0) {
+                        clearHistoryMsg(systemMsgList.get(0).getId());
+                    }
                 }
             }
         }, activity).setPageNo(pageNo);
@@ -208,6 +175,30 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
 
             soundView.soundPlayer(filePath, view);
         });
+    }
+
+    @Override
+    public void check(StanzaInfo stanzaInfo) {
+        if (stanzaInfo.getLink().contains("person_detail")) {
+            ActivityUtils.getCardMemberDetail(Long.parseLong(stanzaInfo.getLink().replace("zw://appview/person_detail?userId=", "")), false);
+        } else {
+            dynDetail(Long.parseLong(stanzaInfo.getLink().replace("zw://appview/dynamic_detail?friendDynId=", "")));
+        }
+    }
+
+    private void dynDetail(long discoverId) {
+        dynDetailApi api = new dynDetailApi(new HttpOnNextListener<DiscoverInfo>() {
+            @Override
+            public void onNext(DiscoverInfo o) {
+                if (o.getVideoUrl().isEmpty()) {
+                    ActivityUtils.getHomeDiscoverDetail(discoverId);
+                } else {
+                    ActivityUtils.getHomeDiscoverVideoL2(discoverId);
+                }
+            }
+        }, activity).setFriendDynId(discoverId);
+        api.setShowProgress(false);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     private void stopVoiceDrawable() {

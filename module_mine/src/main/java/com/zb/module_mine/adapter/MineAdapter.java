@@ -11,12 +11,18 @@ import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.ContactNum;
+import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.model.StanzaInfo;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.vm.EditMemberViewModel;
 import com.zb.module_mine.vm.FCLViewModel;
+import com.zb.module_mine.vm.SystemMsgViewModel;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,6 +89,35 @@ public class MineAdapter<T> extends BindingItemAdapter<T> implements ItemTouchHe
                         }
                     }, mContext).setOtherUserId(((MemberInfo) t).getUserId());
                     HttpManager.getInstance().doHttpDeal(api);
+                }
+            }
+        }
+
+        if (viewModel instanceof SystemMsgViewModel && t instanceof HistoryMsg) {
+            HistoryMsg item = (HistoryMsg) t;
+            if (item.getMsgType() == 112) {
+                try {
+                    JSONObject object = new JSONObject(item.getStanza());
+                    StanzaInfo stanzaInfo = new StanzaInfo();
+                    if (object.has("image"))
+                        stanzaInfo.setImage(object.optString("image"));
+                    if (object.has("styleType"))
+                        stanzaInfo.setStyleType(object.optInt("styleType"));
+                    if (object.has("sex"))
+                        stanzaInfo.setSex(object.optInt("sex"));
+                    if (object.has("link"))
+                        stanzaInfo.setLink(object.optString("link"));
+                    if (object.has("memberType"))
+                        stanzaInfo.setMemberType(object.optInt("memberType"));
+                    if (object.has("title"))
+                        stanzaInfo.setTitle(object.optString("title"));
+                    if (object.has("content"))
+                        stanzaInfo.setContent(object.optString("content"));
+                    if (object.has("linkContent"))
+                        stanzaInfo.setLinkContent(object.optString("linkContent"));
+                    holder.binding.setVariable(BR.stanzaInfo, stanzaInfo);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         }

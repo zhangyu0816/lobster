@@ -18,8 +18,9 @@ public abstract class RecyclerAdapter<T, B extends ViewDataBinding> extends Recy
     public RxAppCompatActivity mContext;
     private List<T> mList;
     private int layoutId;
+    private boolean isMax = false;
 
-   public RecyclerAdapter(RxAppCompatActivity context, List<T> list, @LayoutRes int layoutId) {
+    public RecyclerAdapter(RxAppCompatActivity context, List<T> list, @LayoutRes int layoutId) {
         this.mContext = context;
         this.mList = list;
         this.layoutId = layoutId;
@@ -28,6 +29,10 @@ public abstract class RecyclerAdapter<T, B extends ViewDataBinding> extends Recy
     public void setList(List<T> mList) {
         this.mList = mList;
         notifyDataSetChanged();
+    }
+
+    public void setMax(boolean max) {
+        isMax = max;
     }
 
     @NonNull
@@ -39,13 +44,35 @@ public abstract class RecyclerAdapter<T, B extends ViewDataBinding> extends Recy
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder<B> holder, int position) {
-        final T t = mList.get(position);
-        onBind(holder, t, position);
+        if (isMax) {
+            if (mList.size() != 0) {
+                if (mList.size() < 5) {
+                    final T t = mList.get(position);
+                    onBind(holder, t, position);
+                } else {
+                    int index = position % mList.size();
+                    final T t = mList.get(index);
+                    onBind(holder, t, index);
+                }
+            }
+        } else {
+            final T t = mList.get(position);
+            onBind(holder, t, position);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mList == null ? 0 : mList.size();
+        if (mList == null)
+            return 0;
+        else if (isMax) {
+            if (mList.size() < 5) {
+                return mList.size();
+            } else {
+                return Integer.MAX_VALUE;
+            }
+        } else
+            return mList.size();
     }
 
     public List<T> getList() {

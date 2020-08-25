@@ -78,6 +78,7 @@ public class MineApp extends MultiDexApplication {
     public static ContactNum contactNum;
     public static int noReadBottleNum = 0;
     public static int chatSelectIndex = 0;
+    public static String NOTIFICATION_CHANNEL_ID ="com.yimi.rentme_notice";
 
     public static List<LikeMe> pairList = new ArrayList<>();
 

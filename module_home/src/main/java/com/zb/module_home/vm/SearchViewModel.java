@@ -7,7 +7,6 @@ import android.widget.LinearLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.zb.lib_base.api.searchApi;
-import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -27,21 +26,17 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import io.realm.Realm;
 
 public class SearchViewModel extends BaseViewModel implements SearchVMInterface, OnLoadMoreListener {
     private HomeSearchBinding mBinding;
     public HomeAdapter adapter;
-    private AreaDb areaDb;
     private List<MemberInfo> memberInfoList = new ArrayList<>();
     private int pageNo = 1;
-    private String keyWord = "";
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (HomeSearchBinding) binding;
-        areaDb = new AreaDb(Realm.getDefaultInstance());
         mBinding.setNoData(false);
         setAdapter();
 
@@ -55,7 +50,7 @@ public class SearchViewModel extends BaseViewModel implements SearchVMInterface,
                 pageNo = 1;
                 memberInfoList.clear();
                 adapter.notifyDataSetChanged();
-                keyWord = mBinding.getSearchKey();
+                hintKeyBoard();
                 search();
             }
             return true;
@@ -92,7 +87,6 @@ public class SearchViewModel extends BaseViewModel implements SearchVMInterface,
                 adapter.notifyItemRangeChanged(start, memberInfoList.size());
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
-                mBinding.setSearchKey("");
             }
 
             @Override
@@ -101,14 +95,13 @@ public class SearchViewModel extends BaseViewModel implements SearchVMInterface,
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
                     mBinding.refresh.finishLoadMore();
-                    mBinding.setSearchKey("");
                     if (memberInfoList.size() == 0) {
                         mBinding.setNoData(true);
                     }
                 }
             }
         }, activity)
-                .setKeyWord(keyWord)
+                .setKeyWord(mBinding.getSearchKey())
                 .setPageNo(pageNo)
                 .setMaxAge(100)
                 .setMinAge(0)

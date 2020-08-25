@@ -1,11 +1,16 @@
 package com.yimi.rentme.activity;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.graphics.Color;
+import android.os.Build;
 import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.yimi.rentme.BR;
 import com.yimi.rentme.R;
 import com.yimi.rentme.vm.MainViewModel;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.JobInfoDb;
 import com.zb.lib_base.db.TagDb;
 import com.zb.lib_base.model.JobInfo;
@@ -71,6 +76,7 @@ public class MainActivity extends AppBaseActivity {
             } catch (Exception e) {
             }
         }
+        setNotificationChannel();
     }
 
     @Override
@@ -78,6 +84,24 @@ public class MainActivity extends AppBaseActivity {
         super.onDestroy();
         viewModel.onDestroy();
         viewModel.stopAnimator();
+    }
+
+    /**
+     * 适配8.0通知栏
+     */
+    private void setNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = MineApp.NOTIFICATION_CHANNEL_ID;
+            String channelName = "虾菇消息通知";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, importance);
+            notificationChannel.enableLights(true); //是否在桌面icon右上角展示小红点
+            notificationChannel.setLightColor(Color.RED); //小红点颜色
+            notificationChannel.setShowBadge(true); //是否在久按桌面图标时显示此渠道的通知
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            if (notificationManager != null)
+                notificationManager.createNotificationChannel(notificationChannel);
+        }
     }
 
     // 监听程序退出
