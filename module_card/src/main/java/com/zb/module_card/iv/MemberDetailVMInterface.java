@@ -12,6 +12,8 @@ public interface MemberDetailVMInterface {
 
     void otherInfo();
 
+    void otherRentInfo();
+
     void personOtherDyn();
 
     void attentionStatus();

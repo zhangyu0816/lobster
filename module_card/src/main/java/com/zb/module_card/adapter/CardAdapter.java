@@ -84,7 +84,7 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
         }
 
         if (viewModel instanceof MemberDetailViewModel) {
-            holder.binding.setVariable(BR.raIndex, ra.nextInt(4));
+            holder.binding.setVariable(BR.raIndex, ra.nextInt(5));
         }
         holder.binding.executePendingBindings();
     }

@@ -310,6 +310,8 @@ public class ObjectUtils {
             return MineApp.getInstance().getResources().getDrawable(R.drawable.btn_bg_yellow_fff_radius40);
         } else if (position == 2) {
             return MineApp.getInstance().getResources().getDrawable(R.drawable.btn_bg_blue_e4f_radius40);
+        } else if (position == 3) {
+            return MineApp.getInstance().getResources().getDrawable(R.drawable.btn_bg_purple_e8d_radius40);
         } else {
             return MineApp.getInstance().getResources().getDrawable(R.drawable.btn_bg_green_e1f_radius40);
         }
@@ -322,6 +324,8 @@ public class ObjectUtils {
             return MineApp.getInstance().getResources().getColor(R.color.yellow_e89);
         } else if (position == 2) {
             return MineApp.getInstance().getResources().getColor(R.color.blue_37a);
+        } else if (position == 3) {
+            return MineApp.getInstance().getResources().getColor(R.color.purple_7a4);
         } else {
             return MineApp.getInstance().getResources().getColor(R.color.green_34c);
         }

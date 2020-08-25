@@ -15,11 +15,15 @@ import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.adapter.BaseAdapter;
+import com.zb.lib_base.api.openedMemberPriceListApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.ItemAdBinding;
 import com.zb.lib_base.databinding.PwsVipAdBinding;
 import com.zb.lib_base.db.MineInfoDb;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 
@@ -86,7 +90,11 @@ public class VipAdPW extends BasePopupWindow {
             Ads ads = new Ads(adView(type));
             adsList.add(ads);
         }
-        initUI();
+
+        if (MineApp.vipInfoList.size() == 0)
+            openedMemberPriceList();
+        else
+            initUI();
     }
 
     private View adView(int type) {
@@ -219,4 +227,19 @@ public class VipAdPW extends BasePopupWindow {
         dismiss();
     }
 
+    private void openedMemberPriceList() {
+        openedMemberPriceListApi api = new openedMemberPriceListApi(new HttpOnNextListener<List<VipInfo>>() {
+            @Override
+            public void onNext(List<VipInfo> o) {
+                VipInfo vipInfo = o.get(0);
+                o.get(0).setOriginalPrice(vipInfo.getPrice());
+                o.get(1).setOriginalPrice(vipInfo.getPrice() * 3);
+                o.get(2).setOriginalPrice(vipInfo.getPrice() * 12);
+                MineApp.vipInfoList.clear();
+                MineApp.vipInfoList.addAll(o);
+                initUI();
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
 }

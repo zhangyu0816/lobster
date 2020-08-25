@@ -28,6 +28,7 @@ import com.zb.lib_base.api.cancelAttentionApi;
 import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.memberInfoConfApi;
 import com.zb.lib_base.api.otherInfoApi;
+import com.zb.lib_base.api.otherRentInfoApi;
 import com.zb.lib_base.api.personOtherDynApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
@@ -40,6 +41,7 @@ import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.model.RentInfo;
 import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
@@ -167,6 +169,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     String tags = memberInfo.getServiceTags().substring(1, memberInfo.getServiceTags().length() - 1);
                     tagList.addAll(Arrays.asList(tags.split("#")));
                     tagAdapter.notifyDataSetChanged();
+                } else {
+                    otherRentInfo();
                 }
                 mBinding.setConstellation(DateUtil.getConstellations(memberInfo.getBirthday()));
 
@@ -224,6 +228,19 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 attentionStatus();
                 personOtherDyn();
                 mBinding.setVariable(BR.viewModel, MemberDetailViewModel.this);
+            }
+        }, activity).setOtherUserId(otherUserId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void otherRentInfo() {
+        otherRentInfoApi api = new otherRentInfoApi(new HttpOnNextListener<RentInfo>() {
+            @Override
+            public void onNext(RentInfo o) {
+                String tags = o.getServiceTags().substring(1, o.getServiceTags().length() - 1);
+                tagList.addAll(Arrays.asList(tags.split("#")));
+                tagAdapter.notifyDataSetChanged();
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);

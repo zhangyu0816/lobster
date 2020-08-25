@@ -30,6 +30,7 @@ import com.zb.lib_base.model.PairInfo;
 import com.zb.lib_base.model.PrivateMsg;
 import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.RecommendInfo;
+import com.zb.lib_base.model.RentInfo;
 import com.zb.lib_base.model.Report;
 import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.model.Review;
@@ -222,6 +223,9 @@ public interface HttpService {
     // 三合一接口 （返回关注数量、粉丝数量、喜欢数量、被喜欢数量）
     @GET("api/Collect_contactNum")
     Observable<BaseResultEntity<ContactNum>> contactNum(@Query("otherUserId") long otherUserId);
+
+    @GET("api/SimpleRent_otherInfo")
+    Observable<BaseResultEntity<RentInfo>> otherRentInfo(@Query("otherUserId") long otherUserId);
 
     /******************************* 首页 **********************************/
 
