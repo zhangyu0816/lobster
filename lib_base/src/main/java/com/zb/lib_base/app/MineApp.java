@@ -73,9 +73,9 @@ public class MineApp extends MultiDexApplication {
     public static List<RechargeInfo> rechargeInfoList = new ArrayList<>();
     public static List<BankInfo> bankInfoList = new ArrayList<>();
     public static List<Report> reportList = new ArrayList<>();
-    public static WalletInfo walletInfo;
-    public static MineNewsCount mineNewsCount;
-    public static ContactNum contactNum;
+    public static WalletInfo walletInfo = new WalletInfo();
+    public static MineNewsCount mineNewsCount = new MineNewsCount();
+    public static ContactNum contactNum = new ContactNum();
     public static int noReadBottleNum = 0;
     public static int chatSelectIndex = 0;
     public static String NOTIFICATION_CHANNEL_ID ="com.yimi.rentme_notice";

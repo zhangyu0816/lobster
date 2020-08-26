@@ -2,9 +2,12 @@ package com.zb.lib_base.activity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.media.AudioAttributes;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -17,7 +20,6 @@ import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.PwsPerformBinding;
 import com.zb.lib_base.utils.PreferenceUtil;
-import com.zb.lib_base.utils.SCToastUtil;
 import com.zero.smallvideorecord.JianXiCamera;
 
 import java.io.File;
@@ -25,6 +27,7 @@ import java.util.Random;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 
@@ -178,6 +181,28 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         }
     }
 
+    public static NotificationCompat.Builder getNotificationBuilderByChannel(NotificationManager notificationManager, String channelId) {
+        NotificationCompat.Builder builder = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            AudioAttributes att = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                    .build();
+
+            builder = new NotificationCompat.Builder(MineApp.getInstance(), channelId);
+            NotificationChannel channel = new NotificationChannel(channelId,
+                    "您有未读消息", NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(channel);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {//8.0以下 && 7.0及以上 设置优先级
+                builder.setPriority(NotificationManager.IMPORTANCE_HIGH);
+            } else {
+                builder.setPriority(NotificationCompat.PRIORITY_HIGH);
+            }
+        }
+        return builder;
+    }
+
     //**************** Android M Permission (Android 6.0权限控制代码封装)*****************************************************
     private int permissionRequestCode = 88;
     private PermissionCallback permissionRunnable;
@@ -297,7 +322,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
                     permissionRunnable = null;
                 }
             } else {
-                SCToastUtil.showToast(activity, "暂无权限执行相关操作！", true);
                 if (permissionRunnable != null) {
                     permissionRunnable.noPermission();
                     permissionRunnable = null;

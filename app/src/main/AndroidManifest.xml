@@ -29,6 +29,16 @@
         <service android:name=".activity.ForegroundLiveService" />
         <service android:name=".activity.ForegroundLiveService$InnerService" />
 
+        <receiver
+            android:name=".activity.MainActivity$alarmReceiver"
+            android:exported="false"/>
+        <receiver
+            android:name=".activity.MainActivity$alarmReceiver1"
+            android:exported="false"/>
+        <receiver
+            android:name=".activity.MainActivity$alarmReceiver2"
+            android:exported="false"/>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.yimi.rentme.fileprovider"

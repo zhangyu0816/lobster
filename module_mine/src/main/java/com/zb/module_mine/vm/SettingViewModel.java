@@ -40,7 +40,6 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     @Override
     public void back(View view) {
         super.back(view);
-        activity.sendBroadcast(new Intent("lobster_resumeContactNum"));
         activity.finish();
     }
 

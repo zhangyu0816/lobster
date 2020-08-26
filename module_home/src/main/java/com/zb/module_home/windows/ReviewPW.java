@@ -8,6 +8,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.dynDoReviewApi;
 import com.zb.lib_base.api.seeReviewsApi;
@@ -142,7 +143,8 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
     }
 
     public void toMemberDetail(Review review) {
-        ActivityUtils.getCardMemberDetail(review.getUserId(), false);
+        if (review.getUserId() != BaseActivity.userId)
+            ActivityUtils.getCardMemberDetail(review.getUserId(), false);
     }
 
     public interface CallBack {

@@ -51,7 +51,6 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     @Override
     public void back(View view) {
         super.back(view);
-        activity.sendBroadcast(new Intent("lobster_resumeContactNum"));
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
         activity.finish();
     }

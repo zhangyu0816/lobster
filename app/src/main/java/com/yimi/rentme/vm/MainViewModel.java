@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.animation.LinearInterpolator;
@@ -96,7 +97,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private BaseReceiver rechargeReceiver;
     private BaseReceiver chatListReceiver;
     private BaseReceiver newMsgReceiver;
-    private BaseReceiver resumeContactNumReceiver;
     private BaseReceiver bottleNumReceiver;
     private BaseReceiver mainSelectReceiver;
     private BaseReceiver newsCountReceiver;
@@ -106,6 +106,15 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private AreaDb areaDb;
     private HistoryMsgDb historyMsgDb;
     private MineInfo mineInfo;
+    private int time = 2 * 60 * 1000;
+    private Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message message) {
+            contactNum(true);
+            handler.sendEmptyMessageDelayed(0, time);
+            return false;
+        }
+    });
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -258,13 +267,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             }
         };
 
-        resumeContactNumReceiver = new BaseReceiver(activity, "lobster_resumeContactNum") {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                contactNum(true);
-            }
-        };
-
         bottleNumReceiver = new BaseReceiver(activity, "lobster_bottleNum") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -323,18 +325,21 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             }
         }
         getPermissions();
+
+        handler.sendEmptyMessageDelayed(0, time);
     }
 
     public void onDestroy() {
         rechargeReceiver.unregisterReceiver();
         chatListReceiver.unregisterReceiver();
         newMsgReceiver.unregisterReceiver();
-        resumeContactNumReceiver.unregisterReceiver();
         bottleNumReceiver.unregisterReceiver();
         mainSelectReceiver.unregisterReceiver();
         newsCountReceiver.unregisterReceiver();
         unReadCountReceiver.unregisterReceiver();
         newDynMsgAllNumReceiver.unregisterReceiver();
+        recommendReceiver.unregisterReceiver();
+
     }
 
     private boolean isNotificationEnabled() {
@@ -641,8 +646,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 }, 500);
                 if (!isUpdate) {
                     noReadBottleNum(false);
-                    initRemind(o.getBeLikeCount());
                 }
+                initRemind(o.getBeLikeCount());
             }
 
             @Override
@@ -676,18 +681,17 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     }
 
     private void initRemind(int beLikeCount) {
-        if (PreferenceUtil.readStringValue(activity, "likeRemark_" + BaseActivity.userId).isEmpty()) {
-            PreferenceUtil.saveStringValue(activity, "likeRemark_" + BaseActivity.userId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm));
-            PreferenceUtil.saveIntValue(activity, "beLikeCount" + BaseActivity.userId, beLikeCount);
-        } else {
-            String lastTime = PreferenceUtil.readStringValue(activity, "likeRemark_" + BaseActivity.userId);
-            if (DateUtil.getDateCount(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm), lastTime, DateUtil.yyyy_MM_dd_HH_mm, 1000f * 3600f * 24f) > 1) {
-                PreferenceUtil.saveStringValue(activity, "likeRemark_" + BaseActivity.userId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm));
-                int count = beLikeCount - PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId);
-                if (count > 0) {
-                    startAnimator("24小时内有", count < 99 ? (count + "") : "99+", "人喜欢你啦", "");
-                }
+        int lastBeLikeCount = PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId);
+        if (lastBeLikeCount == 0) {
+            if (beLikeCount > 0) {
                 PreferenceUtil.saveIntValue(activity, "beLikeCount" + BaseActivity.userId, beLikeCount);
+                startAnimator("快来看看有", beLikeCount < 99 ? (beLikeCount + "") : "99+", "人喜欢你啦", "");
+            }
+        } else {
+            int count = beLikeCount - lastBeLikeCount;
+            if (count > 0) {
+                PreferenceUtil.saveIntValue(activity, "beLikeCount" + BaseActivity.userId, beLikeCount);
+                startAnimator("快来看看有", count < 99 ? (count + "") : "99+", "人喜欢你啦", "");
             }
         }
     }
@@ -779,21 +783,22 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
+
     /**
      * 权限
      */
     private void getPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             performCodeWithPermission("虾菇需要访问显示通知权限", new BaseActivity.PermissionCallback() {
-                        @Override
-                        public void hasPermission() {
-                            setPermissions();
-                        }
+                @Override
+                public void hasPermission() {
+                    setPermissions();
+                }
 
-                        @Override
-                        public void noPermission() {
-                        }
-                    }, Manifest.permission.FOREGROUND_SERVICE);
+                @Override
+                public void noPermission() {
+                }
+            }, Manifest.permission.FOREGROUND_SERVICE);
         } else {
             setPermissions();
         }

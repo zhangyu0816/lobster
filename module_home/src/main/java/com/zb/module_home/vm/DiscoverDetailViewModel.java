@@ -523,7 +523,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 
     @Override
     public void toReviewMemberDetail(Review review) {
-        ActivityUtils.getCardMemberDetail(review.getUserId(), false);
+        if (review.getUserId() != BaseActivity.userId)
+            ActivityUtils.getCardMemberDetail(review.getUserId(), false);
     }
 
     @Override
@@ -604,31 +605,35 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         for (Ads item : adList) {
             imageList.add(item.getSmallImage());
         }
-        mBinding.banner.setImageScaleType(ImageView.ScaleType.FIT_CENTER)
-                .setAds(adList)
-                .setImageLoader((context, ads, image, position) ->
-                        Glide.with(activity).asBitmap().load(ads.getSmallImage()).into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                int w = resource.getWidth();
-                                int h = resource.getHeight();
+        try {
+            mBinding.banner.setImageScaleType(ImageView.ScaleType.FIT_CENTER)
+                    .setAds(adList)
+                    .setImageLoader((context, ads, image, position) ->
+                            Glide.with(activity).asBitmap().load(ads.getSmallImage()).into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                    int w = resource.getWidth();
+                                    int h = resource.getHeight();
 
-                                if (w >= h) {
-                                    AdapterBinding.viewSize(image, bannerWidth, (int) ((float) bannerWidth * h / w));
-                                } else {
-                                    AdapterBinding.viewSize(image, (int) ((float) bannerHeight * w / h), bannerHeight);
+                                    if (w >= h) {
+                                        AdapterBinding.viewSize(image, bannerWidth, (int) ((float) bannerWidth * h / w));
+                                    } else {
+                                        AdapterBinding.viewSize(image, (int) ((float) bannerHeight * w / h), bannerHeight);
+                                    }
+                                    image.setImageBitmap(resource);
                                 }
-                                image.setImageBitmap(resource);
-                            }
-                        })
-                )
-                .setBannerPageListener(item -> MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, item, false, null))
-                .setBannerTypes(XBanner.CIRCLE_INDICATOR_TITLE)
-                .setIndicatorGravity(XBanner.INDICATOR_START)
-                .setDelay(3000)
-                .setUpIndicators(R.drawable.banner_circle_pressed, R.drawable.banner_circle_unpressed)
-                .setUpIndicatorSize(20, 20)
-                .isAutoPlay(false)
-                .start();
+                            })
+                    )
+                    .setBannerPageListener(item -> MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, item, false, null))
+                    .setBannerTypes(XBanner.CIRCLE_INDICATOR_TITLE)
+                    .setIndicatorGravity(XBanner.INDICATOR_START)
+                    .setDelay(3000)
+                    .setUpIndicators(R.drawable.banner_circle_pressed, R.drawable.banner_circle_unpressed)
+                    .setUpIndicatorSize(20, 20)
+                    .isAutoPlay(false)
+                    .start();
+        } catch (Exception e) {
+
+        }
     }
 }

@@ -103,7 +103,6 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 boolean isRelieve = intent.getBooleanExtra("isRelieve", false);
                 try {
                     if (isRelieve) {
-                        activity.sendBroadcast(new Intent("lobster_resumeContactNum"));
                         likeDb.deleteLike(otherUserId);
                     }
 

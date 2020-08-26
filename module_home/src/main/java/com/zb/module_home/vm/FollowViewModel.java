@@ -106,7 +106,6 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
             @Override
             public void onReceive(Context context, Intent intent) {
                 onRefreshForNet(null);
-                activity.sendBroadcast(new Intent("lobster_resumeContactNum"));
             }
         };
     }
