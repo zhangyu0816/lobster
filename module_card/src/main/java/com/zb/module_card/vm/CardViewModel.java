@@ -205,9 +205,10 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             return false;
         }
     });
+    private ObjectAnimator animator;
 
     private void playExposure() {
-        ObjectAnimator animator;
+
         if (mineInfo.getMemberType() == 2) {
             animator = ObjectAnimator.ofFloat(mBinding.ivExposured, "rotation", -15, 15).setDuration(800);
         } else {
@@ -464,6 +465,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    private ObjectAnimator animatorUI;
+
     // 更新adapterUI
     private void updateAdapterUI(View view, CardAdapter imageAdapter, int preIndex, int selectIndex, List<String> imageList) {
         if (imageList.size() == 0)
@@ -480,15 +483,17 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 0, ObjectUtils.getDefaultRes(), -1,
                 -1, false, true, 10,
                 false, 0, false);
-        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "rotationY", 0, 1);
-        animator.setInterpolator(new CycleInterpolator(1));
-        animator.setRepeatCount(1);
-        animator.setDuration(100);
-        animator.start();
+        animatorUI = ObjectAnimator.ofFloat(view, "rotationY", 0, 1);
+        animatorUI.setInterpolator(new CycleInterpolator(1));
+        animatorUI.setRepeatCount(1);
+        animatorUI.setDuration(100);
+        animatorUI.start();
     }
 
+    private ObjectAnimator translate;
+
     private void startAnimation(View view, float x, int duration) {
-        ObjectAnimator translate = ObjectAnimator.ofFloat(view, "translationX", 0, x);
+        translate = ObjectAnimator.ofFloat(view, "translationX", 0, x);
         translate.setDuration(duration);
         translate.start();
 
@@ -584,19 +589,22 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     /**
      * 出现
      */
+    private ObjectAnimator rotationOut, translationOutX, alphaOut;
+    private AnimatorSet animatorSet = new AnimatorSet();
+
     private void setCardAnimationLeftToRight(PairInfo pairInfo) {
         mBinding.setVariable(BR.pairInfo, pairInfo);
         imageList.clear();
         imageList.addAll(pairInfo.getImageList());
         disListAdapter.notifyDataSetChanged();
 
-        ObjectAnimator rotation = ObjectAnimator.ofFloat(mBinding.cardRelative, "rotation", -45, 0).setDuration(500);
-        ObjectAnimator translationX = ObjectAnimator.ofFloat(mBinding.cardRelative, "translationX", -MineApp.W, 0).setDuration(500);
-        ObjectAnimator alpha = ObjectAnimator.ofFloat(mBinding.cardRelative, "alpha", 0, 1).setDuration(500);
+        rotationOut = ObjectAnimator.ofFloat(mBinding.cardRelative, "rotation", -45, 0).setDuration(500);
+        translationOutX = ObjectAnimator.ofFloat(mBinding.cardRelative, "translationX", -MineApp.W, 0).setDuration(500);
+        alphaOut = ObjectAnimator.ofFloat(mBinding.cardRelative, "alpha", 0, 1).setDuration(500);
 
-        AnimatorSet animatorSet = new AnimatorSet();
+
         animatorSet.setInterpolator(new LinearInterpolator());
-        animatorSet.play(rotation).with(translationX).with(alpha);
+        animatorSet.play(rotationOut).with(translationOutX).with(alphaOut);
         animatorSet.start();
 
         new Handler().postDelayed(() -> {

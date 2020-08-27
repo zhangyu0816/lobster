@@ -57,6 +57,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
 
     private long friendDynId = 0;
     private boolean canClose = true;
+    private ObjectAnimator translateX,scaleX,scaleY,alpha;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -95,11 +96,11 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         mPlayer = MediaPlayer.create(activity, R.raw.sea_wave);
         new Handler().postDelayed(() -> appSound(), 200);
 
-        ObjectAnimator translateX = ObjectAnimator.ofFloat(mBinding.ivStar, "translationX", 0, MineApp.W - ObjectUtils.getViewSizeByWidthFromMax(250)).setDuration(time);
+        translateX = ObjectAnimator.ofFloat(mBinding.ivStar, "translationX", 0, MineApp.W - ObjectUtils.getViewSizeByWidthFromMax(250)).setDuration(time);
 
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mBinding.ivBg, "scaleX", 1, 1.5f).setDuration(time);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mBinding.ivBg, "scaleY", 1, 1.5f).setDuration(time);
-        ObjectAnimator alpha = ObjectAnimator.ofFloat(mBinding.firstLayout, "alpha", 1, 0).setDuration(time);
+        scaleX = ObjectAnimator.ofFloat(mBinding.ivBg, "scaleX", 1, 1.5f).setDuration(time);
+        scaleY = ObjectAnimator.ofFloat(mBinding.ivBg, "scaleY", 1, 1.5f).setDuration(time);
+        alpha = ObjectAnimator.ofFloat(mBinding.firstLayout, "alpha", 1, 0).setDuration(time);
 
         animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.playTogether(scaleX, scaleY, translateX, alpha);//同时执行

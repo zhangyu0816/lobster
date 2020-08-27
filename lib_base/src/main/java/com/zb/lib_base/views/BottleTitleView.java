@@ -38,14 +38,16 @@ public class BottleTitleView extends RelativeLayout {
         init(context);
     }
 
+    private ObjectAnimator ivBackY, ivFrontY, ivBottleY, ivLightY;
+
     private void init(Context context) {
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.bottle_title, null, false);
         addView(mBinding.getRoot());
 
-        ObjectAnimator ivBackY = ObjectAnimator.ofFloat(mBinding.ivBackWeak, "translationY", Y, 0, Y, 0, Y, 0, Y);
-        ObjectAnimator ivFrontY = ObjectAnimator.ofFloat(mBinding.ivFrontWeak, "translationY", 0, Y, 0, Y, 0, Y, 0);
-        ObjectAnimator ivBottleY = ObjectAnimator.ofFloat(mBinding.ivBottle, "translationY", Y, 0, Y, 0, Y, 0, Y);
-        ObjectAnimator ivLightY = ObjectAnimator.ofFloat(mBinding.ivBottleLight, "translationY", Y, 0, Y, 0, Y, 0, Y);
+        ivBackY = ObjectAnimator.ofFloat(mBinding.ivBackWeak, "translationY", Y, 0, Y, 0, Y, 0, Y);
+        ivFrontY = ObjectAnimator.ofFloat(mBinding.ivFrontWeak, "translationY", 0, Y, 0, Y, 0, Y, 0);
+        ivBottleY = ObjectAnimator.ofFloat(mBinding.ivBottle, "translationY", Y, 0, Y, 0, Y, 0, Y);
+        ivLightY = ObjectAnimator.ofFloat(mBinding.ivBottleLight, "translationY", Y, 0, Y, 0, Y, 0, Y);
 
         ivBackY.setDuration(time);
         ivBackY.setRepeatCount(repeat);

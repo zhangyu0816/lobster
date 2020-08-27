@@ -21,6 +21,8 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
     private RecommendInfo recommendInfo;
     private Handler handler = new Handler();
     private int time = 1000 * 60 * 5;
+    private ObjectAnimator outX, backX;
+    private AnimatorSet animatorSet = new AnimatorSet();
     private Runnable ra = new Runnable() {
         @Override
         public void run() {
@@ -32,9 +34,9 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
             int outWidth = mBinding.recommendMainLayout.getWidth();
             int backWidth = mBinding.recommendLayout.getWidth();
 
-            ObjectAnimator outX = ObjectAnimator.ofFloat(mBinding.recommendMainLayout, "translationX", outWidth, 0).setDuration(500);
-            ObjectAnimator backX = ObjectAnimator.ofFloat(mBinding.recommendMainLayout, "translationX", 0, backWidth).setDuration(200);
-            AnimatorSet animatorSet = new AnimatorSet();
+            outX = ObjectAnimator.ofFloat(mBinding.recommendMainLayout, "translationX", outWidth, 0).setDuration(500);
+            backX = ObjectAnimator.ofFloat(mBinding.recommendMainLayout, "translationX", 0, backWidth).setDuration(200);
+
             animatorSet.setInterpolator(new LinearInterpolator());
             animatorSet.play(outX);
             animatorSet.play(backX).after(outX).after(1000);
@@ -46,7 +48,7 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
             }
         }
     };
-
+    private  ObjectAnimator outOutX;
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
@@ -55,8 +57,8 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
 
         new Handler().postDelayed(() -> {
             int outWidth = mBinding.recommendMainLayout.getWidth();
-            ObjectAnimator outX = ObjectAnimator.ofFloat(mBinding.recommendMainLayout, "translationX", 0, outWidth).setDuration(100);
-            outX.start();
+            outOutX = ObjectAnimator.ofFloat(mBinding.recommendMainLayout, "translationX", 0, outWidth).setDuration(100);
+            outOutX.start();
         }, 200);
     }
 

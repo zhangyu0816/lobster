@@ -744,6 +744,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    private ObjectAnimator scaleX, scaleY, translateY, scaleXEnd, scaleYEnd;
+
     private void startAnimator(String title, String content, String subContent, String logo) {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBinding.remindRelative.getLayoutParams();
         params.setMarginEnd(ObjectUtils.getViewSizeByWidthFromMax(220));
@@ -753,11 +755,11 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         mBinding.tvSubContent.setText(subContent);
         mBinding.setOtherHead(logo);
 
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleX", 0, 1).setDuration(500);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleY", 0, 1).setDuration(500);
-        ObjectAnimator translateY = ObjectAnimator.ofFloat(mBinding.remindRelative, "translationY", 0, -30, 0, -30, 0, -30, 0).setDuration(500);
-        ObjectAnimator scaleXEnd = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleX", 1, 0).setDuration(500);
-        ObjectAnimator scaleYEnd = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleY", 1, 0).setDuration(500);
+        scaleX = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleX", 0, 1).setDuration(500);
+        scaleY = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleY", 0, 1).setDuration(500);
+        translateY = ObjectAnimator.ofFloat(mBinding.remindRelative, "translationY", 0, -30, 0, -30, 0, -30, 0).setDuration(500);
+        scaleXEnd = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleX", 1, 0).setDuration(500);
+        scaleYEnd = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleY", 1, 0).setDuration(500);
 
         animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.play(scaleX).with(scaleY).after(5000);

@@ -82,7 +82,7 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
      */
     private void getPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission( "虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
+            performCodeWithPermission("虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
                         @Override
                         public void hasPermission() {
                             setPermissions();
@@ -103,6 +103,8 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
         initCamera();
     }
 
+    private ObjectAnimator scaleX, scaleY;
+
     private void initCamera() {
         mBinding.cameraLayout.removeAllViews();
         mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
@@ -112,8 +114,8 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
         mBinding.cameraLayout.addView(mOverCameraView);
 
         animatorSet = new AnimatorSet();
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mBinding.tvTime, "scaleX", 0, 1).setDuration(700);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mBinding.tvTime, "scaleY", 0, 1).setDuration(700);
+        scaleX = ObjectAnimator.ofFloat(mBinding.tvTime, "scaleX", 0, 1).setDuration(700);
+        scaleY = ObjectAnimator.ofFloat(mBinding.tvTime, "scaleY", 0, 1).setDuration(700);
         animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.play(scaleX).with(scaleY);
 

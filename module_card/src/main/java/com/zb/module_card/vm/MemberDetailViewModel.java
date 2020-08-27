@@ -398,12 +398,12 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    private ObjectAnimator scaleX, scaleY;
+    private AnimatorSet animatorSet = new AnimatorSet();
+
     private void isLike(View view) {
-
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 1, 1.1f, 1, 1.2f, 1).setDuration(500);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 1, 1.1f, 1, 1.2f, 1).setDuration(500);
-
-        AnimatorSet animatorSet = new AnimatorSet();
+        scaleX = ObjectAnimator.ofFloat(view, "scaleX", 1, 1.1f, 1, 1.2f, 1).setDuration(500);
+        scaleY = ObjectAnimator.ofFloat(view, "scaleY", 1, 1.1f, 1, 1.2f, 1).setDuration(500);
         animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.play(scaleX).with(scaleY);
         animatorSet.start();

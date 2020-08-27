@@ -113,6 +113,7 @@ public class MainActivity extends AppBaseActivity {
     private AlarmManager am2;
     private static Random ra = new Random();
     private static MineInfo mineInfo = null;
+    private static Map<Integer, String> noticeMap = new HashMap<>();
 
     //注意：receiver记得在manifest.xml注册
     public static class alarmReceiver extends BroadcastReceiver {
@@ -263,5 +264,4 @@ public class MainActivity extends AppBaseActivity {
             am2.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 330 * 60 * 1000, sender2);
     }
 
-    private static Map<Integer, String> noticeMap = new HashMap<>();
 }

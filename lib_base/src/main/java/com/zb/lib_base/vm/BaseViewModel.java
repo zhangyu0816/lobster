@@ -214,34 +214,39 @@ public class BaseViewModel implements BaseVMInterface {
         return screenHeight * 2 / 3 > rect.bottom;
     }
 
+    private ObjectAnimator scaleViewX, scaleViewY, alphaView;
+    private AnimatorSet animatorViewSet = new AnimatorSet();
+
     public void playAnimator(View view) {
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 0.5f, 1).setDuration(2000);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 0.5f, 1).setDuration(2000);
-        ObjectAnimator alpha = ObjectAnimator.ofFloat(view, "alpha", 1, 0).setDuration(2000);
+        scaleViewX = ObjectAnimator.ofFloat(view, "scaleX", 0.5f, 1).setDuration(2000);
+        scaleViewY = ObjectAnimator.ofFloat(view, "scaleY", 0.5f, 1).setDuration(2000);
+        alphaView = ObjectAnimator.ofFloat(view, "alpha", 1, 0).setDuration(2000);
 
-        scaleX.setRepeatCount(Animation.INFINITE);
-        scaleX.setRepeatMode(ValueAnimator.RESTART);
+        scaleViewX.setRepeatCount(Animation.INFINITE);
+        scaleViewX.setRepeatMode(ValueAnimator.RESTART);
 
-        scaleY.setRepeatCount(Animation.INFINITE);
-        scaleY.setRepeatMode(ValueAnimator.RESTART);
+        scaleViewY.setRepeatCount(Animation.INFINITE);
+        scaleViewY.setRepeatMode(ValueAnimator.RESTART);
 
-        alpha.setRepeatCount(Animation.INFINITE);
-        alpha.setRepeatMode(ValueAnimator.RESTART);
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setInterpolator(new LinearInterpolator());
-        animatorSet.playTogether(scaleX, scaleY, alpha);//同时执行
-        animatorSet.start();
+        alphaView.setRepeatCount(Animation.INFINITE);
+        alphaView.setRepeatMode(ValueAnimator.RESTART);
+
+        animatorViewSet.setInterpolator(new LinearInterpolator());
+        animatorViewSet.playTogether(scaleViewX, scaleViewY, alphaView);//同时执行
+        animatorViewSet.start();
     }
+
+    private ObjectAnimator scaleLikeX, scaleLikeY;
+    private AnimatorSet animatorLikeSet = new AnimatorSet();
 
     public void likeOrNot(View view) {
 
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(view, "scaleX", 0, 1, 0.8f, 1).setDuration(500);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(view, "scaleY", 0, 1, 0.8f, 1).setDuration(500);
+        scaleLikeX = ObjectAnimator.ofFloat(view, "scaleX", 0, 1, 0.8f, 1).setDuration(500);
+        scaleLikeY = ObjectAnimator.ofFloat(view, "scaleY", 0, 1, 0.8f, 1).setDuration(500);
 
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setInterpolator(new LinearInterpolator());
-        animatorSet.play(scaleX).with(scaleY);
-        animatorSet.start();
+        animatorLikeSet.setInterpolator(new LinearInterpolator());
+        animatorLikeSet.play(scaleLikeX).with(scaleLikeY);
+        animatorLikeSet.start();
 
     }
 
