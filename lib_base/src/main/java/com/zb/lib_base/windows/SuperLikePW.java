@@ -108,17 +108,17 @@ public class SuperLikePW extends BasePopupWindow {
     int rightY1 = -500;
     int rightY2 = 600;
     int time = 1500;
-    private ObjectAnimator ivStar1X, ivStar1Y, ivStar2X, ivStar2Y, ivStar3X, ivStar3Y, ivStar4X, ivStar4Y, ivStar5X, ivStar5Y, ivStar6X, ivStar6Y;
+    private ObjectAnimator translationX, translationY;
 
     private void start1() {
 
         binding.ivStar1.setVisibility(View.VISIBLE);
-        ivStar1X = ObjectAnimator.ofFloat(binding.ivStar1, "translationX", 0, leftX1, leftX2).setDuration(time);
-        ivStar1Y = ObjectAnimator.ofFloat(binding.ivStar1, "translationY", 0, leftY1, leftY2).setDuration(time);
-
-        animatorSet.setInterpolator(new LinearInterpolator());
-        animatorSet.playTogether(ivStar1X, ivStar1Y);
-        animatorSet.start();
+        translationX = ObjectAnimator.ofFloat(binding.ivStar1, "translationX", 0, leftX1, leftX2).setDuration(time);
+        translationY = ObjectAnimator.ofFloat(binding.ivStar1, "translationY", 0, leftY1, leftY2).setDuration(time);
+        AnimatorSet animatorStarSet = new AnimatorSet();
+        animatorStarSet.setInterpolator(new LinearInterpolator());
+        animatorStarSet.playTogether(translationX, translationY);
+        animatorStarSet.start();
         new Handler().postDelayed(() -> {
             binding.ivStar1.setVisibility(View.GONE);
         }, time);
@@ -130,12 +130,12 @@ public class SuperLikePW extends BasePopupWindow {
 
     private void start2() {
         binding.ivStar2.setVisibility(View.VISIBLE);
-        ivStar2X = ObjectAnimator.ofFloat(binding.ivStar2, "translationX", 0, rightX1 + 100, rightX2 + 350).setDuration(time);
-        ivStar2Y = ObjectAnimator.ofFloat(binding.ivStar2, "translationY", 0, rightY1 + 100, rightY2 + 160).setDuration(time);
-
-        animatorSet.setInterpolator(new LinearInterpolator());
-        animatorSet.playTogether(ivStar2X, ivStar2Y);
-        animatorSet.start();
+        translationX = ObjectAnimator.ofFloat(binding.ivStar2, "translationX", 0, rightX1 + 100, rightX2 + 350).setDuration(time);
+        translationY = ObjectAnimator.ofFloat(binding.ivStar2, "translationY", 0, rightY1 + 100, rightY2 + 160).setDuration(time);
+        AnimatorSet animatorStarSet = new AnimatorSet();
+        animatorStarSet.setInterpolator(new LinearInterpolator());
+        animatorStarSet.playTogether(translationX, translationY);
+        animatorStarSet.start();
         new Handler().postDelayed(() -> {
             binding.ivStar2.setVisibility(View.GONE);
         }, time);
@@ -147,12 +147,12 @@ public class SuperLikePW extends BasePopupWindow {
 
     private void start3() {
         binding.ivStar3.setVisibility(View.VISIBLE);
-        ivStar3X = ObjectAnimator.ofFloat(binding.ivStar3, "translationX", 0, leftX1 + 50, leftX2 - 150).setDuration(time);
-        ivStar3Y = ObjectAnimator.ofFloat(binding.ivStar3, "translationY", 0, leftY1 - 150, leftY2 + 150).setDuration(time);
-
-        animatorSet.setInterpolator(new LinearInterpolator());
-        animatorSet.playTogether(ivStar3X, ivStar3Y);
-        animatorSet.start();
+        translationX = ObjectAnimator.ofFloat(binding.ivStar3, "translationX", 0, leftX1 + 50, leftX2 - 150).setDuration(time);
+        translationY = ObjectAnimator.ofFloat(binding.ivStar3, "translationY", 0, leftY1 - 150, leftY2 + 150).setDuration(time);
+        AnimatorSet animatorStarSet = new AnimatorSet();
+        animatorStarSet.setInterpolator(new LinearInterpolator());
+        animatorStarSet.playTogether(translationX, translationY);
+        animatorStarSet.start();
         new Handler().postDelayed(() -> {
             binding.ivStar3.setVisibility(View.GONE);
         }, time);
@@ -164,12 +164,12 @@ public class SuperLikePW extends BasePopupWindow {
 
     private void start4() {
         binding.ivStar4.setVisibility(View.VISIBLE);
-        ivStar4X = ObjectAnimator.ofFloat(binding.ivStar4, "translationX", 0, rightX1 - 60, rightX2 + 90).setDuration(time);
-        ivStar4Y = ObjectAnimator.ofFloat(binding.ivStar4, "translationY", 0, rightY1 - 160, rightY2 + 190).setDuration(time);
-
-        animatorSet.setInterpolator(new LinearInterpolator());
-        animatorSet.playTogether(ivStar4X, ivStar4Y);
-        animatorSet.start();
+        translationX = ObjectAnimator.ofFloat(binding.ivStar4, "translationX", 0, rightX1 - 60, rightX2 + 90).setDuration(time);
+        translationY = ObjectAnimator.ofFloat(binding.ivStar4, "translationY", 0, rightY1 - 160, rightY2 + 190).setDuration(time);
+        AnimatorSet animatorStarSet = new AnimatorSet();
+        animatorStarSet.setInterpolator(new LinearInterpolator());
+        animatorStarSet.playTogether(translationX, translationY);
+        animatorStarSet.start();
         new Handler().postDelayed(() -> {
             binding.ivStar4.setVisibility(View.GONE);
         }, time);
@@ -181,12 +181,12 @@ public class SuperLikePW extends BasePopupWindow {
 
     private void start5() {
         binding.ivStar5.setVisibility(View.VISIBLE);
-        ivStar5X = ObjectAnimator.ofFloat(binding.ivStar5, "translationX", 0, leftX1 - 70, leftX2 + 170).setDuration(time);
-        ivStar5Y = ObjectAnimator.ofFloat(binding.ivStar5, "translationY", 0, leftY1 + 180, leftY2 + 100).setDuration(time);
-
-        animatorSet.setInterpolator(new LinearInterpolator());
-        animatorSet.playTogether(ivStar5X, ivStar5Y);
-        animatorSet.start();
+        translationX = ObjectAnimator.ofFloat(binding.ivStar5, "translationX", 0, leftX1 - 70, leftX2 + 170).setDuration(time);
+        translationY = ObjectAnimator.ofFloat(binding.ivStar5, "translationY", 0, leftY1 + 180, leftY2 + 100).setDuration(time);
+        AnimatorSet animatorStarSet = new AnimatorSet();
+        animatorStarSet.setInterpolator(new LinearInterpolator());
+        animatorStarSet.playTogether(translationX, translationY);
+        animatorStarSet.start();
         new Handler().postDelayed(() -> {
             binding.ivStar5.setVisibility(View.GONE);
         }, time);
@@ -198,12 +198,12 @@ public class SuperLikePW extends BasePopupWindow {
 
     private void start6() {
         binding.ivStar6.setVisibility(View.VISIBLE);
-        ivStar6X = ObjectAnimator.ofFloat(binding.ivStar6, "translationX", 0, rightX1 - 40, rightX2 + 180).setDuration(time);
-        ivStar6Y = ObjectAnimator.ofFloat(binding.ivStar6, "translationY", 0, rightY1 + 60, rightY2 - 90).setDuration(time);
-
-        animatorSet.setInterpolator(new LinearInterpolator());
-        animatorSet.playTogether(ivStar6X, ivStar6Y);
-        animatorSet.start();
+        translationX = ObjectAnimator.ofFloat(binding.ivStar6, "translationX", 0, rightX1 - 40, rightX2 + 180).setDuration(time);
+        translationY = ObjectAnimator.ofFloat(binding.ivStar6, "translationY", 0, rightY1 + 60, rightY2 - 90).setDuration(time);
+        AnimatorSet animatorStarSet = new AnimatorSet();
+        animatorStarSet.setInterpolator(new LinearInterpolator());
+        animatorStarSet.playTogether(translationX, translationY);
+        animatorStarSet.start();
         new Handler().postDelayed(() -> {
             binding.ivStar6.setVisibility(View.GONE);
         }, time);

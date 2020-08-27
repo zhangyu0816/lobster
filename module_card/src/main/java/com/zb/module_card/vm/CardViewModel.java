@@ -149,7 +149,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     superLikeStatus = 2;
                     currentView.postDelayed(() -> cardCallback.swiped(currentView, ItemTouchHelper.RIGHT), 800);
                     String myHead = mineInfo.getImage();
-                    String otherHead = pairInfo.getMoreImages().split("#")[0];
+                    String otherHead = pairInfo.getSingleImage();
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), pairInfo.getSex(), null);
                 }
             }
@@ -601,7 +601,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         rotationOut = ObjectAnimator.ofFloat(mBinding.cardRelative, "rotation", -45, 0).setDuration(500);
         translationOutX = ObjectAnimator.ofFloat(mBinding.cardRelative, "translationX", -MineApp.W, 0).setDuration(500);
         alphaOut = ObjectAnimator.ofFloat(mBinding.cardRelative, "alpha", 0, 1).setDuration(500);
-
 
         animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.play(rotationOut).with(translationOutX).with(alphaOut);

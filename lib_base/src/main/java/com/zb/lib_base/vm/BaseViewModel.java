@@ -214,40 +214,34 @@ public class BaseViewModel implements BaseVMInterface {
         return screenHeight * 2 / 3 > rect.bottom;
     }
 
-    private ObjectAnimator scaleViewX, scaleViewY, alphaView;
-    private AnimatorSet animatorViewSet = new AnimatorSet();
+    private ObjectAnimator scaleX, scaleY, alpha, scaleAfterX, scaleAfterY;
+    private AnimatorSet animatorSet = new AnimatorSet();
 
     public void playAnimator(View view) {
-        scaleViewX = ObjectAnimator.ofFloat(view, "scaleX", 0.5f, 1).setDuration(2000);
-        scaleViewY = ObjectAnimator.ofFloat(view, "scaleY", 0.5f, 1).setDuration(2000);
-        alphaView = ObjectAnimator.ofFloat(view, "alpha", 1, 0).setDuration(2000);
+        scaleX = ObjectAnimator.ofFloat(view, "scaleX", 0.5f, 1).setDuration(2000);
+        scaleY = ObjectAnimator.ofFloat(view, "scaleY", 0.5f, 1).setDuration(2000);
+        alpha = ObjectAnimator.ofFloat(view, "alpha", 1, 0).setDuration(2000);
 
-        scaleViewX.setRepeatCount(Animation.INFINITE);
-        scaleViewX.setRepeatMode(ValueAnimator.RESTART);
+        scaleX.setRepeatCount(Animation.INFINITE);
+        scaleX.setRepeatMode(ValueAnimator.RESTART);
 
-        scaleViewY.setRepeatCount(Animation.INFINITE);
-        scaleViewY.setRepeatMode(ValueAnimator.RESTART);
+        scaleY.setRepeatCount(Animation.INFINITE);
+        scaleY.setRepeatMode(ValueAnimator.RESTART);
 
-        alphaView.setRepeatCount(Animation.INFINITE);
-        alphaView.setRepeatMode(ValueAnimator.RESTART);
+        alpha.setRepeatCount(Animation.INFINITE);
+        alpha.setRepeatMode(ValueAnimator.RESTART);
 
-        animatorViewSet.setInterpolator(new LinearInterpolator());
-        animatorViewSet.playTogether(scaleViewX, scaleViewY, alphaView);//同时执行
-        animatorViewSet.start();
+        animatorSet.setInterpolator(new LinearInterpolator());
+        animatorSet.playTogether(scaleX, scaleY, alpha);//同时执行
+        animatorSet.start();
     }
 
-    private ObjectAnimator scaleLikeX, scaleLikeY;
-    private AnimatorSet animatorLikeSet = new AnimatorSet();
-
     public void likeOrNot(View view) {
-
-        scaleLikeX = ObjectAnimator.ofFloat(view, "scaleX", 0, 1, 0.8f, 1).setDuration(500);
-        scaleLikeY = ObjectAnimator.ofFloat(view, "scaleY", 0, 1, 0.8f, 1).setDuration(500);
-
-        animatorLikeSet.setInterpolator(new LinearInterpolator());
-        animatorLikeSet.play(scaleLikeX).with(scaleLikeY);
-        animatorLikeSet.start();
-
+        scaleX = ObjectAnimator.ofFloat(view, "scaleX", 0, 1, 0.8f, 1).setDuration(500);
+        scaleY = ObjectAnimator.ofFloat(view, "scaleY", 0, 1, 0.8f, 1).setDuration(500);
+        animatorSet.setInterpolator(new LinearInterpolator());
+        animatorSet.play(scaleX).with(scaleY);
+        animatorSet.start();
     }
 
     public void openBottle() {
@@ -266,10 +260,7 @@ public class BaseViewModel implements BaseVMInterface {
         }
     }
 
-    private ObjectAnimator scaleX, scaleY, scaleAfterX, scaleAfterY, alpha;
-    private AnimatorSet animatorSet = new AnimatorSet();
     private Handler mHandler = new Handler();
-
     private long exitTime = 0;
 
     @SuppressLint("ClickableViewAccessibility")
