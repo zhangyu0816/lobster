@@ -90,6 +90,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
     private String downloadPath = "";
     private int videoWidth, videoHeight;
     private List<Review> reviewList = new ArrayList<>();
+    private List<Review> tempList = new ArrayList<>();
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -364,9 +365,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
                 data.putExtra("goodNum", goodNum);
                 data.putExtra("friendDynId", friendDynId);
                 activity.sendBroadcast(data);
-                reviewList.clear();
                 seeLikers(1);
-                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -376,6 +375,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
                         goodDb.saveGood(new CollectID(friendDynId));
                         mBinding.setGoodDb(goodDb);
                         Intent data = new Intent("lobster_doGood");
+                        data.putExtra("goodNum", discoverInfo.getGoodNum());
                         data.putExtra("friendDynId", friendDynId);
                         activity.sendBroadcast(data);
                     }
@@ -471,7 +471,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
             public void onNext(List<Review> o) {
                 for (Review item : o) {
                     item.setType(1);
-                    reviewList.add(item);
+                    tempList.add(item);
                 }
                 seeLikers(pageNo + 1);
             }
@@ -493,7 +493,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
             public void onNext(List<Review> o) {
                 for (Review item : o) {
                     item.setType(2);
-                    reviewList.add(item);
+                    tempList.add(item);
                 }
                 seeReviews(pageNo + 1);
             }
@@ -501,8 +501,12 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    Collections.sort(reviewList, new CreateTimeComparator());
-                    if (reviewList.size() > 0) {
+                    Collections.sort(tempList, new CreateTimeComparator());
+                    if (tempList.size() > 0) {
+                        reviewList.clear();
+                        adapter.notifyDataSetChanged();
+                        reviewList.addAll(tempList);
+                        tempList.clear();
                         mBinding.reviewList.setVisibility(View.VISIBLE);
                         if (reviewList.size() > 4) {
                             mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(650)));

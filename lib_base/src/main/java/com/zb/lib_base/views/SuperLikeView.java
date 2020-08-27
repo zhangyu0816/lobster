@@ -11,6 +11,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
 
 import com.zb.lib_base.R;
+import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.databinding.SuperLikeBinding;
 import com.zb.lib_base.iv.SuperLikeInterface;
 import com.zb.lib_base.model.PairInfo;
@@ -50,8 +51,8 @@ public class SuperLikeView extends RelativeLayout {
     private void init(Context context) {
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.super_like, null, false);
         addView(mBinding.getRoot());
-        mBinding.likeLayout.setOnClickListener(view -> mSuperLikeInterface.superLike(mCurrentView, mPairInfo));
-        mBinding.returnLayout.setOnClickListener(view -> mSuperLikeInterface.returnBack());
+        AdapterBinding.onClick(mBinding.likeLayout, view -> mSuperLikeInterface.superLike(mCurrentView, mPairInfo));
+        AdapterBinding.onClick(mBinding.returnLayout, view -> mSuperLikeInterface.returnBack());
         play();
     }
 

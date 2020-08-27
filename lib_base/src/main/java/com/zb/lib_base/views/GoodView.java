@@ -78,7 +78,9 @@ public class GoodView extends RelativeLayout {
     public static void likeStatus(GoodView view, boolean isLike) {
         if (isLike) {
             view.findViewById(R.id.iv_like).setVisibility(VISIBLE);
+            view.findViewById(R.id.iv_unLike).setVisibility(GONE);
         } else {
+            view.findViewById(R.id.iv_like).setVisibility(GONE);
             view.findViewById(R.id.iv_unLike).setVisibility(VISIBLE);
         }
     }

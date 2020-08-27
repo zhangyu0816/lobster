@@ -19,12 +19,6 @@
         <variable
             name="item"
             type="com.zb.lib_base.model.DiscoverInfo" />
-
-        <variable
-            name="hasGood"
-            type="boolean" />
-
-
     </data>
 
     <RelativeLayout
@@ -64,7 +58,7 @@
 
                 <com.zb.lib_base.views.GoodView
                     android:id="@+id/good_view"
-                    isLike="@{hasGood}"
+                    isLike="@{viewModel.goodDb.hasGood(item.friendDynId)}"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_marginStart="5dp"

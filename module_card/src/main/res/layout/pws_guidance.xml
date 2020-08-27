@@ -31,8 +31,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/linearLayout2">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/textView"
@@ -66,28 +65,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/textView"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="30dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
                 <RelativeLayout
-                    viewHeightSize="@{ObjectUtils.getLogoHeight(0.92f)}"
-                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.92f)}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <View
-                        viewHeightSize="@{ObjectUtils.getLogoHeight(0.92f)}"
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.92f)}"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_centerInParent="true" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
                     <ImageView
                         viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(654,741)}"
                         viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(654)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
                         android:background="@mipmap/guidance_left"
                         android:visibility="@{position==1?View.VISIBLE:View.GONE}" />
 
@@ -106,7 +99,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginBottom="44dp"
+                        android:layout_marginBottom="130dp"
                         android:background="@mipmap/guidance_info"
                         android:visibility="@{position==3?View.VISIBLE:View.GONE}" />
 
@@ -117,8 +110,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginEnd="12dp"
-                        android:layout_marginBottom="54dp"
+                        android:layout_marginEnd="11dp"
+                        android:layout_marginBottom="121dp"
                         android:background="@mipmap/guidance_return"
                         android:visibility="@{position==4?View.VISIBLE:View.GONE}" />
 
@@ -130,8 +123,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginEnd="12dp"
-                        android:layout_marginBottom="12dp"
+                        android:layout_marginEnd="11dp"
+                        android:layout_marginBottom="79dp"
                         android:background="@mipmap/guidance_super"
                         android:visibility="@{position==5?View.VISIBLE:View.INVISIBLE}" />
                 </RelativeLayout>
@@ -149,25 +142,5 @@
                 android:visibility="@{position==6?View.VISIBLE:View.GONE}" />
         </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="match_parent"
-            android:layout_height="74dp"
-            android:layout_alignParentBottom="true"
-            android:background="@android:color/white"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:visibility="invisible">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/chat_select_icon"
-                android:drawablePadding="5dp"
-                android:gravity="center"
-                android:text="广场"
-                android:textSize="12sp" />
-        </LinearLayout>
     </RelativeLayout>
 </layout>

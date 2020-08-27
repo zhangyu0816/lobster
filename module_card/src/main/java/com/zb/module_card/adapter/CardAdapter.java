@@ -5,14 +5,12 @@ import android.view.View;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.adapter.BindingItemAdapter;
 import com.zb.lib_base.adapter.RecyclerHolder;
-import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.PairInfo;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;
 import com.zb.module_card.vm.MemberDetailViewModel;
-import com.zb.module_card.vm.MemberVideoViewModel;
 
 import java.util.List;
 import java.util.Random;
@@ -75,12 +73,6 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
         }
         if (pw != null) {
             holder.binding.setVariable(BR.pw, pw);
-        }
-
-        if (viewModel instanceof MemberVideoViewModel) {
-            DiscoverInfo discoverInfo = (DiscoverInfo) t;
-            boolean hasGood = viewModel.goodDb.hasGood(discoverInfo.getFriendDynId());
-            holder.binding.setVariable(BR.hasGood, hasGood);
         }
 
         if (viewModel instanceof MemberDetailViewModel) {

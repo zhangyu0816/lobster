@@ -8,12 +8,14 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.humanFaceStatusApi;
 import com.zb.lib_base.api.loginOutApi;
+import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.FaceStatus;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.PreferenceUtil;
@@ -48,7 +50,6 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
         super.setBinding(binding);
         mBinding = (MineSettingBinding) binding;
         mineInfo = mineInfoDb.getMineInfo();
-        mBinding.setVariable(BR.walletInfo, MineApp.walletInfo);
         updateWalletReceiver = new BaseReceiver(activity, "lobster_updateWallet") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -83,6 +84,8 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
                 mBinding.setAgeName(MineApp.minAge + "-" + MineApp.maxAge + "+");
             }
         });
+
+        walletAndPop();
     }
 
     public void onDestroy() {
@@ -196,6 +199,18 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     mBinding.setIsChecked(-1);
                 }
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void walletAndPop() {
+        walletAndPopApi api = new walletAndPopApi(new HttpOnNextListener<WalletInfo>() {
+            @Override
+            public void onNext(WalletInfo o) {
+                MineApp.walletInfo = o;
+                mBinding.setVariable(BR.walletInfo, MineApp.walletInfo);
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

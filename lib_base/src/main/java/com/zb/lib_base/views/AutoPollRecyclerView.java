@@ -11,7 +11,6 @@ import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.Xfermode;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -58,7 +57,6 @@ public class AutoPollRecyclerView extends RecyclerView {
 
         @Override
         public void run() {
-            Log.e("AutoPollRecyclerView", System.currentTimeMillis() + "");
             AutoPollRecyclerView recyclerView = (AutoPollRecyclerView) mReference.get();
             if (recyclerView != null && recyclerView.running && recyclerView.canRun) {
                 recyclerView.scrollBy(0, 2);

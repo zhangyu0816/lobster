@@ -31,4 +31,6 @@ public interface SettingVMInterface {
     void loginOut();
 
     void humanFaceStatus();
+
+    void walletAndPop();
 }

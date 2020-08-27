@@ -462,6 +462,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                         goodDb.saveGood(new CollectID(friendDynId));
                         mBinding.setViewModel(DiscoverDetailViewModel.this);
                         Intent data = new Intent("lobster_doGood");
+                        data.putExtra("goodNum", discoverInfo.getGoodNum());
                         data.putExtra("friendDynId", friendDynId);
                         activity.sendBroadcast(data);
                     }

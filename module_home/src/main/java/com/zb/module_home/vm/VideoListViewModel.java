@@ -240,6 +240,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         new ReviewPW(activity, mBinding.getRoot(), discoverInfo.getFriendDynId(), discoverInfo.getReviews(), () -> {
             discoverInfo.setReviews(discoverInfo.getReviews() + 1);
             tvReviews.setText(ObjectUtils.count(discoverInfo.getReviews()));
+            seeLikers(1);
         });
     }
 
@@ -431,10 +432,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 data.putExtra("goodNum", goodNum);
                 data.putExtra("friendDynId", discoverInfo.getFriendDynId());
                 activity.sendBroadcast(data);
-
-                reviewList.clear();
                 seeLikers(1);
-                reviewAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -443,6 +441,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                     if (TextUtils.equals(e.getMessage(), "已经赞过了")) {
                         goodDb.saveGood(new CollectID(discoverInfo.getFriendDynId()));
                         Intent data = new Intent("lobster_doGood");
+                        data.putExtra("goodNum", discoverInfo.getGoodNum());
                         data.putExtra("friendDynId", discoverInfo.getFriendDynId());
                         activity.sendBroadcast(data);
                     }
@@ -499,6 +498,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     private AutoPollRecyclerView reviewListView;
     private HomeAdapter reviewAdapter;
     private List<Review> reviewList = new ArrayList<>();
+    private List<Review> tempList = new ArrayList<>();
     private VideoView lastVideoView;
 
     private void playVideo(View view) {
@@ -574,7 +574,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             public void onNext(List<Review> o) {
                 for (Review item : o) {
                     item.setType(1);
-                    reviewList.add(item);
+                    tempList.add(item);
                 }
                 seeLikers(pageNo + 1);
             }
@@ -595,7 +595,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             public void onNext(List<Review> o) {
                 for (Review item : o) {
                     item.setType(2);
-                    reviewList.add(item);
+                    tempList.add(item);
                 }
                 seeReviews(pageNo + 1);
             }
@@ -603,8 +603,12 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    Collections.sort(reviewList, new CreateTimeComparator());
-                    if (reviewList.size() > 0) {
+                    Collections.sort(tempList, new CreateTimeComparator());
+                    if (tempList.size() > 0) {
+                        reviewList.clear();
+                        reviewAdapter.notifyDataSetChanged();
+                        reviewList.addAll(tempList);
+                        tempList.clear();
                         reviewListView.setVisibility(View.VISIBLE);
                         if (reviewList.size() > 4) {
                             reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(650)));

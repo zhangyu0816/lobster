@@ -13,6 +13,7 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.Reward;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
@@ -93,6 +94,11 @@ public class RewardListViewModel extends BaseViewModel implements RewardListVMIn
                 .setRewardSortType(2)
                 .setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void toMemberDetail(Reward reward) {
+        ActivityUtils.getCardMemberDetail(reward.getUserId(),false);
     }
 
     @Override
