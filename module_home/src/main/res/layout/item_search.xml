@@ -80,9 +80,6 @@
                 android:textColor="@color/black_9"
                 android:textSize="14sp"
                 tools:text="无个性，不签名" />
-
         </LinearLayout>
-
     </LinearLayout>
-
 </layout>

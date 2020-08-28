@@ -22,6 +22,7 @@ import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.ObjectUtils;
@@ -30,13 +31,9 @@ import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BottleQuestionPW;
 import com.zb.module_bottle.BR;
 import com.zb.module_bottle.R;
-import com.zb.module_bottle.adapter.BottleAdapter;
 import com.zb.module_bottle.databinding.BottleThrowBinding;
 import com.zb.module_bottle.iv.BottleThrowVMInterface;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.zb.module_bottle.windows.BottleVipPW;
 
 import androidx.databinding.ViewDataBinding;
 
@@ -52,12 +49,12 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     private BottleInfo bottleInfo;
     private boolean isFirst = true;
     private int throwIndex = 0;
-    public BottleAdapter adapter;
-    private List<String> imageList = new ArrayList<>();
 
     private long friendDynId = 0;
+    private long otherUserId = 0;
     private boolean canClose = true;
     private ObjectAnimator translateX, scaleX, scaleY, alpha;
+    private MineInfo mineInfo;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -68,6 +65,8 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         mBinding.edContent.setTypeface(MineApp.QingSongShouXieTiType);
         mBinding.setMemberInfo(new MemberInfo());
         mBinding.setInfo("");
+
+        mineInfo = mineInfoDb.getMineInfo();
         updateContactNumReceiver = new BaseReceiver(activity, "lobster_updateContactNum") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -110,12 +109,6 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
             mBinding.firstLayout.setVisibility(View.GONE);
             mBinding.bottleWhiteBack.bottleBg.startBg();
         }, time);
-        setAdapter();
-    }
-
-    @Override
-    public void setAdapter() {
-        adapter = new BottleAdapter<>(activity, R.layout.item_discover_image, imageList, this);
     }
 
     public void onDestroy() {
@@ -240,6 +233,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
             public void onNext(DiscoverInfo o) {
                 canClose = true;
                 friendDynId = o.getFriendDynId();
+                otherUserId = o.getUserId();
                 mBinding.setIsBottle(true);
                 mBinding.setShowBottleTop(true);
                 throwIndex = 2;
@@ -255,10 +249,6 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
 
                 mBinding.edContent.setText(o.getText().isEmpty() ? o.getFriendTitle() : o.getText());
                 mBinding.setHasImage(!o.getImages().isEmpty());
-                if (!o.getImages().isEmpty()) {
-                    imageList.addAll(Arrays.asList(o.getImages().split(",")));
-                    adapter.notifyDataSetChanged();
-                }
                 mBinding.setInfo((o.getSex() == 0 ? "女 " : "男 ") + DateUtil.getAge(o.getBirthday(), o.getAge()) + "岁 " + DateUtil.getConstellations(o.getBirthday()));
             }
         }, activity);
@@ -287,11 +277,13 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     }
 
     @Override
-    public void entryDiscover(View view) {
-        if (friendDynId != 0) {
-            ActivityUtils.getHomeDiscoverDetail(friendDynId);
+    public void toMemberDetail(View view) {
+        if (mineInfo.getMemberType() == 2) {
+            ActivityUtils.getCardMemberDetail(otherUserId, false);
             close(null);
+            return;
         }
+        new BottleVipPW(activity, mBinding.getRoot());
     }
 
     @Override

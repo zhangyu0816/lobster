@@ -12,7 +12,7 @@ public interface BottleThrowVMInterface {
 
     void sure(View view);
 
-    void entryDiscover(View view);
+    void toMemberDetail(View view);
 
     void cancel(View view);
 

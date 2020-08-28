@@ -326,7 +326,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 }, 1000);
             }
         }
-        getPermissions();
+//        getPermissions();
 
         handler.sendEmptyMessageDelayed(0, time);
     }
