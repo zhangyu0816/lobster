@@ -14,8 +14,8 @@
         viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(160)}"
         viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(160)}"
         android:layout_width="match_parent"
-        android:layout_marginEnd="15dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp">
 
         <ImageView
             viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(160)}"

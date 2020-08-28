@@ -288,9 +288,10 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
 
     @Override
     public void entryDiscover(View view) {
-        if (friendDynId != 0)
+        if (friendDynId != 0) {
             ActivityUtils.getHomeDiscoverDetail(friendDynId);
-        close(null);
+            close(null);
+        }
     }
 
     @Override

@@ -189,7 +189,7 @@
                 onClickDelayed="@{viewModel::close}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="62dp"/>
+                android:layout_marginTop="62dp" />
 
             <RelativeLayout
                 android:id="@+id/top_layout"
@@ -299,20 +299,16 @@
                     android:textStyle="bold" />
             </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:id="@+id/content_layout"
                 viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(1200)}"
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(1050)}"
-                onClickDelayed="@{viewModel::entryDiscover}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/top_layout"
                 android:layout_centerHorizontal="true"
                 android:background="@mipmap/bottle_content_bg"
-                android:orientation="vertical"
-                android:paddingStart="30dp"
                 android:paddingTop="80dp"
-                android:paddingEnd="30dp"
                 android:paddingBottom="80dp">
 
                 <RelativeLayout
@@ -320,6 +316,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
+                    android:paddingStart="30dp"
+                    android:paddingEnd="30dp"
                     android:visibility="@{hasImage?View.VISIBLE:View.GONE}">
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -345,19 +343,27 @@
                     viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(1050)}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/discover_layout"
                     android:background="@null"
                     android:gravity="top"
                     android:hint='@{throwIndex==2?"":@string/tv_context}'
                     android:lineSpacingExtra="15dp"
                     android:maxLength="100"
                     android:minLines="5"
+                    android:paddingStart="30dp"
+                    android:paddingEnd="30dp"
                     android:textColor="@color/black_252"
                     android:textColorHint="@color/black_9"
                     android:textCursorDrawable="@drawable/cursor_color_black_4d4"
                     android:textSize="20sp"
                     tools:text="是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类是会计访问了就我法律文件法律文件分类" />
 
-            </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    onClickDelayed="@{viewModel::entryDiscover}"
+                    android:visibility="@{throwIndex==2?View.VISIBLE:View.GONE}" />
+            </RelativeLayout>
 
             <ImageView
                 android:id="@+id/iv_throw"
