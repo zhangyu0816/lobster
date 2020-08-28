@@ -93,6 +93,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     public BaseReceiver locationReceiver;
     public BaseReceiver openVipReceiver;
     public BaseReceiver mainSelectReceiver;
+    public BaseReceiver isLikeReceiver;
     private List<PairInfo> disLikeList = new ArrayList<>();
     private CardAdapter disListAdapter;
     private List<String> imageList = new ArrayList<>();
@@ -112,7 +113,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         areaDb = new AreaDb(Realm.getDefaultInstance());
         likeDb = new LikeDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
-        MineApp.sex = mineInfo.getSex() == 0 ? 1 : 0;
         aMapLocation = new AMapLocation(activity);
         mBinding = (CardFragBinding) binding;
 
@@ -178,6 +178,17 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 prePairList(true);
             }
         };
+
+        isLikeReceiver = new BaseReceiver(activity, "lobster_isLike") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (mineInfo.getMemberType() == 1) {
+                    likeCount--;
+                    updateCount(likeCount);
+                }
+            }
+        };
+
         RelativeLayout.LayoutParams paramsS = (RelativeLayout.LayoutParams) mBinding.ivDislike.getLayoutParams();
         paramsS.setMarginStart(0 - ObjectUtils.getViewSizeByWidthFromMax(200));
         mBinding.ivDislike.setLayoutParams(paramsS);
@@ -553,7 +564,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             likeOtherStatus = 0;
             disLikeList.add(0, pairInfo);
         }
-        if (superLikeStatus == 0 && likeOtherStatus == 1) {
+        if (superLikeStatus == 0 && likeOtherStatus == 1 && mineInfo.getMemberType() == 1) {
             likeCount--;
             updateCount(likeCount);
         }
@@ -564,7 +575,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     private void updateCount(int likeCount) {
         if (likeCount >= 0) {
             mBinding.setLikeCount(likeCount);
-            mBinding.setShowCount(likeCount != 0);
+            mBinding.setShowCount(likeCount > 0);
         }
     }
 

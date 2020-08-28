@@ -57,7 +57,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
 
     private long friendDynId = 0;
     private boolean canClose = true;
-    private ObjectAnimator translateX,scaleX,scaleY,alpha;
+    private ObjectAnimator translateX, scaleX, scaleY, alpha;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -284,6 +284,13 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
             ActivityUtils.getHomeDiscoverDetail(friendDynId);
             close(null);
         }
+    }
+
+    @Override
+    public void entryDiscover(View view) {
+        if (friendDynId != 0)
+            ActivityUtils.getHomeDiscoverDetail(friendDynId);
+        close(null);
     }
 
     @Override

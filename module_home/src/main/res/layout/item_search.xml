@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:singleLine="true"
-                android:text='@{item.personalitySign}'
+                android:text='@{item.serviceTags.isEmpty()?"":item.serviceTags.substring(1).replace("#"," ")}'
                 android:textColor="@color/black_9"
                 android:textSize="14sp"
                 tools:text="无个性，不签名" />

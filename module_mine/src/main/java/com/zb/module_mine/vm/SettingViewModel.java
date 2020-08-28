@@ -82,6 +82,8 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
                 MineApp.minAge = minValue;
                 MineApp.maxAge = maxValue;
                 mBinding.setAgeName(MineApp.minAge + "-" + MineApp.maxAge + "+");
+                PreferenceUtil.saveIntValue(activity, "myMinAge", MineApp.minAge);
+                PreferenceUtil.saveIntValue(activity, "myMaxAge", MineApp.maxAge);
             }
         });
 
@@ -97,6 +99,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
         new SelectorPW(activity, mBinding.getRoot(), selectList, position -> {
             mBinding.setSexName(selectList.get(position));
             MineApp.sex = position == 2 ? -1 : position;
+            PreferenceUtil.saveIntValue(activity, "mySex", MineApp.sex);
             activity.sendBroadcast(new Intent("lobster_location"));
         });
     }

@@ -34,5 +34,6 @@ public class CardFragment extends BaseFragment {
         viewModel.locationReceiver.unregisterReceiver();
         viewModel.openVipReceiver.unregisterReceiver();
         viewModel.mainSelectReceiver.unregisterReceiver();
+        viewModel.isLikeReceiver.unregisterReceiver();
     }
 }

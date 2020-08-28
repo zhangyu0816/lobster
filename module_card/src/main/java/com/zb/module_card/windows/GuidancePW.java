@@ -31,7 +31,7 @@ public class GuidancePW extends BasePopupWindow {
     public void selectIndex(int position) {
         super.selectIndex(position);
         mBinding.setVariable(BR.position, position + 1);
-        if (position == 6) {
+        if (position == 8) {
             PreferenceUtil.saveIntValue(activity, "showGuidance",1);
             dismiss();
         }

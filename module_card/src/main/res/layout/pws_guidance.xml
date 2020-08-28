@@ -82,7 +82,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@mipmap/guidance_left"
-                        android:visibility="@{position==1?View.VISIBLE:View.GONE}" />
+                        android:visibility="@{position==3?View.VISIBLE:View.GONE}" />
 
                     <ImageView
                         viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(607,696)}"
@@ -91,7 +91,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:background="@mipmap/guidance_right"
-                        android:visibility="@{position==2?View.VISIBLE:View.GONE}" />
+                        android:visibility="@{position==4?View.VISIBLE:View.GONE}" />
 
                     <ImageView
                         viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(474,509)}"
@@ -101,7 +101,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_marginBottom="130dp"
                         android:background="@mipmap/guidance_info"
-                        android:visibility="@{position==3?View.VISIBLE:View.GONE}" />
+                        android:visibility="@{position==5?View.VISIBLE:View.GONE}" />
 
                     <ImageView
                         viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(466,280)}"
@@ -113,7 +113,7 @@
                         android:layout_marginEnd="11dp"
                         android:layout_marginBottom="121dp"
                         android:background="@mipmap/guidance_return"
-                        android:visibility="@{position==4?View.VISIBLE:View.GONE}" />
+                        android:visibility="@{position==6?View.VISIBLE:View.GONE}" />
 
                     <ImageView
                         android:id="@+id/iv_super_like"
@@ -126,7 +126,7 @@
                         android:layout_marginEnd="11dp"
                         android:layout_marginBottom="79dp"
                         android:background="@mipmap/guidance_super"
-                        android:visibility="@{position==5?View.VISIBLE:View.INVISIBLE}" />
+                        android:visibility="@{position==7?View.VISIBLE:View.INVISIBLE}" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -139,7 +139,28 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="10dp"
                 android:background="@mipmap/guidance_exposure"
-                android:visibility="@{position==6?View.VISIBLE:View.GONE}" />
+                android:visibility="@{position==8?View.VISIBLE:View.GONE}" />
+
+            <ImageView
+                viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(604,667)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(604)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="20dp"
+                android:background="@mipmap/guidance_like"
+                android:visibility="@{position==1?View.VISIBLE:View.GONE}" />
+
+            <ImageView
+                viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(618,717)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(618)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+                android:background="@mipmap/guidance_dislike"
+                android:visibility="@{position==2?View.VISIBLE:View.GONE}" />
         </RelativeLayout>
 
     </RelativeLayout>

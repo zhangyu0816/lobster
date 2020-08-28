@@ -134,7 +134,9 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         mineInfo = mineInfoDb.getMineInfo();
 
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
-        MineApp.sex = mineInfo.getSex() == 0 ? 1 : 0;
+        MineApp.sex = PreferenceUtil.readIntValue(activity, "mySex", -2) == -2 ? (mineInfo.getSex() == 0 ? 1 : 0) : PreferenceUtil.readIntValue(activity, "mySex", -2);
+        MineApp.minAge = PreferenceUtil.readIntValue(activity, "myMinAge", 18);
+        MineApp.maxAge = PreferenceUtil.readIntValue(activity, "myMaxAge", 70);
 
         loginHelper = LoginSampleHelper.getInstance();
         loginHelper.loginOut_Sample();

@@ -303,6 +303,7 @@
                 android:id="@+id/content_layout"
                 viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(1200)}"
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(1050)}"
+                onClickDelayed="@{viewModel::entryDiscover}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/top_layout"

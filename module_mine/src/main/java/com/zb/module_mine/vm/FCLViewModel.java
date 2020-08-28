@@ -203,6 +203,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                         likeDb.deleteLike(otherUserId);
                     } else {
                         likeDb.saveLike(new CollectID(otherUserId));
+                        activity.sendBroadcast(new Intent("lobster_isLike"));
                     }
                     adapter.notifyItemChanged(_selectIndex);
                 } else if (o == 2) {
@@ -210,6 +211,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                     likeDb.saveLike(new CollectID(otherUserId));
                     adapter.notifyItemChanged(_selectIndex);
                     activity.sendBroadcast(new Intent("lobster_pairList"));
+                    activity.sendBroadcast(new Intent("lobster_isLike"));
                 } else if (o == 3) {
                     new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
                 } else if (o == 5) {

@@ -357,6 +357,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                         activity.finish();
                     } else if (likeOtherStatus == 1) {
                         likeDb.saveLike(new CollectID(otherUserId));
+                        activity.sendBroadcast(new Intent("lobster_isLike"));
                     } else if (likeOtherStatus == 2) {
                         if (showLike) {
                             // 不喜欢成功  喜欢成功  超级喜欢成功
@@ -374,6 +375,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), memberInfo.getSex(),
                             () -> ActivityUtils.getChatActivity(otherUserId));
                     activity.sendBroadcast(new Intent("lobster_pairList"));
+                    activity.sendBroadcast(new Intent("lobster_isLike"));
                 } else if (o == 3) {
                     // 喜欢次数用尽
                     new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
