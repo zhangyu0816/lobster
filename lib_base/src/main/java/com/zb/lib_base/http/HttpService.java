@@ -429,7 +429,7 @@ public interface HttpService {
 
     // 随机获取一条最新动态
     @GET("api/Interactive_randomNewDyn")
-    Observable<BaseResultEntity<DiscoverInfo>> randomNewDyn(@Query("sex") int sex);
+    Observable<BaseResultEntity<DiscoverInfo>> randomNewDyn(@QueryMap Map<String, String> map);
 
     /******************************* 我的 **********************************/
 

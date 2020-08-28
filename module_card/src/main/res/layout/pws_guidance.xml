@@ -146,9 +146,8 @@
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(604)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
                 android:background="@mipmap/guidance_like"
                 android:visibility="@{position==1?View.VISIBLE:View.GONE}" />
 
@@ -157,8 +156,9 @@
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(618)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
                 android:background="@mipmap/guidance_dislike"
                 android:visibility="@{position==2?View.VISIBLE:View.GONE}" />
         </RelativeLayout>

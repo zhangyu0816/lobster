@@ -22,7 +22,6 @@ public interface MainVMInterface {
 
     void newDynMsgAllNum(boolean isUpdate);
 
-    void systemChat();
 
     void chatList();
 

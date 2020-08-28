@@ -453,6 +453,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
                 } else if (o == 3) {
                     // 喜欢次数用尽
                     new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
+                    SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else if (o == 4) {
                     SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
 //                    new CountUsedPW(activity, mBinding.getRoot(), 2);
@@ -508,8 +509,8 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
                         reviewList.addAll(tempList);
                         tempList.clear();
                         mBinding.reviewList.setVisibility(View.VISIBLE);
-                        if (reviewList.size() > 4) {
-                            mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(650)));
+                        if (reviewList.size() > 2) {
+                            mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(325)));
                             mBinding.reviewList.start();
                         } else {
                             mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
@@ -592,7 +593,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
         ImageView iv = new ImageView(activity);
         int w = (int) (87f * 2 * (float) videoWidth / (float) MineApp.W);
         int h = (int) (39f * 2 * (float) videoWidth / (float) MineApp.W);
-        int size = (int) (9f * 2 * (float) videoWidth / (float) MineApp.W);
+        int size = (int) (7f * 2 * (float) videoWidth / (float) MineApp.W);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(w, h);
         params.leftMargin = 0;
         params.rightMargin = MineApp.W;
@@ -645,7 +646,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
         }
         outPutUrl = file.getAbsolutePath() + "/Camera/xg_" + BaseActivity.randomString(15) + ".mp4";
         imageUrl = BaseActivity.getImageFile().getAbsolutePath();
-        Bitmap bitmap = textToBitmap("虾菇号：" + memberInfo.getUserId());
+        Bitmap bitmap = textToBitmap("我的虾菇号：" + memberInfo.getUserId());
         getImage(bitmap);
 
         String[] common = addWaterMark(imageUrl, downloadPath, outPutUrl);

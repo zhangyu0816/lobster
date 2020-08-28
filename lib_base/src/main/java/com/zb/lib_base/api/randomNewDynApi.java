@@ -7,6 +7,9 @@ import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.model.BaseEntity;
 import com.zb.lib_base.model.DiscoverInfo;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import rx.Observable;
 
 public class randomNewDynApi extends BaseEntity<DiscoverInfo> {
@@ -18,6 +21,9 @@ public class randomNewDynApi extends BaseEntity<DiscoverInfo> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.randomNewDyn(MineApp.sex);
+        Map<String, String> map = new HashMap<>();
+        if (MineApp.sex != -1)
+            map.put("sex", MineApp.sex + "");
+        return methods.randomNewDyn(map);
     }
 }

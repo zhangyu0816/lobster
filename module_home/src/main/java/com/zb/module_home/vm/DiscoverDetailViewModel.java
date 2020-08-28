@@ -371,6 +371,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 } else if (o == 3) {
                     // 喜欢次数用尽
                     new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
+                    SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else if (o == 4) {
                     SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
 //                    new CountUsedPW(activity, mBinding.getRoot(), 2);
@@ -425,6 +426,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 onRefresh(mBinding.refresh);
             }
         }, activity).setFriendDynId(friendDynId).setText(mBinding.getContent()).setReviewId(reviewId);
+        api.setDialogTitle("发布评论");
         HttpManager.getInstance().doHttpDeal(api);
     }
 

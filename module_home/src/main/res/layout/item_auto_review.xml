@@ -32,35 +32,23 @@
             imageUrl="@{item.image}"
             isCircle="@{true}"
             onClickDelayed="@{v->viewModel.visitMember(item.userId)}"
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(100)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(100)}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(90)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(90)}"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="5dp" />
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="5dp"
             android:layout_marginEnd="15dp"
             android:layout_toEndOf="@+id/iv_logo"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/small_good_icon"
-                android:drawablePadding="5dp"
-                android:gravity="center"
-                android:singleLine="true"
-                android:text="@{item.nick}"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:visibility="@{item.type==1?View.VISIBLE:View.GONE}"
-                tools:text="啊啊啊" />
+            android:orientation="vertical"
+            android:visibility="@{item.type==1?View.GONE:View.VISIBLE}">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -85,7 +73,18 @@
                 android:textStyle="bold"
                 android:visibility="@{item.type==2?View.VISIBLE:View.GONE}"
                 tools:text="啊啊啊" />
-
         </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(66)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(66)}"
+            android:background="@drawable/small_good_icon"
+            android:layout_alignBottom="@+id/iv_logo"
+            android:layout_marginEnd="-5dp"
+            android:layout_marginBottom="-5dp"
+            android:layout_alignRight="@+id/iv_logo"
+            android:visibility="@{item.type==2?View.GONE:View.VISIBLE}"/>
     </RelativeLayout>
 </layout>

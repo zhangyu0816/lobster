@@ -38,9 +38,13 @@
 
         <RelativeLayout
             android:id="@+id/card_relative"
+            viewHeightSize="@{-1}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.94f)}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true">
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:layout_centerHorizontal="true">
 
             <ImageView
                 android:id="@+id/iv_big_image"
@@ -49,7 +53,7 @@
                 isRound="@{true}"
                 roundSize="@{10}"
                 viewHeightSize="@{-1}"
-                viewWidthSize="@{-1}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.94f)}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
@@ -233,9 +237,9 @@
 
             <com.zb.lib_base.views.SuperLikeView
                 android:id="@+id/iv_super_like"
+                currentView="@{currentView}"
                 pairInfo="@{item}"
                 superLikeInterface="@{viewModel}"
-                currentView="@{currentView}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -246,6 +250,28 @@
                 android:layout_marginBottom="15dp"
                 android:visibility="@{(item.singleImage.equals(@string/card_progress)||item.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}" />
 
+            <ImageView
+                android:id="@+id/iv_dislike"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(238)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(226)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="10dp"
+                android:background="@mipmap/dislike_icon"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/iv_like"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(238)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(226)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="10dp"
+                android:background="@mipmap/like_icon"
+                android:visibility="gone" />
         </RelativeLayout>
     </RelativeLayout>
 </layout>

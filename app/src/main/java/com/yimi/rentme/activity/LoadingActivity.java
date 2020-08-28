@@ -10,6 +10,7 @@ import com.yimi.rentme.R;
 import com.yimi.rentme.getui.DemoIntentService;
 import com.yimi.rentme.getui.DemoPushService;
 import com.yimi.rentme.vm.LoadingViewModel;
+import com.zb.lib_base.activity.BaseActivity;
 
 public class LoadingActivity extends AppBaseActivity {
     @Override
@@ -20,6 +21,7 @@ public class LoadingActivity extends AppBaseActivity {
     @Override
     public void initUI() {
         fitComprehensive();
+        BaseActivity.createFfmpegFile();
         // 个推注册
         PushManager.getInstance().initialize(this.getApplicationContext(), DemoPushService.class);
         PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), DemoIntentService.class);

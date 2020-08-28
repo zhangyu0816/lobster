@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
 
         <variable
             name="viewModel"
@@ -14,6 +17,9 @@
             name="recommendInfo"
             type="com.zb.lib_base.model.RecommendInfo" />
 
+        <variable
+            name="mineNewsCount"
+            type="com.zb.lib_base.model.MineNewsCount" />
     </data>
 
     <RelativeLayout
@@ -21,10 +27,51 @@
         android:layout_height="match_parent"
         android:background="@android:color/white">
 
+        <RelativeLayout
+            android:id="@+id/top_relative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp">
+
+            <ImageView
+                android:id="@+id/iv_news"
+                onClickDelayed="@{viewModel::toNews}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="20dp"
+                app:srcCompat="@mipmap/news_icon" />
+
+            <TextView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_alignEnd="@+id/iv_news"
+                android:layout_marginTop="13dp"
+                android:layout_marginEnd="13dp"
+                android:background="@drawable/circle_white_red"
+                android:gravity="center"
+                android:text="@{ObjectUtils.count(mineNewsCount.friendDynamicGoodNum+mineNewsCount.friendDynamicReviewNum+mineNewsCount.friendDynamicGiftNum+mineNewsCount.systemNewsNum)}"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"
+                android:visibility="@{(mineNewsCount.friendDynamicGoodNum+mineNewsCount.friendDynamicReviewNum+mineNewsCount.friendDynamicGiftNum+mineNewsCount.systemNewsNum)==0?View.GONE:View.VISIBLE}"
+                tools:text="···" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="对话"
+                android:textColor="@color/black_252"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="租我吧" />
+        </RelativeLayout>
+
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:id="@+id/coordinator"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@+id/top_relative"
             android:splitMotionEvents="false">
 
             <com.google.android.material.appbar.AppBarLayout
@@ -46,10 +93,7 @@
                         onClickDelayed="@{viewModel::entryBottle}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="25dp"
-                        android:layout_marginEnd="5dp"
-                        android:layout_marginBottom="5dp" />
+                        android:layout_margin="5dp" />
                 </androidx.appcompat.widget.Toolbar>
 
                 <com.google.android.material.tabs.TabLayout
@@ -83,12 +127,12 @@
 
         <LinearLayout
             android:id="@+id/recommend_main_layout"
+            onClickDelayed="@{viewModel::toMemberInfo}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:background="@mipmap/recommend_bg"
-            onClickDelayed="@{viewModel::toMemberInfo}"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 

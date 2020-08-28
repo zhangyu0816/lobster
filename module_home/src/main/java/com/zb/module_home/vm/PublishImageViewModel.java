@@ -79,8 +79,6 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
         publicImageBinding = (HomePublicImageBinding) binding;
 
         BaseActivity.createJianXiCameraFile();
-        BaseActivity.createFfmpegFile();
-
         photoManager = new PhotoManager(activity, () -> {
             publishDyn(photoManager.jointWebUrl(","));
             photoManager.deleteAllFile();

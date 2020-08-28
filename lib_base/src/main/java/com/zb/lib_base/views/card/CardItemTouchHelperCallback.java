@@ -87,10 +87,10 @@ public class CardItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
                 ratio = -1;
             }
             itemView.setRotation(ratio * CardConfig.DEFAULT_ROTATE_DEGREE);
-            float value = 1.3f - Math.abs(ratio);
-            if (value < 0.5f)
-                value = 0f;
-            itemView.setAlpha(value);
+//            float value = 1.3f - Math.abs(ratio);
+//            if (value < 0.5f)
+//                value = 0f;
+//            itemView.setAlpha(value);
             if (mListener != null) {
                 if (ratio != 0) {
                     mListener.onSwiping(itemView, ratio, ratio < 0 ? CardConfig.SWIPING_LEFT : CardConfig.SWIPING_RIGHT);

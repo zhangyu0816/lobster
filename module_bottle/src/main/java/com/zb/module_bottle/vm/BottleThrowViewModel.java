@@ -29,6 +29,7 @@ import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BottleQuestionPW;
+import com.zb.lib_base.windows.EditPW;
 import com.zb.module_bottle.BR;
 import com.zb.module_bottle.R;
 import com.zb.module_bottle.databinding.BottleThrowBinding;
@@ -203,6 +204,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
                 public void onNext(BottleInfo o) {
                     canClose = true;
                     bottleInfo = o;
+                    otherUserId = o.getUserId();
                     mBinding.setBottleInfo(bottleInfo);
                     otherInfo(bottleInfo.getUserId());
                     mBinding.edContent.setText(bottleInfo.getText());
@@ -271,7 +273,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         if (friendDynId == 0)
             pickBottle(2);
         else {
-            ActivityUtils.getHomeDiscoverDetail(friendDynId);
+            new EditPW(activity, mBinding.getRoot(), friendDynId);
             close(null);
         }
     }

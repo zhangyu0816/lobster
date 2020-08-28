@@ -130,10 +130,10 @@ public class VipAdPW extends BasePopupWindow {
             binding.setContent("让你随时随地认识全世界的朋友！");
             binding.setMyHead(mineInfo.getImage());
             binding.setOtherHead("empty_icon");
-            binding.ivVipBg.setBackgroundResource(R.mipmap.vip_ad_5);
+            binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_5_male : R.mipmap.vip_ad_5);
         } else if (type == 6) {
             binding.setTitle("无限次数喜欢");
-            binding.setContent("右滑喜欢不限次数，不要错过每个机会");
+            binding.setContent("左滑喜欢不限次数，不要错过每个机会");
             binding.setMyHead("empty_icon");
             binding.setOtherHead("empty_icon");
             binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_6_male : R.mipmap.vip_ad_6);

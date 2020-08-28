@@ -46,7 +46,7 @@ public abstract class RecyclerAdapter<T, B extends ViewDataBinding> extends Recy
     public void onBindViewHolder(@NonNull RecyclerHolder<B> holder, int position) {
         if (isMax) {
             if (mList.size() != 0) {
-                if (mList.size() < 5) {
+                if (mList.size() < 3) {
                     final T t = mList.get(position);
                     onBind(holder, t, position);
                 } else {
@@ -66,7 +66,7 @@ public abstract class RecyclerAdapter<T, B extends ViewDataBinding> extends Recy
         if (mList == null)
             return 0;
         else if (isMax) {
-            if (mList.size() < 5) {
+            if (mList.size() < 3) {
                 return mList.size();
             } else {
                 return Integer.MAX_VALUE;

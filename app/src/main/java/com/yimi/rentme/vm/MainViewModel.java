@@ -34,7 +34,6 @@ import com.zb.lib_base.api.openedMemberPriceListApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.rechargeDiscountListApi;
 import com.zb.lib_base.api.recommendRankingListApi;
-import com.zb.lib_base.api.systemChatApi;
 import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
@@ -59,7 +58,6 @@ import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.RecommendInfo;
 import com.zb.lib_base.model.Report;
-import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.DateUtil;
@@ -296,13 +294,15 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onReceive(Context context, Intent intent) {
                 mBinding.setNewsCount(MineApp.mineNewsCount.getFriendDynamicGiftNum() + MineApp.mineNewsCount.getFriendDynamicReviewNum() + MineApp.mineNewsCount.getFriendDynamicGoodNum() + MineApp.mineNewsCount.getSystemNewsNum());
+                mBinding.setUnReadCount(chatListDb.getAllUnReadNum() + mBinding.getNewsCount());
             }
         };
 
         unReadCountReceiver = new BaseReceiver(activity, "lobster_unReadCount") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
+                mBinding.setNewsCount(MineApp.mineNewsCount.getFriendDynamicGiftNum() + MineApp.mineNewsCount.getFriendDynamicReviewNum() + MineApp.mineNewsCount.getFriendDynamicGoodNum() + MineApp.mineNewsCount.getSystemNewsNum());
+                mBinding.setUnReadCount(chatListDb.getAllUnReadNum() + mBinding.getNewsCount());
             }
         };
 
@@ -317,12 +317,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             if (!isNotificationEnabled()) {
                 new Handler().postDelayed(() -> {
                     PreferenceUtil.saveIntValue(activity, "isNotificationEnabled", 1);
-                    new TextPW(activity, mBinding.getRoot(), "应用通知", "为了及时收到虾菇通知，请开启通知", "去开启", new TextPW.CallBack() {
-                        @Override
-                        public void sure() {
-                            gotoSet();
-                        }
-                    });
+                    new TextPW(activity, mBinding.getRoot(), "应用通知", "为了及时收到虾菇通知，请开启通知", "去开启", this::gotoSet);
                 }, 1000);
             }
         }
@@ -548,25 +543,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     }
 
     @Override
-    public void systemChat() {
-        systemChatApi api = new systemChatApi(new HttpOnNextListener<SystemMsg>() {
-            @Override
-            public void onNext(SystemMsg o) {
-                MineApp.mineNewsCount.setSystemNewsNum(o.getNoReadNum());
-                activity.sendBroadcast(new Intent("lobster_newsCount"));
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    activity.sendBroadcast(new Intent("lobster_newsCount"));
-                }
-            }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
     public void chatList() {
         chatListApi api = new chatListApi(new HttpOnNextListener<List<ChatList>>() {
             @Override
@@ -599,7 +575,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     activity.sendBroadcast(new Intent("lobster_updateChat"));
-                    mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
+                    activity.sendBroadcast(new Intent("lobster_newsCount"));
                     contactNum(false);
                 }
             }
@@ -639,7 +615,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 chatList.setChatType(1);
                 chatList.setMainUserId(BaseActivity.userId);
                 chatListDb.saveChatList(chatList);
-                mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
+                activity.sendBroadcast(new Intent("lobster_newsCount"));
                 new Handler().postDelayed(() -> {
                     Intent data = new Intent("lobster_updateContactNum");
                     data.putExtra("chatType", 1);
@@ -673,7 +649,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         chatList.setChatType(2);
         chatList.setMainUserId(BaseActivity.userId);
         chatListDb.saveChatList(chatList);
-        mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
+        activity.sendBroadcast(new Intent("lobster_newsCount"));
         new Handler().postDelayed(() -> {
             Intent data = new Intent("lobster_updateContactNum");
             data.putExtra("chatType", 2);
@@ -719,7 +695,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 chatList.setAuthType(1);
                 chatList.setMainUserId(BaseActivity.userId);
                 chatListDb.saveChatList(chatList);
-                mBinding.setUnReadCount(chatListDb.getAllUnReadNum());
+                activity.sendBroadcast(new Intent("lobster_newsCount"));
                 // 更新会话列表
                 Intent data = new Intent("lobster_updateChat");
                 data.putExtra("userId", otherUserId);

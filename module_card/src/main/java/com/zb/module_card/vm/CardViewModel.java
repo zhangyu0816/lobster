@@ -14,7 +14,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
@@ -99,10 +98,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     private List<String> imageList = new ArrayList<>();
     private boolean canReturn = false;
 
-    private RelativeLayout.LayoutParams dislikeParams;
-    private RelativeLayout.LayoutParams likeParams;
-    private int movedWidth = (int) (MineApp.W / 2f - ObjectUtils.getViewSizeByWidthFromMax(264) / 2f);
-
     private int superLikeStatus = 0;
 
     private int likeCount = 50;
@@ -126,28 +121,36 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             public void onReceive(Context context, Intent intent) {
                 if (currentView == null) return;
                 int direction = intent.getIntExtra("direction", 0);
+                ImageView ivLike = currentView.findViewById(R.id.iv_like);
+                ImageView ivDislike = currentView.findViewById(R.id.iv_dislike);
                 if (direction == 0) {
                     // 不喜欢
-                    mBinding.ivDislike.setVisibility(View.VISIBLE);
+                    ivDislike.setVisibility(View.VISIBLE);
                     currentView.startAnimation(AnimationUtils.loadAnimation(activity,
-                            R.anim.view_left_out));
-                    startAnimation(mBinding.ivDislike, movedWidth, 280);
-                    currentView.postDelayed(() -> cardCallback.swiped(currentView, ItemTouchHelper.LEFT), 800);
+                            R.anim.view_right_out));
+                    currentView.postDelayed(() -> {
+                        cardCallback.swiped(currentView, ItemTouchHelper.RIGHT);
+                        ivDislike.setVisibility(View.GONE);
+                    }, 800);
                 } else if (direction == 1) {
                     // 喜欢
-                    mBinding.ivLike.setVisibility(View.VISIBLE);
+                    ivLike.setVisibility(View.VISIBLE);
                     currentView.startAnimation(AnimationUtils.loadAnimation(activity,
-                            R.anim.view_right_out));
-                    startAnimation(mBinding.ivLike, -movedWidth, 280);
-                    currentView.postDelayed(() -> cardCallback.swiped(currentView, ItemTouchHelper.RIGHT), 800);
+                            R.anim.view_left_out));
+                    currentView.postDelayed(() -> {
+                        cardCallback.swiped(currentView, ItemTouchHelper.LEFT);
+                        ivLike.setVisibility(View.GONE);
+                    }, 800);
                 } else {
                     // 超级喜欢
-                    mBinding.ivLike.setVisibility(View.VISIBLE);
+                    ivLike.setVisibility(View.VISIBLE);
                     currentView.startAnimation(AnimationUtils.loadAnimation(activity,
                             R.anim.view_right_out));
-                    startAnimation(mBinding.ivLike, 0 - MineApp.W / 2f - ObjectUtils.getViewSizeByWidthFromMax(200) / 2f, 280);
                     superLikeStatus = 2;
-                    currentView.postDelayed(() -> cardCallback.swiped(currentView, ItemTouchHelper.RIGHT), 800);
+                    currentView.postDelayed(() -> {
+                        cardCallback.swiped(currentView, ItemTouchHelper.RIGHT);
+                        ivLike.setVisibility(View.GONE);
+                    }, 800);
                     String myHead = mineInfo.getImage();
                     String otherHead = pairInfo.getSingleImage();
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), pairInfo.getSex(), null);
@@ -175,6 +178,9 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             @Override
             public void onReceive(Context context, Intent intent) {
                 mineInfo = mineInfoDb.getMineInfo();
+                likeCount = mineInfo.getSurplusToDayLikeNumber();
+                mBinding.setLikeCount(likeCount);
+                mBinding.setShowCount(false);
                 prePairList(true);
             }
         };
@@ -188,14 +194,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 }
             }
         };
-
-        RelativeLayout.LayoutParams paramsS = (RelativeLayout.LayoutParams) mBinding.ivDislike.getLayoutParams();
-        paramsS.setMarginStart(0 - ObjectUtils.getViewSizeByWidthFromMax(200));
-        mBinding.ivDislike.setLayoutParams(paramsS);
-
-        RelativeLayout.LayoutParams paramsE = (RelativeLayout.LayoutParams) mBinding.ivLike.getLayoutParams();
-        paramsE.setMarginEnd(0 - ObjectUtils.getViewSizeByWidthFromMax(200));
-        mBinding.ivLike.setLayoutParams(paramsE);
 
         initArea();
         setAdapter();
@@ -232,8 +230,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void setAdapter() {
-        dislikeParams = (RelativeLayout.LayoutParams) mBinding.ivDislike.getLayoutParams();
-        likeParams = (RelativeLayout.LayoutParams) mBinding.ivLike.getLayoutParams();
 
         adapter = new CardAdapter<>(activity, R.layout.item_card, pairInfoList, this);
         cardCallback = new CardItemTouchHelperCallback<>(adapter, pairInfoList);
@@ -409,11 +405,11 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 } else if (o == 3) {
                     // 喜欢次数用尽
                     new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
+                    SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else if (o == 4) {
                     // 超级喜欢时，非会员或超级喜欢次数用尽
                     if (mineInfo.getMemberType() == 2) {
                         SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
-//                        new CountUsedPW(activity, mBinding.getRoot(), 2);
                     } else {
                         new VipAdPW(activity, mBinding.getRoot(), false, 3, otherHead);
                     }
@@ -491,7 +487,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
         Objects.requireNonNull(imageListView.getLayoutManager()).scrollToPosition(selectIndex);
         AdapterBinding.loadImage(imageView, imageList.get(selectIndex),
-                0, ObjectUtils.getDefaultRes(), -1,
+                0, ObjectUtils.getDefaultRes(), ObjectUtils.getViewSizeByWidth(0.94f),
                 -1, false, true, 10,
                 false, 0, false);
         animatorUI = ObjectAnimator.ofFloat(view, "rotationY", 0, 1);
@@ -501,54 +497,23 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         animatorUI.start();
     }
 
-    private ObjectAnimator translate;
-
-    private void startAnimation(View view, float x, int duration) {
-        translate = ObjectAnimator.ofFloat(view, "translationX", 0, x);
-        translate.setDuration(duration);
-        translate.start();
-
-        new Handler().postDelayed(() -> {
-            mBinding.ivDislike.setVisibility(View.GONE);
-            mBinding.ivLike.setVisibility(View.GONE);
-        }, duration);
-    }
-
-    private int count = 0;
-    private int mDirection = CardConfig.SWIPING_NONE;
-    private boolean isShow = false;
+    private ImageView ivLike, ivDislike;
 
     @Override
     public void onSwiping(View view, float ratio, int direction) {
-        if (mDirection != direction) {
-            mDirection = direction;
-            count++;
-        }
-        if (count >= 5) {
-            if (!isShow) {
-                isShow = true;
-                mBinding.ivDislike.setVisibility(View.GONE);
-                mBinding.ivLike.setVisibility(View.GONE);
-                new TextPW(activity, mBinding.getRoot(), "温馨提示", "心动不如行动，让心怡的TA知道你的存在！", false, this::onReset);
-            }
+        mBinding.setShowCount(false);
+        if (ivLike == null)
+            ivLike = view.findViewById(R.id.iv_like);
+        if (ivDislike == null)
+            ivDislike = view.findViewById(R.id.iv_dislike);
+        if (direction == CardConfig.SWIPING_LEFT) {
+            ivDislike.setVisibility(View.GONE);
+            ivLike.setVisibility(View.VISIBLE);
+        } else if (direction == CardConfig.SWIPING_RIGHT) {
+            ivDislike.setVisibility(View.VISIBLE);
+            ivLike.setVisibility(View.GONE);
         } else {
-            if (direction == CardConfig.SWIPING_LEFT) {
-                mBinding.ivDislike.setVisibility(View.VISIBLE);
-                mBinding.ivLike.setVisibility(View.GONE);
-                likeParams.setMarginEnd(0);
-                dislikeParams.setMarginStart((int) (movedWidth * Math.abs(ratio)));
-                mBinding.ivDislike.setLayoutParams(dislikeParams);
-                mBinding.ivLike.setLayoutParams(likeParams);
-            } else if (direction == CardConfig.SWIPING_RIGHT) {
-                mBinding.ivDislike.setVisibility(View.GONE);
-                mBinding.ivLike.setVisibility(View.VISIBLE);
-                likeParams.setMarginEnd((int) (movedWidth * Math.abs(ratio)));
-                dislikeParams.setMarginStart(0);
-                mBinding.ivDislike.setLayoutParams(dislikeParams);
-                mBinding.ivLike.setLayoutParams(likeParams);
-            } else {
-                onReset();
-            }
+            onReset();
         }
     }
 
@@ -559,7 +524,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             return;
 
         int likeOtherStatus = 1;
-        if (direction == CardConfig.SWIPED_LEFT) {
+        if (direction == CardConfig.SWIPED_RIGHT) {
             canReturn = true;
             likeOtherStatus = 0;
             disLikeList.add(0, pairInfo);
@@ -586,15 +551,15 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void onReset() {
-        isShow = false;
-        count = 0;
-        mDirection = CardConfig.SWIPING_NONE;
-        mBinding.ivDislike.setVisibility(View.GONE);
-        mBinding.ivLike.setVisibility(View.GONE);
-        likeParams.setMarginEnd(0);
-        dislikeParams.setMarginStart(0);
-        mBinding.ivDislike.setLayoutParams(dislikeParams);
-        mBinding.ivLike.setLayoutParams(likeParams);
+        if (ivDislike != null)
+            ivDislike.setVisibility(View.GONE);
+        if (ivLike != null)
+            ivLike.setVisibility(View.GONE);
+        ivLike = null;
+        ivDislike = null;
+        if (mineInfo.getMemberType() == 1 && likeCount > 0) {
+            mBinding.setShowCount(true);
+        }
     }
 
     /**

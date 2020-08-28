@@ -33,7 +33,6 @@ public class dynDoReviewApi extends BaseEntity<BaseResultEntity> {
 
     public dynDoReviewApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
-        setDialogTitle("发布评论");
     }
 
     @Override

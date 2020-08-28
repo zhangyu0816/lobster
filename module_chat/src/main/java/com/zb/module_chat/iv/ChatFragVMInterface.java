@@ -6,4 +6,6 @@ public interface ChatFragVMInterface {
     void entryBottle(View view);
 
     void toMemberInfo(View view);
+
+    void toNews(View view);
 }

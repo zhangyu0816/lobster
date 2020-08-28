@@ -134,6 +134,7 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
                 onRefresh(binding.refresh);
             }
         }, activity).setFriendDynId(friendDynId).setText(binding.getContent()).setReviewId(reviewId);
+        api.setDialogTitle("发布评论");
         HttpManager.getInstance().doHttpDeal(api);
     }
 

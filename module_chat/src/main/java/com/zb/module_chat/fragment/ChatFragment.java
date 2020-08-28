@@ -68,5 +68,6 @@ public class ChatFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         updateRedReceiver.unregisterReceiver();
+        viewModel.onDestroy();
     }
 }

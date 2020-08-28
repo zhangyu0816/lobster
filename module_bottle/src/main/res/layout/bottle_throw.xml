@@ -294,7 +294,7 @@
                     android:gravity="center"
                     android:paddingStart="11dp"
                     android:paddingEnd="11dp"
-                    android:text="@{throwIndex==2?@string/throw_check:@string/throw_repeat}"
+                    android:text="@string/throw_repeat"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     android:textStyle="bold" />
