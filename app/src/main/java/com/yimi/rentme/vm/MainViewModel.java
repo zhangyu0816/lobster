@@ -15,7 +15,6 @@ import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
 
 import com.alibaba.mobileim.conversation.YWMessage;
-import com.yimi.rentme.activity.ForegroundLiveService;
 import com.yimi.rentme.databinding.AcMainBinding;
 import com.yimi.rentme.iv.MainVMInterface;
 import com.zb.lib_base.activity.BaseActivity;
@@ -34,6 +33,7 @@ import com.zb.lib_base.api.openedMemberPriceListApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.rechargeDiscountListApi;
 import com.zb.lib_base.api.recommendRankingListApi;
+import com.zb.lib_base.api.systemChatApi;
 import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
@@ -58,6 +58,7 @@ import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.RecommendInfo;
 import com.zb.lib_base.model.Report;
+import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.DateUtil;
@@ -287,6 +288,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 myImAccountInfoApi();
                 walletAndPop();
                 newDynMsgAllNum(false);
+                MineApp.recommendInfoList.clear();
+                recommendRankingList();
             }
         };
 
@@ -321,7 +324,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 }, 1000);
             }
         }
-//        getPermissions();
+        getPermissions();
 
         handler.sendEmptyMessageDelayed(0, time);
     }
@@ -548,14 +551,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onNext(List<ChatList> o) {
                 for (ChatList chatMsg : o) {
-                    if (chatMsg.getUserId() == BaseActivity.systemUserId) {
-                        // 系统消息
-                        MineApp.mineNewsCount.setContent(chatMsg.getStanza());
-                        MineApp.mineNewsCount.setCreateTime(chatMsg.getCreationDate());
-                        MineApp.mineNewsCount.setMsgType(chatMsg.getMsgType());
-                        MineApp.mineNewsCount.setSystemNewsNum(chatMsg.getNoReadNum());
-                        activity.sendBroadcast(new Intent("lobster_newsCount"));
-                    } else if (chatMsg.getUserId() == BaseActivity.dynUserId) {
+                    if (chatMsg.getUserId() == BaseActivity.dynUserId) {
                         // 评论
                         chatMsg.setMainUserId(BaseActivity.userId);
                         chatMsg.setChatType(5);
@@ -575,11 +571,34 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     activity.sendBroadcast(new Intent("lobster_updateChat"));
+                    systemChat();
+                }
+            }
+        }, activity).setPageNo(pageNo);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void systemChat() {
+        systemChatApi api = new systemChatApi(new HttpOnNextListener<SystemMsg>() {
+            @Override
+            public void onNext(SystemMsg o) {
+                // 系统消息
+                MineApp.mineNewsCount.setContent(o.getStanza());
+                MineApp.mineNewsCount.setCreateTime(o.getCreationDate());
+                MineApp.mineNewsCount.setMsgType(o.getMsgType());
+                MineApp.mineNewsCount.setSystemNewsNum(o.getNoReadNum());
+                activity.sendBroadcast(new Intent("lobster_newsCount"));
+                contactNum(false);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     activity.sendBroadcast(new Intent("lobster_newsCount"));
                     contactNum(false);
                 }
             }
-        }, activity).setPageNo(pageNo);
+        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -769,7 +788,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
      */
     private void getPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission("虾菇需要访问显示通知权限", new BaseActivity.PermissionCallback() {
+            performCodeWithPermission("虾菇需要访问写入存储权限", new BaseActivity.PermissionCallback() {
                 @Override
                 public void hasPermission() {
                     setPermissions();
@@ -778,14 +797,15 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 @Override
                 public void noPermission() {
                 }
-            }, Manifest.permission.FOREGROUND_SERVICE);
+            }, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         } else {
             setPermissions();
         }
     }
 
     private void setPermissions() {
-        activity.startService(new Intent(activity, ForegroundLiveService.class));
+//        activity.startService(new Intent(activity, ForegroundLiveService.class));
+        BaseActivity.createFfmpegFile();
     }
 
 }

@@ -3,4 +3,5 @@
     <cache-path name="imageFiles" path="images/"/>
     <cache-path name="videoFiles" path="videos/"/>
     <cache-path name="audioFiles" path="audios/"/>
+    <files-path name="ffmpeg" path="files/"/>
 </paths>

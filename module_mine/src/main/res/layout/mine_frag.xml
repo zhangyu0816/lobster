@@ -308,13 +308,12 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="70dp">
 
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/tab_layout"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:layout_centerVertical="true"
                         app:tabBackground="@android:color/transparent"
                         app:tabGravity="start"
                         app:tabIndicator="@drawable/indicator"
@@ -323,11 +322,67 @@
                         app:tabIndicatorHeight="3dp"
                         app:tabMaxWidth="0dp"
                         app:tabMinWidth="0dp"
-                        app:tabMode="fixed"
+                        app:tabMode="scrollable"
                         app:tabPaddingBottom="-15dp"
                         app:tabRippleColor="@android:color/transparent"
                         app:tabSelectedTextColor="@color/black_252"
                         app:tabTextColor="@color/black_827" />
+
+                    <LinearLayout
+                        onClickDelayed="@{v->viewModel.contactNumDetail(2)}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="15dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="已有"
+                            android:textColor="@color/black_252"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text='@{String.format("%d",contactNum.beLikeCount)}'
+                            android:textColor="@color/red_ff3"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            tools:text="65484" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="人喜欢你"
+                            android:textColor="@color/black_252"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="5dp"
+                            android:textStyle="bold" />
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/iv_be_like"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@{mineInfo.sex==0?@drawable/be_like_male_icon:@drawable/be_like_female_icon}"
+                                tools:background="@drawable/be_like_male_icon" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignEnd="@+id/iv_be_like"
+                                android:background="@mipmap/be_like_count_icon" />
+                        </RelativeLayout>
+
+                    </LinearLayout>
                 </RelativeLayout>
             </com.google.android.material.appbar.AppBarLayout>
 

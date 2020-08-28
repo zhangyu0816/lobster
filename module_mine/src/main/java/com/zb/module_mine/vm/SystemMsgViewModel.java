@@ -23,7 +23,6 @@ import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.ResFileDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.ImAccount;
@@ -101,15 +100,6 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
                 adapter.notifyItemRangeChanged(start, systemMsgList.size());
                 pageNo++;
                 systemHistoryMsgList();
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    if (systemMsgList.size() > 0) {
-                        clearHistoryMsg(systemMsgList.get(0).getId());
-                    }
-                }
             }
         }, activity).setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);

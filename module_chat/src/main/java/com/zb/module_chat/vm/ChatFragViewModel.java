@@ -22,7 +22,7 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
     private ChatFragBinding mBinding;
     private RecommendInfo recommendInfo;
     private Handler handler = new Handler();
-    private int time = 1000 * 60 * 2;
+    private int time = 1000 * 10;
     private ObjectAnimator outX, backX;
     private AnimatorSet animatorSet = new AnimatorSet();
     private Runnable ra = new Runnable() {

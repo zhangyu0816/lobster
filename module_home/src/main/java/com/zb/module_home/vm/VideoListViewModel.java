@@ -724,6 +724,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         tv.setText(text);
         tv.setTextSize(size);
         tv.setTextColor(Color.WHITE);
+        tv.setShadowLayer(1, 2f, 2f, R.color.black);
         tv.setBackgroundColor(Color.TRANSPARENT);
         layout.addView(tv);
 
