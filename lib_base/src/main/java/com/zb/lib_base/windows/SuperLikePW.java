@@ -2,6 +2,7 @@ package com.zb.lib_base.windows;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -23,7 +24,7 @@ public class SuperLikePW extends BasePopupWindow {
     private PwsSuperLikeBinding binding;
 
     public SuperLikePW(RxAppCompatActivity activity, View parentView, String myHead, String otherHead, boolean isPair, int mySex, int otherSex, CallBack callBack) {
-        super(activity, parentView, true);
+        super(activity, parentView, false);
         this.myHead = myHead;
         this.otherHead = otherHead;
         this.isPair = isPair;
@@ -42,8 +43,16 @@ public class SuperLikePW extends BasePopupWindow {
             ivSuperLike2Y, scale1X, scale1Y, scale2X, scale2Y;
     private AnimatorSet animatorSet = new AnimatorSet();
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void initUI() {
+        mBinding.getRoot().setOnTouchListener((v, event) -> {
+            if (isShowing()) {
+                onDestroy();
+                dismiss();
+            }
+            return false;
+        });
         mBinding.setVariable(BR.pw, this);
         mBinding.setVariable(BR.myHead, myHead);
         mBinding.setVariable(BR.otherHead, otherHead);
@@ -109,16 +118,22 @@ public class SuperLikePW extends BasePopupWindow {
     int rightY2 = 600;
     int time = 1500;
     private ObjectAnimator translationX, translationY;
+    private AnimatorSet animatorStarSet1 = new AnimatorSet();
+    private AnimatorSet animatorStarSet2 = new AnimatorSet();
+    private AnimatorSet animatorStarSet3 = new AnimatorSet();
+    private AnimatorSet animatorStarSet4 = new AnimatorSet();
+    private AnimatorSet animatorStarSet5 = new AnimatorSet();
+    private AnimatorSet animatorStarSet6 = new AnimatorSet();
 
     private void start1() {
 
         binding.ivStar1.setVisibility(View.VISIBLE);
         translationX = ObjectAnimator.ofFloat(binding.ivStar1, "translationX", 0, leftX1, leftX2).setDuration(time);
         translationY = ObjectAnimator.ofFloat(binding.ivStar1, "translationY", 0, leftY1, leftY2).setDuration(time);
-        AnimatorSet animatorStarSet = new AnimatorSet();
-        animatorStarSet.setInterpolator(new LinearInterpolator());
-        animatorStarSet.playTogether(translationX, translationY);
-        animatorStarSet.start();
+
+        animatorStarSet1.setInterpolator(new LinearInterpolator());
+        animatorStarSet1.playTogether(translationX, translationY);
+        animatorStarSet1.start();
         new Handler().postDelayed(() -> {
             binding.ivStar1.setVisibility(View.GONE);
         }, time);
@@ -132,10 +147,9 @@ public class SuperLikePW extends BasePopupWindow {
         binding.ivStar2.setVisibility(View.VISIBLE);
         translationX = ObjectAnimator.ofFloat(binding.ivStar2, "translationX", 0, rightX1 + 100, rightX2 + 350).setDuration(time);
         translationY = ObjectAnimator.ofFloat(binding.ivStar2, "translationY", 0, rightY1 + 100, rightY2 + 160).setDuration(time);
-        AnimatorSet animatorStarSet = new AnimatorSet();
-        animatorStarSet.setInterpolator(new LinearInterpolator());
-        animatorStarSet.playTogether(translationX, translationY);
-        animatorStarSet.start();
+        animatorStarSet2.setInterpolator(new LinearInterpolator());
+        animatorStarSet2.playTogether(translationX, translationY);
+        animatorStarSet2.start();
         new Handler().postDelayed(() -> {
             binding.ivStar2.setVisibility(View.GONE);
         }, time);
@@ -149,10 +163,9 @@ public class SuperLikePW extends BasePopupWindow {
         binding.ivStar3.setVisibility(View.VISIBLE);
         translationX = ObjectAnimator.ofFloat(binding.ivStar3, "translationX", 0, leftX1 + 50, leftX2 - 150).setDuration(time);
         translationY = ObjectAnimator.ofFloat(binding.ivStar3, "translationY", 0, leftY1 - 150, leftY2 + 150).setDuration(time);
-        AnimatorSet animatorStarSet = new AnimatorSet();
-        animatorStarSet.setInterpolator(new LinearInterpolator());
-        animatorStarSet.playTogether(translationX, translationY);
-        animatorStarSet.start();
+        animatorStarSet3.setInterpolator(new LinearInterpolator());
+        animatorStarSet3.playTogether(translationX, translationY);
+        animatorStarSet3.start();
         new Handler().postDelayed(() -> {
             binding.ivStar3.setVisibility(View.GONE);
         }, time);
@@ -166,10 +179,9 @@ public class SuperLikePW extends BasePopupWindow {
         binding.ivStar4.setVisibility(View.VISIBLE);
         translationX = ObjectAnimator.ofFloat(binding.ivStar4, "translationX", 0, rightX1 - 60, rightX2 + 90).setDuration(time);
         translationY = ObjectAnimator.ofFloat(binding.ivStar4, "translationY", 0, rightY1 - 160, rightY2 + 190).setDuration(time);
-        AnimatorSet animatorStarSet = new AnimatorSet();
-        animatorStarSet.setInterpolator(new LinearInterpolator());
-        animatorStarSet.playTogether(translationX, translationY);
-        animatorStarSet.start();
+        animatorStarSet4.setInterpolator(new LinearInterpolator());
+        animatorStarSet4.playTogether(translationX, translationY);
+        animatorStarSet4.start();
         new Handler().postDelayed(() -> {
             binding.ivStar4.setVisibility(View.GONE);
         }, time);
@@ -183,10 +195,9 @@ public class SuperLikePW extends BasePopupWindow {
         binding.ivStar5.setVisibility(View.VISIBLE);
         translationX = ObjectAnimator.ofFloat(binding.ivStar5, "translationX", 0, leftX1 - 70, leftX2 + 170).setDuration(time);
         translationY = ObjectAnimator.ofFloat(binding.ivStar5, "translationY", 0, leftY1 + 180, leftY2 + 100).setDuration(time);
-        AnimatorSet animatorStarSet = new AnimatorSet();
-        animatorStarSet.setInterpolator(new LinearInterpolator());
-        animatorStarSet.playTogether(translationX, translationY);
-        animatorStarSet.start();
+        animatorStarSet5.setInterpolator(new LinearInterpolator());
+        animatorStarSet5.playTogether(translationX, translationY);
+        animatorStarSet5.start();
         new Handler().postDelayed(() -> {
             binding.ivStar5.setVisibility(View.GONE);
         }, time);
@@ -200,10 +211,9 @@ public class SuperLikePW extends BasePopupWindow {
         binding.ivStar6.setVisibility(View.VISIBLE);
         translationX = ObjectAnimator.ofFloat(binding.ivStar6, "translationX", 0, rightX1 - 40, rightX2 + 180).setDuration(time);
         translationY = ObjectAnimator.ofFloat(binding.ivStar6, "translationY", 0, rightY1 + 60, rightY2 - 90).setDuration(time);
-        AnimatorSet animatorStarSet = new AnimatorSet();
-        animatorStarSet.setInterpolator(new LinearInterpolator());
-        animatorStarSet.playTogether(translationX, translationY);
-        animatorStarSet.start();
+        animatorStarSet6.setInterpolator(new LinearInterpolator());
+        animatorStarSet6.playTogether(translationX, translationY);
+        animatorStarSet6.start();
         new Handler().postDelayed(() -> {
             binding.ivStar6.setVisibility(View.GONE);
         }, time);
@@ -214,8 +224,33 @@ public class SuperLikePW extends BasePopupWindow {
     }
 
     public void toChat(View view) {
+        onDestroy();
         dismiss();
         if (callBack != null)
             callBack.success();
+    }
+
+    private void onDestroy() {
+        otherLayoutX = null;
+        otherLayoutY = null;
+        mineLayoutX = null;
+        mineLayoutY = null;
+        ivSuperLike1X = null;
+        ivSuperLike1Y = null;
+        ivSuperLike2X = null;
+        ivSuperLike2Y = null;
+        scale1X = null;
+        scale1Y = null;
+        scale2X = null;
+        scale2Y = null;
+        translationX = null;
+        translationY = null;
+        animatorSet = null;
+        animatorStarSet1 = null;
+        animatorStarSet2 = null;
+        animatorStarSet3 = null;
+        animatorStarSet4 = null;
+        animatorStarSet5 = null;
+        animatorStarSet6 = null;
     }
 }

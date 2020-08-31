@@ -143,7 +143,6 @@ public class BottleBGView extends RelativeLayout {
                 anim_jg_translationY,
                 anim_plp_translationY,
                 anim_plp_translationX);
-
     }
 
     public void startBg() {
@@ -154,12 +153,29 @@ public class BottleBGView extends RelativeLayout {
         set.cancel();
     }
 
+    public void setDestroy() {
+        anim_lsxq = null;
+        anim_xx = null;
+        anim_fsxq = null;
+        anim_hd_s = null;
+        anim_plp_d = null;
+        anim_bl = null;
+        anim_hd_q_translationY = null;
+        anim_hd_q_alpha = null;
+        anim_jg_alpha = null;
+        anim_jg_translationY = null;
+        anim_jg_translationX = null;
+        anim_plp_translationY = null;
+        anim_plp_translationX = null;
+        set = null;
+    }
+
     private ObjectAnimator translateY, translateX, translateBackY, translateBackX, translateBackY2;
+    private AnimatorSet animatorSet = null;
 
     public void startWang(CallBack callBack) {
+        animatorSet = new AnimatorSet();
         ivWang.setVisibility(View.VISIBLE);
-        AnimatorSet animatorSet = new AnimatorSet();
-
         translateY = ObjectAnimator.ofFloat(ivWang, "translationY", 0, ObjectUtils.getViewSizeByWidthFromMax(600)).setDuration(1000);
         translateX = ObjectAnimator.ofFloat(ivWang, "translationX", 0, ObjectUtils.getViewSizeByWidthFromMax(100), 0).setDuration(1000);
         translateBackY = ObjectAnimator.ofFloat(ivWangBack, "translationY", 0, ObjectUtils.getViewSizeByWidthFromMax(600)).setDuration(1000);
@@ -178,24 +194,38 @@ public class BottleBGView extends RelativeLayout {
         }, 2000);
         new Handler().postDelayed(() -> {
             ivWangBack.setVisibility(View.GONE);
+            translateY = null;
+            translateX = null;
+            translateBackY = null;
+            translateBackX = null;
+            translateBackY2 = null;
+            animatorSet = null;
             callBack.success();
         }, 3000);
     }
 
     private ObjectAnimator translateBottleY, translateBottleX, animatorBottle;
+    private AnimatorSet animatorSet1 = null;
 
     public void throwBottle(CallBack callBack) {
         ivBottle.setVisibility(VISIBLE);
+        animatorSet1 = new AnimatorSet();
         int time = 1000;
         translateBottleY = ObjectAnimator.ofFloat(ivBottle, "translationY", 0, -ObjectUtils.getViewSizeByWidthFromMax(400), MineApp.H).setDuration(time);
         translateBottleX = ObjectAnimator.ofFloat(ivBottle, "translationX", 0, -(MineApp.W / 2), -MineApp.W).setDuration(time);
         animatorBottle = ObjectAnimator.ofFloat(ivBottle, "rotation", 0, -900).setDuration(time);
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setInterpolator(new LinearInterpolator());
-        animatorSet.play(translateBottleY).with(translateBottleX).with(animatorBottle);
-        animatorSet.start();
 
-        new Handler().postDelayed(() -> callBack.success(), time);
+        animatorSet1.setInterpolator(new LinearInterpolator());
+        animatorSet1.play(translateBottleY).with(translateBottleX).with(animatorBottle);
+        animatorSet1.start();
+
+        new Handler().postDelayed(() -> {
+            translateBottleY = null;
+            translateBottleX = null;
+            animatorBottle = null;
+            animatorSet1 = null;
+            callBack.success();
+        }, time);
     }
 
     public interface CallBack {

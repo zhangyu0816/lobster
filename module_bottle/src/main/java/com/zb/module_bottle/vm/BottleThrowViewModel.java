@@ -120,6 +120,11 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
             mPlayer.stop();
         }
         mBinding.bottleWhiteBack.bottleBg.stopBg();
+        mBinding.bottleWhiteBack.bottleBg.setDestroy();
+        translateX = null;
+        scaleX = null;
+        scaleY = null;
+        alpha = null;
     }
 
     public void onResume() {
