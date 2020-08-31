@@ -242,6 +242,11 @@ public class BaseViewModel implements BaseVMInterface {
         animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.play(scaleX).with(scaleY);
         animatorSet.start();
+
+        new Handler().postDelayed(() -> {
+            scaleX = null;
+            scaleY = null;
+        }, 500);
     }
 
     public void openBottle() {

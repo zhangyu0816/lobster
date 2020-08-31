@@ -41,15 +41,6 @@ public class GoodView extends RelativeLayout {
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.good_layout, null, false);
         addView(mBinding.getRoot());
 
-        ivCircleScaleX = ObjectAnimator.ofFloat(mBinding.ivCircle, "scaleX", 0, 0.8f).setDuration(500);
-        ivCircleScaleY = ObjectAnimator.ofFloat(mBinding.ivCircle, "scaleY", 0, 0.8f).setDuration(500);
-
-        ivUnLikeScaleX = ObjectAnimator.ofFloat(mBinding.ivUnLike, "scaleX", 0, 1, 0.8f, 1).setDuration(500);
-        ivUnLikeScaleY = ObjectAnimator.ofFloat(mBinding.ivUnLike, "scaleY", 0, 1, 0.8f, 1).setDuration(500);
-
-        ivLikeScaleX = ObjectAnimator.ofFloat(mBinding.ivLike, "scaleX", 0, 1, 0.8f, 1).setDuration(500);
-        ivLikeScaleY = ObjectAnimator.ofFloat(mBinding.ivLike, "scaleY", 0, 1, 0.8f, 1).setDuration(500);
-
         animatorSet.setInterpolator(new LinearInterpolator());
     }
 
@@ -58,19 +49,37 @@ public class GoodView extends RelativeLayout {
         mBinding.ivCircle.setVisibility(GONE);
         mBinding.ivLike.setVisibility(GONE);
 
+        ivUnLikeScaleX = ObjectAnimator.ofFloat(mBinding.ivUnLike, "scaleX", 0, 1, 0.8f, 1).setDuration(500);
+        ivUnLikeScaleY = ObjectAnimator.ofFloat(mBinding.ivUnLike, "scaleY", 0, 1, 0.8f, 1).setDuration(500);
+
         animatorSet.playTogether(ivUnLikeScaleX, ivUnLikeScaleY);
         animatorSet.start();
+        new Handler().postDelayed(() -> {
+            ivUnLikeScaleX = null;
+            ivUnLikeScaleY = null;
+        }, 500);
     }
 
     public void playLike() {
         mBinding.ivUnLike.setVisibility(GONE);
         mBinding.ivCircle.setVisibility(VISIBLE);
         mBinding.ivLike.setVisibility(VISIBLE);
+        ivCircleScaleX = ObjectAnimator.ofFloat(mBinding.ivCircle, "scaleX", 0, 0.8f).setDuration(500);
+        ivCircleScaleY = ObjectAnimator.ofFloat(mBinding.ivCircle, "scaleY", 0, 0.8f).setDuration(500);
+
+        ivLikeScaleX = ObjectAnimator.ofFloat(mBinding.ivLike, "scaleX", 0, 1, 0.8f, 1).setDuration(500);
+        ivLikeScaleY = ObjectAnimator.ofFloat(mBinding.ivLike, "scaleY", 0, 1, 0.8f, 1).setDuration(500);
 
         animatorSet.playTogether(ivCircleScaleX, ivCircleScaleY, ivLikeScaleX, ivLikeScaleY);
         animatorSet.start();
 
-        new Handler().postDelayed(() -> mBinding.ivCircle.setVisibility(GONE), 500);
+        new Handler().postDelayed(() -> {
+            ivCircleScaleX = null;
+            ivCircleScaleY = null;
+            ivLikeScaleX = null;
+            ivLikeScaleY = null;
+            mBinding.ivCircle.setVisibility(GONE);
+        }, 500);
     }
 
 
