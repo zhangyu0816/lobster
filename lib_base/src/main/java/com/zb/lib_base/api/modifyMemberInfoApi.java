@@ -84,6 +84,6 @@ public class modifyMemberInfoApi extends BaseEntity<BaseResultEntity> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.modifyMemberInfo(nick, image, moreImages, personalitySign, birthday, Integer.parseInt(DateUtil.getNow(DateUtil.yyyy_MM_dd).substring(0, 4)) - Integer.parseInt(birthday.substring(0, 4)), sex, 0, job, provinceId, cityId, districtId, "", serviceTags);
+        return methods.modifyMemberInfo(nick, image, moreImages, personalitySign, birthday, DateUtil.getAge(birthday, 31), sex, 0, job, provinceId, cityId, districtId, "", serviceTags);
     }
 }

@@ -2,6 +2,7 @@ package com.zb.lib_base.utils;
 
 import android.annotation.SuppressLint;
 import android.os.CountDownTimer;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import java.sql.Timestamp;
@@ -498,6 +499,8 @@ public class DateUtil {
 
     public static int getAge(String birthday, int age) {
         if (birthday == null || birthday.isEmpty())
+            return age;
+        if (TextUtils.equals(birthday, "1990-01-01"))
             return age;
         String now = getNow(yyyy_MM_dd);
         int nowYear = Integer.parseInt(now.substring(0, 4));
