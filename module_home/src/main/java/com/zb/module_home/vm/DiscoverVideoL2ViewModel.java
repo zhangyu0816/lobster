@@ -166,6 +166,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
         new ReviewPW(activity, mBinding.getRoot(), friendDynId, discoverInfo.getReviews(), () -> {
             discoverInfo.setReviews(discoverInfo.getReviews() + 1);
             mBinding.setDiscoverInfo(discoverInfo);
+            seeLikers(1);
         });
     }
 
@@ -510,7 +511,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
                         tempList.clear();
                         mBinding.reviewList.setVisibility(View.VISIBLE);
                         if (reviewList.size() > 2) {
-                            mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(325)));
+                            mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(335)));
                             mBinding.reviewList.start();
                         } else {
                             mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
@@ -591,9 +592,14 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
         layout.setBackgroundColor(Color.TRANSPARENT);
 
         ImageView iv = new ImageView(activity);
-        int w = (int) (87f * 2 * (float) videoWidth / (float) MineApp.W);
-        int h = (int) (39f * 2 * (float) videoWidth / (float) MineApp.W);
-        int size = (int) (7f * 2 * (float) videoWidth / (float) MineApp.W);
+        float ra = 0;
+        if (videoHeight > videoWidth)
+            ra = (float) videoWidth / (float) MineApp.W;
+        else
+            ra = (float) videoHeight / (float) MineApp.W;
+        int w = (int) (87f * 2 * ra);
+        int h = (int) (39f * 2 * ra);
+        int size = (int) (7f * 2 * ra);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(w, h);
         params.leftMargin = 0;
         params.rightMargin = MineApp.W;

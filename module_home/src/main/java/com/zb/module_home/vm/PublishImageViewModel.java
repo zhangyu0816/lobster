@@ -24,8 +24,6 @@ import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
-import com.zb.module_camera.utils.Compressor;
-import com.zb.module_camera.utils.InitListener;
 import com.zb.module_home.BR;
 import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
@@ -55,8 +53,6 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     private OnlyCompressOverBean onlyCompressOverBean;
     private BaseReceiver locationReceiver;
     private BaseReceiver deleteVideoReceiver;
-
-    private Compressor mCompressor;
 
     @Override
     public void back(View view) {
@@ -100,17 +96,6 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
             }
         };
         setAdapter();
-
-        mCompressor = new Compressor(activity);
-        mCompressor.loadBinary(new InitListener() {
-            @Override
-            public void onLoadSuccess() {
-            }
-
-            @Override
-            public void onLoadFail(String reason) {
-            }
-        });
     }
 
     @Override

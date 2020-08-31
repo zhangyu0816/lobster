@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
@@ -551,6 +550,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         reviewListView.setLayoutManager(layoutManager1);// 布局管理器。
         reviewListView.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
 
+
         DownLoad.getFilePath(discoverInfo.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), filePath -> {
             discoverInfo.setVideoPath(filePath);
             ivProgress.setVisibility(View.GONE);
@@ -612,7 +612,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                         tempList.clear();
                         reviewListView.setVisibility(View.VISIBLE);
                         if (reviewList.size() > 2) {
-                            reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(325)));
+                            reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(335)));
                             reviewListView.start();
                         } else {
                             reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
@@ -709,9 +709,15 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         layout.setBackgroundColor(Color.TRANSPARENT);
 
         ImageView iv = new ImageView(activity);
-        int w = (int) (87f * 2 * (float) videoWidth / (float) MineApp.W);
-        int h = (int) (39f * 2 * (float) videoWidth / (float) MineApp.W);
-        int size = (int) (7f * 2 * (float) videoWidth / (float) MineApp.W);
+
+        float ra = 0;
+        if (videoHeight > videoWidth)
+            ra = (float) videoWidth / (float) MineApp.W;
+        else
+            ra = (float) videoHeight / (float) MineApp.W;
+        int w = (int) (87f * 2 * ra);
+        int h = (int) (39f * 2 * ra);
+        int size = (int) (7f * 2 * ra);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(w, h);
         params.leftMargin = 0;
         params.rightMargin = MineApp.W;
@@ -777,12 +783,10 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
 
             @Override
             public void onProgress(String message) {
-                Log.e("onProgress", "111111111111111 = = = = = = = " + message);
             }
 
             @Override
             public void onFailure(String message) {
-                Log.e("onProgress", "222222222222222 = = = = = = = " + message);
                 handler.sendEmptyMessage(0);
             }
 

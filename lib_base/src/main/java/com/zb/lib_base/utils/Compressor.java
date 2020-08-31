@@ -1,4 +1,4 @@
-package com.zb.module_camera.utils;
+package com.zb.lib_base.utils;
 
 import android.app.Activity;
 

@@ -61,8 +61,10 @@ import com.zb.lib_base.model.Report;
 import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WalletInfo;
+import com.zb.lib_base.utils.Compressor;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.FragmentUtils;
+import com.zb.lib_base.utils.InitListener;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -114,6 +116,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             return false;
         }
     });
+    private Compressor mCompressor;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -806,6 +809,16 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private void setPermissions() {
 //        activity.startService(new Intent(activity, ForegroundLiveService.class));
         BaseActivity.createFfmpegFile();
+        mCompressor = new Compressor(activity);
+        mCompressor.loadBinary(new InitListener() {
+            @Override
+            public void onLoadSuccess() {
+            }
+
+            @Override
+            public void onLoadFail(String reason) {
+            }
+        });
     }
 
 }

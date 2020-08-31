@@ -115,7 +115,7 @@
             <com.zb.lib_base.views.AutoPollRecyclerView
                 android:id="@+id/review_list"
                 autoAdapter="@{viewModel.adapter}"
-                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(325)}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(330)}"
                 viewWidthSize="@{-2}"
                 android:layout_width="wrap_content"
                 android:layout_height="240dp"

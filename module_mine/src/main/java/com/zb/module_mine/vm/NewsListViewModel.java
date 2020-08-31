@@ -64,7 +64,7 @@ public class NewsListViewModel extends BaseViewModel implements NewsListVMInterf
     public void setAdapter() {
         adapter = new MineAdapter<>(activity, R.layout.item_mine_news_list, mineNewsList, this);
         dynNewMsgList();
-//        readNewDynMsgAll();
+        readNewDynMsgAll();
     }
 
     @Override

@@ -48,7 +48,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 adapter="@{viewModel.adapter}"
                 recyclerType="@{0}"
-                size="@{0}"
+                size="@{1}"
+                color="@{ObjectUtils.getLineColor()}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/layout" />

@@ -468,7 +468,7 @@ public interface HttpService {
     Observable<BaseResultEntity<List<LikeMe>>> likeMeList(@QueryMap Map<String, String> map);
 
     // 新消息列表
-    @GET("api/Interactive_dynNewMsgList")
+    @GET("api/Interactive_dynNewMsgListV2")
     Observable<BaseResultEntity<List<MineNews>>> dynNewMsgList(@Query("pageNo") int pageNo, @Query("reviewType") int reviewType);
 
     // 新消息读完后，请调用这个接口
