@@ -37,6 +37,7 @@ import com.zb.lib_base.model.PairInfo;
 import com.zb.lib_base.model.ProvinceInfo;
 import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -110,8 +111,11 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         mineInfo = mineInfoDb.getMineInfo();
         aMapLocation = new AMapLocation(activity);
         mBinding = (CardFragBinding) binding;
+        if (PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1) == -1)
+            likeCount = mineInfo.getSurplusToDayLikeNumber();
+        else
+            likeCount = PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1);
 
-        likeCount = mineInfo.getSurplusToDayLikeNumber();
         mBinding.setLikeCount(likeCount);
         mBinding.setShowCount(false);
 
@@ -178,7 +182,10 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             @Override
             public void onReceive(Context context, Intent intent) {
                 mineInfo = mineInfoDb.getMineInfo();
-                likeCount = mineInfo.getSurplusToDayLikeNumber();
+                if (PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1) == -1)
+                    likeCount = mineInfo.getSurplusToDayLikeNumber();
+                else
+                    likeCount = PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1);
                 mBinding.setLikeCount(likeCount);
                 mBinding.setShowCount(false);
                 prePairList(true);
@@ -501,7 +508,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void onSwiping(View view, float ratio, int direction) {
-        mBinding.setShowCount(false);
         if (ivLike == null)
             ivLike = view.findViewById(R.id.iv_like);
         if (ivDislike == null)
@@ -531,8 +537,17 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         }
         if (superLikeStatus == 0 && likeOtherStatus == 1 && mineInfo.getMemberType() == 1) {
             likeCount--;
+            if (likeCount < 0)
+                likeCount = 0;
+            PreferenceUtil.saveIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), likeCount);
             updateCount(likeCount);
         }
+        if (likeCount == 0 && likeOtherStatus == 1 && mineInfo.getMemberType() == 1) {
+            new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
+            SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
+            return;
+        }
+
         makeEvaluate(pairInfo, superLikeStatus == 0 ? likeOtherStatus : superLikeStatus);
         superLikeStatus = 0;
     }
@@ -557,9 +572,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             ivLike.setVisibility(View.GONE);
         ivLike = null;
         ivDislike = null;
-        if (mineInfo.getMemberType() == 1 && likeCount > 0) {
-            mBinding.setShowCount(true);
-        }
     }
 
     /**
@@ -653,7 +665,11 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 if (mineInfo.getMemberType() == 2) {
                     mBinding.setShowCount(false);
                 } else {
-                    updateCount(mineInfo.getSurplusToDayLikeNumber());
+                    if (PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1) == -1)
+                        likeCount = mineInfo.getSurplusToDayLikeNumber();
+                    else
+                        likeCount = PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1);
+                    updateCount(likeCount);
                 }
             }
         }, activity);

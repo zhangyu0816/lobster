@@ -192,6 +192,7 @@ public class BottleBGView extends RelativeLayout {
             ivWangBack.setVisibility(View.VISIBLE);
             ivWang.setVisibility(View.GONE);
         }, 2000);
+        new Handler().postDelayed(callBack::success, 2500);
         new Handler().postDelayed(() -> {
             ivWangBack.setVisibility(View.GONE);
             translateY = null;
@@ -200,8 +201,7 @@ public class BottleBGView extends RelativeLayout {
             translateBackX = null;
             translateBackY2 = null;
             animatorSet = null;
-            callBack.success();
-        }, 3000);
+        }, 3200);
     }
 
     private ObjectAnimator translateBottleY, translateBottleX, animatorBottle;

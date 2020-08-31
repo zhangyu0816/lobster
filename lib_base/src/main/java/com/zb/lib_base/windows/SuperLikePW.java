@@ -91,7 +91,8 @@ public class SuperLikePW extends BasePopupWindow {
         scale2X = ObjectAnimator.ofFloat(binding.ivSuperLike2, "scaleX", 1, 1.3f, 1, 1.3f, 1).setDuration(time);
         scale2Y = ObjectAnimator.ofFloat(binding.ivSuperLike2, "scaleY", 1, 1.3f, 1, 1.3f, 1).setDuration(time);
 
-
+        if (animatorSet == null)
+            return;
         animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.play(otherLayoutX).with(otherLayoutY).with(mineLayoutX).with(mineLayoutY);
         animatorSet.play(ivSuperLike1X).with(ivSuperLike1Y).with(ivSuperLike2X).with(ivSuperLike2Y).after(otherLayoutX);
@@ -130,7 +131,8 @@ public class SuperLikePW extends BasePopupWindow {
         binding.ivStar1.setVisibility(View.VISIBLE);
         translationX = ObjectAnimator.ofFloat(binding.ivStar1, "translationX", 0, leftX1, leftX2).setDuration(time);
         translationY = ObjectAnimator.ofFloat(binding.ivStar1, "translationY", 0, leftY1, leftY2).setDuration(time);
-
+        if (animatorStarSet1 == null)
+            return;
         animatorStarSet1.setInterpolator(new LinearInterpolator());
         animatorStarSet1.playTogether(translationX, translationY);
         animatorStarSet1.start();
@@ -147,6 +149,8 @@ public class SuperLikePW extends BasePopupWindow {
         binding.ivStar2.setVisibility(View.VISIBLE);
         translationX = ObjectAnimator.ofFloat(binding.ivStar2, "translationX", 0, rightX1 + 100, rightX2 + 350).setDuration(time);
         translationY = ObjectAnimator.ofFloat(binding.ivStar2, "translationY", 0, rightY1 + 100, rightY2 + 160).setDuration(time);
+        if (animatorStarSet2 == null)
+            return;
         animatorStarSet2.setInterpolator(new LinearInterpolator());
         animatorStarSet2.playTogether(translationX, translationY);
         animatorStarSet2.start();
@@ -163,6 +167,8 @@ public class SuperLikePW extends BasePopupWindow {
         binding.ivStar3.setVisibility(View.VISIBLE);
         translationX = ObjectAnimator.ofFloat(binding.ivStar3, "translationX", 0, leftX1 + 50, leftX2 - 150).setDuration(time);
         translationY = ObjectAnimator.ofFloat(binding.ivStar3, "translationY", 0, leftY1 - 150, leftY2 + 150).setDuration(time);
+        if (animatorStarSet3 == null)
+            return;
         animatorStarSet3.setInterpolator(new LinearInterpolator());
         animatorStarSet3.playTogether(translationX, translationY);
         animatorStarSet3.start();
@@ -179,6 +185,8 @@ public class SuperLikePW extends BasePopupWindow {
         binding.ivStar4.setVisibility(View.VISIBLE);
         translationX = ObjectAnimator.ofFloat(binding.ivStar4, "translationX", 0, rightX1 - 60, rightX2 + 90).setDuration(time);
         translationY = ObjectAnimator.ofFloat(binding.ivStar4, "translationY", 0, rightY1 - 160, rightY2 + 190).setDuration(time);
+        if (animatorStarSet4 == null)
+            return;
         animatorStarSet4.setInterpolator(new LinearInterpolator());
         animatorStarSet4.playTogether(translationX, translationY);
         animatorStarSet4.start();
@@ -195,6 +203,8 @@ public class SuperLikePW extends BasePopupWindow {
         binding.ivStar5.setVisibility(View.VISIBLE);
         translationX = ObjectAnimator.ofFloat(binding.ivStar5, "translationX", 0, leftX1 - 70, leftX2 + 170).setDuration(time);
         translationY = ObjectAnimator.ofFloat(binding.ivStar5, "translationY", 0, leftY1 + 180, leftY2 + 100).setDuration(time);
+        if (animatorStarSet5 == null)
+            return;
         animatorStarSet5.setInterpolator(new LinearInterpolator());
         animatorStarSet5.playTogether(translationX, translationY);
         animatorStarSet5.start();
@@ -211,6 +221,8 @@ public class SuperLikePW extends BasePopupWindow {
         binding.ivStar6.setVisibility(View.VISIBLE);
         translationX = ObjectAnimator.ofFloat(binding.ivStar6, "translationX", 0, rightX1 - 40, rightX2 + 180).setDuration(time);
         translationY = ObjectAnimator.ofFloat(binding.ivStar6, "translationY", 0, rightY1 + 60, rightY2 - 90).setDuration(time);
+        if (animatorStarSet6 == null)
+            return;
         animatorStarSet6.setInterpolator(new LinearInterpolator());
         animatorStarSet6.playTogether(translationX, translationY);
         animatorStarSet6.start();

@@ -46,6 +46,7 @@ import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.ObjectUtils;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.FunctionPW;
@@ -84,6 +85,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     private int mainW = 0;
     private int mainH = 0;
     private List<Ads> adsList = new ArrayList<>();
+    private boolean isLike = false;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -149,6 +151,11 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             activity.sendBroadcast(data);
         } else {
             isLike(mBinding.ivLike);
+            if (PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1) == 0 && mineInfo.getMemberType() == 1) {
+                new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
+                SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
+                return;
+            }
             makeEvaluate(1);
         }
 
@@ -358,6 +365,9 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     } else if (likeOtherStatus == 1) {
                         likeDb.saveLike(new CollectID(otherUserId));
                         activity.sendBroadcast(new Intent("lobster_isLike"));
+                        closeBtn(mBinding.ivLike);
+                        closeBtn(mBinding.ivDislike);
+                        isLike = true;
                     } else if (likeOtherStatus == 2) {
                         if (showLike) {
                             // 不喜欢成功  喜欢成功  超级喜欢成功
@@ -366,6 +376,11 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                             data.putExtra("direction", 2);
                             activity.sendBroadcast(data);
                         } else {
+                            if (!isLike) {
+                                closeBtn(mBinding.ivLike);
+                                closeBtn(mBinding.ivDislike);
+                            }
+                            closeBtn(mBinding.ivSuperLike);
                             new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
                         }
                     }
@@ -383,25 +398,34 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 } else if (o == 4) {
                     // 超级喜欢时，非会员或超级喜欢次数用尽
                     if (mineInfo.getMemberType() == 2) {
+                        closeBtn(mBinding.ivLike);
+                        closeBtn(mBinding.ivDislike);
+                        closeBtn(mBinding.ivSuperLike);
                         SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
-//                        new CountUsedPW(activity, mBinding.getRoot(), 2);
                     } else {
                         new VipAdPW(activity, mBinding.getRoot(), false, 3, otherHead);
                     }
                 } else {
                     if (likeOtherStatus == 0) {
                         activity.finish();
-                    } else if (likeOtherStatus == 1)
+                    } else if (likeOtherStatus == 1) {
+                        closeBtn(mBinding.ivLike);
+                        closeBtn(mBinding.ivDislike);
+                        isLike = true;
                         SCToastUtil.showToast(activity, "你已喜欢过对方", true);
-                    else if (likeOtherStatus == 2)
+                    } else if (likeOtherStatus == 2) {
+                        closeBtn(mBinding.ivLike);
+                        closeBtn(mBinding.ivDislike);
+                        closeBtn(mBinding.ivSuperLike);
                         SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
+                    }
                 }
             }
         }, activity).setOtherUserId(otherUserId).setLikeOtherStatus(likeOtherStatus);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    private ObjectAnimator scaleX, scaleY;
+    private ObjectAnimator scaleX, scaleY, translateY;
     private AnimatorSet animatorSet = new AnimatorSet();
 
     private void isLike(View view) {
@@ -410,7 +434,18 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.play(scaleX).with(scaleY);
         animatorSet.start();
+        new Handler().postDelayed(() -> {
+            scaleX = null;
+            scaleY = null;
+        }, 500);
+    }
 
+    private void closeBtn(View view) {
+        translateY = ObjectAnimator.ofFloat(view, "translationY", 0, 1000).setDuration(500);
+        translateY.start();
+        new Handler().postDelayed(() -> {
+            translateY = null;
+        }, 500);
     }
 
     @Override
