@@ -38,6 +38,21 @@
         <receiver
             android:name=".activity.MainActivity$alarmReceiver2"
             android:exported="false"/>
+        <receiver
+            android:name=".activity.MainActivity$alarmShortReceiver"
+            android:exported="false"/>
+        <receiver
+            android:name=".activity.MainActivity$alarmShortReceiver1"
+            android:exported="false"/>
+        <receiver
+            android:name=".activity.MainActivity$alarmShortReceiver2"
+            android:exported="false"/>
+        <receiver
+            android:name=".activity.MainActivity$alarmShortReceiver3"
+            android:exported="false"/>
+        <receiver
+            android:name=".activity.MainActivity$alarmShortReceiver4"
+            android:exported="false"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

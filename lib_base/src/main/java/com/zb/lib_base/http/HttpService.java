@@ -235,8 +235,7 @@ public interface HttpService {
 
     // 动态广场
     @GET("api/Interactive_dynPiazzaList")
-    Observable<BaseResultEntity<List<DiscoverInfo>>> dynPiazzaList(@Query("cityId") long cityId, @Query("pageNo") int pageNo,
-                                                                   @Query("dynType") int dynType);
+    Observable<BaseResultEntity<List<DiscoverInfo>>> dynPiazzaList(@QueryMap Map<String,String> map);
 
     // 个人动态
     @GET("api/Interactive_personOtherDyn")

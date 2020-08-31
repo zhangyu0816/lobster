@@ -183,7 +183,6 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         mBinding.edContent.setEnabled(true);
         throwIndex = 0;
         mBinding.setThrowIndex(throwIndex);
-        mBinding.setHasImage(false);
         mBinding.ivThrow.setBackgroundResource(R.mipmap.throw_icon);
         mBinding.bottleWhiteBack.bottleBg.stopBg();
     }
@@ -219,7 +218,6 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
                     mBinding.ivThrow.setBackgroundResource(R.mipmap.throw_back_icon);
                     mBinding.setIsBottle(true);
                     mBinding.setShowBottleTop(true);
-                    mBinding.setHasImage(false);
                 }
 
                 @Override
@@ -248,15 +246,8 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
                 mBinding.edContent.setEnabled(false);
                 mBinding.ivThrow.setBackgroundResource(R.mipmap.throw_fan_icon);
                 mBinding.setIsBottle(true);
-
-                MemberInfo memberInfo = new MemberInfo();
-                memberInfo.setNick(o.getNick());
-                memberInfo.setImage(o.getHeadImage());
-                mBinding.setMemberInfo(memberInfo);
-
                 mBinding.edContent.setText(o.getText().isEmpty() ? o.getFriendTitle() : o.getText());
-                mBinding.setHasImage(!o.getImages().isEmpty());
-                mBinding.setInfo((o.getSex() == 0 ? "女 " : "男 ") + DateUtil.getAge(o.getBirthday(), o.getAge()) + "岁 " + DateUtil.getConstellations(o.getBirthday()));
+                otherInfo(o.getUserId());
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

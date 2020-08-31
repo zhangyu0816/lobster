@@ -48,10 +48,6 @@
             name="throwIndex"
             type="Integer" />
 
-        <variable
-            name="hasImage"
-            type="boolean" />
-
     </data>
 
     <RelativeLayout

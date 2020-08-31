@@ -23,12 +23,14 @@ import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.ResFileDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.StanzaInfo;
 import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.views.SoundView;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -101,8 +103,31 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
                 pageNo++;
                 systemHistoryMsgList();
             }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    if (systemMsgList.size() != 0)
+                        updateTime();
+                }
+            }
         }, activity).setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void updateTime() {
+        String time = "";
+        systemMsgList.get(0).setShowTime(true);
+        time = systemMsgList.get(0).getCreationDate();
+        for (int i = 1; i < systemMsgList.size(); i++) {
+            if (DateUtil.getDateCount(systemMsgList.get(i).getCreationDate(), time, DateUtil.yyyy_MM_dd_HH_mm_ss, 1000f * 60f) > 3) {
+                time = systemMsgList.get(i).getCreationDate();
+                systemMsgList.get(i).setShowTime(true);
+            } else {
+                systemMsgList.get(i).setShowTime(false);
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 
     @Override

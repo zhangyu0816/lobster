@@ -14,6 +14,7 @@ public class SystemMsg extends BaseObservable {
     int resTime;        //资源时长  秒
     String creationDate = "";
     int noReadNum;//未读条数
+    boolean showTime = false;
 
     @Bindable
     public long getId() {
@@ -25,7 +26,8 @@ public class SystemMsg extends BaseObservable {
         notifyPropertyChanged(BR.id);
     }
 
-    @Bindable public int getMsgType() {
+    @Bindable
+    public int getMsgType() {
         return msgType;
     }
 
@@ -34,7 +36,8 @@ public class SystemMsg extends BaseObservable {
         notifyPropertyChanged(BR.msgType);
     }
 
-    @Bindable public String getStanza() {
+    @Bindable
+    public String getStanza() {
         return stanza;
     }
 
@@ -43,7 +46,8 @@ public class SystemMsg extends BaseObservable {
         notifyPropertyChanged(BR.stanza);
     }
 
-    @Bindable public String getTitle() {
+    @Bindable
+    public String getTitle() {
         return title;
     }
 
@@ -52,7 +56,8 @@ public class SystemMsg extends BaseObservable {
         notifyPropertyChanged(BR.title);
     }
 
-    @Bindable public String getResLink() {
+    @Bindable
+    public String getResLink() {
         return resLink;
     }
 
@@ -61,7 +66,8 @@ public class SystemMsg extends BaseObservable {
         notifyPropertyChanged(BR.resLink);
     }
 
-    @Bindable public int getResTime() {
+    @Bindable
+    public int getResTime() {
         return resTime;
     }
 
@@ -70,7 +76,8 @@ public class SystemMsg extends BaseObservable {
         notifyPropertyChanged(BR.resTime);
     }
 
-    @Bindable public String getCreationDate() {
+    @Bindable
+    public String getCreationDate() {
         return creationDate;
     }
 
@@ -79,12 +86,23 @@ public class SystemMsg extends BaseObservable {
         notifyPropertyChanged(BR.creationDate);
     }
 
-    @Bindable public int getNoReadNum() {
+    @Bindable
+    public int getNoReadNum() {
         return noReadNum;
     }
 
     public void setNoReadNum(int noReadNum) {
         this.noReadNum = noReadNum;
+        notifyPropertyChanged(BR.noReadNum);
+    }
+
+    @Bindable
+    public boolean isShowTime() {
+        return showTime;
+    }
+
+    public void setShowTime(boolean showTime) {
+        this.showTime = showTime;
         notifyPropertyChanged(BR.noReadNum);
     }
 }

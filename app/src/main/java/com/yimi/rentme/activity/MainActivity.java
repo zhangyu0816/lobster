@@ -99,21 +99,45 @@ public class MainActivity extends AppBaseActivity {
         sender = PendingIntent.getBroadcast(activity, 0, new Intent(activity, alarmReceiver.class), 0);
         sender1 = PendingIntent.getBroadcast(activity, 0, new Intent(activity, alarmReceiver1.class), 0);
         sender2 = PendingIntent.getBroadcast(activity, 0, new Intent(activity, alarmReceiver2.class), 0);
+
+        senderShort = PendingIntent.getBroadcast(activity, 0, new Intent(activity, alarmShortReceiver.class), 0);
+        senderShort1 = PendingIntent.getBroadcast(activity, 0, new Intent(activity, alarmShortReceiver1.class), 0);
+        senderShort2 = PendingIntent.getBroadcast(activity, 0, new Intent(activity, alarmShortReceiver2.class), 0);
+        senderShort3 = PendingIntent.getBroadcast(activity, 0, new Intent(activity, alarmShortReceiver3.class), 0);
+        senderShort4 = PendingIntent.getBroadcast(activity, 0, new Intent(activity, alarmShortReceiver4.class), 0);
+
         am = (AlarmManager) activity.getSystemService(ALARM_SERVICE);
         am1 = (AlarmManager) activity.getSystemService(ALARM_SERVICE);
         am2 = (AlarmManager) activity.getSystemService(ALARM_SERVICE);
+
+        amShort = (AlarmManager) activity.getSystemService(ALARM_SERVICE);
+        amShort1 = (AlarmManager) activity.getSystemService(ALARM_SERVICE);
+        amShort2 = (AlarmManager) activity.getSystemService(ALARM_SERVICE);
+        amShort3 = (AlarmManager) activity.getSystemService(ALARM_SERVICE);
+        amShort4 = (AlarmManager) activity.getSystemService(ALARM_SERVICE);
     }
 
     private static int id;
     private PendingIntent sender;
     private PendingIntent sender1;
     private PendingIntent sender2;
+    private PendingIntent senderShort;
+    private PendingIntent senderShort1;
+    private PendingIntent senderShort2;
+    private PendingIntent senderShort3;
+    private PendingIntent senderShort4;
     private AlarmManager am;
     private AlarmManager am1;
     private AlarmManager am2;
+    private AlarmManager amShort;
+    private AlarmManager amShort1;
+    private AlarmManager amShort2;
+    private AlarmManager amShort3;
+    private AlarmManager amShort4;
     private static Random ra = new Random();
     private static MineInfo mineInfo = null;
     private static Map<Integer, String> noticeMap = new HashMap<>();
+    private static Map<Integer, String> noticeShortMap = new HashMap<>();
 
     //注意：receiver记得在manifest.xml注册
     public static class alarmReceiver extends BroadcastReceiver {
@@ -142,6 +166,51 @@ public class MainActivity extends AppBaseActivity {
         }
     }
 
+    //注意：receiver记得在manifest.xml注册
+    public static class alarmShortReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            setNoticeShort(context, 0);
+        }
+    }
+
+    //注意：receiver记得在manifest.xml注册
+    public static class alarmShortReceiver1 extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            setNoticeShort(context, 1);
+        }
+    }
+
+    //注意：receiver记得在manifest.xml注册
+    public static class alarmShortReceiver2 extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            setNoticeShort(context, 2);
+        }
+    }
+
+    //注意：receiver记得在manifest.xml注册
+    public static class alarmShortReceiver3 extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            setNoticeShort(context, 3);
+        }
+    }
+
+    //注意：receiver记得在manifest.xml注册
+    public static class alarmShortReceiver4 extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            setNoticeShort(context, 4);
+        }
+    }
+
     private static void setNotice(Context context, int type) {
         PreferenceUtil.saveIntValue(context, BaseActivity.userId + "_notice_" + type + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), 1);
         noticeMap.put(100, "我不计较你的过去#但我想知道你的历史～");
@@ -158,7 +227,7 @@ public class MainActivity extends AppBaseActivity {
         noticeMap.put(111, "虾菇#你未必出类拔萃，但你一定与众不同");
         noticeMap.put(112, "虾菇#摸着你的良心说话，还不来回复，是不是去打游戏了");
         noticeMap.put(113, "宝贝～总有人在角落偷偷爱你#比如：我");
-        noticeMap.put(114, "来自同城的{name}访问了你#你们都在同一个城市哦，周末约出来玩玩~");
+        noticeMap.put(114, "来自同城的<name>访问了你#你们都在同一个城市哦，周末约出来玩玩~");
         noticeMap.put(115, "滴～滴~，喜欢的人已送到#请进入右滑模式");
         noticeMap.put(116, "有人在角落里偷偷看了你！#快来找到" + (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")));
         noticeMap.put(117, (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) + "反复查看了你的动态#快来右滑");
@@ -174,8 +243,48 @@ public class MainActivity extends AppBaseActivity {
         NotificationManagerCompat nmc = NotificationManagerCompat.from(context);
         NotificationCompat.Builder builder = BaseActivity.getNotificationBuilderByChannel(notificationManager, MineApp.NOTIFICATION_CHANNEL_ID);
         // 通知内容
+        builder.setContentTitle(temp[0].replace("name", recommendInfo == null ? (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) : recommendInfo.getUserNick()));
         builder.setContentText(temp[1]);
-        builder.setContentTitle(temp[0].replace("{name}", recommendInfo == null ? (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) : recommendInfo.getUserNick()));
+        builder.setOngoing(false);
+        builder.setAutoCancel(true);// 设置这个标志当用户单击面板就可以让通知将自动取消
+        builder.setDefaults(Notification.DEFAULT_ALL);
+        builder.setSmallIcon(R.mipmap.ic_launcher); // 向通知添加声音、闪灯和振动效果的最简单、最一致的方式是使用当前的用户默认设置，使用defaults属性，可以组合：
+        try {
+            if (recommendInfo != null)
+                builder.setLargeIcon(Glide.with(activity).asBitmap().load(recommendInfo.getSingleImage()).into(380, 380).get());
+        } catch (Exception e) {
+
+        }
+
+        Intent intentMain = new Intent(Intent.ACTION_MAIN);
+        intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
+        intentMain.setClass(context, LoadingActivity.class);
+        intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+        PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intentMain, 0);
+        builder.setContentIntent(contextIntent);
+        nmc.notify(null, id, builder.build());
+    }
+
+    private static void setNoticeShort(Context context, int type) {
+        PreferenceUtil.saveIntValue(context, BaseActivity.userId + "_noticeShort_" + type + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), 1);
+        noticeShortMap.put(118, "虾菇#<name>向你打招呼");
+        noticeShortMap.put(119, "虾菇#<name>想和你聊天");
+        noticeShortMap.put(120, "有人在角落里偷偷看了你！#快来找到他");
+        noticeShortMap.put(121, (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) + "反复查看了你的动态#快来右滑");
+
+        id = ra.nextInt(4) + 118;
+        String[] temp = noticeShortMap.get(id).split("#");
+        RecommendInfo recommendInfo = null;
+        if (MineApp.recommendInfoList.size() > 0 && id < 120) {
+            recommendInfo = MineApp.recommendInfoList.get(0);
+        }
+        NotificationManager notificationManager = (NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManagerCompat nmc = NotificationManagerCompat.from(context);
+        NotificationCompat.Builder builder = BaseActivity.getNotificationBuilderByChannel(notificationManager, MineApp.NOTIFICATION_CHANNEL_ID);
+        // 通知内容
+        builder.setContentTitle(temp[0]);
+        builder.setContentText(temp[1].replace("name", recommendInfo == null ? (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) : recommendInfo.getUserNick()));
         builder.setOngoing(false);
         builder.setAutoCancel(true);// 设置这个标志当用户单击面板就可以让通知将自动取消
         builder.setDefaults(Notification.DEFAULT_ALL);
@@ -233,11 +342,22 @@ public class MainActivity extends AppBaseActivity {
                 exitTime = System.currentTimeMillis();
             } else {
                 if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_notice_" + 0 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
-                    am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 30 * 60 * 1000, sender);
+                    am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 120 * 60 * 1000, sender);
                 if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_notice_" + 1 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
-                    am1.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 150 * 60 * 1000, sender1);
+                    am1.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 240 * 60 * 1000, sender1);
                 if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_notice_" + 2 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
-                    am2.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 330 * 60 * 1000, sender2);
+                    am2.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 300 * 60 * 1000, sender2);
+
+                if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 0 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
+                    amShort.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 60 * 1000, senderShort);
+                if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 1 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
+                    amShort1.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 3 * 60 * 1000, senderShort1);
+                if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 2 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
+                    amShort2.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 5 * 60 * 1000, senderShort2);
+                if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 3 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
+                    amShort3.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 7 * 60 * 1000, senderShort3);
+                if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 4 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
+                    amShort4.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 9 * 60 * 1000, senderShort4);
                 System.exit(0);
             }
             return true;
@@ -251,17 +371,34 @@ public class MainActivity extends AppBaseActivity {
         am.cancel(sender);
         am1.cancel(sender1);
         am2.cancel(sender2);
+
+        amShort.cancel(senderShort);
+        amShort1.cancel(senderShort1);
+        amShort2.cancel(senderShort2);
+        amShort3.cancel(senderShort3);
+        amShort4.cancel(senderShort4);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_notice_" + 0 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
-            am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 30 * 60 * 1000, sender);
+            am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 120 * 60 * 1000, sender);
         if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_notice_" + 1 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
-            am1.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 150 * 60 * 1000, sender1);
+            am1.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 240 * 60 * 1000, sender1);
         if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_notice_" + 2 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
-            am2.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 330 * 60 * 1000, sender2);
+            am2.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 300 * 60 * 1000, sender2);
+
+        if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 0 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
+            amShort.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 60 * 1000, senderShort);
+        if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 1 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
+            amShort1.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 3 * 60 * 1000, senderShort1);
+        if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 2 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
+            amShort2.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 5 * 60 * 1000, senderShort2);
+        if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 3 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
+            amShort3.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 7 * 60 * 1000, senderShort3);
+        if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 4 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
+            amShort4.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 9 * 60 * 1000, senderShort4);
     }
 
 }
