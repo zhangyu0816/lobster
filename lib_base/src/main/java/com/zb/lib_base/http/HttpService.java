@@ -342,6 +342,9 @@ public interface HttpService {
     @GET("api/UserPopularityDetail_recommendRankingList")
     Observable<BaseResultEntity<List<RecommendInfo>>> recommendRankingList(@Query("cityId") long cityId, @Query("sex") int sex);
 
+    // 自动喜欢
+    @GET("api/Pair_pushGoodUser")
+    Observable<BaseResultEntity<Integer>> pushGoodUser();
     /******************************* 对话 **********************************/
 
     // 未读会话列表

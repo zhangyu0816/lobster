@@ -34,4 +34,6 @@ public interface MainVMInterface {
     void otherInfo(long otherUserId,  YWMessage ywMessage);
 
     void recommendRankingList();
+
+    void pushGoodUser();
 }

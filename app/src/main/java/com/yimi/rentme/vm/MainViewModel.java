@@ -31,6 +31,7 @@ import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.newDynMsgAllNumApi;
 import com.zb.lib_base.api.openedMemberPriceListApi;
 import com.zb.lib_base.api.otherInfoApi;
+import com.zb.lib_base.api.pushGoodUserApi;
 import com.zb.lib_base.api.rechargeDiscountListApi;
 import com.zb.lib_base.api.recommendRankingListApi;
 import com.zb.lib_base.api.systemChatApi;
@@ -107,12 +108,12 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private AreaDb areaDb;
     private HistoryMsgDb historyMsgDb;
     private MineInfo mineInfo;
-    private int time = 2 * 60 * 1000;
+    private int time = 10 * 1000;
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
-            contactNum(true);
             handler.sendEmptyMessageDelayed(0, time);
+            pushGoodUser();
             return false;
         }
     });
@@ -342,7 +343,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         unReadCountReceiver.unregisterReceiver();
         newDynMsgAllNumReceiver.unregisterReceiver();
         recommendReceiver.unregisterReceiver();
-
     }
 
     private boolean isNotificationEnabled() {
@@ -681,18 +681,11 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     }
 
     private void initRemind(int beLikeCount) {
-        int lastBeLikeCount = PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId);
-        if (lastBeLikeCount == 0) {
-            if (beLikeCount > 0) {
-                PreferenceUtil.saveIntValue(activity, "beLikeCount" + BaseActivity.userId, beLikeCount);
-                startAnimator("快来看看有", beLikeCount < 99 ? (beLikeCount + "") : "99+", "人喜欢你啦", "");
-            }
-        } else {
-            int count = beLikeCount - lastBeLikeCount;
-            if (count > 0) {
-                PreferenceUtil.saveIntValue(activity, "beLikeCount" + BaseActivity.userId, beLikeCount);
-                startAnimator("快来看看有", count < 99 ? (count + "") : "99+", "人喜欢你啦", "");
-            }
+        int lastBeLikeCount = PreferenceUtil.readIntValue(activity, "nowBeLikeCount" + BaseActivity.userId);
+        int count = beLikeCount - lastBeLikeCount;
+        if (count > 0) {
+            PreferenceUtil.saveIntValue(activity, "nowBeLikeCount" + BaseActivity.userId, beLikeCount);
+            startAnimator("快来看看有", count < 99 ? (count + "") : "99+", "人喜欢你啦", "");
         }
     }
 
@@ -744,6 +737,17 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    @Override
+    public void pushGoodUser() {
+        pushGoodUserApi api = new pushGoodUserApi(new HttpOnNextListener<Integer>() {
+            @Override
+            public void onNext(Integer o) {
+                contactNum(true);
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
     private ObjectAnimator scaleX, scaleY, translateY, scaleXEnd, scaleYEnd;
 
     private void startAnimator(String title, String content, String subContent, String logo) {
@@ -766,6 +770,14 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         animatorSet.play(translateY).after(scaleY);
         animatorSet.play(scaleXEnd).with(scaleYEnd).after(translateY).after(10000);
         animatorSet.start();
+
+        new Handler().postDelayed(() -> {
+            scaleX = null;
+            scaleY = null;
+            translateY = null;
+            scaleXEnd = null;
+            scaleYEnd = null;
+        }, 16500);
     }
 
     public void stopAnimator() {

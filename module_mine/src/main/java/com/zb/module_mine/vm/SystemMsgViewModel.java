@@ -21,6 +21,7 @@ import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.api.systemHistoryMsgListApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.ResFileDb;
+import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -89,6 +90,7 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
     @Override
     public void setAdapter() {
         adapter = new MineAdapter<>(activity, R.layout.item_system_msg, systemMsgList, this);
+        CustomProgressDialog.showLoading(activity, "拉取系统消息");
         systemHistoryMsgList();
     }
 
@@ -107,6 +109,7 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    CustomProgressDialog.stopLoading();
                     if (systemMsgList.size() != 0)
                         updateTime();
                 }
