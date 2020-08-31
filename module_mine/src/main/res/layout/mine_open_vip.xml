@@ -140,7 +140,7 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/top_layout"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="-30dp"
+            android:layout_marginTop="-50dp"
             android:layout_marginBottom="78dp"
             android:overScrollMode="never"
             android:scrollbars="none">
@@ -155,7 +155,7 @@
                     viewWidthSize="@{-1}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@mipmap/vip_intro_icon"
+                    android:background="@{viewModel.mineInfo.sex==0?@drawable/vip_intro_icon:@drawable/vip_intro_icon_male}"
                     android:scrollbars="vertical" />
 
             </LinearLayout>
