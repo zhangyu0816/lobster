@@ -116,7 +116,7 @@
             android:name=".activity.MainActivity"
             android:launchMode="singleTask" />
 
-        <activity android:name=".activity.NotifivationActivity" />
+        <activity android:name="com.zb.lib_base.activity.NotifivationActivity" />
 
 
     </application>

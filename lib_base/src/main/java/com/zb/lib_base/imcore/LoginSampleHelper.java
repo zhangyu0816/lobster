@@ -4,10 +4,8 @@ import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.util.Log;
@@ -28,9 +26,9 @@ import com.alibaba.mobileim.gingko.model.tribe.YWTribe;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.activity.NotifivationActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.model.LikeMe;
-import com.zb.lib_base.utils.ActivityUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +37,7 @@ import java.io.IOException;
 import java.util.List;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 /**
  * Created by DIY on 2019-03-12.
@@ -140,25 +139,23 @@ public class LoginSampleHelper {
             }
             if (isBackground()) {
                 sendMsg(ywMessage);
-            } else {
-                try {
-                    JSONObject data = new JSONObject(
-                            new JSONObject(ywMessage.getContent()).getString("customize"));
-                    if (data.has("message")) { // 聊天信息
-                        if (body.getFromId() != BaseActivity.userId)
-                            appSound();
-                        // 单聊消息
-                        YWConversation conversation = conversationService.getConversationByUserId(contact.getUserId());
-                        if (conversation != null) {
-                            Intent intent = new Intent("lobster_newMsg");
-                            intent.putExtra("unreadCount", conversation.getUnreadCount());
-                            intent.putExtra("ywMessage", ywMessage);
-                            MineApp.getInstance().sendBroadcast(intent);
-                        }
+            }
+            try {
+                JSONObject data = new JSONObject(new JSONObject(ywMessage.getContent()).getString("customize"));
+                if (data.has("message")) { // 聊天信息
+                    if (body.getFromId() != BaseActivity.userId)
+                        appSound();
+                    // 单聊消息
+                    YWConversation conversation = conversationService.getConversationByUserId(contact.getUserId());
+                    if (conversation != null) {
+                        Intent intent = new Intent("lobster_newMsg");
+                        intent.putExtra("unreadCount", conversation.getUnreadCount());
+                        intent.putExtra("ywMessage", ywMessage);
+                        MineApp.getInstance().sendBroadcast(intent);
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
 
@@ -240,42 +237,32 @@ public class LoginSampleHelper {
 
     private void sendMsg(YWMessage ywMessage) {
         mywMessage = ywMessage;
+        CustomMessageBody body = (CustomMessageBody) LoginSampleHelper.unpack(ywMessage.getContent());
+        long otherUserId = body.getFromId() == BaseActivity.userId ? body.getToId() : body.getFromId();
+
         NotificationManager notificationManager = (NotificationManager) activity
                 .getSystemService(Context.NOTIFICATION_SERVICE);
-        // 通知内容
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(activity);
+        NotificationManagerCompat nmc = NotificationManagerCompat.from(activity);
+        NotificationCompat.Builder builder = BaseActivity.getNotificationBuilderByChannel(notificationManager, MineApp.NOTIFICATION_CHANNEL_ID);
 
         RemoteViews mRemoteViews = new RemoteViews("com.yimi.rentme", R.layout.remote_layout);
-        mRemoteViews.setTextViewText(R.id.tv_content, ywMessage.getContent());
+        mRemoteViews.setTextViewText(R.id.tv_content, body.getStanza());
 
-        mBuilder.setContent(mRemoteViews)
-                // 通知首次出现在通知栏，带上升动画效果的
-                .setWhen(System.currentTimeMillis())
-                // 通知产生的时间，会在通知信息里显示
-                .setPriority(Notification.PRIORITY_DEFAULT)
-                // 设置该通知优先级
-                .setAutoCancel(true)
-                // 设置这个标志当用户单击面板就可以让通知将自动取消
-                .setOngoing(false)
-                // ture，设置他为一个正在进行的通知。他们通常是用来表示一个后台任务,用户积极参与(如播放音乐)或以某种方式正在等待,因此占用设备(如一个文件下载,同步操作,主动网络连接)
-                .setDefaults(Notification.DEFAULT_ALL)
-                // 向通知添加声音、闪灯和振动效果的最简单、最一致的方式是使用当前的用户默认设置，使用defaults属性，可以组合：
-                .setSmallIcon(R.mipmap.ic_launcher);
+        builder.setOngoing(false);
+        builder.setAutoCancel(true);// 设置这个标志当用户单击面板就可以让通知将自动取消
+        builder.setDefaults(Notification.DEFAULT_ALL);
+        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setContent(mRemoteViews);
 
-
-        MineApp.getInstance().registerReceiver(new NotificationReceiver(), new IntentFilter("lobster_send"));
-
-        PendingIntent contentIntent = PendingIntent.getActivity(activity, 1, new Intent("lobster_send"), PendingIntent.FLAG_UPDATE_CURRENT);
-        // 指定内容意图
-        mBuilder.setContentIntent(contentIntent);
-        notificationManager.notify(1, mBuilder.build());
-    }
-
-    static class NotificationReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            ActivityUtils.getChatActivity(Long.parseLong(mywMessage.getAuthorUserId()));
-        }
+        Intent intentMain = new Intent(Intent.ACTION_MAIN);
+        intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
+        intentMain.setClass(activity, NotifivationActivity.class);
+        intentMain.putExtra("activityContent", "ChatActivity");
+        intentMain.putExtra("otherUserId", otherUserId);
+        intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+        PendingIntent contextIntent = PendingIntent.getActivity(activity, 0, intentMain, 0);
+        builder.setContentIntent(contextIntent);
+        nmc.notify(null, (int) otherUserId, builder.build());
     }
 
     private boolean isBackground() {

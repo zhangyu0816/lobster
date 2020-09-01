@@ -192,6 +192,9 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             builder = new NotificationCompat.Builder(MineApp.getInstance(), channelId);
             NotificationChannel channel = new NotificationChannel(channelId,
                     "您有未读消息", NotificationManager.IMPORTANCE_HIGH);
+            channel.enableLights(true); //是否在桌面icon右上角展示小红点
+            channel.setLightColor(Color.RED); //小红点颜色
+            channel.setShowBadge(true); //是否在久按桌面图标时显示此渠道的通知
             notificationManager.createNotificationChannel(channel);
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {//8.0以下 && 7.0及以上 设置优先级

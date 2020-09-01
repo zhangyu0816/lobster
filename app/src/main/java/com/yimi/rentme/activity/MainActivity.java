@@ -247,6 +247,7 @@ public class MainActivity extends AppBaseActivity {
         if (MineApp.recommendInfoList.size() > 0 && id > 113) {
             recommendInfo = MineApp.recommendInfoList.get(0);
         }
+
         NotificationManager notificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationManagerCompat nmc = NotificationManagerCompat.from(context);
@@ -296,16 +297,16 @@ public class MainActivity extends AppBaseActivity {
                         if (result != null) {
                             mRemoteViews.setImageViewBitmap(R.id.iv_logo, result);
                             mRemoteViews.setViewVisibility(R.id.iv_logo, View.VISIBLE);
-                            builder.setContent(mRemoteViews);
-
-                            Intent intentMain = new Intent(Intent.ACTION_MAIN);
-                            intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
-                            intentMain.setClass(context, LoadingActivity.class);
-                            intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                            PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intentMain, 0);
-                            builder.setContentIntent(contextIntent);
-                            nmc.notify(null, id, builder.build());
                         }
+                        builder.setContent(mRemoteViews);
+
+                        Intent intentMain = new Intent(Intent.ACTION_MAIN);
+                        intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
+                        intentMain.setClass(context, LoadingActivity.class);
+                        intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                        PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intentMain, 0);
+                        builder.setContentIntent(contextIntent);
+                        nmc.notify(null, id, builder.build());
                     }
                 }.execute(recommendInfo.getSingleImage().replace("YM0000", "240X240"));
             } else {
@@ -320,7 +321,15 @@ public class MainActivity extends AppBaseActivity {
                 nmc.notify(null, id, builder.build());
             }
         } catch (Exception e) {
+            builder.setContent(mRemoteViews);
 
+            Intent intentMain = new Intent(Intent.ACTION_MAIN);
+            intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
+            intentMain.setClass(context, LoadingActivity.class);
+            intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+            PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intentMain, 0);
+            builder.setContentIntent(contextIntent);
+            nmc.notify(null, id, builder.build());
         }
     }
 
@@ -386,16 +395,16 @@ public class MainActivity extends AppBaseActivity {
                         if (result != null) {
                             mRemoteViews.setImageViewBitmap(R.id.iv_logo, result);
                             mRemoteViews.setViewVisibility(R.id.iv_logo, View.VISIBLE);
-                            builder.setContent(mRemoteViews);
-
-                            Intent intentMain = new Intent(Intent.ACTION_MAIN);
-                            intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
-                            intentMain.setClass(context, LoadingActivity.class);
-                            intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                            PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intentMain, 0);
-                            builder.setContentIntent(contextIntent);
-                            nmc.notify(null, id, builder.build());
                         }
+                        builder.setContent(mRemoteViews);
+
+                        Intent intentMain = new Intent(Intent.ACTION_MAIN);
+                        intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
+                        intentMain.setClass(context, LoadingActivity.class);
+                        intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                        PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intentMain, 0);
+                        builder.setContentIntent(contextIntent);
+                        nmc.notify(null, id, builder.build());
                     }
                 }.execute(recommendInfo.getSingleImage().replace("YM0000", "240X240"));
             } else {
@@ -410,7 +419,15 @@ public class MainActivity extends AppBaseActivity {
                 nmc.notify(null, id, builder.build());
             }
         } catch (Exception e) {
+            builder.setContent(mRemoteViews);
 
+            Intent intentMain = new Intent(Intent.ACTION_MAIN);
+            intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
+            intentMain.setClass(context, LoadingActivity.class);
+            intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+            PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intentMain, 0);
+            builder.setContentIntent(contextIntent);
+            nmc.notify(null, id, builder.build());
         }
 
     }
@@ -468,6 +485,7 @@ public class MainActivity extends AppBaseActivity {
                     amShort3.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 7 * 60 * 1000, senderShort3);
                 if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 4 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
                     amShort4.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 9 * 60 * 1000, senderShort4);
+               viewModel.loginHelper.loginOut_Sample();
                 System.exit(0);
             }
             return true;
@@ -487,11 +505,13 @@ public class MainActivity extends AppBaseActivity {
         amShort2.cancel(senderShort2);
         amShort3.cancel(senderShort3);
         amShort4.cancel(senderShort4);
+        viewModel.myImAccountInfoApi();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        viewModel.loginHelper.loginOut_Sample();
         if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_notice_" + 0 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
             am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 120 * 60 * 1000, sender);
         if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_notice_" + 1 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)

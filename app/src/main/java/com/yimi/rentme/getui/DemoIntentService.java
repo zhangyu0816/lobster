@@ -21,8 +21,8 @@ import com.igexin.sdk.message.GTTransmitMessage;
 import com.yimi.rentme.R;
 import com.yimi.rentme.activity.LoadingActivity;
 import com.yimi.rentme.activity.MainActivity;
-import com.yimi.rentme.activity.NotifivationActivity;
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.activity.NotifivationActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.PreferenceUtil;
 

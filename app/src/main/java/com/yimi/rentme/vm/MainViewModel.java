@@ -99,7 +99,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private int nowIndex = -1;
     private AnimatorSet animatorSet = new AnimatorSet();
 
-    private LoginSampleHelper loginHelper;
+    public LoginSampleHelper loginHelper;
     private BaseReceiver rechargeReceiver;
     private BaseReceiver chatListReceiver;
     private BaseReceiver newMsgReceiver;
@@ -817,7 +817,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     /**
      * 阿里百川登录账号
      */
-    private void myImAccountInfoApi() {
+    public void myImAccountInfoApi() {
         myImAccountInfoApi api = new myImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
             @Override
             public void onNext(ImAccount o) {

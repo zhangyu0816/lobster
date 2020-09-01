@@ -1,11 +1,10 @@
-package com.yimi.rentme.activity;
+package com.zb.lib_base.activity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import com.yimi.rentme.R;
-import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.R;
 import com.zb.lib_base.utils.ActivityUtils;
 
 import org.json.JSONException;
@@ -28,9 +27,11 @@ public class NotifivationActivity extends RxAppCompatActivity {
         setContentView(R.layout.ac_notifivation);
 
         activityContent = getIntent().getStringExtra("activityContent");
-        if(activityContent.equals("MainActivity")){
+        if (activityContent.equals("MainActivity")) {
             ActivityUtils.getMainActivity();
-        }else{
+        } else if (activityContent.equals("ChatActivity")) {
+            ActivityUtils.getChatActivity(getIntent().getLongExtra("otherUserId", 0));
+        } else {
             try {
                 JSONObject object = new JSONObject(activityContent);
                 Iterator<String> keys = object.keys();
@@ -61,9 +62,9 @@ public class NotifivationActivity extends RxAppCompatActivity {
                 if (TextUtils.equals(activity, "MemberDetailActivity")) {
                     ActivityUtils.getCardMemberDetail(otherUserId, false);
                 } else if (TextUtils.equals(activity, "ChatActivity")) {
-                    if(otherUserId == BaseActivity.systemUserId){
+                    if (otherUserId == BaseActivity.systemUserId) {
                         ActivityUtils.getMineSystemMsg();
-                    }else{
+                    } else {
                         ActivityUtils.getChatActivity(otherUserId);
                     }
                 } else if (TextUtils.equals(activity, "DiscoverDetailActivity")) {
