@@ -29,7 +29,9 @@
             name="info"
             type="String" />
 
-
+        <variable
+            name="likeType"
+            type="Integer" />
     </data>
 
     <RelativeLayout
@@ -308,7 +310,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_margin="15dp" />
+            android:layout_margin="15dp"
+            android:visibility="@{likeType==2?View.GONE:View.VISIBLE}" />
 
         <ImageView
             android:id="@+id/iv_dislike"
@@ -317,6 +320,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_margin="15dp"
+            android:visibility="@{likeType==0?View.VISIBLE:View.GONE}"
             app:srcCompat="@mipmap/dislike_icon" />
 
         <ImageView
@@ -327,6 +331,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_margin="15dp"
+            android:visibility="@{likeType==0?View.VISIBLE:View.GONE}"
             app:srcCompat="@mipmap/like_icon" />
 
     </RelativeLayout>

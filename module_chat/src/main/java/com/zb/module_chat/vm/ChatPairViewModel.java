@@ -261,6 +261,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         relievePairApi api = new relievePairApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
+                likeTypeDb.deleteLikeType(otherUserId);
                 Intent data = new Intent("lobster_relieve");
                 data.putExtra("otherUserId", otherUserId);
                 data.putExtra("isRelieve", true);

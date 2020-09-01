@@ -204,6 +204,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                     } else {
                         likeDb.saveLike(new CollectID(otherUserId));
                         activity.sendBroadcast(new Intent("lobster_isLike"));
+                        likeTypeDb.setType(otherUserId, 1);
                     }
                     adapter.notifyItemChanged(_selectIndex);
                 } else if (o == 2) {
@@ -212,14 +213,15 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                     adapter.notifyItemChanged(_selectIndex);
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                     activity.sendBroadcast(new Intent("lobster_isLike"));
+                    likeTypeDb.setType(otherUserId, 1);
                 } else if (o == 3) {
                     new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
                     SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else if (o == 5) {
-                    if (likeOtherStatus == 1)
+                    if (likeOtherStatus == 1) {
+                        likeTypeDb.setType(otherUserId, 1);
                         SCToastUtil.showToast(activity, "你已喜欢过对方", true);
-                    else if (likeOtherStatus == 2)
-                        SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
+                    }
                 }
             }
         }, activity).setOtherUserId(otherUserId).setLikeOtherStatus(likeOtherStatus);
@@ -230,6 +232,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
         relievePairApi api = new relievePairApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
+                likeTypeDb.deleteLikeType(otherUserId);
                 if (_selectIndex != -1) {
                     likeDb.deleteLike(otherUserId);
                     adapter.notifyItemRemoved(_selectIndex);

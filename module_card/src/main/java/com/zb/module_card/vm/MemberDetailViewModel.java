@@ -86,6 +86,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     private int mainH = 0;
     private List<Ads> adsList = new ArrayList<>();
     private boolean isLike = false;
+    private int likeType = 0;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -93,11 +94,12 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         areaDb = new AreaDb(Realm.getDefaultInstance());
         likeDb = new LikeDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
-
+        likeType = likeTypeDb.getType(otherUserId);
         mBinding = (CardMemberDetailBinding) binding;
         mBinding.setConstellation("");
         mBinding.setIsAttention(false);
         mBinding.setInfo("");
+        mBinding.setLikeType(likeType);
 
         attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
             @Override
@@ -365,6 +367,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     } else if (likeOtherStatus == 1) {
                         likeDb.saveLike(new CollectID(otherUserId));
                         activity.sendBroadcast(new Intent("lobster_isLike"));
+                        likeTypeDb.setType(otherUserId, 1);
                         closeBtn(mBinding.ivLike);
                         closeBtn(mBinding.ivDislike);
                         isLike = true;
@@ -381,6 +384,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                                 closeBtn(mBinding.ivLike);
                                 closeBtn(mBinding.ivDislike);
                             }
+                            likeTypeDb.setType(otherUserId, 2);
                             closeBtn(mBinding.ivSuperLike);
                             new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
                         }
@@ -392,6 +396,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                             () -> ActivityUtils.getChatActivity(otherUserId));
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                     activity.sendBroadcast(new Intent("lobster_isLike"));
+                    likeTypeDb.setType(otherUserId, 1);
+                    mBinding.setLikeType(1);
                 } else if (o == 3) {
                     // 喜欢次数用尽
                     new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
@@ -410,11 +416,13 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     if (likeOtherStatus == 0) {
                         activity.finish();
                     } else if (likeOtherStatus == 1) {
+                        likeTypeDb.setType(otherUserId, 1);
                         closeBtn(mBinding.ivLike);
                         closeBtn(mBinding.ivDislike);
                         isLike = true;
                         SCToastUtil.showToast(activity, "已喜欢成功", true);
                     } else if (likeOtherStatus == 2) {
+                        likeTypeDb.setType(otherUserId, 2);
                         closeBtn(mBinding.ivLike);
                         closeBtn(mBinding.ivDislike);
                         closeBtn(mBinding.ivSuperLike);
@@ -446,6 +454,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         translateY.start();
         new Handler().postDelayed(() -> {
             translateY = null;
+            mBinding.setLikeType(view == mBinding.ivSuperLike ? 2 : 1);
         }, 500);
     }
 

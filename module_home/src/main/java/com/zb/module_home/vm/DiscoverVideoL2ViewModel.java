@@ -445,20 +445,12 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
                 String myHead = mineInfo.getImage();
                 String otherHead = memberInfo.getImage();
                 if (o == 1) {
+                    likeTypeDb.setType(discoverInfo.getUserId(), 2);
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
-                } else if (o == 2) {
-                    // 匹配成功
-                    likeDb.saveLike(new CollectID(memberInfo.getUserId()));
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), memberInfo.getSex(), () -> ActivityUtils.getChatActivity(memberInfo.getUserId()));
-                    activity.sendBroadcast(new Intent("lobster_pairList"));
-                } else if (o == 3) {
-                    // 喜欢次数用尽
-                    new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
-                    SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else if (o == 4) {
                     SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
-//                    new CountUsedPW(activity, mBinding.getRoot(), 2);
                 } else {
+                    likeTypeDb.setType(discoverInfo.getUserId(), 2);
                     SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
                 }
             }

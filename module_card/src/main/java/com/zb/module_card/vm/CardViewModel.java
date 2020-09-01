@@ -394,11 +394,13 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     // 不喜欢成功  喜欢成功  超级喜欢成功
                     if (likeOtherStatus == 1) {
                         likeDb.saveLike(new CollectID(pairInfo.getOtherUserId()));
+                        likeTypeDb.setType(pairInfo.getOtherUserId(), 1);
                     } else if (likeOtherStatus == 2) {
                         Intent data = new Intent("lobster_card");
                         data.putExtra("direction", 2);
                         activity.sendBroadcast(data);
                         activity.sendBroadcast(new Intent("lobster_pairList"));
+                        likeTypeDb.setType(pairInfo.getOtherUserId(), 2);
                         new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), pairInfo.getSex(), null);
                     }
                 } else if (o == 2) {
@@ -406,6 +408,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     likeDb.saveLike(new CollectID(pairInfo.getOtherUserId()));
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), pairInfo.getSex(), () -> ActivityUtils.getChatActivity(pairInfo.getOtherUserId()));
                     activity.sendBroadcast(new Intent("lobster_pairList"));
+                    likeTypeDb.setType(pairInfo.getOtherUserId(), 1);
                 } else if (o == 3) {
                     // 喜欢次数用尽
                     new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
@@ -418,10 +421,13 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                         new VipAdPW(activity, mBinding.getRoot(), false, 3, otherHead);
                     }
                 } else {
-                    if (likeOtherStatus == 1)
+                    if (likeOtherStatus == 1) {
                         SCToastUtil.showToast(activity, "你已喜欢过对方", true);
-                    else if (likeOtherStatus == 2)
+                        likeTypeDb.setType(pairInfo.getOtherUserId(), 1);
+                    } else if (likeOtherStatus == 2) {
                         SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
+                        likeTypeDb.setType(pairInfo.getOtherUserId(), 2);
+                    }
                 }
             }
 

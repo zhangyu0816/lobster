@@ -30,6 +30,7 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AttentionDb;
 import com.zb.lib_base.db.GoodDb;
+import com.zb.lib_base.db.LikeTypeDb;
 import com.zb.lib_base.db.MineInfoDb;
 import com.zb.lib_base.iv.BaseVMInterface;
 import com.zb.lib_base.model.Review;
@@ -51,6 +52,7 @@ public class BaseViewModel implements BaseVMInterface {
     public MineInfoDb mineInfoDb;
     public GoodDb goodDb;
     public AttentionDb attentionDb;
+    public LikeTypeDb likeTypeDb;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -62,6 +64,8 @@ public class BaseViewModel implements BaseVMInterface {
             goodDb = new GoodDb(Realm.getDefaultInstance());
         if (attentionDb == null)
             attentionDb = new AttentionDb(Realm.getDefaultInstance());
+        if (likeTypeDb == null)
+            likeTypeDb = new LikeTypeDb(Realm.getDefaultInstance());
     }
 
     @Override
@@ -268,7 +272,7 @@ public class BaseViewModel implements BaseVMInterface {
                 mPlayer.stop();
                 mPlayer.release();//释放资源
             }
-        },500);
+        }, 500);
     }
 
     private Handler mHandler = new Handler();
