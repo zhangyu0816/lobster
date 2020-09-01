@@ -3,18 +3,22 @@ package com.yimi.rentme.vm;
 import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
 
 import com.alibaba.mobileim.conversation.YWMessage;
+import com.yimi.rentme.R;
 import com.yimi.rentme.databinding.AcMainBinding;
 import com.yimi.rentme.iv.MainVMInterface;
 import com.zb.lib_base.activity.BaseActivity;
@@ -108,7 +112,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private AreaDb areaDb;
     private HistoryMsgDb historyMsgDb;
     private MineInfo mineInfo;
-    private int time = 10 * 1000;
+    private int time = 2 * 60 * 1000;
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
@@ -118,6 +122,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         }
     });
     private Compressor mCompressor;
+    private Vibrator vibrator;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -135,6 +140,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         mBinding.setNewsCount(0);
 
         mineInfo = mineInfoDb.getMineInfo();
+
+        vibrator = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);
 
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
         MineApp.sex = PreferenceUtil.readIntValue(activity, "mySex", -2) == -2 ? (mineInfo.getSex() == 0 ? 1 : 0) : PreferenceUtil.readIntValue(activity, "mySex", -2);
@@ -685,8 +692,31 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         int count = beLikeCount - lastBeLikeCount;
         if (count > 0) {
             PreferenceUtil.saveIntValue(activity, "nowBeLikeCount" + BaseActivity.userId, beLikeCount);
+            appSound();
             startAnimator("快来看看有", count < 99 ? (count + "") : "99+", "人喜欢你啦", "");
         }
+    }
+
+    private void appSound() {
+        // 播放声音
+        MediaPlayer mPlayer = MediaPlayer.create(activity, R.raw.msn);
+        try {
+            vibrator.vibrate(300);
+            if (mPlayer != null) {
+                mPlayer.stop();
+            }
+            mPlayer.prepare();
+            mPlayer.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        new Handler().postDelayed(() -> {
+            vibrator.cancel();
+            if (mPlayer != null) {
+                mPlayer.stop();
+                mPlayer.release();//释放资源
+            }
+        }, 500);
     }
 
     @Override

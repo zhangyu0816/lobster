@@ -197,7 +197,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             public void onReceive(Context context, Intent intent) {
                 if (mineInfo.getMemberType() == 1) {
                     likeCount--;
-                    updateCount(likeCount);
+                    if (pairInfoList.size() > 0)
+                        updateCount(likeCount);
                 }
             }
         };
@@ -375,11 +376,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 .setSex(MineApp.sex)
                 .setMaxAge(MineApp.maxAge)
                 .setMinAge(MineApp.minAge);
-        if (needProgress) {
-            new Handler().postDelayed(() -> HttpManager.getInstance().doHttpDeal(api), 1000);
-        } else {
-            HttpManager.getInstance().doHttpDeal(api);
-        }
+        new Handler().postDelayed(() -> HttpManager.getInstance().doHttpDeal(api), 1000);
     }
 
     @Override

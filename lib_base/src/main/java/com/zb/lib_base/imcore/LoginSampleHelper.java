@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.util.Log;
 
 import com.alibaba.mobileim.IYWLoginService;
@@ -387,5 +388,11 @@ public class LoginSampleHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        new Handler().postDelayed(() -> {
+            if (mPlayer != null) {
+                mPlayer.stop();
+                mPlayer.release();//释放资源
+            }
+        },500);
     }
 }

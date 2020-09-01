@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
 import android.util.Log;
 
 import com.igexin.sdk.GTIntentService;
@@ -156,6 +157,12 @@ public class DemoIntentService extends GTIntentService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        new Handler().postDelayed(() -> {
+            if (mPlayer != null) {
+                mPlayer.stop();
+                mPlayer.release();//释放资源
+            }
+        },500);
     }
 
     @Override

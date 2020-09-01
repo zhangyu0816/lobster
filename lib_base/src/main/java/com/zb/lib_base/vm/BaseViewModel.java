@@ -263,6 +263,12 @@ public class BaseViewModel implements BaseVMInterface {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        new Handler().postDelayed(() -> {
+            if (mPlayer != null) {
+                mPlayer.stop();
+                mPlayer.release();//释放资源
+            }
+        },500);
     }
 
     private Handler mHandler = new Handler();

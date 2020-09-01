@@ -368,6 +368,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                         closeBtn(mBinding.ivLike);
                         closeBtn(mBinding.ivDislike);
                         isLike = true;
+                        SCToastUtil.showToast(activity, "已喜欢成功", true);
                     } else if (likeOtherStatus == 2) {
                         if (showLike) {
                             // 不喜欢成功  喜欢成功  超级喜欢成功
@@ -412,7 +413,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                         closeBtn(mBinding.ivLike);
                         closeBtn(mBinding.ivDislike);
                         isLike = true;
-                        SCToastUtil.showToast(activity, "你已喜欢过对方", true);
+                        SCToastUtil.showToast(activity, "已喜欢成功", true);
                     } else if (likeOtherStatus == 2) {
                         closeBtn(mBinding.ivLike);
                         closeBtn(mBinding.ivDislike);
