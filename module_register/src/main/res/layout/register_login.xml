@@ -50,13 +50,13 @@
             android:layout_marginEnd="30dp"
             android:background="@null"
             android:gravity="center"
+            android:hint="输入您的密码！"
             android:inputType="textPassword"
             android:maxLength="20"
             android:padding="15dp"
             android:text="@={pass}"
-            android:hint="输入您的密码！"
-            android:textColorHint="@color/black_c3b"
             android:textColor="@android:color/white"
+            android:textColorHint="@color/black_c3b"
             android:textCursorDrawable="@drawable/cursor_color_white"
             android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -70,26 +70,19 @@
             android:background="#AC87FF"
             app:layout_constraintTop_toBottomOf="@+id/ed_pass" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/btn_layout"
+        <TextView
+            android:id="@+id/tv_next"
+            onClickDelayed="@{viewModel::complete}"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3">
+            android:layout_height="50dp"
+            android:layout_margin="30dp"
+            android:background="@drawable/btn_bg_purple_af9_radius60"
+            android:gravity="center"
+            android:text="登录"
+            android:textColor="@color/purple_cab"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-            <TextView
-                android:id="@+id/tv_next"
-                onClickDelayed="@{viewModel::complete}"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_margin="30dp"
-                android:background="@drawable/btn_bg_purple_af9_radius60"
-                android:gravity="center"
-                android:text="登录"
-                android:textColor="@color/purple_cab"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

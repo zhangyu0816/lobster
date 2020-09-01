@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import com.alibaba.mobileim.IYWLoginService;
 import com.alibaba.mobileim.IYWPushListener;
@@ -243,7 +244,11 @@ public class LoginSampleHelper {
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         // 通知内容
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(activity);
-        mBuilder.setContentTitle("虾菇通知").setContentText(ywMessage.getContent()).setTicker("您有未读消息")
+
+        RemoteViews mRemoteViews = new RemoteViews("com.yimi.rentme", R.layout.remote_layout);
+        mRemoteViews.setTextViewText(R.id.tv_content, ywMessage.getContent());
+
+        mBuilder.setContent(mRemoteViews)
                 // 通知首次出现在通知栏，带上升动画效果的
                 .setWhen(System.currentTimeMillis())
                 // 通知产生的时间，会在通知信息里显示
@@ -393,6 +398,6 @@ public class LoginSampleHelper {
                 mPlayer.stop();
                 mPlayer.release();//释放资源
             }
-        },500);
+        }, 500);
     }
 }

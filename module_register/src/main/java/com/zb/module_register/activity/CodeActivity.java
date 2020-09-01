@@ -3,15 +3,12 @@ package com.zb.module_register.activity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.utils.KeyBroadUtils;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_register.BR;
 import com.zb.module_register.R;
@@ -19,11 +16,10 @@ import com.zb.module_register.databinding.RegisterCodeBinding;
 import com.zb.module_register.vm.CodeViewModel;
 
 @Route(path = RouteUtils.Register_Code)
-public class CodeActivity extends RegisterBaseActivity implements KeyBroadUtils.OnSoftKeyboardChangeListener {
+public class CodeActivity extends RegisterBaseActivity {
     private RegisterCodeBinding binding;
     private TextView[] array = new TextView[4];
     private CodeViewModel viewModel;
-    private ViewTreeObserver.OnGlobalLayoutListener mOnGlobalLayoutListener;
 
     @Autowired(name = "isLogin")
     boolean isLogin;
@@ -67,13 +63,9 @@ public class CodeActivity extends RegisterBaseActivity implements KeyBroadUtils.
                     }
                 }
                 if (content.length() == 4) {
-                    binding.tvNext.setBackgroundResource(R.drawable.btn_bg_white_radius60);
-                    binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.black_252));
                     binding.tvNext2.setBackgroundResource(R.drawable.btn_bg_white_radius60);
                     binding.tvNext2.setTextColor(MineApp.getInstance().getResources().getColor(R.color.black_252));
                 } else {
-                    binding.tvNext.setBackgroundResource(R.drawable.btn_bg_purple_af9_radius60);
-                    binding.tvNext.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_cab));
                     binding.tvNext2.setBackgroundResource(R.drawable.btn_bg_purple_af9_radius60);
                     binding.tvNext2.setTextColor(MineApp.getInstance().getResources().getColor(R.color.purple_cab));
                 }
@@ -92,18 +84,6 @@ public class CodeActivity extends RegisterBaseActivity implements KeyBroadUtils.
         AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 10);
         AdapterBinding.viewSize(binding.includeLayout.whiteView, width, 10);
 
-        mOnGlobalLayoutListener = KeyBroadUtils.observeSoftKeyboard(this, this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        KeyBroadUtils.removeSoftKeyboardObserver(this, mOnGlobalLayoutListener);
-    }
-
-    @Override
-    public void onSoftKeyBoardChange(int softKeyboardHeight, boolean visible) {
-        binding.tvNext.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override

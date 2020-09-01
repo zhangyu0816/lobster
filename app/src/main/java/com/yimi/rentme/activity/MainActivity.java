@@ -8,13 +8,17 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.SystemClock;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.RemoteViews;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.bumptech.glide.Glide;
 import com.yimi.rentme.BR;
 import com.yimi.rentme.R;
 import com.yimi.rentme.vm.MainViewModel;
@@ -35,6 +39,11 @@ import com.zb.lib_base.utils.SimulateNetAPI;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -218,14 +227,14 @@ public class MainActivity extends AppBaseActivity {
         noticeMap.put(102, "你知道嘛#有人喜欢你很久了");
         noticeMap.put(103, "你知道孤独是什么感觉吗#手机亮了却只有推送");
         noticeMap.put(104, "你和" + (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) + "们擦肩而过#快来看看是谁");
-        noticeMap.put(105, "虾菇#亲，你不在的这段时间里，有人多次访问了你的资料");
+        noticeMap.put(105, "#亲，你不在的这段时间里，有人多次访问了你的资料");
         noticeMap.put(106, "甜甜的恋爱是真的#不信？你滑我试试？");
         noticeMap.put(107, "聊天选我#超会聊天，还秒回");
-        noticeMap.put(108, "虾菇#▇▇▇▇▇▇←刮开看看有谁喜欢你了！");
+        noticeMap.put(108, "#▇▇▇▇▇▇←刮开看看有谁喜欢你了！");
         noticeMap.put(109, "就爱难舍，新欢难得，我觉得我可以做你的新欢+旧爱#别说话，打开我");
-        noticeMap.put(110, "虾菇#你知道孤独是什么感觉吗，手机亮了却只有推送");
-        noticeMap.put(111, "虾菇#你未必出类拔萃，但你一定与众不同");
-        noticeMap.put(112, "虾菇#摸着你的良心说话，还不来回复，是不是去打游戏了");
+        noticeMap.put(110, "#你知道孤独是什么感觉吗，手机亮了却只有推送");
+        noticeMap.put(111, "#你未必出类拔萃，但你一定与众不同");
+        noticeMap.put(112, "#摸着你的良心说话，还不来回复，是不是去打游戏了");
         noticeMap.put(113, "宝贝～总有人在角落偷偷爱你#比如：我");
         noticeMap.put(114, "来自同城的<name>访问了你#你们都在同一个城市哦，周末约出来玩玩~");
         noticeMap.put(115, "滴～滴~，喜欢的人已送到#请进入右滑模式");
@@ -242,33 +251,83 @@ public class MainActivity extends AppBaseActivity {
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationManagerCompat nmc = NotificationManagerCompat.from(context);
         NotificationCompat.Builder builder = BaseActivity.getNotificationBuilderByChannel(notificationManager, MineApp.NOTIFICATION_CHANNEL_ID);
-        // 通知内容
-        builder.setContentTitle(temp[0].replace("name", recommendInfo == null ? (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) : recommendInfo.getUserNick()));
-        builder.setContentText(temp[1]);
+
+        RemoteViews mRemoteViews = new RemoteViews("com.yimi.rentme", R.layout.remoteview_layout);
+        mRemoteViews.setTextViewText(R.id.tv_title, temp[0].replace("name", recommendInfo == null ? (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) : recommendInfo.getUserNick()));
+        mRemoteViews.setViewVisibility(R.id.tv_title, temp[0].isEmpty() ? View.GONE : View.VISIBLE);
+        mRemoteViews.setTextViewText(R.id.tv_content, temp[1]);
+
         builder.setOngoing(false);
         builder.setAutoCancel(true);// 设置这个标志当用户单击面板就可以让通知将自动取消
         builder.setDefaults(Notification.DEFAULT_ALL);
         builder.setSmallIcon(R.mipmap.ic_launcher); // 向通知添加声音、闪灯和振动效果的最简单、最一致的方式是使用当前的用户默认设置，使用defaults属性，可以组合：
         try {
-            if (recommendInfo != null)
-                builder.setLargeIcon(Glide.with(activity).asBitmap().load(recommendInfo.getSingleImage()).into(380, 380).get());
+            if (recommendInfo != null) {
+                new AsyncTask<String, Void, Bitmap>() {
+                    @Override
+                    protected Bitmap doInBackground(String... params) {
+                        try {
+                            URL url = new URL(params[0]);
+                            HttpURLConnection conn = (HttpURLConnection) url
+                                    .openConnection();
+                            conn.setConnectTimeout(6000);// 设置超时
+                            conn.setDoInput(true);
+                            conn.setUseCaches(false);// 不缓存
+                            conn.connect();
+                            int code = conn.getResponseCode();
+                            Bitmap bitmap = null;
+                            if (code == 200) {
+                                InputStream is = conn.getInputStream();// 获得图片的数据流
+                                bitmap = BitmapFactory.decodeStream(is);
+                            }
+                            return bitmap;
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                            return null;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            return null;
+                        }
+                    }
+
+                    @Override
+                    protected void onPostExecute(Bitmap result) {
+                        super.onPostExecute(result);
+                        if (result != null) {
+                            mRemoteViews.setImageViewBitmap(R.id.iv_logo, result);
+                            mRemoteViews.setViewVisibility(R.id.iv_logo, View.VISIBLE);
+                            builder.setContent(mRemoteViews);
+
+                            Intent intentMain = new Intent(Intent.ACTION_MAIN);
+                            intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
+                            intentMain.setClass(context, LoadingActivity.class);
+                            intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                            PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intentMain, 0);
+                            builder.setContentIntent(contextIntent);
+                            nmc.notify(null, id, builder.build());
+                        }
+                    }
+                }.execute(recommendInfo.getSingleImage().replace("YM0000", "240X240"));
+            } else {
+                builder.setContent(mRemoteViews);
+
+                Intent intentMain = new Intent(Intent.ACTION_MAIN);
+                intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
+                intentMain.setClass(context, LoadingActivity.class);
+                intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intentMain, 0);
+                builder.setContentIntent(contextIntent);
+                nmc.notify(null, id, builder.build());
+            }
         } catch (Exception e) {
 
         }
-
-        Intent intentMain = new Intent(Intent.ACTION_MAIN);
-        intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
-        intentMain.setClass(context, LoadingActivity.class);
-        intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-        PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intentMain, 0);
-        builder.setContentIntent(contextIntent);
-        nmc.notify(null, id, builder.build());
     }
 
     private static void setNoticeShort(Context context, int type) {
         PreferenceUtil.saveIntValue(context, BaseActivity.userId + "_noticeShort_" + type + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), 1);
-        noticeShortMap.put(118, "虾菇#<name>向你打招呼");
-        noticeShortMap.put(119, "虾菇#<name>想和你聊天");
+        noticeShortMap.put(118, "#<name>向你打招呼");
+        noticeShortMap.put(119, "#<name>想和你聊天");
         noticeShortMap.put(120, "有人在角落里偷偷看了你！#快来找到他");
         noticeShortMap.put(121, (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) + "反复查看了你的动态#快来右滑");
 
@@ -282,27 +341,78 @@ public class MainActivity extends AppBaseActivity {
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationManagerCompat nmc = NotificationManagerCompat.from(context);
         NotificationCompat.Builder builder = BaseActivity.getNotificationBuilderByChannel(notificationManager, MineApp.NOTIFICATION_CHANNEL_ID);
-        // 通知内容
-        builder.setContentTitle(temp[0]);
-        builder.setContentText(temp[1].replace("name", recommendInfo == null ? (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) : recommendInfo.getUserNick()));
+
+        RemoteViews mRemoteViews = new RemoteViews("com.yimi.rentme", R.layout.remoteview_layout);
+        mRemoteViews.setTextViewText(R.id.tv_title, temp[0]);
+        mRemoteViews.setViewVisibility(R.id.tv_title, temp[0].isEmpty() ? View.GONE : View.VISIBLE);
+        mRemoteViews.setTextViewText(R.id.tv_content, temp[1].replace("name", recommendInfo == null ? (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) : recommendInfo.getUserNick()));
+
         builder.setOngoing(false);
         builder.setAutoCancel(true);// 设置这个标志当用户单击面板就可以让通知将自动取消
         builder.setDefaults(Notification.DEFAULT_ALL);
-        builder.setSmallIcon(R.mipmap.ic_launcher); // 向通知添加声音、闪灯和振动效果的最简单、最一致的方式是使用当前的用户默认设置，使用defaults属性，可以组合：
+        builder.setSmallIcon(R.mipmap.ic_launcher);
         try {
-            if (recommendInfo != null)
-                builder.setLargeIcon(Glide.with(activity).asBitmap().load(recommendInfo.getSingleImage()).into(380, 380).get());
+            if (recommendInfo != null) {
+                new AsyncTask<String, Void, Bitmap>() {
+                    @Override
+                    protected Bitmap doInBackground(String... params) {
+                        try {
+                            URL url = new URL(params[0]);
+                            HttpURLConnection conn = (HttpURLConnection) url
+                                    .openConnection();
+                            conn.setConnectTimeout(6000);// 设置超时
+                            conn.setDoInput(true);
+                            conn.setUseCaches(false);// 不缓存
+                            conn.connect();
+                            int code = conn.getResponseCode();
+                            Bitmap bitmap = null;
+                            if (code == 200) {
+                                InputStream is = conn.getInputStream();// 获得图片的数据流
+                                bitmap = BitmapFactory.decodeStream(is);
+                            }
+                            return bitmap;
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                            return null;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            return null;
+                        }
+                    }
+
+                    @Override
+                    protected void onPostExecute(Bitmap result) {
+                        super.onPostExecute(result);
+                        if (result != null) {
+                            mRemoteViews.setImageViewBitmap(R.id.iv_logo, result);
+                            mRemoteViews.setViewVisibility(R.id.iv_logo, View.VISIBLE);
+                            builder.setContent(mRemoteViews);
+
+                            Intent intentMain = new Intent(Intent.ACTION_MAIN);
+                            intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
+                            intentMain.setClass(context, LoadingActivity.class);
+                            intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                            PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intentMain, 0);
+                            builder.setContentIntent(contextIntent);
+                            nmc.notify(null, id, builder.build());
+                        }
+                    }
+                }.execute(recommendInfo.getSingleImage().replace("YM0000", "240X240"));
+            } else {
+                builder.setContent(mRemoteViews);
+
+                Intent intentMain = new Intent(Intent.ACTION_MAIN);
+                intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
+                intentMain.setClass(context, LoadingActivity.class);
+                intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intentMain, 0);
+                builder.setContentIntent(contextIntent);
+                nmc.notify(null, id, builder.build());
+            }
         } catch (Exception e) {
 
         }
 
-        Intent intentMain = new Intent(Intent.ACTION_MAIN);
-        intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
-        intentMain.setClass(context, LoadingActivity.class);
-        intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-        PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intentMain, 0);
-        builder.setContentIntent(contextIntent);
-        nmc.notify(null, id, builder.build());
     }
 
     @Override

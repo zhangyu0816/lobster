@@ -7,7 +7,6 @@ import android.view.KeyEvent;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.utils.KeyBroadUtils;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_register.BR;
 import com.zb.module_register.R;
@@ -34,9 +33,6 @@ public class LoginActivity extends RegisterBaseActivity {
         // 步骤进度跳
         AdapterBinding.viewSize(binding.includeLayout.whiteBg, MineApp.W, 10);
         AdapterBinding.viewSize(binding.includeLayout.whiteView, MineApp.W, 10);
-
-        // 按钮向上移
-        KeyBroadUtils.controlKeyboardLayout(binding.btnLayout, binding.tvNext);
 
         binding.edPass.addTextChangedListener(new TextWatcher() {
             @Override

@@ -11,6 +11,8 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.widget.RemoteViews;
 
 import com.igexin.sdk.GTIntentService;
 import com.igexin.sdk.message.GTCmdMessage;
@@ -63,8 +65,13 @@ public class DemoIntentService extends GTIntentService {
                 String title = object.optString("title");
                 int notificationBasicStyle = object.optInt("notification_basic_style");
                 // 通知内容
-                builder.setContentText(description);
-                builder.setContentTitle(title);
+
+                RemoteViews mRemoteViews = new RemoteViews("com.yimi.rentme", R.layout.remoteview_layout);
+                mRemoteViews.setTextViewText(R.id.tv_title, title);
+                mRemoteViews.setViewVisibility(R.id.tv_title, title.isEmpty() ? View.GONE : View.VISIBLE);
+                mRemoteViews.setTextViewText(R.id.tv_content,description);
+
+                builder.setContent(mRemoteViews);
                 builder.setOngoing(false);
                 builder.setAutoCancel(true);// 设置这个标志当用户单击面板就可以让通知将自动取消
                 builder.setDefaults(Notification.DEFAULT_ALL);

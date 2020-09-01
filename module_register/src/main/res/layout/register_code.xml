@@ -31,8 +31,8 @@
         <include
             android:id="@+id/include_layout"
             layout="@layout/back_white"
-            viewModel="@{viewModel}"
-            right = "@{right}"/>
+            right="@{right}"
+            viewModel="@{viewModel}" />
 
         <TextView
             android:id="@+id/textView"
@@ -64,8 +64,8 @@
 
                 <TextView
                     android:id="@+id/tv_code1"
-                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
                     viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.11f)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
                     android:layout_width="55dp"
                     android:layout_height="80dp"
                     android:background="@drawable/btn_bg_white_radius10"
@@ -76,8 +76,8 @@
 
                 <TextView
                     android:id="@+id/tv_code2"
-                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
                     viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.11f)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
                     android:layout_width="55dp"
                     android:layout_height="80dp"
                     android:layout_marginStart="20dp"
@@ -90,8 +90,8 @@
 
                 <TextView
                     android:id="@+id/tv_code3"
-                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
                     viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.11f)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
                     android:layout_width="55dp"
                     android:layout_height="80dp"
                     android:layout_marginStart="10dp"
@@ -104,8 +104,8 @@
 
                 <TextView
                     android:id="@+id/tv_code4"
-                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
                     viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.11f)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
                     android:layout_width="55dp"
                     android:layout_height="80dp"
                     android:layout_marginStart="10dp"
@@ -118,8 +118,8 @@
 
             <EditText
                 android:id="@+id/ed_code"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.8f)}"
                 viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.11f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.8f)}"
                 android:layout_width="280dp"
                 android:layout_height="80dp"
                 android:layout_centerHorizontal="true"
@@ -134,34 +134,17 @@
 
         <TextView
             android:id="@+id/tv_second"
+            onClickDelayed="@{viewModel::reset}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:alpha="0.8"
-            onClickDelayed="@{viewModel::reset}"
             android:text="@{remark}"
             android:textColor="@android:color/white"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/relativeLayout2" />
-
-        <TextView
-            android:id="@+id/tv_next"
-            onClickDelayed="@{viewModel::sure}"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="30dp"
-            android:background="@drawable/btn_bg_purple_af9_radius60"
-            android:gravity="center"
-            android:text="确认"
-            android:textColor="@color/purple_cab"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@+id/tv_second" />
 
         <TextView
             android:id="@+id/tv_next2"
