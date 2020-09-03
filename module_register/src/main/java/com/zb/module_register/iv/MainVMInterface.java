@@ -10,8 +10,6 @@ public interface MainVMInterface {
 
     void changeUrl(View view);
 
-    void registerByUnion(String userName, String captcha);
-
     void loginByUnion();
 
     void toQQ(View view);

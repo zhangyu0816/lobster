@@ -36,11 +36,13 @@ import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
+import com.zb.lib_base.iv.SuperLikeInterface;
 import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.model.PairInfo;
 import com.zb.lib_base.model.RentInfo;
 import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.utils.ActivityUtils;
@@ -67,7 +69,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.ViewDataBinding;
 import io.realm.Realm;
 
-public class MemberDetailViewModel extends BaseViewModel implements MemberDetailVMInterface {
+public class MemberDetailViewModel extends BaseViewModel implements MemberDetailVMInterface,SuperLikeInterface {
     private CardMemberDetailBinding mBinding;
     public long otherUserId = 0;
     public boolean showLike;
@@ -510,17 +512,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     }
 
     @Override
-    public void superLike(View view) {
-        super.superLike(view);
-        if (mineInfo.getMemberType() == 2) {
-            makeEvaluate(2);
-        } else {
-            if (memberInfo != null)
-                new VipAdPW(activity, mBinding.getRoot(), false, 3, memberInfo.getImage());
-        }
-    }
-
-    @Override
     public void back(View view) {
         super.back(view);
         activity.finish();
@@ -577,5 +568,20 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         } catch (Exception e) {
 
         }
+    }
+
+    @Override
+    public void superLike(View view, PairInfo pairInfo) {
+        if (mineInfo.getMemberType() == 2) {
+            makeEvaluate(2);
+        } else {
+            if (memberInfo != null)
+                new VipAdPW(activity, mBinding.getRoot(), false, 3, memberInfo.getImage());
+        }
+    }
+
+    @Override
+    public void returnBack() {
+
     }
 }

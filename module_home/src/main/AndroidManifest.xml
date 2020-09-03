@@ -6,16 +6,12 @@
         <activity
             android:name=".activity.PublishImageActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity
-            android:name=".activity.DiscoverDetailActivity"
-            android:launchMode="singleTask" />
+        <activity android:name=".activity.DiscoverDetailActivity" />
         <activity android:name=".activity.RewardListActivity" />
         <activity android:name=".activity.ReportActivity" />
         <activity android:name=".activity.SearchActivity" />
         <activity android:name=".activity.VideoListActivity" />
-        <activity
-            android:name=".activity.DiscoverVideoL2Activity"
-            android:launchMode="singleTask" />
+        <activity android:name=".activity.DiscoverVideoL2Activity" />
     </application>
 
 </manifest>

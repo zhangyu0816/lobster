@@ -22,7 +22,6 @@ import com.maning.imagebrowserlibrary.MNImage;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.umeng.socialize.media.UMImage;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;

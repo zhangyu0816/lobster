@@ -110,17 +110,6 @@ public interface HttpService {
     @POST("api/Union_loginByUnionV2")
     Observable<BaseResultEntity<LoginInfo>> loginByUnion(@FieldMap Map<String, String> map);
 
-    // 快捷登录注册
-    @FormUrlEncoded
-    @POST("api/Union_registByUnion")
-    Observable<BaseResultEntity<LoginInfo>> registerByUnion(@Field("openId") String openId, @Field("unionId") String unionId, @Field("unionNick") String unionNick,
-                                                            @Field("unionImage") String unionImage, @Field("unionSex") int unionSex,
-                                                            @Field("unionType") int unionType, @Field("device") String device,
-                                                            @Field("deviceSysVersion") String deviceSysVersion, @Field("deviceCode") String deviceCode,
-                                                            @Field("channelId") String channelId, @Field("usePl") int usePl, @Field("appVersion") String appVersion,
-                                                            @Field("deviceHardwareInfo") String deviceHardwareInfo,
-                                                            @Field("userName") String userName, @Field("captcha") String captcha);
-
     @FormUrlEncoded
     @POST("api/Union_bindingPhone")
     Observable<BaseResultEntity> bindingPhone(@Field("userName") String userName, @Field("captcha") String captcha);
@@ -235,7 +224,7 @@ public interface HttpService {
 
     // 动态广场
     @GET("api/Interactive_dynPiazzaList")
-    Observable<BaseResultEntity<List<DiscoverInfo>>> dynPiazzaList(@QueryMap Map<String,String> map);
+    Observable<BaseResultEntity<List<DiscoverInfo>>> dynPiazzaList(@QueryMap Map<String, String> map);
 
     // 个人动态
     @GET("api/Interactive_personOtherDyn")
@@ -345,6 +334,11 @@ public interface HttpService {
     // 自动喜欢
     @GET("api/Pair_pushGoodUser")
     Observable<BaseResultEntity<Integer>> pushGoodUser();
+
+    // 删除我不喜欢的记录
+    @GET("api/Pair_deleteNoLike")
+    Observable<BaseResultEntity> deleteNoLike();
+
     /******************************* 对话 **********************************/
 
     // 未读会话列表

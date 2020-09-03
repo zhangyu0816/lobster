@@ -101,6 +101,8 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
                 PreferenceUtil.saveStringValue(activity, "userName", o.getUserName());
                 BaseActivity.update();
                 DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
+                MineApp.isThreeLogin = false;
+                PreferenceUtil.saveIntValue(activity, "myIsThreeLogin", 0);
                 myInfo();
             }
         }, activity)
@@ -126,6 +128,8 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
                 PreferenceUtil.saveStringValue(activity, "sessionId", o.getSessionId());
                 PreferenceUtil.saveStringValue(activity, "userName", o.getUserName());
                 BaseActivity.update();
+                MineApp.isThreeLogin = true;
+                PreferenceUtil.saveIntValue(activity, "myIsThreeLogin", 1);
                 DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
                 myInfo();
             }

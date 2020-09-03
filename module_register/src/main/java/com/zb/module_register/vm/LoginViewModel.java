@@ -73,6 +73,8 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface {
                 PreferenceUtil.saveStringValue(activity, "userName", o.getUserName());
                 PreferenceUtil.saveStringValue(activity, "loginPass", loginBinding.getPass());
                 BaseActivity.update();
+                MineApp.isThreeLogin = false;
+                PreferenceUtil.saveIntValue(activity, "myIsThreeLogin", 0);
                 myInfo();
             }
         }, activity)

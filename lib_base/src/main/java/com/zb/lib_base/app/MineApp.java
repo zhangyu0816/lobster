@@ -101,11 +101,14 @@ public class MineApp extends MultiDexApplication {
     public static int sex = 0;
     public static int maxAge = 70;
     public static int minAge = 18;
+    public static int distance = 50 * 1000;
 
     public static List<DiscoverInfo> discoverInfoList = new ArrayList<>();
     public static Map<String, Integer> constellationMap = new HashMap<>();
 
     public static List<RecommendInfo> recommendInfoList = new ArrayList<>();
+
+    public static boolean isThreeLogin = false;
 
     static {
         //设置全局的Header构建器
@@ -276,10 +279,18 @@ public class MineApp extends MultiDexApplication {
     /**
      * Activity退出时清除集合中的Activity.
      *
-     * @param activity 被移除的activity
+     * @param oneself 被移除的activity
      */
-    public static void removeActivity(RxAppCompatActivity activity) {
-        mActivityList.remove(activity);
+    public static void removeActivity(RxAppCompatActivity oneself) {
+        try {
+            for (Activity activity : mActivityList) {
+                if (activity != null && activity.getLocalClassName().equals(oneself.getLocalClassName())) {
+                    activity.finish();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

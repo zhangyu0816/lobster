@@ -110,6 +110,8 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
                 PreferenceUtil.saveStringValue(activity, "sessionId", o.getSessionId());
                 PreferenceUtil.saveStringValue(activity, "userName", o.getUserName());
                 BaseActivity.update();
+                MineApp.isThreeLogin = false;
+                PreferenceUtil.saveIntValue(activity, "myIsThreeLogin", 0);
                 timer.cancel();
                 myInfo();
             }
@@ -147,7 +149,7 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
                 loginHelper.login_Sample(activity, o.getImUserId(), o.getImPassWord());
                 if (MineApp.isLogin) {
                     activity.sendBroadcast(new Intent("lobster_mainSelect"));
-                }else {
+                } else {
                     ActivityUtils.getMainActivity();
                 }
                 activity.finish();

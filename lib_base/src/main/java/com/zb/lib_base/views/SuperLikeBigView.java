@@ -10,11 +10,14 @@ import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
 
 import com.zb.lib_base.R;
+import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.databinding.SuperLikeBigBinding;
+import com.zb.lib_base.iv.SuperLikeInterface;
 import com.zb.lib_base.utils.ObjectUtils;
 
 import java.util.Random;
 
+import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 
 public class SuperLikeBigView extends RelativeLayout {
@@ -22,6 +25,7 @@ public class SuperLikeBigView extends RelativeLayout {
     private AnimatorSet animatorSet = new AnimatorSet();
     private Random ra = new Random();
     private SuperLikeBigBinding mBinding;
+    private static SuperLikeInterface mSuperLikeInterface;
 
     public SuperLikeBigView(Context context) {
         super(context);
@@ -43,6 +47,7 @@ public class SuperLikeBigView extends RelativeLayout {
     private void init(Context context) {
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.super_like_big, null, false);
         addView(mBinding.getRoot());
+        AdapterBinding.onClick(mBinding.ivSuperLike, view -> mSuperLikeInterface.superLike(null, null));
         play();
 
     }
@@ -54,7 +59,7 @@ public class SuperLikeBigView extends RelativeLayout {
         ivStar1Y = ObjectAnimator.ofFloat(mBinding.ivStar1, "translationY", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(200)) + 50)).setDuration(time);
 
         ivStar2X = ObjectAnimator.ofFloat(mBinding.ivStar2, "translationX", 0, (ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(200)) + 50)).setDuration(time);
-        ivStar2Y = ObjectAnimator.ofFloat(mBinding.ivStar2, "translationY", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(200))+ 50)).setDuration(time);
+        ivStar2Y = ObjectAnimator.ofFloat(mBinding.ivStar2, "translationY", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(200)) + 50)).setDuration(time);
 
 
         animatorSet.setInterpolator(new LinearInterpolator());
@@ -72,4 +77,8 @@ public class SuperLikeBigView extends RelativeLayout {
         new Handler().postDelayed(this::play, (time + 2000));
     }
 
+    @BindingAdapter("superLikeInterface")
+    public static void superLike(SuperLikeBigView view, SuperLikeInterface superLikeInterface) {
+        mSuperLikeInterface = superLikeInterface;
+    }
 }

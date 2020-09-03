@@ -20,7 +20,6 @@ import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.loginByUnionApi;
 import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.myInfoApi;
-import com.zb.lib_base.api.registerByUnionApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
@@ -126,30 +125,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     }
 
     @Override
-    public void registerByUnion(String userName, String captcha) {
-        registerByUnionApi api = new registerByUnionApi(new HttpOnNextListener<LoginInfo>() {
-            @Override
-            public void onNext(LoginInfo o) {
-                PreferenceUtil.saveLongValue(activity, "userId", o.getId());
-                PreferenceUtil.saveStringValue(activity, "sessionId", o.getSessionId());
-                PreferenceUtil.saveStringValue(activity, "userName", "");
-                PreferenceUtil.saveStringValue(activity, "loginPass", "");
-                BaseActivity.update();
-                myInfo();
-            }
-        }, activity)
-                .setOpenId(openId)
-                .setUnionId(unionId)
-                .setUnionImage(unionImage)
-                .setUnionNick(unionNick)
-                .setUnionSex(unionSex)
-                .setUnionType(unionType)
-                .setUserName(userName)
-                .setCaptcha(captcha);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
     public void loginByUnion() {
         loginByUnionApi api = new loginByUnionApi(new HttpOnNextListener<LoginInfo>() {
             @Override
@@ -159,6 +134,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 PreferenceUtil.saveStringValue(activity, "userName", "");
                 PreferenceUtil.saveStringValue(activity, "loginPass", "");
                 BaseActivity.update();
+                MineApp.isThreeLogin = true;
+                PreferenceUtil.saveIntValue(activity, "myIsThreeLogin", 1);
                 if (o.getPhoneNum().isEmpty()) {
                     ActivityUtils.getBindingPhone(activity);
                 } else {
