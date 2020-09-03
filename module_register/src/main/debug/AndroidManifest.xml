@@ -24,7 +24,7 @@
                 android:resource="@xml/filepaths" />
         </provider>
 
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.RegisterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

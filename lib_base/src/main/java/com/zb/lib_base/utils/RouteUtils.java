@@ -95,7 +95,7 @@ public class RouteUtils {
     /*********************** 注册 **************************/
 
     // 注册主页
-    public static final String Register_Main = "/register/MainActivity";
+    public static final String Register_Main = "/register/RegisterActivity";
     // 注册--登录
     public static final String Register_Login = "/register/LoginActivity";
     // 注册--昵称
@@ -115,7 +115,7 @@ public class RouteUtils {
 
     /*********************** 相册 **************************/
     // 相册主页
-    public static final String Camera_Main = "/camera/MainActivity";
+    public static final String Camera_Main = "/camera/CameraActivity";
     // 拍视频
     public static final String Camera_Video = "/camera/VideoActivity";
     // 拍照

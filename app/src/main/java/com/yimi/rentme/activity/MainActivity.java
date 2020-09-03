@@ -19,13 +19,16 @@ import android.view.View;
 import android.widget.RemoteViews;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.igexin.sdk.PushManager;
 import com.yimi.rentme.BR;
 import com.yimi.rentme.R;
+import com.yimi.rentme.getui.DemoIntentService;
 import com.yimi.rentme.vm.MainViewModel;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.JobInfoDb;
 import com.zb.lib_base.db.TagDb;
+import com.zb.lib_base.iv.DemoPushService;
 import com.zb.lib_base.model.JobInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.RecommendInfo;
@@ -65,6 +68,10 @@ public class MainActivity extends AppBaseActivity {
 
     @Override
     public void initUI() {
+        // 个推注册
+        PushManager.getInstance().initialize(this.getApplicationContext(), DemoPushService.class);
+        PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), DemoIntentService.class);
+
         tagDb = new TagDb(Realm.getDefaultInstance());
         jobInfoDb = new JobInfoDb(Realm.getDefaultInstance());
         viewModel = new MainViewModel();
@@ -435,6 +442,7 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MineApp.exit();
         viewModel.onDestroy();
         viewModel.stopAnimator();
     }
@@ -486,6 +494,7 @@ public class MainActivity extends AppBaseActivity {
                 if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 4 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
                     amShort4.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 9 * 60 * 1000, senderShort4);
                viewModel.loginHelper.loginOut_Sample();
+                MineApp.exit();
                 System.exit(0);
             }
             return true;

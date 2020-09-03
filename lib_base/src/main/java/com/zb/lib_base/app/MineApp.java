@@ -10,15 +10,18 @@ import com.alibaba.android.arouter.launcher.ARouter;
 import com.alibaba.mobileim.YWAPI;
 import com.alibaba.tcms.service.TCMSService;
 import com.alibaba.wxlib.util.SysUtil;
+import com.igexin.sdk.PushManager;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 import com.zb.lib_base.R;
 import com.zb.lib_base.adaptive.FitScreen;
 import com.zb.lib_base.imcore.LoginSampleHelper;
+import com.zb.lib_base.iv.DemoPushService;
 import com.zb.lib_base.log.LogUtil;
 import com.zb.lib_base.model.BankInfo;
 import com.zb.lib_base.model.ContactNum;
@@ -78,11 +81,12 @@ public class MineApp extends MultiDexApplication {
     public static ContactNum contactNum = new ContactNum();
     public static int noReadBottleNum = 0;
     public static int chatSelectIndex = 0;
-    public static String NOTIFICATION_CHANNEL_ID ="com.yimi.rentme_notice";
+    public static String NOTIFICATION_CHANNEL_ID = "com.yimi.rentme_notice";
 
     public static List<LikeMe> pairList = new ArrayList<>();
 
-    private static LinkedList<Activity> mActivityList = new LinkedList<>();
+    public static LinkedList<RxAppCompatActivity> mActivityList = new LinkedList<>();
+    public static Map<String, RxAppCompatActivity> activityMap = new HashMap<>();
 
     public static boolean isChat = false;
     public static boolean isLocation = false;
@@ -168,6 +172,7 @@ public class MineApp extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         instance = this;
+        PushManager.getInstance().initialize(getApplicationContext(), DemoPushService.class);
         W = getApplicationContext().getResources().getDisplayMetrics().widthPixels;
         H = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
         type = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/semibold.ttf");
@@ -264,7 +269,7 @@ public class MineApp extends MultiDexApplication {
      *
      * @param activity
      */
-    public static void addActivity(Activity activity) {
+    public static void addActivity(RxAppCompatActivity activity) {
         mActivityList.addFirst(activity);
     }
 
@@ -273,7 +278,7 @@ public class MineApp extends MultiDexApplication {
      *
      * @param activity 被移除的activity
      */
-    public static void removeActivity(Activity activity) {
+    public static void removeActivity(RxAppCompatActivity activity) {
         mActivityList.remove(activity);
     }
 
@@ -282,7 +287,7 @@ public class MineApp extends MultiDexApplication {
      *
      * @param oneself 不被移除的activity
      */
-    public static void removeOtherActivity(Activity oneself) {
+    public static void removeOtherActivity(RxAppCompatActivity oneself) {
         try {
             for (Activity activity : mActivityList) {
                 if (activity != null && !activity.getLocalClassName().equals(oneself.getLocalClassName())) {

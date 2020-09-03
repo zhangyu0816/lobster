@@ -102,6 +102,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     private int superLikeStatus = 0;
 
     private int likeCount = 50;
+    private int isFilter = 1;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -344,6 +345,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             public void onNext(List<PairInfo> o) {
                 mBinding.cardRelative.setAlpha(0f);
                 mBinding.setIsPlay(false);
+                isFilter = 1;
                 int start = pairInfoList.size();
                 for (PairInfo pairInfo : o) {
                     List<String> imageList = new ArrayList<>();
@@ -367,6 +369,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     if (pairInfoList.size() == 0) {
                         createProgress();
+                        isFilter = 0;
+                        prePairList(needProgress);
                     }
                 } else if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
                     createOutLike();
@@ -375,7 +379,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         }, activity)
                 .setSex(MineApp.sex)
                 .setMaxAge(MineApp.maxAge)
-                .setMinAge(MineApp.minAge);
+                .setMinAge(MineApp.minAge)
+                .setIsFilter(isFilter);
         new Handler().postDelayed(() -> HttpManager.getInstance().doHttpDeal(api), 1000);
     }
 

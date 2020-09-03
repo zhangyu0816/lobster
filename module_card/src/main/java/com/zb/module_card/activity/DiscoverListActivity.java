@@ -2,6 +2,7 @@ package com.zb.module_card.activity;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_card.BR;
@@ -24,6 +25,7 @@ public class DiscoverListActivity extends CardBaseActivity {
 
     @Override
     public void initUI() {
+        MineApp.activityMap.put("DiscoverListActivity", new DiscoverListActivity());
         DiscoverListViewModel viewModel = new DiscoverListViewModel();
         viewModel.otherUserId = userId;
         viewModel.memberInfo = memberInfo;

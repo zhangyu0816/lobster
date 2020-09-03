@@ -15,6 +15,34 @@
         android:name="notch.config"
         android:value="portrait" />
 
+    <!-- 个推 SDK 权限配置开始 -->
+    <!-- 必选权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+
+    <!-- 以下为可选权限 -->
+    <!-- 支持 iBeancon 需要蓝牙权限 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- 支持个推电子围栏功能 -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- 自定义权限 -->
+    <uses-permission android:name="getui.permission.GetuiService.${applicationId}" />
+
+    <permission
+        android:name="getui.permission.GetuiService.${applicationId}"
+        android:protectionLevel="normal" />
+    <!-- 个推 SDK 权限配置结束 -->
+
     <application
         android:name="com.zb.lib_base.app.MineApp"
         android:allowBackup="true"
@@ -24,6 +52,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:replace="android:theme">
 
         <service android:name=".activity.ForegroundLiveService" />
@@ -31,28 +60,28 @@
 
         <receiver
             android:name=".activity.MainActivity$alarmReceiver"
-            android:exported="false"/>
+            android:exported="false" />
         <receiver
             android:name=".activity.MainActivity$alarmReceiver1"
-            android:exported="false"/>
+            android:exported="false" />
         <receiver
             android:name=".activity.MainActivity$alarmReceiver2"
-            android:exported="false"/>
+            android:exported="false" />
         <receiver
             android:name=".activity.MainActivity$alarmShortReceiver"
-            android:exported="false"/>
+            android:exported="false" />
         <receiver
             android:name=".activity.MainActivity$alarmShortReceiver1"
-            android:exported="false"/>
+            android:exported="false" />
         <receiver
             android:name=".activity.MainActivity$alarmShortReceiver2"
-            android:exported="false"/>
+            android:exported="false" />
         <receiver
             android:name=".activity.MainActivity$alarmShortReceiver3"
-            android:exported="false"/>
+            android:exported="false" />
         <receiver
             android:name=".activity.MainActivity$alarmShortReceiver4"
-            android:exported="false"/>
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -91,16 +120,72 @@
         <!-- 支付宝快捷支付 end -->
 
         <!-- 个推SDK配置开始 -->
+        <!--        <service-->
+        <!--            android:name=".getui.DemoPushService"-->
+        <!--            android:exported="true"-->
+        <!--            android:label="PushService"-->
+        <!--            android:process=":pushservice">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="com.igexin.sdk.action.service.message" />-->
+        <!--            </intent-filter>-->
+        <!--        </service>-->
+        <!--        <service android:name=".getui.DemoIntentService" />-->
+
+
+        <!-- 个推 SDK 配置开始 -->
+        <!-- Android9.0 以上默认不支持 http 通信，为保证 SDK 正常使用，请在 application 节点下新增该属性 -->
+        <!-- 配置的第三方参数属性 -->
+        <meta-data
+            android:name="PUSH_APPID"
+            android:value="${GETUI_APP_ID}" />
+        <meta-data
+            android:name="PUSH_APPKEY"
+            android:value="${GETUI_APP_KEY}" />
+        <meta-data
+            android:name="PUSH_APPSECRET"
+            android:value="${GETUI_APP_SECRET}" />
+
+        <!-- 配置 SDK 核心服务 -->
+        <!-- permission 属性在 2.13.1.0 版本后必须配置 -->
         <service
-            android:name=".getui.DemoPushService"
-            android:exported="true"
-            android:label="PushService"
-            android:process=":pushservice">
+            android:name="com.zb.lib_base.iv.DemoPushService"
+            android:exported="false"
+            android:label="NotificationCenter"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:process=":pushservice" />
+        <service
+            android:name=".getui.DemoIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver android:name="com.igexin.sdk.PushReceiver">
             <intent-filter>
-                <action android:name="com.igexin.sdk.action.service.message" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <!-- 以下三项为可选的 action 声明，有助于提高 service 存活率 -->
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
             </intent-filter>
-        </service>
-        <service android:name=".getui.DemoIntentService" />
+        </receiver>
+
+        <activity
+            android:name="com.igexin.sdk.PushActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:process=":pushservice"
+            android:taskAffinity="com.igexin.sdk.PushActivityTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity
+            android:name="com.igexin.sdk.GActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:process=":pushservice"
+            android:taskAffinity="com.igexin.sdk.PushActivityTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <!-- 个推 SDK 配置结束 -->
         <!-- 个推SDK配置结束 -->
 
         <activity

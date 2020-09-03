@@ -12,7 +12,7 @@
     <application
         android:hardwareAccelerated="true"
         android:theme="@style/CameraTheme">
-        <activity android:name=".activity.MainActivity" />
+        <activity android:name=".activity.CameraActivity" />
         <activity android:name=".activity.VideoActivity" />
         <activity android:name=".activity.PhotoActivity" />
         <activity android:name=".activity.VideosActivity" />

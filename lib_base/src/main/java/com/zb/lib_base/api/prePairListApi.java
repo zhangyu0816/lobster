@@ -16,6 +16,7 @@ public class prePairListApi extends BaseEntity<List<PairInfo>> {
     int sex;//性别
     int minAge;//最小年龄
     int maxAge;//最大年龄
+    int isFilter;
 
     public prePairListApi setSex(int sex) {
         this.sex = sex;
@@ -32,6 +33,11 @@ public class prePairListApi extends BaseEntity<List<PairInfo>> {
         return this;
     }
 
+    public prePairListApi setIsFilter(int isFilter) {
+        this.isFilter = isFilter;
+        return this;
+    }
+
     public prePairListApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
         setShowProgress(false);
@@ -45,6 +51,7 @@ public class prePairListApi extends BaseEntity<List<PairInfo>> {
         }
         map.put("minAge", minAge + "");
         map.put("maxAge", maxAge + "");
+        map.put("isFilter", isFilter + "");
         return methods.prePairList(map);
     }
 }

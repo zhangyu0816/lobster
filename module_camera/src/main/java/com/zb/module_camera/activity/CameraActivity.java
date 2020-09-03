@@ -8,7 +8,7 @@ import com.zb.module_camera.R;
 import com.zb.module_camera.vm.CameraViewModel;
 
 @Route(path = RouteUtils.Camera_Main)
-public class MainActivity extends CameraBaseActivity {
+public class CameraActivity extends CameraBaseActivity {
 
     @Autowired(name = "isMore")
     boolean isMore;

@@ -13,6 +13,8 @@ public interface DiscoverVideoL2VMInterface {
 
     void toMemberDetail(View view);
 
+    void doReward(View view);
+
     void dynDetail();
 
     void otherInfo();

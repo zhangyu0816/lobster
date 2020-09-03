@@ -367,6 +367,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     } else if (likeOtherStatus == 1) {
                         likeDb.saveLike(new CollectID(otherUserId));
                         activity.sendBroadcast(new Intent("lobster_isLike"));
+                        activity.sendBroadcast(new Intent("lobster_updateFCL"));
                         likeTypeDb.setType(otherUserId, 1);
                         closeBtn(mBinding.ivLike);
                         closeBtn(mBinding.ivDislike);
@@ -374,7 +375,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                         SCToastUtil.showToast(activity, "已喜欢成功", true);
                     } else if (likeOtherStatus == 2) {
                         if (showLike) {
-                            // 不喜欢成功  喜欢成功  超级喜欢成功
                             activity.finish();
                             Intent data = new Intent("lobster_card");
                             data.putExtra("direction", 2);
@@ -386,6 +386,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                             }
                             likeTypeDb.setType(otherUserId, 2);
                             closeBtn(mBinding.ivSuperLike);
+                            activity.sendBroadcast(new Intent("lobster_updateFCL"));
                             new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
                         }
                     }
@@ -396,6 +397,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                             () -> ActivityUtils.getChatActivity(otherUserId));
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                     activity.sendBroadcast(new Intent("lobster_isLike"));
+                    activity.sendBroadcast(new Intent("lobster_updateFCL"));
                     likeTypeDb.setType(otherUserId, 1);
                     mBinding.setLikeType(1);
                 } else if (o == 3) {

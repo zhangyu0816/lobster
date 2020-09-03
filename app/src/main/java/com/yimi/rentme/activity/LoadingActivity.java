@@ -8,8 +8,8 @@ import com.igexin.sdk.PushManager;
 import com.yimi.rentme.BR;
 import com.yimi.rentme.R;
 import com.yimi.rentme.getui.DemoIntentService;
-import com.yimi.rentme.getui.DemoPushService;
 import com.yimi.rentme.vm.LoadingViewModel;
+import com.zb.lib_base.iv.DemoPushService;
 
 public class LoadingActivity extends AppBaseActivity {
     @Override

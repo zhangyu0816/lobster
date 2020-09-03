@@ -57,6 +57,7 @@ public class NewsManagerViewModel extends BaseViewModel implements NewsManagerVM
                 MineApp.mineNewsCount.setFriendDynamicGoodNum(0);
                 MineApp.mineNewsCount.setFriendDynamicReviewNum(0);
                 mBinding.setVariable(BR.mineNewsCount, MineApp.mineNewsCount);
+                activity.sendBroadcast(new Intent("lobster_newsCount"));
                 if (MineApp.mineNewsCount.getSystemNewsNum() > 0) {
                     // 获取与某个聊天对象的会话记录
                     otherImAccountInfoApi();

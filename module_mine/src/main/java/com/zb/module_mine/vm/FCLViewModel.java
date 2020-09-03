@@ -54,6 +54,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
     private MineInfo mineInfo;
     private BaseReceiver attentionListReceiver;
     private BaseReceiver finishRefreshReceiver;
+    private BaseReceiver updateFCLReceiver;
 
     @Override
     public void back(View view) {
@@ -81,11 +82,19 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 adapter.notifyItemChanged(_selectIndex);
             }
         };
+        updateFCLReceiver = new BaseReceiver(activity, "lobster_updateFCL") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (_selectIndex != -1)
+                    adapter.notifyItemChanged(_selectIndex);
+            }
+        };
     }
 
     public void onDestroy() {
         finishRefreshReceiver.unregisterReceiver();
         attentionListReceiver.unregisterReceiver();
+        updateFCLReceiver.unregisterReceiver();
     }
 
     @Override

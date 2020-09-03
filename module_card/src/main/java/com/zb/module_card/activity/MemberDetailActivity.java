@@ -2,6 +2,7 @@ package com.zb.module_card.activity;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;
@@ -23,6 +24,7 @@ public class MemberDetailActivity extends CardBaseActivity {
 
     @Override
     public void initUI() {
+        MineApp.activityMap.put("MemberDetailActivity", new MemberDetailActivity());
         viewModel = new MemberDetailViewModel();
         viewModel.otherUserId = userId;
         viewModel.showLike = showLike;

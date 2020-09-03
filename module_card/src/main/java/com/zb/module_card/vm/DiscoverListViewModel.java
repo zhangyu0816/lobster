@@ -11,7 +11,6 @@ import com.zb.lib_base.api.cancelAttentionApi;
 import com.zb.lib_base.api.contactNumApi;
 import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.memberInfoConfApi;
-import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -36,7 +35,6 @@ import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
-import io.realm.Realm;
 
 public class DiscoverListViewModel extends BaseViewModel implements DiscoverListVMInterface {
     public long otherUserId;
@@ -44,13 +42,11 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
     private List<Fragment> fragments = new ArrayList<>();
     public MemberInfo memberInfo;
     private MineInfo mineInfo;
-    private LikeDb likeDb;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (CardDiscoverListBinding) binding;
-        likeDb = new LikeDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
         contactNum();
         initFragments();

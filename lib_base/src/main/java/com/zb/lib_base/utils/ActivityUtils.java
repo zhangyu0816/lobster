@@ -2,6 +2,7 @@ package com.zb.lib_base.utils;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.model.Authentication;
 import com.zb.lib_base.model.FeedbackInfo;
 import com.zb.lib_base.model.MemberInfo;
@@ -22,7 +23,8 @@ public class ActivityUtils {
     }
 
     // 动态详情
-    public static RxAppCompatActivity getHomeDiscoverDetail(long friendDynId) {
+    public static RxAppCompatActivity getHomeDiscoverDetail(long friendDynId) {//253510
+        MineApp.removeActivity(MineApp.activityMap.get("DiscoverDetailActivity"));
         RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Home_Discover_Detail).withLong("friendDynId", friendDynId).navigation();
         return activity;
     }
@@ -41,6 +43,7 @@ public class ActivityUtils {
 
     // 礼物列表
     public static RxAppCompatActivity getHomeDiscoverVideoL2(long friendDynId) {
+        MineApp.removeActivity(MineApp.activityMap.get("DiscoverVideoL2Activity"));
         RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Home_Discover_Video_L2).withLong("friendDynId", friendDynId).navigation();
         return activity;
     }
@@ -59,13 +62,15 @@ public class ActivityUtils {
 
     /*********************** 卡片 **************************/
     // 用户详情
-    public static RxAppCompatActivity getCardMemberDetail(long userId, boolean showLike) {
+    public static RxAppCompatActivity getCardMemberDetail(long userId, boolean showLike) {//2321942
+        MineApp.removeActivity(MineApp.activityMap.get("MemberDetailActivity"));
         RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Card_Member_Detail).withLong("userId", userId).withBoolean("showLike", showLike).navigation();
         return activity;
     }
 
     // 用户详情
     public static RxAppCompatActivity getCardDiscoverList(long userId, boolean isAttention, MemberInfo memberInfo) {
+        MineApp.removeActivity(MineApp.activityMap.get("DiscoverListActivity"));
         RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Card_Discover_List).withLong("userId", userId).withBoolean("isAttention", isAttention).withParcelable("memberInfo", memberInfo).navigation();
         return activity;
     }

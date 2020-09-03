@@ -64,6 +64,8 @@ import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
 import com.zb.module_home.databinding.HomeVideoL2Binding;
 import com.zb.module_home.iv.DiscoverVideoL2VMInterface;
+import com.zb.module_home.windows.GiftPW;
+import com.zb.module_home.windows.GiftPayPW;
 import com.zb.module_home.windows.ReviewPW;
 
 import java.io.File;
@@ -241,6 +243,13 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
             mBinding.reviewList.stop();
             ActivityUtils.getCardMemberDetail(discoverInfo.getUserId(), false);
         }
+    }
+
+    @Override
+    public void doReward(View view) {
+        new GiftPW(activity, mBinding.getRoot(), giftInfo ->
+                new GiftPayPW(activity, mBinding.getRoot(), giftInfo, discoverInfo.getFriendDynId(), () -> {
+                }));
     }
 
     @Override

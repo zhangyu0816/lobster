@@ -15,7 +15,7 @@ import com.zb.module_register.vm.MainViewModel;
 import androidx.annotation.Nullable;
 
 @Route(path = RouteUtils.Register_Main)
-public class MainActivity extends RegisterBaseActivity {
+public class RegisterActivity extends RegisterBaseActivity {
 
     private long exitTime = 0;
     private MainViewModel viewModel;
@@ -47,6 +47,7 @@ public class MainActivity extends RegisterBaseActivity {
                     SCToastUtil.showToast(activity, "再按一次退出程序", false);
                     exitTime = System.currentTimeMillis();
                 } else {
+                    MineApp.exit();
                     System.exit(0);
                 }
             } else {
