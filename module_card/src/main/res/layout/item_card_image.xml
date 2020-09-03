@@ -20,10 +20,6 @@
             type="com.zb.module_card.vm.CardViewModel" />
 
         <variable
-            name="imageAdapter"
-            type="com.zb.module_card.adapter.CardAdapter" />
-
-        <variable
             name="position"
             type="Integer" />
 
@@ -35,7 +31,7 @@
         viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:onClick="@{v->viewModel.selectImage(imageAdapter,position)}">
+        android:onClick="@{v->viewModel.selectImage(position)}">
 
         <ImageView
             imageRes="@{ObjectUtils.getDefaultRes()}"

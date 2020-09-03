@@ -60,7 +60,6 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
         holder.binding.setVariable(BR.item, t);
         holder.binding.setVariable(BR.position, position);
         holder.binding.setVariable(BR.isImageSelect, position == selectImageIndex);
-        holder.binding.setVariable(BR.imageAdapter, CardAdapter.this);
         if (t instanceof PairInfo) {
             CardAdapter adapter = new CardAdapter<>(activity, R.layout.item_card_image, ((PairInfo) t).getImageList(), viewModel);
             adapter.setCurrentView(holder.binding.getRoot());

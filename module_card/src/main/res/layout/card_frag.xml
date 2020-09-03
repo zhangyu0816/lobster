@@ -97,6 +97,7 @@
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/card_list"
             adapter="@{viewModel.adapter}"
             cardCallback="@{cardCallback}"
             recyclerType="@{6}"

@@ -156,9 +156,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                         cardCallback.swiped(currentView, ItemTouchHelper.LEFT);
                         ivLike.setVisibility(View.GONE);
                     }, 800);
-                    String myHead = mineInfo.getImage();
-                    String otherHead = pairInfo.getSingleImage();
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), pairInfo.getSex(), null);
                 }
             }
         };
@@ -244,7 +241,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         cardCallback = new CardItemTouchHelperCallback<>(adapter, pairInfoList);
         cardCallback.setOnSwipedListener(this);
         mBinding.setVariable(BR.cardCallback, cardCallback);
-
         disListAdapter = new CardAdapter<>(activity, R.layout.item_card_image, imageList, this);
         mBinding.setVariable(BR.adapter, disListAdapter);
         prePairList(true);
@@ -318,10 +314,12 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     }
 
     @Override
-    public void selectImage(CardAdapter imageAdapter, int position) {
-        int preIndex = imageAdapter.getSelectImageIndex();
-        int selectIndex = position;
-        updateAdapterUI(imageAdapter.getCurrentView(), imageAdapter, preIndex, selectIndex, pairInfoList.get(0).getImageList());
+    public void selectImage(int position) {
+        View currentView = mBinding.cardList.getLayoutManager().findViewByPosition(0);
+        MyRecyclerView imageList = currentView.findViewById(R.id.image_list);
+        CardAdapter adapter = (CardAdapter) imageList.getAdapter();
+
+        updateAdapterUI(currentView, adapter, adapter.getSelectImageIndex(), position, pairInfoList.get(0).getImageList());
     }
 
     @Override
@@ -333,12 +331,15 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         ActivityUtils.getMineLocation(false);
     }
 
+    private List<Long> userIdList = new ArrayList<>();
+
     @Override
     public void prePairList(boolean needProgress) {
         if (needProgress) {
             pairInfoList.clear();
             adapter.notifyDataSetChanged();
             createProgress();
+            userIdList.clear();
         }
         prePairListApi api = new prePairListApi(new HttpOnNextListener<List<PairInfo>>() {
             @Override
@@ -347,34 +348,45 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 mBinding.setIsPlay(false);
                 int start = pairInfoList.size();
                 for (PairInfo pairInfo : o) {
-                    List<String> imageList = new ArrayList<>();
-                    if (!pairInfo.getMoreImages().isEmpty()) {
-                        imageList.addAll(Arrays.asList(pairInfo.getMoreImages().split("#")));
+                    if (!userIdList.contains(pairInfo.getOtherUserId())) {
+                        userIdList.add(pairInfo.getOtherUserId());
+                        List<String> imageList = new ArrayList<>();
+                        if (!pairInfo.getMoreImages().isEmpty()) {
+                            imageList.addAll(Arrays.asList(pairInfo.getMoreImages().split("#")));
+                        }
+                        if (imageList.size() == 0) {
+                            imageList.add(pairInfo.getSingleImage());
+                        }
+                        pairInfo.setImageList(imageList);
+                        pairInfoList.add(pairInfo);
                     }
-                    if (imageList.size() == 0) {
-                        imageList.add(pairInfo.getSingleImage());
-                    }
-                    pairInfo.setImageList(imageList);
-                    pairInfoList.add(pairInfo);
                 }
-                adapter.notifyItemRangeChanged(start, pairInfoList.size());
-                if (mineInfo.getMemberType() == 1) {
-                    updateCount(likeCount);
+                if (start == pairInfoList.size()) {
+                    if (MineApp.distance >= 500 * 1000) {
+                        deleteNoLike();
+                    } else {
+                        MineApp.distance = MineApp.distance + 50 * 1000;
+                        PreferenceUtil.saveIntValue(activity, "myDistance", MineApp.distance);
+                        prePairList(needProgress);
+                    }
+                } else {
+                    adapter.notifyItemRangeChanged(start, pairInfoList.size());
+                    if (mineInfo.getMemberType() == 1) {
+                        updateCount(likeCount);
+                    }
                 }
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    if (pairInfoList.size() == 0) {
-                        createProgress();
-                        if (MineApp.distance >= 500 * 1000) {
-                            deleteNoLike();
-                        } else {
-                            MineApp.distance = MineApp.distance + 50 * 1000;
-                            PreferenceUtil.saveIntValue(activity, "myDistance", MineApp.distance);
-                            prePairList(needProgress);
-                        }
+                    createProgress();
+                    if (MineApp.distance >= 500 * 1000) {
+                        deleteNoLike();
+                    } else {
+                        MineApp.distance = MineApp.distance + 50 * 1000;
+                        PreferenceUtil.saveIntValue(activity, "myDistance", MineApp.distance);
+                        prePairList(needProgress);
                     }
                 } else if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
                     createOutLike();
@@ -396,6 +408,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         deleteNoLikeApi api = new deleteNoLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
+                userIdList.clear();
                 if ((System.currentTimeMillis() - exitTime) > 2000) {
                     exitTime = System.currentTimeMillis();
                     prePairList(false);
@@ -514,6 +527,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     private void updateAdapterUI(View view, CardAdapter imageAdapter, int preIndex, int selectIndex, List<String> imageList) {
         if (imageList.size() == 0)
             return;
+
         imageAdapter.setSelectImageIndex(selectIndex);
         imageAdapter.notifyItemChanged(preIndex);
         imageAdapter.notifyItemChanged(selectIndex);
@@ -576,8 +590,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
             return;
         }
-
-        makeEvaluate(pairInfo, superLikeStatus == 0 ? likeOtherStatus : superLikeStatus);
+        if (superLikeStatus != 2)
+            makeEvaluate(pairInfo, likeOtherStatus);
         superLikeStatus = 0;
     }
 
@@ -615,8 +629,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         imageList.addAll(pairInfo.getImageList());
         disListAdapter.notifyDataSetChanged();
 
-        rotationOut = ObjectAnimator.ofFloat(mBinding.cardRelative, "rotation", -45, 0).setDuration(500);
-        translationOutX = ObjectAnimator.ofFloat(mBinding.cardRelative, "translationX", -MineApp.W, 0).setDuration(500);
+        rotationOut = ObjectAnimator.ofFloat(mBinding.cardRelative, "rotation", 45, 0).setDuration(500);
+        translationOutX = ObjectAnimator.ofFloat(mBinding.cardRelative, "translationX", MineApp.W, 0).setDuration(500);
         alphaOut = ObjectAnimator.ofFloat(mBinding.cardRelative, "alpha", 0, 1).setDuration(500);
 
         animatorSet.setInterpolator(new LinearInterpolator());

@@ -15,7 +15,7 @@ public interface CardVMInterface {
 
     void rightBtn(View currentView, CardAdapter adapter);
 
-    void selectImage(CardAdapter adapter, int position);
+    void selectImage(int position);
 
     void selectCity(View view);
 
