@@ -9,7 +9,6 @@ import com.zb.lib_base.adapter.BindingItemAdapter;
 import com.zb.lib_base.adapter.ItemTouchHelperAdapter;
 import com.zb.lib_base.adapter.RecyclerHolder;
 import com.zb.lib_base.vm.BaseViewModel;
-import com.zb.module_register.vm.ImagesViewModel;
 
 import java.util.Collections;
 import java.util.List;

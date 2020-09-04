@@ -93,9 +93,6 @@ dependencies {
     if (isNeedMineModule.toBoolean()) {
         implementation project(':module_mine')
     }
-    if (isNeedRegisterModule.toBoolean()) {
-        implementation project(':module_register')
-    }
     if (isNeedBottleModule.toBoolean()) {
         implementation project(':module_bottle')
     }

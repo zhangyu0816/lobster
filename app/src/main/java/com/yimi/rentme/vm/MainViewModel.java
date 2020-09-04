@@ -41,7 +41,6 @@ import com.zb.lib_base.api.recommendRankingListApi;
 import com.zb.lib_base.api.systemChatApi;
 import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.BottleCacheDb;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.db.HistoryMsgDb;

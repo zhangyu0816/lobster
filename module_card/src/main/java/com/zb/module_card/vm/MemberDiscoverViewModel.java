@@ -19,7 +19,6 @@ import com.zb.lib_base.api.dynPiazzaListApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.personOtherDynApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -43,7 +42,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
-import io.realm.Realm;
 
 public class MemberDiscoverViewModel extends BaseViewModel implements MemberDiscoverVMInterface, OnRefreshListener, OnLoadMoreListener {
 

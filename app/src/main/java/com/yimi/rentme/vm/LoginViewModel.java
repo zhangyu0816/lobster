@@ -1,12 +1,14 @@
 package com.yimi.rentme.vm;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -43,6 +45,7 @@ import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.LoginInfo;
 import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
@@ -189,6 +192,8 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     public void onDestroy() {
         cameraReceiver.unregisterReceiver();
         bindPhoneReceiver.unregisterReceiver();
+        if (outAlpha != null)
+            outAlpha = null;
     }
 
     /**
@@ -620,6 +625,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 } else {
                     ActivityUtils.getMainActivity();
                 }
+                MineApp.registerInfo = new RegisterInfo();
                 timer.cancel();
                 activity.finish();
             }
@@ -670,22 +676,26 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         mBinding.setLoginStep(step);
         switch (step) {
             case 0:
+                outAlpha(mBinding.step0Layout);
                 MineApp.registerInfo.setOpenId("");
                 MineApp.registerInfo.setUnionId("");
                 mBinding.setIsThree(false);
                 break;
             case 1:
+                outAlpha(mBinding.step1Layout);
                 AdapterBinding.viewSize(mBinding.whiteView, MineApp.W / 6, 10);
                 mBinding.setBtnName("继续");
                 mBinding.setCanNext(!MineApp.registerInfo.getName().isEmpty());
                 break;
             case 2:
+                outAlpha(mBinding.step2Layout);
                 titleMap.put(2, "嗨 " + MineApp.registerInfo.getName() + "！\n您的生日是？");
                 AdapterBinding.viewSize(mBinding.whiteView, MineApp.W / 3, 10);
                 mBinding.setBtnName("继续");
                 mBinding.setCanNext(!MineApp.registerInfo.getBirthday().isEmpty());
                 break;
             case 3:
+                outAlpha(mBinding.step3Layout);
                 AdapterBinding.viewSize(mBinding.whiteView, MineApp.W / 2, 10);
                 mBinding.setCanNext(MineApp.registerInfo.getPhone().length() == 11);
                 if (!MineApp.registerInfo.getPhone().isEmpty()) {
@@ -694,23 +704,27 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 }
                 break;
             case 4:
+                outAlpha(mBinding.step4Layout);
                 AdapterBinding.viewSize(mBinding.whiteView, mBinding.getRight().isEmpty() ? MineApp.W * 2 / 3 : MineApp.W, 10);
                 mBinding.setCanNext(false);
                 mBinding.setBtnName("确认");
                 mBinding.edCode.setText("");
                 break;
             case 5:
+                outAlpha(mBinding.step5Layout);
                 AdapterBinding.viewSize(mBinding.whiteView, MineApp.W * 5 / 6, 10);
                 mBinding.setCanNext(!moreImageList.get(0).isEmpty());
                 mBinding.setBtnName("确认上传");
                 mBinding.setImageUrl(moreImageList.get(0));
                 break;
             case 6:
+                outAlpha(mBinding.step6Layout);
                 AdapterBinding.viewSize(mBinding.whiteView, MineApp.W, 10);
                 mBinding.setBtnName("开始使用吧");
                 mBinding.setCanNext(true);
                 break;
             case 7:
+                outAlpha(mBinding.step7Layout);
                 AdapterBinding.viewSize(mBinding.whiteView, MineApp.W, 10);
                 mBinding.setBtnName("登录");
                 mBinding.setCanNext(MineApp.registerInfo.getPass().length() > 5);
@@ -876,5 +890,16 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(str);
         return m.replaceAll("");
+    }
+
+    private ObjectAnimator outAlpha;
+
+    private void outAlpha(View view) {
+        outAlpha = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f).setDuration(500);
+        outAlpha.start();
+        new Handler().postDelayed(() -> {
+            if (outAlpha != null)
+                outAlpha = null;
+        }, 1000);
     }
 }

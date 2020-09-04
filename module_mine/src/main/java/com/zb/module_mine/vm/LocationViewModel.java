@@ -28,7 +28,6 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.updatePairPoolApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.LocationInfo;
@@ -44,7 +43,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
-import io.realm.Realm;
 
 public class LocationViewModel extends BaseViewModel implements LocationVMInterface, GeocodeSearch.OnGeocodeSearchListener {
     public MineAdapter adapter;

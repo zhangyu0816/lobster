@@ -13,8 +13,6 @@ import com.yimi.rentme.vm.LoginViewModel;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.utils.RouteUtils;
 
-import androidx.annotation.Nullable;
-
 @Route(path = RouteUtils.Main_Login)
 public class LoginActivity extends BaseActivity {
 

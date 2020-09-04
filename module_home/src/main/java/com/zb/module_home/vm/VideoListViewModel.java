@@ -38,7 +38,6 @@ import com.zb.lib_base.api.seeLikersApi;
 import com.zb.lib_base.api.seeReviewsApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
-import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;

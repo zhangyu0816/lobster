@@ -9,7 +9,6 @@ import com.maning.imagebrowserlibrary.MNImage;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.modifyMemberInfoApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.MineInfo;
@@ -35,7 +34,6 @@ import java.util.List;
 import androidx.databinding.ViewDataBinding;
 import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.ItemTouchHelper;
-import io.realm.Realm;
 
 public class EditMemberViewModel extends BaseViewModel implements EditMemberVMInterface {
     public MineAdapter adapter;

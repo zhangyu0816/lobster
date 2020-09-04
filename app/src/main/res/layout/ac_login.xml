@@ -132,12 +132,13 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/step_0_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:visibility="@{loginStep==0?View.VISIBLE:View.GONE}">
-                <!--                android:visibility="gone">-->
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -260,11 +261,12 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/step_1_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:visibility="@{loginStep==1?View.VISIBLE:View.GONE}">
-                <!--                android:visibility="gone">-->
+
                 <EditText
                     android:id="@+id/ed_nick"
                     style="@style/whiteEdit"
@@ -297,11 +299,12 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/step_2_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:visibility="@{loginStep==2?View.VISIBLE:View.GONE}">
-                <!--                android:visibility="gone">-->
+
                 <TextView
                     onClickDelayed="@{viewModel::selectBirthday}"
                     android:layout_width="match_parent"
@@ -336,11 +339,12 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/step_3_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:visibility="@{loginStep==3?View.VISIBLE:View.GONE}">
-                <!--                android:visibility="gone">-->
+
                 <EditText
                     android:id="@+id/ed_phone"
                     style="@style/whiteEdit"
@@ -374,11 +378,11 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/step_4_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:visibility="@{loginStep==4?View.VISIBLE:View.GONE}">
-                <!--                android:visibility="gone">-->
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -476,6 +480,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/step_5_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal"
@@ -542,6 +547,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/step_6_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal"
@@ -560,6 +566,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/step_7_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal"
