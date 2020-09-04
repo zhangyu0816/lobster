@@ -49,6 +49,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (MineSettingBinding) binding;
+        mBinding.setIsThreeLogin(PreferenceUtil.readIntValue(activity, "myIsThreeLogin", 0) == 1);
         mineInfo = mineInfoDb.getMineInfo();
         updateWalletReceiver = new BaseReceiver(activity, "lobster_updateWallet") {
             @Override
@@ -186,7 +187,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
                 BaseActivity.update();
                 MineApp.isLogin = false;
                 MineApp.exit();
-                ActivityUtils.getRegisterMain();
+                ActivityUtils.getLoginActivity(0);
                 activity.finish();
             }
         }, activity);

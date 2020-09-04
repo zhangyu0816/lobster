@@ -55,8 +55,8 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:theme">
 
-        <service android:name=".activity.ForegroundLiveService" />
-        <service android:name=".activity.ForegroundLiveService$InnerService" />
+        <service android:name=".service.ForegroundLiveService" />
+        <service android:name=".service.ForegroundLiveService$InnerService" />
 
         <receiver
             android:name=".activity.MainActivity$alarmReceiver"
@@ -202,6 +202,8 @@
             android:launchMode="singleTask" />
 
         <activity android:name="com.zb.lib_base.activity.NotifivationActivity" />
+        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.BindingPhoneActivity" />
 
 
     </application>

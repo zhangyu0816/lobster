@@ -78,7 +78,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     public CardAdapter discoverAdapter;
     private List<String> tagList = new ArrayList<>();
     private List<DiscoverInfo> discoverInfoList = new ArrayList<>();
-    private AreaDb areaDb;
     private MineInfo mineInfo;
     private LikeDb likeDb;
     private BaseReceiver attentionReceiver;
@@ -93,7 +92,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        areaDb = new AreaDb(Realm.getDefaultInstance());
         likeDb = new LikeDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
         likeType = likeTypeDb.getType(otherUserId);

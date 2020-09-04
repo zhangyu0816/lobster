@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="item"
+            type="String" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="viewModel"
+            type="com.yimi.rentme.vm.LoginViewModel" />
+
+    </data>
+
+    <RelativeLayout
+        onClickDelayed="@{v->viewModel.selectImage(position)}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+
+        <LinearLayout
+            viewHeightSize="@{ObjectUtils.getLogoHeight(0.27f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.27f)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/btn_bg_purple_976_radius10"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="@{item.isEmpty()?View.VISIBLE:View.GONE}">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@mipmap/add_icon" />
+
+        </LinearLayout>
+
+        <ImageView
+            imageUrl="@{item}"
+            isRound="@{true}"
+            roundSize="@{10}"
+            viewHeightSize="@{ObjectUtils.getLogoHeight(0.27f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.27f)}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="@{item.isEmpty()?View.GONE:View.VISIBLE}"/>
+    </RelativeLayout>
+</layout>

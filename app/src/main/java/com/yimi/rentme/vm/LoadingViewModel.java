@@ -44,7 +44,7 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
     @Override
     public void myInfo() {
         if (BaseActivity.sessionId.isEmpty()) {
-            ActivityUtils.getRegisterMain();
+            ActivityUtils.getLoginActivity(0);
             activity.finish();
         } else {
             myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
@@ -58,7 +58,7 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
                 @Override
                 public void onError(Throwable e) {
                     if (e instanceof SocketTimeoutException || e instanceof ConnectException || e instanceof UnknownHostException) {
-                        ActivityUtils.getRegisterMain();
+                        ActivityUtils.getLoginActivity(0);
                         activity.finish();
                     }
                 }

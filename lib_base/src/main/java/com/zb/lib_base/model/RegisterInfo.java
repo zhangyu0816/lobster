@@ -22,6 +22,7 @@ public class RegisterInfo extends BaseObservable {
     String openId = "";
     String unionId = "";
     int unionType;
+    String unionImage = "";
 
     @Bindable
     public String getOpenId() {
@@ -131,5 +132,15 @@ public class RegisterInfo extends BaseObservable {
     public void setImageList(List<String> imageList) {
         this.imageList = imageList;
         notifyPropertyChanged(BR.imageList);
+    }
+
+    @Bindable
+    public String getUnionImage() {
+        return unionImage;
+    }
+
+    public void setUnionImage(String unionImage) {
+        this.unionImage = unionImage;
+        notifyPropertyChanged(BR.unionImage);
     }
 }

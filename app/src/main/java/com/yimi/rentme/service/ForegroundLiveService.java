@@ -1,4 +1,4 @@
-package com.yimi.rentme.activity;
+package com.yimi.rentme.service;
 
 import android.app.Notification;
 import android.app.NotificationManager;

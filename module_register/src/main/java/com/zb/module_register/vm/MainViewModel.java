@@ -134,7 +134,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 PreferenceUtil.saveStringValue(activity, "userName", "");
                 PreferenceUtil.saveStringValue(activity, "loginPass", "");
                 BaseActivity.update();
-                MineApp.isThreeLogin = true;
                 PreferenceUtil.saveIntValue(activity, "myIsThreeLogin", 1);
                 if (o.getPhoneNum().isEmpty()) {
                     ActivityUtils.getBindingPhone(activity);

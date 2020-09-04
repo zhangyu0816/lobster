@@ -3,6 +3,8 @@ package com.zb.lib_base.utils;
 public class RouteUtils {
     /*********************** app **************************/
     public static final String Main_MainActivity = "/main/MainActivity";
+    public static final String Main_Login = "/main/LoginActivity";
+    public static final String Main_Binding_Phone = "/main/BindingPhoneActivity";
 
     /*********************** 首页 **************************/
     // 首页主fragment

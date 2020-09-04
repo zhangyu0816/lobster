@@ -28,6 +28,7 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.AttentionDb;
 import com.zb.lib_base.db.GoodDb;
 import com.zb.lib_base.db.LikeTypeDb;
@@ -53,6 +54,7 @@ public class BaseViewModel implements BaseVMInterface {
     public GoodDb goodDb;
     public AttentionDb attentionDb;
     public LikeTypeDb likeTypeDb;
+    public AreaDb areaDb;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -66,6 +68,8 @@ public class BaseViewModel implements BaseVMInterface {
             attentionDb = new AttentionDb(Realm.getDefaultInstance());
         if (likeTypeDb == null)
             likeTypeDb = new LikeTypeDb(Realm.getDefaultInstance());
+        if (areaDb == null)
+            areaDb = new AreaDb(Realm.getDefaultInstance());
     }
 
     @Override

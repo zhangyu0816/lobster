@@ -1,6 +1,6 @@
 <resources>
 
-    <!-- Base application theme. -->
+    <!-- AppTheme  WhiteTheme -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowEnableSplitTouch">false</item>
@@ -10,9 +10,26 @@
         <item name="colorPrimaryDark">@android:color/white</item>
     </style>
 
+    <style name="RegisterTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowEnableSplitTouch">false</item>
+        <item name="android:splitMotionEvents">false</item>
+        <item name="android:windowBackground">@mipmap/register_bg</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
     <!-- 应用启动页(StartingWindow)的theme -->
     <style name="StartingWindowTheme" parent="AppTheme">
         <!--也可以设置成一张图片 -->
         <item name="android:windowBackground">@drawable/bg_splash</item>
+    </style>
+
+    <style name="whiteEdit" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@null</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorHint">@color/black_c3b</item>
+        <item name="android:textCursorDrawable">@drawable/cursor_color_white</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">15dp</item>
     </style>
 </resources>

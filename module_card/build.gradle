@@ -71,7 +71,6 @@ dependencies {
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
     implementation project(':lib_base')
     implementation project(':xbanner')
-    implementation project(':imagebrowserlib')
     if (!isNeedCardModule.toBoolean()) {
         if (isNeedHomeModule.toBoolean()) {
             implementation project(':module_home')

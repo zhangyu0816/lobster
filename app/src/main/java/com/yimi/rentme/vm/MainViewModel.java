@@ -109,7 +109,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private BaseReceiver unReadCountReceiver;
     private BaseReceiver newDynMsgAllNumReceiver;
     private BaseReceiver recommendReceiver;
-    private AreaDb areaDb;
     private HistoryMsgDb historyMsgDb;
     private MineInfo mineInfo;
     private int time = 2 * 60 * 1000;
@@ -129,7 +128,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         super.setBinding(binding);
         MineApp.isLogin = true;
         bottleCacheDb = new BottleCacheDb(Realm.getDefaultInstance());
-        areaDb = new AreaDb(Realm.getDefaultInstance());
         chatListDb = new ChatListDb(Realm.getDefaultInstance());
         historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         mBinding = (AcMainBinding) binding;
@@ -148,7 +146,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         MineApp.minAge = PreferenceUtil.readIntValue(activity, "myMinAge", 18);
         MineApp.maxAge = PreferenceUtil.readIntValue(activity, "myMaxAge", 70);
         MineApp.distance = PreferenceUtil.readIntValue(activity, "myDistance", 50 * 1000);
-        MineApp.isThreeLogin = PreferenceUtil.readIntValue(activity, "myIsThreeLogin", 0) == 1;
 
         loginHelper = LoginSampleHelper.getInstance();
         loginHelper.loginOut_Sample();

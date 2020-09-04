@@ -15,6 +15,17 @@ public class ActivityUtils {
         return activity;
     }
 
+    // 注册登录
+    public static RxAppCompatActivity getLoginActivity(int loginStep) {
+        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Main_Login).withInt("loginStep", loginStep).navigation();
+        return activity;
+    }
+
+    // 绑定手机号
+    public static void getBindingPhoneActivity(RxAppCompatActivity activity) {
+        ARouter.getInstance().build(RouteUtils.Main_Binding_Phone).navigation(activity, 1002);
+    }
+
     /*********************** 首页 **************************/
     // 图文动态
     public static RxAppCompatActivity getHomePublishImage() {

@@ -110,7 +110,6 @@ public class CodeViewModel extends BaseViewModel implements CodeVMInterface {
                 PreferenceUtil.saveStringValue(activity, "sessionId", o.getSessionId());
                 PreferenceUtil.saveStringValue(activity, "userName", o.getUserName());
                 BaseActivity.update();
-                MineApp.isThreeLogin = false;
                 PreferenceUtil.saveIntValue(activity, "myIsThreeLogin", 0);
                 timer.cancel();
                 myInfo();

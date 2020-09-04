@@ -42,7 +42,6 @@ import io.realm.Realm;
 public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVMInterface, OnRefreshListener, OnLoadMoreListener {
     public CardAdapter adapter;
     public long otherUserId;
-    private AreaDb areaDb;
     private int pageNo = 1;
     private List<DiscoverInfo> discoverInfoList = new ArrayList<>();
     private CardMemberVideoBinding mBinding;
@@ -58,7 +57,6 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        areaDb = new AreaDb(Realm.getDefaultInstance());
         mBinding = (CardMemberVideoBinding) binding;
         publishReceiver = new BaseReceiver(activity, "lobster_publish") {
             @Override

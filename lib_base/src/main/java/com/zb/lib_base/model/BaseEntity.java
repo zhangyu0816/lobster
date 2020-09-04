@@ -100,7 +100,7 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
                 @Override
                 public void sure() {
                     getRxAppCompatActivity().sendBroadcast(new Intent("lobster_finishRefresh"));
-                    ActivityUtils.getRegisterPhone(true);
+                    ActivityUtils.getLoginActivity(3);
                     if (TextUtils.equals(dialogTitle, "loadingNotLogin")) {
                         getRxAppCompatActivity().finish();
                     }

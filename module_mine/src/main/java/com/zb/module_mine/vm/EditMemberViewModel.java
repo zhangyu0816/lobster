@@ -39,7 +39,6 @@ import io.realm.Realm;
 
 public class EditMemberViewModel extends BaseViewModel implements EditMemberVMInterface {
     public MineAdapter adapter;
-    public AreaDb areaDb;
     public List<String> imageList = new ArrayList<>();
     public int _position = 0;
     private SimpleItemTouchHelperCallback callback;
@@ -59,7 +58,6 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mineEditMemberBinding = (MineEditMemberBinding) binding;
-        areaDb = new AreaDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
         if (mineInfo.getMoreImages().isEmpty()) {
             imageList.add(mineInfo.getImage());

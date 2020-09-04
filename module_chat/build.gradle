@@ -70,7 +70,6 @@ dependencies {
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
     implementation project(':lib_base')
     implementation project(':module_camera')
-    implementation project(':imagebrowserlib')
     if (!isNeedChatModule.toBoolean())
         if (isNeedBottleModule.toBoolean()) {
             implementation project(':module_bottle')

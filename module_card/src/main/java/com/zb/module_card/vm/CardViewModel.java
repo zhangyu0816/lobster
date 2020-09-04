@@ -73,7 +73,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import io.realm.Realm;
 
 public class CardViewModel extends BaseViewModel implements CardVMInterface, OnSwipeListener<PairInfo>, SuperLikeInterface {
-    public AreaDb areaDb;
     private LikeDb likeDb;
     private MineInfo mineInfo;
     public CardAdapter adapter;
@@ -107,7 +106,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        areaDb = new AreaDb(Realm.getDefaultInstance());
         likeDb = new LikeDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
         aMapLocation = new AMapLocation(activity);

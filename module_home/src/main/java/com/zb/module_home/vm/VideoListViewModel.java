@@ -86,11 +86,9 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     private HomeAdapter adapter;
     private DouYinLayoutManager douYinLayoutManager;
     private HomeVideoListBinding mBinding;
-    private AreaDb areaDb;
     private boolean isUp = false;
     private boolean isOver = false;
     private MineInfo mineInfo;
-    private LikeDb likeDb;
     private BaseReceiver attentionReceiver;
     private String downloadPath = "";
     private int videoWidth, videoHeight;
@@ -100,7 +98,6 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         super.setBinding(binding);
         mBinding = (HomeVideoListBinding) binding;
         areaDb = new AreaDb(Realm.getDefaultInstance());
-        likeDb = new LikeDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
         setAdapter();
 

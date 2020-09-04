@@ -48,7 +48,6 @@ import io.realm.Realm;
 public class MemberDiscoverViewModel extends BaseViewModel implements MemberDiscoverVMInterface, OnRefreshListener, OnLoadMoreListener {
 
     public CardAdapter adapter;
-    private AreaDb areaDb;
     private int pageNo = 1;
     private List<DiscoverInfo> discoverInfoList = new ArrayList<>();
     private CardMemberDiscoverBinding mBinding;
@@ -67,7 +66,6 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        areaDb = new AreaDb(Realm.getDefaultInstance());
         mBinding = (CardMemberDiscoverBinding) binding;
         publishReceiver = new BaseReceiver(activity, "lobster_publish") {
             @Override

@@ -57,12 +57,10 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
     private LatLng tagLl;
     private boolean isSearch = false;
     private GeocodeSearch geocodeSearch;
-    private AreaDb areaDb;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        areaDb = new AreaDb(Realm.getDefaultInstance());
         geocodeSearch = new GeocodeSearch(activity);
         geocodeSearch.setOnGeocodeSearchListener(this);
         locationBinding = (MineLocationBinding) binding;

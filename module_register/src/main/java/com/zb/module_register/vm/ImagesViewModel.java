@@ -43,7 +43,6 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
     public List<String> images = new ArrayList<>();
     private SimpleItemTouchHelperCallback callback;
     private PhotoManager photoManager;
-    private AreaDb areaDb;
 
     @Override
     public void back(View view) {
@@ -55,7 +54,6 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
 
     @Override
     public void setAdapter() {
-        areaDb = new AreaDb(Realm.getDefaultInstance());
         images = MineApp.registerInfo.getImageList();
         adapter = new RegisterAdapter<>(activity, R.layout.item_register_image, images, this);
         callback = new SimpleItemTouchHelperCallback(adapter);
@@ -101,7 +99,6 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
                 PreferenceUtil.saveStringValue(activity, "userName", o.getUserName());
                 BaseActivity.update();
                 DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
-                MineApp.isThreeLogin = false;
                 PreferenceUtil.saveIntValue(activity, "myIsThreeLogin", 0);
                 myInfo();
             }
@@ -128,7 +125,6 @@ public class ImagesViewModel extends BaseViewModel implements ImagesVMInterface 
                 PreferenceUtil.saveStringValue(activity, "sessionId", o.getSessionId());
                 PreferenceUtil.saveStringValue(activity, "userName", o.getUserName());
                 BaseActivity.update();
-                MineApp.isThreeLogin = true;
                 PreferenceUtil.saveIntValue(activity, "myIsThreeLogin", 1);
                 DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
                 myInfo();
