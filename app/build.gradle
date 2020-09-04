@@ -12,8 +12,8 @@ android {
         applicationId "com.yimi.rentme"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 1060
-        versionName "6.0"
+        versionCode 1061
+        versionName "6.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
