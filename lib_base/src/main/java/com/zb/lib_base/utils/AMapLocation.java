@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
+import com.zb.lib_base.app.MineApp;
 
 /**
  * Created by DIY on 2018-06-27.
@@ -36,21 +36,29 @@ public class AMapLocation {
         mLocationClient.setLocationOption(mLocationOption);
     }
 
-    public void start(AMapLocationListener mLocationListener){
+    public void start(CallBack callBack) {
 
         //设置定位回调监听
-        mLocationClient.setLocationListener(mLocationListener);
+        mLocationClient.setLocationListener(location -> {
+            if (location != null) {
+                if (location.getErrorCode() == 0) {
+                    MineApp.cityName = location.getCity();
+                    String provinceName = location.getProvince();
+                    String districtName = location.getDistrict();
+                    String address = location.getAddress();
+                    String longitude = location.getLongitude() + "";
+                    String latitude = location.getLatitude() + "";
+                    callBack.success(longitude, latitude, provinceName, MineApp.cityName, districtName, address);
+                }
+                mLocationClient.stopLocation();
+                mLocationClient.onDestroy();
+            }
+        });
         //启动定位
         mLocationClient.startLocation();
     }
 
-    public void stop(){
-        mLocationClient.stopLocation();//停止定位后，本地定位服务并不会被销毁
+    public interface CallBack {
+        void success(String longitude, String latitude, String provinceName, String cityName, String districtName, String address);
     }
-
-    public void destroy() {
-        mLocationClient.onDestroy();//销毁定位客户端，同时销毁本地定位服务。
-    }
-
-
 }

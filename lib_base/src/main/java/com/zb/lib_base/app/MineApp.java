@@ -108,8 +108,6 @@ public class MineApp extends MultiDexApplication {
 
     public static List<RecommendInfo> recommendInfoList = new ArrayList<>();
 
-    public static boolean isThreeLogin = false;
-
     static {
         //设置全局的Header构建器
         SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {

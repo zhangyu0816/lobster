@@ -762,24 +762,13 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         if (type == 0) {
             initPhone();
             if (MineApp.cityName.isEmpty()) {
-                aMapLocation.start(location -> {
-                    if (location != null) {
-                        if (location.getErrorCode() == 0) {
-                            MineApp.cityName = location.getCity();
-                            String address = location.getAddress();
-                            String longitude = location.getLongitude() + "";
-                            String latitude = location.getLatitude() + "";
-
-                            PreferenceUtil.saveStringValue(activity, "longitude", longitude);
-                            PreferenceUtil.saveStringValue(activity, "latitude", latitude);
-                            PreferenceUtil.saveStringValue(activity, "provinceName", location.getProvince());
-                            PreferenceUtil.saveStringValue(activity, "cityName", MineApp.cityName);
-                            PreferenceUtil.saveStringValue(activity, "districtName", location.getDistrict());
-                            PreferenceUtil.saveStringValue(activity, "address", address);
-                        }
-                        aMapLocation.stop();
-                        aMapLocation.destroy();
-                    }
+                aMapLocation.start((longitude, latitude, provinceName, cityName, districtName, address) -> {
+                    PreferenceUtil.saveStringValue(activity, "longitude", longitude);
+                    PreferenceUtil.saveStringValue(activity, "latitude", latitude);
+                    PreferenceUtil.saveStringValue(activity, "provinceName", provinceName);
+                    PreferenceUtil.saveStringValue(activity, "cityName", cityName);
+                    PreferenceUtil.saveStringValue(activity, "districtName", districtName);
+                    PreferenceUtil.saveStringValue(activity, "address", address);
                 });
             }
         } else {

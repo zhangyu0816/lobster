@@ -742,27 +742,14 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     }
 
     private void setLocation() {
-        aMapLocation.start(location -> {
-            if (location != null) {
-                if (location.getErrorCode() == 0) {
-                    MineApp.cityName = location.getCity();
-                    String provinceName = location.getProvince();
-                    String districtName = location.getDistrict();
-                    String address = location.getAddress();
-                    String longitude = location.getLongitude() + "";
-                    String latitude = location.getLatitude() + "";
-
-                    PreferenceUtil.saveStringValue(activity, "longitude", longitude);
-                    PreferenceUtil.saveStringValue(activity, "latitude", latitude);
-                    PreferenceUtil.saveStringValue(activity, "provinceName", provinceName);
-                    PreferenceUtil.saveStringValue(activity, "cityName", MineApp.cityName);
-                    PreferenceUtil.saveStringValue(activity, "districtName", districtName);
-                    PreferenceUtil.saveStringValue(activity, "address", address);
-                    joinPairPool(longitude, latitude, areaDb.getProvinceId(provinceName), areaDb.getCityId(MineApp.cityName), areaDb.getDistrictId(districtName));
-                }
-                aMapLocation.stop();
-                aMapLocation.destroy();
-            }
+        aMapLocation.start((longitude, latitude, provinceName, cityName, districtName, address) -> {
+            PreferenceUtil.saveStringValue(activity, "longitude", longitude);
+            PreferenceUtil.saveStringValue(activity, "latitude", latitude);
+            PreferenceUtil.saveStringValue(activity, "provinceName", provinceName);
+            PreferenceUtil.saveStringValue(activity, "cityName", cityName);
+            PreferenceUtil.saveStringValue(activity, "districtName", districtName);
+            PreferenceUtil.saveStringValue(activity, "address", address);
+            joinPairPool(longitude, latitude, areaDb.getProvinceId(provinceName), areaDb.getCityId(cityName), areaDb.getDistrictId(districtName));
         });
     }
 
@@ -773,9 +760,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         PreferenceUtil.saveStringValue(activity, "provinceName", "浙江省");
         PreferenceUtil.saveStringValue(activity, "districtName", "鹿城区");
         PreferenceUtil.saveStringValue(activity, "address", "浙江省温州市鹿城区望江东路175号靠近温州银行(文化支行)");
-        joinPairPool(PreferenceUtil.readStringValue(activity, "longitude"), PreferenceUtil.readStringValue(activity, "latitude"),
-                areaDb.getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")),
-                areaDb.getCityId(PreferenceUtil.readStringValue(activity, "cityName")),
-                areaDb.getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
+        joinPairPool("120.641956", "28.021994", areaDb.getProvinceId("浙江省"),
+                areaDb.getCityId("温州市"), areaDb.getDistrictId("鹿城区"));
     }
 }

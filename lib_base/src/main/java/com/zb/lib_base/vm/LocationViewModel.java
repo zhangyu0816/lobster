@@ -1,4 +1,4 @@
-package com.zb.module_mine.vm;
+package com.zb.lib_base.vm;
 
 import android.Manifest;
 import android.content.Intent;
@@ -24,20 +24,19 @@ import com.amap.api.services.help.InputtipsQuery;
 import com.amap.api.services.help.Tip;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
+import com.zb.lib_base.R;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.AdapterBinding;
+import com.zb.lib_base.adapter.BaseAdapter;
 import com.zb.lib_base.api.updatePairPoolApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.databinding.FragLocationBinding;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.iv.LocationVMInterface;
 import com.zb.lib_base.model.LocationInfo;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
-import com.zb.lib_base.vm.BaseViewModel;
-import com.zb.module_mine.R;
-import com.zb.module_mine.adapter.MineAdapter;
-import com.zb.module_mine.databinding.MineLocationBinding;
-import com.zb.module_mine.iv.LocationVMInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,12 +44,12 @@ import java.util.List;
 import androidx.databinding.ViewDataBinding;
 
 public class LocationViewModel extends BaseViewModel implements LocationVMInterface, GeocodeSearch.OnGeocodeSearchListener {
-    public MineAdapter adapter;
+    public BaseAdapter adapter;
     public boolean isDiscover;
     private List<LocationInfo> locationInfoList = new ArrayList<>();
     private AMap aMap;
     private int prePosition = -1;
-    private MineLocationBinding locationBinding;
+    private FragLocationBinding mBinding;
     private LatLng myLl;
     private LatLng tagLl;
     private boolean isSearch = false;
@@ -61,17 +60,17 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
         super.setBinding(binding);
         geocodeSearch = new GeocodeSearch(activity);
         geocodeSearch.setOnGeocodeSearchListener(this);
-        locationBinding = (MineLocationBinding) binding;
+        mBinding = (FragLocationBinding) binding;
         setAdapter();
         initMap();
-        locationBinding.edKey.setOnEditorActionListener((arg0, arg1, arg2) -> {
+        mBinding.edKey.setOnEditorActionListener((arg0, arg1, arg2) -> {
             if (arg1 == EditorInfo.IME_ACTION_SEARCH) {
                 hintKeyBoard();
                 querySearchByTips(arg0.getText().toString());
             }
             return false;
         });
-        AdapterBinding.viewSize(locationBinding.addressList, MineApp.W, (int) (MineApp.H * 0.4f));
+        AdapterBinding.viewSize(mBinding.addressList, MineApp.W, (int) (MineApp.H * 0.4f));
     }
 
     @Override
@@ -82,11 +81,11 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
 
     @Override
     public void setAdapter() {
-        adapter = new MineAdapter<>(activity, R.layout.item_mine_location_address, locationInfoList, this);
+        adapter = new BaseAdapter<>(activity, R.layout.item_mine_location_address, locationInfoList, this);
     }
 
     private void initMap() {
-        aMap = locationBinding.mapView.getMap();
+        aMap = mBinding.mapView.getMap();
         myLl = new LatLng(Double.parseDouble(PreferenceUtil.readStringValue(activity, "latitude")),
                 Double.parseDouble(PreferenceUtil.readStringValue(activity, "longitude")));
         aMap.moveCamera(CameraUpdateFactory.changeLatLng(myLl));//设置中心点

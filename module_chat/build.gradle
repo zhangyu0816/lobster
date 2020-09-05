@@ -78,8 +78,8 @@ dependencies {
         if (isNeedCardModule.toBoolean()) {
             implementation project(':module_card')
         }
-    if (!isNeedChatModule.toBoolean())
-        if (isNeedMineModule.toBoolean()) {
-            implementation project(':module_mine')
-        }
+//    if (!isNeedChatModule.toBoolean())
+//        if (isNeedMineModule.toBoolean()) {
+//            implementation project(':module_mine')
+//        }
 }

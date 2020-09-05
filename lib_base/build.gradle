@@ -48,7 +48,6 @@ dependencies {
     api 'com.squareup.retrofit2:adapter-rxjava:2.3.0'
     implementation project(':xbanner')
     api project(':imagebrowserlib')
-    api project(path: ':FFmpegAndroid')
     // RxAppCompatActivity
     api 'com.trello:rxlifecycle-components:1.0'
     // 路由包
@@ -71,7 +70,7 @@ dependencies {
     // 多class
     api 'com.android.support:multidex:1.0.3'
     // 高德地图
-    api files('libs/AMap2DMap_6.0.0_AMapSearch_7.3.0_AMapLocation_4.9.0_20200331.jar')
+    implementation files('libs/AMap2DMap_6.0.0_AMapSearch_7.3.0_AMapLocation_4.9.0_20200331.jar')
     //log
     api 'com.squareup.okhttp3:logging-interceptor:3.10.0'
     api 'com.orhanobut:logger:2.1.1'

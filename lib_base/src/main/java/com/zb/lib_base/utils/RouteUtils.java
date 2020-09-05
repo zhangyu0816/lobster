@@ -96,24 +96,24 @@ public class RouteUtils {
 
     /*********************** 注册 **************************/
 
-    // 注册主页
-    public static final String Register_Main = "/register/RegisterActivity";
-    // 注册--登录
-    public static final String Register_Login = "/register/LoginActivity";
-    // 注册--昵称
-    public static final String Register_Nick = "/register/NickNameActivity";
-    // 注册--生日
-    public static final String Register_Birthday = "/register/BirthdayActivity";
-    // 注册--手机号
-    public static final String Register_Phone = "/register/PhoneActivity";
-    // 注册--验证码
-    public static final String Register_Code = "/register/CodeActivity";
-    // 注册--头像
-    public static final String Register_Logo = "/register/LogoActivity";
-    // 注册--多图
-    public static final String Register_Images = "/register/ImagesActivity";
-    // 注册--多图
-    public static final String Register_Binding_Phone = "/register/BindingPhoneActivity";
+//    // 注册主页
+//    public static final String Register_Main = "/register/RegisterActivity";
+//    // 注册--登录
+//    public static final String Register_Login = "/register/LoginActivity";
+//    // 注册--昵称
+//    public static final String Register_Nick = "/register/NickNameActivity";
+//    // 注册--生日
+//    public static final String Register_Birthday = "/register/BirthdayActivity";
+//    // 注册--手机号
+//    public static final String Register_Phone = "/register/PhoneActivity";
+//    // 注册--验证码
+//    public static final String Register_Code = "/register/CodeActivity";
+//    // 注册--头像
+//    public static final String Register_Logo = "/register/LogoActivity";
+//    // 注册--多图
+//    public static final String Register_Images = "/register/ImagesActivity";
+//    // 注册--多图
+//    public static final String Register_Binding_Phone = "/register/BindingPhoneActivity";
 
     /*********************** 相册 **************************/
     // 相册主页

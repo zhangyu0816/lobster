@@ -253,58 +253,58 @@ public class ActivityUtils {
 
     /*********************** 注册 **************************/
 
-    // 注册主页
-    public static RxAppCompatActivity getRegisterMain() {
-        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Main).navigation();
-        return activity;
-    }
-
-    // 注册--登录
-    public static RxAppCompatActivity getRegisterLogin() {
-        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Login).navigation();
-        return activity;
-    }
-
-    // 注册--昵称
-    public static RxAppCompatActivity getRegisterNick() {
-        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Nick).navigation();
-        return activity;
-    }
-
-    // 注册--生日
-    public static RxAppCompatActivity getRegisterBirthday() {
-        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Birthday).navigation();
-        return activity;
-    }
-
-    // 注册--手机号
-    public static RxAppCompatActivity getRegisterPhone(boolean isLogin) {
-        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Phone).withBoolean("isLogin", isLogin).navigation();
-        return activity;
-    }
-
-    // 注册--验证码
-    public static RxAppCompatActivity getRegisterCode(boolean isLogin) {
-        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Code).withBoolean("isLogin", isLogin).navigation();
-        return activity;
-    }
-
-    // 注册--头像
-    public static RxAppCompatActivity getRegisterLogo() {
-        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Logo).navigation();
-        return activity;
-    }
-
-    // 注册--多图
-    public static RxAppCompatActivity getRegisterImages() {
-        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Images).navigation();
-        return activity;
-    }
-
-    // 相册主页
-    public static void getBindingPhone(RxAppCompatActivity activity) {
-        ARouter.getInstance().build(RouteUtils.Register_Binding_Phone).navigation(activity, 1002);
-    }
+//    // 注册主页
+//    public static RxAppCompatActivity getRegisterMain() {
+//        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Main).navigation();
+//        return activity;
+//    }
+//
+//    // 注册--登录
+//    public static RxAppCompatActivity getRegisterLogin() {
+//        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Login).navigation();
+//        return activity;
+//    }
+//
+//    // 注册--昵称
+//    public static RxAppCompatActivity getRegisterNick() {
+//        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Nick).navigation();
+//        return activity;
+//    }
+//
+//    // 注册--生日
+//    public static RxAppCompatActivity getRegisterBirthday() {
+//        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Birthday).navigation();
+//        return activity;
+//    }
+//
+//    // 注册--手机号
+//    public static RxAppCompatActivity getRegisterPhone(boolean isLogin) {
+//        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Phone).withBoolean("isLogin", isLogin).navigation();
+//        return activity;
+//    }
+//
+//    // 注册--验证码
+//    public static RxAppCompatActivity getRegisterCode(boolean isLogin) {
+//        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Code).withBoolean("isLogin", isLogin).navigation();
+//        return activity;
+//    }
+//
+//    // 注册--头像
+//    public static RxAppCompatActivity getRegisterLogo() {
+//        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Logo).navigation();
+//        return activity;
+//    }
+//
+//    // 注册--多图
+//    public static RxAppCompatActivity getRegisterImages() {
+//        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Register_Images).navigation();
+//        return activity;
+//    }
+//
+//    // 相册主页
+//    public static void getBindingPhone(RxAppCompatActivity activity) {
+//        ARouter.getInstance().build(RouteUtils.Register_Binding_Phone).navigation(activity, 1002);
+//    }
 
     /*********************** 相册 **************************/
 

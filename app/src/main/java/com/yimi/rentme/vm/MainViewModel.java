@@ -1,6 +1,5 @@
 package com.yimi.rentme.vm;
 
-import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Service;
@@ -65,10 +64,8 @@ import com.zb.lib_base.model.Report;
 import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WalletInfo;
-import com.zb.lib_base.utils.Compressor;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.FragmentUtils;
-import com.zb.lib_base.utils.InitListener;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -119,7 +116,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             return false;
         }
     });
-    private Compressor mCompressor;
     private Vibrator vibrator;
 
     @Override
@@ -333,8 +329,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 }, 1000);
             }
         }
-        getPermissions();
-
         handler.sendEmptyMessageDelayed(0, time);
     }
 
@@ -825,40 +819,4 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
-
-    /**
-     * 权限
-     */
-    private void getPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission("虾菇需要访问写入存储权限", new BaseActivity.PermissionCallback() {
-                @Override
-                public void hasPermission() {
-                    setPermissions();
-                }
-
-                @Override
-                public void noPermission() {
-                }
-            }, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        } else {
-            setPermissions();
-        }
-    }
-
-    private void setPermissions() {
-//        activity.startService(new Intent(activity, ForegroundLiveService.class));
-        BaseActivity.createFfmpegFile();
-        mCompressor = new Compressor(activity);
-        mCompressor.loadBinary(new InitListener() {
-            @Override
-            public void onLoadSuccess() {
-            }
-
-            @Override
-            public void onLoadFail(String reason) {
-            }
-        });
-    }
-
 }

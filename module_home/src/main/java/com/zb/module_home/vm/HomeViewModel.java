@@ -13,12 +13,15 @@ import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_home.databinding.HomeFragBinding;
 import com.zb.module_home.iv.HomeVMInterface;
+import com.zb.module_home.utils.Compressor;
+import com.zb.module_home.utils.InitListener;
 
 import androidx.databinding.ViewDataBinding;
 
 public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
     private HomeFragBinding mBinding;
     private BaseReceiver homeBottleReceiver;
+    private Compressor mCompressor;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -32,6 +35,7 @@ public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
                 mBinding.setShowBottle(intent.getIntExtra("index", 1) == 1);
             }
         };
+        getPermissions1();
     }
 
     public void onDestroy() {
@@ -83,4 +87,39 @@ public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
             ActivityUtils.getCameraMain(activity, true, true, false);
         }
     }
+
+    /**
+     * 权限
+     */
+    private void getPermissions1() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            performCodeWithPermission("虾菇需要访问写入存储权限", new BaseActivity.PermissionCallback() {
+                @Override
+                public void hasPermission() {
+                    setPermissions1();
+                }
+
+                @Override
+                public void noPermission() {
+                }
+            }, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        } else {
+            setPermissions1();
+        }
+    }
+
+    private void setPermissions1() {
+        BaseActivity.createFfmpegFile();
+        mCompressor = new Compressor(activity);
+        mCompressor.loadBinary(new InitListener() {
+            @Override
+            public void onLoadSuccess() {
+            }
+
+            @Override
+            public void onLoadFail(String reason) {
+            }
+        });
+    }
+
 }

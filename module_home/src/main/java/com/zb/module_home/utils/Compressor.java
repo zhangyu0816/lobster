@@ -1,4 +1,4 @@
-package com.zb.lib_base.utils;
+package com.zb.module_home.utils;
 
 import android.app.Activity;
 

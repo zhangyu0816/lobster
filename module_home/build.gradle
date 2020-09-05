@@ -70,6 +70,7 @@ dependencies {
     implementation project(':lib_base')
     implementation project(':module_camera')
     implementation project(':xbanner')
+    implementation project(path: ':FFmpegAndroid')
     if (!isNeedHomeModule.toBoolean())
         if (isNeedBottleModule.toBoolean()) {
             implementation project(':module_bottle')
