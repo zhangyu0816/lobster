@@ -89,7 +89,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <com.app.abby.xbanner.XBanner
+                    <com.zb.lib_base.views.xbanner.XBanner
                         android:id="@+id/banner"
                         android:layout_width="match_parent"
                         android:layout_height="300dp"

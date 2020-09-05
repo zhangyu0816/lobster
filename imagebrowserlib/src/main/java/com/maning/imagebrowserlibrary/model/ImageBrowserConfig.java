@@ -39,7 +39,7 @@ public class ImageBrowserConfig {
     private int position;
     private TransformType transformType = TransformType.Transform_Default;
     private IndicatorType indicatorType = IndicatorType.Indicator_Number;
-    private ArrayList<String> imageList;
+    private ArrayList<String> imageList = new ArrayList<>();
     private ImageEngine imageEngine;
     private OnClickListener onClickListener;
     private OnLongClickListener onLongClickListener;

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.view.View;
 
-import com.maning.imagebrowserlibrary.MNImage;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.modifyMemberInfoApi;
 import com.zb.lib_base.app.MineApp;
@@ -14,6 +13,7 @@ import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
+import com.zb.lib_base.utils.MNImage;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;

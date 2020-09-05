@@ -1,4 +1,4 @@
-package com.app.abby.xbanner;
+package com.zb.lib_base.views.xbanner;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -23,7 +23,11 @@ import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import com.app.abby.xbanner.databinding.XbannerBinding;
+import com.app.abby.xbanner.XBPagerAdapter;
+import com.app.abby.xbanner.XBannerScroller;
+import com.zb.lib_base.R;
+import com.zb.lib_base.databinding.XbannerBinding;
+import com.zb.lib_base.model.Ads;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -105,7 +109,7 @@ public class XBanner extends RelativeLayout {
     private List<String> mTitles;
     private List<String> mUrls;
     private List<View> adViewList;
-    private BannerPageListener mBannerPageListner;
+    private XBPagerAdapter.BannerPageListener mBannerPageListner;
     private ImageLoader mImageLoader;
 
     private static Handler mHandler = new Handler();
@@ -194,15 +198,15 @@ public class XBanner extends RelativeLayout {
         if (attr == null) {
             return;
         }
-        TypedArray typedArray = context.obtainStyledAttributes(attr, R.styleable.XBanner);
+        TypedArray typedArray = context.obtainStyledAttributes(attr, com.app.abby.xbanner.R.styleable.XBanner);
 
-        mIndicatorWidth = typedArray.getDimensionPixelSize(R.styleable.XBanner_indicator_width, mIndicatorSize);
-        mTitleHeight = typedArray.getDimensionPixelSize(R.styleable.XBanner_title_height, titleHeight);
-        mDelayTime = typedArray.getInteger(R.styleable.XBanner_delay_time, delayTime);
-        mIsAutoPlay = typedArray.getBoolean(R.styleable.XBanner_is_auto_play, false);
-        mSizeTitleText = typedArray.getInteger(R.styleable.XBanner_size_title_text, titleTextSize);
-        mGravity = typedArray.getInteger(R.styleable.XBanner_indicator_gravity, INDICATOR_CENTER);
-        mColorTitle = typedArray.getColor(R.styleable.XBanner_color_title, Color.WHITE);
+        mIndicatorWidth = typedArray.getDimensionPixelSize(com.app.abby.xbanner.R.styleable.XBanner_indicator_width, mIndicatorSize);
+        mTitleHeight = typedArray.getDimensionPixelSize(com.app.abby.xbanner.R.styleable.XBanner_title_height, titleHeight);
+        mDelayTime = typedArray.getInteger(com.app.abby.xbanner.R.styleable.XBanner_delay_time, delayTime);
+        mIsAutoPlay = typedArray.getBoolean(com.app.abby.xbanner.R.styleable.XBanner_is_auto_play, false);
+        mSizeTitleText = typedArray.getInteger(com.app.abby.xbanner.R.styleable.XBanner_size_title_text, titleTextSize);
+        mGravity = typedArray.getInteger(com.app.abby.xbanner.R.styleable.XBanner_indicator_gravity, INDICATOR_CENTER);
+        mColorTitle = typedArray.getColor(com.app.abby.xbanner.R.styleable.XBanner_color_title, Color.WHITE);
         typedArray.recycle();
 
     }
@@ -362,9 +366,9 @@ public class XBanner extends RelativeLayout {
         if (mIndicatorSet) {
             indicator.setImageResource(index == 0 ? mIndicatorSelected : mIndicatorUnselected);
         } else if (mBannerType == CIRCLE_INDICATOR_TITLE || mBannerType == CIRCLE_INDICATOR) {
-            indicator.setImageResource(index == 0 ? R.drawable.indicator_selected : R.drawable.indicator_unselected);
+            indicator.setImageResource(index == 0 ? com.app.abby.xbanner.R.drawable.indicator_selected : com.app.abby.xbanner.R.drawable.indicator_unselected);
         } else if (mBannerType == CUBE_INDICATOR) {
-            indicator.setImageResource(index == 0 ? R.drawable.indicator_cube_selected : R.drawable.indicator_cube_unselected);
+            indicator.setImageResource(index == 0 ? com.app.abby.xbanner.R.drawable.indicator_cube_selected : com.app.abby.xbanner.R.drawable.indicator_cube_unselected);
         }
 //
 //        if (mBannerType == CUBE_INDICATOR) {
@@ -837,20 +841,20 @@ public class XBanner extends RelativeLayout {
 
     private void onCircleIndicatorChange(int position) {
 
-        mIndicators.get(getTruePos(position)).setImageResource(mIndicatorSet ? mIndicatorSelected : R.drawable.indicator_selected);
+        mIndicators.get(getTruePos(position)).setImageResource(mIndicatorSet ? mIndicatorSelected : com.app.abby.xbanner.R.drawable.indicator_selected);
         for (int i = 0; i < mIndicators.size(); i++) {
             if (i != getTruePos(position)) {
-                mIndicators.get(i).setImageResource(mIndicatorSet ? mIndicatorUnselected : R.drawable.indicator_unselected);
+                mIndicators.get(i).setImageResource(mIndicatorSet ? mIndicatorUnselected : com.app.abby.xbanner.R.drawable.indicator_unselected);
             }
         }
     }
 
     private void onCubeIndicatorChange(int position) {
 
-        mIndicators.get(getTruePos(position)).setImageResource(mIndicatorSet ? mIndicatorSelected : R.drawable.indicator_cube_selected);
+        mIndicators.get(getTruePos(position)).setImageResource(mIndicatorSet ? mIndicatorSelected : com.app.abby.xbanner.R.drawable.indicator_cube_selected);
         for (int i = 0; i < mIndicators.size(); i++) {
             if (i != getTruePos(position)) {
-                mIndicators.get(i).setImageResource(mIndicatorSet ? mIndicatorUnselected : R.drawable.indicator_cube_unselected);
+                mIndicators.get(i).setImageResource(mIndicatorSet ? mIndicatorUnselected : com.app.abby.xbanner.R.drawable.indicator_cube_unselected);
             }
         }
     }
@@ -993,19 +997,10 @@ public class XBanner extends RelativeLayout {
      * the listener interface for banner event,includeing clicked,dragging and idled
      * the index starts from 0,which item's value starts from 0
      */
-    @FunctionalInterface
-    public interface BannerPageListener {
-        void onBannerClick(int item);
-
-        default void onBannerDragging(int item) {
-        }
-
-        default void onBannerIdle(int item) {
-        }
-    }
 
 
-    public XBanner setBannerPageListener(BannerPageListener listener) {
+
+    public XBanner setBannerPageListener(XBPagerAdapter.BannerPageListener listener) {
         mBannerPageListner = listener;
         return this;
     }

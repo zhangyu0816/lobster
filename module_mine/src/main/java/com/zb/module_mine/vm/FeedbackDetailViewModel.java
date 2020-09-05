@@ -2,8 +2,8 @@ package com.zb.module_mine.vm;
 
 import android.view.View;
 
-import com.maning.imagebrowserlibrary.MNImage;
 import com.zb.lib_base.model.FeedbackInfo;
+import com.zb.lib_base.utils.MNImage;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.R;
 import com.zb.module_mine.adapter.MineAdapter;

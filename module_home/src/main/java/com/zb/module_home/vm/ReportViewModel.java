@@ -5,7 +5,6 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.maning.imagebrowserlibrary.MNImage;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.comsubApi;
 import com.zb.lib_base.app.MineApp;
@@ -13,6 +12,7 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
+import com.zb.lib_base.utils.MNImage;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;

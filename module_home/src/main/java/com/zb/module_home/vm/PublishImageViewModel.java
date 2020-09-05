@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.maning.imagebrowserlibrary.MNImage;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.publishDynApi;
@@ -21,6 +20,7 @@ import com.zb.lib_base.http.HttpUploadManager;
 import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
+import com.zb.lib_base.utils.MNImage;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;

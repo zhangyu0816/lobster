@@ -1,4 +1,4 @@
-package com.app.abby.xbanner;
+package com.zb.lib_base.model;
 
 import android.view.View;
 

@@ -7,9 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.app.abby.xbanner.Ads;
-import com.app.abby.xbanner.ImageLoader;
-import com.app.abby.xbanner.XBanner;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
@@ -22,10 +19,13 @@ import com.zb.lib_base.databinding.PwsVipAdBinding;
 import com.zb.lib_base.db.MineInfoDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.model.Ads;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
+import com.zb.lib_base.views.xbanner.ImageLoader;
+import com.zb.lib_base.views.xbanner.XBanner;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -10,15 +10,11 @@ import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.ImageView;
 
-import com.app.abby.xbanner.Ads;
-import com.app.abby.xbanner.XBanner;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
-import com.maning.imagebrowserlibrary.MNImage;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -39,10 +35,10 @@ import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.seeGiftRewardsApi;
 import com.zb.lib_base.api.seeReviewsApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
+import com.zb.lib_base.model.Ads;
 import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
@@ -51,8 +47,10 @@ import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.model.Reward;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.MNImage;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
+import com.zb.lib_base.views.xbanner.XUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.FunctionPW;
 import com.zb.lib_base.windows.SuperLikePW;
@@ -72,7 +70,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.ViewDataBinding;
-import io.realm.Realm;
 
 public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDetailVMInterface, OnRefreshListener, OnLoadMoreListener {
     private HomeDiscoverDetailBinding mBinding;
@@ -80,7 +77,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     public DiscoverInfo discoverInfo;
     public HomeAdapter reviewAdapter;
     public HomeAdapter rewardAdapter;
-    private LikeDb likeDb;
 
     private List<Review> reviewList = new ArrayList<>();
     private int pageNo = 1;
@@ -105,7 +101,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         super.setBinding(binding);
         mBinding = (HomeDiscoverDetailBinding) binding;
         mineInfo = mineInfoDb.getMineInfo();
-        likeDb = new LikeDb(Realm.getDefaultInstance());
         mBinding.setContent("");
         mBinding.setName("");
         mBinding.setListNum(10);
@@ -306,7 +301,24 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 bannerHeight = ObjectUtils.getLogoHeight(1f);
             }
             AdapterBinding.viewSize(mBinding.banner, bannerWidth, bannerHeight);
-            showBanner(adsList);
+            XUtils.showBanner(mBinding.banner, adsList,
+                    (context, ads, image, position) ->
+                            Glide.with(activity).asBitmap().load(ads.getSmallImage()).into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                    int w = resource.getWidth();
+                                    int h = resource.getHeight();
+
+                                    if (w >= h) {
+                                        AdapterBinding.viewSize(image, bannerWidth, (int) ((float) bannerWidth * h / w));
+                                    } else {
+                                        AdapterBinding.viewSize(image, (int) ((float) bannerHeight * w / h), bannerHeight);
+                                    }
+                                    image.setImageBitmap(resource);
+                                }
+                            }),
+                    (position, imageList) ->
+                            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, false, null));
             return false;
         }
     });
@@ -592,43 +604,5 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         reviewList.clear();
         reviewAdapter.notifyDataSetChanged();
         seeReviews();
-    }
-
-    // 显示相册
-    private void showBanner(List<Ads> adList) {
-        ArrayList<String> imageList = new ArrayList<>();
-        for (Ads item : adList) {
-            imageList.add(item.getSmallImage());
-        }
-        try {
-            mBinding.banner.setImageScaleType(ImageView.ScaleType.FIT_CENTER)
-                    .setAds(adList)
-                    .setImageLoader((context, ads, image, position) ->
-                            Glide.with(activity).asBitmap().load(ads.getSmallImage()).into(new SimpleTarget<Bitmap>() {
-                                @Override
-                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                    int w = resource.getWidth();
-                                    int h = resource.getHeight();
-
-                                    if (w >= h) {
-                                        AdapterBinding.viewSize(image, bannerWidth, (int) ((float) bannerWidth * h / w));
-                                    } else {
-                                        AdapterBinding.viewSize(image, (int) ((float) bannerHeight * w / h), bannerHeight);
-                                    }
-                                    image.setImageBitmap(resource);
-                                }
-                            })
-                    )
-                    .setBannerPageListener(item -> MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, item, false, null))
-                    .setBannerTypes(XBanner.CIRCLE_INDICATOR_TITLE)
-                    .setIndicatorGravity(XBanner.INDICATOR_START)
-                    .setDelay(3000)
-                    .setUpIndicators(R.drawable.banner_circle_pressed, R.drawable.banner_circle_unpressed)
-                    .setUpIndicatorSize(20, 20)
-                    .isAutoPlay(false)
-                    .start();
-        } catch (Exception e) {
-
-        }
     }
 }

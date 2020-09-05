@@ -46,7 +46,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.app.abby.xbanner.XBanner
+            <com.zb.lib_base.views.xbanner.XBanner
                 android:id="@+id/banner"
                 android:layout_width="match_parent"
                 android:layout_height="200dp" />

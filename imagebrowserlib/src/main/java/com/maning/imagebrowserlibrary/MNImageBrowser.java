@@ -55,6 +55,7 @@ public class MNImageBrowser {
         imageBrowserConfig.setOnClickListener(onClickListener);
         return this;
     }
+
     public MNImageBrowser setOnDeleteImageListener(OnDeleteImageListener onDeleteImageListener) {
         imageBrowserConfig.setOnDeleteImageListener(onDeleteImageListener);
         return this;
@@ -69,6 +70,7 @@ public class MNImageBrowser {
         imageBrowserConfig.setIndicatorType(indicatorType);
         return this;
     }
+
     public MNImageBrowser setShowDelete(boolean showDelete) {
         imageBrowserConfig.setShowDelete(showDelete);
         return this;
@@ -79,10 +81,10 @@ public class MNImageBrowser {
         if (imageBrowserConfig.getImageList() == null || imageBrowserConfig.getImageList().size() <= 0) {
             return;
         }
-        if(imageBrowserConfig.getImageEngine() == null){
+        if (imageBrowserConfig.getImageEngine() == null) {
             return;
         }
-        if(imageBrowserConfig.getIndicatorType() == null){
+        if (imageBrowserConfig.getIndicatorType() == null) {
             imageBrowserConfig.setIndicatorType(ImageBrowserConfig.IndicatorType.Indicator_Number);
         }
         MNImageBrowserActivity.imageBrowserConfig = imageBrowserConfig;

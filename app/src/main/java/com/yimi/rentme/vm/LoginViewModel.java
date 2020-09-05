@@ -16,7 +16,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
 
-import com.maning.imagebrowserlibrary.MNImage;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareConfig;
@@ -49,6 +48,7 @@ import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
+import com.zb.lib_base.utils.MNImage;
 import com.zb.lib_base.utils.Mac;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;

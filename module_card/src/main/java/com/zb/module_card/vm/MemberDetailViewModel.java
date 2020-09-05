@@ -9,15 +9,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
-import android.widget.ImageView;
 
-import com.app.abby.xbanner.Ads;
-import com.app.abby.xbanner.XBanner;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
-import com.maning.imagebrowserlibrary.MNImage;
 import com.umeng.socialize.media.UMImage;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
@@ -36,6 +32,7 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.iv.SuperLikeInterface;
+import com.zb.lib_base.model.Ads;
 import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
@@ -46,9 +43,11 @@ import com.zb.lib_base.model.RentInfo;
 import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
+import com.zb.lib_base.utils.MNImage;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
+import com.zb.lib_base.views.xbanner.XUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.FunctionPW;
 import com.zb.lib_base.windows.SuperLikePW;
@@ -68,7 +67,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.ViewDataBinding;
 import io.realm.Realm;
 
-public class MemberDetailViewModel extends BaseViewModel implements MemberDetailVMInterface,SuperLikeInterface {
+public class MemberDetailViewModel extends BaseViewModel implements MemberDetailVMInterface, SuperLikeInterface {
     private CardMemberDetailBinding mBinding;
     public long otherUserId = 0;
     public boolean showLike;
@@ -263,7 +262,23 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 bannerHeight = ObjectUtils.getLogoHeight(1f);
             }
             AdapterBinding.viewSize(mBinding.banner, bannerWidth, bannerHeight);
-            showBanner(adsList);
+            XUtils.showBanner(mBinding.banner, adsList,
+                    (context, ads, image, position) ->
+                            Glide.with(activity).asBitmap().load(ads.getSmallImage()).into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                    int w = resource.getWidth();
+                                    int h = resource.getHeight();
+                                    if (w >= h) {
+                                        AdapterBinding.viewSize(image, bannerWidth, (int) ((float) bannerWidth * h / w));
+                                    } else {
+                                        AdapterBinding.viewSize(image, (int) ((float) bannerHeight * w / h), bannerHeight);
+                                    }
+                                    image.setImageBitmap(resource);
+                                }
+                            }),
+                    (position, imageList) ->
+                            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, false, null));
             return false;
         }
     });
@@ -527,43 +542,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             attentionOther();
         } else {
             cancelAttention();
-        }
-    }
-
-    // 显示相册
-    private void showBanner(List<Ads> adList) {
-        ArrayList<String> imageList = new ArrayList<>();
-        for (Ads item : adList) {
-            imageList.add(item.getSmallImage());
-        }
-        try {
-            mBinding.banner.setImageScaleType(ImageView.ScaleType.FIT_CENTER)
-                    .setAds(adList)
-                    .setImageLoader((context, ads, image, position) ->
-                            Glide.with(activity).asBitmap().load(ads.getSmallImage()).into(new SimpleTarget<Bitmap>() {
-                                @Override
-                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                    int w = resource.getWidth();
-                                    int h = resource.getHeight();
-                                    if (w >= h) {
-                                        AdapterBinding.viewSize(image, bannerWidth, (int) ((float) bannerWidth * h / w));
-                                    } else {
-                                        AdapterBinding.viewSize(image, (int) ((float) bannerHeight * w / h), bannerHeight);
-                                    }
-                                    image.setImageBitmap(resource);
-                                }
-                            })
-                    )
-                    .setBannerPageListener(item -> MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, item, false, null))
-                    .setBannerTypes(XBanner.CIRCLE_INDICATOR_TITLE)
-                    .setIndicatorGravity(XBanner.INDICATOR_START)
-                    .setDelay(3000)
-                    .setUpIndicators(R.drawable.banner_circle_pressed, R.drawable.banner_circle_unpressed)
-                    .setUpIndicatorSize(20, 20)
-                    .isAutoPlay(false)
-                    .start();
-        } catch (Exception e) {
-
         }
     }
 

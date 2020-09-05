@@ -14,11 +14,11 @@ import androidx.viewpager.widget.PagerAdapter;
 
 public class XBPagerAdapter extends PagerAdapter {
     List<View> mData;
-    XBanner.BannerPageListener mBannerPageListner;
+    BannerPageListener mBannerPageListner;
     int mImageCount;
     View view;
 
-    XBPagerAdapter(XBanner.BannerPageListener listener, int imagecount) {
+    public XBPagerAdapter(BannerPageListener listener, int imagecount) {
         mData = new ArrayList<>();
         mBannerPageListner = listener;
         mImageCount = imagecount;
@@ -113,5 +113,16 @@ public class XBPagerAdapter extends PagerAdapter {
 
         view.setOnClickListener(null);
         view = null;
+    }
+
+    @FunctionalInterface
+    public interface BannerPageListener {
+        void onBannerClick(int item);
+
+        default void onBannerDragging(int item) {
+        }
+
+        default void onBannerIdle(int item) {
+        }
     }
 }
