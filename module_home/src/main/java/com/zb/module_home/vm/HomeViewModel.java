@@ -35,7 +35,7 @@ public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
                 mBinding.setShowBottle(intent.getIntExtra("index", 1) == 1);
             }
         };
-        getPermissions1();
+        getPermissions(0);
     }
 
     public void onDestroy() {
@@ -44,7 +44,7 @@ public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
 
     @Override
     public void publishDiscover(View view) {
-        getPermissions();
+        getPermissions(1);
     }
 
     @Override
@@ -60,12 +60,12 @@ public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
     /**
      * 权限
      */
-    private void getPermissions() {
+    private void getPermissions(int type) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             performCodeWithPermission("虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
                         @Override
                         public void hasPermission() {
-                            setPermissions();
+                            setPermissions(type);
                         }
 
                         @Override
@@ -74,52 +74,31 @@ public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
                     }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO);
         } else {
-            setPermissions();
+            setPermissions(type);
         }
     }
 
-    private void setPermissions() {
-        MineApp.toPublish = true;
-        MineApp.toContinue = false;
-        if (mBinding.viewPage.getCurrentItem() == 2) {
-            ActivityUtils.getCameraVideo(false);
-        } else {
-            ActivityUtils.getCameraMain(activity, true, true, false);
-        }
-    }
-
-    /**
-     * 权限
-     */
-    private void getPermissions1() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission("虾菇需要访问写入存储权限", new BaseActivity.PermissionCallback() {
+    private void setPermissions(int type) {
+        if(type==0){
+            BaseActivity.createFfmpegFile();
+            mCompressor = new Compressor(activity);
+            mCompressor.loadBinary(new InitListener() {
                 @Override
-                public void hasPermission() {
-                    setPermissions1();
+                public void onLoadSuccess() {
                 }
 
                 @Override
-                public void noPermission() {
+                public void onLoadFail(String reason) {
                 }
-            }, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        } else {
-            setPermissions1();
+            });
+        }else{
+            MineApp.toPublish = true;
+            MineApp.toContinue = false;
+            if (mBinding.viewPage.getCurrentItem() == 2) {
+                ActivityUtils.getCameraVideo(false);
+            } else {
+                ActivityUtils.getCameraMain(activity, true, true, false);
+            }
         }
     }
-
-    private void setPermissions1() {
-        BaseActivity.createFfmpegFile();
-        mCompressor = new Compressor(activity);
-        mCompressor.loadBinary(new InitListener() {
-            @Override
-            public void onLoadSuccess() {
-            }
-
-            @Override
-            public void onLoadFail(String reason) {
-            }
-        });
-    }
-
 }
