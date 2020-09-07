@@ -104,20 +104,7 @@
             android:configChanges="keyboardHidden|orientation"
             android:exported="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
         <!-- 友盟配置 end-->
-        <!-- 支付宝快捷支付 -->
-        <activity
-            android:name="com.alipay.sdk.app.H5PayActivity"
-            android:configChanges="orientation|keyboardHidden|navigation"
-            android:exported="false"
-            android:screenOrientation="behind" />
-        <activity
-            android:name="com.alipay.sdk.auth.AuthActivity"
-            android:configChanges="orientation|keyboardHidden|navigation"
-            android:exported="false"
-            android:screenOrientation="behind" />
-        <!-- 支付宝快捷支付 end -->
 
         <!-- 个推SDK配置开始 -->
         <!--        <service-->

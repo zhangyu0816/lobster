@@ -3,7 +3,6 @@ package com.zb.module_card.vm;
 import android.content.Intent;
 import android.view.View;
 
-import com.umeng.socialize.media.UMImage;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.api.attentionOtherApi;
@@ -145,7 +144,6 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
                         + o.getSharetextId();
                 String sharedName = o.getText().replace("{userId}", memberInfo.getUserId() + "");
                 sharedName = sharedName.replace("{nick}", memberInfo.getNick());
-                UMImage umImage = new UMImage(activity, memberInfo.getImage().replace("YM0000", "430X430"));
                 String content = "";
                 if (memberInfo.getServiceTags().isEmpty()) {
                     content = o.getText();
@@ -154,7 +152,7 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
                     content = "兴趣：" + content.replace("#", ",");
                 }
 
-                new FunctionPW(activity, mBinding.getRoot(), umImage, sharedName, content, sharedUrl,
+                new FunctionPW(activity, mBinding.getRoot(),  memberInfo.getImage().replace("YM0000", "430X430"), sharedName, content, sharedUrl,
                         otherUserId == BaseActivity.userId, false, false, false, new FunctionPW.CallBack() {
                     @Override
                     public void gift() {

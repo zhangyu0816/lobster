@@ -43,10 +43,10 @@ public class FunctionPW extends BasePopupWindow {
     private CallBack callBack;
     private boolean isDiscover = false;
 
-    public FunctionPW(RxAppCompatActivity activity, View parentView, UMImage umImage, String sharedName, String content, String sharedUrl,
+    public FunctionPW(RxAppCompatActivity activity, View parentView, String logo, String sharedName, String content, String sharedUrl,
                       boolean isMine, boolean isVideo, boolean isDiscover, boolean isList, CallBack callBack) {
         super(activity, parentView, true);
-        this.umImage = umImage;
+        this.umImage = new UMImage(activity, logo);
         this.sharedName = sharedName;
         this.content = content;
         this.sharedUrl = sharedUrl;

@@ -97,5 +97,6 @@ dependencies {
         implementation project(':module_bottle')
     }
     implementation project(':lib_base')
-
+    implementation files('libs/SocialSDK_QQ_Full.jar')
+    implementation files('libs/SocialSDK_WeiXin_Full.jar')
 }

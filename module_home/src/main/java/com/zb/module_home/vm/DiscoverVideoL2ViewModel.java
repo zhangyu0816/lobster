@@ -22,7 +22,6 @@ import android.widget.TextView;
 
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
-import com.umeng.socialize.media.UMImage;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
@@ -193,8 +192,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
         String sharedName = discoverInfo.getNick();
         String content = discoverInfo.getText();
         String sharedUrl = HttpManager.BASE_URL + "mobile/Dyn_dynDetail?friendDynId=" + friendDynId;
-        UMImage umImage = new UMImage(activity, discoverInfo.getImage().replace("YM0000", "430X430"));
-        new FunctionPW(activity, mBinding.getRoot(), umImage, sharedName, content, sharedUrl,
+        new FunctionPW(activity, mBinding.getRoot(), discoverInfo.getImage().replace("YM0000", "430X430"), sharedName, content, sharedUrl,
                 discoverInfo.getUserId() == BaseActivity.userId, true, true, false, new FunctionPW.CallBack() {
             @Override
             public void gift() {

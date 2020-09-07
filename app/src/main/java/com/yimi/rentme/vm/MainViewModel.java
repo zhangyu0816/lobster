@@ -80,7 +80,6 @@ import io.realm.Realm;
 
 import static android.provider.Settings.EXTRA_APP_PACKAGE;
 import static android.provider.Settings.EXTRA_CHANNEL_ID;
-import static com.umeng.socialize.utils.ContextUtil.getPackageName;
 
 public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private ArrayList<Fragment> fragments = new ArrayList<>();
@@ -136,7 +135,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         MineApp.sex = PreferenceUtil.readIntValue(activity, "mySex", -2) == -2 ? (mineInfo.getSex() == 0 ? 1 : 0) : PreferenceUtil.readIntValue(activity, "mySex", -2);
         MineApp.minAge = PreferenceUtil.readIntValue(activity, "myMinAge", 18);
         MineApp.maxAge = PreferenceUtil.readIntValue(activity, "myMaxAge", 70);
-        MineApp.distance = PreferenceUtil.readIntValue(activity, "myDistance", 50 * 1000);
 
         imUtils = new ImUtils(activity, null);
 
@@ -357,21 +355,21 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             // android 8.0引导
             Intent intent = new Intent();
             intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-            intent.putExtra(EXTRA_APP_PACKAGE, getPackageName());
+            intent.putExtra(EXTRA_APP_PACKAGE, activity.getPackageName());
             intent.putExtra(EXTRA_CHANNEL_ID, activity.getApplicationInfo().uid);
             activity.startActivity(intent);
         } else if (Build.VERSION.SDK_INT >= 21) {
             // android 5.0-7.0
             Intent intent = new Intent();
             intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-            intent.putExtra("app_package", getPackageName());
+            intent.putExtra("app_package", activity.getPackageName());
             intent.putExtra("app_uid", activity.getApplicationInfo().uid);
             activity.startActivity(intent);
         } else {
             // 其他
             Intent intent = new Intent();
             intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            Uri uri = Uri.fromParts("package", getPackageName(), null);
+            Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
             intent.setData(uri);
             activity.startActivity(intent);
         }

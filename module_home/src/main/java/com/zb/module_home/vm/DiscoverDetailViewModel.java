@@ -18,7 +18,6 @@ import com.bumptech.glide.request.transition.Transition;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.umeng.socialize.media.UMImage;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
@@ -172,9 +171,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         String sharedName = discoverInfo.getNick();
         String content = discoverInfo.getText();
         String sharedUrl = HttpManager.BASE_URL + "mobile/Dyn_dynDetail?friendDynId=" + friendDynId;
-        UMImage umImage = new UMImage(activity, discoverInfo.getImage().replace("YM0000", "430X430"));
 
-        new FunctionPW(activity, mBinding.getRoot(), umImage, sharedName, content, sharedUrl,
+        new FunctionPW(activity, mBinding.getRoot(), discoverInfo.getImage().replace("YM0000", "430X430"), sharedName, content, sharedUrl,
                 discoverInfo.getUserId() == BaseActivity.userId, false, true, false, new FunctionPW.CallBack() {
             @Override
             public void gift() {

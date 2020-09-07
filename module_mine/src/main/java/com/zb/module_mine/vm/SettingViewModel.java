@@ -73,9 +73,8 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
             public void onEndTouch(float minPercentage, float maxPercentage) {
                 MineApp.minAge = (int) minPercentage;
                 MineApp.maxAge = (int) maxPercentage;
-                MineApp.distance = 50 * 1000;
-                PreferenceUtil.saveIntValue(activity, "myDistance", MineApp.distance);
                 mBinding.setAgeName(MineApp.minAge + "-" + MineApp.maxAge + "+");
+                MineApp.noDataCount = 0;
                 activity.sendBroadcast(new Intent("lobster_location"));
             }
 
@@ -103,8 +102,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
             mBinding.setSexName(selectList.get(position));
             MineApp.sex = position == 2 ? -1 : position;
             PreferenceUtil.saveIntValue(activity, "mySex", MineApp.sex);
-            MineApp.distance = 50 * 1000;
-            PreferenceUtil.saveIntValue(activity, "myDistance", MineApp.distance);
+            MineApp.noDataCount = 0;
             activity.sendBroadcast(new Intent("lobster_location"));
         });
     }

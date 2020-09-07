@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
-import com.umeng.socialize.media.UMImage;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
@@ -483,7 +482,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                         + o.getSharetextId();
                 String sharedName = o.getText().replace("{userId}", memberInfo.getUserId() + "");
                 sharedName = sharedName.replace("{nick}", memberInfo.getNick());
-                UMImage umImage = new UMImage(activity, memberInfo.getImage().replace("YM0000", "430X430"));
                 String content = "";
                 if (memberInfo.getServiceTags().isEmpty()) {
                     content = o.getText();
@@ -492,7 +490,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     content = "兴趣：" + content.replace("#", ",");
                 }
 
-                new FunctionPW(activity, mBinding.getRoot(), umImage, sharedName, content, sharedUrl,
+                new FunctionPW(activity, mBinding.getRoot(), memberInfo.getImage().replace("YM0000", "430X430"), sharedName, content, sharedUrl,
                         otherUserId == BaseActivity.userId, false, false, false, new FunctionPW.CallBack() {
                     @Override
                     public void gift() {

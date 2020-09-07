@@ -100,7 +100,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     private boolean canReturn = false;
 
     private int superLikeStatus = 0;
-
     private int likeCount = 50;
 
     @Override
@@ -359,31 +358,18 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                         pairInfoList.add(pairInfo);
                     }
                 }
-                if (start == pairInfoList.size()) {
-                    if (MineApp.distance >= 500 * 1000) {
-                        deleteNoLike();
-                    } else {
-                        MineApp.distance = MineApp.distance + 50 * 1000;
-                        PreferenceUtil.saveIntValue(activity, "myDistance", MineApp.distance);
-                        prePairList(needProgress);
-                    }
-                } else {
-                    adapter.notifyItemRangeChanged(start, pairInfoList.size());
-                    if (mineInfo.getMemberType() == 1) {
-                        updateCount(likeCount);
-                    }
+                adapter.notifyItemRangeChanged(start, pairInfoList.size());
+                if (mineInfo.getMemberType() == 1) {
+                    updateCount(likeCount);
                 }
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    MineApp.noDataCount++;
                     createProgress();
-                    if (MineApp.distance >= 500 * 1000) {
-                        deleteNoLike();
-                    } else {
-                        MineApp.distance = MineApp.distance + 50 * 1000;
-                        PreferenceUtil.saveIntValue(activity, "myDistance", MineApp.distance);
+                    if (MineApp.noDataCount < 2) {
                         prePairList(needProgress);
                     }
                 } else if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
@@ -393,9 +379,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         }, activity)
                 .setSex(MineApp.sex)
                 .setMaxAge(MineApp.maxAge)
-                .setMinAge(MineApp.minAge)
-                .setIsFilter(1)
-                .setDistance(MineApp.distance);
+                .setMinAge(MineApp.minAge);
         new Handler().postDelayed(() -> HttpManager.getInstance().doHttpDeal(api), 1000);
     }
 

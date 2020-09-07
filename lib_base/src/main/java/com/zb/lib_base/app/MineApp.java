@@ -101,8 +101,7 @@ public class MineApp extends MultiDexApplication {
     public static int sex = 0;
     public static int maxAge = 70;
     public static int minAge = 18;
-    public static int distance = 50 * 1000;
-
+    public static int noDataCount = 0;
     public static List<DiscoverInfo> discoverInfoList = new ArrayList<>();
     public static Map<String, Integer> constellationMap = new HashMap<>();
 

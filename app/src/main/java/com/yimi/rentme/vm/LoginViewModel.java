@@ -16,10 +16,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
 
-import com.umeng.socialize.UMAuthListener;
-import com.umeng.socialize.UMShareAPI;
-import com.umeng.socialize.UMShareConfig;
-import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.yimi.rentme.R;
 import com.yimi.rentme.adapter.MainAdapter;
 import com.yimi.rentme.databinding.AcLoginBinding;
@@ -36,7 +32,6 @@ import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.registerApi;
 import com.zb.lib_base.api.registerCaptchaApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -53,6 +48,7 @@ import com.zb.lib_base.utils.Mac;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
+import com.zb.lib_base.utils.ThreeLogin;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BirthdayPW;
@@ -67,9 +63,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.ViewDataBinding;
@@ -95,13 +88,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
 
     private AMapLocation aMapLocation;
     private TelephonyManager tm;
-    private String openId;
-    private String unionId;
-    private String unionNick;
-    private String unionImage;
-    private int unionSex;
-    private int unionType;
-    private UMShareAPI umShareAPI;
+    private ThreeLogin threeLogin;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -138,6 +125,8 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             mBinding.setRight("");
         }
 
+        threeLogin = new ThreeLogin(activity, this::loginByUnion);
+
         array[0] = mBinding.tvCode1;
         array[1] = mBinding.tvCode2;
         array[2] = mBinding.tvCode3;
@@ -165,12 +154,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         bindPhoneReceiver = new BaseReceiver(activity, "lobster_bindPhone") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                MineApp.registerInfo.setOpenId(openId);
-                MineApp.registerInfo.setUnionId(unionId);
-                MineApp.registerInfo.setUnionType(unionType);
-                MineApp.registerInfo.setName(unionNick);
-                MineApp.registerInfo.setSex(unionSex);
-                moreImageList.set(0, unionImage);
+                moreImageList.set(0, MineApp.registerInfo.getUnionImage());
                 mBinding.setIsThree(true);
             }
         };
@@ -178,11 +162,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         aMapLocation = new AMapLocation(activity);
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
         getPermissions(0);
-
-        umShareAPI = UMShareAPI.get(activity);
-        UMShareConfig config = new UMShareConfig();
-        config.isNeedAuthOnGetUserInfo(true);
-        umShareAPI.setShareConfig(config);
 
         loginHelper = LoginSampleHelper.getInstance();
 
@@ -364,16 +343,12 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
 
     @Override
     public void toQQ(View view) {
-        unionType = 2;
-        CustomProgressDialog.showLoading(activity, "正在QQ登录申请权限");
-        umShareAPI.getPlatformInfo(activity, SHARE_MEDIA.QQ, umAuthListener);
+        threeLogin.selectUnionType(2);
     }
 
     @Override
     public void toWX(View view) {
-        unionType = 1;
-        CustomProgressDialog.showLoading(activity, "正在微信登录申请权限");
-        umShareAPI.getPlatformInfo(activity, SHARE_MEDIA.WEIXIN, umAuthListener);
+        threeLogin.selectUnionType(1);
     }
 
     @Override
@@ -801,84 +776,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             e.printStackTrace();
         }
         PreferenceUtil.saveStringValue(activity, "deviceHardwareInfo", object.toString());
-    }
-
-    private UMAuthListener umAuthListener = new UMAuthListener() {
-
-        @Override
-        public void onStart(SHARE_MEDIA share_media) {
-
-        }
-
-        @Override
-        public void onComplete(SHARE_MEDIA platform, int status, Map<String, String> info) {
-            CustomProgressDialog.showLoading(activity, "授权成功，正在登录中...");
-            if (status == 2) {
-                unionNick = "";
-                unionImage = "";
-                unionSex = 0;
-                openId = "";
-                unionId = "";
-                if ("QQ".equals(platform.name())) {
-                    unionNick = stringFilter(info.get("screen_name"));
-                    unionImage = info.get("profile_image_url");
-                    String sexName = info.get("gender");
-                    if ("女".equals(sexName)) {
-                        unionSex = 0;
-                    } else {
-                        unionSex = 1;
-                    }
-                    openId = info.get("openid");
-                    unionId = "";
-                } else if ("WEIXIN".equals(platform.name())) {
-                    unionNick = stringFilter(info.get("screen_name"));
-                    unionImage = info.get("profile_image_url");
-                    String sexName = info.get("gender");
-                    if ("女".equals(sexName)) {
-                        unionSex = 0;
-                    } else {
-                        unionSex = 1;
-                    }
-                    openId = info.get("openid");
-                    unionId = info.get("unionid");
-                }
-
-                try {
-                    MineApp.registerInfo.setOpenId(openId);
-                    MineApp.registerInfo.setUnionId(unionId);
-                    MineApp.registerInfo.setUnionType(unionType);
-                    MineApp.registerInfo.setName(unionNick);
-                    MineApp.registerInfo.setSex(unionSex);
-                    MineApp.registerInfo.setUnionImage(unionImage);
-                    MineApp.registerInfo.setPhone("");
-                    loginByUnion();
-                } catch (Exception e) {
-                    CustomProgressDialog.stopLoading();
-                    SCToastUtil.showToast(activity, "获取用户信息失败", true);
-                }
-            } else {
-                CustomProgressDialog.stopLoading();
-                SCToastUtil.showToast(activity, "获取用户信息失败", true);
-            }
-        }
-
-        @Override
-        public void onError(SHARE_MEDIA platform, int action, Throwable t) {
-            CustomProgressDialog.stopLoading();
-            SCToastUtil.showToast(activity, "获取用户信息失败", true);
-        }
-
-        @Override
-        public void onCancel(SHARE_MEDIA platform, int action) {
-            CustomProgressDialog.stopLoading();
-        }
-    };
-
-    private String stringFilter(String str) throws PatternSyntaxException {
-        String regEx = ".*\\p{So}.*";
-        Pattern p = Pattern.compile(regEx);
-        Matcher m = p.matcher(str);
-        return m.replaceAll("");
     }
 
     private ObjectAnimator outAlpha;
