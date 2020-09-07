@@ -59,28 +59,28 @@
         <service android:name=".service.ForegroundLiveService$InnerService" />
 
         <receiver
-            android:name=".activity.MainActivity$alarmReceiver"
+            android:name=".utils.AlarmUtils$alarmReceiver"
             android:exported="false" />
         <receiver
-            android:name=".activity.MainActivity$alarmReceiver1"
+            android:name=".utils.AlarmUtils$alarmReceiver1"
             android:exported="false" />
         <receiver
-            android:name=".activity.MainActivity$alarmReceiver2"
+            android:name=".utils.AlarmUtils$alarmReceiver2"
             android:exported="false" />
         <receiver
-            android:name=".activity.MainActivity$alarmShortReceiver"
+            android:name=".utils.AlarmUtils$alarmShortReceiver"
             android:exported="false" />
         <receiver
-            android:name=".activity.MainActivity$alarmShortReceiver1"
+            android:name=".utils.AlarmUtils$alarmShortReceiver1"
             android:exported="false" />
         <receiver
-            android:name=".activity.MainActivity$alarmShortReceiver2"
+            android:name=".utils.AlarmUtils$alarmShortReceiver2"
             android:exported="false" />
         <receiver
-            android:name=".activity.MainActivity$alarmShortReceiver3"
+            android:name=".utils.AlarmUtils$alarmShortReceiver3"
             android:exported="false" />
         <receiver
-            android:name=".activity.MainActivity$alarmShortReceiver4"
+            android:name=".utils.AlarmUtils$alarmShortReceiver4"
             android:exported="false" />
 
         <provider
