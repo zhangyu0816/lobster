@@ -17,14 +17,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
-import com.alibaba.mobileim.channel.event.IWxCallback;
-import com.alibaba.mobileim.contact.IYWContact;
-import com.alibaba.mobileim.contact.YWContactFactory;
-import com.alibaba.mobileim.conversation.IYWConversationService;
-import com.alibaba.mobileim.conversation.YWConversation;
-import com.alibaba.mobileim.conversation.YWMessage;
-import com.alibaba.mobileim.conversation.YWMessageBody;
-import com.alibaba.mobileim.conversation.YWMessageChannel;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
@@ -32,8 +24,6 @@ import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.dynDetailApi;
 import com.zb.lib_base.api.historyMsgListApi;
-import com.zb.lib_base.api.myImAccountInfoApi;
-import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.readOverHistoryMsgApi;
 import com.zb.lib_base.api.thirdHistoryMsgListApi;
@@ -45,17 +35,15 @@ import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.db.ResFileDb;
 import com.zb.lib_base.emojj.EmojiHandler;
-import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpChatUploadManager;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.imcore.CustomMessageBody;
-import com.zb.lib_base.imcore.LoginSampleHelper;
+import com.zb.lib_base.imcore.ImUtils;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.HistoryMsg;
-import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.PrivateMsg;
@@ -68,7 +56,6 @@ import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.utils.KeyboardStateObserver;
 import com.zb.lib_base.utils.MNImage;
 import com.zb.lib_base.utils.PreferenceUtil;
-import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.views.SoundView;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -103,12 +90,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     private int pagerNo = 0;
     private int pageSize = 20;
     private HistoryMsgDb historyMsgDb;
-    private LoginSampleHelper loginHelper;
     // 阿里百川
-    private String otherIMUserId;
-    private YWConversation conversation;
-    private int timeOut = 10 * 1000;
-    private IYWConversationService mConversationService;
+    private ImUtils imUtils;
     private long historyMsgId = 0;
     private boolean updateAll = false;
     private AnimationDrawable drawable; // 语音播放
@@ -120,7 +103,6 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     private ObjectAnimator animator;
     private BaseReceiver chatReceiver;
     private int soundPosition = -1;
-    private boolean needLink = false;
     private boolean isFirst = true;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -132,13 +114,13 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         chatListDb = new ChatListDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
-        loginHelper = LoginSampleHelper.getInstance();
+        imUtils = new ImUtils(activity, this::updateMySend);
         setAdapter();
 
         setProhibitEmoji(mBinding.edContent);
 
         photoManager = new PhotoManager(activity, () -> {
-            sendChatMessage(2, "", photoManager.jointWebUrl(","), 0, "【图片】");
+            imUtils.sendChatMessage(2, "", photoManager.jointWebUrl(","), 0, "【图片】", 0, 1);
             photoManager.deleteAllFile();
         });
 
@@ -150,7 +132,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                 if (mBinding.getContent().trim().isEmpty()) {
                     return false;
                 }
-                sendChatMessage(1, mBinding.getContent(), "", 0, "【文字】");
+                imUtils.sendChatMessage(1, mBinding.getContent(), "", 0, "【文字】", 0, 1);
                 mBinding.setContent("");
                 closeImplicit(mBinding.edContent);
             }
@@ -196,10 +178,10 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         chatReceiver = new BaseReceiver(activity, "lobster_upMessage/friend=" + otherUserId) {
             @Override
             public void onReceive(Context context, Intent intent) {
-                YWMessage ywMessage = (YWMessage) intent.getSerializableExtra("ywMessage");
-                CustomMessageBody body = (CustomMessageBody) LoginSampleHelper.unpack(ywMessage.getContent());
+                CustomMessageBody body = (CustomMessageBody) intent.getSerializableExtra("customMessageBody");
+                String msgId = intent.getStringExtra("msgId");
                 HistoryMsg historyMsg = new HistoryMsg();
-                historyMsg.setThirdMessageId(ywMessage.getMsgId() + "");
+                historyMsg.setThirdMessageId(msgId);
                 historyMsg.setFromId(body.getFromId());
                 historyMsg.setToId(body.getToId());
                 historyMsg.setTitle(body.getSummary());
@@ -253,10 +235,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "videos"));
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
         chatReceiver.unregisterReceiver();
-        try {
-            mConversationService.markReaded(conversation);
-        } catch (Exception e) {
-        }
+        imUtils.markRead();
         activity.finish();
     }
 
@@ -301,11 +280,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             public void onNext(MemberInfo o) {
                 memberInfo = o;
                 mBinding.setVariable(BR.viewModel, ChatViewModel.this);
-                if (loginHelper.getImCore() == null) {
-                    myImAccountInfoApi();
-                } else {
-                    otherImAccountInfoApi();
-                }
+                imUtils.setOtherUserId(otherUserId);
+                imUtils.createConnect();
                 new Thread(() -> historyMsgList(1)).start();
             }
         }, activity).setOtherUserId(otherUserId);
@@ -606,7 +582,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         uploadSoundApi api = new uploadSoundApi(new HttpOnNextListener<ResourceUrl>() {
             @Override
             public void onNext(ResourceUrl o) {
-                sendChatMessage(3, "", o.getUrl(), resTime, "【语音】");
+                imUtils.sendChatMessage(3, "", o.getUrl(), resTime, "【语音】", 0, 1);
                 soundView.setResTime(0);
             }
         }, activity).setFile(file);
@@ -652,7 +628,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         uploadVideoApi api = new uploadVideoApi(new HttpOnNextListener<ResourceUrl>() {
             @Override
             public void onNext(ResourceUrl o) {
-                sendChatMessage(4, "", o.getUrl(), (int) (time / 1000), "【视频】");
+                imUtils.sendChatMessage(4, "", o.getUrl(), (int) (time / 1000), "【视频】", 0, 1);
             }
         }, activity).setFile(new File(fileName));
         HttpChatUploadManager.getInstance().doHttpDeal(api);
@@ -672,53 +648,6 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     }
 
     /**
-     * 阿里百川登录账号
-     */
-    private void myImAccountInfoApi() {
-        myImAccountInfoApi api = new myImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
-            @Override
-            public void onNext(ImAccount o) {
-                loginHelper.loginOut_Sample();
-                loginHelper.login_Sample(activity, o.getImUserId(), o.getImPassWord());
-                otherImAccountInfoApi();
-            }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    /**
-     * 对方的阿里百川账号
-     */
-    private void otherImAccountInfoApi() {
-        otherImAccountInfoApi api = new otherImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
-            @Override
-            public void onNext(ImAccount o) {
-                otherIMUserId = o.getImUserId();
-                mConversationService = loginHelper.getConversationService();
-                conversation = mConversationService.getConversationByUserId(otherIMUserId, LoginSampleHelper.APP_KEY);
-                checkConversation();
-                if (needLink) {
-                    needLink = false;
-                    CustomProgressDialog.stopLoading();
-                    SCToastUtil.showToast(activity, "连接成功", true);
-                }
-            }
-        }, activity);
-        api.setOtherUserId(otherUserId);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    /**
-     * 检查 conversation
-     */
-    private void checkConversation() {
-        if (conversation == null) { // 这里必须判空
-            IYWContact contact = YWContactFactory.createAPPContact(otherIMUserId, LoginSampleHelper.APP_KEY);
-            conversation = mConversationService.getConversationCreater().createConversationIfNotExist(contact);
-        }
-    }
-
-    /**
      * 清除未读数量
      */
     private void thirdReadChat() {
@@ -731,71 +660,23 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    /**
-     * 发送消息
-     *
-     * @param msgType
-     * @param stanza
-     * @param resLink
-     * @param resTime
-     * @param summary
-     */
-    private void sendChatMessage(final int msgType, final String stanza, final String resLink, final int resTime, final String summary) {
-        if (memberInfo == null)
-            return;
-        YWMessageBody body = new CustomMessageBody(msgType, stanza, resLink, resTime, BaseActivity.userId, otherUserId, summary, 0, 1);
-        body.setSummary(body.getSummary());
-        body.setContent(loginHelper.pack(body));
-        final YWMessage message = YWMessageChannel.createCustomMessage(body);
-        if (mConversationService == null) {
-            needLink = true;
-            CustomProgressDialog.showLoading(activity, "已断开连接，正在重新连接...");
-            if (loginHelper.getImCore() == null) {
-                myImAccountInfoApi();
-            } else {
-                otherImAccountInfoApi();
-            }
-        } else {
-            if (conversation == null) { // 这里必须判空
-                IYWContact contact = YWContactFactory.createAPPContact(otherIMUserId, LoginSampleHelper.APP_KEY);
-                conversation = mConversationService.getConversationCreater().createConversationIfNotExist(contact);
-            }
-            conversation.getMessageSender().sendMessage(message, timeOut, new IWxCallback() {
 
-                @Override
-                public void onSuccess(Object... arg0) {
-                    updateMySend(message, stanza, msgType, resLink, resTime, summary);
-                }
-
-                @Override
-                public void onProgress(int arg0) {
-
-                }
-
-                @Override
-                public void onError(int arg0, String arg1) {
-
-                }
-            });
-        }
-    }
-
-    private void updateMySend(YWMessage message, String stanza, int msgType, String resLink, int resTime, String title) {
+    private void updateMySend(String msgId, int msgType, String stanza, String resLink, int resTime, String summary, long driftBottleId, int msgChannelType) {
         // 记录我们发出去的消息
         HistoryMsg historyMsg = new HistoryMsg();
-        historyMsg.setThirdMessageId(message.getMsgId() + "");
+        historyMsg.setThirdMessageId(msgId);
         historyMsg.setMainUserId(BaseActivity.userId);
         historyMsg.setFromId(BaseActivity.userId);
         historyMsg.setToId(otherUserId);
         historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
         historyMsg.setStanza(stanza);
         historyMsg.setMsgType(msgType);
-        historyMsg.setTitle(title);
+        historyMsg.setTitle(summary);
         historyMsg.setResTime(resTime);
         historyMsg.setResLink(resLink);
         historyMsg.setOtherUserId(otherUserId);
-        historyMsg.setMsgChannelType(1);
-        historyMsg.setDriftBottleId(0);
+        historyMsg.setMsgChannelType(msgChannelType);
+        historyMsg.setDriftBottleId(driftBottleId);
         historyMsgDb.saveHistoryMsg(historyMsg);
         historyMsgList.add(historyMsg);
         updateTime();

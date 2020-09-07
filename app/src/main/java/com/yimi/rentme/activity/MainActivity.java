@@ -493,7 +493,7 @@ public class MainActivity extends AppBaseActivity {
                     amShort3.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 7 * 60 * 1000, senderShort3);
                 if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 4 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
                     amShort4.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 9 * 60 * 1000, senderShort4);
-               viewModel.loginHelper.loginOut_Sample();
+                viewModel.imUtils.loginOutIM();
                 MineApp.exit();
                 System.exit(0);
             }
@@ -514,13 +514,13 @@ public class MainActivity extends AppBaseActivity {
         amShort2.cancel(senderShort2);
         amShort3.cancel(senderShort3);
         amShort4.cancel(senderShort4);
-        viewModel.myImAccountInfoApi();
+        viewModel.imUtils.setChat(false);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        viewModel.loginHelper.loginOut_Sample();
+        viewModel.imUtils.loginOutIM();
         if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_notice_" + 0 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
             am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 120 * 60 * 1000, sender);
         if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_notice_" + 1 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)

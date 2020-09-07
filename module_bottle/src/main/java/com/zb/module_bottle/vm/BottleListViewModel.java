@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
-import com.alibaba.mobileim.conversation.IYWConversationService;
-import com.alibaba.mobileim.conversation.YWConversation;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -14,17 +12,15 @@ import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.clearAllDriftBottleHistoryMsgApi;
 import com.zb.lib_base.api.myBottleListApi;
 import com.zb.lib_base.api.myInfoApi;
-import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.api.pickBottleApi;
 import com.zb.lib_base.db.BottleCacheDb;
 import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
-import com.zb.lib_base.imcore.LoginSampleHelper;
+import com.zb.lib_base.imcore.ImUtils;
 import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.BottleInfo;
-import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
@@ -61,6 +57,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     private BottleCacheDb bottleCacheDb;
     private BaseReceiver singleBottleCacheReceiver;
     private HistoryMsgDb historyMsgDb;
+    private ImUtils imUtils;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -70,6 +67,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
         historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         mBinding = (BottleListBinding) binding;
         mBinding.setShowBg(false);
+        imUtils = new ImUtils(activity, null);
         // 开通会员
         openVipReceiver = new BaseReceiver(activity, "lobster_openVip") {
             @Override
@@ -248,7 +246,9 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 adapter.notifyItemRemoved(position);
                 bottleInfoList.remove(position);
                 adapter.notifyDataSetChanged();
-                otherImAccountInfoApi(otherUserId);
+                imUtils.setOtherUserId(otherUserId);
+                imUtils.setDelete(true);
+
                 clearAllHistoryMsg(otherUserId, bottleInfo.getDriftBottleId());
                 activity.sendBroadcast(new Intent("lobster_bottleNum"));
                 if (bottleInfoList.size() == 0) {
@@ -288,28 +288,6 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 mineInfoDb.saveMineInfo(o);
             }
         }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    /**
-     * 对方的阿里百川账号
-     */
-    private void otherImAccountInfoApi(long otherUserId) {
-        otherImAccountInfoApi api = new otherImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
-            @Override
-            public void onNext(ImAccount o) {
-                try {
-                    IYWConversationService mConversationService = LoginSampleHelper.imCore
-                            .getConversationService();
-                    YWConversation conversation = mConversationService
-                            .getConversationByUserId(o.getImUserId(), LoginSampleHelper.APP_KEY);
-                    // 删除所有聊天记录
-                    conversation.getMessageLoader().deleteAllMessage();
-                } catch (Exception e) {
-                }
-            }
-        }, activity);
-        api.setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

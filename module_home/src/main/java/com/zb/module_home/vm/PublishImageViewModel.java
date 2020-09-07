@@ -29,6 +29,7 @@ import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
 import com.zb.module_home.databinding.HomePublicImageBinding;
 import com.zb.module_home.iv.PublishImageVMInterface;
+import com.zero.smallvideorecord.JianXiCamera;
 import com.zero.smallvideorecord.LocalMediaCompress;
 import com.zero.smallvideorecord.model.AutoVBRMode;
 import com.zero.smallvideorecord.model.LocalMediaConfig;
@@ -74,7 +75,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
         super.setBinding(binding);
         publicImageBinding = (HomePublicImageBinding) binding;
 
-        BaseActivity.createJianXiCameraFile();
+        createJianXiCameraFile();
         photoManager = new PhotoManager(activity, () -> {
             publishDyn(photoManager.jointWebUrl(","));
             photoManager.deleteAllFile();
@@ -96,6 +97,14 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
             }
         };
         setAdapter();
+    }
+
+    private void createJianXiCameraFile() {
+        File file = new File(activity.getCacheDir(), "videos");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        JianXiCamera.setVideoCachePath(file.getPath() + "/");
     }
 
     @Override

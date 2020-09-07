@@ -21,7 +21,6 @@ import com.alibaba.mobileim.contact.IYWContact;
 import com.alibaba.mobileim.conversation.IYWConversationService;
 import com.alibaba.mobileim.conversation.YWConversation;
 import com.alibaba.mobileim.conversation.YWMessage;
-import com.alibaba.mobileim.conversation.YWMessageBody;
 import com.alibaba.mobileim.gingko.model.tribe.YWTribe;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
@@ -121,7 +120,7 @@ public class LoginSampleHelper {
     private IYWPushListener iywPushListener = new IYWPushListener() {
         @Override
         public void onPushMessage(IYWContact contact, YWMessage ywMessage) {
-            CustomMessageBody body = (CustomMessageBody) unpack(ywMessage.getContent());
+            CustomMessageBody body = unpack(ywMessage.getContent());
             long otherUserId = body.getFromId();
             if (body.getDriftBottleId() == 0) {
                 if (body.getFromId() != BaseActivity.dynUserId) {
@@ -137,9 +136,6 @@ public class LoginSampleHelper {
                     }
                 }
             }
-            if (isBackground()) {
-                sendMsg(ywMessage);
-            }
             try {
                 JSONObject data = new JSONObject(new JSONObject(ywMessage.getContent()).getString("customize"));
                 if (data.has("message")) { // 聊天信息
@@ -150,13 +146,18 @@ public class LoginSampleHelper {
                     if (conversation != null) {
                         Intent intent = new Intent("lobster_newMsg");
                         intent.putExtra("unreadCount", conversation.getUnreadCount());
-                        intent.putExtra("ywMessage", ywMessage);
+                        intent.putExtra("customMessageBody", body);
+                        intent.putExtra("msgId", ywMessage.getMsgId() + "");
                         MineApp.getInstance().sendBroadcast(intent);
                     }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            if (isBackground()) {
+                sendMsg(ywMessage);
+            }
+
         }
 
         @Override
@@ -218,7 +219,7 @@ public class LoginSampleHelper {
 
             @Override
             public void onSuccess(Object... arg0) {
-
+                imCore = null;
             }
 
             @Override
@@ -288,7 +289,7 @@ public class LoginSampleHelper {
      * @param content
      * @return
      */
-    public static YWMessageBody unpack(String content) {
+    public static CustomMessageBody unpack(String content) {
         CustomMessageBody body = new CustomMessageBody();
         // 自定义消息的实现可以使用jsonObject实现，或者也可以根据自定义其他格式，只需要个pack中一致即可
         JSONObject object;
@@ -342,22 +343,22 @@ public class LoginSampleHelper {
      * @param body
      * @return
      */
-    public static String pack(YWMessageBody body) {
+    public static String pack(CustomMessageBody body) {
         // 自定义消息的实现可以使用jsonObject实现，或者也可以根据自定义其他格式，只需要个unpack中一致即可
         JSONObject data = new JSONObject();
         try {
             JSONObject message = new JSONObject();
             JSONObject valueBean = new JSONObject();
-            valueBean.put("msgType", ((CustomMessageBody) body).getMsgType());
-            valueBean.put("stanza", ((CustomMessageBody) body).getStanza());
-            valueBean.put("resLink", ((CustomMessageBody) body).getResLink());
-            valueBean.put("resTime", ((CustomMessageBody) body).getResTime());
-            if (((CustomMessageBody) body).getDriftBottleId() != 0)
-                valueBean.put("driftBottleId", ((CustomMessageBody) body).getDriftBottleId());
-            if (((CustomMessageBody) body).getMsgChannelType() == 2)
-                valueBean.put("msgChannelType", ((CustomMessageBody) body).getMsgChannelType());
-            message.put("fromId", ((CustomMessageBody) body).getFromId());
-            message.put("toId", ((CustomMessageBody) body).getToId());
+            valueBean.put("msgType", body.getMsgType());
+            valueBean.put("stanza", body.getStanza());
+            valueBean.put("resLink", body.getResLink());
+            valueBean.put("resTime", body.getResTime());
+            if (body.getDriftBottleId() != 0)
+                valueBean.put("driftBottleId", body.getDriftBottleId());
+            if (body.getMsgChannelType() == 2)
+                valueBean.put("msgChannelType", body.getMsgChannelType());
+            message.put("fromId", body.getFromId());
+            message.put("toId", body.getToId());
             message.put("valueBean", valueBean);
             data.put("message", message);
         } catch (JSONException e) {

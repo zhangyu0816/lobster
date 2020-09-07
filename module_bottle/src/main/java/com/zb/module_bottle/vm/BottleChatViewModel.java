@@ -9,14 +9,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 
-import com.alibaba.mobileim.channel.event.IWxCallback;
-import com.alibaba.mobileim.contact.IYWContact;
-import com.alibaba.mobileim.contact.YWContactFactory;
-import com.alibaba.mobileim.conversation.IYWConversationService;
-import com.alibaba.mobileim.conversation.YWConversation;
-import com.alibaba.mobileim.conversation.YWMessage;
-import com.alibaba.mobileim.conversation.YWMessageBody;
-import com.alibaba.mobileim.conversation.YWMessageChannel;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
@@ -24,24 +16,20 @@ import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.bottleHistoryMsgListApi;
 import com.zb.lib_base.api.myBottleApi;
-import com.zb.lib_base.api.myImAccountInfoApi;
-import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.readOverDriftBottleHistoryMsgApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.BottleCacheDb;
 import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.emojj.EmojiHandler;
-import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.imcore.CustomMessageBody;
-import com.zb.lib_base.imcore.LoginSampleHelper;
+import com.zb.lib_base.imcore.ImUtils;
 import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.HistoryMsg;
-import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.PrivateMsg;
@@ -76,11 +64,8 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     private long otherUserId = 0;
     private BottleCacheDb bottleCacheDb;
     // 阿里百川
-    private LoginSampleHelper loginHelper;
-    private String otherIMUserId;
-    private YWConversation conversation;
-    private int timeOut = 10 * 1000;
-    private IYWConversationService mConversationService;
+    private ImUtils imUtils;
+
     private long historyMsgId = 0;
     private HistoryMsgDb historyMsgDb;
     private List<HistoryMsg> historyMsgList = new ArrayList<>();
@@ -91,7 +76,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     private List<Integer> emojiList = new ArrayList<>();
     private BaseReceiver bottleChatReceiver;
     private MemberInfo memberInfo;
-    private boolean needLink = false;
+
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -100,16 +85,17 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         bottleCacheDb = new BottleCacheDb(Realm.getDefaultInstance());
         historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
-        loginHelper = LoginSampleHelper.getInstance();
+        imUtils = new ImUtils(activity, this::updateMySend);
+
         setAdapter();
         setProhibitEmoji(mBinding.edContent);
         bottleChatReceiver = new BaseReceiver(activity, "lobster_upMessage/driftBottleId=" + driftBottleId) {
             @Override
             public void onReceive(Context context, Intent intent) {
-                YWMessage ywMessage = (YWMessage) intent.getSerializableExtra("ywMessage");
-                CustomMessageBody body = (CustomMessageBody) LoginSampleHelper.unpack(ywMessage.getContent());
+                CustomMessageBody body = (CustomMessageBody) intent.getSerializableExtra("customMessageBody");
+                String msgId = intent.getStringExtra("msgId");
                 HistoryMsg historyMsg = new HistoryMsg();
-                historyMsg.setThirdMessageId(ywMessage.getMsgId() + "");
+                historyMsg.setThirdMessageId(msgId);
                 historyMsg.setFromId(body.getFromId());
                 historyMsg.setToId(body.getToId());
                 historyMsg.setTitle(body.getSummary());
@@ -150,7 +136,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                     SCToastUtil.showToast(activity, "请输入回复内容", true);
                     return false;
                 }
-                sendChatMessage(1, mBinding.edContent.getText().toString(), "", 0, "【文字】");
+                imUtils.sendChatMessage(1, mBinding.edContent.getText().toString(), "", 0, "【文字】", driftBottleId, 2);
                 mBinding.edContent.setText("");
                 hintKeyBoard();
             }
@@ -173,10 +159,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     @Override
     public void back(View view) {
         super.back(view);
-        try {
-            mConversationService.markReaded(conversation);
-        } catch (Exception e) {
-        }
+        imUtils.markRead();
         activity.finish();
     }
 
@@ -224,6 +207,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                 mBinding.setNick(bottleInfo.getOtherNick());
 
                 otherUserId = bottleInfo.getUserId() == BaseActivity.userId ? bottleInfo.getOtherUserId() : bottleInfo.getUserId();
+                imUtils.setOtherUserId(otherUserId);
                 // 记录我们发出去的消息
                 HistoryMsg historyMsg = new HistoryMsg();
                 historyMsg.setThirdMessageId("1");
@@ -256,12 +240,8 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             @Override
             public void onNext(MemberInfo o) {
                 memberInfo = o;
-                if (loginHelper.getImCore() == null) {
-                    myImAccountInfoApi();
-                } else {
-                    otherImAccountInfoApi();
-                }
                 activity.sendBroadcast(new Intent("lobster_bottleNum"));
+                imUtils.createConnect();
                 new Thread(() -> bottleHistoryMsgList(1)).start();
             }
         }, activity).setOtherUserId(otherUserId);
@@ -442,57 +422,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         mBinding.edContent.onKeyDown(KeyEvent.KEYCODE_DEL, new KeyEvent(R.id.ed_content, KeyEvent.ACTION_DOWN));
     }
 
-    /**
-     * 发送消息
-     *
-     * @param msgType
-     * @param stanza
-     * @param resLink
-     * @param resTime
-     * @param summary
-     */
-    private void sendChatMessage(final int msgType, final String stanza, final String resLink, final int resTime, final String summary) {
-        if (bottleInfo == null)
-            return;
-        YWMessageBody body = new CustomMessageBody(msgType, stanza, resLink, resTime, BaseActivity.userId, otherUserId, summary, driftBottleId, 2);
-        body.setSummary(body.getSummary());
-        body.setContent(loginHelper.pack(body));
-        final YWMessage message = YWMessageChannel.createCustomMessage(body);
-
-        if (mConversationService == null) {
-            needLink = true;
-            CustomProgressDialog.showLoading(activity, "已断开连接，正在重新连接...");
-            if (loginHelper.getImCore() == null) {
-                myImAccountInfoApi();
-            } else {
-                otherImAccountInfoApi();
-            }
-        } else {
-            if (conversation == null) { // 这里必须判空
-                IYWContact contact = YWContactFactory.createAPPContact(otherIMUserId, LoginSampleHelper.APP_KEY);
-                conversation = mConversationService.getConversationCreater().createConversationIfNotExist(contact);
-            }
-            conversation.getMessageSender().sendMessage(message, timeOut, new IWxCallback() {
-
-                @Override
-                public void onSuccess(Object... arg0) {
-                    updateMySend(message, stanza, msgType, resLink, resTime, summary);
-                }
-
-                @Override
-                public void onProgress(int arg0) {
-
-                }
-
-                @Override
-                public void onError(int arg0, String arg1) {
-
-                }
-            });
-        }
-    }
-
-    private void updateMySend(YWMessage message, String stanza, int msgType, String resLink, int resTime, String title) {
+    private void updateMySend(String msgId, int msgType, String stanza, String resLink, int resTime, String summary, long driftBottleId, int msgChannelType) {
 
         // 会话列表
         BottleCache bottleCache = new BottleCache();
@@ -516,18 +446,18 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
 
         // 记录我们发出去的消息
         HistoryMsg historyMsg = new HistoryMsg();
-        historyMsg.setThirdMessageId(message.getMsgId() + "");
+        historyMsg.setThirdMessageId(msgId);
         historyMsg.setMainUserId(BaseActivity.userId);
         historyMsg.setFromId(BaseActivity.userId);
         historyMsg.setToId(otherUserId);
         historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
         historyMsg.setStanza(stanza);
         historyMsg.setMsgType(msgType);
-        historyMsg.setTitle(title);
+        historyMsg.setTitle(summary);
         historyMsg.setResTime(resTime);
         historyMsg.setResLink(resLink);
         historyMsg.setOtherUserId(otherUserId);
-        historyMsg.setMsgChannelType(2);
+        historyMsg.setMsgChannelType(msgChannelType);
         historyMsg.setDriftBottleId(driftBottleId);
         historyMsgDb.saveHistoryMsg(historyMsg);
 
@@ -552,53 +482,4 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             }
         }
     }
-
-    /**
-     * 阿里百川登录账号
-     */
-    private void myImAccountInfoApi() {
-        myImAccountInfoApi api = new myImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
-            @Override
-            public void onNext(ImAccount o) {
-                loginHelper.loginOut_Sample();
-                loginHelper.login_Sample(activity, o.getImUserId(), o.getImPassWord());
-                otherImAccountInfoApi();
-            }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    /**
-     * 对方的阿里百川账号
-     */
-    private void otherImAccountInfoApi() {
-        otherImAccountInfoApi api = new otherImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
-            @Override
-            public void onNext(ImAccount o) {
-                otherIMUserId = o.getImUserId();
-                mConversationService = loginHelper.getConversationService();
-                conversation = mConversationService.getConversationByUserId(otherIMUserId, LoginSampleHelper.APP_KEY);
-                checkConversation();
-                if (needLink) {
-                    needLink = false;
-                    CustomProgressDialog.stopLoading();
-                    SCToastUtil.showToast(activity, "连接成功", true);
-                }
-            }
-        }, activity);
-        api.setOtherUserId(otherUserId);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    /**
-     * 检查 conversation
-     */
-    private void checkConversation() {
-        if (conversation == null) { // 这里必须判空
-            IYWContact contact = YWContactFactory.createAPPContact(otherIMUserId, LoginSampleHelper.APP_KEY);
-            conversation = mConversationService.getConversationCreater().createConversationIfNotExist(contact);
-        }
-    }
-
-
 }

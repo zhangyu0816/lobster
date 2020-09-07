@@ -41,26 +41,37 @@ android {
 }
 
 dependencies {
+    // 路由包
+    api 'com.alibaba:arouter-api:1.3.1'
+    annotationProcessor "com.alibaba:arouter-compiler:1.1.4"
+
     implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+    implementation project(':xbanner')
+    implementation project(':imagebrowserlib')
+    // 按钮防抖
+    implementation 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
+    // 高德地图
+    implementation files('libs/AMap2DMap_6.0.0_AMapSearch_7.3.0_AMapLocation_4.9.0_20200331.jar')
+    //log
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+    implementation 'com.orhanobut:logger:2.1.1'
+    // 鲁班
+    implementation 'me.shaohui.advancedluban:library:1.3.5'
+    // 聊天
+    implementation 'com.alibaba.mobileim:IMCore:2.0.1@aar'
+
+
     api 'androidx.appcompat:appcompat:1.2.0'
     api 'androidx.constraintlayout:constraintlayout:1.1.3'
     api 'com.squareup.retrofit2:converter-gson:2.5.0'
     api 'com.squareup.retrofit2:adapter-rxjava:2.3.0'
-    implementation project(':xbanner')
-    implementation project(':imagebrowserlib')
     // RxAppCompatActivity
     api 'com.trello:rxlifecycle-components:1.0'
-    // 路由包
-    api 'com.alibaba:arouter-api:1.3.1'
-    annotationProcessor "com.alibaba:arouter-compiler:1.1.4"
-    // 其他引用包
     // recyclerView
     api 'androidx.recyclerview:recyclerview:1.1.0'
     // SmartRefresh
     api 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0'
     api 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0'
-    // 按钮防抖
-    api 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
     // glide
     api 'com.github.bumptech.glide:glide:4.8.0'
     // TabLayout
@@ -69,19 +80,12 @@ dependencies {
     api 'com.github.1002326270xc:LayoutManager-FlowLayout:v1.6'
     // 多class
     api 'com.android.support:multidex:1.0.3'
-    // 高德地图
-    implementation files('libs/AMap2DMap_6.0.0_AMapSearch_7.3.0_AMapLocation_4.9.0_20200331.jar')
-    //log
-    api 'com.squareup.okhttp3:logging-interceptor:3.10.0'
-    api 'com.orhanobut:logger:2.1.1'
-    // 鲁班
-    api 'me.shaohui.advancedluban:library:1.3.5'
-    // 聊天
-    api 'com.alibaba.mobileim:IMCore:2.0.1@aar'
-    // 压缩视频
-    api files('libs/SmallVideoLib.aar')
+
+
+
+
     // 阿里
-    api files('libs/alipaySDK-20151014.jar')
+    implementation files('libs/alipaySDK-20151014.jar')
     // 友盟
     api 'com.umeng.sdk:common:1.5.0'
     api files('libs/SocialSDK_QQ_Full.jar')

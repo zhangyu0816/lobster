@@ -1,12 +1,12 @@
 package com.zb.lib_base.imcore;
 
-import com.alibaba.mobileim.conversation.YWMessageBody;
+import java.io.Serializable;
 
 /**
  * Created by DIY on 2019-03-12.
  */
 
-public class CustomMessageBody extends YWMessageBody {
+public class CustomMessageBody implements Serializable {
 
     // 通用
     private long mFromId;

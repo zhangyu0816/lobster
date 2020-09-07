@@ -3,23 +3,19 @@ package com.zb.module_chat.vm;
 import android.content.Context;
 import android.content.Intent;
 
-import com.alibaba.mobileim.conversation.IYWConversationService;
-import com.alibaba.mobileim.conversation.YWConversation;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.clearAllHistoryMsgApi;
-import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.api.thirdReadChatApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.imcore.LoginSampleHelper;
+import com.zb.lib_base.imcore.ImUtils;
 import com.zb.lib_base.model.ChatList;
-import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
@@ -47,6 +43,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
     private BaseReceiver relieveReceiver;
     private SimpleItemTouchHelperCallback callback;
     private HistoryMsgDb historyMsgDb;
+    private ImUtils imUtils;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -54,6 +51,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
         chatListDb = new ChatListDb(Realm.getDefaultInstance());
         historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         mBinding = (ChatListFragmentBinding) binding;
+        imUtils = new ImUtils(activity, null);
         setAdapter();
         updateChatReceiver = new BaseReceiver(activity, "lobster_updateChat") {
             @Override
@@ -125,7 +123,8 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                         activity.sendBroadcast(new Intent("lobster_updateRed"));
                         historyMsgDb.deleteHistoryMsg(otherUserId, 1, 0);
                         chatListDb.deleteChatMsg(otherUserId);
-                        otherImAccountInfoApi(otherUserId);
+                        imUtils.setOtherUserId(otherUserId);
+                        imUtils.setDelete(true);
                         clearAllHistoryMsg(otherUserId);
                         thirdReadChat(otherUserId);
                     }
@@ -196,28 +195,6 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                 activity.sendBroadcast(new Intent("lobster_updateRed"));
             }
         });
-    }
-
-    /**
-     * 对方的阿里百川账号
-     */
-    private void otherImAccountInfoApi(long otherUserId) {
-        otherImAccountInfoApi api = new otherImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
-            @Override
-            public void onNext(ImAccount o) {
-                try {
-                    IYWConversationService mConversationService = LoginSampleHelper.imCore
-                            .getConversationService();
-                    YWConversation conversation = mConversationService
-                            .getConversationByUserId(o.getImUserId(), LoginSampleHelper.APP_KEY);
-                    // 删除所有聊天记录
-                    conversation.getMessageLoader().deleteAllMessage();
-                } catch (Exception e) {
-                }
-            }
-        }, activity);
-        api.setOtherUserId(otherUserId);
-        HttpManager.getInstance().doHttpDeal(api);
     }
 
     private void clearAllHistoryMsg(long otherUserId) {

@@ -20,7 +20,6 @@ import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.PwsPerformBinding;
 import com.zb.lib_base.utils.PreferenceUtil;
-import com.zero.smallvideorecord.JianXiCamera;
 
 import java.io.File;
 import java.util.Random;
@@ -108,14 +107,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         if (!videoPath.exists()) {
             videoPath.mkdirs();
         }
-    }
-
-    public static void createJianXiCameraFile() {
-        File file = new File(activity.getCacheDir(), "videos");
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        JianXiCamera.setVideoCachePath(file.getPath() + "/");
     }
 
     /**

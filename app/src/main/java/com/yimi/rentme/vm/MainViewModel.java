@@ -16,7 +16,6 @@ import android.text.TextUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
 
-import com.alibaba.mobileim.conversation.YWMessage;
 import com.yimi.rentme.R;
 import com.yimi.rentme.databinding.AcMainBinding;
 import com.yimi.rentme.iv.MainVMInterface;
@@ -30,7 +29,6 @@ import com.zb.lib_base.api.contactNumApi;
 import com.zb.lib_base.api.driftBottleChatListApi;
 import com.zb.lib_base.api.giftListApi;
 import com.zb.lib_base.api.joinPairPoolApi;
-import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.newDynMsgAllNumApi;
 import com.zb.lib_base.api.openedMemberPriceListApi;
 import com.zb.lib_base.api.otherInfoApi;
@@ -47,14 +45,13 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.imcore.CustomMessageBody;
-import com.zb.lib_base.imcore.LoginSampleHelper;
+import com.zb.lib_base.imcore.ImUtils;
 import com.zb.lib_base.model.BankInfo;
 import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.HistoryMsg;
-import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.MineNewsCount;
@@ -95,7 +92,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private int nowIndex = -1;
     private AnimatorSet animatorSet = new AnimatorSet();
 
-    public LoginSampleHelper loginHelper;
     private BaseReceiver rechargeReceiver;
     private BaseReceiver chatListReceiver;
     private BaseReceiver newMsgReceiver;
@@ -117,6 +113,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         }
     });
     private Vibrator vibrator;
+    public ImUtils imUtils;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -133,7 +130,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         mBinding.setNewsCount(0);
 
         mineInfo = mineInfoDb.getMineInfo();
-
         vibrator = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);
 
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
@@ -142,11 +138,10 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         MineApp.maxAge = PreferenceUtil.readIntValue(activity, "myMaxAge", 70);
         MineApp.distance = PreferenceUtil.readIntValue(activity, "myDistance", 50 * 1000);
 
-        loginHelper = LoginSampleHelper.getInstance();
-        loginHelper.loginOut_Sample();
+        imUtils = new ImUtils(activity, null);
 
         if (!TextUtils.equals(BaseActivity.sessionId, ""))
-            myImAccountInfoApi();
+            imUtils.setChat(false);
 
         initFragments();
         giftList();
@@ -172,8 +167,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         newMsgReceiver = new BaseReceiver(activity, "lobster_newMsg") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                YWMessage ywMessage = (YWMessage) intent.getSerializableExtra("ywMessage");
-                CustomMessageBody body = (CustomMessageBody) LoginSampleHelper.unpack(ywMessage.getContent());
+                CustomMessageBody body = (CustomMessageBody) intent.getSerializableExtra("customMessageBody");
+                String msgId = intent.getStringExtra("msgId");
                 long otherUserId = body.getFromId() == BaseActivity.userId ? body.getToId() : body.getFromId();
 
                 if (body.getDriftBottleId() == 0) {
@@ -182,7 +177,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                         activity.sendBroadcast(new Intent("lobster_newsCount"));
                     } else {
                         HistoryMsg historyMsg = new HistoryMsg();
-                        historyMsg.setThirdMessageId(ywMessage.getMsgId() + "");
+                        historyMsg.setThirdMessageId(msgId);
                         historyMsg.setFromId(body.getFromId());
                         historyMsg.setToId(body.getToId());
                         historyMsg.setTitle(body.getSummary());
@@ -208,13 +203,14 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
                                 // 更新对话页面
                                 Intent upMessage = new Intent("lobster_upMessage/friend=" + otherUserId);
-                                upMessage.putExtra("ywMessage", ywMessage);
+                                upMessage.putExtra("customMessageBody", body);
+                                upMessage.putExtra("msgId", msgId);
                                 activity.sendBroadcast(upMessage);
                             }
 
                             @Override
                             public void fail() {
-                                otherInfo(otherUserId, ywMessage);
+                                otherInfo(otherUserId, body, msgId);
                             }
                         });
                         if (body.getMsgType() == 112) {
@@ -224,7 +220,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 } else {
 
                     HistoryMsg historyMsg = new HistoryMsg();
-                    historyMsg.setThirdMessageId(ywMessage.getMsgId() + "");
+                    historyMsg.setThirdMessageId(msgId);
                     historyMsg.setFromId(body.getFromId());
                     historyMsg.setToId(body.getToId());
                     historyMsg.setTitle(body.getSummary());
@@ -257,12 +253,12 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
                     // 更新对话页面
                     Intent upMessage = new Intent("lobster_upMessage/driftBottleId=" + body.getDriftBottleId());
-                    upMessage.putExtra("ywMessage", ywMessage);
+                    upMessage.putExtra("customMessageBody", body);
+                    upMessage.putExtra("msgId", msgId);
                     activity.sendBroadcast(upMessage);
 
                     noReadBottleNum(true);
                 }
-
             }
         };
 
@@ -290,7 +286,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                         areaDb.getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")),
                         areaDb.getCityId(PreferenceUtil.readStringValue(activity, "cityName")),
                         areaDb.getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
-                myImAccountInfoApi();
+                imUtils.setChat(false);
                 walletAndPop();
                 newDynMsgAllNum(false);
                 MineApp.recommendInfoList.clear();
@@ -712,11 +708,10 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     }
 
     @Override
-    public void otherInfo(long otherUserId, YWMessage ywMessage) {
+    public void otherInfo(long otherUserId, CustomMessageBody body, String msgId) {
         otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
             @Override
             public void onNext(MemberInfo o) {
-                CustomMessageBody body = (CustomMessageBody) LoginSampleHelper.unpack(ywMessage.getContent());
                 ChatList dbData = chatListDb.getChatMsg(otherUserId, otherUserId == BaseActivity.dynUserId ? 5 : 4);
                 ChatList chatList = new ChatList();
                 chatList.setUserId(otherUserId);
@@ -740,7 +735,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
                 // 更新对话页面
                 Intent upMessage = new Intent("lobster_upMessage/friend=" + otherUserId);
-                upMessage.putExtra("ywMessage", ywMessage);
+                upMessage.putExtra("customMessageBody", body);
+                upMessage.putExtra("msgId", msgId);
                 activity.sendBroadcast(upMessage);
 
             }
@@ -804,19 +800,5 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
     public void stopAnimator() {
         animatorSet.cancel();
-    }
-
-    /**
-     * 阿里百川登录账号
-     */
-    public void myImAccountInfoApi() {
-        myImAccountInfoApi api = new myImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
-            @Override
-            public void onNext(ImAccount o) {
-                loginHelper.loginOut_Sample();
-                loginHelper.login_Sample(activity, o.getImUserId(), o.getImPassWord());
-            }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
     }
 }

@@ -8,15 +8,9 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.widget.ImageView;
 
-import com.alibaba.mobileim.contact.IYWContact;
-import com.alibaba.mobileim.contact.YWContactFactory;
-import com.alibaba.mobileim.conversation.IYWConversationService;
-import com.alibaba.mobileim.conversation.YWConversation;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.clearHistoryMsgApi;
 import com.zb.lib_base.api.dynDetailApi;
-import com.zb.lib_base.api.myImAccountInfoApi;
-import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.api.systemHistoryMsgListApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.ResFileDb;
@@ -24,9 +18,8 @@ import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
-import com.zb.lib_base.imcore.LoginSampleHelper;
+import com.zb.lib_base.imcore.ImUtils;
 import com.zb.lib_base.model.DiscoverInfo;
-import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.StanzaInfo;
 import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.utils.ActivityUtils;
@@ -57,10 +50,7 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
     private int preDirection;
     private SoundView soundView;
     private ObjectAnimator animator;
-    private LoginSampleHelper loginHelper;
-    private String otherIMUserId;
-    private YWConversation conversation;
-    private IYWConversationService mConversationService;
+    private ImUtils imUtils;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -69,21 +59,15 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
         resFileDb = new ResFileDb(Realm.getDefaultInstance());
         setAdapter();
         soundView = new SoundView(activity, view -> stopVoiceDrawable());
-        loginHelper = LoginSampleHelper.getInstance();
-        if (loginHelper.getImCore() == null) {
-            myImAccountInfoApi();
-        } else {
-            otherImAccountInfoApi();
-        }
+        imUtils = new ImUtils(activity, null);
+        imUtils.setOtherUserId(BaseActivity.systemUserId);
+        imUtils.createConnect();
     }
 
     @Override
     public void back(View view) {
         super.back(view);
-        try {
-            mConversationService.markReaded(conversation);
-        } catch (Exception e) {
-        }
+        imUtils.markRead();
         activity.finish();
     }
 
@@ -225,48 +209,6 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
             preImageView.setImageResource(preDirection == 0 ? R.mipmap.icon_voice_3_left : R.mipmap.icon_voice_3_right);
             drawable.stop();
             drawable = null;
-        }
-    }
-
-    /**
-     * 阿里百川登录账号
-     */
-    private void myImAccountInfoApi() {
-        myImAccountInfoApi api = new myImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
-            @Override
-            public void onNext(ImAccount o) {
-                loginHelper.loginOut_Sample();
-                loginHelper.login_Sample(activity, o.getImUserId(), o.getImPassWord());
-                otherImAccountInfoApi();
-            }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    /**
-     * 对方的阿里百川账号
-     */
-    private void otherImAccountInfoApi() {
-        otherImAccountInfoApi api = new otherImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
-            @Override
-            public void onNext(ImAccount o) {
-                otherIMUserId = o.getImUserId();
-                mConversationService = loginHelper.getConversationService();
-                conversation = mConversationService.getConversationByUserId(otherIMUserId, LoginSampleHelper.APP_KEY);
-                checkConversation();
-            }
-        }, activity);
-        api.setOtherUserId(BaseActivity.systemUserId);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    /**
-     * 检查 conversation
-     */
-    private void checkConversation() {
-        if (conversation == null) { // 这里必须判空
-            IYWContact contact = YWContactFactory.createAPPContact(otherIMUserId, LoginSampleHelper.APP_KEY);
-            conversation = mConversationService.getConversationCreater().createConversationIfNotExist(contact);
         }
     }
 }
