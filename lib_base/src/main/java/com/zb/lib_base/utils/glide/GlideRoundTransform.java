@@ -1,4 +1,4 @@
-package com.zb.lib_base.utils;
+package com.zb.lib_base.utils.glide;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;

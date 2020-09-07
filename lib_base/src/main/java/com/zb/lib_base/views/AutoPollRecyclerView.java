@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 
 import com.zb.lib_base.adapter.BindingItemAdapter;
-import com.zb.lib_base.utils.ScrollSpeedLinearLayoutManger;
+import com.zb.lib_base.utils.glide.ScrollSpeedLinearLayoutManger;
 
 import java.lang.ref.WeakReference;
 
