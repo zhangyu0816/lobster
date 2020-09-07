@@ -1,12 +1,11 @@
 package com.zb.lib_base.views;
 
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
 
 import com.zb.lib_base.R;
@@ -17,10 +16,9 @@ import androidx.databinding.DataBindingUtil;
 
 public class GoodView extends RelativeLayout {
     private GoodLayoutBinding mBinding;
-    private ObjectAnimator ivCircleScaleX, ivCircleScaleY;
-    private ObjectAnimator ivUnLikeScaleX, ivUnLikeScaleY;
-    private ObjectAnimator ivLikeScaleX, ivLikeScaleY;
-    private AnimatorSet animatorSet = new AnimatorSet();
+
+    private PropertyValuesHolder pvhSY, pvhSX;
+    private ObjectAnimator pvh_dislike, pvh_circle, pvh_like;
 
     public GoodView(Context context) {
         super(context);
@@ -37,11 +35,10 @@ public class GoodView extends RelativeLayout {
         init(context);
     }
 
+
     private void init(Context context) {
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.good_layout, null, false);
         addView(mBinding.getRoot());
-
-        animatorSet.setInterpolator(new LinearInterpolator());
     }
 
     public void playUnlike() {
@@ -49,14 +46,15 @@ public class GoodView extends RelativeLayout {
         mBinding.ivCircle.setVisibility(GONE);
         mBinding.ivLike.setVisibility(GONE);
 
-        ivUnLikeScaleX = ObjectAnimator.ofFloat(mBinding.ivUnLike, "scaleX", 0, 1, 0.8f, 1).setDuration(500);
-        ivUnLikeScaleY = ObjectAnimator.ofFloat(mBinding.ivUnLike, "scaleY", 0, 1, 0.8f, 1).setDuration(500);
+        pvhSY = PropertyValuesHolder.ofFloat("scaleY", 0, 1, 0.8f, 1);
+        pvhSX = PropertyValuesHolder.ofFloat("scaleX", 0, 1, 0.8f, 1);
+        pvh_dislike = ObjectAnimator.ofPropertyValuesHolder(mBinding.ivUnLike, pvhSY, pvhSX).setDuration(500);
+        pvh_dislike.start();
 
-        animatorSet.playTogether(ivUnLikeScaleX, ivUnLikeScaleY);
-        animatorSet.start();
         new Handler().postDelayed(() -> {
-            ivUnLikeScaleX = null;
-            ivUnLikeScaleY = null;
+            if (pvh_dislike != null)
+                pvh_dislike.cancel();
+            pvh_dislike = null;
         }, 500);
     }
 
@@ -64,20 +62,25 @@ public class GoodView extends RelativeLayout {
         mBinding.ivUnLike.setVisibility(GONE);
         mBinding.ivCircle.setVisibility(VISIBLE);
         mBinding.ivLike.setVisibility(VISIBLE);
-        ivCircleScaleX = ObjectAnimator.ofFloat(mBinding.ivCircle, "scaleX", 0, 0.8f).setDuration(500);
-        ivCircleScaleY = ObjectAnimator.ofFloat(mBinding.ivCircle, "scaleY", 0, 0.8f).setDuration(500);
 
-        ivLikeScaleX = ObjectAnimator.ofFloat(mBinding.ivLike, "scaleX", 0, 1, 0.8f, 1).setDuration(500);
-        ivLikeScaleY = ObjectAnimator.ofFloat(mBinding.ivLike, "scaleY", 0, 1, 0.8f, 1).setDuration(500);
+        pvhSY = PropertyValuesHolder.ofFloat("scaleY", 0, 0.8f);
+        pvhSX = PropertyValuesHolder.ofFloat("scaleX", 0, 0.8f);
+        pvh_circle = ObjectAnimator.ofPropertyValuesHolder(mBinding.ivCircle, pvhSY, pvhSX).setDuration(500);
+        pvh_circle.start();
 
-        animatorSet.playTogether(ivCircleScaleX, ivCircleScaleY, ivLikeScaleX, ivLikeScaleY);
-        animatorSet.start();
+        pvhSY = PropertyValuesHolder.ofFloat("scaleY", 0, 1, 0.8f, 1);
+        pvhSX = PropertyValuesHolder.ofFloat("scaleX", 0, 1, 0.8f, 1);
+        pvh_like = ObjectAnimator.ofPropertyValuesHolder(mBinding.ivLike, pvhSY, pvhSX).setDuration(500);
+        pvh_like.start();
 
         new Handler().postDelayed(() -> {
-            ivCircleScaleX = null;
-            ivCircleScaleY = null;
-            ivLikeScaleX = null;
-            ivLikeScaleY = null;
+            if (pvh_circle != null) {
+                pvh_circle.cancel();
+            }
+            pvh_circle = null;
+            if (pvh_like != null)
+                pvh_like.cancel();
+            pvh_like = null;
             mBinding.ivCircle.setVisibility(GONE);
         }, 500);
     }

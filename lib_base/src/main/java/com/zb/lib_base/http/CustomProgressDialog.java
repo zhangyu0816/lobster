@@ -81,7 +81,8 @@ public class CustomProgressDialog extends Dialog implements DialogInterface.OnCa
 
     public static synchronized void stopLoading() {
         if (sDialog != null && sDialog.isShowing()) {
-            animator.cancel();
+            if (animator != null)
+                animator.cancel();
             sDialog.dismiss();
         }
         sDialog = null;

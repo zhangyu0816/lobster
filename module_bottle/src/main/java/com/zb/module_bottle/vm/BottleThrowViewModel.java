@@ -295,7 +295,8 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         } else if (throwIndex == 1) {
             pickBottle(1);
         } else if (throwIndex == 2) {
-            close(null);
+            mBinding.setIsBottle(false);
+            mBinding.bottleWhiteBack.bottleBg.throwBottle(() -> close(null));
         }
     }
 

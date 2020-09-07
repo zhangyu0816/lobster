@@ -1,8 +1,7 @@
 package com.zb.lib_base.vm;
 
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
+import android.animation.PropertyValuesHolder;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -222,38 +220,27 @@ public class BaseViewModel implements BaseVMInterface {
         return screenHeight * 2 / 3 > rect.bottom;
     }
 
-    private ObjectAnimator scaleX, scaleY, alpha, scaleAfterX, scaleAfterY;
-    private AnimatorSet animatorSet = new AnimatorSet();
+    private PropertyValuesHolder pvhSY, pvhSX, pvhA;
+    private ObjectAnimator pvh;
 
     public void playAnimator(View view) {
-        scaleX = ObjectAnimator.ofFloat(view, "scaleX", 0.5f, 1).setDuration(2000);
-        scaleY = ObjectAnimator.ofFloat(view, "scaleY", 0.5f, 1).setDuration(2000);
-        alpha = ObjectAnimator.ofFloat(view, "alpha", 1, 0).setDuration(2000);
-
-        scaleX.setRepeatCount(Animation.INFINITE);
-        scaleX.setRepeatMode(ValueAnimator.RESTART);
-
-        scaleY.setRepeatCount(Animation.INFINITE);
-        scaleY.setRepeatMode(ValueAnimator.RESTART);
-
-        alpha.setRepeatCount(Animation.INFINITE);
-        alpha.setRepeatMode(ValueAnimator.RESTART);
-
-        animatorSet.setInterpolator(new LinearInterpolator());
-        animatorSet.playTogether(scaleX, scaleY, alpha);//同时执行
-        animatorSet.start();
+        pvhSY = PropertyValuesHolder.ofFloat("scaleY", 0.5f, 1);
+        pvhSX = PropertyValuesHolder.ofFloat("scaleX", 0.5f, 1);
+        pvhA = PropertyValuesHolder.ofFloat("alpha", 1, 0);
+        pvh = ObjectAnimator.ofPropertyValuesHolder(view, pvhSY, pvhSX, pvhA).setDuration(2000);
+        pvh.setRepeatCount(Animation.INFINITE);
+        pvh.start();
     }
 
     public void likeOrNot(View view) {
-        scaleX = ObjectAnimator.ofFloat(view, "scaleX", 0, 1, 0.8f, 1).setDuration(500);
-        scaleY = ObjectAnimator.ofFloat(view, "scaleY", 0, 1, 0.8f, 1).setDuration(500);
-        animatorSet.setInterpolator(new LinearInterpolator());
-        animatorSet.play(scaleX).with(scaleY);
-        animatorSet.start();
-
+        pvhSY = PropertyValuesHolder.ofFloat("scaleY", 0, 1, 0.8f, 1);
+        pvhSX = PropertyValuesHolder.ofFloat("scaleX", 0, 1, 0.8f, 1);
+        pvh = ObjectAnimator.ofPropertyValuesHolder(view, pvhSY, pvhSX).setDuration(500);
+        pvh.start();
         new Handler().postDelayed(() -> {
-            scaleX = null;
-            scaleY = null;
+            if (pvh != null)
+                pvh.cancel();
+            pvh = null;
         }, 500);
     }
 
@@ -285,12 +272,10 @@ public class BaseViewModel implements BaseVMInterface {
     @SuppressLint("ClickableViewAccessibility")
     public void initGood(View clickView, View imageView, Runnable ra, Runnable successRa) {
         imageView.setRotation(45f);
-        scaleX = ObjectAnimator.ofFloat(imageView, "scaleX", 2f, 1.8f, 2f).setDuration(300);
-        scaleY = ObjectAnimator.ofFloat(imageView, "scaleY", 2f, 1.8f, 2f).setDuration(300);
-        scaleAfterX = ObjectAnimator.ofFloat(imageView, "scaleX", 2f, 3f).setDuration(200);
-        scaleAfterY = ObjectAnimator.ofFloat(imageView, "scaleY", 2f, 3f).setDuration(200);
-        alpha = ObjectAnimator.ofFloat(imageView, "alpha", 1, 0).setDuration(200);
-
+        pvhSY = PropertyValuesHolder.ofFloat("scaleY", 2f, 1.8f, 2f, 2f, 3f);
+        pvhSX = PropertyValuesHolder.ofFloat("scaleX", 2f, 1.8f, 2f, 2f, 3f);
+        pvhA = PropertyValuesHolder.ofFloat("alpha", 1, 1, 1, 0.5f, 0);
+        pvh = ObjectAnimator.ofPropertyValuesHolder(imageView, pvhSY, pvhSX, pvhA).setDuration(500);
         clickView.setOnTouchListener((view, motionEvent) -> {
             if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                 if ((System.currentTimeMillis() - exitTime) > 500) {
@@ -302,11 +287,8 @@ public class BaseViewModel implements BaseVMInterface {
                     imageView.setX(motionEvent.getX() - ObjectUtils.getViewSizeByWidthFromMax(102));
                     imageView.setY(motionEvent.getY() - ObjectUtils.getViewSizeByWidthFromMax(102));
                     imageView.setAlpha(1f);
-                    animatorSet.setInterpolator(new LinearInterpolator());
-                    animatorSet.play(scaleX).with(scaleY);
-                    animatorSet.play(scaleAfterX).with(scaleAfterY).with(alpha).after(scaleX).after(100);
-                    animatorSet.start();
-                    mHandler.postDelayed(successRa, 600);
+                    pvh.start();
+                    mHandler.postDelayed(successRa, 500);
                 }
             }
             return true;

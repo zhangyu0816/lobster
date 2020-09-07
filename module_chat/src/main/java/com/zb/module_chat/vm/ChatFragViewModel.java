@@ -1,12 +1,12 @@
 package com.zb.module_chat.vm;
 
-import android.animation.AnimatorSet;
+import android.animation.Keyframe;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
 
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.app.MineApp;
@@ -23,8 +23,9 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
     private RecommendInfo recommendInfo;
     private Handler handler = new Handler();
     private int time = 1000 * 60 * 2;
-    private ObjectAnimator outX, backX;
-    private AnimatorSet animatorSet = new AnimatorSet();
+    private ObjectAnimator anim;
+    private Keyframe t1, t2, t3, t4;
+    private PropertyValuesHolder pvhTX;
     private Runnable ra = new Runnable() {
         @Override
         public void run() {
@@ -36,14 +37,14 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
             int outWidth = mBinding.recommendMainLayout.getWidth();
             int backWidth = mBinding.recommendLayout.getWidth();
 
-            outX = ObjectAnimator.ofFloat(mBinding.recommendMainLayout, "translationX", outWidth, 0).setDuration(500);
-            backX = ObjectAnimator.ofFloat(mBinding.recommendMainLayout, "translationX", 0, backWidth).setDuration(200);
+            t1 = Keyframe.ofFloat(0, outWidth);
+            t2 = Keyframe.ofFloat(0.2f, 0);
+            t3 = Keyframe.ofFloat(0.9f, 0);
+            t4 = Keyframe.ofFloat(1f, backWidth);
 
-            animatorSet.setInterpolator(new LinearInterpolator());
-            animatorSet.play(outX);
-            animatorSet.play(backX).after(outX).after(1000);
-            animatorSet.start();
-
+            pvhTX = PropertyValuesHolder.ofKeyframe("translationX", t1, t2, t3, t4);
+            anim = ObjectAnimator.ofPropertyValuesHolder(mBinding.recommendMainLayout, pvhTX);
+            anim.setDuration(1700).start();
             handler.postDelayed(ra, time);
             if (MineApp.recommendInfoList.size() == 0) {
                 activity.sendBroadcast(new Intent("lobster_recommend"));

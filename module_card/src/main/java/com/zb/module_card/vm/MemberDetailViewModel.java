@@ -1,14 +1,13 @@
 package com.zb.module_card.vm;
 
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -449,18 +448,19 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    private ObjectAnimator scaleX, scaleY, translateY;
-    private AnimatorSet animatorSet = new AnimatorSet();
+    private ObjectAnimator pvh, translateY;
+    private PropertyValuesHolder pvhSY, pvhSX;
 
     private void isLike(View view) {
-        scaleX = ObjectAnimator.ofFloat(view, "scaleX", 1, 1.1f, 1, 1.2f, 1).setDuration(500);
-        scaleY = ObjectAnimator.ofFloat(view, "scaleY", 1, 1.1f, 1, 1.2f, 1).setDuration(500);
-        animatorSet.setInterpolator(new LinearInterpolator());
-        animatorSet.play(scaleX).with(scaleY);
-        animatorSet.start();
+        pvhSY = PropertyValuesHolder.ofFloat("scaleY", 1, 1.1f, 1, 1.2f, 1);
+        pvhSX = PropertyValuesHolder.ofFloat("scaleX", 1, 1.1f, 1, 1.2f, 1);
+        pvh = ObjectAnimator.ofPropertyValuesHolder(view, pvhSY, pvhSX).setDuration(500);
+        pvh.start();
+
         new Handler().postDelayed(() -> {
-            scaleX = null;
-            scaleY = null;
+            if (pvh != null)
+                pvh.cancel();
+            pvh = null;
         }, 500);
     }
 

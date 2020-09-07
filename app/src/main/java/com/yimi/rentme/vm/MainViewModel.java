@@ -89,7 +89,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private int bottlePageNo = 1;
     private BottleCacheDb bottleCacheDb;
     private int nowIndex = -1;
-    private AnimatorSet animatorSet = new AnimatorSet();
+    private AnimatorSet animatorSet;
 
     private BaseReceiver rechargeReceiver;
     private BaseReceiver chatListReceiver;
@@ -780,23 +780,27 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         translateY = ObjectAnimator.ofFloat(mBinding.remindRelative, "translationY", 0, -30, 0, -30, 0, -30, 0).setDuration(500);
         scaleXEnd = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleX", 1, 0).setDuration(500);
         scaleYEnd = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleY", 1, 0).setDuration(500);
-
+        animatorSet = new AnimatorSet();
         animatorSet.setInterpolator(new LinearInterpolator());
-        animatorSet.play(scaleX).with(scaleY).after(5000);
+        animatorSet.play(scaleX).with(scaleY);
         animatorSet.play(translateY).after(scaleY);
         animatorSet.play(scaleXEnd).with(scaleYEnd).after(translateY).after(10000);
         animatorSet.start();
 
         new Handler().postDelayed(() -> {
+            if (animatorSet != null)
+                animatorSet.cancel();
             scaleX = null;
             scaleY = null;
             translateY = null;
             scaleXEnd = null;
             scaleYEnd = null;
-        }, 16500);
+            animatorSet = null;
+        }, 11500);
     }
 
     public void stopAnimator() {
-        animatorSet.cancel();
+        if (animatorSet != null)
+            animatorSet.cancel();
     }
 }

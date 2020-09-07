@@ -542,6 +542,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             ivProgress.setVisibility(View.GONE);
             if (animator != null)
                 animator.cancel();
+            animator = null;
             initVideo();
             lastVideoView = videoView;
         });

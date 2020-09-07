@@ -407,11 +407,11 @@
                     <com.zb.lib_base.views.GoodView
                         android:id="@+id/good_view"
                         isLike="@{viewModel.goodDb.hasGood(viewModel.discoverInfo.friendDynId)}"
+                        onClickDelayed="@{viewModel::dynLike}"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginStart="5dp"
-                        android:gravity="center"
-                        android:onClick="@{viewModel::dynLike}" />
+                        android:gravity="center" />
 
                     <TextView
                         onClickDelayed="@{viewModel::dynLike}"

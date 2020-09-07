@@ -1,8 +1,8 @@
 package com.zb.module_card.vm;
 
 import android.Manifest;
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,6 @@ import android.os.Message;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.CycleInterpolator;
-import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
 import com.zb.lib_base.activity.BaseActivity;
@@ -602,8 +601,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     /**
      * 出现
      */
-    private ObjectAnimator rotationOut, translationOutX, alphaOut;
-    private AnimatorSet animatorSet = new AnimatorSet();
+    private PropertyValuesHolder pvhR, pvhTX, pvhA;
+    private ObjectAnimator pvh_card;
 
     private void setCardAnimationLeftToRight(PairInfo pairInfo) {
         mBinding.setVariable(BR.pairInfo, pairInfo);
@@ -611,13 +610,12 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         imageList.addAll(pairInfo.getImageList());
         disListAdapter.notifyDataSetChanged();
 
-        rotationOut = ObjectAnimator.ofFloat(mBinding.cardRelative, "rotation", 45, 0).setDuration(500);
-        translationOutX = ObjectAnimator.ofFloat(mBinding.cardRelative, "translationX", MineApp.W, 0).setDuration(500);
-        alphaOut = ObjectAnimator.ofFloat(mBinding.cardRelative, "alpha", 0, 1).setDuration(500);
+        pvhR = PropertyValuesHolder.ofFloat("rotation", 45, 0);
+        pvhTX = PropertyValuesHolder.ofFloat("translationX", MineApp.W, 0);
+        pvhA = PropertyValuesHolder.ofFloat("alpha", 0, 1);
 
-        animatorSet.setInterpolator(new LinearInterpolator());
-        animatorSet.play(rotationOut).with(translationOutX).with(alphaOut);
-        animatorSet.start();
+        pvh_card = ObjectAnimator.ofPropertyValuesHolder(mBinding.cardRelative, pvhR, pvhTX, pvhA).setDuration(500);
+        pvh_card.start();
 
         new Handler().postDelayed(() -> {
             canReturn = true;

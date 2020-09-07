@@ -273,6 +273,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
                     mBinding.setIsProgress(false);
                     if (animator != null)
                         animator.cancel();
+                    animator = null;
                     initVideo();
                 });
                 otherInfo();

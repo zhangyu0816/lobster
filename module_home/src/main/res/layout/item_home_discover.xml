@@ -67,8 +67,8 @@
                 android:background="@drawable/btn_bg_white_radius_bottom5"
                 android:orientation="vertical"
                 android:paddingStart="10dp"
-                android:paddingEnd="10dp"
                 android:paddingTop="10dp"
+                android:paddingEnd="10dp"
                 android:paddingBottom="2dp">
 
                 <TextView
@@ -122,11 +122,11 @@
                         <com.zb.lib_base.views.GoodView
                             android:id="@+id/good_view"
                             isLike="@{viewModel.goodDb.hasGood(item.friendDynId)}"
+                            onClickDelayed="@{v->viewModel.doLike(v,position)}"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_marginStart="5dp"
-                            android:gravity="center"
-                            android:onClick="@{v->viewModel.doLike(v,position)}" />
+                            android:gravity="center" />
 
                         <TextView
                             android:layout_width="wrap_content"
