@@ -21,8 +21,6 @@ public interface CardVMInterface {
 
     void prePairList(boolean needProgress);
 
-    void deleteNoLike();
-
     void makeEvaluate(PairInfo pairInfo, int likeOtherStatus);
 
     void onRefresh(View view);

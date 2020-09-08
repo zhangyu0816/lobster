@@ -56,7 +56,7 @@ public class CardItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
         }
         view.setAlpha(1.0f);
         // 当没有数据时回调 mListener
-        if (adapter.getItemCount() <= 3) {
+        if (adapter.getItemCount() == 5 || adapter.getItemCount() == 3 || adapter.getItemCount() == 0) {
             if (mListener != null) {
                 mListener.onSwipedClear();
             }
@@ -65,6 +65,7 @@ public class CardItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
 
     /**
      * 是否可以删除
+     *
      * @return
      */
     @Override

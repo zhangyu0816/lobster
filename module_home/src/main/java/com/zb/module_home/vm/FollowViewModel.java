@@ -3,11 +3,11 @@ package com.zb.module_home.vm;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.Target;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -25,6 +25,7 @@ import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.views.GoodView;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_home.R;
@@ -32,6 +33,7 @@ import com.zb.module_home.adapter.HomeAdapter;
 import com.zb.module_home.databinding.HomeFollowBinding;
 import com.zb.module_home.iv.FollowVMInterface;
 
+import java.io.File;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -130,28 +132,39 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
         onRefreshForNet(null);
     }
 
-    private int index = 0;
-    private int start;
-
     @Override
     public void attentionDyn() {
         attentionDynApi api = new attentionDynApi(new HttpOnNextListener<List<DiscoverInfo>>() {
             @Override
             public void onNext(List<DiscoverInfo> o) {
                 mBinding.noNetLinear.setVisibility(View.GONE);
-                start = discoverInfoList.size();
                 for (DiscoverInfo item : o) {
-                    try {
-                        Bitmap bitmap = Glide.with(activity).asBitmap().load(item.getVideoUrl().isEmpty() ? (item.getImages().isEmpty() ? attentionDb.getAttentionInfo(item.getOtherUserId()).getImage() : item.getImages().split(",")[0]) : item.getVideoUrl())
-                                .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
-                        item.setWidth(bitmap.getWidth());
-                        item.setHeight(bitmap.getHeight());
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    String url = item.getVideoUrl().isEmpty() ? (item.getImages().isEmpty() ? attentionDb.getAttentionInfo(item.getOtherUserId()).getImage() : item.getImages().split(",")[0]) : item.getVideoUrl();
+                    if (url.contains(".mp4")) {
+                        int start = discoverInfoList.size();
+                        discoverInfoList.add(item);
+                        adapter.notifyItemRangeChanged(start, discoverInfoList.size());
+                    } else {
+                        DownLoad.downImageFile(url, filePath -> {
+                            int start = discoverInfoList.size();
+                            Bitmap bitmap = BitmapFactory.decodeFile(new File(filePath).toString());
+                            try {
+                                item.setWidth(bitmap.getWidth());
+                                item.setHeight(bitmap.getHeight());
+                            } catch (Exception e) {
+                                Log.e("filePath", "filePath == " + filePath);
+                            }
+                            discoverInfoList.add(item);
+                            if (attentionDb.isAttention(item.getOtherUserId())) {
+                                adapter.notifyItemRangeChanged(start, discoverInfoList.size());
+                            } else {
+                                setImage(start, item);
+                            }
+                        });
                     }
-                    discoverInfoList.add(item);
                 }
-                setImage();
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
             }
 
             @Override
@@ -171,34 +184,15 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    private void setImage() {
-        DiscoverInfo discoverInfo = discoverInfoList.get(index);
-        if (!attentionDb.isAttention(discoverInfo.getOtherUserId())) {
-            otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
-                @Override
-                public void onNext(MemberInfo o) {
-                    attentionDb.saveAttention(new AttentionInfo(discoverInfo.getOtherUserId(), o.getNick(), o.getImage(), true, BaseActivity.userId));
-                    if (index < discoverInfoList.size() - 1) {
-                        index++;
-                        setImage();
-                    } else {
-                        adapter.notifyItemRangeChanged(start, discoverInfoList.size());
-                        mBinding.refresh.finishRefresh();
-                        mBinding.refresh.finishLoadMore();
-                    }
-                }
-            }, activity).setOtherUserId(discoverInfo.getOtherUserId());
-            HttpManager.getInstance().doHttpDeal(api);
-        } else {
-            if (index < discoverInfoList.size() - 1) {
-                index++;
-                setImage();
-            } else {
+    private void setImage(int start, DiscoverInfo discoverInfo) {
+        otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
+            @Override
+            public void onNext(MemberInfo o) {
+                attentionDb.saveAttention(new AttentionInfo(discoverInfo.getOtherUserId(), o.getNick(), o.getImage(), true, BaseActivity.userId));
                 adapter.notifyItemRangeChanged(start, discoverInfoList.size());
-                mBinding.refresh.finishRefresh();
-                mBinding.refresh.finishLoadMore();
             }
-        }
+        }, activity).setOtherUserId(discoverInfo.getOtherUserId());
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override
@@ -207,7 +201,6 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
         mBinding.noNetLinear.setVisibility(View.GONE);
         mBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
-        index = 0;
         discoverInfoList.clear();
         adapter.notifyDataSetChanged();
         attentionDyn();

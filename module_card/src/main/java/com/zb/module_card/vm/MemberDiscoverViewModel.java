@@ -3,11 +3,11 @@ package com.zb.module_card.vm;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.Target;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -27,6 +27,7 @@ import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.views.GoodView;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_card.R;
@@ -34,6 +35,7 @@ import com.zb.module_card.adapter.CardAdapter;
 import com.zb.module_card.databinding.CardMemberDiscoverBinding;
 import com.zb.module_card.iv.MemberDiscoverVMInterface;
 
+import java.io.File;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -160,21 +162,20 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
             public void onNext(List<DiscoverInfo> o) {
                 mBinding.noNetLinear.setVisibility(View.GONE);
                 mBinding.refresh.setVisibility(View.VISIBLE);
-                int start = discoverInfoList.size();
-
                 for (DiscoverInfo item : o) {
-                    try {
-                        Bitmap bitmap = Glide.with(activity).asBitmap()
-                                .load(item.getImages().isEmpty() ? item.getImage() : item.getImages().split(",")[0])
-                                .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
-                        item.setWidth(bitmap.getWidth());
-                        item.setHeight(bitmap.getHeight());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    discoverInfoList.add(item);
+                    DownLoad.downImageFile(item.getImages().isEmpty() ? item.getImage() : item.getImages().split(",")[0], filePath -> {
+                        int start = discoverInfoList.size();
+                        Bitmap bitmap = BitmapFactory.decodeFile(new File(filePath).toString());
+                        try {
+                            item.setWidth(bitmap.getWidth());
+                            item.setHeight(bitmap.getHeight());
+                        } catch (Exception e) {
+
+                        }
+                        discoverInfoList.add(item);
+                        adapter.notifyItemRangeChanged(start, discoverInfoList.size());
+                    });
                 }
-                adapter.notifyItemRangeChanged(start, discoverInfoList.size());
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
             }
@@ -207,7 +208,6 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
             public void onNext(List<DiscoverInfo> o) {
                 mBinding.noNetLinear.setVisibility(View.GONE);
                 mBinding.ivNoData.setVisibility(View.GONE);
-                int start = discoverInfoList.size();
                 for (DiscoverInfo item : o) {
                     if (otherUserId == 1) {
                         item.setNick(mineInfo.getNick());
@@ -216,18 +216,20 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                         item.setNick(memberInfo.getNick());
                         item.setImage(memberInfo.getImage());
                     }
-                    try {
-                        Bitmap bitmap = Glide.with(activity).asBitmap()
-                                .load(item.getImages().isEmpty() ? item.getImage() : item.getImages().split(",")[0])
-                                .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
-                        item.setWidth(bitmap.getWidth());
-                        item.setHeight(bitmap.getHeight());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    discoverInfoList.add(item);
+                    DownLoad.downImageFile(item.getImages().isEmpty() ? item.getImage() : item.getImages().split(",")[0], filePath -> {
+                        int start = discoverInfoList.size();
+                        Bitmap bitmap = BitmapFactory.decodeFile(new File(filePath).toString());
+                        try {
+                            item.setWidth(bitmap.getWidth());
+                            item.setHeight(bitmap.getHeight());
+                        } catch (Exception e) {
+                            Log.e("filePath", "filePath == " + filePath);
+                        }
+
+                        discoverInfoList.add(item);
+                        adapter.notifyItemRangeChanged(start, discoverInfoList.size());
+                    });
                 }
-                adapter.notifyItemRangeChanged(start, discoverInfoList.size());
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
             }

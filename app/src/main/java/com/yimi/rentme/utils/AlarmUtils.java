@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -22,13 +21,10 @@ import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.RecommendInfo;
 import com.zb.lib_base.utils.DateUtil;
+import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.utils.PreferenceUtil;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -86,7 +82,7 @@ public class AlarmUtils {
         amShort4 = (AlarmManager) activity.getSystemService(ALARM_SERVICE);
     }
 
-    public void  startAlarm(){
+    public void startAlarm() {
         if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_notice_" + 0 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
             am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 120 * 60 * 1000, sender);
         if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_notice_" + 1 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
@@ -95,9 +91,9 @@ public class AlarmUtils {
             am2.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 300 * 60 * 1000, sender2);
 
         if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 0 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
-            amShort.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 60 * 1000, senderShort);
+            amShort.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 10 * 1000, senderShort);
         if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 1 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
-            amShort1.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 3 * 60 * 1000, senderShort1);
+            amShort1.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 20 * 1000, senderShort1);
         if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 2 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
             amShort2.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 5 * 60 * 1000, senderShort2);
         if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 3 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
@@ -106,7 +102,7 @@ public class AlarmUtils {
             amShort4.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 9 * 60 * 1000, senderShort4);
     }
 
-    public void cancelAlarm(){
+    public void cancelAlarm() {
         am.cancel(sender);
         am1.cancel(sender1);
         am2.cancel(sender2);
@@ -227,7 +223,7 @@ public class AlarmUtils {
         noticeShortMap.put(120, "有人在角落里偷偷看了你！#快来找到他");
         noticeShortMap.put(121, (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) + "反复查看了你的动态#快来右滑");
 
-        id = ra.nextInt(4) + 118;
+        id = 118;
         String[] temp = noticeShortMap.get(id).split("#");
         RecommendInfo recommendInfo = null;
         if (MineApp.recommendInfoList.size() > 0 && id < 120) {
@@ -239,8 +235,7 @@ public class AlarmUtils {
 
     private static void setNoticeManager(Context context, String title, String content, RecommendInfo recommendInfo) {
 
-        NotificationManager notificationManager = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationManagerCompat nmc = NotificationManagerCompat.from(context);
         NotificationCompat.Builder builder = BaseActivity.getNotificationBuilderByChannel(notificationManager, MineApp.NOTIFICATION_CHANNEL_ID);
 
@@ -255,72 +250,38 @@ public class AlarmUtils {
         builder.setSmallIcon(R.mipmap.ic_launcher);
         try {
             if (recommendInfo != null) {
-                new AsyncTask<String, Void, Bitmap>() {
+                DownLoad.downImageFile(recommendInfo.getSingleImage().replace("YM0000", "240X240"), new DownLoad.CallBack() {
                     @Override
-                    protected Bitmap doInBackground(String... params) {
-                        try {
-                            URL url = new URL(params[0]);
-                            HttpURLConnection conn = (HttpURLConnection) url
-                                    .openConnection();
-                            conn.setConnectTimeout(6000);// 设置超时
-                            conn.setDoInput(true);
-                            conn.setUseCaches(false);// 不缓存
-                            conn.connect();
-                            int code = conn.getResponseCode();
-                            Bitmap bitmap = null;
-                            if (code == 200) {
-                                InputStream is = conn.getInputStream();// 获得图片的数据流
-                                bitmap = BitmapFactory.decodeStream(is);
-                            }
-                            return bitmap;
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                            return null;
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                            return null;
-                        }
-                    }
-
-                    @Override
-                    protected void onPostExecute(Bitmap result) {
-                        super.onPostExecute(result);
-                        if (result != null) {
-                            mRemoteViews.setImageViewBitmap(R.id.iv_logo, result);
+                    public void success(String filePath) {
+                        Bitmap bitmap = BitmapFactory.decodeFile(new File(filePath).toString());
+                        if (bitmap != null) {
+                            mRemoteViews.setImageViewBitmap(R.id.iv_logo, bitmap);
                             mRemoteViews.setViewVisibility(R.id.iv_logo, View.VISIBLE);
                         }
-                        builder.setContent(mRemoteViews);
-
-                        Intent intentMain = new Intent(Intent.ACTION_MAIN);
-                        intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
-                        intentMain.setClass(context, LoadingActivity.class);
-                        intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                        PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intentMain, 0);
-                        builder.setContentIntent(contextIntent);
-                        nmc.notify(null, id, builder.build());
+                        builder(context, builder, mRemoteViews, nmc);
                     }
-                }.execute(recommendInfo.getSingleImage().replace("YM0000", "240X240"));
-            } else {
-                builder.setContent(mRemoteViews);
 
-                Intent intentMain = new Intent(Intent.ACTION_MAIN);
-                intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
-                intentMain.setClass(context, LoadingActivity.class);
-                intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intentMain, 0);
-                builder.setContentIntent(contextIntent);
-                nmc.notify(null, id, builder.build());
+                    @Override
+                    public void fail() {
+                        builder(context, builder, mRemoteViews, nmc);
+                    }
+                });
+            } else {
+                builder(context, builder, mRemoteViews, nmc);
             }
         } catch (Exception e) {
-            builder.setContent(mRemoteViews);
-
-            Intent intentMain = new Intent(Intent.ACTION_MAIN);
-            intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
-            intentMain.setClass(context, LoadingActivity.class);
-            intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-            PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intentMain, 0);
-            builder.setContentIntent(contextIntent);
-            nmc.notify(null, id, builder.build());
+            builder(context, builder, mRemoteViews, nmc);
         }
+    }
+
+    private static void builder(Context context, NotificationCompat.Builder builder, RemoteViews mRemoteViews, NotificationManagerCompat nmc) {
+        builder.setContent(mRemoteViews);
+        Intent intentMain = new Intent(Intent.ACTION_MAIN);
+        intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
+        intentMain.setClass(context, LoadingActivity.class);
+        intentMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+        PendingIntent contextIntent = PendingIntent.getActivity(context, 0, intentMain, 0);
+        builder.setContentIntent(contextIntent);
+        nmc.notify(null, id, builder.build());
     }
 }

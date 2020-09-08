@@ -100,9 +100,43 @@ public class DownLoad {
         back.onCancelled();
     }
 
+
+    public static void downImageFile(String fileUrl, CallBack callBack) {
+
+        String filePath = BaseActivity.getImageFile().getAbsolutePath();
+        back = new RequestCallBack<File>() {
+
+            @Override
+            public void onSuccess(ResponseInfo<File> file) {
+                callBack.success(file.result.getAbsolutePath());
+            }
+
+            @Override
+            public void onFailure(HttpException arg0, String arg1) {
+                // 下载失败则将本地的空文件删除
+                File file = new File(filePath);
+                file.deleteOnExit();
+                file = null;
+                if (callBack != null)
+                    callBack.fail();
+            }
+
+            @Override
+            public void onLoading(long total, long current, boolean isUploading) {
+                super.onLoading(total, current, isUploading);
+                callBack.onLoading(total, current);
+            }
+        };
+        DownLoadRetrofitHelper.httpClient.download(fileUrl, filePath, back);
+    }
+
     @FunctionalInterface
     public interface CallBack {
         void success(String filePath);
+
+        default void fail() {
+
+        }
 
         default void onLoading(long total, long current) {
         }

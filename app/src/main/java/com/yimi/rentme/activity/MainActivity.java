@@ -19,12 +19,15 @@ import com.zb.lib_base.db.TagDb;
 import com.zb.lib_base.iv.DemoPushService;
 import com.zb.lib_base.model.JobInfo;
 import com.zb.lib_base.model.Tag;
+import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.SimulateNetAPI;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.File;
 
 import io.realm.Realm;
 
@@ -90,7 +93,6 @@ public class MainActivity extends AppBaseActivity {
 
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -128,6 +130,8 @@ public class MainActivity extends AppBaseActivity {
                 SCToastUtil.showToast(activity, "再按一次退出程序", true);
                 exitTime = System.currentTimeMillis();
             } else {
+                DataCleanManager.deleteFile(new File(activity.getCacheDir(), "videos"));
+                DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
                 alarmUtils.startAlarm();
                 viewModel.imUtils.loginOutIM();
                 MineApp.exit();
@@ -148,6 +152,8 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        DataCleanManager.deleteFile(new File(activity.getCacheDir(), "videos"));
+        DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
         alarmUtils.startAlarm();
         viewModel.imUtils.loginOutIM();
     }

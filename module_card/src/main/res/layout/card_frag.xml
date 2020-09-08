@@ -44,6 +44,12 @@
         <variable
             name="showCount"
             type="boolean" />
+
+        <variable
+            name="showRemind"
+            type="boolean" />
+
+
     </data>
 
     <RelativeLayout
@@ -324,6 +330,16 @@
                     android:layout_marginBottom="15dp"
                     android:visibility="@{(pairInfo.singleImage.equals(@string/card_progress)||pairInfo.singleImage.equals(@string/out_line))?View.GONE:View.VISIBLE}" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="50dp"
+                    android:text="正在努力寻找中，不如试试修改匹配年龄？"
+                    android:textColor="@color/black_252"
+                    android:textSize="16sp"
+                    android:visibility="@{showRemind?View.VISIBLE:View.GONE}" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -334,8 +350,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/tv_city"
-            android:layout_marginTop="30dp"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
             android:layout_marginBottom="30dp"
             android:orientation="vertical">
 

@@ -75,7 +75,6 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setWindowFullScreen();
         setContentView(R.layout.activity_mnimage_browser);
         context = this;
 

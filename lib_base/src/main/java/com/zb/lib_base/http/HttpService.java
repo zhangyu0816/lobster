@@ -335,10 +335,6 @@ public interface HttpService {
     @GET("api/Pair_pushGoodUser")
     Observable<BaseResultEntity<Integer>> pushGoodUser();
 
-    // 删除我不喜欢的记录
-    @GET("api/Pair_deleteNoLike")
-    Observable<BaseResultEntity> deleteNoLike();
-
     /******************************* 对话 **********************************/
 
     // 未读会话列表

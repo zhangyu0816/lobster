@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
-import com.zb.lib_base.api.deleteNoLikeApi;
 import com.zb.lib_base.api.joinPairPoolApi;
 import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.myInfoApi;
@@ -196,7 +195,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 }
             }
         };
-
         initArea();
         setAdapter();
 
@@ -340,8 +338,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         prePairListApi api = new prePairListApi(new HttpOnNextListener<List<PairInfo>>() {
             @Override
             public void onNext(List<PairInfo> o) {
-                mBinding.cardRelative.setAlpha(0f);
-                mBinding.setIsPlay(false);
+                MineApp.noDataCount = 0;
+                mBinding.setShowRemind(false);
                 int start = pairInfoList.size();
                 for (PairInfo pairInfo : o) {
                     if (!userIdList.contains(pairInfo.getOtherUserId())) {
@@ -358,18 +356,26 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     }
                 }
                 adapter.notifyItemRangeChanged(start, pairInfoList.size());
-                if (mineInfo.getMemberType() == 1) {
-                    updateCount(likeCount);
-                }
+
+                new Handler().postDelayed(() -> {
+                    mBinding.setIsPlay(false);
+                    mBinding.cardRelative.setAlpha(0f);
+                    if (mineInfo.getMemberType() == 1) {
+                        updateCount(likeCount);
+                    }
+                }, 500);
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     MineApp.noDataCount++;
+                    userIdList.clear();
                     createProgress();
                     if (MineApp.noDataCount < 2) {
                         prePairList(needProgress);
+                    } else {
+                        mBinding.setShowRemind(true);
                     }
                 } else if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
                     createOutLike();
@@ -380,23 +386,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 .setMaxAge(MineApp.maxAge)
                 .setMinAge(MineApp.minAge);
         new Handler().postDelayed(() -> HttpManager.getInstance().doHttpDeal(api), 1000);
-    }
-
-    private long exitTime = 0;
-
-    @Override
-    public void deleteNoLike() {
-        deleteNoLikeApi api = new deleteNoLikeApi(new HttpOnNextListener() {
-            @Override
-            public void onNext(Object o) {
-                userIdList.clear();
-                if ((System.currentTimeMillis() - exitTime) > 2000) {
-                    exitTime = System.currentTimeMillis();
-                    prePairList(false);
-                }
-            }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override
@@ -585,7 +574,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void onSwipedClear() {
-        prePairList(false);
+        prePairList(pairInfoList.size() == 0);
     }
 
     @Override
