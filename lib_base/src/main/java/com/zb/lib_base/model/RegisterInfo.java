@@ -3,9 +3,6 @@ package com.zb.lib_base.model;
 
 import com.zb.lib_base.BR;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
@@ -17,8 +14,6 @@ public class RegisterInfo extends BaseObservable {
     String pass = "";
     String captcha = "";
     String moreImages = "";
-    List<String> imageList = new ArrayList<>();
-
     String openId = "";
     String unionId = "";
     int unionType;
@@ -122,16 +117,6 @@ public class RegisterInfo extends BaseObservable {
     public void setMoreImages(String moreImages) {
         this.moreImages = moreImages;
         notifyPropertyChanged(BR.moreImages);
-    }
-
-    @Bindable
-    public List<String> getImageList() {
-        return imageList;
-    }
-
-    public void setImageList(List<String> imageList) {
-        this.imageList = imageList;
-        notifyPropertyChanged(BR.imageList);
     }
 
     @Bindable

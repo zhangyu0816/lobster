@@ -206,6 +206,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     @Override
     public void back(View view) {
         super.back(view);
+        hintKeyBoard();
         switch (mBinding.getLoginStep()) {
             case 0:
                 if ((System.currentTimeMillis() - exitTime) > 2000) {
@@ -337,7 +338,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     @Override
     public void toLogin(View view) {
         mBinding.setRight("密码登录");
-        mBinding.setBtnName("获取登录验证码");
         step(3);
     }
 
@@ -353,13 +353,13 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
 
     @Override
     public void next(View view) {
+        hintKeyBoard();
         if (mBinding.getCanNext())
             switch (mBinding.getLoginStep()) {
                 case 1: // 跳转生日页
                     step(2);
                     break;
                 case 2: // 跳转手机页
-                    mBinding.setBtnName("获取注册验证码");
                     step(3);
                     break;
                 case 3: // 跳转验证码页
@@ -381,7 +381,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                     break;
                 case 6:
                     String images = "";
-                    for (String image : MineApp.registerInfo.getImageList()) {
+                    for (String image : moreImageList) {
                         if (!image.isEmpty()) {
                             images += "#" + image;
                         }
@@ -670,6 +670,11 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 mBinding.setCanNext(!MineApp.registerInfo.getBirthday().isEmpty());
                 break;
             case 3:
+                if(mBinding.getRight().isEmpty()){
+                    mBinding.setBtnName("获取注册验证码");
+                }else{
+                    mBinding.setBtnName("获取登录验证码");
+                }
                 outAlpha(mBinding.step3Layout);
                 AdapterBinding.viewSize(mBinding.whiteView, MineApp.W / 2, 10);
                 mBinding.setCanNext(MineApp.registerInfo.getPhone().length() == 11);

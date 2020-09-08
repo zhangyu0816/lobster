@@ -1,14 +1,20 @@
 package com.zb.lib_base.utils;
 
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class KeyboardStateObserver {
@@ -37,11 +43,10 @@ public class KeyboardStateObserver {
     }
 
     private void possiblyResizeChildOfContent() {
-        int usableHeightNow = computeUsableHeight();
+        int usableHeightNow = computeUsableHeight(mActivity);
         if (usableHeightNow != usableHeightPrevious) {
             int usableHeightSansKeyboard = mChildOfContent.getRootView().getHeight();
-            boolean hasNavigationBar = checkDeviceHasNavigationBar();
-            int heightDifference = usableHeightSansKeyboard - usableHeightNow - (isFull ? (hasNavigationBar ? StatusBarUtil.getStatusBarHeight(mActivity)*2 : 0) : (hasNavigationBar ? StatusBarUtil.getStatusBarHeight(mActivity) : 0));
+            int heightDifference = usableHeightSansKeyboard - usableHeightNow;
             if (heightDifference > (usableHeightSansKeyboard / 5)) {
                 if (listener != null) {
                     listener.onKeyboardHeight(heightDifference);
@@ -56,11 +61,15 @@ public class KeyboardStateObserver {
         }
     }
 
-    private int computeUsableHeight() {
+    private int computeUsableHeight(RxAppCompatActivity activity) {
         Rect r = new Rect();
         mChildOfContent.getWindowVisibleDisplayFrame(r);
-        Log.d(TAG, "rec bottom>" + r.bottom + " | rec top>" + r.top);
-        return isFull ? r.bottom : (r.bottom - r.top);// 全屏模式下： return r.bottom
+
+        Point point = getNavigationBarSize(activity);
+        int bottomHeight = point.y;
+        if (bottomHeight < 100)
+            bottomHeight = bottomHeight * 2;
+        return isFull ? (r.bottom + bottomHeight) : (r.bottom - r.top + bottomHeight);// 全屏模式下： return r.bottom
     }
 
     @FunctionalInterface
@@ -92,5 +101,52 @@ public class KeyboardStateObserver {
             e.printStackTrace();
         }
         return dpi;
+    }
+
+    public static Point getNavigationBarSize(RxAppCompatActivity context) {
+        Point appUsableSize = getAppUsableScreenSize(context);
+        Point realScreenSize = getRealScreenSize(context);
+
+        // navigation bar on the right
+        if (appUsableSize.x < realScreenSize.x) {
+            return new Point(realScreenSize.x - appUsableSize.x, appUsableSize.y);
+        }
+
+        // navigation bar at the bottom
+        if (appUsableSize.y < realScreenSize.y) {
+            return new Point(appUsableSize.x, realScreenSize.y - appUsableSize.y);
+        }
+
+        // navigation bar is not present
+        return new Point();
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    public static Point getAppUsableScreenSize(RxAppCompatActivity context) {
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        return size;
+    }
+
+    public static Point getRealScreenSize(RxAppCompatActivity context) {
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = windowManager.getDefaultDisplay();
+        Point size = new Point();
+
+        if (Build.VERSION.SDK_INT >= 17) {
+            display.getRealSize(size);
+        } else if (Build.VERSION.SDK_INT >= 14) {
+            try {
+                size.x = (Integer) Display.class.getMethod("getRawWidth").invoke(display);
+                size.y = (Integer) Display.class.getMethod("getRawHeight").invoke(display);
+            } catch (IllegalAccessException e) {
+            } catch (InvocationTargetException e) {
+            } catch (NoSuchMethodException e) {
+            }
+        }
+
+        return size;
     }
 }
