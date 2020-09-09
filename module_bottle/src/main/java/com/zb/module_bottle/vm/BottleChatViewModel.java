@@ -31,7 +31,6 @@ import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.MemberInfo;
-import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.PrivateMsg;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
@@ -59,7 +58,6 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     public BottleAdapter adapter;
     public BottleAdapter emojiAdapter;
     private BottleChatBinding mBinding;
-    public MineInfo mineInfo;
     public BottleInfo bottleInfo;
     private long otherUserId = 0;
     private BottleCacheDb bottleCacheDb;
@@ -82,7 +80,6 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         mBinding = (BottleChatBinding) binding;
         bottleCacheDb = new BottleCacheDb(Realm.getDefaultInstance());
         historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
-        mineInfo = mineInfoDb.getMineInfo();
         ImUtils.getInstance(activity).setCallBackForMsg(this::updateMySend);
         setAdapter();
         setProhibitEmoji(mBinding.edContent);
@@ -361,7 +358,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     @Override
     public void toMemberDetail(View view) {
         hintKeyBoard();
-        if (mineInfo.getMemberType() == 2) {
+        if (MineApp.mineInfo.getMemberType() == 2) {
             ActivityUtils.getCardMemberDetail(otherUserId, false);
             return;
         }

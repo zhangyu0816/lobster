@@ -43,7 +43,7 @@ public class MainActivity extends AppBaseActivity {
         mBinding.setVariable(BR.viewModel, viewModel);
         setNotificationChannel();
 
-        alarmUtils = new AlarmUtils(activity, viewModel.mineInfoDb.getMineInfo());
+        alarmUtils = new AlarmUtils(activity, MineApp.mineInfo);
 
     }
 

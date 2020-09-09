@@ -22,6 +22,7 @@
         <variable
             name="isEmoji"
             type="boolean" />
+
     </data>
 
     <RelativeLayout

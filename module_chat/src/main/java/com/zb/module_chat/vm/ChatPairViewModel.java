@@ -19,7 +19,6 @@ import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.LikeMe;
-import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
@@ -47,7 +46,6 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
     public int pageNo = 1;
     private ChatListDb chatListDb;
     private ChatPairFragmentBinding mBinding;
-    private MineInfo mineInfo;
     private BaseReceiver pairListReceiver;
     private BaseReceiver updateContactNumReceiver;
     private BaseReceiver relieveReceiver;
@@ -60,7 +58,6 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         likeDb = new LikeDb(Realm.getDefaultInstance());
         chatListDb = new ChatListDb(Realm.getDefaultInstance());
 
-        mineInfo = mineInfoDb.getMineInfo();
         mBinding = (ChatPairFragmentBinding) binding;
         pairListReceiver = new BaseReceiver(activity, "lobster_pairList") {
             @Override
@@ -180,7 +177,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         ChatList chatList = chatMsgList.get(position);
         if (chatList.getChatType() == 1) {
             // 喜欢我
-            if (mineInfo.getMemberType() == 2) {
+            if (MineApp.mineInfo.getMemberType() == 2) {
                 ActivityUtils.getMineFCL(2);
                 return;
             }

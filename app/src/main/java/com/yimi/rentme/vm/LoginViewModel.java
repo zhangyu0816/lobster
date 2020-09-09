@@ -581,7 +581,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
             @Override
             public void onNext(MineInfo o) {
-                mineInfoDb.saveMineInfo(o);
+                MineApp.mineInfo = o;
                 ImUtils.getInstance(activity).setChat(false);
             }
         }, activity);

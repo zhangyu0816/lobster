@@ -72,7 +72,6 @@ import io.realm.Realm;
 
 public class CardViewModel extends BaseViewModel implements CardVMInterface, OnSwipeListener<PairInfo>, SuperLikeInterface {
     private LikeDb likeDb;
-    private MineInfo mineInfo;
     public CardAdapter adapter;
     private List<PairInfo> pairInfoList = new ArrayList<>();
     private PairInfo pairInfo;
@@ -103,11 +102,10 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         likeDb = new LikeDb(Realm.getDefaultInstance());
-        mineInfo = mineInfoDb.getMineInfo();
         aMapLocation = new AMapLocation(activity);
         mBinding = (CardFragBinding) binding;
         if (PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1) == -1)
-            likeCount = mineInfo.getSurplusToDayLikeNumber();
+            likeCount = MineApp.mineInfo.getSurplusToDayLikeNumber();
         else
             likeCount = PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1);
 
@@ -174,7 +172,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         isLikeReceiver = new BaseReceiver(activity, "lobster_isLike") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (mineInfo.getMemberType() == 1) {
+                if (MineApp.mineInfo.getMemberType() == 1) {
                     likeCount--;
                     if (pairInfoList.size() > 0)
                         updateCount(likeCount);
@@ -184,7 +182,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         initArea();
         setAdapter();
 
-        if (mineInfo.getMemberType() == 2) {
+        if (MineApp.mineInfo.getMemberType() == 2) {
             mBinding.ivExposured.setVisibility(View.VISIBLE);
             mBinding.ivExposure.setVisibility(View.GONE);
         }
@@ -204,7 +202,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     private void playExposure() {
 
-        if (mineInfo.getMemberType() == 2) {
+        if (MineApp.mineInfo.getMemberType() == 2) {
             animator = ObjectAnimator.ofFloat(mBinding.ivExposured, "rotation", -15, 15).setDuration(800);
         } else {
             animator = ObjectAnimator.ofFloat(mBinding.tvCity, "rotation", 0, -5, 0, 5).setDuration(400);
@@ -235,7 +233,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void superLike(View currentView, PairInfo pairInfo) {
-        if (mineInfo.getMemberType() == 2) {
+        if (MineApp.mineInfo.getMemberType() == 2) {
             this.currentView = currentView;
             this.pairInfo = pairInfo;
             makeEvaluate(pairInfo, 2);
@@ -246,7 +244,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void returnBack() {
-        if (mineInfo.getMemberType() == 2) {
+        if (MineApp.mineInfo.getMemberType() == 2) {
             if (canReturn && disLikeList.size() > 0) {
                 canReturn = false;
                 PairInfo pairInfo = disLikeList.remove(0);
@@ -259,7 +257,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void exposure(View view) {
-        if (mineInfo.getMemberType() == 2) {
+        if (MineApp.mineInfo.getMemberType() == 2) {
             new TextPW(activity, mBinding.getRoot(), "VIP专享", "虾菇每日自动为你增加曝光度，让10的人优先看到你", "明白了", () -> {
 
             });
@@ -304,7 +302,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void selectCity(View view) {
-        if (mineInfo.getMemberType() == 1) {
+        if (MineApp.mineInfo.getMemberType() == 1) {
             new VipAdPW(activity, mBinding.getRoot(), false, 5, "");
             return;
         }
@@ -346,7 +344,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 new Handler().postDelayed(() -> {
                     mBinding.setIsPlay(false);
                     mBinding.cardRelative.setAlpha(0f);
-                    if (mineInfo.getMemberType() == 1) {
+                    if (MineApp.mineInfo.getMemberType() == 1) {
                         updateCount(likeCount);
                     }
                 }, 500);
@@ -383,7 +381,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             @Override
             public void onNext(Integer o) {
                 // 1喜欢成功 2匹配成功 3喜欢次数用尽
-                String myHead = mineInfo.getImage();
+                String myHead = MineApp.mineInfo.getImage();
                 String otherHead = pairInfo.getSingleImage();
                 if (o == 1) {
                     // 不喜欢成功  喜欢成功  超级喜欢成功
@@ -396,12 +394,12 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                         activity.sendBroadcast(data);
                         activity.sendBroadcast(new Intent("lobster_pairList"));
                         likeTypeDb.setType(pairInfo.getOtherUserId(), 2);
-                        new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), pairInfo.getSex(), null);
+                        new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, MineApp.mineInfo.getSex(), pairInfo.getSex(), null);
                     }
                 } else if (o == 2) {
                     // 匹配成功
                     likeDb.saveLike(new CollectID(pairInfo.getOtherUserId()));
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), pairInfo.getSex(), () -> ActivityUtils.getChatActivity(pairInfo.getOtherUserId()));
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, MineApp.mineInfo.getSex(), pairInfo.getSex(), () -> ActivityUtils.getChatActivity(pairInfo.getOtherUserId()));
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                     likeTypeDb.setType(pairInfo.getOtherUserId(), 1);
                 } else if (o == 3) {
@@ -410,7 +408,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else if (o == 4) {
                     // 超级喜欢时，非会员或超级喜欢次数用尽
-                    if (mineInfo.getMemberType() == 2) {
+                    if (MineApp.mineInfo.getMemberType() == 2) {
                         SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
                     } else {
                         new VipAdPW(activity, mBinding.getRoot(), false, 3, otherHead);
@@ -534,14 +532,14 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             likeOtherStatus = 0;
             disLikeList.add(0, pairInfo);
         }
-        if (superLikeStatus == 0 && likeOtherStatus == 1 && mineInfo.getMemberType() == 1) {
+        if (superLikeStatus == 0 && likeOtherStatus == 1 && MineApp.mineInfo.getMemberType() == 1) {
             likeCount--;
             if (likeCount < 0)
                 likeCount = 0;
             PreferenceUtil.saveIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), likeCount);
             updateCount(likeCount);
         }
-        if (likeCount == 0 && likeOtherStatus == 1 && mineInfo.getMemberType() == 1) {
+        if (likeCount == 0 && likeOtherStatus == 1 && MineApp.mineInfo.getMemberType() == 1) {
             new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
             SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
             return;
@@ -658,13 +656,12 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
             @Override
             public void onNext(MineInfo o) {
-                mineInfo = o;
-                mineInfoDb.saveMineInfo(o);
-                if (mineInfo.getMemberType() == 2) {
+                MineApp.mineInfo = o;
+                if (MineApp.mineInfo.getMemberType() == 2) {
                     mBinding.setShowCount(false);
                 } else {
                     if (PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1) == -1)
-                        likeCount = mineInfo.getSurplusToDayLikeNumber();
+                        likeCount = MineApp.mineInfo.getSurplusToDayLikeNumber();
                     else
                         likeCount = PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1);
                     updateCount(likeCount);

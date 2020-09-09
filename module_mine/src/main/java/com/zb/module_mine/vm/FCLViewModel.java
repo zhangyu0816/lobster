@@ -16,6 +16,7 @@ import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.myConcernsApi;
 import com.zb.lib_base.api.myFansApi;
 import com.zb.lib_base.api.relievePairApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -24,7 +25,6 @@ import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.MemberInfo;
-import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -51,7 +51,6 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
     private MineFclBinding mBinding;
     public LikeDb likeDb;
     private int _selectIndex = -1;
-    private MineInfo mineInfo;
     private BaseReceiver attentionListReceiver;
     private BaseReceiver updateFCLReceiver;
 
@@ -66,7 +65,6 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
         super.setBinding(binding);
         likeDb = new LikeDb(Realm.getDefaultInstance());
         mBinding = (MineFclBinding) binding;
-        mineInfo = mineInfoDb.getMineInfo();
         setAdapter();
         attentionListReceiver = new BaseReceiver(activity, "lobster_attentionList") {
             @Override
@@ -195,7 +193,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
             @Override
             public void onNext(Integer o) {
                 // 1喜欢成功 2匹配成功 3喜欢次数用尽
-                String myHead = mineInfo.getImage();
+                String myHead = MineApp.mineInfo.getImage();
                 String otherHead = memberInfoList.get(_selectIndex).getImage();
                 if (o == 1) {
                     if (likeOtherStatus == 0) {
@@ -208,7 +206,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                     }
                     adapter.notifyItemChanged(_selectIndex);
                 } else if (o == 2) {
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), memberInfoList.get(_selectIndex).getSex(), () -> ActivityUtils.getChatActivity(memberInfoList.get(_selectIndex).getUserId()));
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, MineApp.mineInfo.getSex(), memberInfoList.get(_selectIndex).getSex(), () -> ActivityUtils.getChatActivity(memberInfoList.get(_selectIndex).getUserId()));
                     likeDb.saveLike(new CollectID(otherUserId));
                     adapter.notifyItemChanged(_selectIndex);
                     activity.sendBroadcast(new Intent("lobster_pairList"));

@@ -30,7 +30,6 @@ import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.AttentionDb;
 import com.zb.lib_base.db.GoodDb;
 import com.zb.lib_base.db.LikeTypeDb;
-import com.zb.lib_base.db.MineInfoDb;
 import com.zb.lib_base.iv.BaseVMInterface;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.utils.DateUtil;
@@ -48,7 +47,6 @@ import io.realm.Realm;
 public class BaseViewModel implements BaseVMInterface {
     public ViewDataBinding mBinding;
     public RxAppCompatActivity activity;
-    public MineInfoDb mineInfoDb;
     public GoodDb goodDb;
     public AttentionDb attentionDb;
     public LikeTypeDb likeTypeDb;
@@ -58,8 +56,6 @@ public class BaseViewModel implements BaseVMInterface {
     public void setBinding(ViewDataBinding binding) {
         mBinding = binding;
         activity = (RxAppCompatActivity) mBinding.getRoot().getContext();
-        if (mineInfoDb == null)
-            mineInfoDb = new MineInfoDb(Realm.getDefaultInstance());
         if (goodDb == null)
             goodDb = new GoodDb(Realm.getDefaultInstance());
         if (attentionDb == null)

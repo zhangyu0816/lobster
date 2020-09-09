@@ -13,6 +13,7 @@ import com.zb.lib_base.api.clearAllDriftBottleHistoryMsgApi;
 import com.zb.lib_base.api.myBottleListApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.pickBottleApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.BottleCacheDb;
 import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.http.HttpManager;
@@ -47,7 +48,6 @@ import io.realm.Realm;
 public class BottleListViewModel extends BaseViewModel implements BottleListVMInterface, OnRefreshListener, OnLoadMoreListener {
 
     public BottleAdapter adapter;
-    public MineInfo mineInfo;
     private List<BottleInfo> bottleInfoList = new ArrayList<>();
     private BaseReceiver openVipReceiver;
     private int pageNo = 1;
@@ -60,7 +60,6 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        mineInfo = mineInfoDb.getMineInfo();
         bottleCacheDb = new BottleCacheDb(Realm.getDefaultInstance());
         historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         mBinding = (BottleListBinding) binding;
@@ -157,8 +156,8 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                     }
 
                     if (bottleInfo.getOtherHeadImage().isEmpty()) {
-                        bottleInfo.setOtherHeadImage(mineInfo.getImage());
-                        bottleInfo.setOtherNick(mineInfo.getNick());
+                        bottleInfo.setOtherHeadImage(MineApp.mineInfo.getImage());
+                        bottleInfo.setOtherNick(MineApp.mineInfo.getNick());
                     }
                     BottleCache bottleCache = bottleCacheDb.getBottleCache(bottleInfo.getDriftBottleId());
                     if (bottleCache != null) {
@@ -273,8 +272,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
         myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
             @Override
             public void onNext(MineInfo o) {
-                mineInfo = o;
-                mineInfoDb.saveMineInfo(o);
+                MineApp.mineInfo = o;
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

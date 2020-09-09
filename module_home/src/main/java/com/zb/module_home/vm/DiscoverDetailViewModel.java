@@ -42,7 +42,6 @@ import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
-import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.model.Reward;
 import com.zb.lib_base.utils.ActivityUtils;
@@ -80,7 +79,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     private List<Review> reviewList = new ArrayList<>();
     private int pageNo = 1;
     private List<Reward> rewardList = new ArrayList<>();
-    private MineInfo mineInfo;
     private MemberInfo memberInfo;
 
     private long reviewId = 0;
@@ -98,7 +96,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (HomeDiscoverDetailBinding) binding;
-        mineInfo = mineInfoDb.getMineInfo();
         mBinding.setContent("");
         mBinding.setName("");
         mBinding.setListNum(10);
@@ -187,7 +184,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 
             @Override
             public void like() {
-                if (mineInfo.getMemberType() == 2) {
+                if (MineApp.mineInfo.getMemberType() == 2) {
                     makeEvaluate();
                 } else {
                     new VipAdPW(activity, mBinding.getRoot(), false, 3, discoverInfo.getImage());
@@ -360,11 +357,11 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(Integer o) {
                 // 1喜欢成功 2匹配成功 3喜欢次数用尽
-                String myHead = mineInfo.getImage();
+                String myHead = MineApp.mineInfo.getImage();
                 String otherHead = memberInfo.getImage();
                 if (o == 1) {
                     likeTypeDb.setType(discoverInfo.getUserId(), 2);
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, MineApp.mineInfo.getSex(), memberInfo.getSex(), null);
                 } else if (o == 4) {
                     SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
                 } else {

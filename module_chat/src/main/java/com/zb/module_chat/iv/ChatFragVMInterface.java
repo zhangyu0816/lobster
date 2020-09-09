@@ -8,4 +8,6 @@ public interface ChatFragVMInterface {
     void toMemberInfo(View view);
 
     void toNews(View view);
+
+    void recommendRankingList();
 }

@@ -16,11 +16,9 @@ import com.zb.lib_base.api.openedMemberPriceListApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.ItemAdBinding;
 import com.zb.lib_base.databinding.PwsVipAdBinding;
-import com.zb.lib_base.db.MineInfoDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.Ads;
-import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -31,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.databinding.DataBindingUtil;
-import io.realm.Realm;
 
 public class VipAdPW extends BasePopupWindow {
     private List<Ads> adsList = new ArrayList<>();
@@ -40,16 +37,12 @@ public class VipAdPW extends BasePopupWindow {
     private PwsVipAdBinding binding;
     private boolean isAutoPlay;
     private int type = 0;
-    private MineInfoDb mineInfoDb;
-    private MineInfo mineInfo;
     private int sex;
     private String otherImage = "";
 
     public VipAdPW(RxAppCompatActivity activity, View parentView, boolean isAutoPlay, int type, String otherImage) {
         super(activity, parentView, false);
-        mineInfoDb = new MineInfoDb(Realm.getDefaultInstance());
-        mineInfo = mineInfoDb.getMineInfo();
-        sex = mineInfo.getSex();
+        sex = MineApp.mineInfo.getSex();
         this.isAutoPlay = isAutoPlay;
         this.type = type;
         this.otherImage = otherImage;
@@ -104,7 +97,7 @@ public class VipAdPW extends BasePopupWindow {
         if (type == 1) {
             binding.setTitle("超级曝光");
             binding.setContent("增加10倍曝光度，让更多人先发现你");
-            binding.setMyHead(mineInfo.getImage());
+            binding.setMyHead(MineApp.mineInfo.getImage());
             binding.setOtherHead("empty_icon");
             binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
         } else if (type == 2) {
@@ -116,19 +109,19 @@ public class VipAdPW extends BasePopupWindow {
         } else if (type == 3) {
             binding.setTitle("超级喜欢");
             binding.setContent("每天10个超级喜欢，开通专属私信通道");
-            binding.setMyHead(mineInfo.getImage());
+            binding.setMyHead(MineApp.mineInfo.getImage());
             binding.setOtherHead(otherImage.isEmpty() ? (sex == 0 ? "vip_ad_3_logo_male" : "vip_ad_3_logo") : otherImage);
             binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
         } else if (type == 4) {
             binding.setTitle("立即查看谁喜欢我？");
             binding.setContent("第一时间查看喜欢你的人！立即匹配哦～");
-            binding.setMyHead(mineInfo.getImage());
+            binding.setMyHead(MineApp.mineInfo.getImage());
             binding.setOtherHead("empty_icon");
             binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_4_male : R.mipmap.vip_ad_4);
         } else if (type == 5) {
             binding.setTitle("位置漫游");
             binding.setContent("让你随时随地认识全世界的朋友！");
-            binding.setMyHead(mineInfo.getImage());
+            binding.setMyHead(MineApp.mineInfo.getImage());
             binding.setOtherHead("empty_icon");
             binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_5_male : R.mipmap.vip_ad_5);
         } else if (type == 6) {
@@ -162,7 +155,7 @@ public class VipAdPW extends BasePopupWindow {
 
         mBinding.setVariable(BR.pw, this);
         mBinding.setVariable(BR.adapter, adapter);
-        mBinding.setVariable(BR.mineInfo, mineInfo);
+        mBinding.setVariable(BR.mineInfo, MineApp.mineInfo);
         mBinding.setVariable(BR.vipInfo, MineApp.vipInfoList.get(preIndex));
 
         binding = (PwsVipAdBinding) mBinding;

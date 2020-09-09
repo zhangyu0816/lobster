@@ -10,13 +10,13 @@ import com.zb.lib_base.api.cancelAttentionApi;
 import com.zb.lib_base.api.contactNumApi;
 import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.memberInfoConfApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.MemberInfo;
-import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.FragmentUtils;
@@ -40,13 +40,11 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
     private CardDiscoverListBinding mBinding;
     private List<Fragment> fragments = new ArrayList<>();
     public MemberInfo memberInfo;
-    private MineInfo mineInfo;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (CardDiscoverListBinding) binding;
-        mineInfo = mineInfoDb.getMineInfo();
         contactNum();
         initFragments();
     }
@@ -186,7 +184,7 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
     @Override
     public void superLike(View view) {
         super.superLike(view);
-        if (mineInfo.getMemberType() == 2) {
+        if (MineApp.mineInfo.getMemberType() == 2) {
             makeEvaluate();
         } else {
             if (memberInfo != null)
@@ -200,15 +198,15 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
         makeEvaluateApi api = new makeEvaluateApi(new HttpOnNextListener<Integer>() {
             @Override
             public void onNext(Integer o) {
-                String myHead = mineInfo.getImage();
+                String myHead = MineApp.mineInfo.getImage();
                 String otherHead = memberInfo.getImage();
                 // 1喜欢成功 2匹配成功 3喜欢次数用尽
                 if (o == 1) {
                     likeTypeDb.setType(otherUserId, 2);
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, MineApp.mineInfo.getSex(), memberInfo.getSex(), null);
                 } else if (o == 4) {
                     // 超级喜欢时，非会员或超级喜欢次数用尽
-                    if (mineInfo.getMemberType() == 2) {
+                    if (MineApp.mineInfo.getMemberType() == 2) {
                         SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
                     } else {
                         new VipAdPW(activity, mBinding.getRoot(), false, 3, otherHead);

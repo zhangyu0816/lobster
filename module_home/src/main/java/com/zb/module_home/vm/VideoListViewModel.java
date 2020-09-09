@@ -44,7 +44,6 @@ import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
-import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
@@ -86,7 +85,6 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     private HomeVideoListBinding mBinding;
     private boolean isUp = false;
     private boolean isOver = false;
-    private MineInfo mineInfo;
     private BaseReceiver attentionReceiver;
     private String downloadPath = "";
     private int videoWidth, videoHeight;
@@ -96,7 +94,6 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         super.setBinding(binding);
         mBinding = (HomeVideoListBinding) binding;
         areaDb = new AreaDb(Realm.getDefaultInstance());
-        mineInfo = mineInfoDb.getMineInfo();
         setAdapter();
 
         attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
@@ -308,7 +305,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             @Override
             public void like() {
                 // 超级喜欢
-                if (mineInfo.getMemberType() == 2) {
+                if (MineApp.mineInfo.getMemberType() == 2) {
                     makeEvaluate(discoverInfo);
                 } else {
                     new VipAdPW(activity, mBinding.getRoot(), false, 3, discoverInfo.getImage());
@@ -389,11 +386,11 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             @Override
             public void onNext(Integer o) {
                 // 1喜欢成功 2匹配成功 3喜欢次数用尽
-                String myHead = mineInfo.getImage();
+                String myHead = MineApp.mineInfo.getImage();
                 String otherHead = discoverInfo.getImage();
                 if (o == 1) {
                     likeTypeDb.setType(discoverInfo.getUserId(), 2);
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), mineInfo.getSex() == 1 ? 0 : 1, null);
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, MineApp.mineInfo.getSex(), MineApp.mineInfo.getSex() == 1 ? 0 : 1, null);
                 } else if (o == 4) {
                     SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
                 } else {

@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.myInfoApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.MineInfo;
@@ -18,14 +19,13 @@ import androidx.databinding.ViewDataBinding;
 
 public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterface {
     private MineOpenVipBinding vipBinding;
-    public MineInfo mineInfo;
     public BaseReceiver openVipReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         vipBinding = (MineOpenVipBinding) binding;
-        mineInfo = mineInfoDb.getMineInfo();
+        vipBinding.setMineInfo(MineApp.mineInfo);
         // 开通会员
         openVipReceiver = new BaseReceiver(activity, "lobster_openVip") {
             @Override
@@ -51,9 +51,8 @@ public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterfac
         myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
             @Override
             public void onNext(MineInfo o) {
-                mineInfo = o;
-                mineInfoDb.saveMineInfo(o);
-                vipBinding.setViewModel(OpenVipViewModel.this);
+                MineApp.mineInfo = o;
+                vipBinding.setMineInfo(MineApp.mineInfo);
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

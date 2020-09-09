@@ -38,7 +38,6 @@ import com.zb.lib_base.api.seeLikersApi;
 import com.zb.lib_base.api.seeReviewsApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.GoodDb;
-import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -47,7 +46,6 @@ import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
-import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
@@ -85,8 +83,6 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
     private ObjectAnimator animator;
     private MemberInfo memberInfo;
     private GoodDb goodDb;
-    private MineInfo mineInfo;
-    private LikeDb likeDb;
     private BaseReceiver attentionReceiver;
     private String downloadPath = "";
     private int videoWidth, videoHeight;
@@ -97,8 +93,6 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         goodDb = new GoodDb(Realm.getDefaultInstance());
-        likeDb = new LikeDb(Realm.getDefaultInstance());
-        mineInfo = mineInfoDb.getMineInfo();
         mBinding = (HomeVideoL2Binding) binding;
         animator = ObjectAnimator.ofFloat(mBinding.ivProgress, "rotation", 0, 360).setDuration(700);
         animator.setRepeatMode(ValueAnimator.RESTART);
@@ -225,7 +219,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
             @Override
             public void like() {
                 // 超级喜欢
-                if (mineInfo.getMemberType() == 2) {
+                if (MineApp.mineInfo.getMemberType() == 2) {
                     makeEvaluate();
                 } else {
                     new VipAdPW(activity, mBinding.getRoot(), false, 3, discoverInfo.getImage());
@@ -450,11 +444,11 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
             @Override
             public void onNext(Integer o) {
                 // 1喜欢成功 2匹配成功 3喜欢次数用尽
-                String myHead = mineInfo.getImage();
+                String myHead = MineApp.mineInfo.getImage();
                 String otherHead = memberInfo.getImage();
                 if (o == 1) {
                     likeTypeDb.setType(discoverInfo.getUserId(), 2);
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, MineApp.mineInfo.getSex(), memberInfo.getSex(), null);
                 } else if (o == 4) {
                     SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
                 } else {

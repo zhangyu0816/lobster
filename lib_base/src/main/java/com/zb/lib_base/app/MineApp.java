@@ -28,6 +28,7 @@ import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.LikeMe;
+import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.RecommendInfo;
@@ -59,7 +60,7 @@ public class MineApp extends MultiDexApplication {
     public static int H;
     public static String PHONE_NUMBER_REG = "^1[0-9]{10}$";
     public static String EMAIL_REG = "^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
-
+    public static MineInfo mineInfo = new MineInfo();
     public static Map<String, Integer> selectMap = new HashMap<>();
     public static Typeface type;
     public static Typeface simplifiedType;

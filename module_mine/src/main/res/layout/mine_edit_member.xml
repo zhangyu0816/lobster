@@ -13,6 +13,10 @@
             name="title"
             type="String" />
 
+        <variable
+            name="mineInfo"
+            type="com.zb.lib_base.model.MineInfo" />
+
     </data>
 
     <LinearLayout
@@ -114,7 +118,7 @@
                         android:drawablePadding="5dp"
                         android:gravity="center"
                         android:hint="添加名称"
-                        android:text="@{viewModel.mineInfo.nick}"
+                        android:text="@{mineInfo.nick}"
                         android:textColor="@color/black_827"
                         android:textColorHint="@color/black_827"
                         android:textSize="14sp" />
@@ -147,7 +151,7 @@
                         android:drawableEnd="@mipmap/arrow_small_right_icon"
                         android:drawablePadding="5dp"
                         android:gravity="center"
-                        android:text="@{viewModel.mineInfo.sex==0?@string/sex_0:@string/sex_1}"
+                        android:text="@{mineInfo.sex==0?@string/sex_0:@string/sex_1}"
                         android:textColor="@color/black_827"
                         android:textSize="14sp" />
                 </RelativeLayout>
@@ -181,7 +185,7 @@
                         android:drawablePadding="5dp"
                         android:gravity="center"
                         android:hint="添加出生日期"
-                        android:text="@{viewModel.mineInfo.birthday}"
+                        android:text="@{mineInfo.birthday}"
                         android:textColor="@color/black_827"
                         android:textColorHint="@color/black_827"
                         android:textSize="14sp" />
@@ -216,7 +220,7 @@
                         android:drawablePadding="5dp"
                         android:gravity="center"
                         android:hint="添加职业"
-                        android:text="@{viewModel.mineInfo.job}"
+                        android:text="@{mineInfo.job}"
                         android:textColor="@color/black_827"
                         android:textColorHint="@color/black_827"
                         android:textSize="14sp" />
@@ -255,7 +259,7 @@
                         android:gravity="center|right"
                         android:hint="添加您的个性签名"
                         android:singleLine="true"
-                        android:text="@{viewModel.mineInfo.personalitySign}"
+                        android:text="@{mineInfo.personalitySign}"
                         android:textColor="@color/black_827"
                         android:textColorHint="@color/black_827"
                         android:textSize="14sp" />

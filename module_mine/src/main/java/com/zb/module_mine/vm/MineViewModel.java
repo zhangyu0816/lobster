@@ -34,7 +34,6 @@ import androidx.fragment.app.FragmentManager;
 public class MineViewModel extends BaseViewModel implements MineVMInterface {
 
     public FragmentManager fm;
-    private MineInfo mineInfo;
     private MineFragBinding mBinding;
     private BaseReceiver updateMineInfoReceiver;
     private BaseReceiver newsCountReceiver;
@@ -45,7 +44,6 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        mineInfo = mineInfoDb.getMineInfo();
         mBinding = (MineFragBinding) binding;
         playAnimator(mBinding.circleView);
         mBinding.setMineNewsCount(MineApp.mineNewsCount);
@@ -53,13 +51,12 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             mBinding.setContactNum(MineApp.contactNum);
             mBinding.setHasNewBeLike(MineApp.contactNum.getBeLikeCount() > PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId));
         }
-        mBinding.setMineInfo(mineInfo);
+        mBinding.setMineInfo(MineApp.mineInfo);
 
         updateMineInfoReceiver = new BaseReceiver(activity, "lobster_updateMineInfo") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                mineInfo = mineInfoDb.getMineInfo();
-                mBinding.setMineInfo(mineInfo);
+                mBinding.setMineInfo(MineApp.mineInfo);
             }
         };
         newsCountReceiver = new BaseReceiver(activity, "lobster_newsCount") {
@@ -134,7 +131,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     @Override
     public void contactNumDetail(int position) {
         if (position == 2) {
-            if (mineInfo.getMemberType() == 2) {
+            if (MineApp.mineInfo.getMemberType() == 2) {
                 PreferenceUtil.saveIntValue(activity, "beLikeCount" + BaseActivity.userId, MineApp.contactNum.getBeLikeCount());
                 mBinding.setVariable(BR.hasNewBeLike, false);
                 ActivityUtils.getMineFCL(2);
@@ -151,9 +148,8 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
             @Override
             public void onNext(MineInfo o) {
-                mineInfo = o;
-                mineInfoDb.saveMineInfo(o);
-                mBinding.setMineInfo(mineInfo);
+                MineApp.mineInfo = o;
+                mBinding.setMineInfo(MineApp.mineInfo);
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

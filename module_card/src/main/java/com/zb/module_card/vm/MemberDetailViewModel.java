@@ -35,7 +35,6 @@ import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
-import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.PairInfo;
 import com.zb.lib_base.model.RentInfo;
 import com.zb.lib_base.model.ShareInfo;
@@ -74,7 +73,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     public CardAdapter discoverAdapter;
     private List<String> tagList = new ArrayList<>();
     private List<DiscoverInfo> discoverInfoList = new ArrayList<>();
-    private MineInfo mineInfo;
     private LikeDb likeDb;
     private BaseReceiver attentionReceiver;
     private int bannerWidth = MineApp.W;
@@ -89,7 +87,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         likeDb = new LikeDb(Realm.getDefaultInstance());
-        mineInfo = mineInfoDb.getMineInfo();
         likeType = likeTypeDb.getType(otherUserId);
         mBinding = (CardMemberDetailBinding) binding;
         mBinding.setConstellation("");
@@ -149,7 +146,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             activity.sendBroadcast(data);
         } else {
             isLike(mBinding.ivLike);
-            if (PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1) == 0 && mineInfo.getMemberType() == 1) {
+            if (PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1) == 0 && MineApp.mineInfo.getMemberType() == 1) {
                 new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
                 SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 return;
@@ -369,7 +366,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         makeEvaluateApi api = new makeEvaluateApi(new HttpOnNextListener<Integer>() {
             @Override
             public void onNext(Integer o) {
-                String myHead = mineInfo.getImage();
+                String myHead = MineApp.mineInfo.getImage();
                 String otherHead = memberInfo.getImage();
                 // 1喜欢成功 2匹配成功 3喜欢次数用尽
                 if (o == 1) {
@@ -399,13 +396,13 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                             likeTypeDb.setType(otherUserId, 2);
                             closeBtn(mBinding.ivSuperLike);
                             activity.sendBroadcast(new Intent("lobster_updateFCL"));
-                            new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, mineInfo.getSex(), memberInfo.getSex(), null);
+                            new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, MineApp.mineInfo.getSex(), memberInfo.getSex(), null);
                         }
                     }
                 } else if (o == 2) {
                     // 匹配成功
                     likeDb.saveLike(new CollectID(otherUserId));
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, mineInfo.getSex(), memberInfo.getSex(),
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, MineApp.mineInfo.getSex(), memberInfo.getSex(),
                             () -> ActivityUtils.getChatActivity(otherUserId));
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                     activity.sendBroadcast(new Intent("lobster_isLike"));
@@ -418,7 +415,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else if (o == 4) {
                     // 超级喜欢时，非会员或超级喜欢次数用尽
-                    if (mineInfo.getMemberType() == 2) {
+                    if (MineApp.mineInfo.getMemberType() == 2) {
                         closeBtn(mBinding.ivLike);
                         closeBtn(mBinding.ivDislike);
                         closeBtn(mBinding.ivSuperLike);
@@ -545,7 +542,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
 
     @Override
     public void superLike(View view, PairInfo pairInfo) {
-        if (mineInfo.getMemberType() == 2) {
+        if (MineApp.mineInfo.getMemberType() == 2) {
             makeEvaluate(2);
         } else {
             if (memberInfo != null)

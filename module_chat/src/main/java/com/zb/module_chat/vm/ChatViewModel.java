@@ -45,7 +45,6 @@ import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.MemberInfo;
-import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.PrivateMsg;
 import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.model.StanzaInfo;
@@ -79,7 +78,6 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     public long otherUserId;
     public MemberInfo memberInfo;
     public ChatAdapter adapter;
-    public MineInfo mineInfo;
     public ResFileDb resFileDb;
     public ChatAdapter emojiAdapter;
     private List<Integer> emojiList = new ArrayList<>();
@@ -111,7 +109,6 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         resFileDb = new ResFileDb(Realm.getDefaultInstance());
         historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         chatListDb = new ChatListDb(Realm.getDefaultInstance());
-        mineInfo = mineInfoDb.getMineInfo();
         ImUtils.getInstance(activity).setCallBackForMsg(this::updateMySend);
         setAdapter();
 

@@ -25,7 +25,6 @@ import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
-import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.views.GoodView;
@@ -53,7 +52,6 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     private CardMemberDiscoverBinding mBinding;
     private BaseReceiver publishReceiver;
     public long otherUserId;
-    private MineInfo mineInfo;
     private MemberInfo memberInfo;
     private int prePosition = -1;
     private BaseReceiver doGoodReceiver;
@@ -109,7 +107,6 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
             getData();
         else {
             if (otherUserId == 1) {
-                mineInfo = mineInfoDb.getMineInfo();
                 getData();
             } else {
                 otherInfo();
@@ -193,8 +190,8 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 mBinding.ivNoData.setVisibility(View.GONE);
                 for (DiscoverInfo item : o) {
                     if (otherUserId == 1) {
-                        item.setNick(mineInfo.getNick());
-                        item.setImage(mineInfo.getImage());
+                        item.setNick(MineApp.mineInfo.getNick());
+                        item.setImage(MineApp.mineInfo.getImage());
                     } else {
                         item.setNick(memberInfo.getNick());
                         item.setImage(memberInfo.getImage());

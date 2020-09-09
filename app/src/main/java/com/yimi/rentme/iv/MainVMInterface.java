@@ -6,8 +6,6 @@ public interface MainVMInterface {
 
     void selectPage(int index);
 
-    void joinPairPool(String longitude, String latitude, long provinceId, long cityId, long districtId);
-
     void openedMemberPriceList();
 
     void giftList();
@@ -22,7 +20,6 @@ public interface MainVMInterface {
 
     void newDynMsgAllNum(boolean isUpdate);
 
-
     void chatList();
 
     void driftBottleChatList();
@@ -32,8 +29,6 @@ public interface MainVMInterface {
     void noReadBottleNum(boolean isUpdate);
 
     void otherInfo(long otherUserId, CustomMessageBody body, String msgId);
-
-    void recommendRankingList();
 
     void pushGoodUser();
 }

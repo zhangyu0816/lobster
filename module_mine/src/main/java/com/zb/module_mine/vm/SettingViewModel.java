@@ -14,7 +14,6 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.FaceStatus;
-import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
@@ -34,7 +33,6 @@ import java.util.List;
 import androidx.databinding.ViewDataBinding;
 
 public class SettingViewModel extends BaseViewModel implements SettingVMInterface {
-    private MineInfo mineInfo;
     private BaseReceiver updateWalletReceiver;
     private MineSettingBinding mBinding;
     private List<String> selectList = new ArrayList<>();
@@ -50,7 +48,6 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
         super.setBinding(binding);
         mBinding = (MineSettingBinding) binding;
         mBinding.setIsThreeLogin(PreferenceUtil.readIntValue(activity, "myIsThreeLogin", 0) == 1);
-        mineInfo = mineInfoDb.getMineInfo();
         updateWalletReceiver = new BaseReceiver(activity, "lobster_updateWallet") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -125,7 +122,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
 
     @Override
     public void toLocation(View view) {
-        if (mineInfo.getMemberType() == 1) {
+        if (MineApp.mineInfo.getMemberType() == 1) {
             if (MineApp.vipInfoList.size() > 0)
                 new TextPW(activity, mBinding.getRoot(), "VIP特权", "位置漫游服务为VIP用户专享功能", "开通会员", ActivityUtils::getMineOpenVip);
             return;

@@ -6,6 +6,7 @@ import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.R;
@@ -34,9 +35,8 @@ public class EditMemberActivity extends MineBaseActivity {
             public void onReceive(Context context, Intent intent) {
                 int type = intent.getIntExtra("type", 0);
                 String content = intent.getStringExtra("content");
-                viewModel.mineInfoDb.updateContent(content, type);
-                viewModel.mineInfo = viewModel.mineInfoDb.getMineInfo();
-                mBinding.setVariable(BR.viewModel, viewModel);
+                viewModel.updateContent(content, type);
+                mBinding.setVariable(BR.mineInfo, MineApp.mineInfo);
             }
         };
         cameraReceiver = new BaseReceiver(activity, "lobster_camera") {

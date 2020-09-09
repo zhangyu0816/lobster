@@ -9,12 +9,18 @@ import android.os.Handler;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.api.recommendRankingListApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.RecommendInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_chat.databinding.ChatFragBinding;
 import com.zb.module_chat.iv.ChatFragVMInterface;
+
+import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
 
@@ -47,7 +53,7 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
             anim.setDuration(1700).start();
             handler.postDelayed(ra, time);
             if (MineApp.recommendInfoList.size() == 0) {
-                activity.sendBroadcast(new Intent("lobster_recommend"));
+                recommendRankingList();
             }
         }
     };
@@ -74,6 +80,8 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
                 mBinding.setMineNewsCount(MineApp.mineNewsCount);
             }
         };
+
+        recommendRankingList();
     }
 
     public void onDestroy() {
@@ -94,5 +102,16 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
     @Override
     public void toNews(View view) {
         ActivityUtils.getMineNewsManager();
+    }
+
+    @Override
+    public void recommendRankingList() {
+        recommendRankingListApi api = new recommendRankingListApi(new HttpOnNextListener<List<RecommendInfo>>() {
+            @Override
+            public void onNext(List<RecommendInfo> o) {
+                MineApp.recommendInfoList.addAll(o);
+            }
+        }, activity).setCityId(areaDb.getCityId(PreferenceUtil.readStringValue(activity, "cityName"))).setSex(MineApp.mineInfo.getSex() == 0 ? 1 : 0);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 }

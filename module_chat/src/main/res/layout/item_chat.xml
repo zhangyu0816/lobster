@@ -10,6 +10,8 @@
 
         <import type="com.zb.lib_base.activity.BaseActivity" />
 
+        <import type="com.zb.lib_base.app.MineApp" />
+
         <variable
             name="item"
             type="com.zb.lib_base.model.HistoryMsg" />
@@ -337,7 +339,7 @@
             <ImageView
                 android:id="@+id/iv_mine_logo"
                 defaultRes="@{ObjectUtils.getDefaultRes()}"
-                imageUrl="@{viewModel.mineInfo.image}"
+                imageUrl="@{MineApp.mineInfo.image}"
                 isCircle="@{true}"
                 viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"

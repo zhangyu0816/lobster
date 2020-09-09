@@ -7,6 +7,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.zb.lib_base.app.MineApp" />
+
         <variable
             name="viewModel"
             type="com.zb.module_bottle.vm.BottleChatViewModel" />
@@ -55,7 +57,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:padding="15dp"
-                android:src="@{viewModel.mineInfo.memberType==2?@drawable/look_icon:@drawable/unlook_icon}" />
+                android:src="@{MineApp.mineInfo.memberType==2?@drawable/look_icon:@drawable/unlook_icon}" />
         </RelativeLayout>
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout

@@ -17,6 +17,10 @@
             name="vipInfo"
             type="com.zb.lib_base.model.VipInfo" />
 
+        <variable
+            name="mineInfo"
+            type="com.zb.lib_base.model.MineInfo" />
+
     </data>
 
     <RelativeLayout
@@ -82,7 +86,7 @@
 
                     <ImageView
                         defaultRes="@{ObjectUtils.getDefaultRes()}"
-                        imageUrl="@{viewModel.mineInfo.image}"
+                        imageUrl="@{mineInfo.image}"
                         isCircle="@{true}"
                         viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
                         viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
@@ -100,7 +104,7 @@
                     android:layout_toStartOf="@+id/tv_open"
                     android:layout_toEndOf="@+id/image_relative"
                     android:singleLine="true"
-                    android:text="@{String.format(@string/member_nick, viewModel.mineInfo.nick)}"
+                    android:text="@{String.format(@string/member_nick, mineInfo.nick)}"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -115,11 +119,11 @@
                     android:layout_marginEnd="15dp"
                     android:alpha="0.8"
                     android:gravity="right"
-                    android:text='@{viewModel.mineInfo.memberExpireTime.empty ? String.valueOf("") : String.format(@string/member_expire_time, viewModel.mineInfo.memberExpireTime.substring(0,10))}'
+                    android:text='@{mineInfo.memberExpireTime.empty ? String.valueOf("") : String.format(@string/member_expire_time, mineInfo.memberExpireTime.substring(0,10))}'
                     android:textColor="@android:color/white"
                     android:textSize="12sp"
                     android:textStyle="bold"
-                    android:visibility="@{viewModel.mineInfo.memberType==2?View.VISIBLE:View.GONE}" />
+                    android:visibility="@{mineInfo.memberType==2?View.VISIBLE:View.GONE}" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -155,7 +159,7 @@
                     viewWidthSize="@{-1}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@{viewModel.mineInfo.sex==0?@drawable/vip_intro_icon:@drawable/vip_intro_icon_male}"
+                    android:background="@{mineInfo.sex==0?@drawable/vip_intro_icon:@drawable/vip_intro_icon_male}"
                     android:scrollbars="vertical" />
 
             </LinearLayout>
@@ -171,7 +175,7 @@
             android:layout_marginBottom="15dp"
             android:background="@drawable/gradient_purple_6d5_ae7"
             android:gravity="center"
-            android:text="@{viewModel.mineInfo.memberType==2?@string/pay_btn:String.format(@string/open_btn,vipInfo.price)}"
+            android:text="@{mineInfo.memberType==2?@string/pay_btn:String.format(@string/open_btn,vipInfo.price)}"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="bold" />

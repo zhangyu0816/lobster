@@ -6,18 +6,16 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
-import android.provider.Settings;
 import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
 
 import com.yimi.rentme.R;
 import com.yimi.rentme.databinding.AcMainBinding;
 import com.yimi.rentme.iv.MainVMInterface;
+import com.yimi.rentme.utils.OpenNotice;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.FragmentAdapter;
@@ -27,13 +25,11 @@ import com.zb.lib_base.api.comTypeApi;
 import com.zb.lib_base.api.contactNumApi;
 import com.zb.lib_base.api.driftBottleChatListApi;
 import com.zb.lib_base.api.giftListApi;
-import com.zb.lib_base.api.joinPairPoolApi;
 import com.zb.lib_base.api.newDynMsgAllNumApi;
 import com.zb.lib_base.api.openedMemberPriceListApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.pushGoodUserApi;
 import com.zb.lib_base.api.rechargeDiscountListApi;
-import com.zb.lib_base.api.recommendRankingListApi;
 import com.zb.lib_base.api.systemChatApi;
 import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
@@ -51,10 +47,8 @@ import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.MemberInfo;
-import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.RechargeInfo;
-import com.zb.lib_base.model.RecommendInfo;
 import com.zb.lib_base.model.Report;
 import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.model.VipInfo;
@@ -64,20 +58,15 @@ import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
-import com.zb.lib_base.windows.TextPW;
 import com.zb.module_card.windows.GuidancePW;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.core.app.NotificationManagerCompat;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import io.realm.Realm;
-
-import static android.provider.Settings.EXTRA_APP_PACKAGE;
-import static android.provider.Settings.EXTRA_CHANNEL_ID;
 
 public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private ArrayList<Fragment> fragments = new ArrayList<>();
@@ -96,10 +85,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private BaseReceiver newsCountReceiver;
     private BaseReceiver unReadCountReceiver;
     private BaseReceiver newDynMsgAllNumReceiver;
-    private BaseReceiver recommendReceiver;
     private BaseReceiver contactNumReceiver;
     private HistoryMsgDb historyMsgDb;
-    private MineInfo mineInfo;
     private int time = 2 * 60 * 1000;
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -124,17 +111,15 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         mBinding.setUnReadCount(0);
         mBinding.setNewsCount(0);
 
-        mineInfo = mineInfoDb.getMineInfo();
         vibrator = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);
 
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
-        MineApp.sex = PreferenceUtil.readIntValue(activity, "mySex", -2) == -2 ? (mineInfo.getSex() == 0 ? 1 : 0) : PreferenceUtil.readIntValue(activity, "mySex", -2);
+        MineApp.sex = PreferenceUtil.readIntValue(activity, "mySex", -2) == -2 ? (MineApp.mineInfo.getSex() == 0 ? 1 : 0) : PreferenceUtil.readIntValue(activity, "mySex", -2);
         MineApp.minAge = PreferenceUtil.readIntValue(activity, "myMinAge", 18);
         MineApp.maxAge = PreferenceUtil.readIntValue(activity, "myMaxAge", 70);
 
         initFragments();
         giftList();
-        recommendRankingList();
 
         rechargeReceiver = new BaseReceiver(activity, "lobster_recharge") {
             @Override
@@ -281,13 +266,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             }
         };
 
-        recommendReceiver = new BaseReceiver(activity, "lobster_recommend") {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                recommendRankingList();
-            }
-        };
-
         contactNumReceiver = new BaseReceiver(activity, "lobster_contactNum") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -295,14 +273,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             }
         };
 
-        if (PreferenceUtil.readIntValue(activity, "isNotificationEnabled") == 0) {
-            if (!isNotificationEnabled()) {
-                new Handler().postDelayed(() -> {
-                    PreferenceUtil.saveIntValue(activity, "isNotificationEnabled", 1);
-                    new TextPW(activity, mBinding.getRoot(), "应用通知", "为了及时收到虾菇通知，请开启通知", "去开启", this::gotoSet);
-                }, 1000);
-            }
-        }
+        new OpenNotice(activity, mBinding.getRoot());
+
         handler.sendEmptyMessageDelayed(0, time);
     }
 
@@ -314,46 +286,9 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         newsCountReceiver.unregisterReceiver();
         unReadCountReceiver.unregisterReceiver();
         newDynMsgAllNumReceiver.unregisterReceiver();
-        recommendReceiver.unregisterReceiver();
         contactNumReceiver.unregisterReceiver();
     }
 
-    private boolean isNotificationEnabled() {
-        boolean isOpened = false;
-        try {
-            isOpened = NotificationManagerCompat.from(activity).areNotificationsEnabled();
-        } catch (Exception e) {
-            e.printStackTrace();
-            isOpened = false;
-        }
-        return isOpened;
-    }
-
-    private void gotoSet() {
-
-        if (Build.VERSION.SDK_INT >= 26) {
-            // android 8.0引导
-            Intent intent = new Intent();
-            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-            intent.putExtra(EXTRA_APP_PACKAGE, activity.getPackageName());
-            intent.putExtra(EXTRA_CHANNEL_ID, activity.getApplicationInfo().uid);
-            activity.startActivity(intent);
-        } else if (Build.VERSION.SDK_INT >= 21) {
-            // android 5.0-7.0
-            Intent intent = new Intent();
-            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-            intent.putExtra("app_package", activity.getPackageName());
-            intent.putExtra("app_uid", activity.getApplicationInfo().uid);
-            activity.startActivity(intent);
-        } else {
-            // 其他
-            Intent intent = new Intent();
-            intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
-            intent.setData(uri);
-            activity.startActivity(intent);
-        }
-    }
 
     private void initFragments() {
         fragments.clear();
@@ -395,18 +330,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         nowIndex = index;
         mBinding.setIndex(nowIndex);
         mBinding.viewPage.setCurrentItem(index);
-    }
-
-    @Override
-    public void joinPairPool(String longitude, String latitude, long provinceId, long cityId, long districtId) {
-        // 加入匹配池
-        joinPairPoolApi api = new joinPairPoolApi(new HttpOnNextListener() {
-            @Override
-            public void onNext(Object o) {
-
-            }
-        }, activity).setLatitude(latitude).setLongitude(longitude).setProvinceId(provinceId).setCityId(cityId).setDistrictId(districtId);
-        HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override
@@ -719,17 +642,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
             }
         }, activity).setOtherUserId(otherUserId);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
-    public void recommendRankingList() {
-        recommendRankingListApi api = new recommendRankingListApi(new HttpOnNextListener<List<RecommendInfo>>() {
-            @Override
-            public void onNext(List<RecommendInfo> o) {
-                MineApp.recommendInfoList.addAll(o);
-            }
-        }, activity).setCityId(areaDb.getCityId(PreferenceUtil.readStringValue(activity, "cityName"))).setSex(mineInfo.getSex() == 0 ? 1 : 0);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

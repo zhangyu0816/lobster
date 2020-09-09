@@ -5,6 +5,7 @@ import android.os.Handler;
 import com.yimi.rentme.iv.LoadingVMInterface;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.myInfoApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.MineInfo;
@@ -50,7 +51,7 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
             myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
                 @Override
                 public void onNext(MineInfo o) {
-                    mineInfoDb.saveMineInfo(o);
+                    MineApp.mineInfo = o;
                     ActivityUtils.getMainActivity();
                     activity.finish();
                 }

@@ -10,7 +10,6 @@ import com.zb.lib_base.api.modifyMemberInfoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.MNImage;
@@ -32,7 +31,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
-import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
 public class EditMemberViewModel extends BaseViewModel implements EditMemberVMInterface {
@@ -41,7 +39,6 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     public int _position = 0;
     private SimpleItemTouchHelperCallback callback;
     private MineEditMemberBinding mineEditMemberBinding;
-    public MineInfo mineInfo;
     private PhotoManager photoManager;
     private String images = "";
 
@@ -56,11 +53,11 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mineEditMemberBinding = (MineEditMemberBinding) binding;
-        mineInfo = mineInfoDb.getMineInfo();
-        if (mineInfo.getMoreImages().isEmpty()) {
-            imageList.add(mineInfo.getImage());
+        mineEditMemberBinding.setMineInfo(MineApp.mineInfo);
+        if (MineApp.mineInfo.getMoreImages().isEmpty()) {
+            imageList.add(MineApp.mineInfo.getImage());
         } else {
-            String[] images = mineInfo.getMoreImages().split("#");
+            String[] images = MineApp.mineInfo.getMoreImages().split("#");
             imageList.addAll(Arrays.asList(images));
         }
         for (int i = imageList.size(); i < 6; i++) {
@@ -106,7 +103,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
             return;
         }
 
-        if (mineInfo.getPersonalitySign().isEmpty()) {
+        if (MineApp.mineInfo.getPersonalitySign().isEmpty()) {
             SCToastUtil.showToast(activity, "请添加自己的个性签名", true);
             return;
         }
@@ -141,31 +138,30 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
 
     @Override
     public void toEditNick(View view) {
-        ActivityUtils.getMineEditContent(2, 1, "编辑名称", mineInfo.getNick(), "输入你的名称，名称不能为空");
+        ActivityUtils.getMineEditContent(2, 1, "编辑名称", MineApp.mineInfo.getNick(), "输入你的名称，名称不能为空");
     }
 
     @Override
     public void toSelectBirthday(View view) {
-        new BirthdayPW(activity, mBinding.getRoot(), mineInfo.getBirthday(), birthday -> {
-            mineInfoDb.updateContent(birthday, 5);
-            mineInfo = mineInfoDb.getMineInfo();
-            mBinding.setVariable(BR.viewModel, EditMemberViewModel.this);
+        new BirthdayPW(activity, mBinding.getRoot(), MineApp.mineInfo.getBirthday(), birthday -> {
+            updateContent(birthday, 5);
+            mineEditMemberBinding.setMineInfo(MineApp.mineInfo);
         });
     }
 
     @Override
     public void toSelectJob(View view) {
-        ActivityUtils.getMineSelectJob(mineInfo.getJob());
+        ActivityUtils.getMineSelectJob(MineApp.mineInfo.getJob());
     }
 
     @Override
     public void toEditSign(View view) {
-        ActivityUtils.getMineEditContent(3, 10, "编辑个性签名", mineInfo.getPersonalitySign(), "编辑个性签名...");
+        ActivityUtils.getMineEditContent(3, 10, "编辑个性签名", MineApp.mineInfo.getPersonalitySign(), "编辑个性签名...");
     }
 
     @Override
     public void toSelectTag(View view) {
-        ActivityUtils.getMineSelectTag(mineInfo.getServiceTags());
+        ActivityUtils.getMineSelectTag(MineApp.mineInfo.getServiceTags());
     }
 
     @Override
@@ -181,23 +177,42 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "个人信息提交成功", true);
-                mineInfoDb.updateImages(images);
+                updateImages(images);
                 activity.sendBroadcast(new Intent("lobster_updateMineInfo"));
                 activity.finish();
             }
         }, activity)
-                .setBirthday(mineInfo.getBirthday())
+                .setBirthday(MineApp.mineInfo.getBirthday())
                 .setImage(imageList.get(0))
                 .setMoreImages(images)
-                .setNick(mineInfo.getNick())
-                .setJob(mineInfo.getJob())
-                .setPersonalitySign(mineInfo.getPersonalitySign())
-                .setSex(mineInfo.getSex())
-                .setServiceTags(mineInfo.getServiceTags())
+                .setNick(MineApp.mineInfo.getNick())
+                .setJob(MineApp.mineInfo.getJob())
+                .setPersonalitySign(MineApp.mineInfo.getPersonalitySign())
+                .setSex(MineApp.mineInfo.getSex())
+                .setServiceTags(MineApp.mineInfo.getServiceTags())
                 .setProvinceId(areaDb.getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
                 .setCityId(areaDb.getCityId(MineApp.cityName))
                 .setDistrictId(areaDb.getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void updateImages(String images) {
+        MineApp.mineInfo.setImage(images.split("#")[0]);
+        MineApp.mineInfo.setMoreImages(images);
+    }
+
+    public void updateContent(String content, int type) {
+        // type   1：工作  2：昵称
+        if (type == 1)
+            MineApp.mineInfo.setJob(content);
+        else if (type == 2)
+            MineApp.mineInfo.setNick(content);
+        else if (type == 3)
+            MineApp.mineInfo.setPersonalitySign(content);
+        else if (type == 4)
+            MineApp.mineInfo.setServiceTags(content);
+        else if (type == 5)
+            MineApp.mineInfo.setBirthday(content);
     }
 
     /**

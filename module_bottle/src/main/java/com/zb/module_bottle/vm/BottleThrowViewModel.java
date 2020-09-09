@@ -22,7 +22,6 @@ import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
-import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.ObjectUtils;
@@ -55,7 +54,6 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     private long otherUserId = 0;
     private boolean canClose = true;
     private ObjectAnimator translateX, scaleX, scaleY, alpha;
-    private MineInfo mineInfo;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -67,7 +65,6 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         mBinding.setMemberInfo(new MemberInfo());
         mBinding.setInfo("");
 
-        mineInfo = mineInfoDb.getMineInfo();
         updateContactNumReceiver = new BaseReceiver(activity, "lobster_updateContactNum") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -276,7 +273,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
 
     @Override
     public void toMemberDetail(View view) {
-        if (mineInfo.getMemberType() == 2) {
+        if (MineApp.mineInfo.getMemberType() == 2) {
             ActivityUtils.getCardMemberDetail(otherUserId, false);
             close(null);
             return;

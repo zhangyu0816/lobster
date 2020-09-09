@@ -8,19 +8,15 @@ import android.view.LayoutInflater;
 import android.view.animation.Animation;
 import android.widget.RelativeLayout;
 
-import com.zb.lib_base.db.MineInfoDb;
-import com.zb.lib_base.model.MineInfo;
+import com.zb.lib_base.app.MineApp;
 import com.zb.module_card.R;
 import com.zb.module_card.databinding.ProgressBinding;
 
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
-import io.realm.Realm;
 
 public class ProgressView extends RelativeLayout {
     private ProgressBinding mBinding;
-    private MineInfo mineInfo;
-    private MineInfoDb mineInfoDb;
     private static ObjectAnimator pvh;
     private PropertyValuesHolder pvhSY, pvhSX;
 
@@ -40,12 +36,10 @@ public class ProgressView extends RelativeLayout {
     }
 
     private void init(Context context) {
-        mineInfoDb = new MineInfoDb(Realm.getDefaultInstance());
-        mineInfo = mineInfoDb.getMineInfo();
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.progress, null, false);
         addView(mBinding.getRoot());
 
-        mBinding.setMineInfo(mineInfo);
+        mBinding.setMineInfo(MineApp.mineInfo);
         pvhSY = PropertyValuesHolder.ofFloat("scaleY", 1, 2.3f);
         pvhSX = PropertyValuesHolder.ofFloat("scaleX", 1, 2.3f);
         pvh = ObjectAnimator.ofPropertyValuesHolder(mBinding.ivProgress, pvhSY, pvhSX).setDuration(1000);
