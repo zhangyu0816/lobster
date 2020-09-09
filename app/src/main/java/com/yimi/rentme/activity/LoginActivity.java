@@ -13,9 +13,8 @@ import com.yimi.rentme.R;
 import com.yimi.rentme.databinding.AcLoginBinding;
 import com.yimi.rentme.vm.LoginViewModel;
 import com.zb.lib_base.activity.BaseActivity;
-import com.zb.lib_base.utils.KeyboardStateObserver;
 import com.zb.lib_base.utils.RouteUtils;
-import com.zb.lib_base.utils.SCToastUtil;
+import com.zb.lib_base.utils.SoftHideKeyBoardUtil;
 
 @Route(path = RouteUtils.Main_Login)
 public class LoginActivity extends BaseActivity {
@@ -45,23 +44,24 @@ public class LoginActivity extends BaseActivity {
         viewModel.loginStep = loginStep;
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
-        AcLoginBinding binding = (AcLoginBinding) mBinding;
-        KeyboardStateObserver.getKeyboardStateObserver(activity).
-                setKeyboardVisibilityListener(new KeyboardStateObserver.OnKeyboardVisibilityListener() {
-                    @Override
-                    public void onKeyboardHeight(int height) {
-                        SCToastUtil.showToast(activity, "softKeyboardHeight == " + height, true);
-                        mHeight = height;
-                        ty = ObjectAnimator.ofFloat(binding.tvNext, "translationY", 0, -mHeight).setDuration(200);
-                        ty.start();
-                    }
 
-                    @Override
-                    public void onKeyboardHide() {
-                        ty = ObjectAnimator.ofFloat(binding.tvNext, "translationY", -mHeight, 0).setDuration(200);
-                        ty.start();
-                    }
-                }, true);
+        SoftHideKeyBoardUtil.assistActivity(activity,true);
+        AcLoginBinding binding = (AcLoginBinding) mBinding;
+//        KeyboardStateObserver.getKeyboardStateObserver(activity).
+//                setKeyboardVisibilityListener(new KeyboardStateObserver.OnKeyboardVisibilityListener() {
+//                    @Override
+//                    public void onKeyboardHeight(int height) {
+//                        mHeight = height;
+//                        ty = ObjectAnimator.ofFloat(binding.tvNext, "translationY", 0, -mHeight).setDuration(200);
+//                        ty.start();
+//                    }
+//
+//                    @Override
+//                    public void onKeyboardHide() {
+//                        ty = ObjectAnimator.ofFloat(binding.tvNext, "translationY", -mHeight, 0).setDuration(200);
+//                        ty.start();
+//                    }
+//                }, true);
     }
 
     @Override
