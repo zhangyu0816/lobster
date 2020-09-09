@@ -44,7 +44,6 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.imcore.CustomMessageBody;
-import com.zb.lib_base.imcore.ImUtils;
 import com.zb.lib_base.model.BankInfo;
 import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.ChatList;
@@ -94,7 +93,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private BaseReceiver chatListReceiver;
     private BaseReceiver newMsgReceiver;
     private BaseReceiver bottleNumReceiver;
-    private BaseReceiver mainSelectReceiver;
     private BaseReceiver newsCountReceiver;
     private BaseReceiver unReadCountReceiver;
     private BaseReceiver newDynMsgAllNumReceiver;
@@ -116,7 +114,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        MineApp.isLogin = true;
         bottleCacheDb = new BottleCacheDb(Realm.getDefaultInstance());
         chatListDb = new ChatListDb(Realm.getDefaultInstance());
         historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
@@ -267,24 +264,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 noReadBottleNum(true);
             }
         };
-        mainSelectReceiver = new BaseReceiver(activity, "lobster_mainSelect") {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (!MineApp.isLogin) {
-                    selectPage(1);
-                }
-                MineApp.isLogin = true;
-                joinPairPool(PreferenceUtil.readStringValue(activity, "longitude"), PreferenceUtil.readStringValue(activity, "latitude"),
-                        areaDb.getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")),
-                        areaDb.getCityId(PreferenceUtil.readStringValue(activity, "cityName")),
-                        areaDb.getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
-                ImUtils.getInstance(activity).setChat(false);
-                walletAndPop();
-                newDynMsgAllNum(false);
-                MineApp.recommendInfoList.clear();
-                recommendRankingList();
-            }
-        };
 
         newsCountReceiver = new BaseReceiver(activity, "lobster_newsCount") {
             @Override
@@ -332,7 +311,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         chatListReceiver.unregisterReceiver();
         newMsgReceiver.unregisterReceiver();
         bottleNumReceiver.unregisterReceiver();
-        mainSelectReceiver.unregisterReceiver();
         newsCountReceiver.unregisterReceiver();
         unReadCountReceiver.unregisterReceiver();
         newDynMsgAllNumReceiver.unregisterReceiver();

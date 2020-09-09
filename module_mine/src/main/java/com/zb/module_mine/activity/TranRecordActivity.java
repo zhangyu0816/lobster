@@ -28,9 +28,4 @@ public class TranRecordActivity extends MineBaseActivity {
         mBinding.setVariable(BR.title, tranType == 0 ? "账单明细" : "收益明细");
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        viewModel.onDestroy();
-    }
 }

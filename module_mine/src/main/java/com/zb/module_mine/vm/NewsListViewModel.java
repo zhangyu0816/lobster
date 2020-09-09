@@ -1,13 +1,11 @@
 package com.zb.module_mine.vm;
 
-import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.dynNewMsgListApi;
 import com.zb.lib_base.api.readNewDynMsgAllApi;
 import com.zb.lib_base.app.MineApp;
@@ -34,24 +32,12 @@ public class NewsListViewModel extends BaseViewModel implements NewsListVMInterf
     public int reviewType;
     private int pageNo = 1;
     private MineNewsListBinding mBinding;
-    private BaseReceiver finishRefreshReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (MineNewsListBinding) binding;
         setAdapter();
-        finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                mBinding.refresh.finishRefresh();
-                mBinding.refresh.finishLoadMore();
-            }
-        };
-    }
-
-    public void onDestroy() {
-        finishRefreshReceiver.unregisterReceiver();
     }
 
     @Override

@@ -29,9 +29,4 @@ public class RewardListActivity extends HomeBaseActivity {
         mBinding.setVariable(BR.remark, "暂无排行榜记录");
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        viewModel.onDestroy();
-    }
 }

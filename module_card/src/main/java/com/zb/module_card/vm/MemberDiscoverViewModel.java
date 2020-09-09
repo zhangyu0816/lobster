@@ -57,8 +57,6 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     private MemberInfo memberInfo;
     private int prePosition = -1;
     private BaseReceiver doGoodReceiver;
-    private BaseReceiver finishRefreshReceiver;
-    private BaseReceiver mainSelectReceiver;
     private BaseReceiver locationReceiver;
     private long friendDynId = 0;
     private DiscoverInfo discoverInfo;
@@ -87,19 +85,6 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 }
             }
         };
-        finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                mBinding.refresh.finishRefresh();
-                mBinding.refresh.finishLoadMore();
-            }
-        };
-        mainSelectReceiver = new BaseReceiver(activity, "lobster_mainSelect") {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                onRefreshForNet(null);
-            }
-        };
 
         // 位置漫游
         locationReceiver = new BaseReceiver(activity, "lobster_location") {
@@ -114,8 +99,6 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     public void onDestroy() {
         publishReceiver.unregisterReceiver();
         doGoodReceiver.unregisterReceiver();
-        finishRefreshReceiver.unregisterReceiver();
-        mainSelectReceiver.unregisterReceiver();
         locationReceiver.unregisterReceiver();
     }
 

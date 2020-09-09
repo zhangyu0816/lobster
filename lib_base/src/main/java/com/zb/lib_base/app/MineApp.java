@@ -68,8 +68,6 @@ public class MineApp extends MultiDexApplication {
     public static String cityName = "";
     public static String versionName;
     public static String WX_PAY_APPID = "wxbdd7128e0a0a08f8";
-    public static boolean isLogin = false;
-
 
     public static List<VipInfo> vipInfoList = new ArrayList<>();
     public static List<GiftInfo> giftInfoList = new ArrayList<>();

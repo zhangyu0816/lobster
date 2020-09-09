@@ -1,13 +1,10 @@
 package com.zb.module_mine.vm;
 
-import android.content.Context;
-import android.content.Intent;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.tranRecordsApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -33,25 +30,13 @@ public class TranRecordViewModel extends BaseViewModel implements TranRecordVMIn
     private List<TranRecord> tranRecordList = new ArrayList<>();
     private int pageNo = 1;
     private MineTranRecordBinding mBinding;
-    private BaseReceiver finishRefreshReceiver;
     public  Map<Integer, String> tranStatusMap = new HashMap<>();
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (MineTranRecordBinding) binding;
-        finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                mBinding.refresh.finishRefresh();
-                mBinding.refresh.finishLoadMore();
-            }
-        };
         initData();
         setAdapter();
-    }
-
-    public void onDestroy() {
-        finishRefreshReceiver.unregisterReceiver();
     }
 
     @Override

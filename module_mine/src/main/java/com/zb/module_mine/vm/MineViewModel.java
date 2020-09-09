@@ -40,7 +40,6 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     private BaseReceiver newsCountReceiver;
     private BaseReceiver openVipReceiver;
     private BaseReceiver updateContactNumReceiver;
-    private BaseReceiver mainSelectReceiver;
     private List<Fragment> fragments = new ArrayList<>();
 
     @Override
@@ -88,14 +87,6 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                 }
             }
         };
-
-        mainSelectReceiver = new BaseReceiver(activity, "lobster_mainSelect") {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                mineInfo = mineInfoDb.getMineInfo();
-                mBinding.setMineInfo(mineInfo);
-            }
-        };
         initFragments();
     }
 
@@ -104,7 +95,6 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         newsCountReceiver.unregisterReceiver();
         openVipReceiver.unregisterReceiver();
         updateContactNumReceiver.unregisterReceiver();
-        mainSelectReceiver.unregisterReceiver();
     }
 
     private void initFragments() {

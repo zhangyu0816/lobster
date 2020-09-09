@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.http.HttpTimeException;
@@ -99,11 +100,8 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
                     "重新登录", false, new TextPW.CallBack() {
                 @Override
                 public void sure() {
-                    getRxAppCompatActivity().sendBroadcast(new Intent("lobster_finishRefresh"));
+                    MineApp.exit();
                     ActivityUtils.getLoginActivity(3);
-                    if (TextUtils.equals(dialogTitle, "loadingNotLogin")) {
-                        getRxAppCompatActivity().finish();
-                    }
                 }
 
                 @Override

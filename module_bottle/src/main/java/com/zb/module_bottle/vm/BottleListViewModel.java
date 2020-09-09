@@ -50,7 +50,6 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     public MineInfo mineInfo;
     private List<BottleInfo> bottleInfoList = new ArrayList<>();
     private BaseReceiver openVipReceiver;
-    private BaseReceiver finishRefreshReceiver;
     private int pageNo = 1;
     private BottleListBinding mBinding;
     private SimpleItemTouchHelperCallback callback;
@@ -71,13 +70,6 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
             @Override
             public void onReceive(Context context, Intent intent) {
                 myInfo();
-            }
-        };
-        finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                mBinding.refresh.finishRefresh();
-                mBinding.refresh.finishLoadMore();
             }
         };
         singleBottleCacheReceiver = new BaseReceiver(activity, "lobster_singleBottleCache") {
@@ -118,7 +110,6 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
 
     public void onDestroy() {
         openVipReceiver.unregisterReceiver();
-        finishRefreshReceiver.unregisterReceiver();
         singleBottleCacheReceiver.unregisterReceiver();
     }
 

@@ -84,7 +84,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     private MemberInfo memberInfo;
 
     private long reviewId = 0;
-    private BaseReceiver finishRefreshReceiver;
     private BaseReceiver attentionReceiver;
     private boolean isFirst = true;
     private int bannerWidth = MineApp.W;
@@ -114,13 +113,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             }
             return true;
         });
-        finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                mBinding.refresh.finishRefresh();
-                mBinding.refresh.finishLoadMore();
-            }
-        };
 
         attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
             @Override
@@ -159,7 +151,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void back(View view) {
         super.back(view);
-        finishRefreshReceiver.unregisterReceiver();
         attentionReceiver.unregisterReceiver();
         activity.finish();
     }

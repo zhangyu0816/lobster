@@ -1,13 +1,10 @@
 package com.zb.module_mine.vm;
 
-import android.content.Context;
-import android.content.Intent;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.giveOrReceiveListApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -32,7 +29,6 @@ public class GRGiftViewModel extends BaseViewModel implements GRGiftVMInterface,
     private int pageNo = 1;
     private List<GiftRecord> giftRecordList = new ArrayList<>();
     private MineGiveReceiveGiftBinding mBinding;
-    private BaseReceiver finishRefreshReceiver;
 
     @Override
     public void back(View view) {
@@ -40,22 +36,11 @@ public class GRGiftViewModel extends BaseViewModel implements GRGiftVMInterface,
         activity.finish();
     }
 
-    public void onDestroy() {
-        finishRefreshReceiver.unregisterReceiver();
-    }
-
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (MineGiveReceiveGiftBinding) binding;
         setAdapter();
-        finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                mBinding.refresh.finishRefresh();
-                mBinding.refresh.finishLoadMore();
-            }
-        };
     }
 
     @Override

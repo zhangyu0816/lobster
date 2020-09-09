@@ -124,11 +124,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
 
         threeLogin = new ThreeLogin(activity, this::loginByUnion);
         ImUtils.getInstance(activity).setCallBackForLogin(() -> {
-            if (MineApp.isLogin) {
-                activity.sendBroadcast(new Intent("lobster_mainSelect"));
-            } else {
-                ActivityUtils.getMainActivity();
-            }
+            ActivityUtils.getMainActivity();
             MineApp.registerInfo = new RegisterInfo();
             timer.cancel();
             activity.finish();

@@ -90,7 +90,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     public BaseReceiver cardReceiver;
     public BaseReceiver locationReceiver;
     public BaseReceiver openVipReceiver;
-    public BaseReceiver mainSelectReceiver;
     public BaseReceiver isLikeReceiver;
     private List<PairInfo> disLikeList = new ArrayList<>();
     private CardAdapter disListAdapter;
@@ -169,19 +168,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             @Override
             public void onReceive(Context context, Intent intent) {
                 myInfo();
-            }
-        };
-        mainSelectReceiver = new BaseReceiver(activity, "lobster_mainSelect") {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                mineInfo = mineInfoDb.getMineInfo();
-                if (PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1) == -1)
-                    likeCount = mineInfo.getSurplusToDayLikeNumber();
-                else
-                    likeCount = PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1);
-                mBinding.setLikeCount(likeCount);
-                mBinding.setShowCount(false);
-                prePairList(true);
             }
         };
 

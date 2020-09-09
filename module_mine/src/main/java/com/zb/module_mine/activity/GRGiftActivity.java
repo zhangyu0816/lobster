@@ -29,10 +29,4 @@ public class GRGiftActivity extends MineBaseActivity {
         mBinding.setVariable(BR.noData, true);
         mBinding.setVariable(BR.remark, friendDynGiftType == 1 ? "暂无送礼记录" : "暂无收礼记录");
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        viewModel.onDestroy();
-    }
 }

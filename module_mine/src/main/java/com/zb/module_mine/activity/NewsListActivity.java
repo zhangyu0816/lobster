@@ -29,10 +29,4 @@ public class NewsListActivity extends MineBaseActivity {
         mBinding.setVariable(BR.reviewType, reviewType);
         mBinding.setVariable(BR.title, reviewType == 1 ? "我的评论" : (reviewType == 2 ? "我的点赞" : "我的礼物"));
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        viewModel.onDestroy();
-    }
 }

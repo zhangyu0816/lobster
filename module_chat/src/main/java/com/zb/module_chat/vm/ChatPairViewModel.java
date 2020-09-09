@@ -51,7 +51,6 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
     private BaseReceiver pairListReceiver;
     private BaseReceiver updateContactNumReceiver;
     private BaseReceiver relieveReceiver;
-    private BaseReceiver finishRefreshReceiver;
     private BaseReceiver updateChatReceiver;
     private SimpleItemTouchHelperCallback callback;
 
@@ -117,13 +116,6 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 onRefresh(mBinding.refresh);
             }
         };
-        finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                mBinding.refresh.finishRefresh();
-                mBinding.refresh.finishLoadMore();
-            }
-        };
         updateChatReceiver = new BaseReceiver(activity, "lobster_updateChat") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -149,7 +141,6 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         pairListReceiver.unregisterReceiver();
         updateContactNumReceiver.unregisterReceiver();
         relieveReceiver.unregisterReceiver();
-        finishRefreshReceiver.unregisterReceiver();
         updateChatReceiver.unregisterReceiver();
     }
 

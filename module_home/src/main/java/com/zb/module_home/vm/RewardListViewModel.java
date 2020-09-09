@@ -1,13 +1,10 @@
 package com.zb.module_home.vm;
 
-import android.content.Context;
-import android.content.Intent;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.seeGiftRewardsApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -34,25 +31,14 @@ public class RewardListViewModel extends BaseViewModel implements RewardListVMIn
     private List<Reward> rewardList = new ArrayList<>();
     private int pageNo = 1;
     private HomeRewardListBinding mBinding;
-    private BaseReceiver finishRefreshReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (HomeRewardListBinding) binding;
         setAdapter();
-        finishRefreshReceiver = new BaseReceiver(activity, "lobster_finishRefresh") {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                mBinding.refresh.finishRefresh();
-                mBinding.refresh.finishLoadMore();
-            }
-        };
     }
 
-    public void onDestroy() {
-        finishRefreshReceiver.unregisterReceiver();
-    }
 
     @Override
     public void back(View view) {
