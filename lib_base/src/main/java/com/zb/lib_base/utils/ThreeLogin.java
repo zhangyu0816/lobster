@@ -40,10 +40,10 @@ public class ThreeLogin {
     public void selectUnionType(int unionType) {
         this.unionType = unionType;
         if (unionType == 1) { // 微信登录
-            CustomProgressDialog.showLoading(activity, "正在微信登录申请权限");
+            CustomProgressDialog.showLoading(activity, "正向微信申请登录权限");
             umShareAPI.getPlatformInfo(activity, SHARE_MEDIA.WEIXIN, umAuthListener);
         } else { // QQ登录
-            CustomProgressDialog.showLoading(activity, "正在QQ登录申请权限");
+            CustomProgressDialog.showLoading(activity, "正向QQ申请登录权限");
             umShareAPI.getPlatformInfo(activity, SHARE_MEDIA.QQ, umAuthListener);
         }
     }

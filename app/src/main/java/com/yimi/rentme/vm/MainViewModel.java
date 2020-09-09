@@ -100,6 +100,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private BaseReceiver unReadCountReceiver;
     private BaseReceiver newDynMsgAllNumReceiver;
     private BaseReceiver recommendReceiver;
+    private BaseReceiver contactNumReceiver;
     private HistoryMsgDb historyMsgDb;
     private MineInfo mineInfo;
     private int time = 2 * 60 * 1000;
@@ -315,6 +316,13 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             }
         };
 
+        contactNumReceiver = new BaseReceiver(activity, "lobster_contactNum") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                contactNum(true);
+            }
+        };
+
         if (PreferenceUtil.readIntValue(activity, "isNotificationEnabled") == 0) {
             if (!isNotificationEnabled()) {
                 new Handler().postDelayed(() -> {
@@ -336,6 +344,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         unReadCountReceiver.unregisterReceiver();
         newDynMsgAllNumReceiver.unregisterReceiver();
         recommendReceiver.unregisterReceiver();
+        contactNumReceiver.unregisterReceiver();
     }
 
     private boolean isNotificationEnabled() {

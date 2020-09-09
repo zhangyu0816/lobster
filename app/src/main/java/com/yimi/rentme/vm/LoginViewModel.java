@@ -52,6 +52,7 @@ import com.zb.lib_base.utils.ThreeLogin;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BirthdayPW;
+import com.zb.lib_base.windows.RulePW;
 import com.zb.lib_base.windows.TextPW;
 
 import org.json.JSONException;
@@ -285,7 +286,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     @Override
     public void selectSex(int sex) {
         MineApp.registerInfo.setSex(sex);
-        step(1); // 跳转昵称页
+        showRule();// 跳转昵称页
     }
 
     @Override
@@ -647,6 +648,25 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         }
     }
 
+    private void showRule() {
+        if (PreferenceUtil.readIntValue(activity, "ruleType1") == 0) {
+            new Handler().postDelayed(() -> new RulePW(activity, mBinding.getRoot(), 1, new RulePW.CallBack() {
+                @Override
+                public void sureBack() {
+                    PreferenceUtil.saveIntValue(activity, "ruleType1", 1);
+                    step(1);
+                }
+
+                @Override
+                public void cancelBack() {
+
+                }
+            }), 200);
+        } else {
+            step(1);
+        }
+    }
+
     private void step(int step) {
         mBinding.setLoginStep(step);
         switch (step) {
@@ -670,9 +690,9 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 mBinding.setCanNext(!MineApp.registerInfo.getBirthday().isEmpty());
                 break;
             case 3:
-                if(mBinding.getRight().isEmpty()){
+                if (mBinding.getRight().isEmpty()) {
                     mBinding.setBtnName("获取注册验证码");
-                }else{
+                } else {
                     mBinding.setBtnName("获取登录验证码");
                 }
                 outAlpha(mBinding.step3Layout);
@@ -790,7 +810,8 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         outAlpha.start();
         new Handler().postDelayed(() -> {
             if (outAlpha != null)
-                outAlpha = null;
-        }, 1000);
+                outAlpha.cancel();
+            outAlpha = null;
+        }, 500);
     }
 }

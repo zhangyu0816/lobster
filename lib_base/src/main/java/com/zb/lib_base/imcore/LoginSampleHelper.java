@@ -2,11 +2,14 @@ package com.zb.lib_base.imcore;
 
 import android.app.ActivityManager;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -35,6 +38,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.List;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -234,17 +238,29 @@ public class LoginSampleHelper {
         });
     }
 
-    private static YWMessage mywMessage;
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public String getChannelId(NotificationManager notificationManager) {
+        NotificationChannel channel = new NotificationChannel(MineApp.NOTIFICATION_CHANNEL_ID, "虾菇推送", NotificationManager.IMPORTANCE_DEFAULT);
+        channel.enableLights(true);//显示桌面红点
+        channel.setLightColor(Color.RED);
+        channel.setShowBadge(true);
+        notificationManager.createNotificationChannel(channel);
+        return channel.getId();
+    }
 
     private void sendMsg(YWMessage ywMessage) {
-        mywMessage = ywMessage;
-        CustomMessageBody body = (CustomMessageBody) LoginSampleHelper.unpack(ywMessage.getContent());
+        CustomMessageBody body = LoginSampleHelper.unpack(ywMessage.getContent());
         long otherUserId = body.getFromId() == BaseActivity.userId ? body.getToId() : body.getFromId();
 
         NotificationManager notificationManager = (NotificationManager) activity
                 .getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationManagerCompat nmc = NotificationManagerCompat.from(activity);
-        NotificationCompat.Builder builder = BaseActivity.getNotificationBuilderByChannel(notificationManager, MineApp.NOTIFICATION_CHANNEL_ID);
+        NotificationCompat.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder = new NotificationCompat.Builder(activity, getChannelId(notificationManager));
+        } else {
+            builder = new NotificationCompat.Builder(activity, null);
+        }
 
         RemoteViews mRemoteViews = new RemoteViews("com.yimi.rentme", R.layout.remote_layout);
         mRemoteViews.setTextViewText(R.id.tv_content, body.getStanza());

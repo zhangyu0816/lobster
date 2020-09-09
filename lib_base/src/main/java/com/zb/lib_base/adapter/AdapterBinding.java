@@ -183,10 +183,12 @@ public class AdapterBinding {
             Glide.with(view.getContext()).asBitmap().load(imageUrl).apply(cropOptions).into(new SimpleTarget<Bitmap>() {
                 @Override
                 public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                    if (widthSize == 0) {
-                        viewSize(view, (int) ((float) resource.getWidth() * heightSize / (float) resource.getHeight()), heightSize);
-                    }
-                    if (heightSize == 0) {
+                    float width = (float) resource.getWidth();
+                    float height = (float) resource.getHeight();
+
+                    if (width > height) {
+                        viewSize(view, (int) ((float) resource.getWidth() * heightSize * 0.7 / (float) resource.getHeight()), (int) (heightSize * 0.7f));
+                    } else {
                         viewSize(view, widthSize, (int) ((float) resource.getHeight() * widthSize / (float) resource.getWidth()));
                     }
                     view.setImageBitmap(resource);

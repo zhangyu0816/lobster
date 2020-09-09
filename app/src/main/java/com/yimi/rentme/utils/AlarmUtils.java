@@ -2,6 +2,7 @@ package com.yimi.rentme.utils;
 
 import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -9,6 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.SystemClock;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -29,6 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -233,11 +237,27 @@ public class AlarmUtils {
         setNoticeManager(context, temp[0], temp[1].replace("name", recommendInfo == null ? (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) : recommendInfo.getUserNick()), recommendInfo);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static String getChannelId(NotificationManager notificationManager) {
+        NotificationChannel channel = new NotificationChannel(MineApp.NOTIFICATION_CHANNEL_ID, "虾菇推送", NotificationManager.IMPORTANCE_DEFAULT);
+        channel.enableLights(true);//显示桌面红点
+        channel.setLightColor(Color.RED);
+        channel.setShowBadge(true);
+        notificationManager.createNotificationChannel(channel);
+        return channel.getId();
+    }
+
     private static void setNoticeManager(Context context, String title, String content, RecommendInfo recommendInfo) {
 
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) context
+                .getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationManagerCompat nmc = NotificationManagerCompat.from(context);
-        NotificationCompat.Builder builder = BaseActivity.getNotificationBuilderByChannel(notificationManager, MineApp.NOTIFICATION_CHANNEL_ID);
+        NotificationCompat.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder = new NotificationCompat.Builder(context, getChannelId(notificationManager));
+        } else {
+            builder = new NotificationCompat.Builder(context, null);
+        }
 
         RemoteViews mRemoteViews = new RemoteViews("com.yimi.rentme", R.layout.remoteview_layout);
         mRemoteViews.setTextViewText(R.id.tv_title, title);

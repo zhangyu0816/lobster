@@ -2,13 +2,16 @@ package com.yimi.rentme.getui;
 
 import android.app.ActivityManager;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -21,7 +24,6 @@ import com.igexin.sdk.message.GTTransmitMessage;
 import com.yimi.rentme.R;
 import com.yimi.rentme.activity.LoadingActivity;
 import com.yimi.rentme.activity.MainActivity;
-import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.NotifivationActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.PreferenceUtil;
@@ -30,6 +32,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -44,6 +47,16 @@ public class DemoIntentService extends GTIntentService {
     public void onReceiveServicePid(Context context, int pid) {
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public String getChannelId(NotificationManager notificationManager) {
+        NotificationChannel channel = new NotificationChannel(MineApp.NOTIFICATION_CHANNEL_ID, "虾菇推送", NotificationManager.IMPORTANCE_DEFAULT);
+        channel.enableLights(true);//显示桌面红点
+        channel.setLightColor(Color.RED);
+        channel.setShowBadge(true);
+        notificationManager.createNotificationChannel(channel);
+        return channel.getId();
+    }
+
     @Override
     public void onReceiveMessageData(Context context, GTTransmitMessage msg) {
         byte[] payload = msg.getPayload();
@@ -52,10 +65,18 @@ public class DemoIntentService extends GTIntentService {
 
             payloadData.append(data);
             payloadData.append("\n");
+
+
             NotificationManager notificationManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationManagerCompat nmc = NotificationManagerCompat.from(context);
-            NotificationCompat.Builder builder = BaseActivity.getNotificationBuilderByChannel(notificationManager, MineApp.NOTIFICATION_CHANNEL_ID);
+            NotificationCompat.Builder builder;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                builder = new NotificationCompat.Builder(this, getChannelId(notificationManager));
+            } else {
+                builder = new NotificationCompat.Builder(this, null);
+            }
+
             JSONObject object;
             try {
                 object = new JSONObject(data);
@@ -69,7 +90,7 @@ public class DemoIntentService extends GTIntentService {
                 RemoteViews mRemoteViews = new RemoteViews("com.yimi.rentme", R.layout.remoteview_layout);
                 mRemoteViews.setTextViewText(R.id.tv_title, title);
                 mRemoteViews.setViewVisibility(R.id.tv_title, title.isEmpty() ? View.GONE : View.VISIBLE);
-                mRemoteViews.setTextViewText(R.id.tv_content,description);
+                mRemoteViews.setTextViewText(R.id.tv_content, description);
 
                 builder.setContent(mRemoteViews);
                 builder.setOngoing(false);
@@ -169,7 +190,7 @@ public class DemoIntentService extends GTIntentService {
                 mPlayer.stop();
                 mPlayer.release();//释放资源
             }
-        },500);
+        }, 500);
     }
 
     @Override
