@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.provider.Settings;
-import android.text.TextUtils;
 import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
 
@@ -113,7 +112,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         }
     });
     private Vibrator vibrator;
-    public ImUtils imUtils;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -136,11 +134,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         MineApp.sex = PreferenceUtil.readIntValue(activity, "mySex", -2) == -2 ? (mineInfo.getSex() == 0 ? 1 : 0) : PreferenceUtil.readIntValue(activity, "mySex", -2);
         MineApp.minAge = PreferenceUtil.readIntValue(activity, "myMinAge", 18);
         MineApp.maxAge = PreferenceUtil.readIntValue(activity, "myMaxAge", 70);
-
-        imUtils = new ImUtils(activity, null);
-
-        if (!TextUtils.equals(BaseActivity.sessionId, ""))
-            imUtils.setChat(false);
 
         initFragments();
         giftList();
@@ -285,7 +278,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                         areaDb.getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")),
                         areaDb.getCityId(PreferenceUtil.readStringValue(activity, "cityName")),
                         areaDb.getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
-                imUtils.setChat(false);
+                ImUtils.getInstance(activity).setChat(false);
                 walletAndPop();
                 newDynMsgAllNum(false);
                 MineApp.recommendInfoList.clear();

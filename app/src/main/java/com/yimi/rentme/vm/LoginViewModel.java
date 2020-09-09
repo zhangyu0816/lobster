@@ -27,7 +27,6 @@ import com.zb.lib_base.api.loginByCaptchaApi;
 import com.zb.lib_base.api.loginByPassApi;
 import com.zb.lib_base.api.loginByUnionApi;
 import com.zb.lib_base.api.loginCaptchaApi;
-import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.registerApi;
 import com.zb.lib_base.api.registerCaptchaApi;
@@ -35,8 +34,7 @@ import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
-import com.zb.lib_base.imcore.LoginSampleHelper;
-import com.zb.lib_base.model.ImAccount;
+import com.zb.lib_base.imcore.ImUtils;
 import com.zb.lib_base.model.LoginInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.RegisterInfo;
@@ -85,8 +83,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     private BaseReceiver bindPhoneReceiver;
     private SimpleItemTouchHelperCallback callback;
     private PhotoManager photoManager;
-    private LoginSampleHelper loginHelper;
-
     private AMapLocation aMapLocation;
     private TelephonyManager tm;
     private ThreeLogin threeLogin;
@@ -127,6 +123,16 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         }
 
         threeLogin = new ThreeLogin(activity, this::loginByUnion);
+        ImUtils.getInstance(activity).setCallBackForLogin(() -> {
+            if (MineApp.isLogin) {
+                activity.sendBroadcast(new Intent("lobster_mainSelect"));
+            } else {
+                ActivityUtils.getMainActivity();
+            }
+            MineApp.registerInfo = new RegisterInfo();
+            timer.cancel();
+            activity.finish();
+        });
 
         array[0] = mBinding.tvCode1;
         array[1] = mBinding.tvCode2;
@@ -163,8 +169,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         aMapLocation = new AMapLocation(activity);
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
         getPermissions(0);
-
-        loginHelper = LoginSampleHelper.getInstance();
 
         setAdapter();
     }
@@ -215,7 +219,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                     exitTime = System.currentTimeMillis();
                 } else {
                     timer.cancel();
-                    loginHelper.loginOut_Sample();
+                    ImUtils.getInstance(activity).loginOutIM();
                     MineApp.exit();
                     System.exit(0);
                 }
@@ -545,6 +549,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 BaseActivity.update();
                 PreferenceUtil.saveIntValue(activity, "myIsThreeLogin", 0);
                 timer.cancel();
+                SCToastUtil.showToast(activity, "登录成功", true);
                 myInfo();
             }
         }, activity)
@@ -565,6 +570,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 PreferenceUtil.saveStringValue(activity, "loginPass", mBinding.getPass());
                 BaseActivity.update();
                 PreferenceUtil.saveIntValue(activity, "myIsThreeLogin", 0);
+                SCToastUtil.showToast(activity, "登录成功", true);
                 myInfo();
             }
         }, activity)
@@ -580,32 +586,10 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             @Override
             public void onNext(MineInfo o) {
                 mineInfoDb.saveMineInfo(o);
-                myImAccountInfoApi();
+                ImUtils.getInstance(activity).setChat(false);
             }
         }, activity);
         api.setPosition(1);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    /**
-     * 阿里百川登录账号
-     */
-    private void myImAccountInfoApi() {
-        myImAccountInfoApi api = new myImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
-            @Override
-            public void onNext(ImAccount o) {
-                loginHelper.loginOut_Sample();
-                loginHelper.login_Sample(activity, o.getImUserId(), o.getImPassWord());
-                if (MineApp.isLogin) {
-                    activity.sendBroadcast(new Intent("lobster_mainSelect"));
-                } else {
-                    ActivityUtils.getMainActivity();
-                }
-                MineApp.registerInfo = new RegisterInfo();
-                timer.cancel();
-                activity.finish();
-            }
-        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

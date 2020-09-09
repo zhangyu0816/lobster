@@ -19,8 +19,10 @@ import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.utils.SCToastUtil;
 
 public class ImUtils {
+    public volatile static ImUtils INSTANCE;
     private RxAppCompatActivity activity;
-    private CallBack callBack;
+    private CallBackForMsg callBackForMsg;
+    private CallBackForLogin callBackForLogin;
     private YWConversation conversation;
     private IYWConversationService mConversationService;
     private int timeOut = 10 * 1000;
@@ -32,37 +34,59 @@ public class ImUtils {
     private boolean isDelete = false;
     private boolean isChat = true;
 
-    public ImUtils(RxAppCompatActivity activity, CallBack callBack) {
+    public ImUtils(RxAppCompatActivity activity) {
         this.activity = activity;
-        this.callBack = callBack;
         loginHelper = LoginSampleHelper.getInstance();
+    }
+
+    //获取单例
+    public static ImUtils getInstance(RxAppCompatActivity activity) {
+        if (INSTANCE == null) {
+            synchronized (ImUtils.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new ImUtils(activity);
+                }
+            }
+        }
+        return INSTANCE;
     }
 
     public void setOtherUserId(long otherUserId) {
         this.otherUserId = otherUserId;
     }
 
+    public void setCallBackForMsg(CallBackForMsg callBackForMsg) {
+        this.callBackForMsg = callBackForMsg;
+    }
+
+    public void setCallBackForLogin(CallBackForLogin callBackForLogin) {
+        this.callBackForLogin = callBackForLogin;
+    }
+
+    public interface CallBackForMsg {
+        void updateMsg(String msgId, int msgType, String stanza, String resLink, int resTime, String summary, long driftBottleId, int msgChannelType);
+    }
+
+    public interface CallBackForLogin {
+        void success();
+    }
+
+    /**
+     * 删除聊天记录
+     *
+     * @param delete
+     */
     public void setDelete(boolean delete) {
         isDelete = delete;
         if (delete)
             otherImAccountInfoApi();
     }
 
-    public void setChat(boolean chat) {
-        isChat = chat;
-        if (!isChat)
-            myImAccountInfoApi();
-    }
-
-    @FunctionalInterface
-    public interface CallBack {
-        void updateMsg(String msgId, int msgType, String stanza, String resLink, int resTime, String summary, long driftBottleId, int msgChannelType);
-    }
-
     /**
      * 建立连接
      */
-    public void createConnect() {
+    public void setChat(boolean chat) {
+        isChat = chat;
         myImAccountInfoApi();
     }
 
@@ -95,8 +119,8 @@ public class ImUtils {
 
                 @Override
                 public void onSuccess(Object... arg0) {
-                    if (callBack != null)
-                        callBack.updateMsg(message.getMsgId() + "", msgType, stanza, resLink, resTime, summary, driftBottleId, msgChannelType);
+                    if (callBackForMsg != null)
+                        callBackForMsg.updateMsg(message.getMsgId() + "", msgType, stanza, resLink, resTime, summary, driftBottleId, msgChannelType);
                 }
 
                 @Override
@@ -131,6 +155,7 @@ public class ImUtils {
 
     public void loginOutIM() {
         loginHelper.loginOut_Sample();
+        INSTANCE = null;
     }
 
 
@@ -144,14 +169,22 @@ public class ImUtils {
                 public void onNext(ImAccount o) {
                     loginOutIM();
                     loginHelper.login_Sample(activity, o.getImUserId(), o.getImPassWord());
-                    if (isChat)
-                        otherImAccountInfoApi();
+                    checkChat();
                 }
             }, activity);
             HttpManager.getInstance().doHttpDeal(api);
         } else {
-            if (isChat)
-                otherImAccountInfoApi();
+            checkChat();
+        }
+    }
+
+    private void checkChat() {
+        if (isChat)
+            otherImAccountInfoApi();
+        else {
+            if (callBackForLogin != null) {
+                callBackForLogin.success();
+            }
         }
     }
 

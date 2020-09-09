@@ -43,7 +43,6 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
     private BaseReceiver relieveReceiver;
     private SimpleItemTouchHelperCallback callback;
     private HistoryMsgDb historyMsgDb;
-    private ImUtils imUtils;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -51,7 +50,6 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
         chatListDb = new ChatListDb(Realm.getDefaultInstance());
         historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         mBinding = (ChatListFragmentBinding) binding;
-        imUtils = new ImUtils(activity, null);
         setAdapter();
         updateChatReceiver = new BaseReceiver(activity, "lobster_updateChat") {
             @Override
@@ -123,8 +121,8 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                         activity.sendBroadcast(new Intent("lobster_updateRed"));
                         historyMsgDb.deleteHistoryMsg(otherUserId, 1, 0);
                         chatListDb.deleteChatMsg(otherUserId);
-                        imUtils.setOtherUserId(otherUserId);
-                        imUtils.setDelete(true);
+                        ImUtils.getInstance(activity).setOtherUserId(otherUserId);
+                        ImUtils.getInstance(activity).setDelete(true);
                         clearAllHistoryMsg(otherUserId);
                         thirdReadChat(otherUserId);
                     }

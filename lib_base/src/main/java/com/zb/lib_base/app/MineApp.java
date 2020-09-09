@@ -59,7 +59,7 @@ public class MineApp extends MultiDexApplication {
     public static int H;
     public static String PHONE_NUMBER_REG = "^1[0-9]{10}$";
     public static String EMAIL_REG = "^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
-    public static Map<Integer, String> tranTypeMap = new HashMap<>();
+
     public static Map<String, Integer> selectMap = new HashMap<>();
     public static Typeface type;
     public static Typeface simplifiedType;
@@ -69,7 +69,7 @@ public class MineApp extends MultiDexApplication {
     public static String versionName;
     public static String WX_PAY_APPID = "wxbdd7128e0a0a08f8";
     public static boolean isLogin = false;
-    public static Map<Integer, String> tranStatusMap = new HashMap<>();
+
 
     public static List<VipInfo> vipInfoList = new ArrayList<>();
     public static List<GiftInfo> giftInfoList = new ArrayList<>();
@@ -103,7 +103,7 @@ public class MineApp extends MultiDexApplication {
     public static int minAge = 18;
     public static int noDataCount = 0;
     public static List<DiscoverInfo> discoverInfoList = new ArrayList<>();
-    public static Map<String, Integer> constellationMap = new HashMap<>();
+
 
     public static List<RecommendInfo> recommendInfoList = new ArrayList<>();
 
@@ -115,57 +115,6 @@ public class MineApp extends MultiDexApplication {
         });
         //设置全局的Footer构建器
         SmartRefreshLayout.setDefaultRefreshFooterCreator((context, layout) -> new ClassicsFooter(context).setDrawableSize(20));
-
-        tranTypeMap.put(1, "充值");
-        tranTypeMap.put(2, "提现");
-        tranTypeMap.put(3, "订单平台服务费");
-        tranTypeMap.put(4, "个人信息首页置顶");
-        tranTypeMap.put(5, "下级消费分成");
-        tranTypeMap.put(6, "技能服务订单付款");
-        tranTypeMap.put(7, "开通会员");
-        tranTypeMap.put(8, "评论付款");
-        tranTypeMap.put(9, "红包付款");
-        tranTypeMap.put(10, "私密相册");
-        tranTypeMap.put(11, "相册打赏");
-        tranTypeMap.put(12, "好友红包");
-        tranTypeMap.put(13, "视频围观");
-        tranTypeMap.put(14, "付费提问");
-        tranTypeMap.put(15, "视频围观分润");
-        tranTypeMap.put(16, "诚意订单诚意金");
-        tranTypeMap.put(17, "诚意订单定金");
-        tranTypeMap.put(18, "诚意订单收款");
-        tranTypeMap.put(19, "诚意订单退款");
-        tranTypeMap.put(31, "礼物打赏消费");
-        tranTypeMap.put(32, "礼物打赏收益");
-        tranTypeMap.put(41, "优惠充值");
-
-        // -10 交易超时 -20交易失败 -30用户取消 -40系统关闭(用户不能再操作) -50 已退款 -60原路退款
-        // 10 ,"待付款" 20 ,"已付款" 30 ,"正在处理" 40,"待卖家发货" 46,"待买家确定收货" 200,"交易成功"
-        tranStatusMap.put(-10, "交易超时");
-        tranStatusMap.put(-20, "交易失败");
-        tranStatusMap.put(-30, "用户取消");
-        tranStatusMap.put(-40, "系统关闭");
-        tranStatusMap.put(-50, "已退款");
-        tranStatusMap.put(-60, "原路退款");
-        tranStatusMap.put(10, "待付款");
-        tranStatusMap.put(20, "已付款");
-        tranStatusMap.put(30, "正在处理");
-        tranStatusMap.put(40, "待卖家发货");
-        tranStatusMap.put(46, "待买家确定收货");
-        tranStatusMap.put(200, "交易成功");
-
-        constellationMap.put("摩羯座", R.drawable.btn_bg_moxie_radius2);
-        constellationMap.put("水瓶座", R.drawable.btn_bg_shuiping_radius2);
-        constellationMap.put("双鱼座", R.drawable.btn_bg_shuangyu_radius2);
-        constellationMap.put("白羊座", R.drawable.btn_bg_baiyang_radius2);
-        constellationMap.put("金牛座", R.drawable.btn_bg_jinniu_radius2);
-        constellationMap.put("双子座", R.drawable.btn_bg_shuangzi_radius2);
-        constellationMap.put("巨蟹座", R.drawable.btn_bg_juxie_radius2);
-        constellationMap.put("狮子座", R.drawable.btn_bg_shizi_radius2);
-        constellationMap.put("处女座", R.drawable.btn_bg_chunv_radius2);
-        constellationMap.put("天秤座", R.drawable.btn_bg_tianping_radius2);
-        constellationMap.put("天蝎座", R.drawable.btn_bg_tianxie_radius2);
-        constellationMap.put("射手座", R.drawable.btn_bg_sheshou_radius2);
     }
 
     @Override
@@ -235,35 +184,6 @@ public class MineApp extends MultiDexApplication {
         Realm.setDefaultConfiguration(config);
     }
 
-    //验证银行卡号
-    public static boolean checkBankCard(String cardId) {
-        char bit = getBankCardCheckCode(cardId.substring(0, cardId.length() - 1));
-        if (bit == 'N') {
-            return false;
-        }
-        return cardId.charAt(cardId.length() - 1) == bit;
-    }
-
-    //从不含校验位的银行卡卡号采用 Luhm 校验算法获得校验位
-    private static char getBankCardCheckCode(String nonCheckCodeCardId) {
-        if (nonCheckCodeCardId == null || nonCheckCodeCardId.trim().length() == 0
-                || !nonCheckCodeCardId.matches("\\d+")) {
-            //如果传的不是数据返回N
-            return 'N';
-        }
-        char[] chs = nonCheckCodeCardId.trim().toCharArray();
-        int luhmSum = 0;
-        for (int i = chs.length - 1, j = 0; i >= 0; i--, j++) {
-            int k = chs[i] - '0';
-            if (j % 2 == 0) {
-                k *= 2;
-                k = k / 10 + k % 10;
-            }
-            luhmSum += k;
-        }
-        return (luhmSum % 10 == 0) ? '0' : (char) ((10 - luhmSum % 10) + '0');
-    }
-
     /**
      * Activity开启时添加Activity到集合
      *
@@ -288,24 +208,6 @@ public class MineApp extends MultiDexApplication {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * 清除 除了自己外其他activity
-     *
-     * @param oneself 不被移除的activity
-     */
-    public static void removeOtherActivity(RxAppCompatActivity oneself) {
-        try {
-            for (Activity activity : mActivityList) {
-                if (activity != null && !activity.getLocalClassName().equals(oneself.getLocalClassName())) {
-                    activity.finish();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
     /**

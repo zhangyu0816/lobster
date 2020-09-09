@@ -6,11 +6,14 @@ import android.view.View;
 
 import com.zb.lib_base.db.JobInfoDb;
 import com.zb.lib_base.model.JobInfo;
-import com.zb.lib_base.utils.SCToastUtil;
+import com.zb.lib_base.utils.SimulateNetAPI;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.R;
 import com.zb.module_mine.adapter.MineAdapter;
 import com.zb.module_mine.iv.SelectJobVMInterface;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +29,12 @@ public class SelectJobViewModel extends BaseViewModel implements SelectJobVMInte
     private List<JobInfo> jobInfoList = new ArrayList<>();
     private JobInfoDb jobInfoDb;
     private int _position = -1;
+    private String selectJob = "";
 
     @Override
     public void back(View view) {
         super.back(view);
-        activity.finish();
+        select(view);
     }
 
     @Override
@@ -47,21 +51,39 @@ public class SelectJobViewModel extends BaseViewModel implements SelectJobVMInte
         titleList.add("模特");
         titleList.add("学生");
 
-        jobInfoDb = new JobInfoDb(Realm.getDefaultInstance());
+        selectJob = job;
 
+        jobInfoDb = new JobInfoDb(Realm.getDefaultInstance());
+        if (jobInfoDb.getJobList("").size() == 0) {
+            String data = SimulateNetAPI.getOriginalFundData(activity, "job.json");
+            try {
+                JSONArray array = new JSONArray(data);
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject object = array.optJSONObject(i);
+                    JSONArray jobArray = object.optJSONArray("job");
+                    assert jobArray != null;
+                    for (int j = 0; j < jobArray.length(); j++) {
+                        JSONObject jobObject = jobArray.optJSONObject(j);
+                        JobInfo jobInfo = new JobInfo();
+                        jobInfo.setJobTitle(object.optString("jobTitle"));
+                        jobInfo.setJob(jobObject.optString("name"));
+                        jobInfoDb.saveJobInfo(jobInfo);
+                    }
+                }
+            } catch (Exception e) {
+            }
+        }
         setAdapter();
     }
 
     @Override
     public void select(View view) {
-        if (_position == -1) {
-            SCToastUtil.showToast(activity, "请选择职业", true);
-            return;
+        if (!TextUtils.equals(selectJob, job)) {
+            Intent data = new Intent("lobster_member");
+            data.putExtra("type", 1);
+            data.putExtra("content", selectJob);
+            activity.sendBroadcast(data);
         }
-        Intent data = new Intent("lobster_member");
-        data.putExtra("type", 1);
-        data.putExtra("content", jobInfoList.get(_position).getJob());
-        activity.sendBroadcast(data);
         activity.finish();
     }
 
@@ -108,6 +130,7 @@ public class SelectJobViewModel extends BaseViewModel implements SelectJobVMInte
     @Override
     public void selectJob(int position) {
         _position = position;
+        selectJob = jobInfoList.get(_position).getJob();
         adapter.setSelectIndex(position);
         adapter.notifyDataSetChanged();
     }

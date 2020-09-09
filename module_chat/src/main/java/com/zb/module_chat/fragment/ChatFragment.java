@@ -48,7 +48,7 @@ public class ChatFragment extends BaseFragment {
         updateRedReceiver = new BaseReceiver(activity, "lobster_updateRed") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String temp = "聊天-" + (chatListDb.getAllUnReadNum() > 0 ? "true" : "false");
+                String temp = "聊天-" + (chatListDb.getChatTabRed() > 0 ? "true" : "false");
                 viewModel.initTabLayout(new String[]{"所有匹配", temp}, binding.tabLayout, binding.viewPage, R.color.black_252, R.color.black_827, MineApp.chatSelectIndex);
             }
         };
@@ -59,7 +59,7 @@ public class ChatFragment extends BaseFragment {
         fragments.add(FragmentUtils.getChatPairFragment());
         fragments.add(FragmentUtils.getChatListFragment());
         binding.viewPage.setAdapter(new FragmentAdapter(getChildFragmentManager(), fragments));
-        String temp = "聊天-" + (chatListDb.getAllUnReadNum() > 0 ? "true" : "false");
+        String temp = "聊天-" + (chatListDb.getChatTabRed() > 0 ? "true" : "false");
         viewModel.initTabLayout(new String[]{"所有匹配", temp}, binding.tabLayout, binding.viewPage, R.color.black_252, R.color.black_827, MineApp.chatSelectIndex);
 
     }

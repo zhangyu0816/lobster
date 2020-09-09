@@ -90,8 +90,6 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     private int pagerNo = 0;
     private int pageSize = 20;
     private HistoryMsgDb historyMsgDb;
-    // 阿里百川
-    private ImUtils imUtils;
     private long historyMsgId = 0;
     private boolean updateAll = false;
     private AnimationDrawable drawable; // 语音播放
@@ -114,13 +112,13 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         chatListDb = new ChatListDb(Realm.getDefaultInstance());
         mineInfo = mineInfoDb.getMineInfo();
-        imUtils = new ImUtils(activity, this::updateMySend);
+        ImUtils.getInstance(activity).setCallBackForMsg(this::updateMySend);
         setAdapter();
 
         setProhibitEmoji(mBinding.edContent);
 
         photoManager = new PhotoManager(activity, () -> {
-            imUtils.sendChatMessage(2, "", photoManager.jointWebUrl(","), 0, "【图片】", 0, 1);
+            ImUtils.getInstance(activity).sendChatMessage(2, "", photoManager.jointWebUrl(","), 0, "【图片】", 0, 1);
             photoManager.deleteAllFile();
         });
 
@@ -132,7 +130,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                 if (mBinding.getContent().trim().isEmpty()) {
                     return false;
                 }
-                imUtils.sendChatMessage(1, mBinding.getContent(), "", 0, "【文字】", 0, 1);
+                ImUtils.getInstance(activity).sendChatMessage(1, mBinding.getContent(), "", 0, "【文字】", 0, 1);
                 mBinding.setContent("");
                 closeImplicit(mBinding.edContent);
             }
@@ -235,7 +233,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "videos"));
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
         chatReceiver.unregisterReceiver();
-        imUtils.markRead();
+        ImUtils.getInstance(activity).markRead();
         activity.finish();
     }
 
@@ -280,8 +278,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             public void onNext(MemberInfo o) {
                 memberInfo = o;
                 mBinding.setVariable(BR.viewModel, ChatViewModel.this);
-                imUtils.setOtherUserId(otherUserId);
-                imUtils.createConnect();
+                ImUtils.getInstance(activity).setOtherUserId(otherUserId);
+                ImUtils.getInstance(activity).setChat(true);
                 new Thread(() -> historyMsgList(1)).start();
             }
         }, activity).setOtherUserId(otherUserId);
@@ -582,7 +580,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         uploadSoundApi api = new uploadSoundApi(new HttpOnNextListener<ResourceUrl>() {
             @Override
             public void onNext(ResourceUrl o) {
-                imUtils.sendChatMessage(3, "", o.getUrl(), resTime, "【语音】", 0, 1);
+                ImUtils.getInstance(activity).sendChatMessage(3, "", o.getUrl(), resTime, "【语音】", 0, 1);
                 soundView.setResTime(0);
             }
         }, activity).setFile(file);
@@ -628,7 +626,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         uploadVideoApi api = new uploadVideoApi(new HttpOnNextListener<ResourceUrl>() {
             @Override
             public void onNext(ResourceUrl o) {
-                imUtils.sendChatMessage(4, "", o.getUrl(), (int) (time / 1000), "【视频】", 0, 1);
+                ImUtils.getInstance(activity).sendChatMessage(4, "", o.getUrl(), (int) (time / 1000), "【视频】", 0, 1);
             }
         }, activity).setFile(new File(fileName));
         HttpChatUploadManager.getInstance().doHttpDeal(api);

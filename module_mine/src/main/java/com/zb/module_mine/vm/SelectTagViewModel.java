@@ -6,11 +6,15 @@ import android.view.View;
 import com.zb.lib_base.db.TagDb;
 import com.zb.lib_base.model.Tag;
 import com.zb.lib_base.utils.SCToastUtil;
+import com.zb.lib_base.utils.SimulateNetAPI;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.R;
 import com.zb.module_mine.adapter.MineAdapter;
 import com.zb.module_mine.iv.SelectTagVMInterface;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +40,20 @@ public class SelectTagViewModel extends BaseViewModel implements SelectTagVMInte
         super.setBinding(binding);
 
         tagDb = new TagDb(Realm.getDefaultInstance());
+        if (tagDb.get().size() == 0) {
+            String data = SimulateNetAPI.getOriginalFundData(activity, "tag.json");
+            try {
+                JSONArray array = new JSONArray(data);
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject object = array.optJSONObject(i);
+                    Tag tag = new Tag();
+                    tag.setName(object.optString("name"));
+                    tag.setTags(object.optString("tags"));
+                    tagDb.saveTag(tag);
+                }
+            } catch (Exception e) {
+            }
+        }
         tags = tagDb.get();
         for (Tag tag : tags) {
             tabList.add(tag.getName());
@@ -113,4 +131,6 @@ public class SelectTagViewModel extends BaseViewModel implements SelectTagVMInte
         tagAdapter.notifyItemChanged(position);
         mBinding.setVariable(BR.showTag, selectList.size() > 0);
     }
+
+
 }

@@ -57,7 +57,6 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     private BottleCacheDb bottleCacheDb;
     private BaseReceiver singleBottleCacheReceiver;
     private HistoryMsgDb historyMsgDb;
-    private ImUtils imUtils;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -67,7 +66,6 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
         historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         mBinding = (BottleListBinding) binding;
         mBinding.setShowBg(false);
-        imUtils = new ImUtils(activity, null);
         // 开通会员
         openVipReceiver = new BaseReceiver(activity, "lobster_openVip") {
             @Override
@@ -246,8 +244,8 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 adapter.notifyItemRemoved(position);
                 bottleInfoList.remove(position);
                 adapter.notifyDataSetChanged();
-                imUtils.setOtherUserId(otherUserId);
-                imUtils.setDelete(true);
+                ImUtils.getInstance(activity).setOtherUserId(otherUserId);
+                ImUtils.getInstance(activity).setDelete(true);
 
                 clearAllHistoryMsg(otherUserId, bottleInfo.getDriftBottleId());
                 activity.sendBroadcast(new Intent("lobster_bottleNum"));

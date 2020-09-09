@@ -14,27 +14,16 @@ import com.yimi.rentme.getui.DemoIntentService;
 import com.yimi.rentme.utils.AlarmUtils;
 import com.yimi.rentme.vm.MainViewModel;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.db.JobInfoDb;
-import com.zb.lib_base.db.TagDb;
+import com.zb.lib_base.imcore.ImUtils;
 import com.zb.lib_base.iv.DemoPushService;
-import com.zb.lib_base.model.JobInfo;
-import com.zb.lib_base.model.Tag;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.lib_base.utils.SCToastUtil;
-import com.zb.lib_base.utils.SimulateNetAPI;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.File;
 
-import io.realm.Realm;
-
 @Route(path = RouteUtils.Main_MainActivity)
 public class MainActivity extends AppBaseActivity {
-    private TagDb tagDb;
-    private JobInfoDb jobInfoDb;
     private MainViewModel viewModel;
     private AlarmUtils alarmUtils;
 
@@ -49,44 +38,9 @@ public class MainActivity extends AppBaseActivity {
         PushManager.getInstance().initialize(this.getApplicationContext(), DemoPushService.class);
         PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), DemoIntentService.class);
 
-        tagDb = new TagDb(Realm.getDefaultInstance());
-        jobInfoDb = new JobInfoDb(Realm.getDefaultInstance());
         viewModel = new MainViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
-        if (tagDb.get().size() == 0) {
-            String data = SimulateNetAPI.getOriginalFundData(activity, "tag.json");
-            try {
-                JSONArray array = new JSONArray(data);
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject object = array.optJSONObject(i);
-                    Tag tag = new Tag();
-                    tag.setName(object.optString("name"));
-                    tag.setTags(object.optString("tags"));
-                    tagDb.saveTag(tag);
-                }
-            } catch (Exception e) {
-            }
-        }
-        if (jobInfoDb.getJobList("").size() == 0) {
-            String data = SimulateNetAPI.getOriginalFundData(activity, "job.json");
-            try {
-                JSONArray array = new JSONArray(data);
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject object = array.optJSONObject(i);
-                    JSONArray jobArray = object.optJSONArray("job");
-                    assert jobArray != null;
-                    for (int j = 0; j < jobArray.length(); j++) {
-                        JSONObject jobObject = jobArray.optJSONObject(j);
-                        JobInfo jobInfo = new JobInfo();
-                        jobInfo.setJobTitle(object.optString("jobTitle"));
-                        jobInfo.setJob(jobObject.optString("name"));
-                        jobInfoDb.saveJobInfo(jobInfo);
-                    }
-                }
-            } catch (Exception e) {
-            }
-        }
         setNotificationChannel();
 
         alarmUtils = new AlarmUtils(activity, viewModel.mineInfoDb.getMineInfo());
@@ -133,7 +87,7 @@ public class MainActivity extends AppBaseActivity {
                 DataCleanManager.deleteFile(new File(activity.getCacheDir(), "videos"));
                 DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
                 alarmUtils.startAlarm();
-                viewModel.imUtils.loginOutIM();
+                ImUtils.getInstance(activity).loginOutIM();
                 MineApp.exit();
                 System.exit(0);
             }
@@ -146,7 +100,7 @@ public class MainActivity extends AppBaseActivity {
     protected void onResume() {
         super.onResume();
         alarmUtils.cancelAlarm();
-        viewModel.imUtils.setChat(false);
+        ImUtils.getInstance(activity).setChat(false);
     }
 
     @Override
@@ -155,6 +109,6 @@ public class MainActivity extends AppBaseActivity {
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "videos"));
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
         alarmUtils.startAlarm();
-        viewModel.imUtils.loginOutIM();
+        ImUtils.getInstance(activity).loginOutIM();
     }
 }

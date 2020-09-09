@@ -25,9 +25,11 @@ public class SCToastUtil {
         toast.setView(mBinding.getRoot()); //添加视图文件
         if (isTop) {
             toast.setGravity(Gravity.TOP, 0, -DisplayUtils.dip2px(75f));
-            translateY = ObjectAnimator.ofFloat(mBinding.toastLinear, "translationY", -DisplayUtils.dip2px(75f), 0).setDuration(500);
-            translateY.start();
-            new Handler().postDelayed(translateY::cancel, 2000);
+            if (translateY == null || !translateY.isRunning()) {
+                translateY = ObjectAnimator.ofFloat(mBinding.toastLinear, "translationY", -DisplayUtils.dip2px(75f), 0).setDuration(500);
+                translateY.start();
+                new Handler().postDelayed(translateY::cancel, 2000);
+            }
         } else {
             toast.setGravity(Gravity.CENTER, 0, 0);
         }

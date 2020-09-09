@@ -104,4 +104,17 @@ public class ChatListDb extends BaseDao {
         return unReadNum;
     }
 
+    public int getChatTabRed() {
+        beginTransaction();
+        int unReadNum = 0;
+        RealmResults<ChatList> results = realm.where(ChatList.class).notEqualTo("noReadNum", 0).greaterThanOrEqualTo("chatType", 4).equalTo("mainUserId", BaseActivity.userId).findAll();
+        if (results.size() > 0) {
+            for (ChatList chatList : results) {
+                unReadNum += chatList.getNoReadNum();
+            }
+        }
+        commitTransaction();
+        return unReadNum;
+    }
+
 }

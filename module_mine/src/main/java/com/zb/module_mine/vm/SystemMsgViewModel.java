@@ -50,7 +50,6 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
     private int preDirection;
     private SoundView soundView;
     private ObjectAnimator animator;
-    private ImUtils imUtils;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -59,15 +58,14 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
         resFileDb = new ResFileDb(Realm.getDefaultInstance());
         setAdapter();
         soundView = new SoundView(activity, view -> stopVoiceDrawable());
-        imUtils = new ImUtils(activity, null);
-        imUtils.setOtherUserId(BaseActivity.systemUserId);
-        imUtils.createConnect();
+        ImUtils.getInstance(activity).setOtherUserId(BaseActivity.systemUserId);
+        ImUtils.getInstance(activity).setChat(true);
     }
 
     @Override
     public void back(View view) {
         super.back(view);
-        imUtils.markRead();
+        ImUtils.getInstance(activity).markRead();
         activity.finish();
     }
 

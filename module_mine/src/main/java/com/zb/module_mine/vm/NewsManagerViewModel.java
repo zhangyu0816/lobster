@@ -22,7 +22,6 @@ import androidx.databinding.ViewDataBinding;
 
 public class NewsManagerViewModel extends BaseViewModel implements NewsManagerVMInterface {
     private BaseReceiver newsCountReceiver;
-    private ImUtils imUtils;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -33,7 +32,6 @@ public class NewsManagerViewModel extends BaseViewModel implements NewsManagerVM
                 mBinding.setVariable(BR.mineNewsCount, MineApp.mineNewsCount);
             }
         };
-        imUtils = new ImUtils(activity, null);
     }
 
     @Override
@@ -56,8 +54,8 @@ public class NewsManagerViewModel extends BaseViewModel implements NewsManagerVM
                 activity.sendBroadcast(new Intent("lobster_newsCount"));
                 if (MineApp.mineNewsCount.getSystemNewsNum() > 0) {
                     // 获取与某个聊天对象的会话记录
-                    imUtils.setOtherUserId(BaseActivity.systemUserId);
-                    imUtils.setDelete(true);
+                    ImUtils.getInstance(activity).setOtherUserId(BaseActivity.systemUserId);
+                    ImUtils.getInstance(activity).setDelete(true);
                     clearAllHistoryMsg(BaseActivity.systemUserId);
                     thirdReadChat(BaseActivity.systemUserId);
                 }

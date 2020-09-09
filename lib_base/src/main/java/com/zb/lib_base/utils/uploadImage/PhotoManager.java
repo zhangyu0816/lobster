@@ -31,17 +31,6 @@ public class PhotoManager {
     public PhotoManager() {
 
     }
-
-    public PhotoManager(RxAppCompatActivity context) {
-        this.context = context;
-        this.instantUpload = false;
-    }
-
-    public PhotoManager(RxAppCompatActivity context, boolean instantUpload) {
-        this.context = context;
-        this.instantUpload = instantUpload;
-    }
-
     public PhotoManager(RxAppCompatActivity context, OnUpLoadImageListener listener) {
         this.context = context;
         this.instantUpload = false;
@@ -61,14 +50,6 @@ public class PhotoManager {
     private int reUploadCount = 0;
 
 
-    public void setInstantUpload(boolean instantUpload) {
-        this.instantUpload = instantUpload;
-    }
-
-
-    public void setMaxSize(int maxSize) {
-        this.maxSize = maxSize;
-    }
 
 
     public int getImageSize() {

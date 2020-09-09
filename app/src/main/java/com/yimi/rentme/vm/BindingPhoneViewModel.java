@@ -9,13 +9,11 @@ import com.yimi.rentme.databinding.AcBindingPhoneBinding;
 import com.yimi.rentme.iv.BindingPhoneVMInterface;
 import com.zb.lib_base.api.banderCaptchaApi;
 import com.zb.lib_base.api.bindingPhoneApi;
-import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.imcore.LoginSampleHelper;
-import com.zb.lib_base.model.ImAccount;
+import com.zb.lib_base.imcore.ImUtils;
 import com.zb.lib_base.model.ImageCaptcha;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
@@ -30,7 +28,6 @@ public class BindingPhoneViewModel extends BaseViewModel implements BindingPhone
     private int second = 120;
     private CountDownTimer timer;
     private boolean isTimer = false;
-    private LoginSampleHelper loginHelper;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -51,6 +48,11 @@ public class BindingPhoneViewModel extends BaseViewModel implements BindingPhone
                 timer.cancel();
             }
         };
+
+        ImUtils.getInstance(activity).setCallBackForLogin(() -> {
+            ActivityUtils.getMainActivity();
+            activity.finish();
+        });
     }
 
     @Override
@@ -139,28 +141,10 @@ public class BindingPhoneViewModel extends BaseViewModel implements BindingPhone
             @Override
             public void onNext(MineInfo o) {
                 mineInfoDb.saveMineInfo(o);
-                loginHelper = LoginSampleHelper.getInstance();
-                loginHelper.loginOut_Sample();
-                myImAccountInfoApi();
+                ImUtils.getInstance(activity).setChat(false);
             }
         }, activity);
         api.setPosition(1);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    /**
-     * 阿里百川登录账号
-     */
-    private void myImAccountInfoApi() {
-        myImAccountInfoApi api = new myImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
-            @Override
-            public void onNext(ImAccount o) {
-                loginHelper.loginOut_Sample();
-                loginHelper.login_Sample(activity, o.getImUserId(), o.getImPassWord());
-                ActivityUtils.getMainActivity();
-                activity.finish();
-            }
-        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }
