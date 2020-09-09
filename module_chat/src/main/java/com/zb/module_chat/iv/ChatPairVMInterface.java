@@ -7,6 +7,6 @@ public interface ChatPairVMInterface {
 
     void beSuperLikeList();
 
-    void pairList();
+    void pairList(int pageNo);
 
 }

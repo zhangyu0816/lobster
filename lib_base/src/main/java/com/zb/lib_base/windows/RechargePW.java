@@ -7,19 +7,25 @@ import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.adapter.BaseAdapter;
+import com.zb.lib_base.api.rechargeDiscountListApi;
 import com.zb.lib_base.api.rechargeWalletApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.PwsHomeVipRechargeBinding;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.OrderTran;
+import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RechargePW extends BasePopupWindow {
     private BaseAdapter adapter;
     private int preIndex = -1;
     private PwsHomeVipRechargeBinding binding;
+    private List<RechargeInfo> rechargeInfoList = new ArrayList<>();
 
     public RechargePW(RxAppCompatActivity activity, View parentView) {
         super(activity, parentView, true);
@@ -34,16 +40,12 @@ public class RechargePW extends BasePopupWindow {
     @Override
     public void initUI() {
         binding = (PwsHomeVipRechargeBinding) mBinding;
-        adapter = new BaseAdapter<>(activity, R.layout.item_home_vip_info, MineApp.rechargeInfoList, this);
+        adapter = new BaseAdapter<>(activity, R.layout.item_home_vip_info, rechargeInfoList, this);
 
         mBinding.setVariable(BR.pw, this);
         mBinding.setVariable(BR.walletInfo, MineApp.walletInfo);
         mBinding.setVariable(BR.adapter, adapter);
-        binding.walletList.postDelayed(() -> {
-            if (MineApp.rechargeInfoList.size() < 4) {
-                AdapterBinding.viewSize(binding.walletList, ObjectUtils.getViewSizeByWidth(1.0f), ObjectUtils.getViewSizeByWidth(0.25f));
-            }
-        },200);
+        rechargeDiscountList();
     }
 
     @Override
@@ -88,7 +90,36 @@ public class RechargePW extends BasePopupWindow {
                 dismiss();
                 new PaymentPW(activity, mBinding.getRoot(), o, 2);
             }
-        }, activity).setMoney(MineApp.rechargeInfoList.get(preIndex).getOriginalMoney()).setMoneyDiscountId(MineApp.rechargeInfoList.get(preIndex).getId());
+        }, activity).setMoney(rechargeInfoList.get(preIndex).getOriginalMoney()).setMoneyDiscountId(rechargeInfoList.get(preIndex).getId());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+
+    private void rechargeDiscountList() {
+        rechargeDiscountListApi api = new rechargeDiscountListApi(new HttpOnNextListener<List<RechargeInfo>>() {
+            @Override
+            public void onNext(List<RechargeInfo> o) {
+                for (RechargeInfo item : o) {
+                    if (item.getMoneyType() == 0) {
+                        if (item.getExtraGiveMoney() == 0)
+                            item.setContent("");
+                        else
+                            item.setContent(String.format("送%.1f虾菇币", item.getExtraGiveMoney()));
+                    } else if (item.getMoneyType() == 1) {
+                        item.setContent("最受欢迎");
+                    } else {
+                        item.setContent("优惠最大");
+                    }
+                   rechargeInfoList.add(item);
+                }
+                adapter.notifyDataSetChanged();
+                binding.walletList.postDelayed(() -> {
+                    if (rechargeInfoList.size() < 4) {
+                        AdapterBinding.viewSize(binding.walletList, ObjectUtils.getViewSizeByWidth(1.0f), ObjectUtils.getViewSizeByWidth(0.25f));
+                    }
+                },200);
+            }
+        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

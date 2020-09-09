@@ -39,7 +39,7 @@ import androidx.databinding.ViewDataBinding;
 
 public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVMInterface {
     private BottleThrowBinding mBinding;
-    private BaseReceiver updateContactNumReceiver;
+    private BaseReceiver updateChatTypeReceiver;
     private BaseReceiver closeSoundReceiver;
     private BaseReceiver resumeSoundReceiver;
     private MediaPlayer mPlayer;
@@ -65,7 +65,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         mBinding.setMemberInfo(new MemberInfo());
         mBinding.setInfo("");
 
-        updateContactNumReceiver = new BaseReceiver(activity, "lobster_updateContactNum") {
+        updateChatTypeReceiver = new BaseReceiver(activity, "lobster_updateChatType") {
             @Override
             public void onReceive(Context context, Intent intent) {
                 int chatType = intent.getIntExtra("chatType", 0);
@@ -110,7 +110,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     }
 
     public void onDestroy() {
-        updateContactNumReceiver.unregisterReceiver();
+        updateChatTypeReceiver.unregisterReceiver();
         closeSoundReceiver.unregisterReceiver();
         resumeSoundReceiver.unregisterReceiver();
         if (mPlayer != null) {

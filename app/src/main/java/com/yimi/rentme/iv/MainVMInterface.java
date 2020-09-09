@@ -8,14 +8,6 @@ public interface MainVMInterface {
 
     void openedMemberPriceList();
 
-    void giftList();
-
-    void rechargeDiscountList();
-
-    void bankInfoList();
-
-    void comType();
-
     void walletAndPop();
 
     void newDynMsgAllNum(boolean isUpdate);

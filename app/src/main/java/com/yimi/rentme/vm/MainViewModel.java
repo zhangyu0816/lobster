@@ -19,17 +19,13 @@ import com.yimi.rentme.utils.OpenNotice;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.FragmentAdapter;
-import com.zb.lib_base.api.bankInfoListApi;
 import com.zb.lib_base.api.chatListApi;
-import com.zb.lib_base.api.comTypeApi;
 import com.zb.lib_base.api.contactNumApi;
 import com.zb.lib_base.api.driftBottleChatListApi;
-import com.zb.lib_base.api.giftListApi;
 import com.zb.lib_base.api.newDynMsgAllNumApi;
 import com.zb.lib_base.api.openedMemberPriceListApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.pushGoodUserApi;
-import com.zb.lib_base.api.rechargeDiscountListApi;
 import com.zb.lib_base.api.systemChatApi;
 import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
@@ -40,16 +36,12 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.imcore.CustomMessageBody;
-import com.zb.lib_base.model.BankInfo;
 import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.ContactNum;
-import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineNewsCount;
-import com.zb.lib_base.model.RechargeInfo;
-import com.zb.lib_base.model.Report;
 import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WalletInfo;
@@ -119,7 +111,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         MineApp.maxAge = PreferenceUtil.readIntValue(activity, "myMaxAge", 70);
 
         initFragments();
-        giftList();
+        openedMemberPriceList();
 
         rechargeReceiver = new BaseReceiver(activity, "lobster_recharge") {
             @Override
@@ -343,72 +335,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 o.get(2).setOriginalPrice(vipInfo.getPrice() * 12);
                 MineApp.vipInfoList.clear();
                 MineApp.vipInfoList.addAll(o);
-            }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
-    public void giftList() {
-        giftListApi api = new giftListApi(new HttpOnNextListener<List<GiftInfo>>() {
-            @Override
-            public void onNext(List<GiftInfo> o) {
-                MineApp.giftInfoList.clear();
-                MineApp.giftInfoList.addAll(o);
-                openedMemberPriceList();
-                rechargeDiscountList();
-                bankInfoList();
-                comType();
                 walletAndPop();
                 newDynMsgAllNum(false);
-            }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
-    public void rechargeDiscountList() {
-        rechargeDiscountListApi api = new rechargeDiscountListApi(new HttpOnNextListener<List<RechargeInfo>>() {
-            @Override
-            public void onNext(List<RechargeInfo> o) {
-                MineApp.rechargeInfoList.clear();
-                for (RechargeInfo item : o) {
-                    if (item.getMoneyType() == 0) {
-                        if (item.getExtraGiveMoney() == 0)
-                            item.setContent("");
-                        else
-                            item.setContent(String.format("送%.1f虾菇币", item.getExtraGiveMoney()));
-                    } else if (item.getMoneyType() == 1) {
-                        item.setContent("最受欢迎");
-                    } else {
-                        item.setContent("优惠最大");
-                    }
-                    MineApp.rechargeInfoList.add(item);
-                }
-            }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
-    public void bankInfoList() {
-        bankInfoListApi api = new bankInfoListApi(new HttpOnNextListener<List<BankInfo>>() {
-            @Override
-            public void onNext(List<BankInfo> o) {
-                MineApp.bankInfoList.clear();
-                MineApp.bankInfoList.addAll(o);
-            }
-        }, activity);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
-    public void comType() {
-        comTypeApi api = new comTypeApi(new HttpOnNextListener<List<Report>>() {
-            @Override
-            public void onNext(List<Report> o) {
-                MineApp.reportList.clear();
-                MineApp.reportList.addAll(o);
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
@@ -469,7 +397,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    activity.sendBroadcast(new Intent("lobster_updateChat"));
                     systemChat();
                 }
             }
@@ -535,7 +462,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 chatListDb.saveChatList(chatList);
                 activity.sendBroadcast(new Intent("lobster_newsCount"));
                 new Handler().postDelayed(() -> {
-                    Intent data = new Intent("lobster_updateContactNum");
+                    Intent data = new Intent("lobster_updateChatType");
                     data.putExtra("chatType", 1);
                     data.putExtra("isUpdate", isUpdate);
                     activity.sendBroadcast(data);
@@ -569,7 +496,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         chatListDb.saveChatList(chatList);
         activity.sendBroadcast(new Intent("lobster_newsCount"));
         new Handler().postDelayed(() -> {
-            Intent data = new Intent("lobster_updateContactNum");
+            Intent data = new Intent("lobster_updateChatType");
             data.putExtra("chatType", 2);
             data.putExtra("isUpdate", isUpdate);
             activity.sendBroadcast(data);

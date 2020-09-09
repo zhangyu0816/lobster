@@ -38,7 +38,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     private BaseReceiver updateMineInfoReceiver;
     private BaseReceiver newsCountReceiver;
     private BaseReceiver openVipReceiver;
-    private BaseReceiver updateContactNumReceiver;
+    private BaseReceiver updateChatTypeReceiver;
     private List<Fragment> fragments = new ArrayList<>();
 
     @Override
@@ -47,10 +47,6 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         mBinding = (MineFragBinding) binding;
         playAnimator(mBinding.circleView);
         mBinding.setMineNewsCount(MineApp.mineNewsCount);
-        if (MineApp.contactNum != null) {
-            mBinding.setContactNum(MineApp.contactNum);
-            mBinding.setHasNewBeLike(MineApp.contactNum.getBeLikeCount() > PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId));
-        }
         mBinding.setMineInfo(MineApp.mineInfo);
 
         updateMineInfoReceiver = new BaseReceiver(activity, "lobster_updateMineInfo") {
@@ -74,7 +70,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             }
         };
 
-        updateContactNumReceiver = new BaseReceiver(activity, "lobster_updateContactNum") {
+        updateChatTypeReceiver = new BaseReceiver(activity, "lobster_updateChatType") {
             @Override
             public void onReceive(Context context, Intent intent) {
                 int chatType = intent.getIntExtra("chatType", 0);
@@ -91,7 +87,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         updateMineInfoReceiver.unregisterReceiver();
         newsCountReceiver.unregisterReceiver();
         openVipReceiver.unregisterReceiver();
-        updateContactNumReceiver.unregisterReceiver();
+        updateChatTypeReceiver.unregisterReceiver();
     }
 
     private void initFragments() {

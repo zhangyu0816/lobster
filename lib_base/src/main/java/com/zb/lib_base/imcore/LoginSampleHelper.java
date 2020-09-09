@@ -127,7 +127,7 @@ public class LoginSampleHelper {
             CustomMessageBody body = unpack(ywMessage.getContent());
             long otherUserId = body.getFromId();
             if (body.getDriftBottleId() == 0) {
-                if (body.getFromId() != BaseActivity.dynUserId) {
+                if (otherUserId != BaseActivity.dynUserId) {
                     boolean hasOtherUserId = false;
                     for (LikeMe item : MineApp.pairList) {
                         if (item.getOtherUserId() == otherUserId) {

@@ -206,11 +206,10 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void selectGift(View view) {
         hintKeyBoard();
-        if (MineApp.walletInfo != null && MineApp.giftInfoList.size() > 0)
-            new GiftPW(activity, mBinding.getRoot(), giftInfo ->
-                    new GiftPayPW(activity, mBinding.getRoot(), giftInfo, friendDynId, () -> {
-                        seeGiftRewards();
-                    }));
+        new GiftPW(activity, mBinding.getRoot(), giftInfo ->
+                new GiftPayPW(activity, mBinding.getRoot(), giftInfo, friendDynId, () -> {
+                    seeGiftRewards();
+                }));
     }
 
     @Override

@@ -23,17 +23,13 @@ import com.zb.lib_base.adaptive.FitScreen;
 import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.iv.DemoPushService;
 import com.zb.lib_base.log.LogUtil;
-import com.zb.lib_base.model.BankInfo;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
-import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.MineNewsCount;
-import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.RecommendInfo;
 import com.zb.lib_base.model.RegisterInfo;
-import com.zb.lib_base.model.Report;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.DisplayUtils;
@@ -71,10 +67,6 @@ public class MineApp extends MultiDexApplication {
     public static String WX_PAY_APPID = "wxbdd7128e0a0a08f8";
 
     public static List<VipInfo> vipInfoList = new ArrayList<>();
-    public static List<GiftInfo> giftInfoList = new ArrayList<>();
-    public static List<RechargeInfo> rechargeInfoList = new ArrayList<>();
-    public static List<BankInfo> bankInfoList = new ArrayList<>();
-    public static List<Report> reportList = new ArrayList<>();
     public static WalletInfo walletInfo = new WalletInfo();
     public static MineNewsCount mineNewsCount = new MineNewsCount();
     public static ContactNum contactNum = new ContactNum();

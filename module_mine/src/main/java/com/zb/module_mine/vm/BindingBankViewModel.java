@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.text.InputType;
 import android.view.View;
 
+import com.zb.lib_base.api.bankInfoListApi;
 import com.zb.lib_base.api.bindBankCardApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
@@ -17,11 +18,15 @@ import com.zb.module_mine.databinding.MineBindingBankBinding;
 import com.zb.module_mine.iv.BindingBankVMInterface;
 import com.zb.module_mine.windows.BankPW;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.databinding.ViewDataBinding;
 
 public class BindingBankViewModel extends BaseViewModel implements BindingBankVMInterface {
     private MineBindingBankBinding mBinding;
     private BankInfo bankInfo;
+    private List<BankInfo> bankInfoList = new ArrayList<>();
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -38,6 +43,7 @@ public class BindingBankViewModel extends BaseViewModel implements BindingBankVM
         mBinding.tvBankAddress.setText("开户网点");
         mBinding.tvBankAddress.setTestSize(16);
         mBinding.edBankAccount.setInputType(InputType.TYPE_CLASS_NUMBER);
+        bankInfoList();
     }
 
     @Override
@@ -48,7 +54,7 @@ public class BindingBankViewModel extends BaseViewModel implements BindingBankVM
 
     @Override
     public void selectBank(View view) {
-        new BankPW(activity, mBinding.getRoot(), MineApp.bankInfoList, bankInfo1 -> {
+        new BankPW(activity, mBinding.getRoot(), bankInfoList, bankInfo1 -> {
             bankInfo = bankInfo1;
             mBinding.tvBankName.setText(bankInfo.getBankName());
             mBinding.tvBankName.setTextColor(activity.getResources().getColor(R.color.black_252));
@@ -69,10 +75,6 @@ public class BindingBankViewModel extends BaseViewModel implements BindingBankVM
             SCToastUtil.showToast(activity, "请选择开户行", true);
             return;
         }
-//        if (mBinding.getName().isEmpty()) {
-//            SCToastUtil.showToast(activity, "请输入户名", true);
-//            return;
-//        }
         if (mBinding.getBankAccount().isEmpty()) {
             SCToastUtil.showToast(activity, "请输入" + bankInfo.getBankName() + "账号", true);
             return;
@@ -113,6 +115,16 @@ public class BindingBankViewModel extends BaseViewModel implements BindingBankVM
                 activity.finish();
             }
         }, activity).setBankId(bankInfo.getId()).setAccountNo(mBinding.getBankAccount()).setOpenAccountLocation(mBinding.getBankAddress());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void bankInfoList() {
+        bankInfoListApi api = new bankInfoListApi(new HttpOnNextListener<List<BankInfo>>() {
+            @Override
+            public void onNext(List<BankInfo> o) {
+                bankInfoList.addAll(o);
+            }
+        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

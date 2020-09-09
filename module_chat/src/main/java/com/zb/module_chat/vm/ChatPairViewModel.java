@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.likeMeListApi;
@@ -31,6 +30,8 @@ import com.zb.module_chat.databinding.ChatPairFragmentBinding;
 import com.zb.module_chat.iv.ChatPairVMInterface;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -38,19 +39,19 @@ import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import io.realm.Realm;
 
-public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterface, OnRefreshListener, OnLoadMoreListener {
+public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterface, OnRefreshListener {
 
     public ChatAdapter adapter;
     private LikeDb likeDb;
     public List<ChatList> chatMsgList = new ArrayList<>();
-    public int pageNo = 1;
     private ChatListDb chatListDb;
     private ChatPairFragmentBinding mBinding;
     private BaseReceiver pairListReceiver;
-    private BaseReceiver updateContactNumReceiver;
+    private BaseReceiver updateChatTypeReceiver;
     private BaseReceiver relieveReceiver;
     private BaseReceiver updateChatReceiver;
     private SimpleItemTouchHelperCallback callback;
+    private List<ChatList> chatType4List = new ArrayList<>();
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -65,9 +66,10 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 onRefresh(mBinding.refresh);
             }
         };
-        updateContactNumReceiver = new BaseReceiver(activity, "lobster_updateContactNum") {
+        updateChatTypeReceiver = new BaseReceiver(activity, "lobster_updateChatType") {
             @Override
             public void onReceive(Context context, Intent intent) {
+                // chatType  1：被喜欢  2：漂流瓶  3：被超级喜欢  4：匹配  5：动态
                 int chatType = intent.getIntExtra("chatType", 0);
                 boolean isUpdate = intent.getBooleanExtra("isUpdate", false);
                 try {
@@ -136,7 +138,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
 
     public void onDestroy() {
         pairListReceiver.unregisterReceiver();
-        updateContactNumReceiver.unregisterReceiver();
+        updateChatTypeReceiver.unregisterReceiver();
         relieveReceiver.unregisterReceiver();
         updateChatReceiver.unregisterReceiver();
     }
@@ -151,19 +153,13 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         callback.setSwipeEnabled(true);
         callback.setSwipeFlags(ItemTouchHelper.START | ItemTouchHelper.END);
         callback.setDragFlags(0);
-    }
-
-    @Override
-    public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-        pageNo++;
-        pairList();
+        mBinding.refresh.setEnableLoadMore(false);
     }
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         // 下拉刷新
-        mBinding.refresh.setEnableLoadMore(true);
-        pageNo = 1;
+        chatType4List.clear();
         chatMsgList.clear();
         adapter.notifyDataSetChanged();
         chatMsgList.addAll(chatListDb.getChatList(1));
@@ -181,7 +177,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 ActivityUtils.getMineFCL(2);
                 return;
             }
-            new VipAdPW(activity, mBinding.getRoot(), false, 4,"");
+            new VipAdPW(activity, mBinding.getRoot(), false, 4, "");
         } else if (chatList.getChatType() == 2) {
             // 漂流瓶
             ActivityUtils.getBottleList();
@@ -233,13 +229,13 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                     chatMsgList.add(chatList);
                 }
                 adapter.notifyItemRangeChanged(start, chatMsgList.size());
-                pairList();
+                pairList(1);
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    pairList();
+                    pairList(1);
                 }
             }
         }, activity).setPageNo(0).setLikeOtherStatus(2);
@@ -261,11 +257,10 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
     }
 
     @Override
-    public void pairList() {
+    public void pairList(int pageNo) {
         pairListApi api = new pairListApi(new HttpOnNextListener<List<LikeMe>>() {
             @Override
             public void onNext(List<LikeMe> o) {
-                int start = chatMsgList.size();
                 for (LikeMe likeMe : o) {
                     likeDb.saveLike(new CollectID(likeMe.getOtherUserId()));
                     ChatList chatMsg = chatListDb.getChatMsg(likeMe.getOtherUserId(), 4);
@@ -277,25 +272,36 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                     chatList.setStanza(chatMsg != null ? chatMsg.getStanza() : "匹配于" + (likeMe.getPairTime().isEmpty() ? DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss).substring(5, 10) : likeMe.getPairTime().substring(5, 10)));
                     chatList.setNoReadNum(chatMsg != null ? chatMsg.getNoReadNum() : 0);
                     chatList.setChatType(4);
-                    chatList.setCreationDate(chatMsg != null ? chatMsg.getCreationDate() : likeMe.getModifyTime());
-                    chatMsgList.add(chatList);
+                    chatList.setCreationDate(chatMsg != null ? chatMsg.getCreationDate() : likeMe.getPairTime());
+                    chatType4List.add(chatList);
                 }
-
                 MineApp.pairList.addAll(o);
-                adapter.notifyItemRangeChanged(start, chatMsgList.size());
-                mBinding.refresh.finishRefresh();
-                mBinding.refresh.finishLoadMore();
+                pairList(pageNo + 1);
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     mBinding.refresh.finishRefresh();
-                    mBinding.refresh.finishLoadMore();
-                    mBinding.refresh.setEnableLoadMore(false);
+                    LikeMeComparator comparator = new LikeMeComparator();
+                    Collections.sort(chatType4List, comparator);
+                    chatMsgList.addAll(chatType4List);
+                    adapter.notifyDataSetChanged();
                 }
             }
         }, activity).setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
     }
+
+    public static class LikeMeComparator implements Comparator<ChatList> {
+        @Override
+        public int compare(ChatList o1, ChatList o2) {
+            if (o1.getCreationDate().isEmpty())
+                return -1;
+            if (o2.getCreationDate().isEmpty())
+                return -1;
+            return DateUtil.getDateCount(o2.getCreationDate(), o1.getCreationDate(), DateUtil.yyyy_MM_dd_HH_mm_ss, 1000f);
+        }
+    }
+
 }
