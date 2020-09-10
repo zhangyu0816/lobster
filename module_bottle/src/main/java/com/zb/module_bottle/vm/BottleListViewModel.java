@@ -15,7 +15,6 @@ import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.pickBottleApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.BottleCacheDb;
-import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -55,13 +54,11 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     private SimpleItemTouchHelperCallback callback;
     private BottleCacheDb bottleCacheDb;
     private BaseReceiver singleBottleCacheReceiver;
-    private HistoryMsgDb historyMsgDb;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         bottleCacheDb = new BottleCacheDb(Realm.getDefaultInstance());
-        historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         mBinding = (BottleListBinding) binding;
         mBinding.setShowBg(false);
         // 开通会员

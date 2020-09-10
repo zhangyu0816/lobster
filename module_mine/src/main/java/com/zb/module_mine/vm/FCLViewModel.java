@@ -17,7 +17,6 @@ import com.zb.lib_base.api.myConcernsApi;
 import com.zb.lib_base.api.myFansApi;
 import com.zb.lib_base.api.relievePairApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -41,7 +40,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
-import io.realm.Realm;
 
 public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRefreshListener, OnLoadMoreListener {
     public int position;
@@ -49,7 +47,6 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
     private List<MemberInfo> memberInfoList = new ArrayList<>();
     private int pageNo = 1;
     private MineFclBinding mBinding;
-    public LikeDb likeDb;
     private int _selectIndex = -1;
     private BaseReceiver attentionListReceiver;
     private BaseReceiver updateFCLReceiver;
@@ -63,7 +60,6 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        likeDb = new LikeDb(Realm.getDefaultInstance());
         mBinding = (MineFclBinding) binding;
         setAdapter();
         attentionListReceiver = new BaseReceiver(activity, "lobster_attentionList") {

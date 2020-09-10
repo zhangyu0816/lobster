@@ -23,7 +23,6 @@ import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.prePairListApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
-import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -71,7 +70,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import io.realm.Realm;
 
 public class CardViewModel extends BaseViewModel implements CardVMInterface, OnSwipeListener<PairInfo>, SuperLikeInterface {
-    private LikeDb likeDb;
+
     public CardAdapter adapter;
     private List<PairInfo> pairInfoList = new ArrayList<>();
     private PairInfo pairInfo;
@@ -113,7 +112,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        likeDb = new LikeDb(Realm.getDefaultInstance());
         aMapLocation = new AMapLocation(activity);
         mBinding = (CardFragBinding) binding;
         if (PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1) == -1)

@@ -10,8 +10,6 @@ import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.clearAllHistoryMsgApi;
 import com.zb.lib_base.api.thirdReadChatApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.db.ChatListDb;
-import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.imcore.ImUtils;
@@ -32,23 +30,18 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.ItemTouchHelper;
-import io.realm.Realm;
 
 public class ChatListViewModel extends BaseViewModel implements ChatListVMInterface, OnRefreshListener {
     public ChatAdapter adapter;
     private List<ChatList> chatMsgList = new ArrayList<>();
     private ChatListFragmentBinding mBinding;
-    private ChatListDb chatListDb;
     private BaseReceiver updateChatReceiver;
     private BaseReceiver relieveReceiver;
     private SimpleItemTouchHelperCallback callback;
-    private HistoryMsgDb historyMsgDb;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        chatListDb = new ChatListDb(Realm.getDefaultInstance());
-        historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         mBinding = (ChatListFragmentBinding) binding;
         setAdapter();
         updateChatReceiver = new BaseReceiver(activity, "lobster_updateChat") {

@@ -30,7 +30,6 @@ import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.BottleCacheDb;
 import com.zb.lib_base.db.ChatListDb;
-import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -62,7 +61,7 @@ import io.realm.Realm;
 public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private ArrayList<Fragment> fragments = new ArrayList<>();
     private AcMainBinding mBinding;
-    private ChatListDb chatListDb;
+
     private int pageNo = 1;
     private int bottlePageNo = 1;
     private BottleCacheDb bottleCacheDb;
@@ -76,7 +75,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private BaseReceiver unReadCountReceiver;
     private BaseReceiver newDynMsgAllNumReceiver;
     private BaseReceiver contactNumReceiver;
-    private HistoryMsgDb historyMsgDb;
+
     private int time = 2 * 60 * 1000;
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
@@ -92,8 +91,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         bottleCacheDb = new BottleCacheDb(Realm.getDefaultInstance());
-        chatListDb = new ChatListDb(Realm.getDefaultInstance());
-        historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         mBinding = (AcMainBinding) binding;
         mBinding.tvTitle.setTypeface(MineApp.simplifiedType);
         mBinding.tvContent.setTypeface(MineApp.simplifiedType);

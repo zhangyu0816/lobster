@@ -20,7 +20,6 @@ import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.readOverDriftBottleHistoryMsgApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.BottleCacheDb;
-import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.emojj.EmojiHandler;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -63,7 +62,6 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     private BottleCacheDb bottleCacheDb;
 
     private long historyMsgId = 0;
-    private HistoryMsgDb historyMsgDb;
     private List<HistoryMsg> historyMsgList = new ArrayList<>();
     private RealmResults<HistoryMsg> realmResults;
     private int pagerNo = 0;
@@ -79,7 +77,6 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         super.setBinding(binding);
         mBinding = (BottleChatBinding) binding;
         bottleCacheDb = new BottleCacheDb(Realm.getDefaultInstance());
-        historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
         ImUtils.getInstance(activity).setCallBackForMsg(this::updateMySend);
         setAdapter();
         setProhibitEmoji(mBinding.edContent);

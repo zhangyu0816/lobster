@@ -32,7 +32,6 @@ import com.zb.lib_base.api.uploadSoundApi;
 import com.zb.lib_base.api.uploadVideoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.ChatListDb;
-import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.db.ResFileDb;
 import com.zb.lib_base.emojj.EmojiHandler;
 import com.zb.lib_base.http.HttpChatUploadManager;
@@ -81,13 +80,11 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     public ResFileDb resFileDb;
     public ChatAdapter emojiAdapter;
     private List<Integer> emojiList = new ArrayList<>();
-    private ChatListDb chatListDb;
     private ChatChatBinding mBinding;
     private List<HistoryMsg> historyMsgList = new ArrayList<>();
     private RealmResults<HistoryMsg> realmResults;
     private int pagerNo = 0;
     private int pageSize = 20;
-    private HistoryMsgDb historyMsgDb;
     private long historyMsgId = 0;
     private boolean updateAll = false;
     private AnimationDrawable drawable; // 语音播放
@@ -107,8 +104,6 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         super.setBinding(binding);
         mBinding = (ChatChatBinding) binding;
         resFileDb = new ResFileDb(Realm.getDefaultInstance());
-        historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
-        chatListDb = new ChatListDb(Realm.getDefaultInstance());
         ImUtils.getInstance(activity).setCallBackForMsg(this::updateMySend);
         setAdapter();
 

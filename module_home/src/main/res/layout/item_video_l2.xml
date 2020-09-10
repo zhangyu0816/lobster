@@ -27,10 +27,6 @@
             name="memberType"
             type="Integer" />
 
-        <variable
-            name="goodDb"
-            type="com.zb.lib_base.db.GoodDb" />
-
     </data>
 
     <RelativeLayout
@@ -230,7 +226,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:background="@drawable/video_play_zan_unpressed"
-                    android:visibility="@{goodDb.hasGood(item.friendDynId)?View.GONE:View.VISIBLE}" />
+                    android:visibility="@{viewModel.goodDb.hasGood(item.friendDynId)?View.GONE:View.VISIBLE}" />
 
                 <ImageView
                     android:id="@+id/iv_like"
@@ -241,7 +237,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:background="@drawable/video_play_zan_pressed"
-                    android:visibility="@{goodDb.hasGood(item.friendDynId)?View.VISIBLE:View.GONE}" />
+                    android:visibility="@{viewModel.goodDb.hasGood(item.friendDynId)?View.VISIBLE:View.GONE}" />
             </RelativeLayout>
 
             <TextView

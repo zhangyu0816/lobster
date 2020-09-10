@@ -25,7 +25,6 @@ import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.otherRentInfoApi;
 import com.zb.lib_base.api.personOtherDynApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -62,7 +61,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.ViewDataBinding;
-import io.realm.Realm;
 
 public class MemberDetailViewModel extends BaseViewModel implements MemberDetailVMInterface, SuperLikeInterface {
     private CardMemberDetailBinding mBinding;
@@ -73,7 +71,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     public CardAdapter discoverAdapter;
     private List<String> tagList = new ArrayList<>();
     private List<DiscoverInfo> discoverInfoList = new ArrayList<>();
-    private LikeDb likeDb;
     private BaseReceiver attentionReceiver;
     private int bannerWidth = MineApp.W;
     private int bannerHeight = MineApp.W;
@@ -86,7 +83,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        likeDb = new LikeDb(Realm.getDefaultInstance());
         likeType = likeTypeDb.getType(otherUserId);
         mBinding = (CardMemberDetailBinding) binding;
         mBinding.setConstellation("");

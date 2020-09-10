@@ -4,7 +4,6 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.adapter.BindingItemAdapter;
 import com.zb.lib_base.adapter.RecyclerHolder;
 import com.zb.lib_base.api.otherInfoApi;
-import com.zb.lib_base.db.GoodDb;
 import com.zb.lib_base.db.MemberTypeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -28,7 +27,6 @@ public class HomeAdapter<T> extends BindingItemAdapter<T> {
     private int selectIndex = -1;
     private MemberTypeDb memberTypeDb;
     private MemberType memberType;
-    private GoodDb goodDb;
 
     public HomeAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BasePopupWindow pw) {
         super(activity, layoutId, list);
@@ -40,7 +38,6 @@ public class HomeAdapter<T> extends BindingItemAdapter<T> {
         this.viewModel = viewModel;
         if (viewModel instanceof VideoListViewModel) {
             memberTypeDb = new MemberTypeDb(Realm.getDefaultInstance());
-            goodDb = new GoodDb(Realm.getDefaultInstance());
         }
     }
 
@@ -62,7 +59,7 @@ public class HomeAdapter<T> extends BindingItemAdapter<T> {
             holder.binding.setVariable(BR.pw, pw);
         }
         if (viewModel instanceof VideoListViewModel) {
-            if(t instanceof DiscoverInfo){
+            if (t instanceof DiscoverInfo) {
                 DiscoverInfo discoverInfo = (DiscoverInfo) t;
                 memberType = memberTypeDb.getMemberType(discoverInfo.getUserId());
                 if (memberType == null) {
@@ -80,7 +77,6 @@ public class HomeAdapter<T> extends BindingItemAdapter<T> {
                 } else {
                     holder.binding.setVariable(BR.memberType, memberType.getMemberType());
                 }
-                holder.binding.setVariable(BR.goodDb, goodDb);
             }
         }
         holder.binding.executePendingBindings();

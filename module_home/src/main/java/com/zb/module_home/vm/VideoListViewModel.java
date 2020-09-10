@@ -38,7 +38,6 @@ import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.seeLikersApi;
 import com.zb.lib_base.api.seeReviewsApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -79,7 +78,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.OrientationHelper;
-import io.realm.Realm;
 
 public class VideoListViewModel extends BaseViewModel implements VideoListVMInterface {
     public int position;
@@ -97,7 +95,6 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (HomeVideoListBinding) binding;
-        areaDb = new AreaDb(Realm.getDefaultInstance());
         setAdapter();
 
         attentionReceiver = new BaseReceiver(activity, "lobster_attention") {

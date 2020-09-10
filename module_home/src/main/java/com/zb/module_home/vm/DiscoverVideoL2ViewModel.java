@@ -39,7 +39,6 @@ import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.seeLikersApi;
 import com.zb.lib_base.api.seeReviewsApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.db.GoodDb;
 import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -77,7 +76,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
-import io.realm.Realm;
 
 public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverVideoL2VMInterface {
     public long friendDynId;
@@ -86,7 +84,6 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
     public DiscoverInfo discoverInfo;
     private ObjectAnimator animator;
     private MemberInfo memberInfo;
-    private GoodDb goodDb;
     private BaseReceiver attentionReceiver;
     private String downloadPath = "";
     private int videoWidth, videoHeight;
@@ -96,7 +93,6 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        goodDb = new GoodDb(Realm.getDefaultInstance());
         mBinding = (HomeVideoL2Binding) binding;
         animator = ObjectAnimator.ofFloat(mBinding.ivProgress, "rotation", 0, 360).setDuration(700);
         animator.setRepeatMode(ValueAnimator.RESTART);

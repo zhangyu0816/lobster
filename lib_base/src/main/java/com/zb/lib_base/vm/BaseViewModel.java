@@ -28,7 +28,10 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.AttentionDb;
+import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.db.GoodDb;
+import com.zb.lib_base.db.HistoryMsgDb;
+import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.db.LikeTypeDb;
 import com.zb.lib_base.iv.BaseVMInterface;
 import com.zb.lib_base.model.Review;
@@ -51,6 +54,9 @@ public class BaseViewModel implements BaseVMInterface {
     public AttentionDb attentionDb;
     public LikeTypeDb likeTypeDb;
     public AreaDb areaDb;
+    public ChatListDb chatListDb;
+    public HistoryMsgDb historyMsgDb;
+    public LikeDb likeDb;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -64,6 +70,12 @@ public class BaseViewModel implements BaseVMInterface {
             likeTypeDb = new LikeTypeDb(Realm.getDefaultInstance());
         if (areaDb == null)
             areaDb = new AreaDb(Realm.getDefaultInstance());
+        if (chatListDb == null)
+            chatListDb = new ChatListDb(Realm.getDefaultInstance());
+        if (historyMsgDb == null)
+            historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
+        if (likeDb == null)
+            likeDb = new LikeDb(Realm.getDefaultInstance());
     }
 
     @Override

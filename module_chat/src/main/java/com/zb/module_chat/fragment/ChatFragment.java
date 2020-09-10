@@ -9,7 +9,6 @@ import com.zb.lib_base.activity.BaseFragment;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_chat.BR;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.fragment.app.Fragment;
-import io.realm.Realm;
 
 @Route(path = RouteUtils.Chat_Fragment)
 public class ChatFragment extends BaseFragment {
@@ -30,7 +28,6 @@ public class ChatFragment extends BaseFragment {
     private List<Fragment> fragments = new ArrayList<>();
     private ChatFragViewModel viewModel;
     private BaseReceiver updateRedReceiver;
-    private ChatListDb chatListDb;
 
     @Override
     public int getRes() {
@@ -39,7 +36,6 @@ public class ChatFragment extends BaseFragment {
 
     @Override
     public void initUI() {
-        chatListDb = new ChatListDb(Realm.getDefaultInstance());
         viewModel = new ChatFragViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
@@ -48,7 +44,7 @@ public class ChatFragment extends BaseFragment {
         updateRedReceiver = new BaseReceiver(activity, "lobster_updateRed") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String temp = "聊天-" + (chatListDb.getChatTabRed() > 0 ? "true" : "false");
+                String temp = "聊天-" + (viewModel.chatListDb.getChatTabRed() > 0 ? "true" : "false");
                 viewModel.initTabLayout(new String[]{"所有匹配", temp}, binding.tabLayout, binding.viewPage, R.color.black_252, R.color.black_827, MineApp.chatSelectIndex);
             }
         };
@@ -60,7 +56,7 @@ public class ChatFragment extends BaseFragment {
         fragments.add(FragmentUtils.getChatPairFragment());
         fragments.add(FragmentUtils.getChatListFragment());
         binding.viewPage.setAdapter(new FragmentAdapter(getChildFragmentManager(), fragments));
-        String temp = "聊天-" + (chatListDb.getChatTabRed() > 0 ? "true" : "false");
+        String temp = "聊天-" + (viewModel.chatListDb.getChatTabRed() > 0 ? "true" : "false");
         viewModel.initTabLayout(new String[]{"所有匹配", temp}, binding.tabLayout, binding.viewPage, R.color.black_252, R.color.black_827, MineApp.chatSelectIndex);
 
     }
