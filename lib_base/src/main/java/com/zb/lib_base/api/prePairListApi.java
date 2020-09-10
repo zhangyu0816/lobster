@@ -43,8 +43,10 @@ public class prePairListApi extends BaseEntity<List<PairInfo>> {
         if (sex != -1) {
             map.put("sex", sex + "");
         }
-        map.put("minAge", minAge + "");
-        map.put("maxAge", maxAge + "");
+        if (minAge != 18||maxAge != 70){
+            map.put("maxAge", maxAge + "");
+            map.put("minAge", minAge + "");
+        }
         return methods.prePairList(map);
     }
 }

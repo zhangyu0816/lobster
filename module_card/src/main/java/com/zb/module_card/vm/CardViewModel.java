@@ -441,10 +441,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     }
                 } else {
                     if (likeOtherStatus == 1) {
-                        SCToastUtil.showToast(activity, "你已喜欢过对方", true);
                         likeTypeDb.setType(pairInfo.getOtherUserId(), 1);
                     } else if (likeOtherStatus == 2) {
-                        SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
                         likeTypeDb.setType(pairInfo.getOtherUserId(), 2);
                     }
                 }
