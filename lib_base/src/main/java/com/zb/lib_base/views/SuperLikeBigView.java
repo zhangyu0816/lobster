@@ -1,12 +1,11 @@
 package com.zb.lib_base.views;
 
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
 
 import com.zb.lib_base.R;
@@ -21,11 +20,12 @@ import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 
 public class SuperLikeBigView extends RelativeLayout {
-    private long time = 500;
-    private AnimatorSet animatorSet = new AnimatorSet();
-    private Random ra = new Random();
-    private SuperLikeBigBinding mBinding;
+    private static long time = 500;
+    private static Random ra = new Random();
+    private static SuperLikeBigBinding mBinding;
     private static SuperLikeInterface mSuperLikeInterface;
+    private static Handler handler = new Handler();
+    private static Runnable runnable = SuperLikeBigView::play;
 
     public SuperLikeBigView(Context context) {
         super(context);
@@ -42,43 +42,65 @@ public class SuperLikeBigView extends RelativeLayout {
         init(context);
     }
 
-    private ObjectAnimator ivStar1X, ivStar1Y, ivStar2X, ivStar2Y;
 
     private void init(Context context) {
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.super_like_big, null, false);
         addView(mBinding.getRoot());
         AdapterBinding.onClick(mBinding.ivSuperLike, view -> mSuperLikeInterface.superLike(null, null));
-        play();
 
+        createAnimator();
     }
 
-    private void play() {
-        mBinding.ivStar1.setVisibility(VISIBLE);
-        mBinding.ivStar2.setVisibility(VISIBLE);
-        ivStar1X = ObjectAnimator.ofFloat(mBinding.ivStar1, "translationX", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(200)) + 50)).setDuration(time);
-        ivStar1Y = ObjectAnimator.ofFloat(mBinding.ivStar1, "translationY", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(200)) + 50)).setDuration(time);
+    private static PropertyValuesHolder pvhTY, pvhTX;
+    private static ObjectAnimator pvh_star1, pvh_star2;
 
-        ivStar2X = ObjectAnimator.ofFloat(mBinding.ivStar2, "translationX", 0, (ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(200)) + 50)).setDuration(time);
-        ivStar2Y = ObjectAnimator.ofFloat(mBinding.ivStar2, "translationY", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(200)) + 50)).setDuration(time);
+    private void createAnimator() {
+        pvhTY = PropertyValuesHolder.ofFloat("translationY", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(200)) + 50));
+        pvhTX = PropertyValuesHolder.ofFloat("translationX", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(200)) + 50));
+        pvh_star1 = ObjectAnimator.ofPropertyValuesHolder(mBinding.ivStar1, pvhTY, pvhTX).setDuration(time);
 
-
-        animatorSet.setInterpolator(new LinearInterpolator());
-        animatorSet.play(ivStar1X)
-                .with(ivStar1Y)
-                .with(ivStar2X)
-                .with(ivStar2Y);
-        animatorSet.start();
-
-        new Handler().postDelayed(() -> {
-            mBinding.ivStar1.setVisibility(GONE);
-            mBinding.ivStar2.setVisibility(GONE);
-        }, time);
-
-        new Handler().postDelayed(this::play, (time + 2000));
+        pvhTY = PropertyValuesHolder.ofFloat("translationY", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(200)) + 50));
+        pvhTX = PropertyValuesHolder.ofFloat("translationX", 0, (ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(200)) + 50));
+        pvh_star2 = ObjectAnimator.ofPropertyValuesHolder(mBinding.ivStar2, pvhTY, pvhTX).setDuration(time);
     }
 
-    @BindingAdapter("superLikeInterface")
-    public static void superLike(SuperLikeBigView view, SuperLikeInterface superLikeInterface) {
+    private static void play() {
+        if (pvh_star1 != null && !pvh_star1.isRunning() && pvh_star2 != null && !pvh_star2.isRunning()) {
+            mBinding.ivStar1.setVisibility(VISIBLE);
+            mBinding.ivStar2.setVisibility(VISIBLE);
+
+            pvhTY = PropertyValuesHolder.ofFloat("translationY", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(200)) + 50));
+            pvhTX = PropertyValuesHolder.ofFloat("translationX", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(200)) + 50));
+            pvh_star1.setValues(pvhTY, pvhTX);
+            pvh_star1.start();
+
+            pvhTY = PropertyValuesHolder.ofFloat("translationY", 0, -(ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(200)) + 50));
+            pvhTX = PropertyValuesHolder.ofFloat("translationX", 0, (ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(200)) + 50));
+            pvh_star2.setValues(pvhTY, pvhTX);
+            pvh_star2.start();
+
+            handler.postDelayed(runnable, time + 2000);
+            new Handler().postDelayed(() -> {
+                mBinding.ivStar1.setVisibility(GONE);
+                mBinding.ivStar2.setVisibility(GONE);
+            }, time);
+        }
+    }
+
+    private static void stop() {
+        handler.removeCallbacks(runnable);
+        if (pvh_star1 != null && pvh_star1.isRunning())
+            pvh_star1.cancel();
+        if (pvh_star2 != null && pvh_star2.isRunning())
+            pvh_star2.cancel();
+    }
+
+    @BindingAdapter(value = {"bigSuperLikeInterface", "isPlay"}, requireAll = false)
+    public static void superLike(SuperLikeBigView view, SuperLikeInterface superLikeInterface, boolean isPlay) {
         mSuperLikeInterface = superLikeInterface;
+        if (isPlay)
+            play();
+        else
+            stop();
     }
 }

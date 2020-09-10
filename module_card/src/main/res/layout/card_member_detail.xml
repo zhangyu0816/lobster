@@ -32,6 +32,11 @@
         <variable
             name="likeType"
             type="Integer" />
+
+        <variable
+            name="isPlay"
+            type="boolean" />
+
     </data>
 
     <RelativeLayout
@@ -305,7 +310,8 @@
 
         <com.zb.lib_base.views.SuperLikeBigView
             android:id="@+id/iv_super_like"
-            superLikeInterface="@{viewModel}"
+            isPlay="@{isPlay}"
+            bigSuperLikeInterface="@{viewModel}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

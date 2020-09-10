@@ -20,6 +20,11 @@
         <variable
             name="mineNewsCount"
             type="com.zb.lib_base.model.MineNewsCount" />
+
+        <variable
+            name="isPlay"
+            type="boolean" />
+
     </data>
 
     <RelativeLayout
@@ -91,6 +96,7 @@
 
                     <com.zb.lib_base.views.BottleTitleView
                         onClickDelayed="@{viewModel::entryBottle}"
+                        isPlay="@{isPlay}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp" />

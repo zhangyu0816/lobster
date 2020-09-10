@@ -30,9 +30,6 @@ public class CardFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        viewModel.cardReceiver.unregisterReceiver();
-        viewModel.locationReceiver.unregisterReceiver();
-        viewModel.openVipReceiver.unregisterReceiver();
-        viewModel.isLikeReceiver.unregisterReceiver();
+        viewModel.onDestroy();
     }
 }

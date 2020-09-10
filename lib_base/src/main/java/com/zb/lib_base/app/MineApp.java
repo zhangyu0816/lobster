@@ -57,7 +57,7 @@ public class MineApp extends MultiDexApplication {
     public static String PHONE_NUMBER_REG = "^1[0-9]{10}$";
     public static String EMAIL_REG = "^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
     public static MineInfo mineInfo = new MineInfo();
-    public static Map<String, Integer> selectMap = new HashMap<>();
+
     public static Typeface type;
     public static Typeface simplifiedType;
     public static Typeface QingSongShouXieTiType;
@@ -70,14 +70,11 @@ public class MineApp extends MultiDexApplication {
     public static WalletInfo walletInfo = new WalletInfo();
     public static MineNewsCount mineNewsCount = new MineNewsCount();
     public static ContactNum contactNum = new ContactNum();
+    public static List<LikeMe> pairList = new ArrayList<>();
+    public static List<RecommendInfo> recommendInfoList = new ArrayList<>();
     public static int noReadBottleNum = 0;
     public static int chatSelectIndex = 0;
     public static String NOTIFICATION_CHANNEL_ID = "com.yimi.rentme_notice";
-
-    public static List<LikeMe> pairList = new ArrayList<>();
-
-    public static LinkedList<RxAppCompatActivity> mActivityList = new LinkedList<>();
-    public static Map<String, RxAppCompatActivity> activityMap = new HashMap<>();
 
     public static boolean isChat = false;
     public static boolean isLocation = false;
@@ -88,15 +85,13 @@ public class MineApp extends MultiDexApplication {
     public static String filePath = "";
     public static boolean isMore = false;
     public static long time = 0;
+    public static Map<String, Integer> selectMap = new HashMap<>();
 
     public static int sex = 0;
     public static int maxAge = 70;
     public static int minAge = 18;
     public static int noDataCount = 0;
     public static List<DiscoverInfo> discoverInfoList = new ArrayList<>();
-
-
-    public static List<RecommendInfo> recommendInfoList = new ArrayList<>();
 
     static {
         //设置全局的Header构建器
@@ -174,6 +169,9 @@ public class MineApp extends MultiDexApplication {
                 .build();
         Realm.setDefaultConfiguration(config);
     }
+
+    public static LinkedList<RxAppCompatActivity> mActivityList = new LinkedList<>();
+    public static Map<String, RxAppCompatActivity> activityMap = new HashMap<>();
 
     /**
      * Activity开启时添加Activity到集合

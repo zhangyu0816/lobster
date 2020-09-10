@@ -16,6 +16,9 @@
             name="showBottle"
             type="boolean" />
 
+        <variable
+            name="isPlay"
+            type="boolean" />
 
     </data>
 
@@ -62,8 +65,9 @@
         </RelativeLayout>
 
         <com.zb.lib_base.views.BottleTitleView
-            onClickDelayed="@{viewModel::entryBottle}"
             android:id="@+id/bottle_layout"
+            isPlay="@{isPlay}"
+            onClickDelayed="@{viewModel::entryBottle}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/top_relative"

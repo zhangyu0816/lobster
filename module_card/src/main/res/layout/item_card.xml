@@ -42,9 +42,9 @@
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.94f)}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
-            android:layout_marginBottom="30dp"
-            android:layout_centerHorizontal="true">
+            android:layout_marginBottom="30dp">
 
             <ImageView
                 android:id="@+id/iv_big_image"
@@ -235,11 +235,8 @@
                     android:visibility="@{item.imageList.size()==0?View.GONE:View.VISIBLE}" />
             </RelativeLayout>
 
-            <com.zb.lib_base.views.SuperLikeView
-                android:id="@+id/iv_super_like"
-                currentView="@{currentView}"
-                pairInfo="@{item}"
-                superLikeInterface="@{viewModel}"
+            <RelativeLayout
+                android:id="@+id/like_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -256,8 +253,8 @@
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(226)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="30dp"
                 android:background="@mipmap/dislike_icon"
                 android:visibility="gone" />
 

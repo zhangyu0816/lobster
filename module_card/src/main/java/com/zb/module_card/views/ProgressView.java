@@ -48,11 +48,12 @@ public class ProgressView extends RelativeLayout {
     }
 
     public static void play() {
-        pvh.start();
+        if (pvh != null && !pvh.isRunning())
+            pvh.start();
     }
 
     public static void stop() {
-        if (pvh != null)
+        if (pvh != null && pvh.isRunning())
             pvh.cancel();
     }
 

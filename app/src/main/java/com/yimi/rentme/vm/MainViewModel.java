@@ -1,7 +1,7 @@
 package com.yimi.rentme.vm;
 
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +9,6 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
-import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
 
 import com.yimi.rentme.R;
@@ -68,7 +67,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private int bottlePageNo = 1;
     private BottleCacheDb bottleCacheDb;
     private int nowIndex = -1;
-    private AnimatorSet animatorSet;
 
     private BaseReceiver rechargeReceiver;
     private BaseReceiver chatListReceiver;
@@ -268,6 +266,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         new OpenNotice(activity, mBinding.getRoot());
 
         handler.sendEmptyMessageDelayed(0, time);
+        createAnimator();
     }
 
     public void onDestroy() {
@@ -297,12 +296,21 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onPageSelected(int position) {
                 nowIndex = position;
+                if (nowIndex == 0 || nowIndex == 2) {
+                    bottleTileStatus(true);
+                    animatorStatus(false);
+                } else if (nowIndex == 1) {
+                    bottleTileStatus(false);
+                    animatorStatus(true);
+                } else {
+                    bottleTileStatus(false);
+                    animatorStatus(false);
+                }
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
                 mBinding.setIndex(nowIndex);
-
             }
         });
 
@@ -313,6 +321,38 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             }
         }, 500);
 
+    }
+
+    private void bottleTileStatus(boolean isPlay) {
+        Intent data = new Intent("lobster_bottleTitle");
+        data.putExtra("isPlay", isPlay);
+        activity.sendBroadcast(data);
+    }
+
+    private void animatorStatus(boolean isPlay) {
+        Intent data = new Intent("lobster_animatorStatus");
+        data.putExtra("isPlay", isPlay);
+        activity.sendBroadcast(data);
+    }
+
+    public void onResume() {
+        if (nowIndex == -1)
+            return;
+        if (nowIndex == 0 || nowIndex == 2) {
+            bottleTileStatus(true);
+            animatorStatus(false);
+        } else if (nowIndex == 1) {
+            bottleTileStatus(false);
+            animatorStatus(true);
+        } else {
+            bottleTileStatus(false);
+            animatorStatus(false);
+        }
+    }
+
+    public void onPause() {
+        bottleTileStatus(false);
+        animatorStatus(false);
     }
 
     @Override
@@ -397,6 +437,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    activity.sendBroadcast(new Intent("lobster_updateChat"));
                     systemChat();
                 }
             }
@@ -509,7 +550,14 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         if (count > 0) {
             PreferenceUtil.saveIntValue(activity, "nowBeLikeCount" + BaseActivity.userId, beLikeCount);
             appSound();
-            startAnimator("快来看看有", count < 99 ? (count + "") : "99+", "人喜欢你啦", "");
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBinding.remindRelative.getLayoutParams();
+            params.setMarginEnd(ObjectUtils.getViewSizeByWidthFromMax(220));
+            mBinding.remindRelative.setLayoutParams(params);
+            mBinding.tvTitle.setText("快来看看有");
+            mBinding.tvContent.setText(count < 99 ? (count + "") : "99+");
+            mBinding.tvSubContent.setText("人喜欢你啦");
+            mBinding.setOtherHead("");
+            startAnimator();
         }
     }
 
@@ -583,43 +631,35 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    private ObjectAnimator scaleX, scaleY, translateY, scaleXEnd, scaleYEnd;
+    private ObjectAnimator pvh_remind;
 
-    private void startAnimator(String title, String content, String subContent, String logo) {
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBinding.remindRelative.getLayoutParams();
-        params.setMarginEnd(ObjectUtils.getViewSizeByWidthFromMax(220));
-        mBinding.remindRelative.setLayoutParams(params);
-        mBinding.tvTitle.setText(title);
-        mBinding.tvContent.setText(content);
-        mBinding.tvSubContent.setText(subContent);
-        mBinding.setOtherHead(logo);
+    private static PropertyValuesHolder pvhTY, pvhSX, pvhSY, pvhSX_L, pvhSY_L;
 
-        scaleX = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleX", 0, 1).setDuration(500);
-        scaleY = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleY", 0, 1).setDuration(500);
-        translateY = ObjectAnimator.ofFloat(mBinding.remindRelative, "translationY", 0, -30, 0, -30, 0, -30, 0).setDuration(500);
-        scaleXEnd = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleX", 1, 0).setDuration(500);
-        scaleYEnd = ObjectAnimator.ofFloat(mBinding.remindRelative, "scaleY", 1, 0).setDuration(500);
-        animatorSet = new AnimatorSet();
-        animatorSet.setInterpolator(new LinearInterpolator());
-        animatorSet.play(scaleX).with(scaleY);
-        animatorSet.play(translateY).after(scaleY);
-        animatorSet.play(scaleXEnd).with(scaleYEnd).after(translateY).after(10000);
-        animatorSet.start();
+    private void createAnimator() {
+        pvhTY = PropertyValuesHolder.ofFloat("translationY",0, -30, 0, -30, 0, -30, 0);
+        pvhSX = PropertyValuesHolder.ofFloat("scaleX", 0, 1);
+        pvhSY = PropertyValuesHolder.ofFloat("scaleY", 0, 1);
+        pvhSX_L = PropertyValuesHolder.ofFloat("scaleX", 1, 0);
+        pvhSY_L = PropertyValuesHolder.ofFloat("scaleY", 1, 0);
+        pvh_remind = ObjectAnimator.ofPropertyValuesHolder(mBinding.remindRelative, pvhSX, pvhSY).setDuration(500);
+    }
 
+    private void startAnimator() {
+        pvh_remind.setValues(pvhSX, pvhSY);
+        pvh_remind.start();
         new Handler().postDelayed(() -> {
-            if (animatorSet != null)
-                animatorSet.cancel();
-            scaleX = null;
-            scaleY = null;
-            translateY = null;
-            scaleXEnd = null;
-            scaleYEnd = null;
-            animatorSet = null;
-        }, 11500);
+            pvh_remind.setValues(pvhTY);
+            pvh_remind.start();
+        },500);
+        new Handler().postDelayed(() -> {
+            pvh_remind.setValues(pvhSX_L,pvhSY_L);
+            pvh_remind.start();
+        },11000);
+        new Handler().postDelayed(this::stopAnimator, 11500);
     }
 
     public void stopAnimator() {
-        if (animatorSet != null)
-            animatorSet.cancel();
+        if (pvh_remind != null && pvh_remind.isRunning())
+            pvh_remind.cancel();
     }
 }

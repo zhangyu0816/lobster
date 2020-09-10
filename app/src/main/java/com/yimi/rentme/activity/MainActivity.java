@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.graphics.Color;
 import android.os.Build;
+import android.util.Log;
 import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -101,6 +102,8 @@ public class MainActivity extends AppBaseActivity {
         super.onResume();
         alarmUtils.cancelAlarm();
         ImUtils.getInstance(activity).setChat(false);
+        viewModel.onResume();
+        Log.e("MainActivity", "111111111111111111111");
     }
 
     @Override
@@ -110,5 +113,19 @@ public class MainActivity extends AppBaseActivity {
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
         alarmUtils.startAlarm();
         ImUtils.getInstance(activity).loginOutIM();
+        Log.e("MainActivity", "2222222222222222222");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.e("MainActivity", "333333333333333333");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        viewModel.onPause();
+        Log.e("MainActivity", "444444444444444444444444");
     }
 }

@@ -80,6 +80,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                         }
                     } else {
                         if (chatType == 1) {
+                            chatType4List.clear();
                             chatMsgList.clear();
                             adapter.notifyDataSetChanged();
                         }
@@ -119,9 +120,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
             @Override
             public void onReceive(Context context, Intent intent) {
                 long userId = intent.getLongExtra("userId", 0);
-                if (userId == 0) {
-                    onRefresh(mBinding.refresh);
-                } else {
+                if (userId != 0) {
                     for (int i = 0; i < chatMsgList.size(); i++) {
                         if (chatMsgList.get(i) != null)
                             if (chatMsgList.get(i).getChatType() == 4 && chatMsgList.get(i).getUserId() == userId) {

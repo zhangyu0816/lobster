@@ -59,13 +59,14 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
     };
     private ObjectAnimator outOutX;
     private BaseReceiver newsCountReceiver;
+    private BaseReceiver bottleTitleReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (ChatFragBinding) binding;
+        mBinding.setIsPlay(false);
         handler.postDelayed(ra, time);
-
         new Handler().postDelayed(() -> {
             int outWidth = mBinding.recommendMainLayout.getWidth();
             outOutX = ObjectAnimator.ofFloat(mBinding.recommendMainLayout, "translationX", 0, outWidth).setDuration(100);
@@ -81,11 +82,19 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
             }
         };
 
+        bottleTitleReceiver = new BaseReceiver(activity,"lobster_bottleTitle") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.setIsPlay(intent.getBooleanExtra("isPlay", false));
+            }
+        };
+
         recommendRankingList();
     }
 
     public void onDestroy() {
         newsCountReceiver.unregisterReceiver();
+        bottleTitleReceiver.unregisterReceiver();
     }
 
     @Override

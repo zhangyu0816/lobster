@@ -8,7 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.CycleInterpolator;
@@ -86,10 +86,11 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         }
         return false;
     });
-    public BaseReceiver cardReceiver;
-    public BaseReceiver locationReceiver;
-    public BaseReceiver openVipReceiver;
-    public BaseReceiver isLikeReceiver;
+    private BaseReceiver cardReceiver;
+    private BaseReceiver locationReceiver;
+    private BaseReceiver openVipReceiver;
+    private BaseReceiver isLikeReceiver;
+    private BaseReceiver animatorStatusReceiver;
     private List<PairInfo> disLikeList = new ArrayList<>();
     private CardAdapter disListAdapter;
     private List<String> imageList = new ArrayList<>();
@@ -97,6 +98,17 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     private int superLikeStatus = 0;
     private int likeCount = 50;
+
+    private Handler mHandler = new Handler();
+    private Runnable ra = new Runnable() {
+        @Override
+        public void run() {
+            startAnim();
+            mHandler.postDelayed(ra, 5000);
+        }
+    };
+    private ObjectAnimator animator;
+    private ObjectAnimator animatorUI;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -179,29 +191,35 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 }
             }
         };
-        initArea();
-        setAdapter();
 
+        animatorStatusReceiver = new BaseReceiver(activity, "lobster_animatorStatus") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                boolean isPlay = intent.getBooleanExtra("isPlay", false);
+                if (mBinding.cardRelative.getAlpha() == 1 && TextUtils.equals(mBinding.getPairInfo().getSingleImage(), "card_progress_icon")) {
+                    mBinding.setIsPlay(isPlay);
+                }
+                if (isPlay) {
+                    startAnim();
+                    mHandler.postDelayed(ra, 5000);
+                } else {
+                    mHandler.removeCallbacks(ra);
+                    stopAnim();
+                }
+            }
+        };
         if (MineApp.mineInfo.getMemberType() == 2) {
             mBinding.ivExposured.setVisibility(View.VISIBLE);
             mBinding.ivExposure.setVisibility(View.GONE);
         }
         playExposure();
-        mHandler.sendEmptyMessageDelayed(0, 5000);
+        startAnim();
+        mHandler.postDelayed(ra, 5000);
+        initArea();
+        setAdapter();
     }
 
-    private Handler mHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message message) {
-            playExposure();
-            mHandler.sendEmptyMessageDelayed(0, 5000);
-            return false;
-        }
-    });
-    private ObjectAnimator animator;
-
     private void playExposure() {
-
         if (MineApp.mineInfo.getMemberType() == 2) {
             animator = ObjectAnimator.ofFloat(mBinding.ivExposured, "rotation", -15, 15).setDuration(800);
         } else {
@@ -209,7 +227,24 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         }
         animator.setRepeatMode(ValueAnimator.REVERSE);
         animator.setRepeatCount(3);
-        animator.start();
+    }
+
+    private void startAnim() {
+        if (animator != null && !animator.isRunning())
+            animator.start();
+    }
+
+    private void stopAnim() {
+        if (animator != null && animator.isRunning())
+            animator.cancel();
+    }
+
+    public void onDestroy() {
+        cardReceiver.unregisterReceiver();
+        locationReceiver.unregisterReceiver();
+        openVipReceiver.unregisterReceiver();
+        isLikeReceiver.unregisterReceiver();
+        animatorStatusReceiver.unregisterReceiver();
     }
 
     @Override
@@ -261,13 +296,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             new TextPW(activity, mBinding.getRoot(), "VIP专享", "虾菇每日自动为你增加曝光度，让10的人优先看到你", "明白了", () -> {
 
             });
-//            if (!TextUtils.equals(PreferenceUtil.readStringValue(activity, "exposureTime"), DateUtil.getNow(DateUtil.yyyy_MM_dd))) {
-//                new ExposurePW(activity, mBinding.getRoot(), e -> {
-//                    if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
-//                        mBinding.setVariable(BR.isOutLine, true);
-//                    }
-//                });
-//            }
         } else {
             new VipAdPW(activity, mBinding.getRoot(), false, 1, "");
         }
@@ -475,8 +503,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    private ObjectAnimator animatorUI;
-
     // 更新adapterUI
     private void updateAdapterUI(View view, CardAdapter imageAdapter, int preIndex, int selectIndex, List<String> imageList) {
         if (imageList.size() == 0)
@@ -499,6 +525,11 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         animatorUI.setRepeatCount(1);
         animatorUI.setDuration(100);
         animatorUI.start();
+        new Handler().postDelayed(() -> {
+            if (animatorUI != null)
+                animatorUI.cancel();
+            animatorUI = null;
+        }, 100);
     }
 
     private ImageView ivLike, ivDislike;

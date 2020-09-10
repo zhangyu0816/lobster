@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
@@ -48,6 +49,8 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         playAnimator(mBinding.circleView);
         mBinding.setMineNewsCount(MineApp.mineNewsCount);
         mBinding.setMineInfo(MineApp.mineInfo);
+        mBinding.setContactNum(MineApp.contactNum);
+        mBinding.setHasNewBeLike(MineApp.contactNum.getBeLikeCount() > PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId));
 
         updateMineInfoReceiver = new BaseReceiver(activity, "lobster_updateMineInfo") {
             @Override
@@ -80,7 +83,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                 }
             }
         };
-        initFragments();
+        new Handler().postDelayed(this::initFragments, 1000);
     }
 
     public void onDestroy() {

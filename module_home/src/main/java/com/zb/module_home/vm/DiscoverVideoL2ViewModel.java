@@ -1,5 +1,6 @@
 package com.zb.module_home.vm;
 
+import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -61,6 +63,8 @@ import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
 import com.zb.module_home.databinding.HomeVideoL2Binding;
 import com.zb.module_home.iv.DiscoverVideoL2VMInterface;
+import com.zb.module_home.utils.Compressor;
+import com.zb.module_home.utils.InitListener;
 import com.zb.module_home.windows.GiftPW;
 import com.zb.module_home.windows.GiftPayPW;
 import com.zb.module_home.windows.ReviewPW;
@@ -212,7 +216,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
             public void download() {
                 DownLoad.downloadLocation(discoverInfo.getVideoUrl(), filePath -> {
                     downloadPath = filePath;
-                    createWater();
+                    getPermissions();
                 });
             }
 
@@ -694,4 +698,43 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
         }
         return false;
     });
+
+    /**
+     * 权限
+     */
+    private void getPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            performCodeWithPermission("虾菇需要访问读写外部存储权限", new BaseActivity.PermissionCallback() {
+                @Override
+                public void hasPermission() {
+                    setPermissions();
+                }
+
+                @Override
+                public void noPermission() {
+                }
+            }, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        } else {
+            setPermissions();
+        }
+    }
+
+    private Compressor mCompressor;
+
+    private void setPermissions() {
+        BaseActivity.createFfmpegFile();
+        if (mCompressor == null) {
+            mCompressor = new Compressor(activity);
+            mCompressor.loadBinary(new InitListener() {
+                @Override
+                public void onLoadSuccess() {
+                }
+
+                @Override
+                public void onLoadFail(String reason) {
+                }
+            });
+        }
+        createWater();
+    }
 }

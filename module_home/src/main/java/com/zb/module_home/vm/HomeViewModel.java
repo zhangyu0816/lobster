@@ -13,15 +13,13 @@ import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_home.databinding.HomeFragBinding;
 import com.zb.module_home.iv.HomeVMInterface;
-import com.zb.module_home.utils.Compressor;
-import com.zb.module_home.utils.InitListener;
 
 import androidx.databinding.ViewDataBinding;
 
 public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
     private HomeFragBinding mBinding;
     private BaseReceiver homeBottleReceiver;
-    private Compressor mCompressor;
+    private BaseReceiver bottleTitleReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -35,16 +33,24 @@ public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
                 mBinding.setShowBottle(intent.getIntExtra("index", 1) == 1);
             }
         };
-        getPermissions(0);
+
+        bottleTitleReceiver = new BaseReceiver(activity, "lobster_bottleTitle") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.setIsPlay(intent.getBooleanExtra("isPlay", false));
+            }
+        };
+        mBinding.setIsPlay(false);
     }
 
     public void onDestroy() {
         homeBottleReceiver.unregisterReceiver();
+        bottleTitleReceiver.unregisterReceiver();
     }
 
     @Override
     public void publishDiscover(View view) {
-        getPermissions(1);
+        getPermissions();
     }
 
     @Override
@@ -60,12 +66,12 @@ public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
     /**
      * 权限
      */
-    private void getPermissions(int type) {
+    private void getPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             performCodeWithPermission("虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
                         @Override
                         public void hasPermission() {
-                            setPermissions(type);
+                            setPermissions();
                         }
 
                         @Override
@@ -74,31 +80,17 @@ public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
                     }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO);
         } else {
-            setPermissions(type);
+            setPermissions();
         }
     }
 
-    private void setPermissions(int type) {
-        if(type==0){
-            BaseActivity.createFfmpegFile();
-            mCompressor = new Compressor(activity);
-            mCompressor.loadBinary(new InitListener() {
-                @Override
-                public void onLoadSuccess() {
-                }
-
-                @Override
-                public void onLoadFail(String reason) {
-                }
-            });
-        }else{
-            MineApp.toPublish = true;
-            MineApp.toContinue = false;
-            if (mBinding.viewPage.getCurrentItem() == 2) {
-                ActivityUtils.getCameraVideo(false);
-            } else {
-                ActivityUtils.getCameraMain(activity, true, true, false);
-            }
+    private void setPermissions() {
+        MineApp.toPublish = true;
+        MineApp.toContinue = false;
+        if (mBinding.viewPage.getCurrentItem() == 2) {
+            ActivityUtils.getCameraVideo(false);
+        } else {
+            ActivityUtils.getCameraMain(activity, true, true, false);
         }
     }
 }

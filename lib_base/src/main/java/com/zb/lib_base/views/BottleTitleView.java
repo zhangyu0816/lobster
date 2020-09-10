@@ -13,12 +13,13 @@ import android.widget.RelativeLayout;
 import com.zb.lib_base.R;
 import com.zb.lib_base.databinding.BottleTitleBinding;
 
+import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 
 public class BottleTitleView extends RelativeLayout {
 
     private BottleTitleBinding mBinding;
-    private AnimatorSet animatorSet = new AnimatorSet();
+    private static AnimatorSet animatorSet = new AnimatorSet();
     private long time = 10000;
     private int repeat = Animation.INFINITE;
     private int Y = 30;
@@ -67,6 +68,24 @@ public class BottleTitleView extends RelativeLayout {
 
         animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.playTogether(ivBackY, ivFrontY, ivBottleY, ivLightY);//同时执行
-        animatorSet.start();
+
+    }
+
+    private static void start() {
+        if (animatorSet != null && !animatorSet.isRunning())
+            animatorSet.start();
+    }
+
+    private static void stop() {
+        if (animatorSet != null && animatorSet.isRunning())
+            animatorSet.cancel();
+    }
+
+    @BindingAdapter("isPlay")
+    public static void bottleTitle(BottleTitleView view, boolean isPlay) {
+        if (isPlay)
+            start();
+        else
+            stop();
     }
 }

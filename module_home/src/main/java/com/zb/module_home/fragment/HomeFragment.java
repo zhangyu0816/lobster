@@ -1,5 +1,7 @@
 package com.zb.module_home.fragment;
 
+import android.os.Handler;
+
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseFragment;
 import com.zb.lib_base.adapter.FragmentAdapter;
@@ -32,7 +34,7 @@ public class HomeFragment extends BaseFragment {
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         homeFragBinding = (HomeFragBinding) mBinding;
-        initFragments();
+        new Handler().postDelayed(this::initFragments, 500);
     }
 
     private void initFragments() {

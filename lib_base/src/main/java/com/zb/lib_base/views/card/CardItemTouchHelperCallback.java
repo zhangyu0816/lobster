@@ -3,6 +3,8 @@ package com.zb.lib_base.views.card;
 import android.graphics.Canvas;
 import android.view.View;
 
+import com.zb.lib_base.views.SuperLikeView;
+
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -49,6 +51,7 @@ public class CardItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
     public void swiped(View view, int direction) {
         view.setOnTouchListener(null);
         int layoutPosition = 0;
+        SuperLikeView.stop();
         T remove = dataList.remove(layoutPosition);
         adapter.notifyDataSetChanged();
         if (mListener != null) {

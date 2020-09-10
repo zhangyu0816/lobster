@@ -93,7 +93,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         mBinding.setIsAttention(false);
         mBinding.setInfo("");
         mBinding.setLikeType(likeType);
-
+        mBinding.setIsPlay(true);
         attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -103,6 +103,29 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
 
         setAdapter();
         otherInfo();
+    }
+
+    @Override
+    public void back(View view) {
+        super.back(view);
+        mBinding.setIsPlay(false);
+        activity.finish();
+    }
+
+    @Override
+    public void more(View view) {
+        super.more(view);
+        memberInfoConf();
+    }
+
+    @Override
+    public void follow(View view) {
+        super.follow(view);
+        if (!mBinding.getIsAttention()) {
+            attentionOther();
+        } else {
+            cancelAttention();
+        }
     }
 
     @Override
@@ -516,28 +539,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
-    public void back(View view) {
-        super.back(view);
-        activity.finish();
-    }
-
-    @Override
-    public void more(View view) {
-        super.more(view);
-        memberInfoConf();
-    }
-
-    @Override
-    public void follow(View view) {
-        super.follow(view);
-        if (!mBinding.getIsAttention()) {
-            attentionOther();
-        } else {
-            cancelAttention();
-        }
     }
 
     @Override

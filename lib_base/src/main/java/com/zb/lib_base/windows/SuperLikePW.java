@@ -126,6 +126,8 @@ public class SuperLikePW extends BasePopupWindow {
     private AnimatorSet animatorStarSet5 = new AnimatorSet();
     private AnimatorSet animatorStarSet6 = new AnimatorSet();
 
+
+
     private void start1() {
 
         binding.ivStar1.setVisibility(View.VISIBLE);
