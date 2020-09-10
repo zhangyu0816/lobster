@@ -395,7 +395,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 .setSex(MineApp.sex)
                 .setMaxAge(MineApp.maxAge)
                 .setMinAge(MineApp.minAge);
-        new Handler().postDelayed(() -> HttpManager.getInstance().doHttpDeal(api), 1000);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override
