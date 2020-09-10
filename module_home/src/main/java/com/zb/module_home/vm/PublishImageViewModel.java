@@ -3,8 +3,11 @@ package com.zb.module_home.vm;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.os.Build;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -35,7 +38,9 @@ import com.zero.smallvideorecord.model.AutoVBRMode;
 import com.zero.smallvideorecord.model.LocalMediaConfig;
 import com.zero.smallvideorecord.model.OnlyCompressOverBean;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +59,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     private OnlyCompressOverBean onlyCompressOverBean;
     private BaseReceiver locationReceiver;
     private BaseReceiver deleteVideoReceiver;
+    private File videoImageFile;
 
     @Override
     public void back(View view) {
@@ -77,7 +83,12 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
 
         createJianXiCameraFile();
         photoManager = new PhotoManager(activity, () -> {
-            publishDyn(photoManager.jointWebUrl(","));
+
+            if (videoUrl.isEmpty()) {
+                publishDyn(photoManager.jointWebUrl(","));
+            } else {
+                uploadVideo(photoManager.jointWebUrl(","));
+            }
             photoManager.deleteAllFile();
         });
 
@@ -178,10 +189,11 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                 handler.sendEmptyMessage(1);
             } else {
                 File file = new File(videoUrl);
-                if (file.length() > 3 * 1024 * 1024) {
+                if (file.length() > 10 * 1024 * 1024) {
                     compress(videoUrl);
                 } else {
-                    uploadVideo();
+                    saveBitmapFile(ThumbnailUtils.createVideoThumbnail(videoUrl, MediaStore.Video.Thumbnails.MINI_KIND));
+//                    uploadVideo();
                 }
             }
         }
@@ -217,17 +229,31 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
 
 
                 File file = new File(onlyCompressOverBean.getVideoPath());
-                if (file.length() > 3 * 1024 * 1024) {
+                if (file.length() > 10 * 1024 * 1024) {
                     handler.sendEmptyMessage(0);
                 } else {
                     videoUrl = onlyCompressOverBean.getVideoPath();
-                    uploadVideo();
+                    videoImageFile = new File(onlyCompressOverBean.getPicPath());
+                    handler.sendEmptyMessage(2);
                 }
             } catch (Exception e) {
                 handler.sendEmptyMessage(0);
             }
 
         }).start();
+    }
+
+    private void saveBitmapFile(Bitmap bitmap) {
+        videoImageFile = BaseActivity.getImageFile();//将要保存图片的路径
+        try {
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(videoImageFile));
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            bos.flush();
+            bos.close();
+            handler.sendEmptyMessage(2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private Handler handler = new Handler(msg -> {
@@ -239,6 +265,9 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
             case 1:
                 SCToastUtil.showToast(activity, "视频链接含中文路径，处理失败", true);
                 CustomProgressDialog.stopLoading();
+                break;
+            case 2:
+                photoManager.addFileUpload(0, videoImageFile);
                 break;
         }
         return false;
@@ -263,17 +292,16 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    private void uploadVideo() {
+    private void uploadVideo(String image) {
         View view = publicImageBinding.recyclerView.getLayoutManager().findViewByPosition(0);
         ContentLoadingProgressBar progressBar = view.findViewById(R.id.progress);
         progressBar.setVisibility(View.VISIBLE);
-
 
         uploadVideoApi api = new uploadVideoApi(new HttpOnNextListener<ResourceUrl>() {
             @Override
             public void onNext(ResourceUrl o) {
                 videoUrl = o.getUrl();
-                publishDyn("");
+                publishDyn(image);
             }
 
             @Override

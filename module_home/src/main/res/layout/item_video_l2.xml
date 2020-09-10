@@ -56,7 +56,7 @@
         <ImageView
             android:id="@+id/iv_image"
             countSize="@{true}"
-            imageUrl="@{item.videoUrl}"
+            imageUrl='@{item.images.empty?item.videoUrl:item.images.split(",")[0]}'
             viewHeightSize="@{0}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(1f)}"
             android:layout_width="match_parent"
