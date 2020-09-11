@@ -441,9 +441,15 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     }
                 } else {
                     if (likeOtherStatus == 1) {
+                        likeDb.saveLike(new CollectID(pairInfo.getOtherUserId()));
                         likeTypeDb.setType(pairInfo.getOtherUserId(), 1);
                     } else if (likeOtherStatus == 2) {
+                        Intent data = new Intent("lobster_card");
+                        data.putExtra("direction", 2);
+                        activity.sendBroadcast(data);
+                        activity.sendBroadcast(new Intent("lobster_pairList"));
                         likeTypeDb.setType(pairInfo.getOtherUserId(), 2);
+                        new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, MineApp.mineInfo.getSex(), pairInfo.getSex(), null);
                     }
                 }
             }

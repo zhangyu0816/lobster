@@ -125,10 +125,14 @@ public class BottleBGView extends RelativeLayout {
     }
 
     public void startBg() {
-        set.start();
-        pvh_hd_q.start();
-        pvh_jg.start();
-        pvh_plp.start();
+        if (set != null)
+            set.start();
+        if (pvh_hd_q != null)
+            pvh_hd_q.start();
+        if (pvh_jg != null)
+            pvh_jg.start();
+        if (pvh_plp != null)
+            pvh_plp.start();
     }
 
     public void stopBg() {
