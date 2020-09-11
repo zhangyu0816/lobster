@@ -119,7 +119,7 @@ public class MineApp extends MultiDexApplication {
         MultiDex.install(this);
         FitScreen.createDesign(getApplicationContext(), H, W);
 
-        UMConfigure.init(this, "55cac14467e58e8bd7000359", "", UMConfigure.DEVICE_TYPE_PHONE, "");
+        UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, null);
         PlatformConfig.setWeixin("wxb83427622a6740f6", "97f837c0ae8b11af734041828ba4a737");
         PlatformConfig.setQQZone("1104574025", "ayk3uI7axNJlfGDk");
         UMShareAPI.get(this);

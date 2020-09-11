@@ -35,7 +35,19 @@ android {
                 GETUI_APP_SECRET: "U0fFTRQ05270lMFvBmWp46"
         ]
         ndk {
-            abiFilters "armeabi","armeabi-v7a","x86"
+            abiFilters "armeabi", "armeabi-v7a", "x86"
+        }
+
+        flavorDimensions "release"
+    }
+    productFlavors {
+        wf360 {
+            dimension "release"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "wf_360app"]
+        }
+        yingyongbao {
+            dimension "release"
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "wf_yybapp"]
         }
     }
     signingConfigs {
@@ -73,8 +85,8 @@ android {
         assets.srcDirs = ['assets']
         jniLibs.srcDirs = ['libs']//指定jniLibs文件夹路径
         jni.srcDirs = []//不编译jni
-
     }
+
 }
 
 dependencies {

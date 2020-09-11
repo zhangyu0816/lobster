@@ -48,7 +48,7 @@ public class FunctionPW extends BasePopupWindow {
         super(activity, parentView, true);
         this.umImage = new UMImage(activity, logo);
         this.sharedName = sharedName;
-        this.content = content;
+        this.content = content.isEmpty() ? "这里藏着喜欢你的人" : content;
         this.sharedUrl = sharedUrl;
         this.isMine = isMine;
         this.isVideo = isVideo;
