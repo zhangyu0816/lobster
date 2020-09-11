@@ -67,7 +67,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        MineApp.removeActivity(this);
         if (mBinding != null)
             mBinding.unbind();
         super.onDestroy();
@@ -76,13 +75,13 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(this);
+        MobclickAgent.onResume(activity);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
+        MobclickAgent.onPause(activity);
     }
 
     /**

@@ -80,7 +80,7 @@ public class BaseViewModel implements BaseVMInterface {
 
     @Override
     public void back(View view) {
-
+        MineApp.removeActivity(activity);
     }
 
     @Override

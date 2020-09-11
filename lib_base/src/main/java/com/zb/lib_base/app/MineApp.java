@@ -1,6 +1,5 @@
 package com.zb.lib_base.app;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;

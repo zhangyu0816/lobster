@@ -31,6 +31,7 @@ import com.zb.lib_base.windows.BottleQuestionPW;
 import com.zb.lib_base.windows.EditPW;
 import com.zb.module_bottle.BR;
 import com.zb.module_bottle.R;
+import com.zb.module_bottle.activity.BottleThrowActivity;
 import com.zb.module_bottle.databinding.BottleThrowBinding;
 import com.zb.module_bottle.iv.BottleThrowVMInterface;
 import com.zb.module_bottle.windows.BottleVipPW;
@@ -125,12 +126,14 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     }
 
     public void onResume() {
-        if (!mPlayer.isPlaying())
-            appSound();
-        if (!isFirst) {
-            mBinding.bottleWhiteBack.bottleBg.startBg();
+        if(MineApp.mActivityList.get(0) instanceof BottleThrowActivity){
+            if (!mPlayer.isPlaying())
+                appSound();
+            if (!isFirst) {
+                mBinding.bottleWhiteBack.bottleBg.startBg();
+            }
+            isFirst = false;
         }
-        isFirst = false;
     }
 
     public void onPause() {

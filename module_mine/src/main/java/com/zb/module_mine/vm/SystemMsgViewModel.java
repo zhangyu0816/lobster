@@ -58,14 +58,14 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
         resFileDb = new ResFileDb(Realm.getDefaultInstance());
         setAdapter();
         soundView = new SoundView(activity, view -> stopVoiceDrawable());
-        ImUtils.getInstance(activity).setOtherUserId(BaseActivity.systemUserId);
-        ImUtils.getInstance(activity).setChat(true);
+        ImUtils.getInstance().setOtherUserId(BaseActivity.systemUserId);
+        ImUtils.getInstance().setChat(true, activity);
     }
 
     @Override
     public void back(View view) {
         super.back(view);
-        ImUtils.getInstance(activity).markRead();
+        ImUtils.getInstance().markRead();
         activity.finish();
     }
 

@@ -22,7 +22,6 @@ import com.zb.lib_base.utils.SCToastUtil;
 
 public class ImUtils {
     public volatile static ImUtils INSTANCE;
-    private RxAppCompatActivity activity;
     private CallBackForMsg callBackForMsg;
     private CallBackForLogin callBackForLogin;
     private YWConversation conversation;
@@ -36,17 +35,16 @@ public class ImUtils {
     private boolean isDelete = false;
     private boolean isChat = true;
 
-    public ImUtils(RxAppCompatActivity activity) {
-        this.activity = activity;
+    public ImUtils() {
         loginHelper = LoginSampleHelper.getInstance();
     }
 
     //获取单例
-    public static ImUtils getInstance(RxAppCompatActivity activity) {
+    public static ImUtils getInstance() {
         if (INSTANCE == null) {
             synchronized (ImUtils.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new ImUtils(activity);
+                    INSTANCE = new ImUtils();
                 }
             }
         }
@@ -78,18 +76,18 @@ public class ImUtils {
      *
      * @param delete
      */
-    public void setDelete(boolean delete) {
+    public void setDelete(boolean delete,RxAppCompatActivity activity) {
         isDelete = delete;
         if (delete)
-            otherImAccountInfoApi();
+            otherImAccountInfoApi(activity);
     }
 
     /**
      * 建立连接
      */
-    public void setChat(boolean chat) {
+    public void setChat(boolean chat,RxAppCompatActivity activity) {
         isChat = chat;
-        myImAccountInfoApi();
+        myImAccountInfoApi(activity);
     }
 
     /**
@@ -104,7 +102,7 @@ public class ImUtils {
     private CustomMessageBody body;
     private YWMessage message;
 
-    public void sendChatMessage(final int msgType, final String stanza, final String resLink, final int resTime, final String summary, long driftBottleId, int msgChannelType) {
+    public void sendChatMessage(RxAppCompatActivity activity, final int msgType, final String stanza, final String resLink, final int resTime, final String summary, long driftBottleId, int msgChannelType) {
         YWMessageBody mainBody = new YWMessageBody();
         body = new CustomMessageBody(msgType, stanza, resLink, resTime, BaseActivity.userId, otherUserId, summary, driftBottleId, msgChannelType);
         mainBody.setSummary(body.getSummary());
@@ -114,7 +112,7 @@ public class ImUtils {
         if (mConversationService == null) {
             needLink = true;
             CustomProgressDialog.showLoading(activity, "已断开连接，正在重新连接...");
-            myImAccountInfoApi();
+            myImAccountInfoApi(activity);
         } else {
             if (conversation == null) { // 这里必须判空
                 IYWContact contact = YWContactFactory.createAPPContact(otherIMUserId, LoginSampleHelper.APP_KEY);
@@ -160,32 +158,31 @@ public class ImUtils {
 
     public void loginOutIM() {
         loginHelper.loginOut_Sample();
-        INSTANCE = null;
     }
 
 
     /**
      * 阿里百川登录账号
      */
-    private void myImAccountInfoApi() {
+    private void myImAccountInfoApi(RxAppCompatActivity activity) {
         if (loginHelper.getImCore() == null) {
             myImAccountInfoApi api = new myImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
                 @Override
                 public void onNext(ImAccount o) {
                     loginOutIM();
                     loginHelper.login_Sample(activity, o.getImUserId(), o.getImPassWord());
-                    checkChat();
+                    checkChat(activity);
                 }
             }, activity);
             HttpManager.getInstance().doHttpDeal(api);
         } else {
-            checkChat();
+            checkChat(activity);
         }
     }
 
-    private void checkChat() {
+    private void checkChat(RxAppCompatActivity activity) {
         if (isChat)
-            otherImAccountInfoApi();
+            otherImAccountInfoApi(activity);
         else {
             if (callBackForLogin != null) {
                 callBackForLogin.success();
@@ -196,7 +193,7 @@ public class ImUtils {
     /**
      * 对方的阿里百川账号
      */
-    private void otherImAccountInfoApi() {
+    private void otherImAccountInfoApi(RxAppCompatActivity activity) {
         otherImAccountInfoApi api = new otherImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
             @Override
             public void onNext(ImAccount o) {

@@ -123,7 +123,8 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         }
 
         threeLogin = new ThreeLogin(activity, this::loginByUnion);
-        ImUtils.getInstance(activity).setCallBackForLogin(() -> {
+        ImUtils.getInstance().setCallBackForLogin(() -> {
+            ImUtils.getInstance().setCallBackForLogin(null);
             ActivityUtils.getMainActivity();
             MineApp.registerInfo = new RegisterInfo();
             timer.cancel();
@@ -215,7 +216,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                     exitTime = System.currentTimeMillis();
                 } else {
                     timer.cancel();
-                    ImUtils.getInstance(activity).loginOutIM();
+                    ImUtils.getInstance().loginOutIM();
                     MineApp.exit();
                     System.exit(0);
                 }
@@ -582,7 +583,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             @Override
             public void onNext(MineInfo o) {
                 MineApp.mineInfo = o;
-                ImUtils.getInstance(activity).setChat(false);
+                ImUtils.getInstance().setChat(false, activity);
             }
         }, activity);
         api.setPosition(1);

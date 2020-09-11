@@ -231,8 +231,8 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 adapter.notifyItemRemoved(position);
                 bottleInfoList.remove(position);
                 adapter.notifyDataSetChanged();
-                ImUtils.getInstance(activity).setOtherUserId(otherUserId);
-                ImUtils.getInstance(activity).setDelete(true);
+                ImUtils.getInstance().setOtherUserId(otherUserId);
+                ImUtils.getInstance().setDelete(true, activity);
 
                 clearAllHistoryMsg(otherUserId, bottleInfo.getDriftBottleId());
                 activity.sendBroadcast(new Intent("lobster_bottleNum"));

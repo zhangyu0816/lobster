@@ -88,7 +88,7 @@ public class MainActivity extends AppBaseActivity {
                 DataCleanManager.deleteFile(new File(activity.getCacheDir(), "videos"));
                 DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
                 alarmUtils.startAlarm();
-                ImUtils.getInstance(activity).loginOutIM();
+                ImUtils.getInstance().loginOutIM();
                 MineApp.exit();
                 System.exit(0);
             }
@@ -100,10 +100,12 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        alarmUtils.cancelAlarm();
-        ImUtils.getInstance(activity).setChat(false);
-        viewModel.onResume();
-        Log.e("MainActivity", "111111111111111111111");
+        if (MineApp.mActivityList.get(0) instanceof MainActivity) {
+            alarmUtils.cancelAlarm();
+            ImUtils.getInstance().setChat(false, activity);
+            viewModel.onResume();
+            Log.e("MainActivity", "111111111111111111111");
+        }
     }
 
     @Override
@@ -112,7 +114,7 @@ public class MainActivity extends AppBaseActivity {
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "videos"));
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
         alarmUtils.startAlarm();
-        ImUtils.getInstance(activity).loginOutIM();
+        ImUtils.getInstance().loginOutIM();
         Log.e("MainActivity", "2222222222222222222");
     }
 

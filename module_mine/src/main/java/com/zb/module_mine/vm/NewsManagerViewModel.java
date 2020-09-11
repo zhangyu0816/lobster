@@ -54,8 +54,8 @@ public class NewsManagerViewModel extends BaseViewModel implements NewsManagerVM
                 activity.sendBroadcast(new Intent("lobster_newsCount"));
                 if (MineApp.mineNewsCount.getSystemNewsNum() > 0) {
                     // 获取与某个聊天对象的会话记录
-                    ImUtils.getInstance(activity).setOtherUserId(BaseActivity.systemUserId);
-                    ImUtils.getInstance(activity).setDelete(true);
+                    ImUtils.getInstance().setOtherUserId(BaseActivity.systemUserId);
+                    ImUtils.getInstance().setDelete(true, activity);
                     clearAllHistoryMsg(BaseActivity.systemUserId);
                     thirdReadChat(BaseActivity.systemUserId);
                 }

@@ -49,7 +49,8 @@ public class BindingPhoneViewModel extends BaseViewModel implements BindingPhone
             }
         };
 
-        ImUtils.getInstance(activity).setCallBackForLogin(() -> {
+        ImUtils.getInstance().setCallBackForLogin(() -> {
+            ImUtils.getInstance().setCallBackForLogin(null);
             ActivityUtils.getMainActivity();
             activity.finish();
         });
@@ -141,7 +142,7 @@ public class BindingPhoneViewModel extends BaseViewModel implements BindingPhone
             @Override
             public void onNext(MineInfo o) {
                 MineApp.mineInfo = o;
-                ImUtils.getInstance(activity).setChat(false);
+                ImUtils.getInstance().setChat(false, activity);
             }
         }, activity);
         api.setPosition(1);

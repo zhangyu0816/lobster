@@ -114,8 +114,8 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                         activity.sendBroadcast(new Intent("lobster_updateRed"));
                         historyMsgDb.deleteHistoryMsg(otherUserId, 1, 0);
                         chatListDb.deleteChatMsg(otherUserId);
-                        ImUtils.getInstance(activity).setOtherUserId(otherUserId);
-                        ImUtils.getInstance(activity).setDelete(true);
+                        ImUtils.getInstance().setOtherUserId(otherUserId);
+                        ImUtils.getInstance().setDelete(true, activity);
                         clearAllHistoryMsg(otherUserId);
                         thirdReadChat(otherUserId);
                     }

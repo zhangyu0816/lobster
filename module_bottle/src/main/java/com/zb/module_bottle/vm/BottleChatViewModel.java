@@ -77,7 +77,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         super.setBinding(binding);
         mBinding = (BottleChatBinding) binding;
         bottleCacheDb = new BottleCacheDb(Realm.getDefaultInstance());
-        ImUtils.getInstance(activity).setCallBackForMsg(this::updateMySend);
+        ImUtils.getInstance().setCallBackForMsg(this::updateMySend);
         setAdapter();
         setProhibitEmoji(mBinding.edContent);
         bottleChatReceiver = new BaseReceiver(activity, "lobster_upMessage/driftBottleId=" + driftBottleId) {
@@ -114,7 +114,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                     SCToastUtil.showToast(activity, "请输入回复内容", true);
                     return false;
                 }
-                ImUtils.getInstance(activity).sendChatMessage(1, mBinding.edContent.getText().toString(), "", 0, "【文字】", driftBottleId, 2);
+                ImUtils.getInstance().sendChatMessage(activity, 1, mBinding.edContent.getText().toString(), "", 0, "【文字】", driftBottleId, 2);
                 mBinding.edContent.setText("");
                 hintKeyBoard();
             }
@@ -137,7 +137,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     @Override
     public void back(View view) {
         super.back(view);
-        ImUtils.getInstance(activity).markRead();
+        ImUtils.getInstance().markRead();
         activity.finish();
     }
 
@@ -171,8 +171,6 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             emojiList.add(EmojiHandler.sCustomizeEmojisMap.get(i));
         }
         emojiAdapter = new BottleAdapter<>(activity, R.layout.item_bottle_emoji, emojiList, this);
-
-
         myBottle();
     }
 
@@ -185,8 +183,8 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                 mBinding.setNick(bottleInfo.getOtherNick());
 
                 otherUserId = bottleInfo.getUserId() == BaseActivity.userId ? bottleInfo.getOtherUserId() : bottleInfo.getUserId();
-                ImUtils.getInstance(activity).setOtherUserId(otherUserId);
-                ImUtils.getInstance(activity).setChat(true);
+                ImUtils.getInstance().setOtherUserId(otherUserId);
+                ImUtils.getInstance().setChat(true, activity);
                 // 记录我们发出去的消息
                 HistoryMsg historyMsg = new HistoryMsg();
                 historyMsg.setThirdMessageId("1");
@@ -220,7 +218,6 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             public void onNext(MemberInfo o) {
                 memberInfo = o;
                 activity.sendBroadcast(new Intent("lobster_bottleNum"));
-                ImUtils.getInstance(activity).setChat(true);
                 new Thread(() -> bottleHistoryMsgList(1)).start();
             }
         }, activity).setOtherUserId(otherUserId);
@@ -235,7 +232,8 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                 for (PrivateMsg privateMsg : o) {
                     historyMsgDb.saveHistoryMsg(HistoryMsg.createHistoryForPrivate(privateMsg, otherUserId, 2, driftBottleId));
                 }
-                historyMsgId = o.get(o.size() - 1).getId();
+                if (historyMsgId == 0)
+                    historyMsgId = o.get(0).getId();
                 bottleHistoryMsgList(pageNo + 1);
             }
 
