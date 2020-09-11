@@ -37,6 +37,7 @@ import com.zb.lib_base.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -189,9 +190,11 @@ public class MineApp extends MultiDexApplication {
      */
     public static void removeActivity(RxAppCompatActivity oneself) {
         try {
-            for (Activity activity : mActivityList) {
-                if (activity != null && activity.getLocalClassName().equals(oneself.getLocalClassName())) {
-                    activity.finish();
+            Iterator<RxAppCompatActivity> iterator = mActivityList.iterator();
+            while (iterator.hasNext()) {
+                RxAppCompatActivity current = iterator.next();
+                if (current != null && current.getLocalClassName().equals(oneself.getLocalClassName())) {
+                    iterator.remove();
                 }
             }
         } catch (Exception e) {
@@ -203,10 +206,11 @@ public class MineApp extends MultiDexApplication {
      * 退出应用时调用
      */
     public static void exit() {
-        for (Activity activity : mActivityList) {
+        for (RxAppCompatActivity activity : mActivityList) {
             if (activity != null) {
                 activity.finish();
             }
         }
+        mActivityList.clear();
     }
 }

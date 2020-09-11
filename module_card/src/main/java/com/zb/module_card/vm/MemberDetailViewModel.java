@@ -141,15 +141,12 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             SCToastUtil.showToast(activity, "网络异常，请检查网络是否链接", true);
             return;
         }
-
         if (showLike) {
             Intent data = new Intent("lobster_card");
             data.putExtra("direction", 0);
             activity.sendBroadcast(data);
-            activity.finish();
-        } else {
-            activity.finish();
         }
+        activity.finish();
     }
 
     @Override
@@ -435,9 +432,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 } else if (o == 4) {
                     // 超级喜欢时，非会员或超级喜欢次数用尽
                     if (MineApp.mineInfo.getMemberType() == 2) {
-                        closeBtn(mBinding.ivLike);
-                        closeBtn(mBinding.ivDislike);
-                        closeBtn(mBinding.ivSuperLike);
                         SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
                     } else {
                         new VipAdPW(activity, mBinding.getRoot(), false, 3, otherHead);

@@ -1,5 +1,7 @@
 package com.zb.lib_base.imcore;
 
+import android.util.Log;
+
 import com.alibaba.mobileim.channel.event.IWxCallback;
 import com.alibaba.mobileim.contact.IYWContact;
 import com.alibaba.mobileim.contact.YWContactFactory;
@@ -64,7 +66,7 @@ public class ImUtils {
     }
 
     public interface CallBackForMsg {
-        void updateMsg(String msgId, int msgType, String stanza, String resLink, int resTime, String summary, long driftBottleId, int msgChannelType);
+        void updateMsg(String msgId, CustomMessageBody body);
     }
 
     public interface CallBackForLogin {
@@ -99,12 +101,15 @@ public class ImUtils {
      * @param resTime
      * @param summary
      */
+    private CustomMessageBody body;
+    private YWMessage message;
+
     public void sendChatMessage(final int msgType, final String stanza, final String resLink, final int resTime, final String summary, long driftBottleId, int msgChannelType) {
         YWMessageBody mainBody = new YWMessageBody();
-        CustomMessageBody body = new CustomMessageBody(msgType, stanza, resLink, resTime, BaseActivity.userId, otherUserId, summary, driftBottleId, msgChannelType);
+        body = new CustomMessageBody(msgType, stanza, resLink, resTime, BaseActivity.userId, otherUserId, summary, driftBottleId, msgChannelType);
         mainBody.setSummary(body.getSummary());
         mainBody.setContent(loginHelper.pack(body));
-        final YWMessage message = YWMessageChannel.createCustomMessage(mainBody);
+        message = YWMessageChannel.createCustomMessage(mainBody);
 
         if (mConversationService == null) {
             needLink = true;
@@ -120,7 +125,7 @@ public class ImUtils {
                 @Override
                 public void onSuccess(Object... arg0) {
                     if (callBackForMsg != null)
-                        callBackForMsg.updateMsg(message.getMsgId() + "", msgType, stanza, resLink, resTime, summary, driftBottleId, msgChannelType);
+                        callBackForMsg.updateMsg(message.getMsgId() + "", body);
                 }
 
                 @Override
@@ -130,7 +135,7 @@ public class ImUtils {
 
                 @Override
                 public void onError(int arg0, String arg1) {
-
+                    Log.e("onError", arg1);
                 }
             });
         }
@@ -203,6 +208,24 @@ public class ImUtils {
                     needLink = false;
                     CustomProgressDialog.stopLoading();
                     SCToastUtil.showToast(activity, "连接成功", true);
+                    conversation.getMessageSender().sendMessage(message, timeOut, new IWxCallback() {
+
+                        @Override
+                        public void onSuccess(Object... arg0) {
+                            if (callBackForMsg != null)
+                                callBackForMsg.updateMsg(message.getMsgId() + "", body);
+                        }
+
+                        @Override
+                        public void onProgress(int arg0) {
+
+                        }
+
+                        @Override
+                        public void onError(int arg0, String arg1) {
+                            Log.e("onError", arg1);
+                        }
+                    });
                 }
 
                 if (isDelete) {

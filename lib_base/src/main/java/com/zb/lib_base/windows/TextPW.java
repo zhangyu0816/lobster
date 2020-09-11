@@ -47,9 +47,9 @@ public class TextPW extends BasePopupWindow {
         mCallBack = callBack;
         mBinding.getRoot().setOnTouchListener((v, event) -> {
             if (isShowing()) {
+                dismiss();
                 if (mCallBack != null)
                     mCallBack.cancel();
-                dismiss();
             }
             return false;
         });
@@ -72,9 +72,9 @@ public class TextPW extends BasePopupWindow {
     @Override
     public void sure(View view) {
         super.sure(view);
+        dismiss();
         if (mCallBack != null)
             mCallBack.sure();
-        dismiss();
     }
 
     @FunctionalInterface

@@ -170,20 +170,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             public void onReceive(Context context, Intent intent) {
                 CustomMessageBody body = (CustomMessageBody) intent.getSerializableExtra("customMessageBody");
                 String msgId = intent.getStringExtra("msgId");
-                HistoryMsg historyMsg = new HistoryMsg();
-                historyMsg.setThirdMessageId(msgId);
-                historyMsg.setFromId(body.getFromId());
-                historyMsg.setToId(body.getToId());
-                historyMsg.setTitle(body.getSummary());
-                historyMsg.setStanza(body.getStanza());
-                historyMsg.setMsgType(body.getMsgType());
-                historyMsg.setResLink(body.getResLink());
-                historyMsg.setResTime(body.getResTime());
-                historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
-                historyMsg.setOtherUserId(otherUserId);
-                historyMsg.setMsgChannelType(1);
-                historyMsg.setDriftBottleId(0);
-                historyMsg.setMainUserId(BaseActivity.userId);
+                HistoryMsg historyMsg = HistoryMsg.createHistory(msgId, body, otherUserId, 1, 0);
                 historyMsgDb.saveHistoryMsg(historyMsg);
                 historyMsgList.add(adapter.getItemCount(), historyMsg);
                 updateTime();
@@ -284,23 +271,10 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             @Override
             public void onNext(List<PrivateMsg> o) {
                 for (PrivateMsg privateMsg : o) {
-                    HistoryMsg historyMsg = new HistoryMsg();
-                    historyMsg.setThirdMessageId(privateMsg.getThirdMessageId());
-                    historyMsg.setMainUserId(BaseActivity.userId);
-                    historyMsg.setFromId(privateMsg.getFromId());
-                    historyMsg.setToId(privateMsg.getToId());
-                    historyMsg.setCreationDate(privateMsg.getCreationDate());
-                    historyMsg.setStanza(privateMsg.getStanza());
-                    historyMsg.setMsgType(privateMsg.getMsgType());
-                    historyMsg.setTitle(privateMsg.getTitle());
-                    historyMsg.setResTime(privateMsg.getResTime());
-                    historyMsg.setResLink(privateMsg.getResLink());
-                    historyMsg.setOtherUserId(otherUserId);
-                    historyMsg.setMsgChannelType(1);
-                    historyMsg.setDriftBottleId(0);
-                    historyMsgDb.saveHistoryMsg(historyMsg);
+                    historyMsgDb.saveHistoryMsg(HistoryMsg.createHistoryForPrivate(privateMsg, otherUserId, 1, 0));
                 }
-                historyMsgId = o.get(o.size() - 1).getId();
+                if (historyMsgId == 0)
+                    historyMsgId = o.get(0).getId();
                 historyMsgList(pageNo + 1);
             }
 
@@ -324,21 +298,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             @Override
             public void onNext(List<PrivateMsg> o) {
                 for (PrivateMsg privateMsg : o) {
-                    HistoryMsg historyMsg = new HistoryMsg();
-                    historyMsg.setThirdMessageId(privateMsg.getThirdMessageId());
-                    historyMsg.setMainUserId(BaseActivity.userId);
-                    historyMsg.setFromId(privateMsg.getFromId());
-                    historyMsg.setToId(privateMsg.getToId());
-                    historyMsg.setCreationDate(privateMsg.getCreationDate());
-                    historyMsg.setStanza(privateMsg.getStanza());
-                    historyMsg.setMsgType(privateMsg.getMsgType());
-                    historyMsg.setTitle(privateMsg.getTitle());
-                    historyMsg.setResTime(privateMsg.getResTime());
-                    historyMsg.setResLink(privateMsg.getResLink());
-                    historyMsg.setOtherUserId(otherUserId);
-                    historyMsg.setMsgChannelType(1);
-                    historyMsg.setDriftBottleId(0);
-                    historyMsgDb.saveHistoryMsg(historyMsg);
+                    historyMsgDb.saveHistoryMsg(HistoryMsg.createHistoryForPrivate(privateMsg, otherUserId, 1, 0));
                 }
                 thirdHistoryMsgList(pageNo + 1);
             }
@@ -651,22 +611,11 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     }
 
 
-    private void updateMySend(String msgId, int msgType, String stanza, String resLink, int resTime, String summary, long driftBottleId, int msgChannelType) {
+    private void updateMySend(String msgId, CustomMessageBody body) {
         // 记录我们发出去的消息
-        HistoryMsg historyMsg = new HistoryMsg();
-        historyMsg.setThirdMessageId(msgId);
-        historyMsg.setMainUserId(BaseActivity.userId);
-        historyMsg.setFromId(BaseActivity.userId);
-        historyMsg.setToId(otherUserId);
-        historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
-        historyMsg.setStanza(stanza);
-        historyMsg.setMsgType(msgType);
-        historyMsg.setTitle(summary);
-        historyMsg.setResTime(resTime);
-        historyMsg.setResLink(resLink);
-        historyMsg.setOtherUserId(otherUserId);
-        historyMsg.setMsgChannelType(msgChannelType);
-        historyMsg.setDriftBottleId(driftBottleId);
+        body.setFromId(BaseActivity.userId);
+        body.setToId(otherUserId);
+        HistoryMsg historyMsg = HistoryMsg.createHistory(msgId, body, otherUserId, 1, 0);
         historyMsgDb.saveHistoryMsg(historyMsg);
         historyMsgList.add(historyMsg);
         updateTime();

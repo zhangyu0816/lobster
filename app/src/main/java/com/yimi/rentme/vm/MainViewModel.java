@@ -137,21 +137,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                         MineApp.mineNewsCount.setSystemNewsNum(MineApp.mineNewsCount.getSystemNewsNum() + 1);
                         activity.sendBroadcast(new Intent("lobster_newsCount"));
                     } else {
-                        HistoryMsg historyMsg = new HistoryMsg();
-                        historyMsg.setThirdMessageId(msgId);
-                        historyMsg.setFromId(body.getFromId());
-                        historyMsg.setToId(body.getToId());
-                        historyMsg.setTitle(body.getSummary());
-                        historyMsg.setStanza(body.getStanza());
-                        historyMsg.setMsgType(body.getMsgType());
-                        historyMsg.setResLink(body.getResLink());
-                        historyMsg.setResTime(body.getResTime());
-                        historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
-                        historyMsg.setOtherUserId(otherUserId);
-                        historyMsg.setMsgChannelType(1);
-                        historyMsg.setDriftBottleId(0);
-                        historyMsg.setMainUserId(BaseActivity.userId);
-                        historyMsgDb.saveHistoryMsg(historyMsg);
+                        historyMsgDb.saveHistoryMsg(HistoryMsg.createHistory(msgId, body, otherUserId, 1, 0));
 
                         chatListDb.updateChatMsg(otherUserId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType(), new ChatListDb.CallBack() {
                             @Override
@@ -179,22 +165,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                         }
                     }
                 } else {
-
-                    HistoryMsg historyMsg = new HistoryMsg();
-                    historyMsg.setThirdMessageId(msgId);
-                    historyMsg.setFromId(body.getFromId());
-                    historyMsg.setToId(body.getToId());
-                    historyMsg.setTitle(body.getSummary());
-                    historyMsg.setStanza(body.getStanza());
-                    historyMsg.setMsgType(body.getMsgType());
-                    historyMsg.setResLink(body.getResLink());
-                    historyMsg.setResTime(body.getResTime());
-                    historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
-                    historyMsg.setOtherUserId(otherUserId);
-                    historyMsg.setMsgChannelType(2);
-                    historyMsg.setDriftBottleId(body.getDriftBottleId());
-                    historyMsg.setMainUserId(BaseActivity.userId);
-                    historyMsgDb.saveHistoryMsg(historyMsg);
+                    historyMsgDb.saveHistoryMsg(HistoryMsg.createHistory(msgId, body, otherUserId, 2, body.getDriftBottleId()));
 
                     BottleCache dbData = bottleCacheDb.getBottleCache(body.getDriftBottleId());
                     BottleCache bottleCache = new BottleCache();
@@ -633,7 +604,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private static PropertyValuesHolder pvhTY, pvhSX, pvhSY, pvhSX_L, pvhSY_L;
 
     private void createAnimator() {
-        pvhTY = PropertyValuesHolder.ofFloat("translationY",0, -30, 0, -30, 0, -30, 0);
+        pvhTY = PropertyValuesHolder.ofFloat("translationY", 0, -30, 0, -30, 0, -30, 0);
         pvhSX = PropertyValuesHolder.ofFloat("scaleX", 0, 1);
         pvhSY = PropertyValuesHolder.ofFloat("scaleY", 0, 1);
         pvhSX_L = PropertyValuesHolder.ofFloat("scaleX", 1, 0);
@@ -647,11 +618,11 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         new Handler().postDelayed(() -> {
             pvh_remind.setValues(pvhTY);
             pvh_remind.start();
-        },500);
+        }, 500);
         new Handler().postDelayed(() -> {
-            pvh_remind.setValues(pvhSX_L,pvhSY_L);
+            pvh_remind.setValues(pvhSX_L, pvhSY_L);
             pvh_remind.start();
-        },11000);
+        }, 11000);
         new Handler().postDelayed(this::stopAnimator, 11500);
     }
 

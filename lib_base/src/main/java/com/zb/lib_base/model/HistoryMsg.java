@@ -1,6 +1,8 @@
 package com.zb.lib_base.model;
 
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.imcore.CustomMessageBody;
+import com.zb.lib_base.utils.DateUtil;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -169,5 +171,41 @@ public class HistoryMsg extends RealmObject {
 
     public void setTheChatUk(String theChatUk) {
         this.theChatUk = theChatUk;
+    }
+
+    public static HistoryMsg createHistory(String msgId, CustomMessageBody body, long otherUserId, int msgChannelType, long driftBottleId) {
+        HistoryMsg historyMsg = new HistoryMsg();
+        historyMsg.setThirdMessageId(msgId);
+        historyMsg.setFromId(body.getFromId());
+        historyMsg.setToId(body.getToId());
+        historyMsg.setTitle(body.getSummary());
+        historyMsg.setStanza(body.getStanza());
+        historyMsg.setMsgType(body.getMsgType());
+        historyMsg.setResLink(body.getResLink());
+        historyMsg.setResTime(body.getResTime());
+        historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
+        historyMsg.setOtherUserId(otherUserId);
+        historyMsg.setMsgChannelType(msgChannelType);
+        historyMsg.setDriftBottleId(driftBottleId);
+        historyMsg.setMainUserId(BaseActivity.userId);
+        return historyMsg;
+    }
+
+    public static HistoryMsg createHistoryForPrivate(PrivateMsg privateMsg, long otherUserId, int msgChannelType, long driftBottleId) {
+        HistoryMsg historyMsg = new HistoryMsg();
+        historyMsg.setThirdMessageId(privateMsg.getThirdMessageId());
+        historyMsg.setMainUserId(BaseActivity.userId);
+        historyMsg.setFromId(privateMsg.getFromId());
+        historyMsg.setToId(privateMsg.getToId());
+        historyMsg.setCreationDate(privateMsg.getCreationDate());
+        historyMsg.setStanza(privateMsg.getStanza());
+        historyMsg.setMsgType(privateMsg.getMsgType());
+        historyMsg.setTitle(privateMsg.getTitle());
+        historyMsg.setResTime(privateMsg.getResTime());
+        historyMsg.setResLink(privateMsg.getResLink());
+        historyMsg.setOtherUserId(otherUserId);
+        historyMsg.setMsgChannelType(msgChannelType);
+        historyMsg.setDriftBottleId(driftBottleId);
+        return historyMsg;
     }
 }

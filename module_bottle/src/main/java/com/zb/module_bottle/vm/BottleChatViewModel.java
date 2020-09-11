@@ -85,20 +85,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             public void onReceive(Context context, Intent intent) {
                 CustomMessageBody body = (CustomMessageBody) intent.getSerializableExtra("customMessageBody");
                 String msgId = intent.getStringExtra("msgId");
-                HistoryMsg historyMsg = new HistoryMsg();
-                historyMsg.setThirdMessageId(msgId);
-                historyMsg.setFromId(body.getFromId());
-                historyMsg.setToId(body.getToId());
-                historyMsg.setTitle(body.getSummary());
-                historyMsg.setStanza(body.getStanza());
-                historyMsg.setMsgType(body.getMsgType());
-                historyMsg.setResLink(body.getResLink());
-                historyMsg.setResTime(body.getResTime());
-                historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
-                historyMsg.setOtherUserId(otherUserId);
-                historyMsg.setMsgChannelType(2);
-                historyMsg.setDriftBottleId(driftBottleId);
-                historyMsg.setMainUserId(BaseActivity.userId);
+                HistoryMsg historyMsg = HistoryMsg.createHistory(msgId, body, otherUserId, 2, driftBottleId);
                 historyMsgDb.saveHistoryMsg(historyMsg);
                 historyMsgList.add(adapter.getItemCount(), historyMsg);
                 updateTime();
@@ -199,6 +186,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
 
                 otherUserId = bottleInfo.getUserId() == BaseActivity.userId ? bottleInfo.getOtherUserId() : bottleInfo.getUserId();
                 ImUtils.getInstance(activity).setOtherUserId(otherUserId);
+                ImUtils.getInstance(activity).setChat(true);
                 // 记录我们发出去的消息
                 HistoryMsg historyMsg = new HistoryMsg();
                 historyMsg.setThirdMessageId("1");
@@ -245,21 +233,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             @Override
             public void onNext(List<PrivateMsg> o) {
                 for (PrivateMsg privateMsg : o) {
-                    HistoryMsg historyMsg = new HistoryMsg();
-                    historyMsg.setThirdMessageId(privateMsg.getThirdMessageId());
-                    historyMsg.setMainUserId(BaseActivity.userId);
-                    historyMsg.setFromId(privateMsg.getFromId());
-                    historyMsg.setToId(privateMsg.getToId());
-                    historyMsg.setCreationDate(privateMsg.getCreationDate());
-                    historyMsg.setStanza(privateMsg.getStanza());
-                    historyMsg.setMsgType(privateMsg.getMsgType());
-                    historyMsg.setTitle(privateMsg.getTitle());
-                    historyMsg.setResTime(privateMsg.getResTime());
-                    historyMsg.setResLink(privateMsg.getResLink());
-                    historyMsg.setOtherUserId(otherUserId);
-                    historyMsg.setMsgChannelType(2);
-                    historyMsg.setDriftBottleId(driftBottleId);
-                    historyMsgDb.saveHistoryMsg(historyMsg);
+                    historyMsgDb.saveHistoryMsg(HistoryMsg.createHistoryForPrivate(privateMsg, otherUserId, 2, driftBottleId));
                 }
                 historyMsgId = o.get(o.size() - 1).getId();
                 bottleHistoryMsgList(pageNo + 1);
@@ -413,8 +387,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         mBinding.edContent.onKeyDown(KeyEvent.KEYCODE_DEL, new KeyEvent(R.id.ed_content, KeyEvent.ACTION_DOWN));
     }
 
-    private void updateMySend(String msgId, int msgType, String stanza, String resLink, int resTime, String summary, long driftBottleId, int msgChannelType) {
-
+    private void updateMySend(String msgId, CustomMessageBody body) {
         // 会话列表
         BottleCache bottleCache = new BottleCache();
         bottleCache.setDriftBottleId(driftBottleId);
@@ -422,8 +395,8 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         bottleCache.setNick(memberInfo.getNick());
         bottleCache.setImage(memberInfo.getImage());
         bottleCache.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
-        bottleCache.setStanza(stanza);
-        bottleCache.setMsgType(msgType);
+        bottleCache.setStanza(body.getStanza());
+        bottleCache.setMsgType(body.getMsgType());
         bottleCache.setNoReadNum(0);
         bottleCache.setPublicTag("");
         bottleCache.setEffectType(1);
@@ -436,22 +409,10 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         activity.sendBroadcast(data);
 
         // 记录我们发出去的消息
-        HistoryMsg historyMsg = new HistoryMsg();
-        historyMsg.setThirdMessageId(msgId);
-        historyMsg.setMainUserId(BaseActivity.userId);
-        historyMsg.setFromId(BaseActivity.userId);
-        historyMsg.setToId(otherUserId);
-        historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
-        historyMsg.setStanza(stanza);
-        historyMsg.setMsgType(msgType);
-        historyMsg.setTitle(summary);
-        historyMsg.setResTime(resTime);
-        historyMsg.setResLink(resLink);
-        historyMsg.setOtherUserId(otherUserId);
-        historyMsg.setMsgChannelType(msgChannelType);
-        historyMsg.setDriftBottleId(driftBottleId);
+        body.setFromId(BaseActivity.userId);
+        body.setToId(otherUserId);
+        HistoryMsg historyMsg = HistoryMsg.createHistory(msgId, body, otherUserId, 2, driftBottleId);
         historyMsgDb.saveHistoryMsg(historyMsg);
-
         historyMsgList.add(historyMsg);
         updateTime();
         adapter.notifyItemChanged(adapter.getItemCount() - 1);
