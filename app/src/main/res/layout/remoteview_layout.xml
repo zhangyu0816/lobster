@@ -41,7 +41,7 @@
             android:textSize="14sp"
             android:textStyle="bold" />
 
-        <com.zb.lib_base.emojj.EmojiTextView
+        <TextView
             android:id="@+id/tv_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

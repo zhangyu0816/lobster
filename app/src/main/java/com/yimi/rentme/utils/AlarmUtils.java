@@ -95,9 +95,9 @@ public class AlarmUtils {
             am2.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 300 * 60 * 1000, sender2);
 
         if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 0 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
-            amShort.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 10 * 1000, senderShort);
+            amShort.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 60 * 1000, senderShort);
         if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 1 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
-            amShort1.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 20 * 1000, senderShort1);
+            amShort1.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 3 * 60 * 1000, senderShort1);
         if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 2 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
             amShort2.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 5 * 60 * 1000, senderShort2);
         if (PreferenceUtil.readIntValue(activity, BaseActivity.userId + "_noticeShort_" + 3 + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd)) == 0)
@@ -227,7 +227,7 @@ public class AlarmUtils {
         noticeShortMap.put(120, "有人在角落里偷偷看了你！#快来找到他");
         noticeShortMap.put(121, (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) + "反复查看了你的动态#快来右滑");
 
-        id = 118;
+        id = ra.nextInt(4) + 118;
         String[] temp = noticeShortMap.get(id).split("#");
         RecommendInfo recommendInfo = null;
         if (MineApp.recommendInfoList.size() > 0 && id < 120) {
