@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.zb.module_card.vm.MemberVideoViewModel" />
+            type="com.zb.lib_base.vm.MemberVideoViewModel" />
 
         <variable
             name="position"

@@ -3,23 +3,25 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
-            type="com.zb.module_card.vm.MemberVideoViewModel" />
+            type="com.zb.lib_base.vm.MemberDiscoverViewModel" />
 
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/black_efe">
+        android:layout_height="match_parent">
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/refresh"
             onLoadMoreListener="@{viewModel}"
             onRefreshListener="@{viewModel}"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/black_efe">
 
             <androidx.recyclerview.widget.RecyclerView
                 adapter="@{viewModel.adapter}"
@@ -68,7 +70,6 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
             android:background="@mipmap/my_no_discover_data"
-            android:visibility="gone" />
+            android:visibility="gone"/>
     </RelativeLayout>
-
 </layout>

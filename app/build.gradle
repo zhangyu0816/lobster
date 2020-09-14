@@ -93,21 +93,11 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     // 需要重新在子模块中再引用一次，否则报错
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
-    if (isNeedHomeModule.toBoolean()) {
-        implementation project(':module_home')
-    }
-    if (isNeedCardModule.toBoolean()) {
-        implementation project(':module_card')
-    }
-    if (isNeedChatModule.toBoolean()) {
-        implementation project(':module_chat')
-    }
-    if (isNeedMineModule.toBoolean()) {
-        implementation project(':module_mine')
-    }
-    if (isNeedBottleModule.toBoolean()) {
-        implementation project(':module_bottle')
-    }
+    implementation project(':module_home')
+    implementation project(':module_card')
+    implementation project(':module_chat')
+    implementation project(':module_mine')
+    implementation project(':module_bottle')
     implementation project(':lib_base')
     implementation files('libs/SocialSDK_QQ_Full.jar')
     implementation files('libs/SocialSDK_WeiXin_Full.jar')

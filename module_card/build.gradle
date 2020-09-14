@@ -1,17 +1,10 @@
-if (!isNeedCardModule.toBoolean()) {
-    apply plugin: 'com.android.application'
-} else {
-    apply plugin: 'com.android.library'
-}
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
 
     defaultConfig {
-        if (!isNeedCardModule.toBoolean()) {
-            applicationId "com.zb.module_card"
-        }
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
@@ -28,12 +21,6 @@ android {
         dataBinding {
             enabled true
         }
-        if (!isNeedCardModule.toBoolean()) {
-            multiDexEnabled true
-            packagingOptions {
-                exclude 'META-INF/rxjava.properties'
-            }
-        }
     }
 
     buildTypes {
@@ -45,16 +32,7 @@ android {
 
     sourceSets {
         main {
-            // 配置manifest文件地址
-            if (!isNeedCardModule.toBoolean()) {
-                manifest.srcFile 'src/main/debug/AndroidManifest.xml'
-            } else {
-                manifest.srcFile 'src/main/AndroidManifest.xml'
-                java {
-                    //全部Module一起编译的时候剔除debug目录
-                    exclude '**/debug/**'
-                }
-            }
+            manifest.srcFile 'src/main/AndroidManifest.xml'
         }
     }
 
@@ -70,9 +48,4 @@ dependencies {
     // 需要重新在子模块中再引用一次，否则报错
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
     implementation project(':lib_base')
-    if (!isNeedCardModule.toBoolean()) {
-        if (isNeedHomeModule.toBoolean()) {
-            implementation project(':module_home')
-        }
-    }
 }

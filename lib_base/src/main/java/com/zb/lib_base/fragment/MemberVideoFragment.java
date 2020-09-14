@@ -1,29 +1,28 @@
-package com.zb.module_card.fragment;
+package com.zb.lib_base.fragment;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.zb.lib_base.BR;
+import com.zb.lib_base.R;
 import com.zb.lib_base.activity.BaseFragment;
+import com.zb.lib_base.vm.MemberVideoViewModel;
 import com.zb.lib_base.utils.RouteUtils;
-import com.zb.module_card.BR;
-import com.zb.module_card.R;
-import com.zb.module_card.vm.MemberDiscoverViewModel;
 
-@Route(path = RouteUtils.Card_Member_Discover_Fragment)
-public class MemberDiscoverFragment extends BaseFragment {
-
+@Route(path = RouteUtils.Card_Member_Video_Fragment)
+public class MemberVideoFragment extends BaseFragment {
     @Autowired(name = "userId")
     long userId;
 
-    private MemberDiscoverViewModel viewModel;
+    private MemberVideoViewModel viewModel;
 
     @Override
     public int getRes() {
-        return R.layout.card_member_discover;
+        return R.layout.card_member_video;
     }
 
     @Override
     public void initUI() {
-        viewModel = new MemberDiscoverViewModel();
+        viewModel = new MemberVideoViewModel();
         viewModel.otherUserId = userId;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);

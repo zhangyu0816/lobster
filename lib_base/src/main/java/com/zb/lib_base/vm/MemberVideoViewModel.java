@@ -1,4 +1,4 @@
-package com.zb.module_card.vm;
+package com.zb.lib_base.vm;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,13 +8,16 @@ import android.view.View;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.R;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.adapter.BaseAdapter;
 import com.zb.lib_base.api.dynCancelLikeApi;
 import com.zb.lib_base.api.dynDoLikeApi;
 import com.zb.lib_base.api.dynPiazzaListApi;
 import com.zb.lib_base.api.personOtherDynApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.databinding.CardMemberVideoBinding;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -22,11 +25,7 @@ import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.views.GoodView;
-import com.zb.lib_base.vm.BaseViewModel;
-import com.zb.module_card.R;
-import com.zb.module_card.adapter.CardAdapter;
-import com.zb.module_card.databinding.CardMemberVideoBinding;
-import com.zb.module_card.iv.MemberVideoVMInterface;
+import com.zb.lib_base.iv.MemberVideoVMInterface;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -38,7 +37,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
 
 public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVMInterface, OnRefreshListener, OnLoadMoreListener {
-    public CardAdapter adapter;
+    public BaseAdapter adapter;
     public long otherUserId;
     private int pageNo = 1;
     private List<DiscoverInfo> discoverInfoList = new ArrayList<>();
@@ -95,7 +94,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
 
     @Override
     public void setAdapter() {
-        adapter = new CardAdapter<>(activity, R.layout.item_card_video, discoverInfoList, this);
+        adapter = new BaseAdapter<>(activity, R.layout.item_card_video, discoverInfoList, this);
         getData();
     }
 

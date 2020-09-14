@@ -1,4 +1,4 @@
-package com.zb.module_card.vm;
+package com.zb.lib_base.vm;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,14 +10,17 @@ import android.view.View;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.R;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.adapter.BaseAdapter;
 import com.zb.lib_base.api.dynCancelLikeApi;
 import com.zb.lib_base.api.dynDoLikeApi;
 import com.zb.lib_base.api.dynPiazzaListApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.personOtherDynApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.databinding.CardMemberDiscoverBinding;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -27,11 +30,7 @@ import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.views.GoodView;
-import com.zb.lib_base.vm.BaseViewModel;
-import com.zb.module_card.R;
-import com.zb.module_card.adapter.CardAdapter;
-import com.zb.module_card.databinding.CardMemberDiscoverBinding;
-import com.zb.module_card.iv.MemberDiscoverVMInterface;
+import com.zb.lib_base.iv.MemberDiscoverVMInterface;
 
 import java.io.File;
 import java.net.ConnectException;
@@ -45,7 +44,7 @@ import androidx.databinding.ViewDataBinding;
 
 public class MemberDiscoverViewModel extends BaseViewModel implements MemberDiscoverVMInterface, OnRefreshListener, OnLoadMoreListener {
 
-    public CardAdapter adapter;
+    public BaseAdapter adapter;
     private int pageNo = 1;
     private List<DiscoverInfo> discoverInfoList = new ArrayList<>();
     private CardMemberDiscoverBinding mBinding;
@@ -102,7 +101,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
 
     @Override
     public void setAdapter() {
-        adapter = new CardAdapter<>(activity, R.layout.item_card_discover, discoverInfoList, this);
+        adapter = new BaseAdapter<>(activity, R.layout.item_card_discover, discoverInfoList, this);
         if (otherUserId == 0)
             getData();
         else {

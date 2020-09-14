@@ -1,14 +1,11 @@
-package com.zb.module_card.iv;
+package com.zb.lib_base.iv;
 
 import android.view.View;
 
-public interface MemberDiscoverVMInterface {
-
+public interface MemberVideoVMInterface {
     void dynPiazzaList();
 
     void personOtherDyn();
-
-    void otherInfo();
 
     void onRefreshForNet(View view);
 

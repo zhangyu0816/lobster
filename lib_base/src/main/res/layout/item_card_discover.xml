@@ -18,7 +18,7 @@
 
         <variable
             name="viewModel"
-            type="com.zb.module_card.vm.MemberDiscoverViewModel" />
+            type="com.zb.lib_base.vm.MemberDiscoverViewModel" />
     </data>
 
     <RelativeLayout

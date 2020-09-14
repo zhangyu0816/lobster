@@ -9,7 +9,6 @@ import com.zb.lib_base.iv.SuperLikeInterface;
 import com.zb.lib_base.model.PairInfo;
 import com.zb.lib_base.views.SuperLikeView;
 import com.zb.lib_base.vm.BaseViewModel;
-import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_card.BR;
 import com.zb.module_card.R;
 import com.zb.module_card.databinding.ItemCardBinding;
@@ -24,7 +23,6 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
 
     private BaseViewModel viewModel;
     private RxAppCompatActivity activity;
-    private BasePopupWindow pw;
     private int selectImageIndex = 0;
     private View currentView;
     private Random ra = new Random();
@@ -42,12 +40,6 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
         super(activity, layoutId, list);
         this.activity = activity;
         this.viewModel = viewModel;
-    }
-
-    public CardAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BasePopupWindow pw) {
-        super(activity, layoutId, list);
-        this.activity = activity;
-        this.pw = pw;
     }
 
     public int getSelectImageIndex() {
@@ -75,24 +67,10 @@ public class CardAdapter<T> extends BindingItemAdapter<T> {
                 SuperLikeView.superLike(superLikeView, (SuperLikeInterface) viewModel, (PairInfo) t, currentView, true, true);
                 mBinding.likeLayout.addView(superLikeView);
             }
-//            <com.zb.lib_base.views.SuperLikeView
-//            android:id="@+id/iv_super_like"
-//            currentView="@{currentView}"
-//            isAnimator="@{position==0}"
-//            isPlay="@{position==0}"
-//            pairInfo="@{item}"
-//            superLikeInterface="@{viewModel}"
-//            android:layout_width="wrap_content"
-//            android:layout_height="wrap_content"
-
-//                    />
         }
 
         if (viewModel != null) {
             holder.binding.setVariable(BR.viewModel, viewModel);
-        }
-        if (pw != null) {
-            holder.binding.setVariable(BR.pw, pw);
         }
 
         if (viewModel instanceof MemberDetailViewModel) {

@@ -1,17 +1,10 @@
-if (!isNeedChatModule.toBoolean()) {
-    apply plugin: 'com.android.application'
-} else {
-    apply plugin: 'com.android.library'
-}
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
 
     defaultConfig {
-        if (!isNeedChatModule.toBoolean()) {
-            applicationId "com.zb.module_chat"
-        }
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
@@ -28,12 +21,6 @@ android {
         dataBinding {
             enabled true
         }
-        if (!isNeedChatModule.toBoolean()) {
-            multiDexEnabled true
-            packagingOptions {
-                exclude 'META-INF/rxjava.properties'
-            }
-        }
     }
 
     buildTypes {
@@ -42,18 +29,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    sourceSets{
+    sourceSets {
         main {
-            // 配置manifest文件地址
-            if (!isNeedChatModule.toBoolean()) {
-                manifest.srcFile 'src/main/debug/AndroidManifest.xml'
-            } else {
-                manifest.srcFile 'src/main/AndroidManifest.xml'
-                java {
-                    //全部Module一起编译的时候剔除debug目录
-                    exclude '**/debug/**'
-                }
-            }
+            manifest.srcFile 'src/main/AndroidManifest.xml'
         }
     }
 
@@ -70,16 +48,4 @@ dependencies {
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
     implementation project(':lib_base')
     implementation project(':module_camera')
-    if (!isNeedChatModule.toBoolean())
-        if (isNeedBottleModule.toBoolean()) {
-            implementation project(':module_bottle')
-        }
-    if (!isNeedChatModule.toBoolean())
-        if (isNeedCardModule.toBoolean()) {
-            implementation project(':module_card')
-        }
-//    if (!isNeedChatModule.toBoolean())
-//        if (isNeedMineModule.toBoolean()) {
-//            implementation project(':module_mine')
-//        }
 }
