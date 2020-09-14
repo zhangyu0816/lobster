@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -58,6 +57,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     private BaseReceiver locationReceiver;
     private long friendDynId = 0;
     private DiscoverInfo discoverInfo;
+    private boolean isMore = true;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -118,6 +118,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         // 上拉加载更多
+        isMore = true;
         pageNo++;
         getData();
     }
@@ -132,7 +133,9 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        onRefreshForNet(null);
+        isMore = false;
+        pageNo++;
+        getData();
     }
 
     @Override
@@ -144,16 +147,28 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 mBinding.refresh.setVisibility(View.VISIBLE);
                 for (DiscoverInfo item : o) {
                     DownLoad.downImageFile(item.getImages().isEmpty() ? item.getImage() : item.getImages().split(",")[0], filePath -> {
-                        int start = discoverInfoList.size();
-                        Bitmap bitmap = BitmapFactory.decodeFile(new File(filePath).toString());
-                        try {
-                            item.setWidth(bitmap.getWidth());
-                            item.setHeight(bitmap.getHeight());
-                        } catch (Exception e) {
+                        if (isMore) {
+                            int start = discoverInfoList.size();
+                            Bitmap bitmap = BitmapFactory.decodeFile(new File(filePath).toString());
+                            try {
+                                item.setWidth(bitmap.getWidth());
+                                item.setHeight(bitmap.getHeight());
+                            } catch (Exception e) {
 
+                            }
+                            discoverInfoList.add(item);
+                            adapter.notifyItemRangeChanged(start, discoverInfoList.size());
+                        } else {
+                            Bitmap bitmap = BitmapFactory.decodeFile(new File(filePath).toString());
+                            try {
+                                item.setWidth(bitmap.getWidth());
+                                item.setHeight(bitmap.getHeight());
+                            } catch (Exception e) {
+
+                            }
+                            discoverInfoList.add(0, item);
+                            adapter.notifyItemRangeChanged(0, discoverInfoList.size());
                         }
-                        discoverInfoList.add(item);
-                        adapter.notifyItemRangeChanged(start, discoverInfoList.size());
                     });
                 }
                 mBinding.refresh.finishRefresh();
@@ -197,17 +212,27 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                         item.setImage(memberInfo.getImage());
                     }
                     DownLoad.downImageFile(item.getImages().isEmpty() ? item.getImage() : item.getImages().split(",")[0], filePath -> {
-                        int start = discoverInfoList.size();
-                        Bitmap bitmap = BitmapFactory.decodeFile(new File(filePath).toString());
-                        try {
-                            item.setWidth(bitmap.getWidth());
-                            item.setHeight(bitmap.getHeight());
-                        } catch (Exception e) {
-                            Log.e("filePath", "filePath == " + filePath);
-                        }
+                        if (isMore) {
+                            int start = discoverInfoList.size();
+                            Bitmap bitmap = BitmapFactory.decodeFile(new File(filePath).toString());
+                            try {
+                                item.setWidth(bitmap.getWidth());
+                                item.setHeight(bitmap.getHeight());
+                            } catch (Exception e) {
+                            }
 
-                        discoverInfoList.add(item);
-                        adapter.notifyItemRangeChanged(start, discoverInfoList.size());
+                            discoverInfoList.add(item);
+                            adapter.notifyItemRangeChanged(start, discoverInfoList.size());
+                        } else {
+                            Bitmap bitmap = BitmapFactory.decodeFile(new File(filePath).toString());
+                            try {
+                                item.setWidth(bitmap.getWidth());
+                                item.setHeight(bitmap.getHeight());
+                            } catch (Exception e) {
+                            }
+                            discoverInfoList.add(0, item);
+                            adapter.notifyItemRangeChanged(0, discoverInfoList.size());
+                        }
                     });
                 }
                 mBinding.refresh.finishRefresh();

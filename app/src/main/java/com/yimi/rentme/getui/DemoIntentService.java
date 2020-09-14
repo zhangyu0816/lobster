@@ -122,7 +122,6 @@ public class DemoIntentService extends GTIntentService {
                     // 指定内容意图
                     builder.setContentIntent(contentIntent);
                     nmc.notify(null, 1, builder.build());
-                    appSound(context);
                 } else if (customContent == null) {
                     Intent intentMain = new Intent(Intent.ACTION_MAIN);
                     intentMain.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -135,7 +134,6 @@ public class DemoIntentService extends GTIntentService {
                         context.sendBroadcast(new Intent("lobster_updateChat"));
                         context.sendBroadcast(new Intent("lobster_newDynMsgAllNum"));
                     }
-                    appSound(context);
                 } else {
                     long userId = object.optJSONObject("custom_content").optLong("userId");
                     JSONObject activityContent = object.optJSONObject("custom_content").optJSONObject("Activity");
@@ -161,7 +159,6 @@ public class DemoIntentService extends GTIntentService {
                                 PendingIntent.FLAG_UPDATE_CURRENT);
                         // 指定内容意图
                         builder.setContentIntent(contentIntent);
-                        appSound(context);
                     }
                     nmc.notify(null, 3, builder.build());
                 }

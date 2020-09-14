@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.app.MineApp;
 
 /**
@@ -36,7 +37,7 @@ public class AMapLocation {
         mLocationClient.setLocationOption(mLocationOption);
     }
 
-    public void start(CallBack callBack) {
+    public void start(RxAppCompatActivity activity, CallBack callBack) {
 
         //设置定位回调监听
         mLocationClient.setLocationListener(location -> {
@@ -48,7 +49,14 @@ public class AMapLocation {
                     String address = location.getAddress();
                     String longitude = location.getLongitude() + "";
                     String latitude = location.getLatitude() + "";
-                    callBack.success(longitude, latitude, provinceName, MineApp.cityName, districtName, address);
+                    PreferenceUtil.saveStringValue(activity, "longitude", longitude);
+                    PreferenceUtil.saveStringValue(activity, "latitude", latitude);
+                    PreferenceUtil.saveStringValue(activity, "provinceName", provinceName);
+                    PreferenceUtil.saveStringValue(activity, "cityName", MineApp.cityName);
+                    PreferenceUtil.saveStringValue(activity, "districtName", districtName);
+                    PreferenceUtil.saveStringValue(activity, "address", address);
+                    if (callBack != null)
+                        callBack.success(longitude, latitude, provinceName, MineApp.cityName, districtName);
                 }
                 mLocationClient.stopLocation();
                 mLocationClient.onDestroy();
@@ -59,6 +67,6 @@ public class AMapLocation {
     }
 
     public interface CallBack {
-        void success(String longitude, String latitude, String provinceName, String cityName, String districtName, String address);
+        void success(String longitude, String latitude, String provinceName, String cityName, String districtName);
     }
 }

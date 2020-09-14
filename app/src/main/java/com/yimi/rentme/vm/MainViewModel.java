@@ -517,7 +517,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         int count = beLikeCount - lastBeLikeCount;
         if (count > 0) {
             PreferenceUtil.saveIntValue(activity, "nowBeLikeCount" + BaseActivity.userId, beLikeCount);
-            appSound();
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBinding.remindRelative.getLayoutParams();
             params.setMarginEnd(ObjectUtils.getViewSizeByWidthFromMax(220));
             mBinding.remindRelative.setLayoutParams(params);
@@ -533,7 +532,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         // 播放声音
         MediaPlayer mPlayer = MediaPlayer.create(activity, R.raw.msn);
         try {
-            vibrator.vibrate(300);
             if (mPlayer != null) {
                 mPlayer.stop();
             }
@@ -543,7 +541,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             e.printStackTrace();
         }
         new Handler().postDelayed(() -> {
-            vibrator.cancel();
             if (mPlayer != null) {
                 mPlayer.stop();
                 mPlayer.release();//释放资源
@@ -613,9 +610,11 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     }
 
     private void startAnimator() {
+        vibrator.vibrate(500);
         pvh_remind.setValues(pvhSX, pvhSY);
         pvh_remind.start();
         new Handler().postDelayed(() -> {
+            vibrator.cancel();
             pvh_remind.setValues(pvhTY);
             pvh_remind.start();
         }, 500);

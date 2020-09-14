@@ -729,13 +729,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     }
 
     private void setLocation() {
-        aMapLocation.start((longitude, latitude, provinceName, cityName, districtName, address) -> {
-            PreferenceUtil.saveStringValue(activity, "longitude", longitude);
-            PreferenceUtil.saveStringValue(activity, "latitude", latitude);
-            PreferenceUtil.saveStringValue(activity, "provinceName", provinceName);
-            PreferenceUtil.saveStringValue(activity, "cityName", cityName);
-            PreferenceUtil.saveStringValue(activity, "districtName", districtName);
-            PreferenceUtil.saveStringValue(activity, "address", address);
+        aMapLocation.start(activity, (longitude, latitude, provinceName, cityName, districtName) -> {
             joinPairPool(longitude, latitude, areaDb.getProvinceId(provinceName), areaDb.getCityId(cityName), areaDb.getDistrictId(districtName));
         });
     }

@@ -49,6 +49,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
     private BaseReceiver locationReceiver;
     private long friendDynId = 0;
     private DiscoverInfo discoverInfo;
+    private boolean isMore = true;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -101,6 +102,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         // 上拉加载更多
+        isMore = true;
         pageNo++;
         getData();
     }
@@ -115,7 +117,9 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        onRefreshForNet(null);
+        isMore = false;
+        pageNo++;
+        getData();
     }
 
     @Override
@@ -124,9 +128,15 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
             @Override
             public void onNext(List<DiscoverInfo> o) {
                 mBinding.noNetLinear.setVisibility(View.GONE);
-                int start = discoverInfoList.size();
-                discoverInfoList.addAll(o);
-                adapter.notifyItemRangeChanged(start, discoverInfoList.size());
+                if (isMore) {
+                    int start = discoverInfoList.size();
+                    discoverInfoList.addAll(o);
+                    adapter.notifyItemRangeChanged(start, discoverInfoList.size());
+                } else {
+                    discoverInfoList.addAll(0, o);
+                    adapter.notifyItemRangeChanged(0, discoverInfoList.size());
+                }
+
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
             }
@@ -158,9 +168,14 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
             public void onNext(List<DiscoverInfo> o) {
                 mBinding.noNetLinear.setVisibility(View.GONE);
                 mBinding.ivNoData.setVisibility(View.GONE);
-                int start = discoverInfoList.size();
-                discoverInfoList.addAll(o);
-                adapter.notifyItemRangeChanged(start, discoverInfoList.size());
+                if (isMore) {
+                    int start = discoverInfoList.size();
+                    discoverInfoList.addAll(o);
+                    adapter.notifyItemRangeChanged(start, discoverInfoList.size());
+                } else {
+                    discoverInfoList.addAll(0, o);
+                    adapter.notifyItemRangeChanged(0, discoverInfoList.size());
+                }
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
             }

@@ -336,7 +336,8 @@
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginBottom="50dp"
-                    android:text="正在努力寻找中，不如试试修改匹配年龄？"
+                    android:gravity="center"
+                    android:text="你知道吗，有缘人也许就在\n我的->设置->修改筛选条件"
                     android:textColor="@color/black_252"
                     android:textSize="16sp"
                     android:visibility="@{showRemind?View.VISIBLE:View.GONE}" />
