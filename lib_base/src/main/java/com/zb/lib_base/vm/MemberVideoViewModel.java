@@ -21,11 +21,11 @@ import com.zb.lib_base.databinding.CardMemberVideoBinding;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
+import com.zb.lib_base.iv.MemberVideoVMInterface;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.views.GoodView;
-import com.zb.lib_base.iv.MemberVideoVMInterface;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;

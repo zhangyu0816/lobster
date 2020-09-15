@@ -25,13 +25,13 @@ public class FragmentUtils {
 
     // 用户详情 -- 动态
     public static Fragment getCardMemberDiscoverFragment(long userId) {
-        Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Card_Member_Discover_Fragment).withLong("userId", userId).navigation();
+        Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Member_Discover_Fragment).withLong("userId", userId).navigation();
         return fragment;
     }
 
     // 用户详情 -- 小视频
     public static Fragment getCardMemberVideoFragment(long userId) {
-        Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Card_Member_Video_Fragment).withLong("userId", userId).navigation();
+        Fragment fragment = (Fragment) ARouter.getInstance().build(RouteUtils.Member_Video_Fragment).withLong("userId", userId).navigation();
         return fragment;
     }
 

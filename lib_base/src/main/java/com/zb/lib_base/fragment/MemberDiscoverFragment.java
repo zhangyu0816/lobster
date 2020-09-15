@@ -5,10 +5,10 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
 import com.zb.lib_base.activity.BaseFragment;
-import com.zb.lib_base.vm.MemberDiscoverViewModel;
 import com.zb.lib_base.utils.RouteUtils;
+import com.zb.lib_base.vm.MemberDiscoverViewModel;
 
-@Route(path = RouteUtils.Card_Member_Discover_Fragment)
+@Route(path = RouteUtils.Member_Discover_Fragment)
 public class MemberDiscoverFragment extends BaseFragment {
 
     @Autowired(name = "userId")

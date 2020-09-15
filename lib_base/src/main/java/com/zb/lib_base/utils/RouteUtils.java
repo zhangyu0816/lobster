@@ -24,8 +24,8 @@ public class RouteUtils {
     public static final String Card_Fragment = "/card/CardFragment";
     public static final String Card_Member_Detail = "/card/MemberDetailActivity";
     public static final String Card_Discover_List = "/card/DiscoverListActivity";
-    public static final String Card_Member_Discover_Fragment = "/base/MemberDiscoverFragment";
-    public static final String Card_Member_Video_Fragment = "/base/MemberVideoFragment";
+    public static final String Member_Discover_Fragment = "/base/MemberDiscoverFragment";
+    public static final String Member_Video_Fragment = "/base/MemberVideoFragment";
 
     /*********************** 对话 **************************/
     // 对话主Fragment
