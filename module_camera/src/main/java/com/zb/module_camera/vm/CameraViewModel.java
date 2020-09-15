@@ -194,6 +194,8 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                         break;
                     if (fileModel == null)
                         break;
+                    if (fileModel.getFileName() == null)
+                        break;
                     if (fileModel.getFileName().equals(fileName)) {
                         hasName = true;
                         break;
