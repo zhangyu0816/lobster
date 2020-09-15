@@ -1,12 +1,15 @@
 package com.zb.module_camera.vm;
 
+import android.Manifest;
 import android.content.Intent;
 import android.hardware.Camera;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.ActivityUtils;
@@ -53,7 +56,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
         mBinding.setVariable(BR.isCreate, false);
         photoBinding.cameraLayout.setOnTouchListener(this);
         AdapterBinding.viewSize(photoBinding.cameraLayout, MineApp.W, (int) (MineApp.W * x / y));
-        initCamera();
+        getPermissions();
     }
 
     private void initCamera() {
@@ -103,7 +106,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
             y = 3f;
         }
         AdapterBinding.viewSize(photoBinding.cameraLayout, MineApp.W, (int) (MineApp.W * x / y));
-        initCamera();
+        getPermissions();
     }
 
     @Override
@@ -148,7 +151,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
     private void openCamera(int position) {
         preview.releaseCamera();
         _position = position;
-        initCamera();
+        getPermissions();
     }
 
     @Override
@@ -250,4 +253,29 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
             mHandler.removeCallbacks(mRunnable);
         }
     };
+
+    /**
+     * 权限
+     */
+    private void getPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            performCodeWithPermission("虾菇需要访问读写外部存储权限、相机权限", new BaseActivity.PermissionCallback() {
+                        @Override
+                        public void hasPermission() {
+                            setPermissions();
+                        }
+
+                        @Override
+                        public void noPermission() {
+                        }
+                    }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        } else {
+            setPermissions();
+        }
+    }
+
+    private void setPermissions() {
+        initCamera();
+    }
 }
