@@ -3,6 +3,7 @@ package com.zb.module_mine.vm;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.view.View;
 import android.view.animation.Animation;
@@ -140,7 +141,7 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
             ivPlay.setVisibility(View.GONE);
             DownLoad.getFilePath(systemMsg.getResLink(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), new DownLoad.CallBack() {
                 @Override
-                public void success(String filePath) {
+                public void success(String filePath, Bitmap bitmap) {
                     ivPlay.setVisibility(View.VISIBLE);
                     ivProgress.setVisibility(View.GONE);
                     if (animator != null)
@@ -163,7 +164,7 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
 
     @Override
     public void toVoice(View view, SystemMsg systemMsg, int direction) {
-        DownLoad.getFilePath(systemMsg.getResLink(), BaseActivity.getDownloadFile(".amr").getAbsolutePath(), filePath -> {
+        DownLoad.getFilePath(systemMsg.getResLink(), BaseActivity.getDownloadFile(".amr").getAbsolutePath(), (filePath, bitmap) -> {
             // direction 0 左  1右
             stopVoiceDrawable();
             preImageView = (ImageView) view;

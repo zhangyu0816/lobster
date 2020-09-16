@@ -171,8 +171,12 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     }
 
     public void onDestroy() {
-        cameraReceiver.unregisterReceiver();
-        bindPhoneReceiver.unregisterReceiver();
+        try {
+            cameraReceiver.unregisterReceiver();
+            bindPhoneReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (outAlpha != null)
             outAlpha = null;
     }

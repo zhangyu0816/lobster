@@ -2,8 +2,6 @@ package com.zb.lib_base.vm;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -32,7 +30,6 @@ import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.views.GoodView;
 
-import java.io.File;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -94,9 +91,13 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     }
 
     public void onDestroy() {
-        publishReceiver.unregisterReceiver();
-        doGoodReceiver.unregisterReceiver();
-        locationReceiver.unregisterReceiver();
+        try {
+            publishReceiver.unregisterReceiver();
+            doGoodReceiver.unregisterReceiver();
+            locationReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -145,29 +146,19 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 mBinding.noNetLinear.setVisibility(View.GONE);
                 mBinding.refresh.setVisibility(View.VISIBLE);
                 for (DiscoverInfo item : o) {
-                    DownLoad.downImageFile(item.getImages().isEmpty() ? item.getImage() : item.getImages().split(",")[0], filePath -> {
-                        if (isMore) {
-                            int start = discoverInfoList.size();
-                            Bitmap bitmap = BitmapFactory.decodeFile(new File(filePath).toString());
-                            try {
-                                item.setWidth(bitmap.getWidth());
-                                item.setHeight(bitmap.getHeight());
-                            } catch (Exception e) {
-
-                            }
-                            discoverInfoList.add(item);
-                            adapter.notifyItemRangeChanged(start, discoverInfoList.size());
-                        } else {
-                            Bitmap bitmap = BitmapFactory.decodeFile(new File(filePath).toString());
-                            try {
-                                item.setWidth(bitmap.getWidth());
-                                item.setHeight(bitmap.getHeight());
-                            } catch (Exception e) {
-
-                            }
-                            discoverInfoList.add(0, item);
-                            adapter.notifyItemRangeChanged(0, discoverInfoList.size());
+                    DownLoad.downImageFile(item.getImages().isEmpty() ? item.getImage() : item.getImages().split(",")[0], (filePath, bitmap) -> {
+                        if (bitmap != null) {
+                            item.setWidth(bitmap.getWidth());
+                            item.setHeight(bitmap.getHeight());
                         }
+                        int start = 0;
+                        if (isMore) {
+                            start = discoverInfoList.size();
+                            discoverInfoList.add(item);
+                        } else {
+                            discoverInfoList.add(0, item);
+                        }
+                        adapter.notifyItemRangeChanged(start, discoverInfoList.size());
                     });
                 }
                 mBinding.refresh.finishRefresh();
@@ -210,28 +201,19 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                         item.setNick(memberInfo.getNick());
                         item.setImage(memberInfo.getImage());
                     }
-                    DownLoad.downImageFile(item.getImages().isEmpty() ? item.getImage() : item.getImages().split(",")[0], filePath -> {
-                        if (isMore) {
-                            int start = discoverInfoList.size();
-                            Bitmap bitmap = BitmapFactory.decodeFile(new File(filePath).toString());
-                            try {
-                                item.setWidth(bitmap.getWidth());
-                                item.setHeight(bitmap.getHeight());
-                            } catch (Exception e) {
-                            }
-
-                            discoverInfoList.add(item);
-                            adapter.notifyItemRangeChanged(start, discoverInfoList.size());
-                        } else {
-                            Bitmap bitmap = BitmapFactory.decodeFile(new File(filePath).toString());
-                            try {
-                                item.setWidth(bitmap.getWidth());
-                                item.setHeight(bitmap.getHeight());
-                            } catch (Exception e) {
-                            }
-                            discoverInfoList.add(0, item);
-                            adapter.notifyItemRangeChanged(0, discoverInfoList.size());
+                    DownLoad.downImageFile(item.getImages().isEmpty() ? item.getImage() : item.getImages().split(",")[0], (filePath, bitmap) -> {
+                        if (bitmap != null) {
+                            item.setWidth(bitmap.getWidth());
+                            item.setHeight(bitmap.getHeight());
                         }
+                        int start = 0;
+                        if (isMore) {
+                            start = discoverInfoList.size();
+                            discoverInfoList.add(item);
+                        } else {
+                            discoverInfoList.add(0, item);
+                        }
+                        adapter.notifyItemRangeChanged(start, discoverInfoList.size());
                     });
                 }
                 mBinding.refresh.finishRefresh();

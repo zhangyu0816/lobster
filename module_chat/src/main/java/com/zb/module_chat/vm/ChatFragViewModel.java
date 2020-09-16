@@ -17,6 +17,7 @@ import com.zb.lib_base.model.RecommendInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.module_chat.R;
 import com.zb.module_chat.databinding.ChatFragBinding;
 import com.zb.module_chat.iv.ChatFragVMInterface;
 
@@ -60,6 +61,7 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
     private ObjectAnimator outOutX;
     private BaseReceiver newsCountReceiver;
     private BaseReceiver bottleTitleReceiver;
+    private BaseReceiver updateRedReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -82,19 +84,30 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
             }
         };
 
-        bottleTitleReceiver = new BaseReceiver(activity,"lobster_bottleTitle") {
+        bottleTitleReceiver = new BaseReceiver(activity, "lobster_bottleTitle") {
             @Override
             public void onReceive(Context context, Intent intent) {
                 mBinding.setIsPlay(intent.getBooleanExtra("isPlay", false));
             }
         };
-
+        updateRedReceiver = new BaseReceiver(activity, "lobster_updateRed") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String temp = "聊天-" + (chatListDb.getChatTabRed() > 0 ? "true" : "false");
+                initTabLayout(new String[]{"所有匹配", temp}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, MineApp.chatSelectIndex);
+            }
+        };
         recommendRankingList();
     }
 
     public void onDestroy() {
-        newsCountReceiver.unregisterReceiver();
-        bottleTitleReceiver.unregisterReceiver();
+        try {
+            updateRedReceiver.unregisterReceiver();
+            newsCountReceiver.unregisterReceiver();
+            bottleTitleReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

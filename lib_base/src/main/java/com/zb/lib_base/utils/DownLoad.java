@@ -1,5 +1,7 @@
 package com.zb.lib_base.utils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 
 import com.lidroid.xutils.exception.HttpException;
@@ -11,6 +13,9 @@ import com.zb.lib_base.http.DownLoadRetrofitHelper;
 import com.zb.lib_base.model.ResFile;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import io.realm.Realm;
 
@@ -26,7 +31,7 @@ public class DownLoad {
         if (resFileDb.isRead(fileUrl)) {
             File file = new File(resFileDb.getResFile(fileUrl).getFilePath());
             if (file.exists()) {
-                callBack.success(resFileDb.getResFile(fileUrl).getFilePath());
+                callBack.success(resFileDb.getResFile(fileUrl).getFilePath(), null);
             } else {
                 resFileDb.deleteResFile(fileUrl);
                 downloadVideo(fileUrl, filePath, callBack);
@@ -42,7 +47,7 @@ public class DownLoad {
             @Override
             public void onSuccess(ResponseInfo<File> file) {
                 resFileDb.saveResFile(new ResFile(fileUrl, file.result.getAbsolutePath()));
-                callBack.success(file.result.getAbsolutePath());
+                callBack.success(file.result.getAbsolutePath(), null);
             }
 
             @Override
@@ -74,7 +79,7 @@ public class DownLoad {
 
             @Override
             public void onSuccess(ResponseInfo<File> file) {
-                callBack.success(file.result.getAbsolutePath());
+                callBack.success(file.result.getAbsolutePath(), null);
             }
 
             @Override
@@ -108,7 +113,21 @@ public class DownLoad {
 
             @Override
             public void onSuccess(ResponseInfo<File> file) {
-                callBack.success(file.result.getAbsolutePath());
+                try {
+                    InputStream is = new FileInputStream(filePath);
+                    BitmapFactory.Options opts = new BitmapFactory.Options();
+                    opts.inTempStorage = new byte[100 * 1024];
+                    opts.inPreferredConfig = Bitmap.Config.RGB_565;
+                    opts.inPurgeable = true;
+                    opts.inSampleSize = 4;
+                    opts.inInputShareable = true;
+                    Bitmap bitmap = BitmapFactory.decodeStream(is, null, opts);
+                    callBack.success(file.result.getAbsolutePath(), bitmap);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    callBack.success(file.result.getAbsolutePath(), null);
+                }
+
             }
 
             @Override
@@ -132,7 +151,7 @@ public class DownLoad {
 
     @FunctionalInterface
     public interface CallBack {
-        void success(String filePath);
+        void success(String filePath, Bitmap bitmap);
 
         default void fail() {
 

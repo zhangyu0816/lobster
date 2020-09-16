@@ -138,7 +138,11 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
     }
 
     public void onDestroy() {
-        attentionReceiver.unregisterReceiver();
+        try {
+            attentionReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -210,7 +214,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
 
             @Override
             public void download() {
-                DownLoad.downloadLocation(discoverInfo.getVideoUrl(), filePath -> {
+                DownLoad.downloadLocation(discoverInfo.getVideoUrl(), (filePath, bitmap) -> {
                     downloadPath = filePath;
                     getPermissions();
                 });
@@ -262,7 +266,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
                 discoverInfo = o;
                 mBinding.setDiscoverInfo(discoverInfo);
                 seeLikers(1);
-                DownLoad.getFilePath(discoverInfo.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), filePath -> {
+                DownLoad.getFilePath(discoverInfo.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), (filePath, bitmap) -> {
                     discoverInfo.setVideoPath(filePath);
                     mBinding.setIsProgress(false);
                     if (animator != null)

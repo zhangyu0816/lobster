@@ -128,8 +128,12 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
 
     public void onDestroy() {
         chatMsgList.clear();
-        updateChatReceiver.unregisterReceiver();
-        relieveReceiver.unregisterReceiver();
+        try {
+            updateChatReceiver.unregisterReceiver();
+            relieveReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

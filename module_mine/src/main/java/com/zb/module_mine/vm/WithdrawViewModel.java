@@ -109,8 +109,12 @@ public class WithdrawViewModel extends BaseViewModel implements WithdrawVMInterf
     }
 
     public void onDestroy() {
-        selectBankReceiver.unregisterReceiver();
-        addBankReceiver.unregisterReceiver();
+        try {
+            selectBankReceiver.unregisterReceiver();
+            addBankReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

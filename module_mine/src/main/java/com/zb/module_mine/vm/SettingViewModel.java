@@ -90,7 +90,11 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     }
 
     public void onDestroy() {
-        updateWalletReceiver.unregisterReceiver();
+        try {
+            updateWalletReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

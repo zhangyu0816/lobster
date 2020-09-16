@@ -238,14 +238,17 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     }
 
     public void onDestroy() {
-        rechargeReceiver.unregisterReceiver();
-        chatListReceiver.unregisterReceiver();
-        newMsgReceiver.unregisterReceiver();
-        bottleNumReceiver.unregisterReceiver();
-        newsCountReceiver.unregisterReceiver();
-        unReadCountReceiver.unregisterReceiver();
-        newDynMsgAllNumReceiver.unregisterReceiver();
-        contactNumReceiver.unregisterReceiver();
+        try {
+            rechargeReceiver.unregisterReceiver();
+            chatListReceiver.unregisterReceiver();
+            newMsgReceiver.unregisterReceiver();
+            bottleNumReceiver.unregisterReceiver();
+            newsCountReceiver.unregisterReceiver();
+            unReadCountReceiver.unregisterReceiver();
+            newDynMsgAllNumReceiver.unregisterReceiver();
+            contactNumReceiver.unregisterReceiver();
+        } catch (Exception e) {
+        }
     }
 
 

@@ -238,11 +238,15 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     }
 
     public void onDestroy() {
-        cardReceiver.unregisterReceiver();
-        locationReceiver.unregisterReceiver();
-        openVipReceiver.unregisterReceiver();
-        isLikeReceiver.unregisterReceiver();
-        animatorStatusReceiver.unregisterReceiver();
+        try {
+            cardReceiver.unregisterReceiver();
+            locationReceiver.unregisterReceiver();
+            openVipReceiver.unregisterReceiver();
+            isLikeReceiver.unregisterReceiver();
+            animatorStatusReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

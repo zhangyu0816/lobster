@@ -148,7 +148,11 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void back(View view) {
         super.back(view);
-        attentionReceiver.unregisterReceiver();
+        try {
+            attentionReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         activity.finish();
     }
 

@@ -25,12 +25,8 @@ public abstract class BaseReceiver extends BroadcastReceiver {
     @Override
     public abstract void onReceive(Context context, Intent intent);
 
-    public void unregisterReceiver() {
-        try {
-            activity.unregisterReceiver(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void unregisterReceiver() throws Exception {
+        activity.unregisterReceiver(this);
     }
 
     public interface CallBack {

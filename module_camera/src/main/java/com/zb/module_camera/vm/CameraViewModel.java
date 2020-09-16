@@ -171,6 +171,10 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                 }
             }).start();
         } else {
+            if (selectIndex == -1) {
+                SCToastUtil.showToast(activity, "请选择照片", true);
+                return;
+            }
             Intent data = new Intent();
             data.putExtra("fileName", images.get(selectIndex));
             activity.setResult(1, data);

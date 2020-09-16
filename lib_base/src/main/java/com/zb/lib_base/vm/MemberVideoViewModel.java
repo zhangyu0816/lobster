@@ -87,9 +87,13 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
     }
 
     public void onDestroy() {
-        publishReceiver.unregisterReceiver();
-        doGoodReceiver.unregisterReceiver();
-        locationReceiver.unregisterReceiver();
+        try {
+            publishReceiver.unregisterReceiver();
+            doGoodReceiver.unregisterReceiver();
+            locationReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -68,8 +68,12 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
         MineApp.isMore = false;
         MineApp.filePath = "";
         MineApp.time = 0;
-        locationReceiver.unregisterReceiver();
-        deleteVideoReceiver.unregisterReceiver();
+        try {
+            locationReceiver.unregisterReceiver();
+            deleteVideoReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         MineApp.selectMap.clear();
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "videos"));
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));

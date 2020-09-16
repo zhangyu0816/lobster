@@ -105,8 +105,12 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     }
 
     public void onDestroy() {
-        openVipReceiver.unregisterReceiver();
-        singleBottleCacheReceiver.unregisterReceiver();
+        try {
+            openVipReceiver.unregisterReceiver();
+            singleBottleCacheReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

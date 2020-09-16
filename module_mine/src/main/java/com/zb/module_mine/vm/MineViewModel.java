@@ -87,10 +87,14 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     }
 
     public void onDestroy() {
-        updateMineInfoReceiver.unregisterReceiver();
-        newsCountReceiver.unregisterReceiver();
-        openVipReceiver.unregisterReceiver();
-        updateChatTypeReceiver.unregisterReceiver();
+        try {
+            updateMineInfoReceiver.unregisterReceiver();
+            newsCountReceiver.unregisterReceiver();
+            openVipReceiver.unregisterReceiver();
+            updateChatTypeReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initFragments() {

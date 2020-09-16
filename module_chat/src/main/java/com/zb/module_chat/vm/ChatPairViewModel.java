@@ -128,10 +128,14 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
     }
 
     public void onDestroy() {
-        pairListReceiver.unregisterReceiver();
-        updateChatTypeReceiver.unregisterReceiver();
-        relieveReceiver.unregisterReceiver();
-        updateChatReceiver.unregisterReceiver();
+        try {
+            pairListReceiver.unregisterReceiver();
+            updateChatTypeReceiver.unregisterReceiver();
+            relieveReceiver.unregisterReceiver();
+            updateChatReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -78,8 +78,12 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
     }
 
     public void onDestroy() {
-        attentionListReceiver.unregisterReceiver();
-        updateFCLReceiver.unregisterReceiver();
+        try {
+            attentionListReceiver.unregisterReceiver();
+            updateFCLReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

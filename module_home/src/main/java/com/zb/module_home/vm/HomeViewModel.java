@@ -44,8 +44,12 @@ public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
     }
 
     public void onDestroy() {
-        homeBottleReceiver.unregisterReceiver();
-        bottleTitleReceiver.unregisterReceiver();
+        try {
+            homeBottleReceiver.unregisterReceiver();
+            bottleTitleReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

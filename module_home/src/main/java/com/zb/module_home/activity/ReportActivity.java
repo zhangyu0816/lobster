@@ -60,7 +60,11 @@ public class ReportActivity extends HomeBaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        cameraReceiver.unregisterReceiver();
+        try {
+            cameraReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -111,9 +111,13 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     }
 
     public void onDestroy() {
-        updateChatTypeReceiver.unregisterReceiver();
-        closeSoundReceiver.unregisterReceiver();
-        resumeSoundReceiver.unregisterReceiver();
+        try {
+            updateChatTypeReceiver.unregisterReceiver();
+            closeSoundReceiver.unregisterReceiver();
+            resumeSoundReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (mPlayer != null) {
             mPlayer.stop();
         }

@@ -131,7 +131,11 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     }
 
     public void onDestroy() {
-        bottleChatReceiver.unregisterReceiver();
+        try {
+            bottleChatReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -37,7 +37,11 @@ public class NewsManagerViewModel extends BaseViewModel implements NewsManagerVM
     @Override
     public void back(View view) {
         super.back(view);
-        newsCountReceiver.unregisterReceiver();
+        try {
+            newsCountReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         activity.finish();
     }
 

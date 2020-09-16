@@ -9,7 +9,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.SystemClock;
@@ -27,7 +26,6 @@ import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.utils.PreferenceUtil;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -272,8 +270,7 @@ public class AlarmUtils {
             if (recommendInfo != null) {
                 DownLoad.downImageFile(recommendInfo.getSingleImage().replace("YM0000", "240X240"), new DownLoad.CallBack() {
                     @Override
-                    public void success(String filePath) {
-                        Bitmap bitmap = BitmapFactory.decodeFile(new File(filePath).toString());
+                    public void success(String filePath, Bitmap bitmap) {
                         if (bitmap != null) {
                             mRemoteViews.setImageViewBitmap(R.id.iv_logo, bitmap);
                             mRemoteViews.setViewVisibility(R.id.iv_logo, View.VISIBLE);

@@ -41,6 +41,9 @@ public class GiftRecordActivity extends MineBaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        updateWalletReceiver.unregisterReceiver();
+        try {
+            updateWalletReceiver.unregisterReceiver();
+        } catch (Exception e) {
+        }
     }
 }

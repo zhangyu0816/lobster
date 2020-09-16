@@ -1,12 +1,9 @@
 package com.zb.module_chat.fragment;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseFragment;
-import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.FragmentUtils;
@@ -27,7 +24,6 @@ public class ChatFragment extends BaseFragment {
     private ChatFragBinding binding;
     private List<Fragment> fragments = new ArrayList<>();
     private ChatFragViewModel viewModel;
-    private BaseReceiver updateRedReceiver;
 
     @Override
     public int getRes() {
@@ -41,13 +37,6 @@ public class ChatFragment extends BaseFragment {
         mBinding.setVariable(BR.viewModel, viewModel);
         binding = (ChatFragBinding) mBinding;
 
-        updateRedReceiver = new BaseReceiver(activity, "lobster_updateRed") {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String temp = "聊天-" + (viewModel.chatListDb.getChatTabRed() > 0 ? "true" : "false");
-                viewModel.initTabLayout(new String[]{"所有匹配", temp}, binding.tabLayout, binding.viewPage, R.color.black_252, R.color.black_827, MineApp.chatSelectIndex);
-            }
-        };
         new Handler().postDelayed(this::initFragments, 800);
     }
 
@@ -64,7 +53,6 @@ public class ChatFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        updateRedReceiver.unregisterReceiver();
         viewModel.onDestroy();
     }
 }

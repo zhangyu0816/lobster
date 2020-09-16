@@ -111,7 +111,11 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     }
 
     public void onDestroy() {
-        attentionReceiver.unregisterReceiver();
+        try {
+            attentionReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -184,7 +188,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                     adapter.notifyItemRangeChanged(start, MineApp.discoverInfoList.size());
 
                     for (DiscoverInfo item : o) {
-                        DownLoad.getFilePath(item.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), filePath -> {
+                        DownLoad.getFilePath(item.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), (filePath, bitmap) -> {
                         });
                     }
                 } else {
@@ -297,7 +301,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
 
             @Override
             public void download() {
-                DownLoad.downloadLocation(discoverInfo.getVideoUrl(), filePath -> {
+                DownLoad.downloadLocation(discoverInfo.getVideoUrl(), (filePath, bitmap) -> {
                     downloadPath = filePath;
                     getPermissions();
                 });
@@ -534,7 +538,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         reviewListView.setLayoutManager(layoutManager1);// 布局管理器。
         reviewListView.setHasFixedSize(true);// 如果Item够简单，高度是确定的，打开FixSize将提高性能。
 
-        DownLoad.getFilePath(discoverInfo.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), filePath -> {
+        DownLoad.getFilePath(discoverInfo.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), (filePath, bitmap) -> {
             discoverInfo.setVideoPath(filePath);
             ivProgress.setVisibility(View.GONE);
             if (animator != null)

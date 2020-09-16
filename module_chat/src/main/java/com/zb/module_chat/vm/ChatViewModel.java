@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.os.Handler;
@@ -211,7 +212,11 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         hintKeyBoard();
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "videos"));
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
-        chatReceiver.unregisterReceiver();
+        try {
+            chatReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ImUtils.getInstance().markRead();
         activity.finish();
     }
@@ -404,7 +409,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             ivPlay.setVisibility(View.GONE);
             DownLoad.getFilePath(historyMsg.getResLink(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), new DownLoad.CallBack() {
                 @Override
-                public void success(String filePath) {
+                public void success(String filePath, Bitmap bitmap) {
                     ivPlay.setVisibility(View.VISIBLE);
                     ivProgress.setVisibility(View.GONE);
                     if (animator != null)
@@ -428,7 +433,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
 
     @Override
     public void toVoice(View view, HistoryMsg historyMsg, int direction, int position) {
-        DownLoad.getFilePath(historyMsg.getResLink(), BaseActivity.getDownloadFile(".amr").getAbsolutePath(), filePath -> {
+        DownLoad.getFilePath(historyMsg.getResLink(), BaseActivity.getDownloadFile(".amr").getAbsolutePath(), (filePath, bitmap) -> {
             soundPosition = position;
             // direction 0 左  1右
             stopVoiceDrawable();

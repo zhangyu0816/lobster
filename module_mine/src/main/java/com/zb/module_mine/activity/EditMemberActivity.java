@@ -85,8 +85,12 @@ public class EditMemberActivity extends MineBaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        memberReceiver.unregisterReceiver();
-        cameraReceiver.unregisterReceiver();
+        try {
+            memberReceiver.unregisterReceiver();
+            cameraReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

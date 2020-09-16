@@ -73,7 +73,11 @@ public class PaymentPW extends BasePopupWindow {
         } else if (payType == 2) {
             activity.sendBroadcast(new Intent("lobster_recharge"));
         }
-        paySuccessReceiver.unregisterReceiver();
+        try {
+            paySuccessReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         dismiss();
     }
 
@@ -129,7 +133,11 @@ public class PaymentPW extends BasePopupWindow {
                     } else {
                         SCToastUtil.showToast(activity, "支付失败", true);
                     }
-                    paySuccessReceiver.unregisterReceiver();
+                    try {
+                        paySuccessReceiver.unregisterReceiver();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     dismiss();
                 }
                 break;

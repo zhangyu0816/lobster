@@ -39,6 +39,10 @@ public class OpenVipActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        viewModel.openVipReceiver.unregisterReceiver();
+        try {
+            viewModel.openVipReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

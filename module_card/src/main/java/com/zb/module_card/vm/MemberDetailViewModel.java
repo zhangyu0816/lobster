@@ -132,7 +132,11 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     }
 
     public void onDestroy() {
-        attentionReceiver.unregisterReceiver();
+        try {
+            attentionReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
