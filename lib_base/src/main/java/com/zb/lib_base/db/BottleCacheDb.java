@@ -7,9 +7,22 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class BottleCacheDb extends BaseDao {
+    public volatile static BottleCacheDb INSTANCE;
 
     public BottleCacheDb(Realm realm) {
         super(realm);
+    }
+
+    //获取单例
+    public static BottleCacheDb getInstance() {
+        if (INSTANCE == null) {
+            synchronized (BottleCacheDb.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new BottleCacheDb(Realm.getDefaultInstance());
+                }
+            }
+        }
+        return INSTANCE;
     }
 
     public void saveBottleCache(BottleCache bottleCache) {

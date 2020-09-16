@@ -11,6 +11,8 @@ import android.view.View;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.recommendRankingListApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.AreaDb;
+import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.RecommendInfo;
@@ -93,7 +95,7 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
         updateRedReceiver = new BaseReceiver(activity, "lobster_updateRed") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String temp = "聊天-" + (chatListDb.getChatTabRed() > 0 ? "true" : "false");
+                String temp = "聊天-" + (ChatListDb.getInstance().getChatTabRed() > 0 ? "true" : "false");
                 initTabLayout(new String[]{"所有匹配", temp}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, MineApp.chatSelectIndex);
             }
         };
@@ -133,7 +135,7 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
             public void onNext(List<RecommendInfo> o) {
                 MineApp.recommendInfoList.addAll(o);
             }
-        }, activity).setCityId(areaDb.getCityId(PreferenceUtil.readStringValue(activity, "cityName"))).setSex(MineApp.mineInfo.getSex() == 0 ? 1 : 0);
+        }, activity).setCityId(AreaDb.getInstance().getCityId(PreferenceUtil.readStringValue(activity, "cityName"))).setSex(MineApp.mineInfo.getSex() == 0 ? 1 : 0);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

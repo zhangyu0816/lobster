@@ -484,7 +484,7 @@ public class DateUtil {
      * @param time
      */
     public static String getConstellations(String time) {
-        if (time.isEmpty()) {
+        if (time == null || time.isEmpty()) {
             return "";
         }
         String[] data = time.split("-");

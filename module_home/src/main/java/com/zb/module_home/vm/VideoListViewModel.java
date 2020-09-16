@@ -31,6 +31,10 @@ import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.seeLikersApi;
 import com.zb.lib_base.api.seeReviewsApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.AreaDb;
+import com.zb.lib_base.db.AttentionDb;
+import com.zb.lib_base.db.GoodDb;
+import com.zb.lib_base.db.LikeTypeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -195,7 +199,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 }
             }
         }, activity)
-                .setCityId(areaDb.getCityId(MineApp.cityName))
+                .setCityId(AreaDb.getInstance().getCityId(MineApp.cityName))
                 .setDynType(2)
                 .setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
@@ -231,7 +235,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     @Override
     public void doGood(int position) {
         DiscoverInfo discoverInfo = MineApp.discoverInfoList.get(position);
-        if (goodDb.hasGood(discoverInfo.getFriendDynId())) {
+        if (GoodDb.getInstance().hasGood(discoverInfo.getFriendDynId())) {
             ivUnLike.setVisibility(View.VISIBLE);
             ivLike.setVisibility(View.GONE);
             likeOrNot(ivUnLike);
@@ -313,10 +317,10 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             public void onNext(Object o) {
                 if (o == null) {
                     ivAttention.setVisibility(View.INVISIBLE);
-                    attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), true, BaseActivity.userId));
+                    AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), true, BaseActivity.userId));
                 } else {
                     ivAttention.setVisibility(View.VISIBLE);
-                    attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), false, BaseActivity.userId));
+                    AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), false, BaseActivity.userId));
                 }
             }
         }, activity).setOtherUserId(discoverInfo.getUserId());
@@ -329,7 +333,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             @Override
             public void onNext(Object o) {
                 ivAttention.setVisibility(View.INVISIBLE);
-                attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), true, BaseActivity.userId));
+                AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), true, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
             }
 
@@ -338,7 +342,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
                     if (e.getMessage().equals("已经关注过")) {
                         ivAttention.setVisibility(View.INVISIBLE);
-                        attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), true, BaseActivity.userId));
+                        AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), true, BaseActivity.userId));
                         activity.sendBroadcast(new Intent("lobster_attentionList"));
                     }
                 }
@@ -353,7 +357,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             @Override
             public void onNext(Object o) {
                 ivAttention.setVisibility(View.VISIBLE);
-                attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), false, BaseActivity.userId));
+                AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), false, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
             }
         }, activity).setOtherUserId(discoverInfo.getUserId());
@@ -382,12 +386,12 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 String myHead = MineApp.mineInfo.getImage();
                 String otherHead = discoverInfo.getImage();
                 if (o == 1) {
-                    likeTypeDb.setType(discoverInfo.getUserId(), 2);
+                    LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 2);
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, MineApp.mineInfo.getSex(), MineApp.mineInfo.getSex() == 1 ? 0 : 1, null);
                 } else if (o == 4) {
                     SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
                 } else {
-                    likeTypeDb.setType(discoverInfo.getUserId(), 2);
+                    LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 2);
                     SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
                 }
             }
@@ -399,7 +403,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         dynDoLikeApi api = new dynDoLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                goodDb.saveGood(new CollectID(discoverInfo.getFriendDynId()));
+                GoodDb.getInstance().saveGood(new CollectID(discoverInfo.getFriendDynId()));
                 int goodNum = discoverInfo.getGoodNum() + 1;
                 discoverInfo.setGoodNum(goodNum);
                 tvGood.setText(discoverInfo.getGoodNumStr());
@@ -415,7 +419,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
                     if (TextUtils.equals(e.getMessage(), "已经赞过了")) {
-                        goodDb.saveGood(new CollectID(discoverInfo.getFriendDynId()));
+                        GoodDb.getInstance().saveGood(new CollectID(discoverInfo.getFriendDynId()));
                         Intent data = new Intent("lobster_doGood");
                         data.putExtra("goodNum", discoverInfo.getGoodNum());
                         data.putExtra("friendDynId", discoverInfo.getFriendDynId());
@@ -431,7 +435,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         dynCancelLikeApi api = new dynCancelLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                goodDb.deleteGood(discoverInfo.getFriendDynId());
+                GoodDb.getInstance().deleteGood(discoverInfo.getFriendDynId());
                 int goodNum = discoverInfo.getGoodNum() - 1;
                 discoverInfo.setGoodNum(goodNum);
                 tvGood.setText(discoverInfo.getGoodNumStr());
@@ -446,7 +450,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
                     if (TextUtils.equals(e.getMessage(), "已经取消过")) {
-                        goodDb.deleteGood(discoverInfo.getFriendDynId());
+                        GoodDb.getInstance().deleteGood(discoverInfo.getFriendDynId());
                         Intent data = new Intent("lobster_doGood");
                         data.putExtra("goodNum", discoverInfo.getGoodNum());
                         data.putExtra("friendDynId", discoverInfo.getFriendDynId());
@@ -508,7 +512,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         videoView.setBackgroundColor(activity.getResources().getColor(R.color.black_252));
         ivLike.setVisibility(View.GONE);
         ivUnLike.setVisibility(View.GONE);
-        if (goodDb.hasGood(discoverInfo.getFriendDynId())) {
+        if (GoodDb.getInstance().hasGood(discoverInfo.getFriendDynId())) {
             ivLike.setVisibility(View.VISIBLE);
         } else {
             ivUnLike.setVisibility(View.VISIBLE);
@@ -537,7 +541,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         });
 
         initGood(viewClick, ivGood, () -> videoPlay(discoverInfo), () -> {
-            if (!goodDb.hasGood(discoverInfo.getFriendDynId())) {
+            if (!GoodDb.getInstance().hasGood(discoverInfo.getFriendDynId())) {
                 ivUnLike.setVisibility(View.GONE);
                 ivLike.setVisibility(View.VISIBLE);
                 dynDoLike(discoverInfo);
@@ -605,6 +609,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         videoView.setVideoPath(discoverInfo.getVideoPath());
         videoView.start();
         reviewListView.start();
+        ivPlay.setVisibility(View.GONE);
     }
 
     private void initVideo() {

@@ -17,23 +17,18 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import io.realm.Realm;
-
 
 public class DownLoad {
 
-    private static ResFileDb resFileDb;
     private static RequestCallBack<File> back;
 
     public static void getFilePath(String fileUrl, String filePath, CallBack callBack) {
-        if (resFileDb == null)
-            resFileDb = new ResFileDb(Realm.getDefaultInstance());
-        if (resFileDb.isRead(fileUrl)) {
-            File file = new File(resFileDb.getResFile(fileUrl).getFilePath());
+        if (ResFileDb.getInstance().isRead(fileUrl)) {
+            File file = new File(ResFileDb.getInstance().getResFile(fileUrl).getFilePath());
             if (file.exists()) {
-                callBack.success(resFileDb.getResFile(fileUrl).getFilePath(), null);
+                callBack.success(ResFileDb.getInstance().getResFile(fileUrl).getFilePath(), null);
             } else {
-                resFileDb.deleteResFile(fileUrl);
+                ResFileDb.getInstance().deleteResFile(fileUrl);
                 downloadVideo(fileUrl, filePath, callBack);
             }
         } else {
@@ -46,7 +41,7 @@ public class DownLoad {
 
             @Override
             public void onSuccess(ResponseInfo<File> file) {
-                resFileDb.saveResFile(new ResFile(fileUrl, file.result.getAbsolutePath()));
+                ResFileDb.getInstance().saveResFile(new ResFile(fileUrl, file.result.getAbsolutePath()));
                 callBack.success(file.result.getAbsolutePath(), null);
             }
 

@@ -14,7 +14,6 @@ import com.zb.lib_base.api.clearHistoryMsgApi;
 import com.zb.lib_base.api.dynDetailApi;
 import com.zb.lib_base.api.systemHistoryMsgListApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.db.ResFileDb;
 import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -38,11 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
-import io.realm.Realm;
 
 public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInterface {
     public MineAdapter adapter;
-    public ResFileDb resFileDb;
     private List<SystemMsg> systemMsgList = new ArrayList<>();
     private int pageNo = 1;
     private MineSystemMsgBinding mBinding;
@@ -56,7 +53,6 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (MineSystemMsgBinding) binding;
-        resFileDb = new ResFileDb(Realm.getDefaultInstance());
         setAdapter();
         soundView = new SoundView(activity, view -> stopVoiceDrawable());
         ImUtils.getInstance().setOtherUserId(BaseActivity.systemUserId);

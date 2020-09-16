@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
-import io.realm.Realm;
 
 public class SelectJobViewModel extends BaseViewModel implements SelectJobVMInterface {
     public MineAdapter titleAdapter;
@@ -27,7 +26,6 @@ public class SelectJobViewModel extends BaseViewModel implements SelectJobVMInte
     public String job = "";
     private List<String> titleList = new ArrayList<>();
     private List<JobInfo> jobInfoList = new ArrayList<>();
-    private JobInfoDb jobInfoDb;
     private int _position = -1;
     private String selectJob = "";
 
@@ -53,8 +51,7 @@ public class SelectJobViewModel extends BaseViewModel implements SelectJobVMInte
 
         selectJob = job;
 
-        jobInfoDb = new JobInfoDb(Realm.getDefaultInstance());
-        if (jobInfoDb.getJobList("").size() == 0) {
+        if (JobInfoDb.getInstance().getJobList("").size() == 0) {
             String data = SimulateNetAPI.getOriginalFundData(activity, "job.json");
             try {
                 JSONArray array = new JSONArray(data);
@@ -67,7 +64,7 @@ public class SelectJobViewModel extends BaseViewModel implements SelectJobVMInte
                         JobInfo jobInfo = new JobInfo();
                         jobInfo.setJobTitle(object.optString("jobTitle"));
                         jobInfo.setJob(jobObject.optString("name"));
-                        jobInfoDb.saveJobInfo(jobInfo);
+                        JobInfoDb.getInstance().saveJobInfo(jobInfo);
                     }
                 }
             } catch (Exception e) {
@@ -92,7 +89,7 @@ public class SelectJobViewModel extends BaseViewModel implements SelectJobVMInte
     public void setAdapter() {
         titleAdapter = new MineAdapter<>(activity, R.layout.item_mine_title, titleList, this);
         titleAdapter.setSelectIndex(0);
-        jobInfoList.addAll(jobInfoDb.getJobList(titleList.get(0)));
+        jobInfoList.addAll(JobInfoDb.getInstance().getJobList(titleList.get(0)));
 
         adapter = new MineAdapter<>(activity, R.layout.item_mine_job, jobInfoList, this);
         _position = -1;
@@ -115,7 +112,7 @@ public class SelectJobViewModel extends BaseViewModel implements SelectJobVMInte
         jobInfoList.clear();
         adapter.notifyDataSetChanged();
 
-        jobInfoList.addAll(jobInfoDb.getJobList(titleList.get(position)));
+        jobInfoList.addAll(JobInfoDb.getInstance().getJobList(titleList.get(position)));
         _position = -1;
         for (int i = 0; i < jobInfoList.size(); i++) {
             if (TextUtils.equals(job, jobInfoList.get(i).getJob())) {

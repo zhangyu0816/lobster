@@ -18,6 +18,8 @@ import com.zb.lib_base.api.dynPiazzaListApi;
 import com.zb.lib_base.api.personOtherDynApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.CardMemberVideoBinding;
+import com.zb.lib_base.db.AreaDb;
+import com.zb.lib_base.db.GoodDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -158,7 +160,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
                 }
             }
         }, activity)
-                .setCityId(areaDb.getCityId(MineApp.cityName))
+                .setCityId(AreaDb.getInstance().getCityId(MineApp.cityName))
                 .setDynType(2)
                 .setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
@@ -242,7 +244,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
 
         GoodView goodView = (GoodView) view;
 
-        if (goodDb.hasGood(discoverInfo.getFriendDynId())) {
+        if (GoodDb.getInstance().hasGood(discoverInfo.getFriendDynId())) {
             goodView.playUnlike();
             dynCancelLike();
         } else {
@@ -256,7 +258,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
         dynDoLikeApi api = new dynDoLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                goodDb.saveGood(new CollectID(friendDynId));
+                GoodDb.getInstance().saveGood(new CollectID(friendDynId));
                 discoverInfo.setGoodNum(discoverInfo.getGoodNum() + 1);
                 adapter.notifyItemChanged(prePosition);
             }
@@ -265,7 +267,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
                     if (TextUtils.equals(e.getMessage(), "已经赞过了")) {
-                        goodDb.saveGood(new CollectID(friendDynId));
+                        GoodDb.getInstance().saveGood(new CollectID(friendDynId));
                         adapter.notifyItemChanged(prePosition);
                     }
                 }
@@ -279,7 +281,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
         dynCancelLikeApi api = new dynCancelLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                goodDb.deleteGood(friendDynId);
+                GoodDb.getInstance().deleteGood(friendDynId);
                 discoverInfo.setGoodNum(discoverInfo.getGoodNum() - 1);
                 adapter.notifyItemChanged(prePosition);
             }
@@ -288,7 +290,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
                     if (TextUtils.equals(e.getMessage(), "已经取消过")) {
-                        goodDb.deleteGood(friendDynId);
+                        GoodDb.getInstance().deleteGood(friendDynId);
                         adapter.notifyItemChanged(prePosition);
                     }
                 }

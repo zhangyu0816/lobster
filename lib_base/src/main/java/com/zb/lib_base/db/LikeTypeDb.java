@@ -6,9 +6,22 @@ import com.zb.lib_base.model.LikeType;
 import io.realm.Realm;
 
 public class LikeTypeDb extends BaseDao {
+    public volatile static LikeTypeDb INSTANCE;
 
     public LikeTypeDb(Realm realm) {
         super(realm);
+    }
+
+    //获取单例
+    public static LikeTypeDb getInstance() {
+        if (INSTANCE == null) {
+            synchronized (LikeTypeDb.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new LikeTypeDb(Realm.getDefaultInstance());
+                }
+            }
+        }
+        return INSTANCE;
     }
 
     public void saveLikeType(LikeType likeType) {

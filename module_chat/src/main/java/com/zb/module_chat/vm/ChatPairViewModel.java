@@ -10,6 +10,9 @@ import com.zb.lib_base.api.likeMeListApi;
 import com.zb.lib_base.api.pairListApi;
 import com.zb.lib_base.api.relievePairApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.ChatListDb;
+import com.zb.lib_base.db.LikeDb;
+import com.zb.lib_base.db.LikeTypeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -67,7 +70,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 try {
                     if (isUpdate) {
                         if (chatMsgList.size() != 0) {
-                            chatMsgList.set(chatType - 1, chatListDb.getChatList(chatType).get(0));
+                            chatMsgList.set(chatType - 1, ChatListDb.getInstance().getChatList(chatType).get(0));
                             adapter.notifyItemChanged(chatType - 1);
                         }
                     } else {
@@ -76,7 +79,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                             chatMsgList.clear();
                             adapter.notifyDataSetChanged();
                         }
-                        chatMsgList.addAll(chatListDb.getChatList(chatType));
+                        chatMsgList.addAll(ChatListDb.getInstance().getChatList(chatType));
                         adapter.notifyItemChanged(chatType - 1);
                         if (chatType == 2) {
                             beSuperLikeList();
@@ -94,7 +97,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 boolean isRelieve = intent.getBooleanExtra("isRelieve", false);
                 try {
                     if (isRelieve) {
-                        likeDb.deleteLike(otherUserId);
+                        LikeDb.getInstance().deleteLike(otherUserId);
                         activity.sendBroadcast(new Intent("lobster_contactNum"));
                     }
 
@@ -116,7 +119,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                     for (int i = 0; i < chatMsgList.size(); i++) {
                         if (chatMsgList.get(i) != null)
                             if (chatMsgList.get(i).getChatType() == 4 && chatMsgList.get(i).getUserId() == userId) {
-                                chatMsgList.set(i, chatListDb.getChatMsg(userId, 4));
+                                chatMsgList.set(i, ChatListDb.getInstance().getChatMsg(userId, 4));
                                 adapter.notifyItemChanged(i);
                                 break;
                             }
@@ -157,8 +160,8 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         chatType4List.clear();
         chatMsgList.clear();
         adapter.notifyDataSetChanged();
-        chatMsgList.addAll(chatListDb.getChatList(1));
-        chatMsgList.addAll(chatListDb.getChatList(2));
+        chatMsgList.addAll(ChatListDb.getInstance().getChatList(1));
+        chatMsgList.addAll(ChatListDb.getInstance().getChatList(2));
         MineApp.pairList.clear();
         beSuperLikeList();
     }
@@ -241,7 +244,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         relievePairApi api = new relievePairApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                likeTypeDb.deleteLikeType(otherUserId);
+                LikeTypeDb.getInstance().deleteLikeType(otherUserId);
                 Intent data = new Intent("lobster_relieve");
                 data.putExtra("otherUserId", otherUserId);
                 data.putExtra("isRelieve", true);
@@ -257,8 +260,8 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
             @Override
             public void onNext(List<LikeMe> o) {
                 for (LikeMe likeMe : o) {
-                    likeDb.saveLike(new CollectID(likeMe.getOtherUserId()));
-                    ChatList chatMsg = chatListDb.getChatMsg(likeMe.getOtherUserId(), 4);
+                    LikeDb.getInstance().saveLike(new CollectID(likeMe.getOtherUserId()));
+                    ChatList chatMsg = ChatListDb.getInstance().getChatMsg(likeMe.getOtherUserId(), 4);
                     ChatList chatList = new ChatList();
                     chatList.setUserId(likeMe.getOtherUserId());
                     chatList.setImage(likeMe.getHeadImage());

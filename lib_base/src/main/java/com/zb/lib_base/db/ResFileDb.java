@@ -4,15 +4,28 @@ package com.zb.lib_base.db;
 import com.zb.lib_base.model.ResFile;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 /**
  * Created by DIY on 2019-03-06.
  */
 
 public class ResFileDb extends BaseDao {
+    public volatile static ResFileDb INSTANCE;
+
     public ResFileDb(Realm realm) {
         super(realm);
+    }
+
+    //获取单例
+    public static ResFileDb getInstance() {
+        if (INSTANCE == null) {
+            synchronized (ResFileDb.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new ResFileDb(Realm.getDefaultInstance());
+                }
+            }
+        }
+        return INSTANCE;
     }
 
     /**
@@ -61,15 +74,6 @@ public class ResFileDb extends BaseDao {
         beginTransaction();
         ResFile resFile = realm.where(ResFile.class).equalTo("resLink", resLink).findFirst();
         resFile.deleteFromRealm();
-        commitTransaction();
-    }
-
-    public void deleteAll() {
-        beginTransaction();
-        RealmResults<ResFile> results = realm.where(ResFile.class).findAll();
-        if (results.size() > 0) {
-            results.deleteAllFromRealm();
-        }
         commitTransaction();
     }
 }

@@ -14,6 +14,8 @@ import com.zb.lib_base.api.attentionDynApi;
 import com.zb.lib_base.api.dynCancelLikeApi;
 import com.zb.lib_base.api.dynDoLikeApi;
 import com.zb.lib_base.api.otherInfoApi;
+import com.zb.lib_base.db.AttentionDb;
+import com.zb.lib_base.db.GoodDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -120,7 +122,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
             public void onNext(List<DiscoverInfo> o) {
                 mBinding.noNetLinear.setVisibility(View.GONE);
                 for (DiscoverInfo item : o) {
-                    String url = item.getVideoUrl().isEmpty() ? (item.getImages().isEmpty() ? attentionDb.getAttentionInfo(item.getOtherUserId()).getImage() : item.getImages().split(",")[0]) : item.getVideoUrl();
+                    String url = item.getVideoUrl().isEmpty() ? (item.getImages().isEmpty() ? AttentionDb.getInstance().getAttentionInfo(item.getOtherUserId()).getImage() : item.getImages().split(",")[0]) : item.getVideoUrl();
                     if (url.contains(".mp4")) {
                         int start = discoverInfoList.size();
                         discoverInfoList.add(item);
@@ -133,7 +135,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
                                 item.setHeight(bitmap.getHeight());
                             }
                             discoverInfoList.add(item);
-                            if (attentionDb.isAttention(item.getOtherUserId())) {
+                            if (AttentionDb.getInstance().isAttention(item.getOtherUserId())) {
                                 adapter.notifyItemRangeChanged(start, discoverInfoList.size());
                             } else {
                                 setImage(start, item);
@@ -166,7 +168,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
         otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
             @Override
             public void onNext(MemberInfo o) {
-                attentionDb.saveAttention(new AttentionInfo(discoverInfo.getOtherUserId(), o.getNick(), o.getImage(), true, BaseActivity.userId));
+                AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getOtherUserId(), o.getNick(), o.getImage(), true, BaseActivity.userId));
                 adapter.notifyItemRangeChanged(start, discoverInfoList.size());
             }
         }, activity).setOtherUserId(discoverInfo.getOtherUserId());
@@ -202,7 +204,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
 
         GoodView goodView = (GoodView) view;
 
-        if (goodDb.hasGood(discoverInfo.getFriendDynId())) {
+        if (GoodDb.getInstance().hasGood(discoverInfo.getFriendDynId())) {
             goodView.playUnlike();
             dynCancelLike();
         } else {
@@ -216,7 +218,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
         dynDoLikeApi api = new dynDoLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                goodDb.saveGood(new CollectID(friendDynId));
+                GoodDb.getInstance().saveGood(new CollectID(friendDynId));
                 discoverInfo.setGoodNum(discoverInfo.getGoodNum() + 1);
                 adapter.notifyItemChanged(prePosition);
             }
@@ -225,7 +227,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
                     if (TextUtils.equals(e.getMessage(), "已经赞过了")) {
-                        goodDb.saveGood(new CollectID(friendDynId));
+                        GoodDb.getInstance().saveGood(new CollectID(friendDynId));
                         adapter.notifyItemChanged(prePosition);
                     }
                 }
@@ -239,7 +241,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
         dynCancelLikeApi api = new dynCancelLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                goodDb.deleteGood(friendDynId);
+                GoodDb.getInstance().deleteGood(friendDynId);
                 discoverInfo.setGoodNum(discoverInfo.getGoodNum() - 1);
                 adapter.notifyItemChanged(prePosition);
             }
@@ -248,7 +250,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
                     if (TextUtils.equals(e.getMessage(), "已经取消过")) {
-                        goodDb.deleteGood(friendDynId);
+                        GoodDb.getInstance().deleteGood(friendDynId);
                         adapter.notifyItemChanged(prePosition);
                     }
                 }

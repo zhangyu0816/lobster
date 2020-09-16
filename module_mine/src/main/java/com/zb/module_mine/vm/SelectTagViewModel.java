@@ -21,11 +21,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
-import io.realm.Realm;
 
 public class SelectTagViewModel extends BaseViewModel implements SelectTagVMInterface {
     public String serviceTags;
-    private TagDb tagDb;
     public MineAdapter selectAdapter;
     public MineAdapter tabAdapter;
     public MineAdapter tagAdapter;
@@ -39,8 +37,7 @@ public class SelectTagViewModel extends BaseViewModel implements SelectTagVMInte
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
 
-        tagDb = new TagDb(Realm.getDefaultInstance());
-        if (tagDb.get().size() == 0) {
+        if (TagDb.getInstance().get().size() == 0) {
             String data = SimulateNetAPI.getOriginalFundData(activity, "tag.json");
             try {
                 JSONArray array = new JSONArray(data);
@@ -49,12 +46,12 @@ public class SelectTagViewModel extends BaseViewModel implements SelectTagVMInte
                     Tag tag = new Tag();
                     tag.setName(object.optString("name"));
                     tag.setTags(object.optString("tags"));
-                    tagDb.saveTag(tag);
+                    TagDb.getInstance().saveTag(tag);
                 }
             } catch (Exception e) {
             }
         }
-        tags = tagDb.get();
+        tags = TagDb.getInstance().get();
         for (Tag tag : tags) {
             tabList.add(tag.getName());
         }

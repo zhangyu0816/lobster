@@ -12,6 +12,8 @@
 
         <import type="com.zb.lib_base.app.MineApp" />
 
+        <import type="com.zb.lib_base.db.ResFileDb" />
+
         <variable
             name="item"
             type="com.zb.lib_base.model.HistoryMsg" />
@@ -161,7 +163,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_toEndOf="@+id/type_3_left_linear"
                     android:background="@drawable/circle_red"
-                    android:visibility="@{viewModel.resFileDb.isRead(item.resLink)?View.GONE:View.VISIBLE}" />
+                    android:visibility="@{ResFileDb.getInstance().isRead(item.resLink)?View.GONE:View.VISIBLE}" />
 
             </RelativeLayout>
 
@@ -332,7 +334,7 @@
                     android:layout_marginEnd="5dp"
                     android:layout_toStartOf="@+id/type_3_right_linear"
                     android:background="@drawable/circle_red"
-                    android:visibility="@{viewModel.resFileDb.isRead(item.resLink)?View.GONE:View.VISIBLE}" />
+                    android:visibility="@{ResFileDb.getInstance().isRead(item.resLink)?View.GONE:View.VISIBLE}" />
 
             </RelativeLayout>
 

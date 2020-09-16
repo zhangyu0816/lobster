@@ -34,6 +34,9 @@ import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.seeGiftRewardsApi;
 import com.zb.lib_base.api.seeReviewsApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.AttentionDb;
+import com.zb.lib_base.db.GoodDb;
+import com.zb.lib_base.db.LikeTypeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -363,12 +366,12 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 String myHead = MineApp.mineInfo.getImage();
                 String otherHead = memberInfo.getImage();
                 if (o == 1) {
-                    likeTypeDb.setType(discoverInfo.getUserId(), 2);
+                    LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 2);
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, MineApp.mineInfo.getSex(), memberInfo.getSex(), null);
                 } else if (o == 4) {
                     SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
                 } else {
-                    likeTypeDb.setType(discoverInfo.getUserId(), 2);
+                    LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 2);
                     SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
                 }
             }
@@ -425,7 +428,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 
     @Override
     public void dynLike(View view) {
-        if (goodDb.hasGood(friendDynId)) {
+        if (GoodDb.getInstance().hasGood(friendDynId)) {
             mBinding.goodView.playUnlike();
             dynCancelLike();
         } else {
@@ -439,7 +442,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         dynDoLikeApi api = new dynDoLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                goodDb.saveGood(new CollectID(friendDynId));
+                GoodDb.getInstance().saveGood(new CollectID(friendDynId));
                 int goodNum = discoverInfo.getGoodNum() + 1;
                 discoverInfo.setGoodNum(goodNum);
                 mBinding.setViewModel(DiscoverDetailViewModel.this);
@@ -454,7 +457,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
                     if (TextUtils.equals(e.getMessage(), "已经赞过了")) {
-                        goodDb.saveGood(new CollectID(friendDynId));
+                        GoodDb.getInstance().saveGood(new CollectID(friendDynId));
                         mBinding.setViewModel(DiscoverDetailViewModel.this);
                         Intent data = new Intent("lobster_doGood");
                         data.putExtra("goodNum", discoverInfo.getGoodNum());
@@ -473,7 +476,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         dynCancelLikeApi api = new dynCancelLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                goodDb.deleteGood(friendDynId);
+                GoodDb.getInstance().deleteGood(friendDynId);
                 int goodNum = discoverInfo.getGoodNum() - 1;
                 discoverInfo.setGoodNum(goodNum);
                 mBinding.setViewModel(DiscoverDetailViewModel.this);
@@ -487,7 +490,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
                     if (TextUtils.equals(e.getMessage(), "已经取消过")) {
-                        goodDb.deleteGood(friendDynId);
+                        GoodDb.getInstance().deleteGood(friendDynId);
                         Intent data = new Intent("lobster_doGood");
                         data.putExtra("goodNum", discoverInfo.getGoodNum());
                         data.putExtra("friendDynId", friendDynId);
@@ -530,9 +533,9 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             public void onNext(Object o) {
                 if (o == null) {
                     mBinding.setIsAttention(true);
-                    attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
+                    AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 } else {
-                    attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
+                    AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
                 }
             }
         }, activity).setOtherUserId(discoverInfo.getUserId());
@@ -546,7 +549,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(Object o) {
                 mBinding.setIsAttention(true);
-                attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
+                AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
             }
 
@@ -555,7 +558,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
                     if (e.getMessage().equals("已经关注过")) {
                         mBinding.setIsAttention(true);
-                        attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
+                        AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                         activity.sendBroadcast(new Intent("lobster_attentionList"));
                     }
                 }
@@ -571,7 +574,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(Object o) {
                 mBinding.setIsAttention(false);
-                attentionDb.saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
+                AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
             }
         }, activity).setOtherUserId(discoverInfo.getUserId());

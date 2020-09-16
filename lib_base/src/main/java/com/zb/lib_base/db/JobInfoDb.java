@@ -9,9 +9,22 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class JobInfoDb extends BaseDao {
+    public volatile static JobInfoDb INSTANCE;
 
     public JobInfoDb(Realm realm) {
         super(realm);
+    }
+
+    //获取单例
+    public static JobInfoDb getInstance() {
+        if (INSTANCE == null) {
+            synchronized (JobInfoDb.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new JobInfoDb(Realm.getDefaultInstance());
+                }
+            }
+        }
+        return INSTANCE;
     }
 
     public void saveJobInfo(JobInfo jobInfo) {

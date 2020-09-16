@@ -8,6 +8,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.zb.lib_base.db.GoodDb" />
+
         <variable
             name="item"
             type="com.zb.lib_base.model.DiscoverInfo" />
@@ -121,7 +123,7 @@
 
                         <com.zb.lib_base.views.GoodView
                             android:id="@+id/good_view"
-                            isLike="@{viewModel.goodDb.hasGood(item.friendDynId)}"
+                            isLike="@{GoodDb.getInstance().hasGood(item.friendDynId)}"
                             onClickDelayed="@{v->viewModel.doLike(v,position)}"
                             android:layout_width="40dp"
                             android:layout_height="40dp"

@@ -26,13 +26,6 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.db.AreaDb;
-import com.zb.lib_base.db.AttentionDb;
-import com.zb.lib_base.db.ChatListDb;
-import com.zb.lib_base.db.GoodDb;
-import com.zb.lib_base.db.HistoryMsgDb;
-import com.zb.lib_base.db.LikeDb;
-import com.zb.lib_base.db.LikeTypeDb;
 import com.zb.lib_base.iv.BaseVMInterface;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.utils.DateUtil;
@@ -45,37 +38,15 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.ViewDataBinding;
 import androidx.viewpager.widget.ViewPager;
-import io.realm.Realm;
 
 public class BaseViewModel implements BaseVMInterface {
     public ViewDataBinding mBinding;
     public RxAppCompatActivity activity;
-    public GoodDb goodDb;
-    public AttentionDb attentionDb;
-    public LikeTypeDb likeTypeDb;
-    public AreaDb areaDb;
-    public ChatListDb chatListDb;
-    public HistoryMsgDb historyMsgDb;
-    public LikeDb likeDb;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         mBinding = binding;
         activity = (RxAppCompatActivity) mBinding.getRoot().getContext();
-        if (goodDb == null)
-            goodDb = new GoodDb(Realm.getDefaultInstance());
-        if (attentionDb == null)
-            attentionDb = new AttentionDb(Realm.getDefaultInstance());
-        if (likeTypeDb == null)
-            likeTypeDb = new LikeTypeDb(Realm.getDefaultInstance());
-        if (areaDb == null)
-            areaDb = new AreaDb(Realm.getDefaultInstance());
-        if (chatListDb == null)
-            chatListDb = new ChatListDb(Realm.getDefaultInstance());
-        if (historyMsgDb == null)
-            historyMsgDb = new HistoryMsgDb(Realm.getDefaultInstance());
-        if (likeDb == null)
-            likeDb = new LikeDb(Realm.getDefaultInstance());
     }
 
     @Override
@@ -295,7 +266,8 @@ public class BaseViewModel implements BaseVMInterface {
                     imageView.setX(motionEvent.getX() - ObjectUtils.getViewSizeByWidthFromMax(102));
                     imageView.setY(motionEvent.getY() - ObjectUtils.getViewSizeByWidthFromMax(102));
                     imageView.setAlpha(1f);
-                    pvh.start();
+                    if (pvh != null)
+                        pvh.start();
                     mHandler.postDelayed(successRa, 500);
                 }
             }

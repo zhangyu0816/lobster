@@ -11,6 +11,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.zb.lib_base.db.AreaDb" />
+
         <variable
             name="item"
             type="com.zb.lib_base.model.PairInfo" />
@@ -167,7 +169,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
-                        android:text="@{viewModel.areaDb.getCityName(item.cityId)}"
+                        android:text="@{AreaDb.getInstance().getCityName(item.cityId)}"
                         android:textColor="@android:color/white"
                         android:textSize="14sp"
                         tools:text="温州市" />
@@ -176,7 +178,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
-                        android:text="@{viewModel.areaDb.getDistrictName(item.districtId)}"
+                        android:text="@{AreaDb.getInstance().getDistrictName(item.districtId)}"
                         android:textColor="@android:color/white"
                         android:textSize="14sp"
                         tools:text="鹿城区" />

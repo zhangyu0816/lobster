@@ -31,6 +31,7 @@ import com.zb.lib_base.adapter.BaseAdapter;
 import com.zb.lib_base.api.updatePairPoolApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.FragLocationBinding;
+import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.iv.LocationVMInterface;
@@ -254,7 +255,7 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
             activity.finish();
         } else {
             MineApp.cityName = info.getCityName();
-            updatePairPool(info.getLongitude() + "", info.getLatitude() + "", areaDb.getProvinceId(info.getProvinceName()), areaDb.getCityId(info.getCityName()), areaDb.getDistrictId(info.getDistrictName()));
+            updatePairPool(info.getLongitude() + "", info.getLatitude() + "", AreaDb.getInstance().getProvinceId(info.getProvinceName()), AreaDb.getInstance().getCityId(info.getCityName()), AreaDb.getInstance().getDistrictId(info.getDistrictName()));
         }
     }
 

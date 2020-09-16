@@ -8,6 +8,7 @@ import android.view.View;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.modifyMemberInfoApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.utils.ActivityUtils;
@@ -190,9 +191,9 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
                 .setPersonalitySign(MineApp.mineInfo.getPersonalitySign())
                 .setSex(MineApp.mineInfo.getSex())
                 .setServiceTags(MineApp.mineInfo.getServiceTags())
-                .setProvinceId(areaDb.getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
-                .setCityId(areaDb.getCityId(MineApp.cityName))
-                .setDistrictId(areaDb.getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
+                .setProvinceId(AreaDb.getInstance().getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
+                .setCityId(AreaDb.getInstance().getCityId(MineApp.cityName))
+                .setDistrictId(AreaDb.getInstance().getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
         HttpManager.getInstance().doHttpDeal(api);
     }
 

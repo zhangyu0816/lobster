@@ -25,6 +25,10 @@ import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.otherRentInfoApi;
 import com.zb.lib_base.api.personOtherDynApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.AreaDb;
+import com.zb.lib_base.db.AttentionDb;
+import com.zb.lib_base.db.LikeDb;
+import com.zb.lib_base.db.LikeTypeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -83,7 +87,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        likeType = likeTypeDb.getType(otherUserId);
+        likeType = LikeTypeDb.getInstance().getType(otherUserId);
         mBinding = (CardMemberDetailBinding) binding;
         mBinding.setConstellation("");
         mBinding.setIsAttention(false);
@@ -201,8 +205,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     distant = String.format("%.1f", Float.parseFloat(memberInfo.getDistance()) / 1000f) + "km";
                 }
 
-                String cityName = areaDb.getCityName(memberInfo.getCityId()) + " ";
-                String districtName = areaDb.getDistrictName(memberInfo.getDistrictId());
+                String cityName = AreaDb.getInstance().getCityName(memberInfo.getCityId()) + " ";
+                String districtName = AreaDb.getInstance().getDistrictName(memberInfo.getDistrictId());
                 if (cityName.trim().isEmpty())
                     mBinding.setInfo(distant + (memberInfo.getSex() == 0 ? "/女" : "/男"));
                 else
@@ -328,9 +332,9 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             public void onNext(Object o) {
                 if (o == null) {
                     mBinding.setIsAttention(true);
-                    attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
+                    AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 } else {
-                    attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
+                    AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
                 }
             }
         }, activity).setOtherUserId(otherUserId);
@@ -343,7 +347,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             @Override
             public void onNext(Object o) {
                 mBinding.setIsAttention(true);
-                attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
+                AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
                 Intent intent = new Intent("lobster_attention");
                 intent.putExtra("isAttention", mBinding.getIsAttention());
@@ -355,7 +359,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
                     if (e.getMessage().equals("已经关注过")) {
                         mBinding.setIsAttention(true);
-                        attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
+                        AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                         activity.sendBroadcast(new Intent("lobster_attentionList"));
                     }
                 }
@@ -370,7 +374,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             @Override
             public void onNext(Object o) {
                 mBinding.setIsAttention(false);
-                attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
+                AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
                 Intent intent = new Intent("lobster_attention");
                 intent.putExtra("isAttention", mBinding.getIsAttention());
@@ -394,10 +398,10 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     if (likeOtherStatus == 0) {
                         activity.finish();
                     } else if (likeOtherStatus == 1) {
-                        likeDb.saveLike(new CollectID(otherUserId));
+                        LikeDb.getInstance().saveLike(new CollectID(otherUserId));
                         activity.sendBroadcast(new Intent("lobster_isLike"));
                         activity.sendBroadcast(new Intent("lobster_updateFCL"));
-                        likeTypeDb.setType(otherUserId, 1);
+                        LikeTypeDb.getInstance().setType(otherUserId, 1);
                         closeBtn(mBinding.ivLike);
                         closeBtn(mBinding.ivDislike);
                         isLike = true;
@@ -413,7 +417,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                                 closeBtn(mBinding.ivLike);
                                 closeBtn(mBinding.ivDislike);
                             }
-                            likeTypeDb.setType(otherUserId, 2);
+                            LikeTypeDb.getInstance().setType(otherUserId, 2);
                             closeBtn(mBinding.ivSuperLike);
                             activity.sendBroadcast(new Intent("lobster_updateFCL"));
                             new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, MineApp.mineInfo.getSex(), memberInfo.getSex(), null);
@@ -421,13 +425,13 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     }
                 } else if (o == 2) {
                     // 匹配成功
-                    likeDb.saveLike(new CollectID(otherUserId));
+                    LikeDb.getInstance().saveLike(new CollectID(otherUserId));
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, MineApp.mineInfo.getSex(), memberInfo.getSex(),
                             () -> ActivityUtils.getChatActivity(otherUserId));
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                     activity.sendBroadcast(new Intent("lobster_isLike"));
                     activity.sendBroadcast(new Intent("lobster_updateFCL"));
-                    likeTypeDb.setType(otherUserId, 1);
+                    LikeTypeDb.getInstance().setType(otherUserId, 1);
                     mBinding.setLikeType(1);
                 } else if (o == 3) {
                     // 喜欢次数用尽
@@ -444,13 +448,13 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     if (likeOtherStatus == 0) {
                         activity.finish();
                     } else if (likeOtherStatus == 1) {
-                        likeTypeDb.setType(otherUserId, 1);
+                        LikeTypeDb.getInstance().setType(otherUserId, 1);
                         closeBtn(mBinding.ivLike);
                         closeBtn(mBinding.ivDislike);
                         isLike = true;
                         SCToastUtil.showToast(activity, "已喜欢成功", true);
                     } else if (likeOtherStatus == 2) {
-                        likeTypeDb.setType(otherUserId, 2);
+                        LikeTypeDb.getInstance().setType(otherUserId, 2);
                         closeBtn(mBinding.ivLike);
                         closeBtn(mBinding.ivDislike);
                         closeBtn(mBinding.ivSuperLike);

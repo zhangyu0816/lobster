@@ -17,6 +17,9 @@ import com.zb.lib_base.api.myConcernsApi;
 import com.zb.lib_base.api.myFansApi;
 import com.zb.lib_base.api.relievePairApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.AttentionDb;
+import com.zb.lib_base.db.LikeDb;
+import com.zb.lib_base.db.LikeTypeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -133,7 +136,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
         long otherUserId = memberInfoList.get(selectIndex).getUserId();
         if (position == 2) {
             // 被喜欢
-            if (likeDb.hasLike(otherUserId)) {
+            if (LikeDb.getInstance().hasLike(otherUserId)) {
                 new TextPW(activity, mBinding.getRoot(), "解除匹配关系", "解除匹配关系后，将对方移除匹配列表及聊天列表。", "解除", () -> {
                     relievePair(otherUserId);
                 });
@@ -142,7 +145,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
             }
         } else {
             // 我的关注  我的粉丝
-            if (attentionDb.isAttention(otherUserId)) {
+            if (AttentionDb.getInstance().isAttention(otherUserId)) {
                 cancelAttention(otherUserId);
             } else {
                 attentionOther(otherUserId);
@@ -156,7 +159,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
             public void onNext(Object o) {
                 MemberInfo memberInfo = memberInfoList.get(_selectIndex);
                 memberInfo.setFansQuantity(memberInfo.getFansQuantity() + 1);
-                attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
+                AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
             }
 
@@ -166,7 +169,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                     if (e.getMessage().equals("已经关注过")) {
                         MemberInfo memberInfo = memberInfoList.get(_selectIndex);
                         memberInfo.setFansQuantity(memberInfo.getFansQuantity() + 1);
-                        attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
+                        AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                         activity.sendBroadcast(new Intent("lobster_attentionList"));
                     }
                 }
@@ -181,7 +184,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
             public void onNext(Object o) {
                 MemberInfo memberInfo = memberInfoList.get(_selectIndex);
                 memberInfo.setFansQuantity(memberInfo.getFansQuantity() - 1);
-                attentionDb.saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
+                AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
             }
         }, activity).setOtherUserId(otherUserId);
@@ -198,26 +201,26 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 if (o == 1) {
                     if (likeOtherStatus == 0) {
                         // 不喜欢返回结果  data=1
-                        likeDb.deleteLike(otherUserId);
+                        LikeDb.getInstance().deleteLike(otherUserId);
                     } else {
-                        likeDb.saveLike(new CollectID(otherUserId));
+                        LikeDb.getInstance().saveLike(new CollectID(otherUserId));
                         activity.sendBroadcast(new Intent("lobster_isLike"));
-                        likeTypeDb.setType(otherUserId, 1);
+                        LikeTypeDb.getInstance().setType(otherUserId, 1);
                     }
                     adapter.notifyItemChanged(_selectIndex);
                 } else if (o == 2) {
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, MineApp.mineInfo.getSex(), memberInfoList.get(_selectIndex).getSex(), () -> ActivityUtils.getChatActivity(memberInfoList.get(_selectIndex).getUserId()));
-                    likeDb.saveLike(new CollectID(otherUserId));
+                    LikeDb.getInstance().saveLike(new CollectID(otherUserId));
                     adapter.notifyItemChanged(_selectIndex);
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                     activity.sendBroadcast(new Intent("lobster_isLike"));
-                    likeTypeDb.setType(otherUserId, 1);
+                    LikeTypeDb.getInstance().setType(otherUserId, 1);
                 } else if (o == 3) {
                     new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
                     SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else if (o == 5) {
                     if (likeOtherStatus == 1) {
-                        likeTypeDb.setType(otherUserId, 1);
+                        LikeTypeDb.getInstance().setType(otherUserId, 1);
                         SCToastUtil.showToast(activity, "你已喜欢过对方", true);
                     }
                 }
@@ -230,9 +233,9 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
         relievePairApi api = new relievePairApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                likeTypeDb.deleteLikeType(otherUserId);
+                LikeTypeDb.getInstance().deleteLikeType(otherUserId);
                 if (_selectIndex != -1) {
-                    likeDb.deleteLike(otherUserId);
+                    LikeDb.getInstance().deleteLike(otherUserId);
                     adapter.notifyItemRemoved(_selectIndex);
                     memberInfoList.remove(_selectIndex);
                     adapter.notifyDataSetChanged();
@@ -262,7 +265,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
             public void onNext(List<MemberInfo> o) {
                 int start = memberInfoList.size();
                 for (MemberInfo item : o) {
-                    attentionDb.saveAttention(new AttentionInfo(item.getUserId(), item.getNick(), item.getImage(), true, BaseActivity.userId));
+                    AttentionDb.getInstance().saveAttention(new AttentionInfo(item.getUserId(), item.getNick(), item.getImage(), true, BaseActivity.userId));
                     memberInfoList.add(item);
                 }
                 adapter.notifyItemRangeChanged(start, memberInfoList.size());

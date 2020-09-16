@@ -245,15 +245,15 @@ public class ObjectUtils {
             return "立即验证";
     }
 
-    public static int textColor(LikeDb likeDb, AttentionDb attentionDb, long otherUserId, int position) {
+    public static int textColor(long otherUserId, int position) {
         if (position == 2) {
-            if (likeDb.hasLike(otherUserId)) {
+            if (LikeDb.getInstance().hasLike(otherUserId)) {
                 return MineApp.getInstance().getResources().getColor(R.color.black_827);
             } else {
                 return MineApp.getInstance().getResources().getColor(R.color.purple_7a4);
             }
         } else {
-            if (attentionDb.isAttention(otherUserId)) {
+            if (AttentionDb.getInstance().isAttention(otherUserId)) {
                 return MineApp.getInstance().getResources().getColor(R.color.black_827);
             } else {
                 return MineApp.getInstance().getResources().getColor(R.color.purple_7a4);
@@ -262,13 +262,13 @@ public class ObjectUtils {
 
     }
 
-    public static String textName(LikeDb likeDb, AttentionDb attentionDb, long otherUserId, int position) {
+    public static String textName(long otherUserId, int position) {
         if (position == 2) {
-            return likeDb.hasLike(otherUserId) ? "已喜欢" : "喜欢Ta";
+            return LikeDb.getInstance().hasLike(otherUserId) ? "已喜欢" : "喜欢Ta";
         } else if (position == 1) {
-            return attentionDb.isAttention(otherUserId) ? "已关注" : "回粉";
+            return AttentionDb.getInstance().isAttention(otherUserId) ? "已关注" : "回粉";
         } else {
-            return attentionDb.isAttention(otherUserId) ? "已关注" : "关注Ta";
+            return AttentionDb.getInstance().isAttention(otherUserId) ? "已关注" : "关注Ta";
         }
     }
 

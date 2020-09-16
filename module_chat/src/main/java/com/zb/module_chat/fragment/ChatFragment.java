@@ -6,6 +6,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseFragment;
 import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_chat.BR;
@@ -45,7 +46,7 @@ public class ChatFragment extends BaseFragment {
         fragments.add(FragmentUtils.getChatPairFragment());
         fragments.add(FragmentUtils.getChatListFragment());
         binding.viewPage.setAdapter(new FragmentAdapter(getChildFragmentManager(), fragments));
-        String temp = "聊天-" + (viewModel.chatListDb.getChatTabRed() > 0 ? "true" : "false");
+        String temp = "聊天-" + (ChatListDb.getInstance().getChatTabRed() > 0 ? "true" : "false");
         viewModel.initTabLayout(new String[]{"所有匹配", temp}, binding.tabLayout, binding.viewPage, R.color.black_252, R.color.black_827, MineApp.chatSelectIndex);
 
     }

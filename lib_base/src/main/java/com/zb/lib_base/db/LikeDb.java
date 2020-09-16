@@ -9,9 +9,22 @@ import io.realm.Realm;
  * 喜欢对方
  */
 public class LikeDb extends BaseDao {
+    public volatile static LikeDb INSTANCE;
 
     public LikeDb(Realm realm) {
         super(realm);
+    }
+
+    //获取单例
+    public static LikeDb getInstance() {
+        if (INSTANCE == null) {
+            synchronized (LikeDb.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new LikeDb(Realm.getDefaultInstance());
+                }
+            }
+        }
+        return INSTANCE;
     }
 
     public void saveLike(CollectID collectID) {

@@ -15,6 +15,7 @@ import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.pickBottleApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.BottleCacheDb;
+import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -42,7 +43,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.ItemTouchHelper;
-import io.realm.Realm;
 
 public class BottleListViewModel extends BaseViewModel implements BottleListVMInterface, OnRefreshListener, OnLoadMoreListener {
 
@@ -52,13 +52,11 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     private int pageNo = 1;
     private BottleListBinding mBinding;
     private SimpleItemTouchHelperCallback callback;
-    private BottleCacheDb bottleCacheDb;
     private BaseReceiver singleBottleCacheReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        bottleCacheDb = new BottleCacheDb(Realm.getDefaultInstance());
         mBinding = (BottleListBinding) binding;
         mBinding.setShowBg(false);
         // 开通会员
@@ -86,7 +84,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                     adapter.notifyItemRemoved(position);
                     bottleInfoList.remove(position);
 
-                    BottleCache bottleCache = bottleCacheDb.getBottleCache(driftBottleId);
+                    BottleCache bottleCache = BottleCacheDb.getInstance().getBottleCache(driftBottleId);
                     if (bottleCache != null) {
                         bottleInfo.setText(bottleCache.getStanza());
                         bottleInfo.setModifyTime(bottleCache.getCreationDate());
@@ -148,11 +146,11 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
             public void onNext(List<BottleInfo> o) {
                 for (BottleInfo bottleInfo : o) {
                     if (bottleInfo.getDestroyType() == 1 && bottleInfo.getUserId() == BaseActivity.userId) {
-                        bottleCacheDb.deleteBottleCache(bottleInfo.getDriftBottleId());
+                        BottleCacheDb.getInstance().deleteBottleCache(bottleInfo.getDriftBottleId());
                         continue;
                     }
                     if (bottleInfo.getDestroyType() == 2 && bottleInfo.getOtherUserId() == BaseActivity.userId) {
-                        bottleCacheDb.deleteBottleCache(bottleInfo.getDriftBottleId());
+                        BottleCacheDb.getInstance().deleteBottleCache(bottleInfo.getDriftBottleId());
                         continue;
                     }
 
@@ -160,7 +158,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                         bottleInfo.setOtherHeadImage(MineApp.mineInfo.getImage());
                         bottleInfo.setOtherNick(MineApp.mineInfo.getNick());
                     }
-                    BottleCache bottleCache = bottleCacheDb.getBottleCache(bottleInfo.getDriftBottleId());
+                    BottleCache bottleCache = BottleCacheDb.getInstance().getBottleCache(bottleInfo.getDriftBottleId());
                     if (bottleCache != null) {
                         bottleInfo.setText(bottleCache.getStanza());
                         bottleInfo.setNoReadNum(bottleCache.getNoReadNum());
@@ -230,8 +228,8 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 BottleInfo bottleInfo = bottleInfoList.get(position);
                 long otherUserId = bottleInfo.getUserId() == BaseActivity.userId ? bottleInfo.getOtherUserId() : bottleInfo.getUserId();
 
-                bottleCacheDb.deleteBottleCache(bottleInfo.getDriftBottleId());
-                historyMsgDb.deleteHistoryMsg(otherUserId, 2, bottleInfo.getDriftBottleId());
+                BottleCacheDb.getInstance().deleteBottleCache(bottleInfo.getDriftBottleId());
+                HistoryMsgDb.getInstance().deleteHistoryMsg(otherUserId, 2, bottleInfo.getDriftBottleId());
                 adapter.notifyItemRemoved(position);
                 bottleInfoList.remove(position);
                 adapter.notifyDataSetChanged();

@@ -20,6 +20,7 @@ import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.readOverDriftBottleHistoryMsgApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.BottleCacheDb;
+import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.emojj.EmojiHandler;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -49,7 +50,6 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
-import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class BottleChatViewModel extends BaseViewModel implements BottleChatVMInterface, OnRefreshListener {
@@ -59,7 +59,6 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     private BottleChatBinding mBinding;
     public BottleInfo bottleInfo;
     private long otherUserId = 0;
-    private BottleCacheDb bottleCacheDb;
 
     private long historyMsgId = 0;
     private List<HistoryMsg> historyMsgList = new ArrayList<>();
@@ -76,7 +75,6 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (BottleChatBinding) binding;
-        bottleCacheDb = new BottleCacheDb(Realm.getDefaultInstance());
         ImUtils.getInstance().setCallBackForMsg(this::updateMySend);
         setAdapter();
         setProhibitEmoji(mBinding.edContent);
@@ -86,13 +84,13 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                 CustomMessageBody body = (CustomMessageBody) intent.getSerializableExtra("customMessageBody");
                 String msgId = intent.getStringExtra("msgId");
                 HistoryMsg historyMsg = HistoryMsg.createHistory(msgId, body, otherUserId, 2, driftBottleId);
-                historyMsgDb.saveHistoryMsg(historyMsg);
+                HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
                 historyMsgList.add(adapter.getItemCount(), historyMsg);
                 updateTime();
                 adapter.notifyItemChanged(adapter.getItemCount() - 1);
                 mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
 
-                bottleCacheDb.updateBottleCache(driftBottleId, memberInfo.getImage(), memberInfo.getNick(), () -> new Handler().postDelayed(() -> {
+                BottleCacheDb.getInstance().updateBottleCache(driftBottleId, memberInfo.getImage(), memberInfo.getNick(), () -> new Handler().postDelayed(() -> {
                     // 更新会话列表
                     Intent data = new Intent("lobster_singleBottleCache");
                     data.putExtra("driftBottleId", body.getDriftBottleId());
@@ -152,7 +150,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             return;
         }
         pagerNo++;
-        List<HistoryMsg> tempList = historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize);
+        List<HistoryMsg> tempList =  HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize);
         Collections.reverse(tempList);
         updateTime();
         historyMsgList.addAll(0, tempList);
@@ -163,8 +161,8 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
 
     @Override
     public void setAdapter() {
-        realmResults = historyMsgDb.getRealmResults(otherUserId, 2, driftBottleId);
-        historyMsgList.addAll(historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize));
+        realmResults =  HistoryMsgDb.getInstance().getRealmResults(otherUserId, 2, driftBottleId);
+        historyMsgList.addAll( HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize));
         Collections.reverse(historyMsgList);
         updateTime();
 
@@ -204,7 +202,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                 historyMsg.setOtherUserId(otherUserId);
                 historyMsg.setMsgChannelType(2);
                 historyMsg.setDriftBottleId(driftBottleId);
-                historyMsgDb.saveHistoryMsg(historyMsg);
+                HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
                 historyMsgList.add(historyMsg);
                 updateTime();
                 adapter.notifyDataSetChanged();
@@ -234,7 +232,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             @Override
             public void onNext(List<PrivateMsg> o) {
                 for (PrivateMsg privateMsg : o) {
-                    historyMsgDb.saveHistoryMsg(HistoryMsg.createHistoryForPrivate(privateMsg, otherUserId, 2, driftBottleId));
+                    HistoryMsgDb.getInstance().saveHistoryMsg(HistoryMsg.createHistoryForPrivate(privateMsg, otherUserId, 2, driftBottleId));
                 }
                 if (historyMsgId == 0)
                     historyMsgId = o.get(0).getId();
@@ -247,8 +245,8 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                     if (historyMsgId > 0)
                         readOverHistoryMsg();
                     historyMsgList.clear();
-                    realmResults = historyMsgDb.getRealmResults(otherUserId, 2, driftBottleId);
-                    historyMsgList.addAll(historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize));
+                    realmResults =  HistoryMsgDb.getInstance().getRealmResults(otherUserId, 2, driftBottleId);
+                    historyMsgList.addAll( HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize));
                     Collections.reverse(historyMsgList);
                     updateTime();
                     adapter.notifyDataSetChanged();
@@ -269,13 +267,13 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                         bottleCache.setEffectType(1);
                         bottleCache.setAuthType(1);
                         bottleCache.setMainUserId(BaseActivity.userId);
-                        bottleCacheDb.saveBottleCache(bottleCache);
+                        BottleCacheDb.getInstance().saveBottleCache(bottleCache);
                         // 更新会话列表
                         Intent data = new Intent("lobster_singleBottleCache");
                         data.putExtra("driftBottleId", driftBottleId);
                         activity.sendBroadcast(data);
                     } else {
-                        bottleCacheDb.updateBottleCache(driftBottleId, memberInfo.getImage(), memberInfo.getNick(), new BottleCacheDb.CallBack() {
+                        BottleCacheDb.getInstance().updateBottleCache(driftBottleId, memberInfo.getImage(), memberInfo.getNick(), new BottleCacheDb.CallBack() {
                             @Override
                             public void success() {
                                 // 更新会话列表
@@ -299,7 +297,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                                 bottleCache.setEffectType(1);
                                 bottleCache.setAuthType(1);
                                 bottleCache.setMainUserId(BaseActivity.userId);
-                                bottleCacheDb.saveBottleCache(bottleCache);
+                                BottleCacheDb.getInstance().saveBottleCache(bottleCache);
                                 // 更新会话列表
                                 Intent data = new Intent("lobster_singleBottleCache");
                                 data.putExtra("driftBottleId", driftBottleId);
@@ -404,7 +402,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         bottleCache.setEffectType(1);
         bottleCache.setAuthType(1);
         bottleCache.setMainUserId(BaseActivity.userId);
-        bottleCacheDb.saveBottleCache(bottleCache);
+        BottleCacheDb.getInstance().saveBottleCache(bottleCache);
         // 更新会话列表
         Intent data = new Intent("lobster_singleBottleCache");
         data.putExtra("driftBottleId", driftBottleId);
@@ -414,7 +412,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         body.setFromId(BaseActivity.userId);
         body.setToId(otherUserId);
         HistoryMsg historyMsg = HistoryMsg.createHistory(msgId, body, otherUserId, 2, driftBottleId);
-        historyMsgDb.saveHistoryMsg(historyMsg);
+        HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
         historyMsgList.add(historyMsg);
         updateTime();
         adapter.notifyItemChanged(adapter.getItemCount() - 1);

@@ -30,10 +30,6 @@
             type="boolean" />
 
         <variable
-            name="goodDb"
-            type="com.zb.lib_base.db.GoodDb" />
-
-        <variable
             name="isMine"
             type="boolean" />
 

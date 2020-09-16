@@ -8,9 +8,22 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 
 public class HistoryMsgDb extends BaseDao {
+    public volatile static HistoryMsgDb INSTANCE;
 
     public HistoryMsgDb(Realm realm) {
         super(realm);
+    }
+
+    //获取单例
+    public static HistoryMsgDb getInstance() {
+        if (INSTANCE == null) {
+            synchronized (HistoryMsgDb.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new HistoryMsgDb(Realm.getDefaultInstance());
+                }
+            }
+        }
+        return INSTANCE;
     }
 
     public void saveHistoryMsg(HistoryMsg historyMsg) {

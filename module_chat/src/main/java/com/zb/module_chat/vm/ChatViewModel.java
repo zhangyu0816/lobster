@@ -33,7 +33,7 @@ import com.zb.lib_base.api.uploadSoundApi;
 import com.zb.lib_base.api.uploadVideoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.ChatListDb;
-import com.zb.lib_base.db.ResFileDb;
+import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.emojj.EmojiHandler;
 import com.zb.lib_base.http.HttpChatUploadManager;
 import com.zb.lib_base.http.HttpManager;
@@ -71,14 +71,12 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
-import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnRefreshListener {
     public long otherUserId;
     public MemberInfo memberInfo;
     public ChatAdapter adapter;
-    public ResFileDb resFileDb;
     public ChatAdapter emojiAdapter;
     private List<Integer> emojiList = new ArrayList<>();
     private ChatChatBinding mBinding;
@@ -104,7 +102,6 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (ChatChatBinding) binding;
-        resFileDb = new ResFileDb(Realm.getDefaultInstance());
         ImUtils.getInstance().setCallBackForMsg(this::updateMySend);
         setAdapter();
 
@@ -172,13 +169,13 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                 CustomMessageBody body = (CustomMessageBody) intent.getSerializableExtra("customMessageBody");
                 String msgId = intent.getStringExtra("msgId");
                 HistoryMsg historyMsg = HistoryMsg.createHistory(msgId, body, otherUserId, 1, 0);
-                historyMsgDb.saveHistoryMsg(historyMsg);
+                HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
                 historyMsgList.add(adapter.getItemCount(), historyMsg);
                 updateTime();
                 adapter.notifyItemChanged(adapter.getItemCount() - 1);
                 mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
 
-                chatListDb.updateMember(otherUserId, memberInfo.getImage(), memberInfo.getNick(), otherUserId == BaseActivity.dynUserId ? 5 : 4,
+                ChatListDb.getInstance().updateMember(otherUserId, memberInfo.getImage(), memberInfo.getNick(), otherUserId == BaseActivity.dynUserId ? 5 : 4,
                         () -> new Handler().postDelayed(() -> {
                             Intent data = new Intent("lobster_updateChat");
                             data.putExtra("userId", otherUserId);
@@ -223,8 +220,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
 
     @Override
     public void setAdapter() {
-        realmResults = historyMsgDb.getRealmResults(otherUserId, 1, 0);
-        historyMsgList.addAll(historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize));
+        realmResults =  HistoryMsgDb.getInstance().getRealmResults(otherUserId, 1, 0);
+        historyMsgList.addAll( HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize));
         Collections.reverse(historyMsgList);
         updateTime();
         adapter = new ChatAdapter<>(activity, R.layout.item_chat, historyMsgList, this);
@@ -246,7 +243,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             return;
         }
         pagerNo++;
-        List<HistoryMsg> tempList = historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize);
+        List<HistoryMsg> tempList =  HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize);
         Collections.reverse(tempList);
         updateTime();
         historyMsgList.addAll(0, tempList);
@@ -276,7 +273,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             @Override
             public void onNext(List<PrivateMsg> o) {
                 for (PrivateMsg privateMsg : o) {
-                    historyMsgDb.saveHistoryMsg(HistoryMsg.createHistoryForPrivate(privateMsg, otherUserId, 1, 0));
+                    HistoryMsgDb.getInstance().saveHistoryMsg(HistoryMsg.createHistoryForPrivate(privateMsg, otherUserId, 1, 0));
                 }
                 if (historyMsgId == 0)
                     historyMsgId = o.get(0).getId();
@@ -303,7 +300,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             @Override
             public void onNext(List<PrivateMsg> o) {
                 for (PrivateMsg privateMsg : o) {
-                    historyMsgDb.saveHistoryMsg(HistoryMsg.createHistoryForPrivate(privateMsg, otherUserId, 1, 0));
+                    HistoryMsgDb.getInstance().saveHistoryMsg(HistoryMsg.createHistoryForPrivate(privateMsg, otherUserId, 1, 0));
                 }
                 thirdHistoryMsgList(pageNo + 1);
             }
@@ -313,8 +310,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     thirdReadChat();
                     historyMsgList.clear();
-                    realmResults = historyMsgDb.getRealmResults(otherUserId, 1, 0);
-                    historyMsgList.addAll(historyMsgDb.getLimitList(realmResults, pagerNo * pageSize, pageSize));
+                    realmResults =  HistoryMsgDb.getInstance().getRealmResults(otherUserId, 1, 0);
+                    historyMsgList.addAll( HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize));
                     Collections.reverse(historyMsgList);
                     updateTime();
                     adapter.notifyDataSetChanged();
@@ -335,14 +332,14 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                         chatList.setAuthType(1);
                         chatList.setChatType(otherUserId == BaseActivity.dynUserId ? 5 : 4);
                         chatList.setMainUserId(BaseActivity.userId);
-                        chatListDb.saveChatList(chatList);
+                        ChatListDb.getInstance().saveChatList(chatList);
                         Intent data = new Intent("lobster_updateChat");
                         data.putExtra("userId", otherUserId);
                         data.putExtra("updateImage", true);
                         activity.sendBroadcast(data);
                         activity.sendBroadcast(new Intent("lobster_unReadCount"));
                     } else {
-                        chatListDb.updateMember(otherUserId, memberInfo.getImage(), memberInfo.getNick(), otherUserId == BaseActivity.dynUserId ? 5 : 4, new ChatListDb.CallBack() {
+                        ChatListDb.getInstance().updateMember(otherUserId, memberInfo.getImage(), memberInfo.getNick(), otherUserId == BaseActivity.dynUserId ? 5 : 4, new ChatListDb.CallBack() {
                             @Override
                             public void success() {
                                 Intent data = new Intent("lobster_updateChat");
@@ -367,7 +364,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                                 chatList.setAuthType(1);
                                 chatList.setChatType(otherUserId == BaseActivity.dynUserId ? 5 : 4);
                                 chatList.setMainUserId(BaseActivity.userId);
-                                chatListDb.saveChatList(chatList);
+                                ChatListDb.getInstance().saveChatList(chatList);
                                 Intent data = new Intent("lobster_updateChat");
                                 data.putExtra("userId", otherUserId);
                                 data.putExtra("updateImage", true);
@@ -621,7 +618,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         body.setFromId(BaseActivity.userId);
         body.setToId(otherUserId);
         HistoryMsg historyMsg = HistoryMsg.createHistory(msgId, body, otherUserId, 1, 0);
-        historyMsgDb.saveHistoryMsg(historyMsg);
+        HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
         historyMsgList.add(historyMsg);
         updateTime();
         adapter.notifyItemChanged(adapter.getItemCount() - 1);
@@ -640,7 +637,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         chatList.setAuthType(1);
         chatList.setChatType(4);
         chatList.setMainUserId(BaseActivity.userId);
-        chatListDb.saveChatList(chatList);
+        ChatListDb.getInstance().saveChatList(chatList);
 
         Intent data = new Intent("lobster_updateChat");
         data.putExtra("userId", otherUserId);

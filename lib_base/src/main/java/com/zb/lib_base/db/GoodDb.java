@@ -9,9 +9,22 @@ import io.realm.Realm;
  * 动态点赞
  */
 public class GoodDb extends BaseDao {
+    public volatile static GoodDb INSTANCE;
 
     public GoodDb(Realm realm) {
         super(realm);
+    }
+
+    //获取单例
+    public static GoodDb getInstance() {
+        if (INSTANCE == null) {
+            synchronized (GoodDb.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new GoodDb(Realm.getDefaultInstance());
+                }
+            }
+        }
+        return INSTANCE;
     }
 
     public void saveGood(CollectID collectID) {

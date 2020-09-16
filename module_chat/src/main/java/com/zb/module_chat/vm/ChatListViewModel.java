@@ -10,6 +10,8 @@ import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.clearAllHistoryMsgApi;
 import com.zb.lib_base.api.thirdReadChatApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.ChatListDb;
+import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.imcore.ImUtils;
@@ -52,8 +54,8 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                 if (userId == 0) {
                     chatMsgList.clear();
                     adapter.notifyDataSetChanged();
-                    chatMsgList.addAll(chatListDb.getChatList(5));
-                    chatMsgList.addAll(chatListDb.getChatList(4));
+                    chatMsgList.addAll(ChatListDb.getInstance().getChatList(5));
+                    chatMsgList.addAll(ChatListDb.getInstance().getChatList(4));
                     adapter.notifyDataSetChanged();
                     activity.sendBroadcast(new Intent("lobster_updateRed"));
                 } else {
@@ -67,7 +69,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                                 }
                         }
                     }
-                    ChatList chatList = chatListDb.getChatMsg(userId, userId == BaseActivity.dynUserId ? 5 : 4);
+                    ChatList chatList = ChatListDb.getInstance().getChatMsg(userId, userId == BaseActivity.dynUserId ? 5 : 4);
                     if (chatList == null) {
                         mBinding.refresh.finishRefresh();
                         return;
@@ -112,8 +114,8 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                         chatMsgList.remove(position);
                         adapter.notifyDataSetChanged();
                         activity.sendBroadcast(new Intent("lobster_updateRed"));
-                        historyMsgDb.deleteHistoryMsg(otherUserId, 1, 0);
-                        chatListDb.deleteChatMsg(otherUserId);
+                        HistoryMsgDb.getInstance().deleteHistoryMsg(otherUserId, 1, 0);
+                        ChatListDb.getInstance().deleteChatMsg(otherUserId);
                         ImUtils.getInstance().setOtherUserId(otherUserId);
                         ImUtils.getInstance().setDelete(true, activity);
                         clearAllHistoryMsg(otherUserId);
@@ -138,8 +140,8 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
 
     @Override
     public void setAdapter() {
-        chatMsgList.addAll(chatListDb.getChatList(5));
-        for (ChatList item : chatListDb.getChatList(4)) {
+        chatMsgList.addAll(ChatListDb.getInstance().getChatList(5));
+        for (ChatList item : ChatListDb.getInstance().getChatList(4)) {
             boolean has = false;
             for (LikeMe likeMe : MineApp.pairList) {
                 if (item.getUserId() == likeMe.getOtherUserId()) {

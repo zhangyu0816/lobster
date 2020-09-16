@@ -11,9 +11,22 @@ import io.realm.RealmResults;
 import io.realm.Sort;
 
 public class ChatListDb extends BaseDao {
+    public volatile static ChatListDb INSTANCE;
 
     public ChatListDb(Realm realm) {
         super(realm);
+    }
+
+    //获取单例
+    public static ChatListDb getInstance() {
+        if (INSTANCE == null) {
+            synchronized (ChatListDb.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new ChatListDb(Realm.getDefaultInstance());
+                }
+            }
+        }
+        return INSTANCE;
     }
 
     // 保存更新会话列表

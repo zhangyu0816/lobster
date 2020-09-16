@@ -13,6 +13,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.zb.lib_base.db.AreaDb" />
+
         <variable
             name="viewModel"
             type="com.zb.module_card.vm.CardViewModel" />
@@ -227,7 +229,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="5dp"
-                            android:text="@{viewModel.areaDb.getCityName(pairInfo.cityId)}"
+                            android:text="@{AreaDb.getInstance().getCityName(pairInfo.cityId)}"
                             android:textColor="@android:color/white"
                             android:textSize="14sp"
                             tools:text="温州市" />
@@ -236,7 +238,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="5dp"
-                            android:text="@{viewModel.areaDb.getDistrictName(pairInfo.districtId)}"
+                            android:text="@{AreaDb.getInstance().getDistrictName(pairInfo.districtId)}"
                             android:textColor="@android:color/white"
                             android:textSize="14sp"
                             tools:text="鹿城区" />

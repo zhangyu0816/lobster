@@ -23,6 +23,8 @@ import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.prePairListApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
+import com.zb.lib_base.db.LikeDb;
+import com.zb.lib_base.db.LikeTypeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -258,7 +260,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         mBinding.setVariable(BR.cardCallback, cardCallback);
         disListAdapter = new CardAdapter<>(activity, R.layout.item_card_image, imageList, this);
         mBinding.setVariable(BR.adapter, disListAdapter);
-        prePairList(true);
+        createProgress();
     }
 
     @Override
@@ -416,22 +418,22 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 if (o == 1) {
                     // 不喜欢成功  喜欢成功  超级喜欢成功
                     if (likeOtherStatus == 1) {
-                        likeDb.saveLike(new CollectID(pairInfo.getOtherUserId()));
-                        likeTypeDb.setType(pairInfo.getOtherUserId(), 1);
+                        LikeDb.getInstance().saveLike(new CollectID(pairInfo.getOtherUserId()));
+                        LikeTypeDb.getInstance().setType(pairInfo.getOtherUserId(), 1);
                     } else if (likeOtherStatus == 2) {
                         Intent data = new Intent("lobster_card");
                         data.putExtra("direction", 2);
                         activity.sendBroadcast(data);
                         activity.sendBroadcast(new Intent("lobster_pairList"));
-                        likeTypeDb.setType(pairInfo.getOtherUserId(), 2);
+                        LikeTypeDb.getInstance().setType(pairInfo.getOtherUserId(), 2);
                         new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, MineApp.mineInfo.getSex(), pairInfo.getSex(), null);
                     }
                 } else if (o == 2) {
                     // 匹配成功
-                    likeDb.saveLike(new CollectID(pairInfo.getOtherUserId()));
+                    LikeDb.getInstance().saveLike(new CollectID(pairInfo.getOtherUserId()));
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, MineApp.mineInfo.getSex(), pairInfo.getSex(), () -> ActivityUtils.getChatActivity(pairInfo.getOtherUserId()));
                     activity.sendBroadcast(new Intent("lobster_pairList"));
-                    likeTypeDb.setType(pairInfo.getOtherUserId(), 1);
+                    LikeTypeDb.getInstance().setType(pairInfo.getOtherUserId(), 1);
                 } else if (o == 3) {
                     // 喜欢次数用尽
                     new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
@@ -445,14 +447,14 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     }
                 } else {
                     if (likeOtherStatus == 1) {
-                        likeDb.saveLike(new CollectID(pairInfo.getOtherUserId()));
-                        likeTypeDb.setType(pairInfo.getOtherUserId(), 1);
+                        LikeDb.getInstance().saveLike(new CollectID(pairInfo.getOtherUserId()));
+                        LikeTypeDb.getInstance().setType(pairInfo.getOtherUserId(), 1);
                     } else if (likeOtherStatus == 2) {
                         Intent data = new Intent("lobster_card");
                         data.putExtra("direction", 2);
                         activity.sendBroadcast(data);
                         activity.sendBroadcast(new Intent("lobster_pairList"));
-                        likeTypeDb.setType(pairInfo.getOtherUserId(), 2);
+                        LikeTypeDb.getInstance().setType(pairInfo.getOtherUserId(), 2);
                         new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, MineApp.mineInfo.getSex(), pairInfo.getSex(), null);
                     }
                 }
@@ -503,7 +505,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         joinPairPoolApi api = new joinPairPoolApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-
+                prePairList(true);
             }
         }, activity).setLatitude(latitude).setLongitude(longitude).setProvinceId(provinceId).setCityId(cityId).setDistrictId(districtId);
         HttpManager.getInstance().doHttpDeal(api);
@@ -639,7 +641,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     // 省市信息
     private void initArea() {
-        if (!areaDb.hasProvince()) {
+        if (!AreaDb.getInstance().hasProvince()) {
             String data = SimulateNetAPI.getOriginalFundData(activity, "cityData.json");
             new Thread(() -> {
                 AreaDb areaDb = new AreaDb(Realm.getDefaultInstance());
@@ -734,7 +736,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     private void setLocation() {
         aMapLocation.start(activity, (longitude, latitude, provinceName, cityName, districtName) -> {
-            joinPairPool(longitude, latitude, areaDb.getProvinceId(provinceName), areaDb.getCityId(cityName), areaDb.getDistrictId(districtName));
+            joinPairPool(longitude, latitude, AreaDb.getInstance().getProvinceId(provinceName), AreaDb.getInstance().getCityId(cityName), AreaDb.getInstance().getDistrictId(districtName));
         });
     }
 
@@ -745,7 +747,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         PreferenceUtil.saveStringValue(activity, "provinceName", "浙江省");
         PreferenceUtil.saveStringValue(activity, "districtName", "鹿城区");
         PreferenceUtil.saveStringValue(activity, "address", "浙江省温州市鹿城区望江东路175号靠近温州银行(文化支行)");
-        joinPairPool("120.641956", "28.021994", areaDb.getProvinceId("浙江省"),
-                areaDb.getCityId("温州市"), areaDb.getDistrictId("鹿城区"));
+        joinPairPool("120.641956", "28.021994", AreaDb.getInstance().getProvinceId("浙江省"),
+                AreaDb.getInstance().getCityId("温州市"), AreaDb.getInstance().getDistrictId("鹿城区"));
     }
 }

@@ -31,6 +31,7 @@ import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.registerApi;
 import com.zb.lib_base.api.registerCaptchaApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -493,9 +494,9 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 .setBirthday(MineApp.registerInfo.getBirthday())
                 .setMoreImages(MineApp.registerInfo.getMoreImages())
                 .setSex(MineApp.registerInfo.getSex())
-                .setProvinceId(areaDb.getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
-                .setCityId(areaDb.getCityId(MineApp.cityName))
-                .setDistrictId(areaDb.getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
+                .setProvinceId(AreaDb.getInstance().getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
+                .setCityId(AreaDb.getInstance().getCityId(MineApp.cityName))
+                .setDistrictId(AreaDb.getInstance().getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
         api.setPosition(1);
         HttpManager.getInstance().doHttpDeal(api);
     }
@@ -532,9 +533,9 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 .setBirthday(MineApp.registerInfo.getBirthday())
                 .setMoreImages(MineApp.registerInfo.getMoreImages())
                 .setSex(MineApp.registerInfo.getSex())
-                .setProvinceId(areaDb.getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
-                .setCityId(areaDb.getCityId(MineApp.cityName))
-                .setDistrictId(areaDb.getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
+                .setProvinceId(AreaDb.getInstance().getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
+                .setCityId(AreaDb.getInstance().getCityId(MineApp.cityName))
+                .setDistrictId(AreaDb.getInstance().getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
         HttpManager.getInstance().doHttpDeal(api);
     }
 

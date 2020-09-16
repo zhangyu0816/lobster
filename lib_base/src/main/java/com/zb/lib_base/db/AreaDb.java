@@ -11,9 +11,22 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class AreaDb extends BaseDao {
+    public volatile static AreaDb INSTANCE;
 
     public AreaDb(Realm realm) {
         super(realm);
+    }
+
+    //获取单例
+    public static AreaDb getInstance() {
+        if (INSTANCE == null) {
+            synchronized (AreaDb.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new AreaDb(Realm.getDefaultInstance());
+                }
+            }
+        }
+        return INSTANCE;
     }
 
     // 保存省份信息
