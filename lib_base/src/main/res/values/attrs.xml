@@ -8,11 +8,6 @@
         <attr name="move" format="boolean" />
         <attr name="disableBlurred" format="boolean" />
     </declare-styleable>
-    <declare-styleable name="RoundImageView">
-        <attr name="radius" format="reference|dimension" />
-        <attr name="all" format="boolean" />
-        <attr name="top" format="boolean" />
-    </declare-styleable>
     <!-- 表情 -->
     <declare-styleable name="Emoji">
         <attr name="emojiSize" format="reference|dimension" />
