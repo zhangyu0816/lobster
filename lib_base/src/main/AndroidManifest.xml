@@ -52,8 +52,6 @@
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="55cac14467e58e8bd7000359" />
-        <!--value的值填写渠道名称，例如yingyongbao。这里设置动态渠道名称变量-->
-        <meta-data android:value="${UMENG_CHANNEL_VALUE}" android:name="UMENG_CHANNEL"/>
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"

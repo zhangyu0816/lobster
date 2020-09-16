@@ -12,8 +12,8 @@ android {
         applicationId "com.yimi.rentme"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 1062
-        versionName "6.2"
+        versionCode 1063
+        versionName "6.2.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -37,19 +37,8 @@ android {
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86"
         }
+    }
 
-        flavorDimensions "release"
-    }
-    productFlavors {
-        wf360 {
-            dimension "release"
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "wf_360app"]
-        }
-        yingyongbao {
-            dimension "release"
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "wf_yybapp"]
-        }
-    }
     signingConfigs {
         debug {
             keyAlias 'androiddebugkey'

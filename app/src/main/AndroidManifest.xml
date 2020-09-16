@@ -106,22 +106,6 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <!-- 友盟配置 end-->
 
-        <!-- 个推SDK配置开始 -->
-        <!--        <service-->
-        <!--            android:name=".getui.DemoPushService"-->
-        <!--            android:exported="true"-->
-        <!--            android:label="PushService"-->
-        <!--            android:process=":pushservice">-->
-        <!--            <intent-filter>-->
-        <!--                <action android:name="com.igexin.sdk.action.service.message" />-->
-        <!--            </intent-filter>-->
-        <!--        </service>-->
-        <!--        <service android:name=".getui.DemoIntentService" />-->
-
-
-        <!-- 个推 SDK 配置开始 -->
-        <!-- Android9.0 以上默认不支持 http 通信，为保证 SDK 正常使用，请在 application 节点下新增该属性 -->
-        <!-- 配置的第三方参数属性 -->
         <meta-data
             android:name="PUSH_APPID"
             android:value="${GETUI_APP_ID}" />
@@ -172,7 +156,6 @@
             android:taskAffinity="com.igexin.sdk.PushActivityTask"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <!-- 个推 SDK 配置结束 -->
         <!-- 个推SDK配置结束 -->
 
         <activity
@@ -187,11 +170,9 @@
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTask" />
-
         <activity android:name="com.zb.lib_base.activity.NotifivationActivity" />
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.BindingPhoneActivity" />
-
 
     </application>
 
