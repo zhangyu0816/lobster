@@ -48,7 +48,6 @@ dependencies {
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
     implementation project(':lib_base')
     implementation project(':module_camera')
-    implementation project(path: ':FFmpegAndroid')
     // 压缩视频
     implementation files('libs/SmallVideoLib.aar')
 }
