@@ -12,8 +12,8 @@ android {
         applicationId "com.yimi.rentme"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 1063
-        versionName "6.2.1"
+        versionCode 1064
+        versionName "6.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -55,7 +55,7 @@ android {
         android.applicationVariants.all { variant ->
             variant.outputs.all {
                 if (variant.buildType.name.equals('release')) {
-                    outputFileName = "xiagu_${releaseTime()}.apk"
+                    outputFileName = "xiagu_${versionName}_${releaseTime()}.apk"
                 }
             }
         }

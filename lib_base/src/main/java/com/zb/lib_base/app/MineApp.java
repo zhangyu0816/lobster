@@ -192,7 +192,7 @@ public class MineApp extends MultiDexApplication {
             Iterator<RxAppCompatActivity> iterator = mActivityList.iterator();
             while (iterator.hasNext()) {
                 RxAppCompatActivity current = iterator.next();
-                if (current != null && current.getLocalClassName().equals(oneself.getLocalClassName())) {
+                if (current != null && current == oneself) {
                     iterator.remove();
                 }
             }
