@@ -21,12 +21,15 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpUploadManager;
 import com.zb.lib_base.model.ResourceUrl;
+import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.MNImage;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.TextPW;
 import com.zb.module_home.BR;
 import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
@@ -60,6 +63,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     private BaseReceiver locationReceiver;
     private BaseReceiver deleteVideoReceiver;
     private File videoImageFile;
+    private AMapLocation aMapLocation;
 
     @Override
     public void back(View view) {
@@ -83,6 +87,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
+        aMapLocation = new AMapLocation(activity);
         publicImageBinding = (HomePublicImageBinding) binding;
 
         createJianXiCameraFile();
@@ -132,13 +137,13 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     public void previewImage(int position) {
         if (cameraType == 1) {
             if (TextUtils.equals(images.get(0), "add_image_icon")) {
-                getPermissions();
+                getPermissions(1);
             } else {
                 ActivityUtils.getCameraVideoPlay(images.get(0), false, true);
             }
         } else {
             if (position == images.size() - 1) {
-                getPermissions();
+                getPermissions(1);
             } else {
                 ArrayList<String> imageList = new ArrayList<>();
                 for (int i = 0; i < images.size() - 1; i++) {
@@ -165,7 +170,11 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
 
     @Override
     public void selectCity(View view) {
-        ActivityUtils.getMineLocation(true);
+        if (PreferenceUtil.readStringValue(activity, "latitude").isEmpty()) {
+            new TextPW(activity, mBinding.getRoot(), "定位失败", "定位失败，无法选取地址，请重新定位", "重新定位", () -> getPermissions(2));
+        } else {
+            ActivityUtils.getMineLocation(true);
+        }
     }
 
     @Override
@@ -321,34 +330,40 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     /**
      * 权限
      */
-    private void getPermissions() {
+    private void getPermissions(int type) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             performCodeWithPermission("虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
                         @Override
                         public void hasPermission() {
-                            setPermissions();
+                            setPermissions(type);
                         }
 
                         @Override
                         public void noPermission() {
                         }
                     }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO);
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO,
+                    Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION);
         } else {
-            setPermissions();
+            setPermissions(type);
         }
     }
 
-    private void setPermissions() {
-        if (MineApp.toPublish) {
-            MineApp.toContinue = true;
-            if (cameraType == 1) {
-                ActivityUtils.getCameraVideo(false);
+    private void setPermissions(int type) {
+        if (type == 1) {
+            if (MineApp.toPublish) {
+                MineApp.toContinue = true;
+                if (cameraType == 1) {
+                    ActivityUtils.getCameraVideo(false);
+                } else {
+                    ActivityUtils.getCameraMain(activity, true, true, false);
+                }
             } else {
-                ActivityUtils.getCameraMain(activity, true, true, false);
+                ActivityUtils.getCameraMain(activity, true, true, true);
             }
         } else {
-            ActivityUtils.getCameraMain(activity, true, true, true);
+            aMapLocation.start(activity, (longitude, latitude, provinceName, cityName, districtName) ->
+                    ActivityUtils.getMineLocation(true));
         }
     }
 }

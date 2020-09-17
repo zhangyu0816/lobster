@@ -82,7 +82,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     private AMapLocation aMapLocation;
     private Handler handler = new Handler(msg -> {
         if (msg.what == 1) {
-            getPermissions();
+            getPermissions(1);
             adapter.notifyDataSetChanged();
         }
         return false;
@@ -116,6 +116,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         super.setBinding(binding);
         aMapLocation = new AMapLocation(activity);
         mBinding = (CardFragBinding) binding;
+        mBinding.setPairInfo(new PairInfo());
         if (PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1) == -1)
             likeCount = MineApp.mineInfo.getSurplusToDayLikeNumber();
         else
@@ -338,7 +339,11 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             new VipAdPW(activity, mBinding.getRoot(), false, 5, "");
             return;
         }
-        ActivityUtils.getMineLocation(false);
+        if (PreferenceUtil.readStringValue(activity, "latitude").isEmpty()) {
+            new TextPW(activity, mBinding.getRoot(), "定位失败", "定位失败，无法选取地址，请重新定位", "重新定位", () -> getPermissions(2));
+        } else {
+            ActivityUtils.getMineLocation(false);
+        }
     }
 
     private List<Long> userIdList = new ArrayList<>();
@@ -431,7 +436,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 } else if (o == 2) {
                     // 匹配成功
                     LikeDb.getInstance().saveLike(new CollectID(pairInfo.getOtherUserId()));
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, MineApp.mineInfo.getSex(), pairInfo.getSex(), () -> ActivityUtils.getChatActivity(pairInfo.getOtherUserId(),false));
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, MineApp.mineInfo.getSex(), pairInfo.getSex(), () -> ActivityUtils.getChatActivity(pairInfo.getOtherUserId(), false));
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                     LikeTypeDb.getInstance().setType(pairInfo.getOtherUserId(), 1);
                 } else if (o == 3) {
@@ -714,40 +719,50 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     /**
      * 权限
      */
-    private void getPermissions() {
+    private void getPermissions(int type) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             performCodeWithPermission("虾菇需要访问定位权限", new BaseActivity.PermissionCallback() {
                         @Override
                         public void hasPermission() {
-                            setLocation();
+                            setLocation(type);
                         }
 
                         @Override
                         public void noPermission() {
-                            baseLocation();
+                            baseLocation(type);
                         }
                     }, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_PHONE_STATE);
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
         } else {
-            setLocation();
+            setLocation(type);
         }
     }
 
-    private void setLocation() {
-        aMapLocation.start(activity, (longitude, latitude, provinceName, cityName, districtName) -> {
-            joinPairPool(longitude, latitude, AreaDb.getInstance().getProvinceId(provinceName), AreaDb.getInstance().getCityId(cityName), AreaDb.getInstance().getDistrictId(districtName));
-        });
+    private void setLocation(int type) {
+        if (type == 1) {
+            aMapLocation.start(activity, (longitude, latitude, provinceName, cityName, districtName) -> {
+                joinPairPool(longitude, latitude, AreaDb.getInstance().getProvinceId(provinceName), AreaDb.getInstance().getCityId(cityName), AreaDb.getInstance().getDistrictId(districtName));
+            });
+        } else {
+            aMapLocation.start(activity, (longitude, latitude, provinceName, cityName, districtName) -> {
+                ActivityUtils.getMineLocation(false);
+            });
+        }
     }
 
-    private void baseLocation() {
+    private void baseLocation(int type) {
         PreferenceUtil.saveStringValue(activity, "longitude", "120.641956");
         PreferenceUtil.saveStringValue(activity, "latitude", "28.021994");
         PreferenceUtil.saveStringValue(activity, "cityName", "温州市");
         PreferenceUtil.saveStringValue(activity, "provinceName", "浙江省");
         PreferenceUtil.saveStringValue(activity, "districtName", "鹿城区");
         PreferenceUtil.saveStringValue(activity, "address", "浙江省温州市鹿城区望江东路175号靠近温州银行(文化支行)");
-        joinPairPool("120.641956", "28.021994", AreaDb.getInstance().getProvinceId("浙江省"),
-                AreaDb.getInstance().getCityId("温州市"), AreaDb.getInstance().getDistrictId("鹿城区"));
+        if (type == 1) {
+            joinPairPool("120.641956", "28.021994", AreaDb.getInstance().getProvinceId("浙江省"),
+                    AreaDb.getInstance().getCityId("温州市"), AreaDb.getInstance().getDistrictId("鹿城区"));
+        } else {
+            ActivityUtils.getMineLocation(false);
+        }
+
     }
 }

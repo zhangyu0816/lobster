@@ -1,7 +1,9 @@
 package com.zb.module_mine.vm;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
@@ -15,6 +17,7 @@ import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.FaceStatus;
 import com.zb.lib_base.model.WalletInfo;
+import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.PreferenceUtil;
@@ -36,6 +39,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     private BaseReceiver updateWalletReceiver;
     private MineSettingBinding mBinding;
     private List<String> selectList = new ArrayList<>();
+    private AMapLocation aMapLocation;
 
     @Override
     public void back(View view) {
@@ -46,6 +50,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
+        aMapLocation = new AMapLocation(activity);
         mBinding = (MineSettingBinding) binding;
         mBinding.setIsThreeLogin(PreferenceUtil.readIntValue(activity, "myIsThreeLogin", 0) == 1);
         updateWalletReceiver = new BaseReceiver(activity, "lobster_updateWallet") {
@@ -131,7 +136,11 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
                 new TextPW(activity, mBinding.getRoot(), "VIP特权", "位置漫游服务为VIP用户专享功能", "开通会员", ActivityUtils::getMineOpenVip);
             return;
         }
-        ActivityUtils.getMineLocation(false);
+        if (PreferenceUtil.readStringValue(activity, "latitude").isEmpty()) {
+            new TextPW(activity, mBinding.getRoot(), "定位失败", "定位失败，无法选取地址，请重新定位", "重新定位", this::getPermissions);
+        } else {
+            ActivityUtils.getMineLocation(false);
+        }
     }
 
     @Override
@@ -220,5 +229,42 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 权限
+     */
+    private void getPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            performCodeWithPermission("虾菇需要访问定位权限", new BaseActivity.PermissionCallback() {
+                        @Override
+                        public void hasPermission() {
+                            setLocation();
+                        }
+
+                        @Override
+                        public void noPermission() {
+                            baseLocation();
+                        }
+                    }, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
+        } else {
+            setLocation();
+        }
+    }
+
+    private void setLocation() {
+        aMapLocation.start(activity, (longitude, latitude, provinceName, cityName, districtName) ->
+                ActivityUtils.getMineLocation(false));
+    }
+
+    private void baseLocation() {
+        PreferenceUtil.saveStringValue(activity, "longitude", "120.641956");
+        PreferenceUtil.saveStringValue(activity, "latitude", "28.021994");
+        PreferenceUtil.saveStringValue(activity, "cityName", "温州市");
+        PreferenceUtil.saveStringValue(activity, "provinceName", "浙江省");
+        PreferenceUtil.saveStringValue(activity, "districtName", "鹿城区");
+        PreferenceUtil.saveStringValue(activity, "address", "浙江省温州市鹿城区望江东路175号靠近温州银行(文化支行)");
+        ActivityUtils.getMineLocation(false);
     }
 }
