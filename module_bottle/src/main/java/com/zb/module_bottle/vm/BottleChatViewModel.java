@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -54,6 +55,7 @@ import io.realm.RealmResults;
 
 public class BottleChatViewModel extends BaseViewModel implements BottleChatVMInterface, OnRefreshListener {
     public long driftBottleId;
+    public boolean isNotice = false;
     public BottleAdapter adapter;
     public BottleAdapter emojiAdapter;
     private BottleChatBinding mBinding;
@@ -85,10 +87,22 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                 String msgId = intent.getStringExtra("msgId");
                 HistoryMsg historyMsg = HistoryMsg.createHistory(msgId, body, otherUserId, 2, driftBottleId);
                 HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
-                historyMsgList.add(adapter.getItemCount(), historyMsg);
-                updateTime();
-                adapter.notifyItemChanged(adapter.getItemCount() - 1);
-                mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
+
+                boolean hasId = false;
+                if (isNotice) {
+                    for (HistoryMsg item : historyMsgList) {
+                        if (TextUtils.equals(item.getThirdMessageId(), msgId)) {
+                            hasId = true;
+                            break;
+                        }
+                    }
+                }
+                if (!hasId) {
+                    historyMsgList.add(adapter.getItemCount(), historyMsg);
+                    updateTime();
+                    adapter.notifyItemChanged(adapter.getItemCount() - 1);
+                    mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
+                }
 
                 BottleCacheDb.getInstance().updateBottleCache(driftBottleId, memberInfo.getImage(), memberInfo.getNick(), () -> new Handler().postDelayed(() -> {
                     // 更新会话列表
@@ -143,6 +157,11 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         activity.finish();
     }
 
+    public void onResume() {
+        if (otherUserId > 0)
+            ImUtils.getInstance().setChat(true, activity);
+    }
+
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         if (updateAll) {
@@ -150,7 +169,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             return;
         }
         pagerNo++;
-        List<HistoryMsg> tempList =  HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize);
+        List<HistoryMsg> tempList = HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize);
         Collections.reverse(tempList);
         updateTime();
         historyMsgList.addAll(0, tempList);
@@ -161,8 +180,8 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
 
     @Override
     public void setAdapter() {
-        realmResults =  HistoryMsgDb.getInstance().getRealmResults(otherUserId, 2, driftBottleId);
-        historyMsgList.addAll( HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize));
+        realmResults = HistoryMsgDb.getInstance().getRealmResults(otherUserId, 2, driftBottleId);
+        historyMsgList.addAll(HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize));
         Collections.reverse(historyMsgList);
         updateTime();
 
@@ -245,8 +264,8 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                     if (historyMsgId > 0)
                         readOverHistoryMsg();
                     historyMsgList.clear();
-                    realmResults =  HistoryMsgDb.getInstance().getRealmResults(otherUserId, 2, driftBottleId);
-                    historyMsgList.addAll( HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize));
+                    realmResults = HistoryMsgDb.getInstance().getRealmResults(otherUserId, 2, driftBottleId);
+                    historyMsgList.addAll(HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize));
                     Collections.reverse(historyMsgList);
                     updateTime();
                     adapter.notifyDataSetChanged();

@@ -184,7 +184,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
             ActivityUtils.getCardMemberDetail(chatList.getUserId(), false);
         } else if (chatList.getChatType() == 4) {
             // 匹配-聊天
-            ActivityUtils.getChatActivity(chatList.getUserId());
+            ActivityUtils.getChatActivity(chatList.getUserId(),false);
         }
     }
 

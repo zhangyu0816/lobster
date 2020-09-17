@@ -170,7 +170,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
 
     @Override
     public void selectIndex(int position) {
-        ActivityUtils.getChatActivity(chatMsgList.get(position).getUserId());
+        ActivityUtils.getChatActivity(chatMsgList.get(position).getUserId(),false);
     }
 
     @Override

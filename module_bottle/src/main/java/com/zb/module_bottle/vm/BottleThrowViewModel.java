@@ -130,7 +130,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     }
 
     public void onResume() {
-        if(MineApp.mActivityList.get(0) instanceof BottleThrowActivity){
+        if (MineApp.mActivityList.get(0) instanceof BottleThrowActivity) {
             if (!mPlayer.isPlaying())
                 appSound();
             if (!isFirst) {
@@ -335,7 +335,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
                     mBinding.setIsBottle(false);
                     mBinding.bottleWhiteBack.bottleBg.throwBottle(() -> close(null));
                 } else if (driftBottleType == 2) {
-                    ActivityUtils.getBottleChat(bottleInfo.getDriftBottleId());
+                    ActivityUtils.getBottleChat(bottleInfo.getDriftBottleId(), false);
                     close(null);
                 }
             }

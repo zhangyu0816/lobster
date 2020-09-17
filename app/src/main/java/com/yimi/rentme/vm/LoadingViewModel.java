@@ -36,7 +36,7 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
                 public void cancelBack() {
                     activity.finish();
                 }
-            }), 200);
+            }), 500);
         } else {
             myInfo();
         }

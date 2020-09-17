@@ -88,8 +88,8 @@ public class ActivityUtils {
 
     /*********************** 对话 **************************/
     // 对话页
-    public static RxAppCompatActivity getChatActivity(long otherUserId) {
-        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Chat_Activity).withLong("otherUserId", otherUserId).navigation();
+    public static RxAppCompatActivity getChatActivity(long otherUserId, boolean isNotice) {
+        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Chat_Activity).withLong("otherUserId", otherUserId).withBoolean("isNotice", isNotice).navigation();
         return activity;
     }
 
@@ -353,8 +353,8 @@ public class ActivityUtils {
     }
 
     // 漂流瓶主页
-    public static RxAppCompatActivity getBottleChat(long driftBottleId) {
-        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Bottle_Chat).withLong("driftBottleId", driftBottleId).navigation();
+    public static RxAppCompatActivity getBottleChat(long driftBottleId, boolean isNotice) {
+        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Bottle_Chat).withLong("driftBottleId", driftBottleId).withBoolean("isNotice", isNotice).navigation();
         return activity;
     }
 }

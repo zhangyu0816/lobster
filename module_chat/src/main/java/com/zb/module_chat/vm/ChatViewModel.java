@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -75,6 +76,7 @@ import io.realm.RealmResults;
 
 public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnRefreshListener {
     public long otherUserId;
+    public boolean isNotice = false;
     public MemberInfo memberInfo;
     public ChatAdapter adapter;
     public ChatAdapter emojiAdapter;
@@ -103,6 +105,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         super.setBinding(binding);
         mBinding = (ChatChatBinding) binding;
         ImUtils.getInstance().setCallBackForMsg(this::updateMySend);
+        ImUtils.getInstance().setOtherUserId(otherUserId);
         setAdapter();
 
         setProhibitEmoji(mBinding.edContent);
@@ -170,11 +173,21 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                 String msgId = intent.getStringExtra("msgId");
                 HistoryMsg historyMsg = HistoryMsg.createHistory(msgId, body, otherUserId, 1, 0);
                 HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
-                historyMsgList.add(adapter.getItemCount(), historyMsg);
-                updateTime();
-                adapter.notifyItemChanged(adapter.getItemCount() - 1);
-                mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
-
+                boolean hasId = false;
+                if (isNotice) {
+                    for (HistoryMsg item : historyMsgList) {
+                        if (TextUtils.equals(item.getThirdMessageId(), msgId)) {
+                            hasId = true;
+                            break;
+                        }
+                    }
+                }
+                if (!hasId) {
+                    historyMsgList.add(adapter.getItemCount(), historyMsg);
+                    updateTime();
+                    adapter.notifyItemChanged(adapter.getItemCount() - 1);
+                    mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
+                }
                 ChatListDb.getInstance().updateMember(otherUserId, memberInfo.getImage(), memberInfo.getNick(), otherUserId == BaseActivity.dynUserId ? 5 : 4,
                         () -> new Handler().postDelayed(() -> {
                             Intent data = new Intent("lobster_updateChat");
@@ -218,10 +231,14 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
         activity.finish();
     }
 
+    public void onResume() {
+        ImUtils.getInstance().setChat(true, activity);
+    }
+
     @Override
     public void setAdapter() {
-        realmResults =  HistoryMsgDb.getInstance().getRealmResults(otherUserId, 1, 0);
-        historyMsgList.addAll( HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize));
+        realmResults = HistoryMsgDb.getInstance().getRealmResults(otherUserId, 1, 0);
+        historyMsgList.addAll(HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize));
         Collections.reverse(historyMsgList);
         updateTime();
         adapter = new ChatAdapter<>(activity, R.layout.item_chat, historyMsgList, this);
@@ -243,7 +260,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             return;
         }
         pagerNo++;
-        List<HistoryMsg> tempList =  HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize);
+        List<HistoryMsg> tempList = HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize);
         Collections.reverse(tempList);
         updateTime();
         historyMsgList.addAll(0, tempList);
@@ -259,8 +276,6 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             public void onNext(MemberInfo o) {
                 memberInfo = o;
                 mBinding.setVariable(BR.viewModel, ChatViewModel.this);
-                ImUtils.getInstance().setOtherUserId(otherUserId);
-                ImUtils.getInstance().setChat(true, activity);
                 new Thread(() -> historyMsgList(1)).start();
             }
         }, activity).setOtherUserId(otherUserId);
@@ -310,8 +325,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     thirdReadChat();
                     historyMsgList.clear();
-                    realmResults =  HistoryMsgDb.getInstance().getRealmResults(otherUserId, 1, 0);
-                    historyMsgList.addAll( HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize));
+                    realmResults = HistoryMsgDb.getInstance().getRealmResults(otherUserId, 1, 0);
+                    historyMsgList.addAll(HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize));
                     Collections.reverse(historyMsgList);
                     updateTime();
                     adapter.notifyDataSetChanged();

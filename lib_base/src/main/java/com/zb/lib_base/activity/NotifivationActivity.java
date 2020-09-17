@@ -30,7 +30,7 @@ public class NotifivationActivity extends RxAppCompatActivity {
         if (activityContent.equals("MainActivity")) {
             ActivityUtils.getMainActivity();
         } else if (activityContent.equals("ChatActivity")) {
-            ActivityUtils.getChatActivity(getIntent().getLongExtra("otherUserId", 0));
+            ActivityUtils.getChatActivity(getIntent().getLongExtra("otherUserId", 0), true);
         } else {
             try {
                 JSONObject object = new JSONObject(activityContent);
@@ -65,7 +65,7 @@ public class NotifivationActivity extends RxAppCompatActivity {
                     if (otherUserId == BaseActivity.systemUserId) {
                         ActivityUtils.getMineSystemMsg();
                     } else {
-                        ActivityUtils.getChatActivity(otherUserId);
+                        ActivityUtils.getChatActivity(otherUserId, true);
                     }
                 } else if (TextUtils.equals(activity, "DiscoverDetailActivity")) {
                     if (dynType == 1) {
@@ -78,7 +78,7 @@ public class NotifivationActivity extends RxAppCompatActivity {
                 } else if (TextUtils.equals(activity, "FCLActivity")) {
                     ActivityUtils.getMineFCL(1);
                 } else if (TextUtils.equals(activity, "BottleChatActivity")) {
-                    ActivityUtils.getBottleChat(driftBottleId);
+                    ActivityUtils.getBottleChat(driftBottleId, true);
                 }
                 finish();
             } catch (JSONException e) {

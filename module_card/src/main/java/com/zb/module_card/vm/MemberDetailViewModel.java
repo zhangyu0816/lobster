@@ -427,7 +427,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     // 匹配成功
                     LikeDb.getInstance().saveLike(new CollectID(otherUserId));
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, MineApp.mineInfo.getSex(), memberInfo.getSex(),
-                            () -> ActivityUtils.getChatActivity(otherUserId));
+                            () -> ActivityUtils.getChatActivity(otherUserId, false));
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                     activity.sendBroadcast(new Intent("lobster_isLike"));
                     activity.sendBroadcast(new Intent("lobster_updateFCL"));

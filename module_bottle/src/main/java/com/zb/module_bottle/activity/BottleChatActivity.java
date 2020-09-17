@@ -17,6 +17,8 @@ import com.zb.module_bottle.vm.BottleChatViewModel;
 public class BottleChatActivity extends BaseActivity {
     @Autowired(name = "driftBottleId")
     long driftBottleId;
+    @Autowired(name = "isNotice")
+    boolean isNotice;
 
     private BottleChatViewModel viewModel;
 
@@ -36,6 +38,7 @@ public class BottleChatActivity extends BaseActivity {
     public void initUI() {
         viewModel = new BottleChatViewModel();
         viewModel.driftBottleId = driftBottleId;
+        viewModel.isNotice = isNotice;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.isEmoji, false);
@@ -50,6 +53,7 @@ public class BottleChatActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        viewModel.onResume();
     }
 
     @Override

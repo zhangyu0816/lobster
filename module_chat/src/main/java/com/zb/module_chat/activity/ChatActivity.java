@@ -20,6 +20,8 @@ import com.zb.module_chat.vm.ChatViewModel;
 public class ChatActivity extends BaseActivity {
     @Autowired(name = "otherUserId")
     long otherUserId;
+    @Autowired(name = "isNotice")
+    boolean isNotice;
 
     private ChatViewModel viewModel;
     private BaseReceiver cameraReceiver;
@@ -40,6 +42,7 @@ public class ChatActivity extends BaseActivity {
     public void initUI() {
         viewModel = new ChatViewModel();
         viewModel.otherUserId = otherUserId;
+        viewModel.isNotice = isNotice;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.isVoice, false);
         mBinding.setVariable(BR.isEmoji, false);
@@ -75,6 +78,12 @@ public class ChatActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewModel.onResume();
     }
 
     @Override
