@@ -31,11 +31,11 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.NotifivationActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.model.LikeMe;
+import com.zb.lib_base.utils.SCToastUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.List;
 
 import androidx.annotation.RequiresApi;
@@ -56,15 +56,11 @@ public class LoginSampleHelper {
 
     private RxAppCompatActivity activity;
     public static String APP_KEY = "23484729";
-    public static YWIMCore imCore;
+    private YWIMCore imCore;
     private IYWConversationService conversationService;
 
     public YWIMCore getImCore() {
         return imCore;
-    }
-
-    public void setImCore(YWIMCore imCore) {
-        this.imCore = imCore;
     }
 
     private void initYWIMCore(String userId) {
@@ -84,7 +80,7 @@ public class LoginSampleHelper {
      */
     //------------------请特别注意，OpenIMSDK会自动对所有输入的用户ID转成小写处理-------------------
     //所以开发者在注册用户信息时，尽量用小写
-    public void login_Sample(RxAppCompatActivity activity, String userId, String password) {
+    public void login_Sample(RxAppCompatActivity activity, String userId, String password, CallBack callBack) {
         this.activity = activity;
         initYWIMCore(userId);
 
@@ -95,11 +91,12 @@ public class LoginSampleHelper {
             @Override
             public void onSuccess(Object... objects) {
                 Log.i("onSuccess", "阿里登录成功");
+                callBack.registerSuccess();
             }
 
             @Override
             public void onError(int i, String s) {
-                Log.e("onSuccess", "code == " + i + "   阿里登录失败:" + s);
+                SCToastUtil.showToast(activity, "聊天异常：" + s + ",请联系客服解决", true);
             }
 
             @Override
@@ -107,6 +104,10 @@ public class LoginSampleHelper {
 
             }
         });
+    }
+
+    public interface CallBack {
+        void registerSuccess();
     }
 
     /**
@@ -117,8 +118,6 @@ public class LoginSampleHelper {
         //添加单聊消息监听，先删除再添加，以免多次添加该监听
         conversationService.removePushListener(iywPushListener);
         conversationService.addPushListener(iywPushListener);
-//        conversationService.removeP2PPushListener(mP2PListener);
-//        conversationService.addP2PPushListener(mP2PListener);
     }
 
     private IYWPushListener iywPushListener = new IYWPushListener() {
@@ -170,47 +169,6 @@ public class LoginSampleHelper {
         }
     };
 
-//    private IYWP2PPushListener mP2PListener = new IYWP2PPushListener() {
-//        @Override
-//        public void onPushMessage(IYWContact contact, List<YWMessage> messages) {
-//            for (YWMessage ywMessage : messages) {
-//                CustomMessageBody body = (CustomMessageBody) unpack(ywMessage.getContent());
-//                if (Long.parseLong(ywMessage.getAuthorUserId()) == BaseActivity.userId) {
-//                    if (body.getMsgType() == 12 || body.getMsgType() == 102 || body.getMsgType() == 112)
-//                        return;
-//                }
-//                if (isBackground()) {
-//                    sendMsg(ywMessage);
-//                } else {
-//                    Log.i("addPushListener", this + "");
-//                    try {
-//                        JSONObject data = new JSONObject(
-//                                new JSONObject(ywMessage.getContent()).getString("customize"));
-//                        if (data.has("message")) { // 聊天信息
-//                            appSound();
-//                            // 单聊消息
-//                            YWConversation conversation = conversationService.getConversationByConversationId(ywMessage.getAuthorUserId());
-////                            YWConversation conversation = conversationService.getConversationByUserId(contact.getUserId());
-//                            if (conversation != null) {
-//                                Intent intent = new Intent("lobster_newMsg");
-//                                intent.putExtra("unReadCount", conversation.getUnreadCount());
-//                                intent.putExtra("ywMessage", ywMessage);
-//                                MineApp.getInstance().sendBroadcast(intent);
-//                            }
-//                        } else if (data.has("roster")) { // 添加好友
-//                            MineApp.getInstance().sendBroadcast(new Intent("lobster_updateFriendList"));
-//                            Intent intent = new Intent("lobster_updateFriendStatus");
-//                            intent.putExtra("ywMessage", ywMessage);
-//                            MineApp.getInstance().sendBroadcast(intent);
-//                        }
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        }
-//    };
-
     /**
      * 登出
      */
@@ -249,7 +207,7 @@ public class LoginSampleHelper {
     }
 
     private void sendMsg(YWMessage ywMessage) {
-        CustomMessageBody body = LoginSampleHelper.unpack(ywMessage.getContent());
+        CustomMessageBody body = unpack(ywMessage.getContent());
         long otherUserId = body.getFromId() == BaseActivity.userId ? body.getToId() : body.getFromId();
 
         NotificationManager notificationManager = (NotificationManager) activity
@@ -305,7 +263,7 @@ public class LoginSampleHelper {
      * @param content
      * @return
      */
-    public static CustomMessageBody unpack(String content) {
+    private CustomMessageBody unpack(String content) {
         CustomMessageBody body = new CustomMessageBody();
         // 自定义消息的实现可以使用jsonObject实现，或者也可以根据自定义其他格式，只需要个pack中一致即可
         JSONObject object;
@@ -359,7 +317,7 @@ public class LoginSampleHelper {
      * @param body
      * @return
      */
-    public static String pack(CustomMessageBody body) {
+    public String pack(CustomMessageBody body) {
         // 自定义消息的实现可以使用jsonObject实现，或者也可以根据自定义其他格式，只需要个unpack中一致即可
         JSONObject data = new JSONObject();
         try {
@@ -392,9 +350,7 @@ public class LoginSampleHelper {
             }
             mPlayer.prepare();
             mPlayer.start();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         new Handler().postDelayed(() -> {

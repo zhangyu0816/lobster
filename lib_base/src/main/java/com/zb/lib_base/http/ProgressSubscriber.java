@@ -106,7 +106,10 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
             switch (exception.getCode()) {
                 case HttpTimeException.ERROR:
                 case HttpTimeException.OPEN_VIP:
-                    if (!TextUtils.equals(exception.getMessage(), "已经赞过了") && !TextUtils.equals("已经取消过", exception.getMessage()) && !TextUtils.equals(exception.getMessage(), "暂时无法拾取漂流瓶哟!")) {
+                    if (!TextUtils.equals(exception.getMessage(), "已经赞过了")
+                            && !TextUtils.equals("已经取消过", exception.getMessage())
+                            && !TextUtils.equals(exception.getMessage(), "暂时无法拾取漂流瓶哟!")
+                            && !TextUtils.equals(exception.getMessage(), "账号生成失败")) {
                         SCToastUtil.showToast(context, exception.getMessage(), position == 0);
                     }
                     break;

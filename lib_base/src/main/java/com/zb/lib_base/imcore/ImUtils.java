@@ -1,5 +1,6 @@
 package com.zb.lib_base.imcore;
 
+import android.os.Handler;
 import android.util.Log;
 
 import com.alibaba.mobileim.channel.event.IWxCallback;
@@ -17,6 +18,7 @@ import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.utils.SCToastUtil;
 
@@ -76,7 +78,7 @@ public class ImUtils {
      *
      * @param delete
      */
-    public void setDelete(boolean delete,RxAppCompatActivity activity) {
+    public void setDelete(boolean delete, RxAppCompatActivity activity) {
         isDelete = delete;
         if (delete)
             otherImAccountInfoApi(activity);
@@ -85,7 +87,7 @@ public class ImUtils {
     /**
      * 建立连接
      */
-    public void setChat(boolean chat,RxAppCompatActivity activity) {
+    public void setChat(boolean chat, RxAppCompatActivity activity) {
         isChat = chat;
         myImAccountInfoApi(activity);
     }
@@ -164,20 +166,37 @@ public class ImUtils {
     /**
      * 阿里百川登录账号
      */
+    private int requestCount = 1;
+
     private void myImAccountInfoApi(RxAppCompatActivity activity) {
         if (loginHelper.getImCore() == null) {
-            myImAccountInfoApi api = new myImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
-                @Override
-                public void onNext(ImAccount o) {
-                    loginOutIM();
-                    loginHelper.login_Sample(activity, o.getImUserId(), o.getImPassWord());
-                    checkChat(activity);
-                }
-            }, activity);
-            HttpManager.getInstance().doHttpDeal(api);
+            requestCount = 1;
+            myImAccountInfo(activity);
         } else {
             checkChat(activity);
         }
+    }
+
+    private void myImAccountInfo(RxAppCompatActivity activity) {
+        myImAccountInfoApi api = new myImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
+            @Override
+            public void onNext(ImAccount o) {
+                loginOutIM();
+                loginHelper.login_Sample(activity, o.getImUserId(), o.getImPassWord(), () -> checkChat(activity));
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
+                    requestCount++;
+                    if (requestCount < 6)
+                        new Handler().postDelayed(() -> myImAccountInfo(activity), 3000);
+                    else
+                        SCToastUtil.showToast(activity, "当前聊天网络有波动，攻城狮正在修复，请稍后使用聊天功能", true);
+                }
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     private void checkChat(RxAppCompatActivity activity) {

@@ -425,9 +425,8 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "验证码已发送，请注意查收", false);
-                if (mBinding.getLoginStep() == 3)
+                if (mBinding.getLoginStep() == 3){
                     step(4);
-                else if (mBinding.getLoginStep() == 4) {
                     mBinding.setCodeRemark(activity.getResources().getString(R.string.code_second, second));
                     timer.start();
                 }
@@ -460,9 +459,8 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "验证码已发送，请注意查收", false);
                 mBinding.setRight("密码登录");
-                if (mBinding.getLoginStep() == 3)
+                if (mBinding.getLoginStep() == 3) {
                     step(4);
-                else if (mBinding.getLoginStep() == 4) {
                     mBinding.setCodeRemark(activity.getResources().getString(R.string.code_second, second));
                     timer.start();
                 }
