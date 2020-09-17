@@ -285,7 +285,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
         if (discoverInfo.getVideoUrl().isEmpty())
             ActivityUtils.getHomeDiscoverDetail(discoverInfo.getFriendDynId());
         else
-            ActivityUtils.getHomeDiscoverVideoL2(discoverInfo.getFriendDynId());
+            ActivityUtils.getHomeDiscoverVideo(discoverInfo.getFriendDynId());
     }
 
     @Override

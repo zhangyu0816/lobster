@@ -231,7 +231,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
                 MineApp.discoverInfoList.addAll(discoverInfoList);
                 ActivityUtils.getHomeVideoList(position, pageNo);
             } else {
-                ActivityUtils.getHomeDiscoverVideoL2(discoverInfo.getFriendDynId());
+                ActivityUtils.getHomeDiscoverVideo(discoverInfo.getFriendDynId());
             }
         }
     }

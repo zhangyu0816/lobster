@@ -51,8 +51,8 @@ import com.zb.lib_base.windows.TextPW;
 import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
-import com.zb.module_home.databinding.HomeVideoL2Binding;
-import com.zb.module_home.iv.DiscoverVideoL2VMInterface;
+import com.zb.module_home.databinding.HomeVideoBinding;
+import com.zb.module_home.iv.DiscoverVideoVMInterface;
 import com.zb.module_home.windows.GiftPW;
 import com.zb.module_home.windows.GiftPayPW;
 import com.zb.module_home.windows.ReviewPW;
@@ -64,10 +64,10 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
 
-public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverVideoL2VMInterface {
+public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVideoVMInterface {
     public long friendDynId;
     public HomeAdapter adapter;
-    private HomeVideoL2Binding mBinding;
+    private HomeVideoBinding mBinding;
     public DiscoverInfo discoverInfo;
     private ObjectAnimator animator;
     private MemberInfo memberInfo;
@@ -80,7 +80,7 @@ public class DiscoverVideoL2ViewModel extends BaseViewModel implements DiscoverV
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        mBinding = (HomeVideoL2Binding) binding;
+        mBinding = (HomeVideoBinding) binding;
         animator = ObjectAnimator.ofFloat(mBinding.ivProgress, "rotation", 0, 360).setDuration(700);
         animator.setRepeatMode(ValueAnimator.RESTART);
         animator.setRepeatCount(Animation.INFINITE);

@@ -81,7 +81,7 @@ public class NewsListViewModel extends BaseViewModel implements NewsListVMInterf
     @Override
     public void clickDyn(MineNews mineNews) {
         if (mineNews.getFriendDynamicDycType() >= 4)
-            ActivityUtils.getHomeDiscoverVideoL2(mineNews.getFriendDynamicId());
+            ActivityUtils.getHomeDiscoverVideo(mineNews.getFriendDynamicId());
         else
             ActivityUtils.getHomeDiscoverDetail(mineNews.getFriendDynamicId());
     }

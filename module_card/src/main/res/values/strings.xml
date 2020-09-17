@@ -11,4 +11,6 @@
     <string name="card_progress">card_progress_icon</string>
     <string name="text_age">%d岁</string>
     <string name="mine_sign_content">未填写签名</string>
+    <string name="km">km</string>
+    <string name="m">m</string>
 </resources>

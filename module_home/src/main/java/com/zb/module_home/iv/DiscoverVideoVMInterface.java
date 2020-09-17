@@ -2,7 +2,7 @@ package com.zb.module_home.iv;
 
 import android.view.View;
 
-public interface DiscoverVideoL2VMInterface {
+public interface DiscoverVideoVMInterface {
     void videoPlay(View view);
 
     void toReviews(View view);

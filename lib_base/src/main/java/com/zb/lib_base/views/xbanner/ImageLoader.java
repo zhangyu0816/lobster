@@ -20,10 +20,6 @@ public interface ImageLoader {
 
     }
 
-    default void getPosition(int position) {
-
-    }
-
     default void loadView(LinearLayout linearLayout, View adView) {
 
     }

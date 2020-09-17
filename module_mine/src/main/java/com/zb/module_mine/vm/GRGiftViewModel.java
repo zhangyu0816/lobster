@@ -80,7 +80,7 @@ public class GRGiftViewModel extends BaseViewModel implements GRGiftVMInterface,
         if (giftRecord.getDycType() < 4)
             ActivityUtils.getHomeDiscoverDetail(giftRecord.getFriendDynamicId());
         else
-            ActivityUtils.getHomeDiscoverVideoL2(giftRecord.getFriendDynamicId());
+            ActivityUtils.getHomeDiscoverVideo(giftRecord.getFriendDynamicId());
     }
 
     @Override

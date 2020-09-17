@@ -53,9 +53,9 @@ public class ActivityUtils {
     }
 
     // 礼物列表
-    public static RxAppCompatActivity getHomeDiscoverVideoL2(long friendDynId) {
-        MineApp.removeActivity(MineApp.activityMap.get("DiscoverVideoL2Activity"));
-        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Home_Discover_Video_L2).withLong("friendDynId", friendDynId).navigation();
+    public static RxAppCompatActivity getHomeDiscoverVideo(long friendDynId) {
+        MineApp.removeActivity(MineApp.activityMap.get("DiscoverVideoActivity"));
+        RxAppCompatActivity activity = (RxAppCompatActivity) ARouter.getInstance().build(RouteUtils.Home_Discover_Video).withLong("friendDynId", friendDynId).navigation();
         return activity;
     }
 

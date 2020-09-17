@@ -11,14 +11,14 @@ import com.zb.lib_base.utils.RouteUtils;
 import com.zb.lib_base.utils.StatusBarUtil;
 import com.zb.module_home.BR;
 import com.zb.module_home.R;
-import com.zb.module_home.vm.DiscoverVideoL2ViewModel;
+import com.zb.module_home.vm.DiscoverVideoViewModel;
 
-@Route(path = RouteUtils.Home_Discover_Video_L2)
-public class DiscoverVideoL2Activity extends BaseActivity {
+@Route(path = RouteUtils.Home_Discover_Video)
+public class DiscoverVideoActivity extends BaseActivity {
     @Autowired(name = "friendDynId")
     long friendDynId;
 
-    private DiscoverVideoL2ViewModel viewModel;
+    private DiscoverVideoViewModel viewModel;
     private boolean isFirst = true;
 
     @Override
@@ -30,13 +30,13 @@ public class DiscoverVideoL2Activity extends BaseActivity {
 
     @Override
     public int getRes() {
-        return R.layout.home_video_l2;
+        return R.layout.home_video;
     }
 
     @Override
     public void initUI() {
-        MineApp.activityMap.put("DiscoverVideoL2Activity", new DiscoverVideoL2Activity());
-        viewModel = new DiscoverVideoL2ViewModel();
+        MineApp.activityMap.put("DiscoverVideoActivity", new DiscoverVideoActivity());
+        viewModel = new DiscoverVideoViewModel();
         viewModel.friendDynId = friendDynId;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);

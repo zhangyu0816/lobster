@@ -118,7 +118,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
 
     @Override
     public void setAdapter() {
-        adapter = new HomeAdapter<>(activity, R.layout.item_video_l2, MineApp.discoverInfoList, this);
+        adapter = new HomeAdapter<>(activity, R.layout.item_video, MineApp.discoverInfoList, this);
 
         douYinLayoutManager = new DouYinLayoutManager(activity, OrientationHelper.VERTICAL, false);
         mBinding.videoList.setLayoutManager(douYinLayoutManager);

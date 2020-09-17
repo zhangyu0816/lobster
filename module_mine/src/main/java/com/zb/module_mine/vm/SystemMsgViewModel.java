@@ -190,7 +190,7 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
                 if (o.getVideoUrl().isEmpty()) {
                     ActivityUtils.getHomeDiscoverDetail(discoverId);
                 } else {
-                    ActivityUtils.getHomeDiscoverVideoL2(discoverId);
+                    ActivityUtils.getHomeDiscoverVideo(discoverId);
                 }
             }
         }, activity).setFriendDynId(discoverId);

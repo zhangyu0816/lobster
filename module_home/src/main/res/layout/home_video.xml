@@ -11,7 +11,7 @@
 
         <variable
             name="viewModel"
-            type="com.zb.module_home.vm.DiscoverVideoL2ViewModel" />
+            type="com.zb.module_home.vm.DiscoverVideoViewModel" />
 
         <variable
             name="discoverInfo"
