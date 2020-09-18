@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:gravity="center"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:paddingBottom="20dp"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
@@ -20,16 +20,17 @@
 
         <ImageView
             android:id="@+id/progress"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
             android:background="@mipmap/loading_icon"/>
 
         <TextView
             android:id="@+id/tv_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
             android:textColor="@color/black_252"
+            android:textSize="16sp"
             tools:text="加载中..."/>
 
     </LinearLayout>
