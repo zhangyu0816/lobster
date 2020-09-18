@@ -231,6 +231,10 @@ public interface HttpService {
     Observable<BaseResultEntity<List<DiscoverInfo>>> personOtherDyn(@Query("otherUserId") long otherUserId, @Query("pageNo") int pageNo,
                                                                     @Query("timeSortType") int timeSortType, @Query("dycRootType") int dynType);
 
+    // 动态访问
+    @GET("api/Interactive_dynVisit")
+    Observable<BaseResultEntity> dynVisit(@Query("friendDynId") long friendDynId);
+
     // 发布动态
     @GET("api/Interactive_publishDyn")
     Observable<BaseResultEntity> publishDyn(@Query("text") String text, @Query("images") String images,
@@ -334,6 +338,10 @@ public interface HttpService {
     // 自动喜欢
     @GET("api/Pair_pushGoodUser")
     Observable<BaseResultEntity<Integer>> pushGoodUser();
+
+    // 访问他人
+    @GET("api/Interactive_otherUserInfoVisit")
+    Observable<BaseResultEntity> otherUserInfoVisit(@Query("otherUserId") long otherUserId);
 
     /******************************* 对话 **********************************/
 

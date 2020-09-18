@@ -29,6 +29,7 @@ import com.zb.lib_base.api.dynCancelLikeApi;
 import com.zb.lib_base.api.dynDetailApi;
 import com.zb.lib_base.api.dynDoLikeApi;
 import com.zb.lib_base.api.dynDoReviewApi;
+import com.zb.lib_base.api.dynVisitApi;
 import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.seeGiftRewardsApi;
@@ -146,6 +147,17 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         reviewAdapter = new HomeAdapter<>(activity, R.layout.item_home_review, reviewList, this);
         // 打赏
         rewardAdapter = new HomeAdapter<>(activity, R.layout.item_home_reward, rewardList, this);
+        dynVisit();
+    }
+
+    private void dynVisit() {
+        dynVisitApi api = new dynVisitApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+
+            }
+        }, activity).setFriendDynId(friendDynId);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override

@@ -27,6 +27,7 @@ import com.zb.lib_base.api.deleteDynApi;
 import com.zb.lib_base.api.dynCancelLikeApi;
 import com.zb.lib_base.api.dynDoLikeApi;
 import com.zb.lib_base.api.dynPiazzaListApi;
+import com.zb.lib_base.api.dynVisitApi;
 import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.seeLikersApi;
 import com.zb.lib_base.api.seeReviewsApi;
@@ -488,7 +489,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             lastVideoView = null;
         }
         discoverInfo = MineApp.discoverInfoList.get(position);
-
+        dynVisit(discoverInfo.getFriendDynId());
         videoView = view.findViewById(R.id.video_view);
         ivProgress = view.findViewById(R.id.iv_progress);
         ivUnLike = view.findViewById(R.id.iv_unLike);
@@ -548,7 +549,15 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             }
         });
     }
+    private void dynVisit(long friendDynId) {
+        dynVisitApi api = new dynVisitApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
 
+            }
+        }, activity).setFriendDynId(friendDynId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
     private void seeLikers(int pageNo) {
         seeLikersApi api = new seeLikersApi(new HttpOnNextListener<List<Review>>() {
             @Override

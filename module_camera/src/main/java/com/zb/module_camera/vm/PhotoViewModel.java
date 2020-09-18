@@ -89,7 +89,10 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
     @Override
     public void reset(View view) {
         mBinding.setVariable(BR.isCreate, false);
-        mCamera.startPreview();
+        try {
+            mCamera.startPreview();
+        } catch (Exception e) {
+        }
         imageData = null;
         isTakePhoto = false;
     }
@@ -169,11 +172,15 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
         isTakePhoto = true;
         mBinding.setVariable(BR.isCreate, true);
         //调用相机拍照
-        mCamera.takePicture(null, null, null, (data, camera1) -> {
-            imageData = data;
-            //停止预览
-            mCamera.stopPreview();
-        });
+        try {
+            mCamera.takePicture(null, null, null, (data, camera1) -> {
+                imageData = data;
+                //停止预览
+                mCamera.stopPreview();
+            });
+        } catch (Exception e) {
+
+        }
     }
 
     @Override

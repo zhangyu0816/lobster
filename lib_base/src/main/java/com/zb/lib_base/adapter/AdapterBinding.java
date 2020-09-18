@@ -145,98 +145,104 @@ public class AdapterBinding {
     @SuppressLint("CheckResult")
     @BindingAdapter(value = {"imageUrl", "imageRes", "defaultRes", "viewWidthSize", "viewHeightSize", "isCircle", "isRound", "roundSize", "countSize", "cornerType", "isBlur"}, requireAll = false)
     public static void loadImage(ImageView view, String imageUrl, int imageRes, int defaultRes, int widthSize, int heightSize, boolean isCircle, boolean isRound, int roundSize, boolean countSize, int cornerType, boolean isBlur) {
-        RequestOptions cropOptions = new RequestOptions().centerCrop();
-        RequestOptions defaultOptions = new RequestOptions().centerCrop();
-        if (isCircle) {
-            // 圆图
-            cropOptions.circleCrop();
-            defaultOptions.circleCrop();
-        }
-        if (isRound) {
-            // 圆角图
-            MultiTransformation<Bitmap> multiTransformation;
-            if (cornerType == 0) {
-                multiTransformation = new MultiTransformation<>(new CenterCrop(), new GlideRoundTransform(roundSize, 0));
+        try {
+
+
+            RequestOptions cropOptions = new RequestOptions().centerCrop();
+            RequestOptions defaultOptions = new RequestOptions().centerCrop();
+            if (isCircle) {
+                // 圆图
+                cropOptions.circleCrop();
+                defaultOptions.circleCrop();
+            }
+            if (isRound) {
+                // 圆角图
+                MultiTransformation<Bitmap> multiTransformation;
+                if (cornerType == 0) {
+                    multiTransformation = new MultiTransformation<>(new CenterCrop(), new GlideRoundTransform(roundSize, 0));
+                    cropOptions.transform(multiTransformation);
+                    defaultOptions.transform(multiTransformation);
+                } else {
+                    if (cornerType == 6) {
+                        cornerType = GlideRoundTransform.CORNER_TOP;
+                    }
+//                multiTransformation = new MultiTransformation<>(new CenterCrop(), new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
+                    cropOptions.transform(new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
+                    defaultOptions.transform(new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
+                }
+            }
+
+            if (isBlur) {
+                MultiTransformation<Bitmap> multiTransformation;
+                if (isCircle) {
+                    multiTransformation = new MultiTransformation<>(new BlurTransformation(), new CircleCrop());
+                } else {
+                    multiTransformation = new MultiTransformation<>(new BlurTransformation());
+                }
                 cropOptions.transform(multiTransformation);
                 defaultOptions.transform(multiTransformation);
-            } else {
-                if (cornerType == 6) {
-                    cornerType = GlideRoundTransform.CORNER_TOP;
-                }
-//                multiTransformation = new MultiTransformation<>(new CenterCrop(), new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
-                cropOptions.transform(new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
-                defaultOptions.transform(new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
             }
-        }
+            if (countSize) {
+                Glide.with(view.getContext()).asBitmap().load(imageUrl).apply(cropOptions).into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        float width = (float) resource.getWidth();
+                        float height = (float) resource.getHeight();
 
-        if (isBlur) {
-            MultiTransformation<Bitmap> multiTransformation;
-            if (isCircle) {
-                multiTransformation = new MultiTransformation<>(new BlurTransformation(), new CircleCrop());
-            } else {
-                multiTransformation = new MultiTransformation<>(new BlurTransformation());
-            }
-            cropOptions.transform(multiTransformation);
-            defaultOptions.transform(multiTransformation);
-        }
-        if (countSize) {
-            Glide.with(view.getContext()).asBitmap().load(imageUrl).apply(cropOptions).into(new SimpleTarget<Bitmap>() {
-                @Override
-                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                    float width = (float) resource.getWidth();
-                    float height = (float) resource.getHeight();
-
-                    if (width > height) {
-                        viewSize(view, (int) ((float) resource.getWidth() * heightSize * 0.7 / (float) resource.getHeight()), (int) (heightSize * 0.7f));
-                    } else {
-                        viewSize(view, widthSize, (int) ((float) resource.getHeight() * widthSize / (float) resource.getWidth()));
+                        if (width > height) {
+                            viewSize(view, (int) ((float) resource.getWidth() * heightSize * 0.7 / (float) resource.getHeight()), (int) (heightSize * 0.7f));
+                        } else {
+                            viewSize(view, widthSize, (int) ((float) resource.getHeight() * widthSize / (float) resource.getWidth()));
+                        }
+                        view.setImageBitmap(resource);
                     }
-                    view.setImageBitmap(resource);
-                }
-            });
-        } else {
-            viewSize(view, widthSize, heightSize);
-            RequestBuilder<android.graphics.drawable.Drawable> builder;
-            if (defaultRes == 0) {
-                builder = Glide.with(view.getContext()).asDrawable().apply(cropOptions);
+                });
             } else {
-                RequestBuilder<android.graphics.drawable.Drawable> thumb = Glide.with(view.getContext()).asDrawable().apply(defaultOptions);
-                builder = Glide.with(view.getContext()).asDrawable().thumbnail(thumb.load(defaultRes)).apply(cropOptions);
-            }
-
-            if (imageRes != 0) {
-                builder.load(imageRes).into(view);
-            } else {
-                if (imageUrl != null && imageUrl.equals("add_image_icon")) {
-                    builder.load(R.mipmap.add_image_icon).into(view);
-                } else if (imageUrl != null && imageUrl.equals("empty_icon")) {
-                    builder.load(R.mipmap.empty_icon).into(view);
-                } else if (imageUrl != null && imageUrl.equals("be_like_logo_icon")) {
-                    builder.load(R.mipmap.be_like_logo_icon).into(view);
-                } else if (imageUrl != null && imageUrl.equals("bottle_logo_icon")) {
-                    builder.load(R.mipmap.bottle_logo_icon).into(view);
-                } else if (imageUrl != null && imageUrl.equals("review_tag_icon")) {
-                    builder.load(R.mipmap.review_tag_icon).into(view);
-                } else if (imageUrl != null && imageUrl.equals("card_no_data_icon")) {
-                    builder.load(R.mipmap.card_no_data_icon).into(view);
-                } else if (imageUrl != null && imageUrl.equals("card_out_line_bg")) {
-                    builder.load(R.mipmap.card_out_line_bg).into(view);
-                } else if (imageUrl != null && imageUrl.equals("card_progress_icon")) {
-                    builder.load(R.mipmap.card_progress_icon).into(view);
-                } else if (imageUrl != null && imageUrl.equals("vip_ad_1_male_right")) {
-                    builder.load(R.drawable.vip_ad_1_male_right).into(view);
-                } else if (imageUrl != null && imageUrl.equals("vip_ad_3_male")) {
-                    builder.load(R.mipmap.vip_ad_3_male).into(view);
-                } else if (imageUrl != null && imageUrl.equals("vip_ad_3_logo")) {
-                    builder.load(R.drawable.vip_ad_3_logo).into(view);
-                } else if (imageUrl != null && imageUrl.equals("vip_ad_3_logo_male")) {
-                    builder.load(R.drawable.vip_ad_3_logo_male).into(view);
+                viewSize(view, widthSize, heightSize);
+                RequestBuilder<android.graphics.drawable.Drawable> builder;
+                if (defaultRes == 0) {
+                    builder = Glide.with(view.getContext()).asDrawable().apply(cropOptions);
                 } else {
-                    if (imageUrl != null && imageUrl.contains(".mp3"))
-                        imageUrl = "";
-                    builder.load(imageUrl).into(view);
+                    RequestBuilder<android.graphics.drawable.Drawable> thumb = Glide.with(view.getContext()).asDrawable().apply(defaultOptions);
+                    builder = Glide.with(view.getContext()).asDrawable().thumbnail(thumb.load(defaultRes)).apply(cropOptions);
+                }
+
+                if (imageRes != 0) {
+                    builder.load(imageRes).into(view);
+                } else {
+                    if (imageUrl != null && imageUrl.equals("add_image_icon")) {
+                        builder.load(R.mipmap.add_image_icon).into(view);
+                    } else if (imageUrl != null && imageUrl.equals("empty_icon")) {
+                        builder.load(R.mipmap.empty_icon).into(view);
+                    } else if (imageUrl != null && imageUrl.equals("be_like_logo_icon")) {
+                        builder.load(R.mipmap.be_like_logo_icon).into(view);
+                    } else if (imageUrl != null && imageUrl.equals("bottle_logo_icon")) {
+                        builder.load(R.mipmap.bottle_logo_icon).into(view);
+                    } else if (imageUrl != null && imageUrl.equals("review_tag_icon")) {
+                        builder.load(R.mipmap.review_tag_icon).into(view);
+                    } else if (imageUrl != null && imageUrl.equals("card_no_data_icon")) {
+                        builder.load(R.mipmap.card_no_data_icon).into(view);
+                    } else if (imageUrl != null && imageUrl.equals("card_out_line_bg")) {
+                        builder.load(R.mipmap.card_out_line_bg).into(view);
+                    } else if (imageUrl != null && imageUrl.equals("card_progress_icon")) {
+                        builder.load(R.mipmap.card_progress_icon).into(view);
+                    } else if (imageUrl != null && imageUrl.equals("vip_ad_1_male_right")) {
+                        builder.load(R.drawable.vip_ad_1_male_right).into(view);
+                    } else if (imageUrl != null && imageUrl.equals("vip_ad_3_male")) {
+                        builder.load(R.mipmap.vip_ad_3_male).into(view);
+                    } else if (imageUrl != null && imageUrl.equals("vip_ad_3_logo")) {
+                        builder.load(R.drawable.vip_ad_3_logo).into(view);
+                    } else if (imageUrl != null && imageUrl.equals("vip_ad_3_logo_male")) {
+                        builder.load(R.drawable.vip_ad_3_logo_male).into(view);
+                    } else {
+                        if (imageUrl != null && imageUrl.contains(".mp3"))
+                            imageUrl = "";
+                        builder.load(imageUrl).into(view);
+                    }
                 }
             }
+        } catch (Exception e) {
+
         }
     }
 

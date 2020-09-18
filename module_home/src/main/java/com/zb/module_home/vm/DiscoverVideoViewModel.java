@@ -23,6 +23,7 @@ import com.zb.lib_base.api.deleteDynApi;
 import com.zb.lib_base.api.dynCancelLikeApi;
 import com.zb.lib_base.api.dynDetailApi;
 import com.zb.lib_base.api.dynDoLikeApi;
+import com.zb.lib_base.api.dynVisitApi;
 import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.seeLikersApi;
@@ -114,6 +115,17 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     @Override
     public void setAdapter() {
         adapter = new HomeAdapter<>(activity, R.layout.item_auto_review, reviewList, this);
+        dynVisit();
+    }
+
+    private void dynVisit() {
+        dynVisitApi api = new dynVisitApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+
+            }
+        }, activity).setFriendDynId(friendDynId);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override

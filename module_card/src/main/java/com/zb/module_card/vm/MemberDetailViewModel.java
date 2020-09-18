@@ -23,6 +23,7 @@ import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.memberInfoConfApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.otherRentInfoApi;
+import com.zb.lib_base.api.otherUserInfoVisitApi;
 import com.zb.lib_base.api.personOtherDynApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
@@ -133,6 +134,17 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         tagAdapter = new CardAdapter<>(activity, R.layout.item_card_tag, tagList, this);
 
         discoverAdapter = new CardAdapter<>(activity, R.layout.item_card_discover_image, discoverInfoList, this);
+        otherUserInfoVisit();
+    }
+
+    private void otherUserInfoVisit() {
+        otherUserInfoVisitApi api = new otherUserInfoVisitApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+
+            }
+        }, activity).setOtherUserId(otherUserId);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     public void onDestroy() {
