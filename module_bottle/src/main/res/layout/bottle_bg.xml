@@ -16,8 +16,7 @@
             android:id="@+id/lsxq"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:src="@mipmap/lansexingqiu" />
+            android:layout_marginTop="100dp" />
 
         <ImageView
             android:id="@+id/fsxq_temp"
@@ -26,15 +25,14 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="150dp"
             android:layout_marginEnd="-75dp"
-            android:src="@mipmap/bottle_star_icon"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
+
         <ImageView
             android:id="@+id/iv_bottle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:layout_below="@+id/fsxq_temp"
-            android:src="@mipmap/bottle_info_icon"
+            android:layout_alignParentEnd="true"
             android:visibility="gone" />
 
         <LinearLayout
@@ -49,14 +47,12 @@
                 android:id="@+id/dg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="-80dp"
-                android:src="@mipmap/dengtadeguang" />
+                android:layout_marginBottom="-80dp" />
 
             <ImageView
                 android:id="@+id/deng"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/dengta" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
 
@@ -65,7 +61,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:background="@mipmap/wang_icon"
             android:visibility="gone" />
 
         <ImageView
@@ -73,7 +68,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:background="@mipmap/wang_back_icon"
             android:visibility="gone" />
 
         <ImageView
@@ -81,7 +75,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@mipmap/haidi1"
             android:scaleType="fitXY" />
 
         <ImageView
@@ -89,47 +82,42 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/yinying"
-            android:layout_alignParentEnd="true"
-            android:src="@mipmap/plp" />
+            android:layout_alignParentEnd="true" />
 
         <ImageView
             android:id="@+id/hd_q"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="fitXY"
             android:layout_alignParentBottom="true"
-            android:src="@mipmap/haidi" />
+            android:scaleType="fitXY" />
 
         <ImageView
             android:id="@+id/jg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:src="@mipmap/jg" />
+            android:layout_alignParentBottom="true" />
 
         <ImageView
             android:id="@+id/plp_d"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:src="@mipmap/plp_d" />
+            android:layout_centerHorizontal="true" />
 
         <ImageView
+            android:id="@+id/xy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="50dp"
-            android:src="@mipmap/xingyun" />
+            android:layout_marginTop="50dp" />
 
         <ImageView
             android:id="@+id/xx"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="100dp"
-            android:layout_marginEnd="-80dp"
-            android:src="@mipmap/xx" />
+            android:layout_marginEnd="-80dp" />
 
         <ImageView
             android:id="@+id/fsxq"
@@ -137,21 +125,18 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="150dp"
-            android:layout_marginEnd="-75dp"
-            android:src="@mipmap/bottle_star_icon" />
+            android:layout_marginEnd="-75dp" />
 
         <ImageView
             android:id="@+id/bl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:src="@mipmap/bolan" />
+            android:layout_alignParentBottom="true" />
 
         <ImageView
             android:id="@+id/yinying"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@mipmap/yinying" />
+            android:layout_alignParentBottom="true" />
     </RelativeLayout>
 </layout>

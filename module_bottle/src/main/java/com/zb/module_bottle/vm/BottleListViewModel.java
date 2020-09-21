@@ -196,6 +196,15 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     public static class BottleInfoComparator implements Comparator<BottleInfo> {
         @Override
         public int compare(BottleInfo o1, BottleInfo o2) {
+            if (o1 == null && o2 == null) {
+                return 0;
+            }
+            if (o1 == null) {
+                return -1;
+            }
+            if (o2 == null) {
+                return 1;
+            }
             if (o1.getModifyTime().isEmpty())
                 return -1;
             if (o2.getModifyTime().isEmpty())

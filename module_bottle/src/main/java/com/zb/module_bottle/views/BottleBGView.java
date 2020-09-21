@@ -21,7 +21,18 @@ import androidx.annotation.Nullable;
 
 public class BottleBGView extends RelativeLayout {
 
-    private ImageView lsxq, hd_s, plp_d, bl, plp, hd_q, jg, xx, fsxq, ivWang, ivWangBack, ivBottle;
+    private ImageView lsxq;
+    private ImageView hd_s;
+    private ImageView plp_d;
+    private ImageView bl;
+    private ImageView plp;
+    private ImageView hd_q;
+    private ImageView jg;
+    private ImageView xx;
+    private ImageView fsxq;
+    private ImageView ivWang;
+    private ImageView ivWangBack;
+    private ImageView ivBottle;
     private AnimatorSet set = new AnimatorSet();
 
     public BottleBGView(Context context) {
@@ -50,6 +61,9 @@ public class BottleBGView extends RelativeLayout {
 
     private void findViewId() {
         lsxq = findViewById(R.id.lsxq);
+        ImageView fsxq_temp = findViewById(R.id.fsxq_temp);
+        ImageView dg = findViewById(R.id.dg);
+        ImageView deng = findViewById(R.id.deng);
         hd_s = findViewById(R.id.hd_s);
         plp_d = findViewById(R.id.plp_d);
         bl = findViewById(R.id.bl);
@@ -57,11 +71,31 @@ public class BottleBGView extends RelativeLayout {
         hd_q = findViewById(R.id.hd_q);
         jg = findViewById(R.id.jg);
         xx = findViewById(R.id.xx);
+        ImageView xy = findViewById(R.id.xy);
         fsxq = findViewById(R.id.fsxq);
         ivWang = findViewById(R.id.iv_wang);
         ivWangBack = findViewById(R.id.iv_wang_back);
         ivBottle = findViewById(R.id.iv_bottle);
+        ImageView yy = findViewById(R.id.yinying);
         fsxq.setVisibility(GONE);
+
+        lsxq.setBackgroundResource(R.mipmap.lansexingqiu);
+        fsxq_temp.setBackgroundResource(R.mipmap.bottle_star_icon);
+        ivBottle.setBackgroundResource(R.mipmap.bottle_info_icon);
+        dg.setBackgroundResource(R.mipmap.dengtadeguang);
+        deng.setBackgroundResource(R.mipmap.dengta);
+        ivWang.setBackgroundResource(R.mipmap.wang_icon);
+        ivWangBack.setBackgroundResource(R.mipmap.wang_back_icon);
+        hd_s.setBackgroundResource(R.mipmap.haidi1);
+        plp.setBackgroundResource(R.mipmap.plp);
+        hd_q.setBackgroundResource(R.mipmap.haidi);
+        jg.setBackgroundResource(R.mipmap.jg);
+        plp_d.setBackgroundResource(R.mipmap.plp_d);
+        xy.setBackgroundResource(R.mipmap.xingyun);
+        xx.setBackgroundResource(R.mipmap.xx);
+        fsxq.setBackgroundResource(R.mipmap.bottle_star_icon);
+        bl.setBackgroundResource(R.mipmap.bolan);
+        yy.setBackgroundResource(R.mipmap.yinying);
         new Handler().postDelayed(() -> fsxq.setVisibility(VISIBLE), 1300);
     }
 

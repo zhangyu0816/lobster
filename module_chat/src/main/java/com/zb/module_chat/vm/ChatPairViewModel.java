@@ -183,7 +183,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
             ActivityUtils.getCardMemberDetail(chatList.getUserId(), false);
         } else if (chatList.getChatType() == 4) {
             // 匹配-聊天
-            ActivityUtils.getChatActivity(chatList.getUserId(),false);
+            ActivityUtils.getChatActivity(chatList.getUserId(), false);
         }
     }
 
@@ -293,6 +293,15 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
     public static class LikeMeComparator implements Comparator<ChatList> {
         @Override
         public int compare(ChatList o1, ChatList o2) {
+            if (o1 == null && o2 == null) {
+                return 0;
+            }
+            if (o1 == null) {
+                return -1;
+            }
+            if (o2 == null) {
+                return 1;
+            }
             if (o1.getCreationDate().isEmpty())
                 return -1;
             if (o2.getCreationDate().isEmpty())

@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Handler;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
@@ -83,7 +82,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                 }
             }
         };
-        new Handler().postDelayed(this::initFragments, 1000);
+        initFragments();
     }
 
     public void onDestroy() {

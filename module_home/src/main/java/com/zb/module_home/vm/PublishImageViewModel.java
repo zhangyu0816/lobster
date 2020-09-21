@@ -207,7 +207,6 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                     compress(videoUrl);
                 } else {
                     saveBitmapFile(ThumbnailUtils.createVideoThumbnail(videoUrl, MediaStore.Video.Thumbnails.MINI_KIND));
-//                    uploadVideo();
                 }
             }
         }
@@ -240,8 +239,6 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                         .build();
 
                 onlyCompressOverBean = new LocalMediaCompress(config).startCompress();
-
-
                 File file = new File(onlyCompressOverBean.getVideoPath());
                 if (file.length() > 10 * 1024 * 1024) {
                     handler.sendEmptyMessage(0);
@@ -277,7 +274,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                 CustomProgressDialog.stopLoading();
                 break;
             case 1:
-                SCToastUtil.showToast(activity, "视频链接含中文路径，处理失败", true);
+                SCToastUtil.showToast(activity, "链接含中文路径，处理失败", true);
                 CustomProgressDialog.stopLoading();
                 break;
             case 2:

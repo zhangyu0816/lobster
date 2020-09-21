@@ -92,6 +92,15 @@ public class BaseViewModel implements BaseVMInterface {
     public static class CreateTimeComparator implements Comparator<Review> {
         @Override
         public int compare(Review o1, Review o2) {
+            if (o1 == null && o2 == null) {
+                return 0;
+            }
+            if (o1 == null) {
+                return -1;
+            }
+            if (o2 == null) {
+                return 1;
+            }
             if (o1.getCreateTime().isEmpty())
                 return -1;
             if (o2.getCreateTime().isEmpty())

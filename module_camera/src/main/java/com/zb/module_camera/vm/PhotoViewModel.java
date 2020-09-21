@@ -81,7 +81,8 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
                 }
             } catch (Exception ignored) {
             }
-            preview.releaseCamera();
+            if (preview != null)
+                preview.releaseCamera();
             activity.finish();
         }
     }
