@@ -47,11 +47,6 @@ public class CustomProgressDialog extends Dialog implements DialogInterface.OnCa
 
     @Override
     public void onCancel(DialogInterface dialog) {
-        // 点手机返回键等触发Dialog消失，应该取消正在进行的网络请求等
-        RxAppCompatActivity context = mContext.get();
-        if (context != null) {
-//            MyHttpClient.cancelRequests(context);
-        }
     }
 
     public static synchronized void showLoading(RxAppCompatActivity context) {
@@ -67,11 +62,11 @@ public class CustomProgressDialog extends Dialog implements DialogInterface.OnCa
             sDialog.dismiss();
         }
 
-        if (context == null || !(context instanceof RxAppCompatActivity) || !cancelable) {
+        if (context == null || !cancelable) {
             return;
         }
         sDialog = new CustomProgressDialog(context, message);
-        sDialog.setCancelable(cancelable);
+        sDialog.setCancelable(true);
 
         if (sDialog != null && !sDialog.isShowing() && !context.isFinishing()) {
             animator.start();

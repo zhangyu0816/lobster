@@ -45,7 +45,6 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     private BaseReceiver resumeSoundReceiver;
     private MediaPlayer mPlayer;
     private AnimatorSet animatorSet = new AnimatorSet();
-    private long time = 1500;
 
     private BottleInfo bottleInfo;
     private boolean isFirst = true;
@@ -92,8 +91,9 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         };
 
         mPlayer = MediaPlayer.create(activity, R.raw.sea_wave);
-        new Handler().postDelayed(() -> appSound(), 200);
+        new Handler().postDelayed(this::appSound, 200);
 
+        long time = 1500;
         translateX = ObjectAnimator.ofFloat(mBinding.ivStar, "translationX", 0, MineApp.W - ObjectUtils.getViewSizeByWidthFromMax(250)).setDuration(time);
 
         scaleX = ObjectAnimator.ofFloat(mBinding.ivBg, "scaleX", 1, 1.5f).setDuration(time);
@@ -151,10 +151,10 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         try {
             if (mPlayer != null) {
                 mPlayer.stop();
+                mPlayer.prepare();
+                mPlayer.setLooping(true);
+                mPlayer.start();
             }
-            mPlayer.prepare();
-            mPlayer.setLooping(true);
-            mPlayer.start();
         } catch (Exception e) {
             e.printStackTrace();
         }

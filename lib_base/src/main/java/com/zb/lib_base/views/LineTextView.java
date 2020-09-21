@@ -49,8 +49,8 @@ public class LineTextView extends androidx.appcompat.widget.AppCompatTextView {
                 canvas.drawText(texts[i],
                         viewWidth - oneWidth - dip2px(context, 2), drawY, p);
             } else if (i != 0 && i != num - 1) {//
-                canvas.drawText(texts[i], i * lineWidth + lineWidth / 2
-                        - oneWidth / 2, drawY, p);
+                canvas.drawText(texts[i], i * lineWidth + lineWidth / 2f
+                        - oneWidth / 2f, drawY, p);
             } else {// 第一个
                 canvas.drawText(texts[i], i * lineWidth + dip2px(context, 2),
                         drawY, p);
@@ -72,8 +72,7 @@ public class LineTextView extends androidx.appcompat.widget.AppCompatTextView {
         p.setTextSize(dip2px(context, textSize));
         this.str = str;
         num = str.length();
-        int width = ce("汉").width();
-        this.oneWidth = width;
+        this.oneWidth = ce("汉").width();
         this.oneHight = ce(str).height();
         String[] strs = new String[num];
         for (int i = 0; i < num; i++) {

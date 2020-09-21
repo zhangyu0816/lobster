@@ -39,7 +39,6 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
     private ChatListFragmentBinding mBinding;
     private BaseReceiver updateChatReceiver;
     private BaseReceiver relieveReceiver;
-    private SimpleItemTouchHelperCallback callback;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -146,6 +145,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
             for (LikeMe likeMe : MineApp.pairList) {
                 if (item.getUserId() == likeMe.getOtherUserId()) {
                     has = true;
+                    break;
                 }
             }
             if (has)
@@ -153,7 +153,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
         }
         adapter = new ChatAdapter<>(activity, R.layout.item_chat_list, chatMsgList, this);
         activity.sendBroadcast(new Intent("lobster_updateRed"));
-        callback = new SimpleItemTouchHelperCallback(adapter);
+        SimpleItemTouchHelperCallback callback = new SimpleItemTouchHelperCallback(adapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(mBinding.chatList);
         callback.setSort(false);

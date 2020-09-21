@@ -23,7 +23,6 @@ public class SoundView {
     private int resTime = 0;
     private AnimationDrawable animationDrawable;
     private String audioPath;
-    private int MAX_DURATION = 60;
     private ImageView audioBtn;
     private MediaPlayer mediaPlayer;
     private CallBack callBack;
@@ -105,6 +104,7 @@ public class SoundView {
         @Override
         public boolean handleMessage(Message msg) {
             resTime = msg.what;
+            int MAX_DURATION = 60;
             if (msg.what == MAX_DURATION || msg.what > MAX_DURATION) {
                 SCToastUtil.showToast(context, "最长时间为60秒", true);
                 stop();
@@ -145,8 +145,6 @@ public class SoundView {
 
     /**
      * 语音播放
-     *
-     * @param msg
      */
     public void soundPlayer(String msg, final View v) {
         try {
@@ -158,7 +156,7 @@ public class SoundView {
                 stopPlayer();
                 callBack.playEndBack(v);
             });
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

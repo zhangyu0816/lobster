@@ -77,7 +77,7 @@ public class DateUtil {
             date = fmt.parse(str);
             return date;
         } catch (Exception e) {
-            return date;
+            return null;
         }
     }
 
@@ -123,8 +123,7 @@ public class DateUtil {
         a.set(Calendar.MONTH, month - 1);
         a.set(Calendar.DATE, 1);
         a.roll(Calendar.DATE, -1);
-        int maxDate = a.get(Calendar.DATE);
-        return maxDate;
+        return a.get(Calendar.DATE);
     }
 
     /**
@@ -238,6 +237,7 @@ public class DateUtil {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        assert date != null;
         return date.getTime();
     }
 
@@ -315,17 +315,17 @@ public class DateUtil {
         String[] u1 = {"〇", "一", "二", "三", "四", "五", "六", "七", "八", "九"};
         String[] u2 = {"零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"};
         char[] str = String.valueOf(num).toCharArray();
-        String rstr = "";
+        StringBuilder rstr = new StringBuilder();
         if (type == 1) {
-            for (int i = 0; i < str.length; i++) {
-                rstr = rstr + u1[Integer.parseInt(str[i] + "")];
+            for (char c : str) {
+                rstr.append(u1[Integer.parseInt(c + "")]);
             }
         } else if (type == 2) {
-            for (int i = 0; i < str.length; i++) {
-                rstr = rstr + u2[Integer.parseInt(str[i] + "")];
+            for (char c : str) {
+                rstr.append(u2[Integer.parseInt(c + "")]);
             }
         }
-        return rstr;
+        return rstr.toString();
     }
 
     /**
@@ -470,7 +470,7 @@ public class DateUtil {
     }
 
     public static long getLongFromString(String str) {
-        return Long.valueOf(str.replaceAll("[-\\s:]", ""));
+        return Long.parseLong(str.replaceAll("[-\\s:]", ""));
     }
 
     private static String[][] constellations = {{"摩羯座", "水瓶座"}, {"水瓶座", "双鱼座"}, {"双鱼座", "白羊座"}, {"白羊座", "金牛座"}, {"金牛座", "双子座"}, {"双子座", "巨蟹座"}, {"巨蟹座", "狮子座"},

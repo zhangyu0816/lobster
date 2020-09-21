@@ -28,7 +28,6 @@ import java.io.FileOutputStream;
 public class WaterMark {
     public volatile static WaterMark INSTANCE;
     private RxAppCompatActivity activity;
-    private Compressor mCompressor;
     private String downloadPath = "";
     private String outPutUrl = "";
     private String imageUrl = "";
@@ -53,7 +52,7 @@ public class WaterMark {
     });
 
     public WaterMark() {
-        mCompressor = new Compressor(BaseActivity.activity);
+        Compressor mCompressor = new Compressor(BaseActivity.activity);
         mCompressor.loadBinary(new InitListener() {
             @Override
             public void onLoadSuccess() {
@@ -134,7 +133,7 @@ public class WaterMark {
         layout.setBackgroundColor(Color.TRANSPARENT);
 
         ImageView iv = new ImageView(activity);
-        float ra = 0;
+        float ra;
         if (videoHeight > videoWidth)
             ra = (float) videoWidth / (float) MineApp.W;
         else

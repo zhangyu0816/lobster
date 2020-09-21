@@ -16,9 +16,7 @@ import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 
 public class ProgressView extends RelativeLayout {
-    private ProgressBinding mBinding;
     private static ObjectAnimator pvh;
-    private PropertyValuesHolder pvhSY, pvhSX;
 
     public ProgressView(Context context) {
         super(context);
@@ -36,12 +34,12 @@ public class ProgressView extends RelativeLayout {
     }
 
     private void init(Context context) {
-        mBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.progress, null, false);
+        ProgressBinding mBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.progress, null, false);
         addView(mBinding.getRoot());
 
         mBinding.setMineInfo(MineApp.mineInfo);
-        pvhSY = PropertyValuesHolder.ofFloat("scaleY", 1, 2.3f);
-        pvhSX = PropertyValuesHolder.ofFloat("scaleX", 1, 2.3f);
+        PropertyValuesHolder pvhSY = PropertyValuesHolder.ofFloat("scaleY", 1, 2.3f);
+        PropertyValuesHolder pvhSX = PropertyValuesHolder.ofFloat("scaleX", 1, 2.3f);
         pvh = ObjectAnimator.ofPropertyValuesHolder(mBinding.ivProgress, pvhSY, pvhSX).setDuration(1000);
         pvh.setRepeatCount(Animation.INFINITE);
         pvh.start();

@@ -53,7 +53,7 @@ public class Emoji implements Serializable {
         return emoji;
     }
 
-    public static final String newString(int codePoint) {
+    public static String newString(int codePoint) {
         if (Character.charCount(codePoint) == 1) {
             return String.valueOf(codePoint);
         } else {

@@ -59,7 +59,7 @@ public class FFmpeg implements FFmpegInterface {
 
     @Override
     public void execute(Map<String, String> environvenmentVars, String[] cmd, FFmpegExecuteResponseHandler ffmpegExecuteResponseHandler) throws FFmpegCommandAlreadyRunningException {
-        if (ffmpegExecuteAsyncTask != null && !ffmpegExecuteAsyncTask.isProcessCompleted()) {
+        if (ffmpegExecuteAsyncTask != null && ffmpegExecuteAsyncTask.isProcessCompleted()) {
             throw new FFmpegCommandAlreadyRunningException("FFmpeg command is already running, you are only allowed to run single command at a time");
         }
         if (cmd.length != 0) {
@@ -88,13 +88,13 @@ public class FFmpeg implements FFmpegInterface {
     public void execute(String[] cmd, FFmpegExecuteResponseHandler ffmpegExecuteResponseHandler) {
         try {
             execute(null, cmd, ffmpegExecuteResponseHandler);
-        } catch (FFmpegCommandAlreadyRunningException e) {
+        } catch (FFmpegCommandAlreadyRunningException ignored) {
 
         }
     }
 
     @Override
-    public String getDeviceFFmpegVersion() throws FFmpegCommandAlreadyRunningException {
+    public String getDeviceFFmpegVersion() {
         ShellCommand shellCommand = new ShellCommand();
         CommandResult commandResult = shellCommand.runWaitFor(new String[]{FileUtils.getFFmpeg(context), "-version"});
         if (commandResult.success) {
@@ -112,7 +112,7 @@ public class FFmpeg implements FFmpegInterface {
 
     @Override
     public boolean isFFmpegCommandRunning() {
-        return ffmpegExecuteAsyncTask != null && !ffmpegExecuteAsyncTask.isProcessCompleted();
+        return ffmpegExecuteAsyncTask != null && ffmpegExecuteAsyncTask.isProcessCompleted();
     }
 
     @Override

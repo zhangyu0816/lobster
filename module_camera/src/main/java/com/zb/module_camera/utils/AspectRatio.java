@@ -86,6 +86,7 @@ public class AspectRatio implements Comparable<AspectRatio>, Parcelable {
         return false;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return mX + ":" + mY;

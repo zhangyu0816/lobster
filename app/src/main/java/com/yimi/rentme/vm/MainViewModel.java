@@ -245,7 +245,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             unReadCountReceiver.unregisterReceiver();
             newDynMsgAllNumReceiver.unregisterReceiver();
             contactNumReceiver.unregisterReceiver();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -535,9 +535,9 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         try {
             if (mPlayer != null) {
                 mPlayer.stop();
+                mPlayer.prepare();
+                mPlayer.start();
             }
-            mPlayer.prepare();
-            mPlayer.start();
         } catch (Exception e) {
             e.printStackTrace();
         }

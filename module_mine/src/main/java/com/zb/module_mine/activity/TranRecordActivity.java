@@ -12,8 +12,6 @@ public class TranRecordActivity extends MineBaseActivity {
     @Autowired(name = "tranType")
     int tranType;
 
-    private TranRecordViewModel viewModel;
-
     @Override
     public int getRes() {
         return R.layout.mine_tran_record;
@@ -21,7 +19,7 @@ public class TranRecordActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
-        viewModel = new TranRecordViewModel();
+        TranRecordViewModel viewModel = new TranRecordViewModel();
         viewModel.tranType = tranType;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);

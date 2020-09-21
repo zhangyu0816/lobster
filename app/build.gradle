@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 
-def releaseTime() {
+static def releaseTime() {
     return new Date().format("yyyyMMddHHmmss", TimeZone.getTimeZone("UTC"))
 }
 
@@ -54,7 +54,7 @@ android {
         }
         android.applicationVariants.all { variant ->
             variant.outputs.all {
-                if (variant.buildType.name.equals('release')) {
+                if (variant.buildType.name == 'release') {
                     outputFileName = "xiagu_${versionName}_${releaseTime()}.apk"
                 }
             }

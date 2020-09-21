@@ -474,8 +474,6 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     private ImageView ivAttention;
     private ImageView ivImage;
     private ImageView ivPlay;
-    private View viewClick;
-    private ImageView ivGood;
     private AutoPollRecyclerView reviewListView;
     private HomeAdapter reviewAdapter;
     private List<Review> reviewList = new ArrayList<>();
@@ -499,8 +497,8 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         ivAttention = view.findViewById(R.id.iv_attention);
         ivImage = view.findViewById(R.id.iv_image);
         ivPlay = view.findViewById(R.id.iv_play);
-        viewClick = view.findViewById(R.id.view_click);
-        ivGood = view.findViewById(R.id.iv_good);
+        View viewClick = view.findViewById(R.id.view_click);
+        ImageView ivGood = view.findViewById(R.id.iv_good);
         reviewListView = view.findViewById(R.id.review_list);
 
         attentionStatus(discoverInfo);

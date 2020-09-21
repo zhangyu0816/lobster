@@ -25,7 +25,6 @@ public class VideosViewModel extends BaseViewModel implements VideosVMInterface 
     public boolean showBottom;
     public CameraAdapter adapter;
     private List<VideoInfo> videoInfoList = new ArrayList<>();
-    private VideoInfo videoInfo;
     private Thread mThread;
     private boolean mWorking = true;
 
@@ -51,7 +50,7 @@ public class VideosViewModel extends BaseViewModel implements VideosVMInterface 
     public void selectVideo(int position) {
         mThread.interrupt();
 
-        videoInfo = videoInfoList.get(position);
+        VideoInfo videoInfo = videoInfoList.get(position);
         MineApp.isLocation = true;
         MineApp.showBottom = showBottom;
         ActivityUtils.getCameraVideoPlay(videoInfo.getPath(), true, false);

@@ -21,13 +21,12 @@ import androidx.databinding.DataBindingUtil;
  */
 
 public class RulePW extends PopupWindow {
-    private PwsRuleBinding mBinding;
 
     private int type = 0;
 
     public RulePW(RxAppCompatActivity activity, View v, int type, CallBack callBack) {
 
-        mBinding = DataBindingUtil.inflate(LayoutInflater.from(activity), R.layout.pws_rule, null, false);
+        PwsRuleBinding mBinding = DataBindingUtil.inflate(LayoutInflater.from(activity), R.layout.pws_rule, null, false);
         View view = mBinding.getRoot();
 
         PopupWindow pw = new PopupWindow(view, LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT, true);
@@ -69,13 +68,11 @@ public class RulePW extends PopupWindow {
             mBinding.tvRule1.setVisibility(View.GONE);
         }
 
-        mBinding.tvRule1.setOnClickListener(v12 -> {
-            ActivityUtils.getMineWeb("注册协议", HttpManager.BASE_URL + "mobile/xiagu_reg_protocol.html");
-        });
+        mBinding.tvRule1.setOnClickListener(v12 ->
+                ActivityUtils.getMineWeb("注册协议", HttpManager.BASE_URL + "mobile/xiagu_reg_protocol.html"));
 
-        mBinding.tvRule2.setOnClickListener(v12 -> {
-            ActivityUtils.getMineWeb("隐私政策", HttpManager.BASE_URL + "mobile/xiagu_privacy_protocol.html");
-        });
+        mBinding.tvRule2.setOnClickListener(v12 ->
+                ActivityUtils.getMineWeb("隐私政策", HttpManager.BASE_URL + "mobile/xiagu_privacy_protocol.html"));
 
         mBinding.tvSure.setOnClickListener(v1 -> {
             this.type = 1;

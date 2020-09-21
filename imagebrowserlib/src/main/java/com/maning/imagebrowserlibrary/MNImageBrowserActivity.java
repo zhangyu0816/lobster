@@ -1,8 +1,7 @@
 package com.maning.imagebrowserlibrary;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.chrisbanes.photoview.PhotoView;
@@ -31,6 +29,7 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -42,13 +41,9 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
 
     private Context context;
 
-    //    private MNGestureView mnGestureView;
     private MNViewPager viewPagerBrowser;
-    private RelativeLayout rl_black_bg;
-    private RelativeLayout rl_indicator;
     private TextView numberIndicator;
     private CircleIndicator circleIndicator;
-    private ImageView ivBack;
     private ImageView ivDelete;
 
     //图片地址
@@ -57,8 +52,6 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
     private int currentPosition;
     //当前切换的动画
     private ImageBrowserConfig.TransformType transformType;
-    //切换器
-    private ImageBrowserConfig.IndicatorType indicatorType;
     //图片加载引擎
     public ImageEngine imageEngine;
     //监听
@@ -69,7 +62,6 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
     public static ImageBrowserConfig imageBrowserConfig;
     private MyAdapter imageBrowserAdapter;
     private View mCurrentView;
-    private boolean showDelete = false;
     private boolean isDelete = false;
 
     @Override
@@ -86,33 +78,20 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
 
     }
 
-    private void setWindowFullScreen() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().addFlags(View.SYSTEM_UI_FLAG_FULLSCREEN);// 导致华为手机模糊
-            getWindow().addFlags(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);// 导致华为手机黑屏
-//            getWindow().addFlags(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-            getWindow().addFlags(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            getWindow().setNavigationBarColor(Color.TRANSPARENT);
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }
-    }
-
     private void initViews() {
         viewPagerBrowser = (MNViewPager) findViewById(R.id.viewPagerBrowser);
-        rl_black_bg = (RelativeLayout) findViewById(R.id.rl_black_bg);
-        rl_indicator = (RelativeLayout) findViewById(R.id.rl_indicator);
         circleIndicator = (CircleIndicator) findViewById(R.id.circleIndicator);
         numberIndicator = (TextView) findViewById(R.id.numberIndicator);
-        ivBack = findViewById(R.id.iv_back);
         ivDelete = findViewById(R.id.iv_delete);
 
-        ivBack.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.iv_back).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finishBrowser();
             }
         });
         ivDelete.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
                 if (onDeleteImageListener != null)
@@ -127,7 +106,7 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
                     if (currentPosition > 0) {
                         currentPosition--;
                     }
-                    numberIndicator.setText(String.valueOf((currentPosition + 1) + "/" + imageUrlList.size()));
+                    numberIndicator.setText((currentPosition + 1) + "/" + imageUrlList.size());
                     initViewPager();
                     isDelete = false;
                 }
@@ -136,6 +115,7 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void initData() {
         imageUrlList = imageBrowserConfig.getImageList();
         currentPosition = imageBrowserConfig.getPosition();
@@ -144,8 +124,8 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
         onClickListener = imageBrowserConfig.getOnClickListener();
         onDeleteImageListener = imageBrowserConfig.getOnDeleteImageListener();
         onLongClickListener = imageBrowserConfig.getOnLongClickListener();
-        indicatorType = imageBrowserConfig.getIndicatorType();
-        showDelete = imageBrowserConfig.isShowDelete();
+        //切换器
+        boolean showDelete = imageBrowserConfig.isShowDelete();
 
         ivDelete.setVisibility(showDelete ? View.VISIBLE : View.GONE);
         if (imageUrlList.size() <= 1) {
@@ -168,6 +148,7 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
                 Log.e("", positionOffsetPixels + "");
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void onPageSelected(int position) {
                 if (!isDelete) {
@@ -224,12 +205,8 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
         }
 
         @Override
-        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        public void setPrimaryItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             mCurrentView = (View) object;
-        }
-
-        public View getPrimaryItem() {
-            return mCurrentView;
         }
 
         @Override
@@ -238,20 +215,20 @@ public class MNImageBrowserActivity extends RxAppCompatActivity {
         }
 
         @Override
-        public boolean isViewFromObject(View view, Object object) {
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
             return view == object;
         }
 
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
+        public void destroyItem(ViewGroup container, int position, @NonNull Object object) {
             container.removeView((View) object);
         }
 
+        @NonNull
         @Override
-        public Object instantiateItem(ViewGroup container, final int position) {
+        public Object instantiateItem(@NonNull ViewGroup container, final int position) {
             View inflate = layoutInflater.inflate(R.layout.mn_image_browser_item_show_image, container, false);
             final PhotoView imageView = (PhotoView) inflate.findViewById(R.id.imageView);
-            final RelativeLayout rl_browser_root = (RelativeLayout) inflate.findViewById(R.id.rl_browser_root);
             final String url = imageUrlList.get(position);
             //图片加载
             imageEngine.loadImage(context, url, imageView);

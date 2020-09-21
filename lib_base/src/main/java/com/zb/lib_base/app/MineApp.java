@@ -18,7 +18,6 @@ import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 import com.zb.lib_base.R;
-import com.zb.lib_base.adaptive.FitScreen;
 import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.iv.DemoPushService;
 import com.zb.lib_base.log.LogUtil;
@@ -117,7 +116,6 @@ public class MineApp extends MultiDexApplication {
         initRealm();
         DisplayUtils.init(this);
         MultiDex.install(this);
-        FitScreen.createDesign(getApplicationContext(), H, W);
 
         UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, null);
         PlatformConfig.setWeixin("wxb83427622a6740f6", "97f837c0ae8b11af734041828ba4a737");

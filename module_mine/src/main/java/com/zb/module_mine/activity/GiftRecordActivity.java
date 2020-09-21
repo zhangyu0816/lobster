@@ -43,7 +43,7 @@ public class GiftRecordActivity extends MineBaseActivity {
         super.onDestroy();
         try {
             updateWalletReceiver.unregisterReceiver();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 }

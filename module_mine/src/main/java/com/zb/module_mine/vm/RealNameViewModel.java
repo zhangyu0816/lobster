@@ -51,9 +51,6 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
     private CountDownTimer timer;
     private AnimatorSet animatorSet;
     private PhotoManager photoManager;
-    private String cameraPath = "";
-    private File cameraFolder;
-    private String imagePath = "";
     private File imageFile;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -65,15 +62,13 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
         AdapterBinding.viewSize(mBinding.cameraLayout, MineApp.W, (int) (MineApp.W * 4f / 3f));
         getPermissions();
         humanFaceStatus();
-        photoManager = new PhotoManager(activity, () -> {
-            humanFace(photoManager.jointWebUrl(","));
-        });
-        cameraPath = Environment.getExternalStorageDirectory().getPath() + File.separator + "DCIM" + File.separator + "Camera";
-        cameraFolder = new File(cameraPath);
+        photoManager = new PhotoManager(activity, () -> humanFace(photoManager.jointWebUrl(",")));
+        String cameraPath = Environment.getExternalStorageDirectory().getPath() + File.separator + "DCIM" + File.separator + "Camera";
+        File cameraFolder = new File(cameraPath);
         if (!cameraFolder.exists()) {
             cameraFolder.mkdirs();
         }
-        imagePath = cameraFolder.getAbsolutePath() + File.separator + "real.jpg";
+        String imagePath = cameraFolder.getAbsolutePath() + File.separator + "real.jpg";
         imageFile = new File(imagePath);
     }
 
@@ -103,8 +98,6 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
         initCamera();
     }
 
-    private ObjectAnimator scaleX, scaleY;
-
     private void initCamera() {
         mBinding.cameraLayout.removeAllViews();
         mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
@@ -114,13 +107,14 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
         mBinding.cameraLayout.addView(mOverCameraView);
 
         animatorSet = new AnimatorSet();
-        scaleX = ObjectAnimator.ofFloat(mBinding.tvTime, "scaleX", 0, 1).setDuration(700);
-        scaleY = ObjectAnimator.ofFloat(mBinding.tvTime, "scaleY", 0, 1).setDuration(700);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(mBinding.tvTime, "scaleX", 0, 1).setDuration(700);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(mBinding.tvTime, "scaleY", 0, 1).setDuration(700);
         animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.play(scaleX).with(scaleY);
 
 
         timer = new CountDownTimer(5000, 1000) {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onTick(long millisUntilFinished) {
                 mBinding.tvTime.setText(millisUntilFinished / 1000 + "");
@@ -227,6 +221,7 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
     }
 
     // 点击对焦
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {

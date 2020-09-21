@@ -12,15 +12,13 @@ import com.zb.lib_base.databinding.ToastViewBinding;
 import androidx.databinding.DataBindingUtil;
 
 public class SCToastUtil {
-    private static Toast toast = null;
-    private static ToastViewBinding mBinding;
     private static ObjectAnimator translateY;
 
     public static void showToast(RxAppCompatActivity activity, CharSequence text, boolean isTop) {
-        mBinding = DataBindingUtil.inflate(activity.getLayoutInflater(), R.layout.toast_view, null, false);
+        ToastViewBinding mBinding = DataBindingUtil.inflate(activity.getLayoutInflater(), R.layout.toast_view, null, false);
         mBinding.setContent(text.toString());
         mBinding.setIsTop(isTop);
-        toast = new Toast(activity);
+        Toast toast = new Toast(activity);
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(mBinding.getRoot()); //添加视图文件
         if (isTop) {

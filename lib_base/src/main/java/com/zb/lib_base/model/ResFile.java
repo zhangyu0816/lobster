@@ -1,5 +1,6 @@
 package com.zb.lib_base.model;
 
+import androidx.annotation.NonNull;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -20,6 +21,7 @@ public class ResFile extends RealmObject {
         this.filePath = filePath;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "ResFile{" +

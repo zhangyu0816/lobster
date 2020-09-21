@@ -47,6 +47,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.databinding.ViewDataBinding;
@@ -157,7 +158,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                                 MineApp.selectMap.put(entry.getKey(), entry.getValue() - 1);
                             }
                         }
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
 
                     }
                     adapter.notifyItemRemoved(position12);
@@ -306,7 +307,8 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     }
 
     private void uploadVideo(String image) {
-        View view = publicImageBinding.recyclerView.getLayoutManager().findViewByPosition(0);
+        View view = Objects.requireNonNull(publicImageBinding.recyclerView.getLayoutManager()).findViewByPosition(0);
+        assert view != null;
         ContentLoadingProgressBar progressBar = view.findViewById(R.id.progress);
         progressBar.setVisibility(View.VISIBLE);
 

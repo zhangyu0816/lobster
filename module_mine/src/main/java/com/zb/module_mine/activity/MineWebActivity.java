@@ -114,10 +114,10 @@ public class MineWebActivity extends MineBaseActivity {
                 argsClass[i] = args[i].getClass();
             }
             Method[] ms = classType.getMethods();
-            for (int i = 0; i < ms.length; i++) {
-                if (ms[i].getName().equals("setDisplayZoomControls")) {
+            for (Method m : ms) {
+                if (m.getName().equals("setDisplayZoomControls")) {
                     try {
-                        ms[i].invoke(view, false);
+                        m.invoke(view, false);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

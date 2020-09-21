@@ -78,10 +78,10 @@ public class OverCameraView extends AppCompatImageView {
         int right = touchFocusRect.right * 2000 / getWindowWidth(context) - 1000;
         int bottom = touchFocusRect.bottom * 2000 / getWindowHeight(context) - 1000;
         // 如果超出了(-1000,1000)到(1000, 1000)的范围，则会导致相机崩溃
-        left = left < -1000 ? -1000 : left;
-        top = top < -1000 ? -1000 : top;
-        right = right > 1000 ? 1000 : right;
-        bottom = bottom > 1000 ? 1000 : bottom;
+        left = Math.max(left, -1000);
+        top = Math.max(top, -1000);
+        right = Math.min(right, 1000);
+        bottom = Math.min(bottom, 1000);
         final Rect targetFocusRect = new Rect(left, top, right, bottom);
 
         //对焦

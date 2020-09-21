@@ -15,11 +15,6 @@ import java.util.regex.PatternSyntaxException;
 
 public class ThreeLogin {
     private RxAppCompatActivity activity;
-    private String openId;
-    private String unionId;
-    private String unionNick;
-    private String unionImage;
-    private int unionSex;
     private int unionType;
     private UMShareAPI umShareAPI;
     private CallBack callBack;
@@ -59,11 +54,11 @@ public class ThreeLogin {
         public void onComplete(SHARE_MEDIA platform, int status, Map<String, String> info) {
             CustomProgressDialog.showLoading(activity, "授权成功，正在登录中...");
             if (status == 2) {
-                unionNick = "";
-                unionImage = "";
-                unionSex = 0;
-                openId = "";
-                unionId = "";
+                String unionNick = "";
+                String unionImage = "";
+                int unionSex = 0;
+                String openId = "";
+                String unionId = "";
                 if ("QQ".equals(platform.name())) {
                     unionNick = stringFilter(info.get("screen_name"));
                     unionImage = info.get("profile_image_url");

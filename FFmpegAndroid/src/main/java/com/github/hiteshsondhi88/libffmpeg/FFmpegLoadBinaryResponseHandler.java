@@ -5,11 +5,11 @@ public interface FFmpegLoadBinaryResponseHandler extends ResponseHandler {
     /**
      * on Fail
      */
-    public void onFailure();
+    void onFailure();
 
     /**
      * on Success
      */
-    public void onSuccess();
+    void onSuccess();
 
 }

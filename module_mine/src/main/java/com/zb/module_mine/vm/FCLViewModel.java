@@ -137,11 +137,10 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
         if (position == 2) {
             // 被喜欢
             if (LikeDb.getInstance().hasLike(otherUserId)) {
-                new TextPW(activity, mBinding.getRoot(), "解除匹配关系", "解除匹配关系后，将对方移除匹配列表及聊天列表。", "解除", () -> {
-                    relievePair(otherUserId);
-                });
+                new TextPW(activity, mBinding.getRoot(), "解除匹配关系", "解除匹配关系后，将对方移除匹配列表及聊天列表。",
+                        "解除", () -> relievePair(otherUserId));
             } else {
-                makeEvaluate(otherUserId, 1);
+                makeEvaluate(otherUserId);
             }
         } else {
             // 我的关注  我的粉丝
@@ -191,7 +190,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    private void makeEvaluate(long otherUserId, int likeOtherStatus) {
+    private void makeEvaluate(long otherUserId) {
         makeEvaluateApi api = new makeEvaluateApi(new HttpOnNextListener<Integer>() {
             @Override
             public void onNext(Integer o) {
@@ -199,14 +198,9 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 String myHead = MineApp.mineInfo.getImage();
                 String otherHead = memberInfoList.get(_selectIndex).getImage();
                 if (o == 1) {
-                    if (likeOtherStatus == 0) {
-                        // 不喜欢返回结果  data=1
-                        LikeDb.getInstance().deleteLike(otherUserId);
-                    } else {
-                        LikeDb.getInstance().saveLike(new CollectID(otherUserId));
-                        activity.sendBroadcast(new Intent("lobster_isLike"));
-                        LikeTypeDb.getInstance().setType(otherUserId, 1);
-                    }
+                    LikeDb.getInstance().saveLike(new CollectID(otherUserId));
+                    activity.sendBroadcast(new Intent("lobster_isLike"));
+                    LikeTypeDb.getInstance().setType(otherUserId, 1);
                     adapter.notifyItemChanged(_selectIndex);
                 } else if (o == 2) {
                     new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, MineApp.mineInfo.getSex(), memberInfoList.get(_selectIndex).getSex(), () -> ActivityUtils.getChatActivity(memberInfoList.get(_selectIndex).getUserId(), false));
@@ -219,13 +213,11 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                     new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
                     SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else if (o == 5) {
-                    if (likeOtherStatus == 1) {
-                        LikeTypeDb.getInstance().setType(otherUserId, 1);
-                        SCToastUtil.showToast(activity, "你已喜欢过对方", true);
-                    }
+                    LikeTypeDb.getInstance().setType(otherUserId, 1);
+                    SCToastUtil.showToast(activity, "你已喜欢过对方", true);
                 }
             }
-        }, activity).setOtherUserId(otherUserId).setLikeOtherStatus(likeOtherStatus);
+        }, activity).setOtherUserId(otherUserId).setLikeOtherStatus(1);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

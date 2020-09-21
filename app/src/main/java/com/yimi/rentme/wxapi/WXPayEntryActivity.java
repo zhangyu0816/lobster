@@ -48,9 +48,6 @@ public class WXPayEntryActivity extends RxAppCompatActivity implements IWXAPIEve
                     msg = "支付成功！";
                     sendBroadcast(new Intent("lobster_paySuccess"));
                     break;
-                case -1:
-                    msg = "支付失败！";
-                    break;
                 case -2:
                     msg = "您取消了支付！";
                     break;

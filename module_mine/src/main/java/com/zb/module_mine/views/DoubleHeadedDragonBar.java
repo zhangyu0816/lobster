@@ -186,8 +186,7 @@ public class DoubleHeadedDragonBar extends View {
         Matrix matrix = new Matrix();
         matrix.postScale(scaleWidth, scaleHeight);
         // 得到新的图片.
-        Bitmap newbm = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
-        return newbm;
+        return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
     }
 
     public void setToastView(View view) {
@@ -266,11 +265,8 @@ public class DoubleHeadedDragonBar extends View {
         mLayoutParams.x = toastViewX;
         mLayoutParams.y = toastViewY;
         if (toastView.getParent() == null) {
-
             mWindowManager.addView(toastView, mLayoutParams);
-            return;
         } else {
-
             mWindowManager.updateViewLayout(toastView, mLayoutParams);
         }
 
@@ -293,7 +289,6 @@ public class DoubleHeadedDragonBar extends View {
         mLayoutParams1.y = toastView1Y;
         if (toastView1.getParent() == null) {
             mWindowManager.addView(toastView1, mLayoutParams1);
-            return;
         } else {
             mWindowManager.updateViewLayout(toastView1, mLayoutParams1);
         }
@@ -344,11 +339,7 @@ public class DoubleHeadedDragonBar extends View {
 
 
         if (toastView != null && toastView1 != null) {
-            if (Math.abs(toastViewX - toastView1X) < (toastView.getMeasuredWidth() / 2 + toastView1.getMeasuredWidth() / 2)) {
-                isCoincide = true;
-            } else {
-                isCoincide = false;
-            }
+            isCoincide = Math.abs(toastViewX - toastView1X) < (toastView.getMeasuredWidth() / 2 + toastView1.getMeasuredWidth() / 2);
         }
 
 
@@ -363,9 +354,9 @@ public class DoubleHeadedDragonBar extends View {
         float maxx = seekWidth * maxValue / max;
         float m2 = maxx + buttonWidth / 2;
 
-        canvas.drawRoundRect(new RectF(m1, buttonHeight - bgHeight / 2, m2, buttonHeight + bgHeight / 2),
-                bgHeight / 2,
-                bgHeight / 2
+        canvas.drawRoundRect(new RectF(m1, buttonHeight - bgHeight / 2f, m2, buttonHeight + bgHeight / 2f),
+                bgHeight / 2f,
+                bgHeight / 2f
                 , valuePaint);
 
 
@@ -388,9 +379,7 @@ public class DoubleHeadedDragonBar extends View {
                 int a = minValue;
                 int b = maxValue;
                 getTouchSeekValue(event);
-                if (a == minValue && b == maxValue) {
-
-                } else {
+                if (a != minValue || b != maxValue) {
                     invalidate();
                 }
                 if (callBack != null) {
@@ -435,20 +424,12 @@ public class DoubleHeadedDragonBar extends View {
 
             if (t < 18) {
                 minValue = 18;
-            } else if (t >= maxValue - 10) {
-                minValue = maxValue - 10;
-            } else {
-                minValue = t;
-            }
+            } else minValue = Math.min(t, maxValue - 10);
 
         } else {
             if (t > max) {
                 maxValue = max;
-            } else if (t <= minValue + 10) {
-                maxValue = minValue + 10;
-            } else {
-                maxValue = t;
-            }
+            } else maxValue = Math.max(t, minValue + 10);
 
 
         }
@@ -527,8 +508,6 @@ public class DoubleHeadedDragonBar extends View {
             hideToastView(toastView);
             hideToastView(toastView1);
             hideToastView(toastView2);
-        } else {
-
         }
         super.onVisibilityChanged(changedView, visibility);
     }
@@ -545,9 +524,9 @@ public class DoubleHeadedDragonBar extends View {
 
     private void drawBg(Canvas canvas) {
         float minx = seekWidth * 18 / max;
-        canvas.drawRoundRect(new RectF(buttonWidth / 2 + minx, buttonHeight - bgHeight / 2, viewWidth - buttonWidth / 2, buttonHeight + bgHeight / 2),
-                bgHeight / 2,
-                bgHeight / 2
+        canvas.drawRoundRect(new RectF(buttonWidth / 2 + minx, buttonHeight - bgHeight / 2f, viewWidth - buttonWidth / 2, buttonHeight + bgHeight / 2f),
+                bgHeight / 2f,
+                bgHeight / 2f
                 , bgPaint);
     }
 

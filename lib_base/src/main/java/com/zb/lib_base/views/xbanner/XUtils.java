@@ -30,10 +30,9 @@ public class XUtils {
                     .setIndicatorGravity(XBanner.INDICATOR_START)
                     .setDelay(3000)
                     .setUpIndicators(R.drawable.banner_circle_pressed, R.drawable.banner_circle_unpressed)
-                    .setUpIndicatorSize(20, 20)
                     .isAutoPlay(false)
                     .start();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }

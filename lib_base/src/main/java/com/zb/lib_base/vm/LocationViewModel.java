@@ -51,7 +51,6 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
     private AMap aMap;
     private int prePosition = -1;
     private FragLocationBinding mBinding;
-    private LatLng myLl;
     private LatLng tagLl;
     private boolean isSearch = false;
     private GeocodeSearch geocodeSearch;
@@ -87,7 +86,7 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
 
     private void initMap() {
         aMap = mBinding.mapView.getMap();
-        myLl = new LatLng(Double.parseDouble(PreferenceUtil.readStringValue(activity, "latitude")),
+        LatLng myLl = new LatLng(Double.parseDouble(PreferenceUtil.readStringValue(activity, "latitude")),
                 Double.parseDouble(PreferenceUtil.readStringValue(activity, "longitude")));
         aMap.moveCamera(CameraUpdateFactory.changeLatLng(myLl));//设置中心点
         aMap.moveCamera(CameraUpdateFactory.zoomTo(16)); // 设置地图可视缩放大小
@@ -150,10 +149,10 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
         search.setOnPoiSearchListener(new PoiSearch.OnPoiSearchListener() {
             @Override
             public void onPoiSearched(PoiResult poiResult, int i) {
+                locationInfoList.clear();
+                adapter.setSelectIndex(-1);
+                adapter.notifyDataSetChanged();
                 if (poiResult != null) {
-                    locationInfoList.clear();
-                    adapter.setSelectIndex(-1);
-                    adapter.notifyDataSetChanged();
                     for (PoiItem poi : poiResult.getPois()) {
                         LocationInfo info = new LocationInfo();
                         info.setCityName(poi.getCityName());
@@ -163,10 +162,6 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
                         info.setLongitude(poi.getLatLonPoint().getLongitude());
                         locationInfoList.add(info);
                     }
-                    adapter.notifyDataSetChanged();
-                } else {
-                    locationInfoList.clear();
-                    adapter.setSelectIndex(-1);
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -181,8 +176,6 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
 
     /**
      * 附近列表
-     *
-     * @param keyWord
      */
     public void querySearchByTips(String keyWord) {
         if (keyWord.isEmpty()) return;
@@ -202,7 +195,7 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
                         try {
                             aMap.moveCamera(CameraUpdateFactory.changeLatLng(new LatLng(tipList.get(i).getPoint().getLatitude(), tipList.get(i).getPoint().getLongitude())));//设置中心点
                             break;
-                        } catch (Exception e) {
+                        } catch (Exception ignored) {
 
                         }
                     }

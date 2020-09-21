@@ -17,8 +17,6 @@ public class NoticeViewModel extends BaseViewModel implements NoticeVMInterface 
     public boolean switchBeGoodCheck = false;
     public boolean switchBeReviewCheck = true;
 
-    private MineNoticeBinding noticeBinding;
-
     @Override
     public void back(View view) {
         super.back(view);
@@ -28,28 +26,14 @@ public class NoticeViewModel extends BaseViewModel implements NoticeVMInterface 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        noticeBinding = (MineNoticeBinding) binding;
+        MineNoticeBinding mBinding = (MineNoticeBinding) binding;
 
-        noticeBinding.switchChat.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            switchChatCheck = isChecked;
-        });
-        noticeBinding.switchBeLike.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            switchBeLikeCheck = isChecked;
-        });
-        noticeBinding.switchBeSuperLike.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            switchBeSuperLikeCheck = isChecked;
-        });
-        noticeBinding.switchBeFollow.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            switchBeFollowCheck = isChecked;
-        });
-        noticeBinding.switchBeReward.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            switchBeRewardCheck = isChecked;
-        });
-        noticeBinding.switchBeGood.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            switchBeGoodCheck = isChecked;
-        });
-        noticeBinding.switchBeReview.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            switchBeReviewCheck = isChecked;
-        });
+        mBinding.switchChat.setOnCheckedChangeListener((buttonView, isChecked) -> switchChatCheck = isChecked);
+        mBinding.switchBeLike.setOnCheckedChangeListener((buttonView, isChecked) -> switchBeLikeCheck = isChecked);
+        mBinding.switchBeSuperLike.setOnCheckedChangeListener((buttonView, isChecked) -> switchBeSuperLikeCheck = isChecked);
+        mBinding.switchBeFollow.setOnCheckedChangeListener((buttonView, isChecked) -> switchBeFollowCheck = isChecked);
+        mBinding.switchBeReward.setOnCheckedChangeListener((buttonView, isChecked) -> switchBeRewardCheck = isChecked);
+        mBinding.switchBeGood.setOnCheckedChangeListener((buttonView, isChecked) -> switchBeGoodCheck = isChecked);
+        mBinding.switchBeReview.setOnCheckedChangeListener((buttonView, isChecked) -> switchBeReviewCheck = isChecked);
     }
 }

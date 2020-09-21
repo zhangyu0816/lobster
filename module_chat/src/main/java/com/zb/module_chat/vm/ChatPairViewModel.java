@@ -48,7 +48,6 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
     private BaseReceiver updateChatTypeReceiver;
     private BaseReceiver relieveReceiver;
     private BaseReceiver updateChatReceiver;
-    private SimpleItemTouchHelperCallback callback;
     private List<ChatList> chatType4List = new ArrayList<>();
 
     @Override
@@ -85,7 +84,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                             beSuperLikeList();
                         }
                     }
-                } catch (Exception e) {
+                } catch (Exception ignored) {
                 }
 
             }
@@ -144,7 +143,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
     @Override
     public void setAdapter() {
         adapter = new ChatAdapter<>(activity, R.layout.item_chat_pair, chatMsgList, this);
-        callback = new SimpleItemTouchHelperCallback(adapter);
+        SimpleItemTouchHelperCallback callback = new SimpleItemTouchHelperCallback(adapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(mBinding.pairList);
         callback.setSort(false);

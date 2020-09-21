@@ -1,5 +1,7 @@
 package com.zb.lib_base.model;
 
+import androidx.annotation.NonNull;
+
 /**
  * 回调信息统一封装类
  *
@@ -38,6 +40,7 @@ public class BaseResultEntity<T> {
         this.code = code;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "BaseResultEntity{" +

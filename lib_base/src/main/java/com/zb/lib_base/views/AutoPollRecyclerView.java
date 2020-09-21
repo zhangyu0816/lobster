@@ -20,6 +20,7 @@ import com.zb.lib_base.utils.glide.ScrollSpeedLinearLayoutManger;
 
 import java.lang.ref.WeakReference;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.BindingAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,27 +41,23 @@ public class AutoPollRecyclerView extends RecyclerView {
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
     }
 
-    public void setCanRun(boolean canRun) {
-        this.canRun = canRun;
-    }
-
     /**
      * 持续滑动（走马灯）
      */
     static class AutoPollTask implements Runnable {
-        private final WeakReference mReference;
+        private final WeakReference<AutoPollRecyclerView> mReference;
 
         //使用弱引用持有外部类引用->防止内存泄漏
         public AutoPollTask(AutoPollRecyclerView reference) {
-            this.mReference = new WeakReference(reference);
+            this.mReference = new WeakReference<>(reference);
         }
 
         @Override
         public void run() {
-            AutoPollRecyclerView recyclerView = (AutoPollRecyclerView) mReference.get();
+            AutoPollRecyclerView recyclerView = mReference.get();
             if (recyclerView != null && recyclerView.running && recyclerView.canRun) {
                 recyclerView.scrollBy(0, 2);
-                recyclerView.postDelayed(recyclerView.autoPollTask, recyclerView.TIME_AUTO_POLL);
+                recyclerView.postDelayed(recyclerView.autoPollTask, TIME_AUTO_POLL);
             }
         }
     }
@@ -70,16 +67,16 @@ public class AutoPollRecyclerView extends RecyclerView {
      */
 
     static class AutoPollTask1 implements Runnable {
-        private final WeakReference mReference;
+        private final WeakReference<AutoPollRecyclerView> mReference;
 
         //使用弱引用持有外部类引用->防止内存泄漏
         public AutoPollTask1(AutoPollRecyclerView reference) {
-            this.mReference = new WeakReference(reference);
+            this.mReference = new WeakReference<>(reference);
         }
 
         @Override
         public void run() {
-            AutoPollRecyclerView recyclerView = (AutoPollRecyclerView) mReference.get();
+            AutoPollRecyclerView recyclerView = mReference.get();
             if (recyclerView != null && recyclerView.running && recyclerView.canRun) {
                 // recyclerView.smoothScrollToPosition(++recyclerView.index);
                 recyclerView.smoothScrollBy(0, 250);
@@ -154,12 +151,12 @@ public class AutoPollRecyclerView extends RecyclerView {
         mPaint.setXfermode(xfermode);
         addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
-            public void onDrawOver(Canvas canvas, RecyclerView parent, RecyclerView.State state) {
+            public void onDrawOver(@NonNull Canvas canvas, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                 super.onDrawOver(canvas, parent, state);
                 // 当linearGradient为空即第一次绘制 或 Recyclerview宽度发生改变时，重新计算透明位置
                 if (linearGradient == null || preWidth != parent.getWidth()) {
                     // 透明位置从最后一个 itemView 的一半处到 Recyclerview 的最右边
-                    linearGradient = new LinearGradient(parent.getWidth() - (itemViewWidth / 2), 0.0f, parent.getWidth(), 0.0f,
+                    linearGradient = new LinearGradient(parent.getWidth() - (itemViewWidth / 2f), 0.0f, parent.getWidth(), 0.0f,
                             new int[]{Color.BLACK, 0}, null, Shader.TileMode.CLAMP);
                     preWidth = parent.getWidth();
                 }
@@ -171,14 +168,14 @@ public class AutoPollRecyclerView extends RecyclerView {
             }
 
             @Override
-            public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
+            public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                 super.onDraw(c, parent, state);
                 layerId = c.saveLayer(0.0f, 0.0f, (float) parent.getWidth(), (float) parent.getHeight(),
                         null, Canvas.ALL_SAVE_FLAG);
             }
 
             @Override
-            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
             }
         });

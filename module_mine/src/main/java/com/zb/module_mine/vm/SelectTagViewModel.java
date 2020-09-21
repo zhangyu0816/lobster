@@ -48,7 +48,7 @@ public class SelectTagViewModel extends BaseViewModel implements SelectTagVMInte
                     tag.setTags(object.optString("tags"));
                     TagDb.getInstance().saveTag(tag);
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         tags = TagDb.getInstance().get();
@@ -84,13 +84,13 @@ public class SelectTagViewModel extends BaseViewModel implements SelectTagVMInte
             SCToastUtil.showToast(activity, "请选择标签", true);
             return;
         }
-        String tags = "#";
+        StringBuilder tags = new StringBuilder("#");
         for (String item : selectList) {
-            tags += item + "#";
+            tags.append(item).append("#");
         }
         Intent data = new Intent("lobster_member");
         data.putExtra("type", 4);
-        data.putExtra("content", tags);
+        data.putExtra("content", tags.toString());
         activity.sendBroadcast(data);
         activity.finish();
     }
@@ -116,15 +116,14 @@ public class SelectTagViewModel extends BaseViewModel implements SelectTagVMInte
     public void selectTag(int position) {
         if (selectList.contains(tagList.get(position))) {
             selectList.remove(tagList.get(position));
-            selectAdapter.notifyDataSetChanged();
         } else {
             if (selectList.size() >= 6) {
                 SCToastUtil.showToast(activity, "最多发布6个标签哦", true);
                 return;
             }
             selectList.add(tagList.get(position));
-            selectAdapter.notifyDataSetChanged();
         }
+        selectAdapter.notifyDataSetChanged();
         tagAdapter.notifyItemChanged(position);
         mBinding.setVariable(BR.showTag, selectList.size() > 0);
     }

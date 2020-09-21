@@ -3,6 +3,7 @@ package com.zb.lib_base.utils.glide;
 import android.graphics.Rect;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,7 +24,7 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
     }
 
     @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+    public void getItemOffsets(@NonNull Rect outRect, View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         //这里是关键，需要根据你有几列来判断
         GridLayoutManager.LayoutParams params = (GridLayoutManager.LayoutParams) view.getLayoutParams();
         int position = params.getSpanIndex();
@@ -32,14 +33,11 @@ public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
         if (includeEdge) {
             outRect.left = spacing - column * spacing / spanCount;
             outRect.right = (column + 1) * spacing / spanCount;
-
-            outRect.top = 0;
-            outRect.bottom = spacing;
         } else {
             outRect.left = column * spacing / spanCount;
             outRect.right = spacing - (column + 1) * spacing / spanCount;
-            outRect.top = 0;
-            outRect.bottom = spacing;
         }
+        outRect.top = 0;
+        outRect.bottom = spacing;
     }
 }

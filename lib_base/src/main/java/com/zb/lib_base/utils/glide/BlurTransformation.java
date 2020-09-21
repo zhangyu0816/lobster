@@ -54,21 +54,26 @@ public class BlurTransformation extends BitmapTransformation {
         return bitmap;
     }
 
-    @Override public String toString() {
+    @NonNull
+    @Override
+    public String toString() {
         return "BlurTransformation(radius=" + radius + ", sampling=" + sampling + ")";
     }
 
-    @Override public boolean equals(Object o) {
+    @Override
+    public boolean equals(Object o) {
         return o instanceof BlurTransformation &&
                 ((BlurTransformation) o).radius == radius &&
                 ((BlurTransformation) o).sampling == sampling;
     }
 
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         return ID.hashCode() + radius * 1000 + sampling * 10;
     }
 
-    @Override public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
+    @Override
+    public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
         messageDigest.update((ID + radius + sampling).getBytes(CHARSET));
     }
 }

@@ -55,7 +55,7 @@ public class BottleVipPW extends BasePopupWindow {
             SCToastUtil.showToast(activity, "请选择VIP套餐", true);
             return;
         }
-        submitOpenedMemberOrder(MineApp.vipInfoList.get(preIndex).getMemberOfOpenedProductId());
+        submitOpenedMemberOrder(MineApp.vipInfoList.get(preIndex).getMemberOfOpenedProductId(), null);
     }
 
     @Override

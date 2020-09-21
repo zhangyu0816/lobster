@@ -48,6 +48,7 @@ import com.zb.module_bottle.windows.BottleVipPW;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
@@ -122,7 +123,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                     SCToastUtil.showToast(activity, "该漂流瓶已被对方销毁", true);
                     return true;
                 }
-                if (mBinding.edContent.getText().toString().trim().isEmpty()) {
+                if (Objects.requireNonNull(mBinding.edContent.getText()).toString().trim().isEmpty()) {
                     SCToastUtil.showToast(activity, "请输入回复内容", true);
                     return false;
                 }
@@ -396,7 +397,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     @Override
     public void addEmoji(int position, int emojiRes) {
         @SuppressLint("DefaultLocale")
-        String content = mBinding.edContent.getText().toString() + String.format("{f:%d}", position + 1);
+        String content = Objects.requireNonNull(mBinding.edContent.getText()).toString() + String.format("{f:%d}", position + 1);
         mBinding.edContent.setText(content);
         mBinding.edContent.setSelection(content.length());
     }

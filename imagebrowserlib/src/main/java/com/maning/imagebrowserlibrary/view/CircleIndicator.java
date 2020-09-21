@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 
 import com.maning.imagebrowserlibrary.R;
 
+import java.util.Objects;
+
 import androidx.annotation.AnimatorRes;
 import androidx.annotation.DrawableRes;
 import androidx.viewpager.widget.ViewPager;
@@ -231,7 +233,7 @@ public class CircleIndicator extends LinearLayout {
                 return;
             }
 
-            int newCount = mViewpager.getAdapter().getCount();
+            int newCount = Objects.requireNonNull(mViewpager.getAdapter()).getCount();
             int currentCount = getChildCount();
 
             if (newCount == currentCount) {  // No change
@@ -260,7 +262,7 @@ public class CircleIndicator extends LinearLayout {
 
     private void createIndicators() {
         removeAllViews();
-        int count = mViewpager.getAdapter().getCount();
+        int count = Objects.requireNonNull(mViewpager.getAdapter()).getCount();
         if (count <= 0) {
             return;
         }
@@ -303,7 +305,7 @@ public class CircleIndicator extends LinearLayout {
         animator.start();
     }
 
-    private class ReverseInterpolator implements Interpolator {
+    private static class ReverseInterpolator implements Interpolator {
         @Override
         public float getInterpolation(float value) {
             return Math.abs(1.0f - value);

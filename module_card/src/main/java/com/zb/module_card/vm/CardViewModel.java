@@ -326,10 +326,12 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     @Override
     public void selectImage(int position) {
-        View currentView = mBinding.cardList.getLayoutManager().findViewByPosition(0);
+        View currentView = Objects.requireNonNull(mBinding.cardList.getLayoutManager()).findViewByPosition(0);
+        assert currentView != null;
         MyRecyclerView imageList = currentView.findViewById(R.id.image_list);
         CardAdapter adapter = (CardAdapter) imageList.getAdapter();
 
+        assert adapter != null;
         updateAdapterUI(currentView, adapter, adapter.getSelectImageIndex(), position, pairInfoList.get(0).getImageList());
     }
 
@@ -615,23 +617,17 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         ivDislike = null;
     }
 
-    /**
-     * 出现
-     */
-    private PropertyValuesHolder pvhR, pvhTX, pvhA;
-    private ObjectAnimator pvh_card;
-
     private void setCardAnimationLeftToRight(PairInfo pairInfo) {
         mBinding.setVariable(BR.pairInfo, pairInfo);
         imageList.clear();
         imageList.addAll(pairInfo.getImageList());
         disListAdapter.notifyDataSetChanged();
 
-        pvhR = PropertyValuesHolder.ofFloat("rotation", 45, 0);
-        pvhTX = PropertyValuesHolder.ofFloat("translationX", MineApp.W, 0);
-        pvhA = PropertyValuesHolder.ofFloat("alpha", 0, 1);
+        PropertyValuesHolder pvhR = PropertyValuesHolder.ofFloat("rotation", 45, 0);
+        PropertyValuesHolder pvhTX = PropertyValuesHolder.ofFloat("translationX", MineApp.W, 0);
+        PropertyValuesHolder pvhA = PropertyValuesHolder.ofFloat("alpha", 0, 1);
 
-        pvh_card = ObjectAnimator.ofPropertyValuesHolder(mBinding.cardRelative, pvhR, pvhTX, pvhA).setDuration(500);
+        ObjectAnimator pvh_card = ObjectAnimator.ofPropertyValuesHolder(mBinding.cardRelative, pvhR, pvhTX, pvhA).setDuration(500);
         pvh_card.start();
 
         new Handler().postDelayed(() -> {
@@ -639,9 +635,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             pairInfoList.add(0, pairInfo);
             adapter.notifyDataSetChanged();
         }, 500);
-        new Handler().postDelayed(() -> {
-            mBinding.cardRelative.setAlpha(0f);
-        }, 600);
+        new Handler().postDelayed(() -> mBinding.cardRelative.setAlpha(0f), 600);
     }
 
     // 省市信息
@@ -740,13 +734,12 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     private void setLocation(int type) {
         if (type == 1) {
-            aMapLocation.start(activity, (longitude, latitude, provinceName, cityName, districtName) -> {
-                joinPairPool(longitude, latitude, AreaDb.getInstance().getProvinceId(provinceName), AreaDb.getInstance().getCityId(cityName), AreaDb.getInstance().getDistrictId(districtName));
-            });
+            aMapLocation.start(activity, (longitude, latitude, provinceName, cityName, districtName) ->
+                    joinPairPool(longitude, latitude, AreaDb.getInstance().getProvinceId(provinceName),
+                            AreaDb.getInstance().getCityId(cityName), AreaDb.getInstance().getDistrictId(districtName)));
         } else {
-            aMapLocation.start(activity, (longitude, latitude, provinceName, cityName, districtName) -> {
-                ActivityUtils.getMineLocation(false);
-            });
+            aMapLocation.start(activity, (longitude, latitude, provinceName, cityName, districtName) ->
+                    ActivityUtils.getMineLocation(false));
         }
     }
 

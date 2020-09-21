@@ -1,5 +1,6 @@
 package com.zb.lib_base.utils;
 
+import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 
 import com.zb.lib_base.R;
@@ -129,6 +130,7 @@ public class ObjectUtils {
     }
 
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public static Drawable getRanking(int position) {
         if (position == 0) {
             return MineApp.getInstance().getResources().getDrawable(R.mipmap.reward_ranking_1);
@@ -156,6 +158,7 @@ public class ObjectUtils {
         constellationMap.put("射手座", R.drawable.btn_bg_sheshou_radius2);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public static Drawable getConstellationBg(String constellation) {
         if (constellation.isEmpty())
             return MineApp.getInstance().getResources().getDrawable(R.mipmap.empty_icon);
@@ -163,6 +166,7 @@ public class ObjectUtils {
             return MineApp.getInstance().getResources().getDrawable(constellationMap.get(constellation));
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public static Drawable getRealCheck(int isChecked) {
         if (isChecked == -1) {
             return MineApp.getInstance().getResources().getDrawable(R.mipmap.real_un_icon);
@@ -175,6 +179,7 @@ public class ObjectUtils {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public static Drawable getNoData(int position) {
         if (position == 0) {
             return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_anth_data);
@@ -185,6 +190,7 @@ public class ObjectUtils {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public static Drawable getNewsNoData(int reviewType) {
         if (reviewType == 1) {
             return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_review_icon);
@@ -212,6 +218,7 @@ public class ObjectUtils {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            assert object != null;
             return object.has("content") ? object.optString("content") : "[你有新的动态消息]";
         } else
             return "[暂不支付该类型消息]";
@@ -321,6 +328,7 @@ public class ObjectUtils {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public static Drawable getTag(int position) {
         if (position == 0) {
             return MineApp.getInstance().getResources().getDrawable(R.drawable.btn_bg_red_ffe_radius40);

@@ -12,6 +12,8 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import androidx.annotation.RequiresApi;
+
 public class StatusBarUtil {
     /**
      * 修改状态栏为全透明
@@ -64,36 +66,27 @@ public class StatusBarUtil {
      * 适配4.4以上版本MIUIV、Flyme和6.0以上版本其他Android
      *
      * @param activity
-     * @return 1:MIUUI 2:Flyme 3:android6.0
      */
-    public static int statusBarLightMode(RxAppCompatActivity activity) {
-        int result = 0;
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public static void statusBarLightMode(RxAppCompatActivity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (MIUISetStatusBarLightMode(activity, true)) {
-                result = 1;
             } else if (FlymeSetStatusBarLightMode(activity.getWindow(), true)) {
-                result = 2;
             } else {
                 activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                result = 3;
             }
         }
-        return result;
     }
 
-    public static int statusBarLightModeNotFull(RxAppCompatActivity activity) {
-        int result = 0;
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public static void statusBarLightModeNotFull(RxAppCompatActivity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (MIUISetStatusBarLightMode(activity, false)) {
-                result = 1;
             } else if (FlymeSetStatusBarLightMode(activity.getWindow(), false)) {
-                result = 2;
             } else {
                 activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                result = 3;
             }
         }
-        return result;
     }
 
 
@@ -126,7 +119,7 @@ public class StatusBarUtil {
                 meizuFlags.setInt(lp, value);
                 window.setAttributes(lp);
                 result = true;
-            } catch (Exception e) {
+            } catch (Exception ignored) {
 
             }
         }
@@ -166,7 +159,7 @@ public class StatusBarUtil {
                         activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
                     }
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
 
             }
         }

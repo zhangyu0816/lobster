@@ -33,8 +33,6 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
     private Handler handler = new Handler();
     private int time = 1000 * 60 * 2;
     private ObjectAnimator anim;
-    private Keyframe t1, t2, t3, t4;
-    private PropertyValuesHolder pvhTX;
     private Runnable ra = new Runnable() {
         @Override
         public void run() {
@@ -46,14 +44,19 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
             int outWidth = mBinding.recommendMainLayout.getWidth();
             int backWidth = mBinding.recommendLayout.getWidth();
 
-            t1 = Keyframe.ofFloat(0, outWidth);
-            t2 = Keyframe.ofFloat(0.2f, 0);
-            t3 = Keyframe.ofFloat(0.9f, 0);
-            t4 = Keyframe.ofFloat(1f, backWidth);
+            Keyframe t1 = Keyframe.ofFloat(0, outWidth);
+            Keyframe t2 = Keyframe.ofFloat(0.2f, 0);
+            Keyframe t3 = Keyframe.ofFloat(0.9f, 0);
+            Keyframe t4 = Keyframe.ofFloat(1f, backWidth);
 
-            pvhTX = PropertyValuesHolder.ofKeyframe("translationX", t1, t2, t3, t4);
+            PropertyValuesHolder pvhTX = PropertyValuesHolder.ofKeyframe("translationX", t1, t2, t3, t4);
             anim = ObjectAnimator.ofPropertyValuesHolder(mBinding.recommendMainLayout, pvhTX);
             anim.setDuration(1700).start();
+            new Handler().postDelayed(() -> {
+                if (anim != null)
+                    anim.cancel();
+                anim = null;
+            }, 1700);
             handler.postDelayed(ra, time);
             if (MineApp.recommendInfoList.size() == 0) {
                 recommendRankingList();

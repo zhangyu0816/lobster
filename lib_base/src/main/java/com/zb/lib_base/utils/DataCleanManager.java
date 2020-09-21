@@ -113,9 +113,9 @@ public class DataCleanManager {
             if (file.isFile()) { // 判断是否是文件
                 file.delete(); // delete()方法 你应该知道 是删除的意思;
             } else if (file.isDirectory()) { // 否则如果它是一个目录
-                File files[] = file.listFiles(); // 声明目录下所有的文件 files[];
-                for (int i = 0; i < files.length; i++) { // 遍历目录下所有的文件
-                    deleteFile(files[i]); // 把每个文件 用这个方法进行迭代
+                File[] files = file.listFiles(); // 声明目录下所有的文件 files[];
+                for (File value : files) { // 遍历目录下所有的文件
+                    deleteFile(value); // 把每个文件 用这个方法进行迭代
                 }
             }
             file.delete();
@@ -154,12 +154,12 @@ public class DataCleanManager {
         long size = 0;
         try {
             File[] fileList = file.listFiles();
-            for (int i = 0; i < fileList.length; i++) {
+            for (File value : fileList) {
                 // 如果下面还有文件
-                if (fileList[i].isDirectory()) {
-                    size = size + getFolderSize(fileList[i]);
+                if (value.isDirectory()) {
+                    size = size + getFolderSize(value);
                 } else {
-                    size = size + fileList[i].length();
+                    size = size + value.length();
                 }
             }
         } catch (Exception e) {

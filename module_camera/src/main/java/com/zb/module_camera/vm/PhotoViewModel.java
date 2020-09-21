@@ -79,7 +79,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
                     parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                     mCamera.setParameters(parameters);
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
             preview.releaseCamera();
             activity.finish();
@@ -91,7 +91,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
         mBinding.setVariable(BR.isCreate, false);
         try {
             mCamera.startPreview();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         imageData = null;
         isTakePhoto = false;
@@ -178,7 +178,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
                 //停止预览
                 mCamera.stopPreview();
             });
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }

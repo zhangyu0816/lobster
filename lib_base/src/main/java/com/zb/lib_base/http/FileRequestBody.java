@@ -2,6 +2,7 @@ package com.zb.lib_base.http;
 
 import java.io.IOException;
 
+import androidx.annotation.NonNull;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okio.Buffer;
@@ -65,7 +66,7 @@ public final class FileRequestBody<T> extends RequestBody {
             long contentLength = 0L;
 
             @Override
-            public void write(Buffer source, long byteCount) throws IOException {
+            public void write(@NonNull Buffer source, long byteCount) throws IOException {
                 super.write(source, byteCount);
                 if (contentLength == 0) {
                     //获得contentLength的值，后续不再调用

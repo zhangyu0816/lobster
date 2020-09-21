@@ -11,18 +11,13 @@ import android.view.animation.LinearInterpolator;
 import android.widget.RelativeLayout;
 
 import com.zb.lib_base.R;
-import com.zb.lib_base.databinding.BottleTitleBinding;
 
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 
 public class BottleTitleView extends RelativeLayout {
 
-    private BottleTitleBinding mBinding;
     private static AnimatorSet animatorSet = new AnimatorSet();
-    private long time = 10000;
-    private int repeat = Animation.INFINITE;
-    private int Y = 30;
 
     public BottleTitleView(Context context) {
         super(context);
@@ -39,18 +34,19 @@ public class BottleTitleView extends RelativeLayout {
         init(context);
     }
 
-    private ObjectAnimator ivBackY, ivFrontY, ivBottleY, ivLightY;
-
     private void init(Context context) {
-        mBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.bottle_title, null, false);
+        com.zb.lib_base.databinding.BottleTitleBinding mBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.bottle_title, null, false);
         addView(mBinding.getRoot());
 
-        ivBackY = ObjectAnimator.ofFloat(mBinding.ivBackWeak, "translationY", Y, 0, Y, 0, Y, 0, Y);
-        ivFrontY = ObjectAnimator.ofFloat(mBinding.ivFrontWeak, "translationY", 0, Y, 0, Y, 0, Y, 0);
-        ivBottleY = ObjectAnimator.ofFloat(mBinding.ivBottle, "translationY", Y, 0, Y, 0, Y, 0, Y);
-        ivLightY = ObjectAnimator.ofFloat(mBinding.ivBottleLight, "translationY", Y, 0, Y, 0, Y, 0, Y);
+        int y = 30;
+        ObjectAnimator ivBackY = ObjectAnimator.ofFloat(mBinding.ivBackWeak, "translationY", y, 0, y, 0, y, 0, y);
+        ObjectAnimator ivFrontY = ObjectAnimator.ofFloat(mBinding.ivFrontWeak, "translationY", 0, y, 0, y, 0, y, 0);
+        ObjectAnimator ivBottleY = ObjectAnimator.ofFloat(mBinding.ivBottle, "translationY", y, 0, y, 0, y, 0, y);
+        ObjectAnimator ivLightY = ObjectAnimator.ofFloat(mBinding.ivBottleLight, "translationY", y, 0, y, 0, y, 0, y);
 
+        long time = 10000;
         ivBackY.setDuration(time);
+        int repeat = Animation.INFINITE;
         ivBackY.setRepeatCount(repeat);
         ivBackY.setRepeatMode(ValueAnimator.RESTART);
 

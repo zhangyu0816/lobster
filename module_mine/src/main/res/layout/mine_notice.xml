@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
@@ -76,7 +77,8 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:checked="@{viewModel.switchChatCheck}"
-                            android:theme="@style/MySwitch" />
+                            android:theme="@style/MySwitch"
+                            tools:ignore="UseSwitchCompatOrMaterialXml" />
                     </RelativeLayout>
 
                 </LinearLayout>
@@ -125,7 +127,8 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:checked="@{viewModel.switchBeLikeCheck}"
-                            android:theme="@style/MySwitch" />
+                            android:theme="@style/MySwitch"
+                            tools:ignore="UseSwitchCompatOrMaterialXml" />
                     </RelativeLayout>
 
                     <View
@@ -154,7 +157,8 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:checked="@{viewModel.switchBeSuperLikeCheck}"
-                            android:theme="@style/MySwitch" />
+                            android:theme="@style/MySwitch"
+                            tools:ignore="UseSwitchCompatOrMaterialXml" />
                     </RelativeLayout>
 
                     <View
@@ -183,7 +187,8 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:checked="@{viewModel.switchBeFollowCheck}"
-                            android:theme="@style/MySwitch" />
+                            android:theme="@style/MySwitch"
+                            tools:ignore="UseSwitchCompatOrMaterialXml" />
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -231,7 +236,8 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:checked="@{viewModel.switchBeRewardCheck}"
-                            android:theme="@style/MySwitch" />
+                            android:theme="@style/MySwitch"
+                            tools:ignore="UseSwitchCompatOrMaterialXml" />
                     </RelativeLayout>
 
                     <View
@@ -260,7 +266,8 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:checked="@{viewModel.switchBeGoodCheck}"
-                            android:theme="@style/MySwitch" />
+                            android:theme="@style/MySwitch"
+                            tools:ignore="UseSwitchCompatOrMaterialXml" />
                     </RelativeLayout>
 
                     <View
@@ -289,7 +296,8 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:checked="@{viewModel.switchBeReviewCheck}"
-                            android:theme="@style/MySwitch" />
+                            android:theme="@style/MySwitch"
+                            tools:ignore="UseSwitchCompatOrMaterialXml" />
                     </RelativeLayout>
                 </LinearLayout>
 

@@ -13,11 +13,10 @@ public class SimulateNetAPI {
      * @return json data
      */
     public static String getOriginalFundData(RxAppCompatActivity activity, String fileName) {
-        InputStream input = null;
+        InputStream input;
         try {
             input = activity.getAssets().open(fileName);
-            String json = convertStreamToString(input);
-            return json;
+            return convertStreamToString(input);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -14,12 +14,10 @@ public class DownLoadRetrofitHelper {
     public static HttpUtils httpClient;
 
     static {
-        if (httpClient == null) {
-            // 设置请求超时时间为20秒
-            httpClient = new HttpUtils(1000 * 10);
-            httpClient.configSoTimeout(1000 * 20);
-            httpClient.configResponseTextCharset("UTF-8");
-        }
+        // 设置请求超时时间为20秒
+        httpClient = new HttpUtils(1000 * 10);
+        httpClient.configSoTimeout(1000 * 20);
+        httpClient.configResponseTextCharset("UTF-8");
     }
 
 }

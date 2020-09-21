@@ -8,6 +8,7 @@ import com.zb.lib_base.activity.BaseFragment;
 import com.zb.lib_base.databinding.FragLocationBinding;
 import com.zb.lib_base.vm.LocationViewModel;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class LocationFragment extends BaseFragment {
@@ -30,6 +31,7 @@ public class LocationFragment extends BaseFragment {
     public void initUI() {
         Bundle bundle = getArguments();
         LocationViewModel viewModel = new LocationViewModel();
+        assert bundle != null;
         viewModel.isDiscover = bundle.getBoolean("isDiscover");
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
@@ -40,7 +42,7 @@ public class LocationFragment extends BaseFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         locationBinding.mapView.onSaveInstanceState(outState);
     }

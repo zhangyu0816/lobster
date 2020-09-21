@@ -19,7 +19,7 @@ class FileUtils {
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
     private static final int EOF = -1;
 
-    static boolean copyBinaryFromAssetsToData(Context context, String fileNameFromAssets, String outputFileName) {
+    static boolean copyBinaryFromAssetsToData(Context context, String fileNameFromAssets) {
 		
 		// create files directory under /data/data/package name
 		File filesDirectory = getFilesDirectory(context);
@@ -28,7 +28,7 @@ class FileUtils {
 		try {
 			is = context.getAssets().open(fileNameFromAssets);
 			// copy ffmpeg file from assets to files dir
-			final FileOutputStream os = new FileOutputStream(new File(filesDirectory, outputFileName));
+			final FileOutputStream os = new FileOutputStream(new File(filesDirectory, FileUtils.ffmpegFileName));
 			byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
 			
 			int n;
@@ -56,14 +56,14 @@ class FileUtils {
     }
 
     static String getFFmpeg(Context context, Map<String,String> environmentVars) {
-        String ffmpegCommand = "";
+        StringBuilder ffmpegCommand = new StringBuilder();
         if (environmentVars != null) {
             for (Map.Entry<String, String> var : environmentVars.entrySet()) {
-                ffmpegCommand += var.getKey()+"="+var.getValue()+" ";
+                ffmpegCommand.append(var.getKey()).append("=").append(var.getValue()).append(" ");
             }
         }
-        ffmpegCommand += getFFmpeg(context);
-        return ffmpegCommand;
+        ffmpegCommand.append(getFFmpeg(context));
+        return ffmpegCommand.toString();
     }
 
     static String SHA1(String file) {
@@ -93,9 +93,7 @@ class FileUtils {
                 formatter.format("%02x", b);
             }
             return formatter.toString();
-        } catch (NoSuchAlgorithmException e) {
-            Log.e(e);
-        } catch (IOException e) {
+        } catch (NoSuchAlgorithmException | IOException e) {
             Log.e(e);
         } finally {
             Util.close(is);

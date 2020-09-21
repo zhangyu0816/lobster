@@ -120,7 +120,7 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
     @Override
     public void changeCameraId(View view) {
         //切换前后摄像头
-        int cameraCount = 0;
+        int cameraCount;
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
         cameraCount = Camera.getNumberOfCameras();//得到摄像头的个数
         for (int i = 0; i < cameraCount; i++) {
@@ -205,6 +205,7 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
         back(view);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -238,11 +239,11 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
             mHandler.removeCallbacks(mRunnable);
         }
     };
-    private Thread mThread = null;
     private boolean exit = false;
 
     private void getVideoFile(File file) {// 获得视频文件
-        mThread = new Thread(() -> file.listFiles(file1 -> {
+        // sdCard找到视频名称
+        Thread mThread = new Thread(() -> file.listFiles(file1 -> {
             if (!exit) {
                 // sdCard找到视频名称
                 String name = file1.getName();

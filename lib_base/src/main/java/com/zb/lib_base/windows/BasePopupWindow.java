@@ -100,10 +100,6 @@ public abstract class BasePopupWindow extends PopupWindow {
         ActivityUtils.getMineWeb("用户充值协议", HttpManager.BASE_URL + "mobile/xiagu_recharge_protocol.html");
     }
 
-    public void touch(View view) {
-
-    }
-
     public void changeImage(View view) {
     }
 
@@ -112,11 +108,11 @@ public abstract class BasePopupWindow extends PopupWindow {
      *
      * @param memberOfOpenedProductId
      */
-    public void submitOpenedMemberOrder(long memberOfOpenedProductId) {
+    public void submitOpenedMemberOrder(long memberOfOpenedProductId, CallBack callBack) {
         submitOpenedMemberOrderApi api = new submitOpenedMemberOrderApi(new HttpOnNextListener<OrderNumber>() {
             @Override
             public void onNext(OrderNumber o) {
-                payOrderForTran(o.getOrderNumber(), 1);
+                payOrderForTran(o.getOrderNumber(), 1, callBack);
             }
         }, activity)
                 .setMemberOfOpenedProductId(memberOfOpenedProductId);
@@ -128,15 +124,21 @@ public abstract class BasePopupWindow extends PopupWindow {
      *
      * @param orderNumber
      */
-    public void payOrderForTran(String orderNumber, int payType) {
+    public void payOrderForTran(String orderNumber, int payType, CallBack callBack) {
         payOrderForTranApi api = new payOrderForTranApi(new HttpOnNextListener<OrderTran>() {
             @Override
             public void onNext(OrderTran o) {
                 dismiss();
+                if (callBack != null)
+                    callBack.canDismiss();
                 new PaymentPW(activity, mBinding.getRoot(), o, payType);
             }
         }, activity).setOrderNumber(orderNumber);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    public interface CallBack {
+        void canDismiss();
     }
 
 }

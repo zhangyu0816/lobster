@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 
 public class NotifivationIntentUtils {
 
@@ -24,12 +25,11 @@ public class NotifivationIntentUtils {
             throws Exception {
         String activity = object.optString("ActivityName");
         Intent intent = new Intent(context.getApplicationContext(),
-                Class.forName(acMap.get(activity)));
-        @SuppressWarnings("unchecked")
+                Class.forName(Objects.requireNonNull(acMap.get(activity))));
         Iterator<String> keys = object.keys();
         while (keys.hasNext()) {
             String key = keys.next();
-            if (key.indexOf("-") != -1) {
+            if (key.contains("-")) {
                 String[] finalKey = key.split("-");
                 String value = object.optString(key);
                 if ("Long".equals(finalKey[1])) {

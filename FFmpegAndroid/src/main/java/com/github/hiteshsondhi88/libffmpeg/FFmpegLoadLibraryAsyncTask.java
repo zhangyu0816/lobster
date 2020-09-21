@@ -25,8 +25,8 @@ class FFmpegLoadLibraryAsyncTask extends AsyncTask<Void, Void, Boolean> {
         }
         if (!ffmpegFile.exists()) {
             boolean isFileCopied = FileUtils.copyBinaryFromAssetsToData(context,
-                    cpuArchNameFromAssets + File.separator + FileUtils.ffmpegFileName,
-                    FileUtils.ffmpegFileName);
+                    cpuArchNameFromAssets + File.separator + FileUtils.ffmpegFileName
+            );
 
             // make file executable
             if (isFileCopied) {

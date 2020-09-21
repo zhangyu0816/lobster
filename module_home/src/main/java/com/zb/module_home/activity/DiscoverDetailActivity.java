@@ -23,7 +23,6 @@ public class DiscoverDetailActivity extends BaseActivity {
     long friendDynId;
 
     private DiscoverDetailViewModel viewModel;
-    private Uri uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +41,7 @@ public class DiscoverDetailActivity extends BaseActivity {
         MineApp.activityMap.put("DiscoverDetailActivity", new DiscoverDetailActivity());
         viewModel = new DiscoverDetailViewModel();
 
-        uri = getIntent().getData();
+        Uri uri = getIntent().getData();
         if (friendDynId == 0 && uri != null) {
             friendDynId = Long.parseLong(Objects.requireNonNull(uri.getQueryParameter("friendDynId")));
         }

@@ -8,6 +8,8 @@ import android.util.AttributeSet;
 
 import com.zb.lib_base.R;
 
+import java.util.Objects;
+
 import androidx.appcompat.widget.AppCompatEditText;
 
 
@@ -39,7 +41,7 @@ public class EmojiEditText extends AppCompatEditText {
 
     @Override
     protected void onTextChanged(CharSequence text, int start, int lengthBefore, int lengthAfter) {
-        EmojiHandler.addEmojis(getContext(), getText(), mEmojiconSize);
+        EmojiHandler.addEmojis(getContext(), Objects.requireNonNull(getText()), mEmojiconSize);
     }
 
     /**

@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -19,7 +18,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -49,8 +47,6 @@ public class XBanner extends RelativeLayout {
     public int indicatorMargin = 10;
     public int titleHeight = 100;
     public int titleMarginStart = 20;
-    public int widthIndicatorCube = 40;
-    public int heightIndicatorCube = 10;
 
     public int pageTransformerDelayIdle = 600;
 
@@ -69,21 +65,9 @@ public class XBanner extends RelativeLayout {
     public static final int NUM_INDICATOR = 3;
     public static final int NUM_INDICATOR_TITLE = 4;
 
-    //ellipsize types
-    public static final int ELLIPSIZE_END = 0;
-    public static final int ELLIPSIZE_MARQUEE = 1;
-
-    //loaing progress view types
-    public static final int TEXT_PROGRESS = 0;
-    public static final int CIRCLE_PROGRESS = 1;
-
-
     private Context mContext;
     private int mTitleHeight;
     private int mTitleWidth;
-    private int mIndicatorSize;
-    private int mIndicatorHeight;
-    private int mIndicatorWidth;
     private int mIndicatorSelected;
     private int mIndicatorUnselected;
     private int mDelayTime;
@@ -96,12 +80,9 @@ public class XBanner extends RelativeLayout {
     private int mGravity;
     private int mImageCount;
     private int mBannerType;
-    private int mEllipsizeType;
     private ImageView.ScaleType mScaleType;
-    private DisplayMetrics dm;
 
     private XBPagerAdapter mAdapter;
-    private ViewPager.PageTransformer mViewPageTransformer;
     private TextView mBannerTitle;
     private TextView mNumIndicator;
     private List<ImageView> mIndicators;
@@ -113,14 +94,10 @@ public class XBanner extends RelativeLayout {
     private ImageLoader mImageLoader;
 
     private static Handler mHandler = new Handler();
-    private Scroller mScroller;
-    //xbannerScroller will be applied by default
     private XBannerScroller xbannerScroller;
     private ViewPagerRunnable mRunnable;
     private List<Ads> adsList;
 
-
-    private boolean[] downloadFinished;
 
     public XBanner(Context context) {
         super(context);
@@ -156,8 +133,6 @@ public class XBanner extends RelativeLayout {
     public @interface INDICATOR_GRAVITY {
     }
 
-    ;
-
     public XBanner setIndicatorGravity(@INDICATOR_GRAVITY int gravity) {
         mGravity = gravity;
         return this;
@@ -171,28 +146,10 @@ public class XBanner extends RelativeLayout {
     public @interface BANNER_TYPE {
     }
 
-    ;
-
     public XBanner setBannerTypes(@BANNER_TYPE int bannerType) {
         mBannerType = bannerType;
         return this;
     }
-
-    /**
-     * Set the ellipsize type here
-     */
-    @IntDef({ELLIPSIZE_END, ELLIPSIZE_MARQUEE})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface ELLIPSIZE_TYPE {
-    }
-
-    ;
-
-    public XBanner setEllipsizeType(@ELLIPSIZE_TYPE int ellipsizeType) {
-        mEllipsizeType = ellipsizeType;
-        return this;
-    }
-
 
     private void getTypeArrayValue(Context context, AttributeSet attr) {
         if (attr == null) {
@@ -200,7 +157,6 @@ public class XBanner extends RelativeLayout {
         }
         TypedArray typedArray = context.obtainStyledAttributes(attr, com.app.abby.xbanner.R.styleable.XBanner);
 
-        mIndicatorWidth = typedArray.getDimensionPixelSize(com.app.abby.xbanner.R.styleable.XBanner_indicator_width, mIndicatorSize);
         mTitleHeight = typedArray.getDimensionPixelSize(com.app.abby.xbanner.R.styleable.XBanner_title_height, titleHeight);
         mDelayTime = typedArray.getInteger(com.app.abby.xbanner.R.styleable.XBanner_delay_time, delayTime);
         mIsAutoPlay = typedArray.getBoolean(com.app.abby.xbanner.R.styleable.XBanner_is_auto_play, false);
@@ -213,10 +169,7 @@ public class XBanner extends RelativeLayout {
 
     private void initValues() {
 
-        dm = mContext.getResources().getDisplayMetrics();
-        mIndicatorSize = dm.widthPixels / 80;
-        mIndicatorHeight = mIndicatorSize;
-        mIndicatorWidth = mIndicatorSize;
+        DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
         mTitleWidth = dm.widthPixels * 3 / 4;
         mImageCount = 0;
         mDelayTime = 4000;
@@ -263,28 +216,14 @@ public class XBanner extends RelativeLayout {
         addView(mBannerTitle);
     }
 
-
-    /**
-     * init Scroller
-     * Change the speed of the scroller
-     * to apply your scroller
-     * use {@link #setScroller(Scroller scroller)}
-     */
-
-
     private void initScroller() {
 
         try {
             Field xScroller = ViewPager.class.getDeclaredField("mScroller");
             xScroller.setAccessible(true);
-            if (mScroller == null) {
-                xbannerScroller = new XBannerScroller(mContext, new DecelerateInterpolator());
-                xbannerScroller.setDuration(600);
-                xScroller.set(binding.viewpager, xbannerScroller);
-            } else {
-                xScroller.set(binding.viewpager, mScroller);
-            }
-
+            xbannerScroller = new XBannerScroller(mContext, new DecelerateInterpolator());
+            xbannerScroller.setDuration(600);
+            xScroller.set(binding.viewpager, xbannerScroller);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -300,32 +239,6 @@ public class XBanner extends RelativeLayout {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public XBanner setScroller(Scroller scroller) {
-        mScroller = scroller;
-        return this;
-    }
-
-    @IntDef({TEXT_PROGRESS, CIRCLE_PROGRESS})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface PROGRESS_TYPE {
-    }
-
-    public XBanner setLoadingProgressType(@PROGRESS_TYPE int type) {
-        downloadFinished = new boolean[mImageCount + 1];
-        for (int i = 0; i < mImageCount; i++) {
-            downloadFinished[i] = false;
-        }
-        return this;
-    }
-
-    /**
-     * Called to make the title background to be alpha
-     */
-    public XBanner setTitlebgAlpha() {
-        mIsTitlebgAlpha = true;
-        return this;
     }
 
     /**
@@ -370,17 +283,13 @@ public class XBanner extends RelativeLayout {
         } else if (mBannerType == CUBE_INDICATOR) {
             indicator.setImageResource(index == 0 ? com.app.abby.xbanner.R.drawable.indicator_cube_selected : com.app.abby.xbanner.R.drawable.indicator_cube_unselected);
         }
-//
-//        if (mBannerType == CUBE_INDICATOR) {
-//            params.height = heightIndicatorCube;
-//            params.width = widthIndicatorCube;
-//        }
         params.leftMargin = indicatorMargin;
         params.rightMargin = indicatorMargin;
         indicator.setLayoutParams(params);
         return indicator;
     }
 
+    @SuppressLint("SetTextI18n")
     private TextView createNumIndicator() {
         TextView indicator = new TextView(mContext);
         indicator.setTextSize(sizeNumIndicator);
@@ -398,10 +307,8 @@ public class XBanner extends RelativeLayout {
             for (int i = 0; i < mImageCount; i++) {
                 mBannerImages.add(newImageFromRes(images[i]));
             }
-            mBannerImages.add(newImageFromRes(images[0]));
-        } else {
-            mBannerImages.add(newImageFromRes(images[0]));
         }
+        mBannerImages.add(newImageFromRes(images[0]));
 
         return this;
     }
@@ -426,52 +333,12 @@ public class XBanner extends RelativeLayout {
         return this;
     }
 
-    /**
-     * Apply your transformer here
-     *
-     * @param transformer the transformer to be applied
-     */
-    public XBanner setPageTransformer(ViewPager.PageTransformer transformer) {
-        mViewPageTransformer = transformer;
-        return this;
-    }
-
     public XBanner setDelay(int delay) {
         //default delay time is 3000ms
         if (mDelayTime < 0) {
             mDelayTime = titleTextSize;
         } else {
             mDelayTime = delay;
-        }
-        return this;
-    }
-
-    /**
-     * Set the speed of transformer when idle,default to be 600ms
-     * but when dragging,it should be a smaller number
-     * if you prefer to set your scroller
-     * use {@link #setScroller(Scroller scroller)}
-     */
-
-    public XBanner setTransformerSpeed(int speed) {
-        if (speed < 0) {
-            speed = 600;
-        }
-        pageTransformerDelayIdle = speed;
-        return this;
-    }
-
-
-    /**
-     * Set up the height of the indicator container,which is the title background
-     *
-     * @param height the height of the title background in px
-     */
-    public XBanner setTitleHeight(int height) {
-        if (height < 0) {
-            height = 0;
-        } else {
-            mTitleHeight = height;
         }
         return this;
     }
@@ -491,30 +358,9 @@ public class XBanner extends RelativeLayout {
         return this;
     }
 
-
-    /**
-     * Set up the indicator size
-     *
-     * @param width  width of the indicator
-     * @param height height of the indicator
-     */
-    public XBanner setUpIndicatorSize(int width, int height) {
-        mIndicatorWidth = width;
-        mIndicatorHeight = height;
-        return this;
-    }
-
-
     public XBanner isAutoPlay(boolean isAutoPlay) {
         mIsAutoPlay = isAutoPlay;
         return this;
-    }
-
-    /**
-     * Get the viewpager
-     */
-    public ViewPager getViewPager() {
-        return binding.viewpager;
     }
 
     private void showIndicators() {
@@ -561,16 +407,6 @@ public class XBanner extends RelativeLayout {
         mBannerTitle.setGravity(Gravity.CENTER_VERTICAL);
         mBannerTitle.setSingleLine();
         mBannerTitle.setTextSize(mSizeTitleText);
-
-        if (mEllipsizeType == ELLIPSIZE_END) {
-            mBannerTitle.setEllipsize(TextUtils.TruncateAt.END);
-        } else if (mEllipsizeType == ELLIPSIZE_MARQUEE) {
-            mBannerTitle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            mBannerTitle.setMarqueeRepeatLimit(-1);
-            mBannerTitle.setFocusable(true);
-            mBannerTitle.setFocusableInTouchMode(true);
-            mBannerTitle.setSelected(true);
-        }
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(mTitleWidth, mTitleHeight);
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
@@ -660,12 +496,6 @@ public class XBanner extends RelativeLayout {
             binding.viewpager.setCurrentItem(0);
         }
         setBannerBg(binding.viewpager.getCurrentItem());
-
-        if (mViewPageTransformer != null) {
-            binding.viewpager.setPageTransformer(false, mViewPageTransformer);
-        }
-
-
     }
 
     /**
@@ -680,20 +510,6 @@ public class XBanner extends RelativeLayout {
             truepos = mImageCount - 1;
         }
         return truepos;
-    }
-
-
-    private int getindexforProgress(int pos) {
-        int index = pos;
-        if (pos == mImageCount + 1) {
-            index = 1;
-        }
-        if (pos == 0) {
-            index = mImageCount;
-        }
-
-        return index;
-
     }
 
     /**
@@ -728,10 +544,10 @@ public class XBanner extends RelativeLayout {
         } else if (position == 5) {
             int red = (int) ((255 - 198) * positionOffset);
             int green = (int) ((255 - 203) * positionOffset);
-            colors = new int[]{Color.argb(255, 198+red, 255-green, 176), Color.argb(255, 255, 255, 255)};
+            colors = new int[]{Color.argb(255, 198 + red, 255 - green, 176), Color.argb(255, 255, 255, 255)};
         } else if (position == 6) {
             int green = (int) ((211 - 203) * positionOffset);
-            colors = new int[]{Color.argb(255, 255, 203+green, 176), Color.argb(255, 255, 255, 255)};
+            colors = new int[]{Color.argb(255, 255, 203 + green, 176), Color.argb(255, 255, 255, 255)};
         }
 //        if (position == -1) {
 //            colors = new int[]{Color.argb(0, 0, 0, 0), Color.argb(0, 0, 0, 0)};
@@ -860,6 +676,7 @@ public class XBanner extends RelativeLayout {
     }
 
 
+    @SuppressLint("SetTextI18n")
     private void onNumIndicatorChange(int position) {
         int i = position;
         if (i == 0) {
@@ -932,10 +749,8 @@ public class XBanner extends RelativeLayout {
                     for (int i = 0; i < adViewList.size(); i++) {
                         mBannerImages.add(newView(adsList.get(i)));
                     }
-                    mBannerImages.add(newView(adsList.get(0)));
-                } else {
-                    mBannerImages.add(newView(adsList.get(0)));
                 }
+                mBannerImages.add(newView(adsList.get(0)));
             }
         } else {
             if (mBannerImages.isEmpty() && !mUrls.isEmpty()) {
@@ -997,7 +812,6 @@ public class XBanner extends RelativeLayout {
      * the listener interface for banner event,includeing clicked,dragging and idled
      * the index starts from 0,which item's value starts from 0
      */
-
 
 
     public XBanner setBannerPageListener(XBPagerAdapter.BannerPageListener listener) {
@@ -1077,7 +891,6 @@ public class XBanner extends RelativeLayout {
         mHandler.removeCallbacks(mRunnable);
         mRunnable = null;
 
-        removeScroller();
         mAdapter.releaseAdapter();
         mAdapter = null;
         mBannerPageListner = null;

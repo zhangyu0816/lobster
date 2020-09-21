@@ -42,9 +42,7 @@ public class AddFeedbackViewModel extends BaseViewModel implements AddFeedbackVM
         mBinding = (MineAddFeedbackBinding) binding;
         mBinding.setTitle("添加反馈");
         setAdapter();
-        photoManager = new PhotoManager(activity, () -> {
-            addFeedBack(photoManager.jointWebUrl(","));
-        });
+        photoManager = new PhotoManager(activity, () -> addFeedBack(photoManager.jointWebUrl(",")));
     }
 
     @Override
@@ -79,7 +77,7 @@ public class AddFeedbackViewModel extends BaseViewModel implements AddFeedbackVM
                             MineApp.selectMap.put(entry.getKey(), entry.getValue() - 1);
                         }
                     }
-                } catch (Exception e) {
+                } catch (Exception ignored) {
 
                 }
 

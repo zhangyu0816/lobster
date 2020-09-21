@@ -38,7 +38,6 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     public MineAdapter adapter;
     public List<String> imageList = new ArrayList<>();
     public int _position = 0;
-    private SimpleItemTouchHelperCallback callback;
     private MineEditMemberBinding mineEditMemberBinding;
     private PhotoManager photoManager;
     private String images = "";
@@ -79,7 +78,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     @Override
     public void setAdapter() {
         adapter = new MineAdapter<>(activity, R.layout.item_mine_image, imageList, this);
-        callback = new SimpleItemTouchHelperCallback(adapter);
+        SimpleItemTouchHelperCallback callback = new SimpleItemTouchHelperCallback(adapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(mineEditMemberBinding.imagesList);
         callback.setSort(true);
@@ -89,17 +88,17 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
 
     @Override
     public void save(View view) {
-        String images = "";
-        String uploadImages = "";
+        StringBuilder images = new StringBuilder();
+        StringBuilder uploadImages = new StringBuilder();
         for (String image : imageList) {
             if (!image.isEmpty()) {
-                images += "#" + image;
+                images.append("#").append(image);
             }
             if (!image.isEmpty() && !image.contains("http://") && !image.contains("https://")) {
-                uploadImages += "#" + image;
+                uploadImages.append("#").append(image);
             }
         }
-        if (images.isEmpty()) {
+        if (images.length() == 0) {
             SCToastUtil.showToast(activity, "请上传至少1张照片", true);
             return;
         }
@@ -108,11 +107,11 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
             SCToastUtil.showToast(activity, "请添加自己的个性签名", true);
             return;
         }
-        if (uploadImages.isEmpty()) {
+        if (uploadImages.length() == 0) {
             modifyMemberInfo();
         } else {
-            uploadImages = uploadImages.substring(1);
-            photoManager.addFiles(Arrays.asList(uploadImages.split("#")), () -> photoManager.reUploadByUnSuccess());
+            uploadImages = new StringBuilder(uploadImages.substring(1));
+            photoManager.addFiles(Arrays.asList(uploadImages.toString().split("#")), () -> photoManager.reUploadByUnSuccess());
         }
     }
 

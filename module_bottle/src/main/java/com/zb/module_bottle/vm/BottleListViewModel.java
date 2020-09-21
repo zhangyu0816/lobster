@@ -51,7 +51,6 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     private BaseReceiver openVipReceiver;
     private int pageNo = 1;
     private BottleListBinding mBinding;
-    private SimpleItemTouchHelperCallback callback;
     private BaseReceiver singleBottleCacheReceiver;
 
     @Override
@@ -120,7 +119,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     @Override
     public void setAdapter() {
         adapter = new BottleAdapter<>(activity, R.layout.item_bottle, bottleInfoList, this);
-        callback = new SimpleItemTouchHelperCallback(adapter);
+        SimpleItemTouchHelperCallback callback = new SimpleItemTouchHelperCallback(adapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(mBinding.bottleList);
         callback.setSort(false);

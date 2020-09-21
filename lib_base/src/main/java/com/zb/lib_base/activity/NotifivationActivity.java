@@ -14,7 +14,6 @@ import java.util.Iterator;
 
 public class NotifivationActivity extends RxAppCompatActivity {
 
-    private String activityContent = "";
     private long otherUserId = 0;
     private long discoverId = 0;
     private long driftBottleId = 0;
@@ -26,7 +25,7 @@ public class NotifivationActivity extends RxAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_notifivation);
 
-        activityContent = getIntent().getStringExtra("activityContent");
+        String activityContent = getIntent().getStringExtra("activityContent");
         if (activityContent.equals("MainActivity")) {
             ActivityUtils.getMainActivity();
         } else if (activityContent.equals("ChatActivity")) {
@@ -37,7 +36,7 @@ public class NotifivationActivity extends RxAppCompatActivity {
                 Iterator<String> keys = object.keys();
                 while (keys.hasNext()) {
                     String key = keys.next();
-                    if (key.indexOf("-") != -1) {
+                    if (key.contains("-")) {
                         String[] finalKey = key.split("-");
                         String value = object.optString(key);
                         if ("Long".equals(finalKey[1])) {

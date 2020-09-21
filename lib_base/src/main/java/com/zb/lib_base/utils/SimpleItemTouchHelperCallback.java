@@ -1,5 +1,6 @@
 package com.zb.lib_base.utils;
 
+import android.content.Context;
 import android.os.Vibrator;
 
 import com.zb.lib_base.adapter.ItemTouchHelperAdapter;
@@ -22,7 +23,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
         mAdapter = adapter;
-        vibrator = (Vibrator) MineApp.getInstance().getSystemService(MineApp.getInstance().VIBRATOR_SERVICE);
+        vibrator = (Vibrator) MineApp.getInstance().getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     public void setDragFlags(int dragFlags) {
@@ -98,7 +99,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
     //滑动消失的距离，当滑动小于这个值的时候会删除这个item，否则不会视为删除
 // 返回值作为用户视为拖动的距离
     @Override
-    public float getSwipeThreshold(RecyclerView.ViewHolder viewHolder) {
+    public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
         return 0.3f;
     }
 

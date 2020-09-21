@@ -28,6 +28,7 @@ import com.zb.lib_base.utils.PreferenceUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 import androidx.annotation.RequiresApi;
@@ -61,7 +62,7 @@ public class AlarmUtils {
     private static Map<Integer, String> noticeShortMap = new HashMap<>();
 
     public AlarmUtils(RxAppCompatActivity activity, MineInfo mineInfo) {
-        this.mineInfo = mineInfo;
+        AlarmUtils.mineInfo = mineInfo;
         this.activity = activity;
         sender = PendingIntent.getBroadcast(activity, 0, new Intent(activity, alarmReceiver.class), 0);
         sender1 = PendingIntent.getBroadcast(activity, 0, new Intent(activity, alarmReceiver1.class), 0);
@@ -210,7 +211,7 @@ public class AlarmUtils {
         noticeMap.put(117, (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) + "反复查看了你的动态#快来左滑");
 
         id = ra.nextInt(18) + 100;
-        String[] temp = noticeMap.get(id).split("#");
+        String[] temp = Objects.requireNonNull(noticeMap.get(id)).split("#");
         RecommendInfo recommendInfo = null;
         if (MineApp.recommendInfoList.size() > 0 && id > 113) {
             recommendInfo = MineApp.recommendInfoList.get(new Random().nextInt(MineApp.recommendInfoList.size()));
@@ -226,7 +227,7 @@ public class AlarmUtils {
         noticeShortMap.put(121, (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) + "反复查看了你的动态#快来右滑");
 
         id = ra.nextInt(4) + 118;
-        String[] temp = noticeShortMap.get(id).split("#");
+        String[] temp = Objects.requireNonNull(noticeShortMap.get(id)).split("#");
         RecommendInfo recommendInfo = null;
         if (MineApp.recommendInfoList.size() > 0 && id < 120) {
             recommendInfo = MineApp.recommendInfoList.get(new Random().nextInt(MineApp.recommendInfoList.size()));

@@ -19,11 +19,6 @@ import com.zb.module_bottle.R;
 
 import androidx.annotation.Nullable;
 
-/**
- * @author: gq.xie
- * @date: 2020/8/7 0007
- * @describe:
- */
 public class BottleBGView extends RelativeLayout {
 
     private ImageView lsxq, hd_s, plp_d, bl, plp, hd_q, jg, xx, fsxq, ivWang, ivWangBack, ivBottle;
@@ -71,7 +66,9 @@ public class BottleBGView extends RelativeLayout {
     }
 
     private ObjectAnimator anim_lsxq, anim_xx, anim_fsxq, anim_hd_s, anim_plp_d, anim_bl;
-    private PropertyValuesHolder pvhTY, pvhTX, pvhA, pvhR;
+    private PropertyValuesHolder pvhTY;
+    private PropertyValuesHolder pvhTX;
+    private PropertyValuesHolder pvhR;
     private ObjectAnimator pvh_hd_q, pvh_jg, pvh_plp;
 
     private void setAnim() {
@@ -104,7 +101,7 @@ public class BottleBGView extends RelativeLayout {
         anim_bl.setRepeatCount(Animation.INFINITE);
 
         pvhTY = PropertyValuesHolder.ofFloat("translationY", 0f, 30f, 0f);
-        pvhA = PropertyValuesHolder.ofFloat("alpha", 1f, 0f, 1f);
+        PropertyValuesHolder pvhA = PropertyValuesHolder.ofFloat("alpha", 1f, 0f, 1f);
         pvh_hd_q = ObjectAnimator.ofPropertyValuesHolder(hd_q, pvhTY, pvhA).setDuration(4000);
         pvh_hd_q.setRepeatCount(Animation.INFINITE);
 
@@ -199,7 +196,7 @@ public class BottleBGView extends RelativeLayout {
         ivBottle.setVisibility(VISIBLE);
         int time = 1000;
         pvhTY = PropertyValuesHolder.ofFloat("translationY", 0, -ObjectUtils.getViewSizeByWidthFromMax(400), MineApp.H);
-        pvhTX = PropertyValuesHolder.ofFloat("translationX", 0, -(MineApp.W / 2), -MineApp.W);
+        pvhTX = PropertyValuesHolder.ofFloat("translationX", 0, -(MineApp.W / 2f), -MineApp.W);
         pvhR = PropertyValuesHolder.ofFloat("rotation", 0, -900);
         pvh = ObjectAnimator.ofPropertyValuesHolder(ivBottle, pvhTY, pvhTX, pvhR).setDuration(time);
         pvh.start();

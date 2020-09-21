@@ -82,10 +82,8 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     private int _position;
     private BaseReceiver cameraReceiver;
     private BaseReceiver bindPhoneReceiver;
-    private SimpleItemTouchHelperCallback callback;
     private PhotoManager photoManager;
     private AMapLocation aMapLocation;
-    private TelephonyManager tm;
     private ThreeLogin threeLogin;
 
     @Override
@@ -184,8 +182,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
 
     /**
      * 更新单图
-     *
-     * @param filePath
      */
     public void setSingleLogo(String filePath) {
         mBinding.setCanNext(true);
@@ -271,7 +267,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     @Override
     public void setAdapter() {
         adapter = new MainAdapter<>(activity, R.layout.item_logo, moreImageList, this);
-        callback = new SimpleItemTouchHelperCallback(adapter);
+        SimpleItemTouchHelperCallback callback = new SimpleItemTouchHelperCallback(adapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(mBinding.imagesList);
         callback.setSort(true);
@@ -387,18 +383,18 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                     step(6);
                     break;
                 case 6:
-                    String images = "";
+                    StringBuilder images = new StringBuilder();
                     for (String image : moreImageList) {
                         if (!image.isEmpty()) {
-                            images += "#" + image;
+                            images.append("#").append(image);
                         }
                     }
-                    if (images.isEmpty()) {
+                    if (images.length() == 0) {
                         SCToastUtil.showToast(activity, "请上传至少1张照片", false);
                         return;
                     }
-                    images = images.substring(1);
-                    photoManager.addFiles(Arrays.asList(images.split("#")), () -> photoManager.reUploadByUnSuccess());
+                    images = new StringBuilder(images.substring(1));
+                    photoManager.addFiles(Arrays.asList(images.toString().split("#")), () -> photoManager.reUploadByUnSuccess());
                     break;
                 case 7:
                     loginByPass();
@@ -425,7 +421,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "验证码已发送，请注意查收", false);
-                if (mBinding.getLoginStep() == 3){
+                if (mBinding.getLoginStep() == 3) {
                     step(4);
                     mBinding.setCodeRemark(activity.getResources().getString(R.string.code_second, second));
                     timer.start();
@@ -435,14 +431,11 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 12) {
-                    new TextPW(activity, mBinding.getRoot(), "温馨提示", "该手机号已注册过，是否前往登录？", "去登录", new TextPW.CallBack() {
-                        @Override
-                        public void sure() {
-                            mBinding.setCodeRemark("");
-                            mBinding.setRight("密码登录");
-                            mBinding.setBtnName("获取登录验证码");
-                            loginCaptcha();
-                        }
+                    new TextPW(activity, mBinding.getRoot(), "温馨提示", "该手机号已注册过，是否前往登录？", "去登录", () -> {
+                        mBinding.setCodeRemark("");
+                        mBinding.setRight("密码登录");
+                        mBinding.setBtnName("获取登录验证码");
+                        loginCaptcha();
                     });
                 }
             }
@@ -756,7 +749,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
 
     @SuppressLint("HardwareIds")
     private void initPhone() {
-        tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
+        TelephonyManager tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }

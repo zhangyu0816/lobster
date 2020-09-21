@@ -163,6 +163,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void back(View view) {
         super.back(view);
+        mBinding.banner.releaseBanner();
         try {
             attentionReceiver.unregisterReceiver();
         } catch (Exception e) {
@@ -226,9 +227,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     public void selectGift(View view) {
         hintKeyBoard();
         new GiftPW(activity, mBinding.getRoot(), giftInfo ->
-                new GiftPayPW(activity, mBinding.getRoot(), giftInfo, friendDynId, () -> {
-                    seeGiftRewards();
-                }));
+                new GiftPayPW(activity, mBinding.getRoot(), giftInfo, friendDynId, this::seeGiftRewards));
     }
 
     @Override

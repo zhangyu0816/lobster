@@ -2,6 +2,8 @@ package com.zb.lib_base.model;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 /**
  * Created by DIY on 2017-10-11.
  */
@@ -17,6 +19,7 @@ public class Ads {
     private int adRes = 0;
     private View view;
 
+    @NonNull
     @Override
     public String toString() {
         return "Ads{" +

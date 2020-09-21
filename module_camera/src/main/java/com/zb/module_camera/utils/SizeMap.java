@@ -27,6 +27,7 @@ public class SizeMap {
         for (AspectRatio ratio : mRatios.keySet()) {
             if (ratio.matches(size)) {
                 final SortedSet<Size> sizes = mRatios.get(ratio);
+                assert sizes != null;
                 if (sizes.contains(size)) {
                     return false;
                 } else {

@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 /**
@@ -50,7 +51,7 @@ public class XBPagerAdapter extends PagerAdapter {
     }
 
     @Override
-    public boolean isViewFromObject(View view, Object object) {
+    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return view == object;
     }
 
@@ -61,6 +62,7 @@ public class XBPagerAdapter extends PagerAdapter {
     }
 
 
+    @NonNull
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
 
@@ -85,10 +87,7 @@ public class XBPagerAdapter extends PagerAdapter {
 
 
     @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-//        if (mData != null && mData.size() > 0) {
-//            container.removeView(mData.get(position));
-//        }
+    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
 
     }
 

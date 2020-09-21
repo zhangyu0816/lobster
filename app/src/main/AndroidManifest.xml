@@ -2,19 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.yimi.rentme">
-    <!--region 适配全面屏-->
-    <meta-data
-        android:name="android.max_aspect"
-        android:value="2.4" />
-    <!--华为刘海区域展示-->
-    <meta-data
-        android:name="android.notch_support"
-        android:value="true" />
-    <!--小米刘海区域展示-->
-    <meta-data
-        android:name="notch.config"
-        android:value="portrait" />
-
     <!-- 个推 SDK 权限配置开始 -->
     <!-- 必选权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -54,6 +41,18 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:theme">
+        <!--region 适配全面屏-->
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.4" />
+        <!--华为刘海区域展示-->
+        <meta-data
+            android:name="android.notch_support"
+            android:value="true" />
+        <!--小米刘海区域展示-->
+        <meta-data
+            android:name="notch.config"
+            android:value="portrait" />
 
         <service android:name=".service.ForegroundLiveService" />
         <service android:name=".service.ForegroundLiveService$InnerService" />

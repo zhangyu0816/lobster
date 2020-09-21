@@ -99,7 +99,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
             publishReceiver.unregisterReceiver();
             doGoodReceiver.unregisterReceiver();
             attentionListReceiver.unregisterReceiver();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

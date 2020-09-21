@@ -5,6 +5,7 @@ import com.zb.lib_base.app.MineApp;
 
 import java.io.IOException;
 
+import androidx.annotation.NonNull;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -17,6 +18,7 @@ import okhttp3.Response;
 public class CommonInterceptor implements Interceptor {
 
 
+    @NonNull
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request oldRequest = chain.request();

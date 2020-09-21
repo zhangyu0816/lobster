@@ -3,25 +3,11 @@ package com.zb.lib_base.views.card;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class CardLayoutManager extends RecyclerView.LayoutManager {
 
-    private RecyclerView mRecyclerView;
-    private ItemTouchHelper mItemTouchHelper;
-
-    public CardLayoutManager(@NonNull RecyclerView recyclerView, @NonNull ItemTouchHelper itemTouchHelper) {
-        this.mRecyclerView = checkIsNull(recyclerView);
-        this.mItemTouchHelper = checkIsNull(itemTouchHelper);
-    }
-
-    private <T> T checkIsNull(T t) {
-        if (t == null) {
-            throw new NullPointerException();
-        }
-        return t;
+    public CardLayoutManager() {
     }
 
     @Override

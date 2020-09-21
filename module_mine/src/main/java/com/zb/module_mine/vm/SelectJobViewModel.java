@@ -67,7 +67,7 @@ public class SelectJobViewModel extends BaseViewModel implements SelectJobVMInte
                         JobInfoDb.getInstance().saveJobInfo(jobInfo);
                     }
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
         setAdapter();

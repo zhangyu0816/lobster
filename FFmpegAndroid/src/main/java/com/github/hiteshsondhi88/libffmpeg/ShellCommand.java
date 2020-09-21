@@ -1,6 +1,7 @@
 package com.github.hiteshsondhi88.libffmpeg;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 class ShellCommand {
 
@@ -9,7 +10,7 @@ class ShellCommand {
         try {
             process = Runtime.getRuntime().exec(commandString);
         } catch (IOException e) {
-            Log.e("Exception while trying to run: " + commandString, e);
+            Log.e("Exception while trying to run: " + Arrays.toString(commandString), e);
         }
         return process;
     }

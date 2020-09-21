@@ -1,5 +1,6 @@
 package com.zb.module_camera.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.SortedSet;
 
 
+@SuppressLint("ViewConstructor")
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
     private RxAppCompatActivity context;
     private Camera mCamera;
@@ -27,7 +29,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
      * 预览尺寸集合
      */
     private final SizeMap mPreviewSizes = new SizeMap();
-    private Size mPreviewSize = null;
     /**
      * 图片尺寸集合
      */
@@ -77,7 +78,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
             mPreviewSizes.add(new Size(size.width, size.height));
         }
-        mPreviewSize = chooseOptimalSize(mPreviewSizes.sizes(mAspectRatio));
+        Size mPreviewSize = chooseOptimalSize(mPreviewSizes.sizes(mAspectRatio));
         parameters.setPreviewSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());
         Log.i("previewSize", mPreviewSize.getWidth() + "" + mPreviewSize.getHeight());//1280720
         //设置预览方向
@@ -154,7 +155,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 mCamera.lock();
                 mCamera.release();
             }
-        } catch (RuntimeException e) {
+        } catch (RuntimeException ignored) {
         } finally {
             mCamera = null;
         }
@@ -183,7 +184,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 long maxFileSize = Long.parseLong(3 * 1024 * 1024 + "");
                 mRecorder.setVideoFrameRate(15);
                 mRecorder.setMaxFileSize(maxFileSize);
-                mRecorder.setMaxDuration(20*1000);
+                mRecorder.setMaxDuration(20 * 1000);
                 String cameraPath = Environment.getExternalStorageDirectory().getPath() + File.separator + "DCIM" + File.separator + "Camera";
                 //相册文件夹
                 File cameraFolder = new File(cameraPath);
@@ -191,7 +192,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                     cameraFolder.mkdirs();
                 }
                 //保存的图片文件
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
                 videoPath = cameraFolder.getAbsolutePath() + File.separator + "Video_" + simpleDateFormat.format(new Date()) + ".mp4";
                 //设置输出文件的路径
                 mRecorder.setOutputFile(videoPath);
@@ -230,7 +231,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             if (mRecorder != null) {
                 mRecorder.release();
             }
-        } catch (RuntimeException e) {
+        } catch (RuntimeException ignored) {
         } finally {
             mRecorder = null;
         }

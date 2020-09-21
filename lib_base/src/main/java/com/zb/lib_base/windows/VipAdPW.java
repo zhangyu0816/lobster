@@ -34,11 +34,11 @@ public class VipAdPW extends BasePopupWindow {
     private List<Ads> adsList = new ArrayList<>();
     private BaseAdapter adapter;
     private int preIndex = -1;
-    private PwsVipAdBinding binding;
     private boolean isAutoPlay;
-    private int type = 0;
+    private int type;
     private int sex;
-    private String otherImage = "";
+    private String otherImage;
+    private PwsVipAdBinding binding;
 
     public VipAdPW(RxAppCompatActivity activity, View parentView, boolean isAutoPlay, int type, String otherImage) {
         super(activity, parentView, false);
@@ -183,7 +183,6 @@ public class VipAdPW extends BasePopupWindow {
                 .setIndicatorGravity(XBanner.INDICATOR_START)
                 .setDelay(5000)
                 .setUpIndicators(R.drawable.vip_circle_pressed, R.drawable.vip_circle_unpressed)
-                .setUpIndicatorSize(20, 20)
                 .isAutoPlay(isAutoPlay)
                 .setShowBg(true)
                 .setType(type)
@@ -211,12 +210,13 @@ public class VipAdPW extends BasePopupWindow {
             SCToastUtil.showToast(activity, "请选择VIP套餐", true);
             return;
         }
-        submitOpenedMemberOrder(MineApp.vipInfoList.get(preIndex).getMemberOfOpenedProductId());
+        submitOpenedMemberOrder(MineApp.vipInfoList.get(preIndex).getMemberOfOpenedProductId(), () -> binding.banner.releaseBanner());
     }
 
     @Override
     public void cancel(View view) {
         super.cancel(view);
+        binding.banner.releaseBanner();
         dismiss();
     }
 

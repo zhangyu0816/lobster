@@ -2,6 +2,7 @@ package com.zb.module_card.vm;
 
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -83,17 +84,15 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     private int mainH = 0;
     private List<Ads> adsList = new ArrayList<>();
     private boolean isLike = false;
-    private int likeType = 0;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        likeType = LikeTypeDb.getInstance().getType(otherUserId);
         mBinding = (CardMemberDetailBinding) binding;
         mBinding.setConstellation("");
         mBinding.setIsAttention(false);
         mBinding.setInfo("");
-        mBinding.setLikeType(likeType);
+        mBinding.setLikeType(LikeTypeDb.getInstance().getType(otherUserId));
         mBinding.setIsPlay(true);
         attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
             @Override
@@ -153,6 +152,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         } catch (Exception e) {
             e.printStackTrace();
         }
+        mBinding.banner.releaseBanner();
     }
 
     @Override
@@ -200,6 +200,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     @Override
     public void otherInfo() {
         otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
+            @SuppressLint("DefaultLocale")
             @Override
             public void onNext(MemberInfo o) {
                 memberInfo = o;
@@ -479,11 +480,10 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     }
 
     private ObjectAnimator pvh, translateY;
-    private PropertyValuesHolder pvhSY, pvhSX;
 
     private void isLike(View view) {
-        pvhSY = PropertyValuesHolder.ofFloat("scaleY", 1, 1.1f, 1, 1.2f, 1);
-        pvhSX = PropertyValuesHolder.ofFloat("scaleX", 1, 1.1f, 1, 1.2f, 1);
+        PropertyValuesHolder pvhSY = PropertyValuesHolder.ofFloat("scaleY", 1, 1.1f, 1, 1.2f, 1);
+        PropertyValuesHolder pvhSX = PropertyValuesHolder.ofFloat("scaleX", 1, 1.1f, 1, 1.2f, 1);
         pvh = ObjectAnimator.ofPropertyValuesHolder(view, pvhSY, pvhSX).setDuration(500);
         pvh.start();
 
@@ -512,7 +512,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                         + o.getSharetextId();
                 String sharedName = o.getText().replace("{userId}", memberInfo.getUserId() + "");
                 sharedName = sharedName.replace("{nick}", memberInfo.getNick());
-                String content = "";
+                String content;
                 if (memberInfo.getServiceTags().isEmpty()) {
                     content = o.getText();
                 } else {

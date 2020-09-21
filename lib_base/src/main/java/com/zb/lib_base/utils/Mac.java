@@ -1,5 +1,6 @@
 package com.zb.lib_base.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiInfo;
@@ -25,15 +26,14 @@ import java.util.Enumeration;
 
 public class Mac {
     public static String getMac(RxAppCompatActivity context) {
-        String strMac = null;
+        String strMac;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             strMac = getLocalMacAddressFromWifiInfo(context);
             return strMac;
-        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N
-                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             strMac = getMacAddress(context);
             return strMac;
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        } else {
             if (!TextUtils.isEmpty(getMacAddress())) {
                 strMac = getMacAddress();
                 return strMac;
@@ -45,8 +45,6 @@ public class Mac {
                 return strMac;
             }
         }
-
-        return "02:00:00:00:00:00";
     }
 
 
@@ -56,11 +54,11 @@ public class Mac {
      * @param context
      * @return
      */
+    @SuppressLint("HardwareIds")
     private static String getLocalMacAddressFromWifiInfo(Context context) {
-        WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo winfo = wifi.getConnectionInfo();
-        String mac = winfo.getMacAddress();
-        return mac;
+        return winfo.getMacAddress();
     }
 
     /**
@@ -81,8 +79,7 @@ public class Mac {
         String str = "";
         String macSerial = "";
         try {
-            Process pp = Runtime.getRuntime().exec(
-                    "cat /sys/class/net/wlan0/address");
+            Process pp = Runtime.getRuntime().exec("cat /sys/class/net/wlan0/address");
             InputStreamReader ir = new InputStreamReader(pp.getInputStream());
             LineNumberReader input = new LineNumberReader(ir);
             for (; null != str; ) {
@@ -92,11 +89,11 @@ public class Mac {
                     break;
                 }
             }
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
-        if (macSerial == null || "".equals(macSerial)) {
+        if ("".equals(macSerial)) {
             try {
-                return loadFileAsString("/sys/class/net/eth0/address")
+                return loadFileAsString()
                         .toUpperCase().substring(0, 17);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -106,15 +103,15 @@ public class Mac {
         return macSerial;
     }
 
+    @SuppressLint("HardwareIds")
     private static String getMacAddress0(Context context) {
         if (isAccessWifiStateAuthorized(context)) {
-            WifiManager wifiMgr = (WifiManager) context
-                    .getSystemService(Context.WIFI_SERVICE);
-            WifiInfo wifiInfo = null;
+            WifiManager wifiMgr = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            WifiInfo wifiInfo;
             try {
                 wifiInfo = wifiMgr.getConnectionInfo();
                 return wifiInfo.getMacAddress();
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
 
         }
@@ -129,16 +126,11 @@ public class Mac {
      * @return
      */
     private static boolean isAccessWifiStateAuthorized(Context context) {
-        if (PackageManager.PERMISSION_GRANTED == context
-                .checkCallingOrSelfPermission("android.permission.ACCESS_WIFI_STATE")) {
-            return true;
-        } else {
-            return false;
-        }
+        return PackageManager.PERMISSION_GRANTED == context.checkCallingOrSelfPermission("android.permission.ACCESS_WIFI_STATE");
     }
 
-    private static String loadFileAsString(String fileName) throws Exception {
-        FileReader reader = new FileReader(fileName);
+    private static String loadFileAsString() throws Exception {
+        FileReader reader = new FileReader("/sys/class/net/eth0/address");
         String text = loadReaderAsString(reader);
         reader.close();
         return text;
@@ -167,7 +159,7 @@ public class Mac {
             InetAddress ip = getLocalInetAddress();
             byte[] b = NetworkInterface.getByInetAddress(ip)
                     .getHardwareAddress();
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             for (int i = 0; i < b.length; i++) {
                 if (i != 0) {
                     buffer.append(':');
@@ -176,7 +168,7 @@ public class Mac {
                 buffer.append(str.length() == 1 ? 0 + str : str);
             }
             strMacAddr = buffer.toString().toUpperCase();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return strMacAddr;
     }
@@ -199,7 +191,7 @@ public class Mac {
                 while (en_ip.hasMoreElements()) {
                     ip = en_ip.nextElement();
                     if (!ip.isLoopbackAddress()
-                            && ip.getHostAddress().indexOf(":") == -1) {
+                            && !ip.getHostAddress().contains(":")) {
                         break;
                     } else {
                         ip = null;
@@ -231,7 +223,7 @@ public class Mac {
                         .getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
                     InetAddress inetAddress = enumIpAddr.nextElement();
                     if (!inetAddress.isLoopbackAddress()) {
-                        return inetAddress.getHostAddress().toString();
+                        return inetAddress.getHostAddress();
                     }
                 }
             }
@@ -241,10 +233,6 @@ public class Mac {
         return null;
     }
 
-    /**
-     * android 7.0及以上 （2）扫描各个网络接口获取mac地址
-     *
-     */
     /**
      * 获取设备HardwareAddress地址
      *
@@ -258,7 +246,7 @@ public class Mac {
             e.printStackTrace();
         }
         String hardWareAddress = null;
-        NetworkInterface iF = null;
+        NetworkInterface iF;
         if (interfaces == null) {
             return null;
         }
@@ -295,27 +283,18 @@ public class Mac {
         }
         return buf.toString();
     }
-    /**
-     * android 7.0及以上 （3）通过busybox获取本地存储的mac地址
-     *
-     */
 
     /**
      * 根据busybox获取本地Mac
-     *
-     * @return
      */
     public static String getLocalMacAddressFromBusybox() {
-        String result = "";
-        String Mac = "";
-        result = callCmd("busybox ifconfig", "HWaddr");
+        String result;
+        String Mac;
+        result = callCmd();
         // 如果返回的result == null，则说明网络不可取
-        if (result == null) {
-            return "网络异常";
-        }
         // 对该行数据进行解析
         // 例如：eth0 Link encap:Ethernet HWaddr 00:16:E8:3E:DF:67
-        if (result.length() > 0 && result.contains("HWaddr") == true) {
+        if (result.length() > 0 && result.contains("HWaddr")) {
             Mac = result.substring(result.indexOf("HWaddr") + 6,
                     result.length() - 1);
             result = Mac;
@@ -323,23 +302,24 @@ public class Mac {
         return result;
     }
 
-    private static String callCmd(String cmd, String filter) {
-        String result = "";
-        String line = "";
+    private static String callCmd() {
+        StringBuilder result = new StringBuilder();
+        String line;
         try {
-            Process proc = Runtime.getRuntime().exec(cmd);
+            Process proc = Runtime.getRuntime().exec("busybox ifconfig");
             InputStreamReader is = new InputStreamReader(proc.getInputStream());
             BufferedReader br = new BufferedReader(is);
 
             while ((line = br.readLine()) != null
-                    && line.contains(filter) == false) {
-                result += line;
+                    && !line.contains("HWaddr")) {
+                result.append(line);
             }
 
-            result = line;
+            assert line != null;
+            result = new StringBuilder(line);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return result;
+        return result.toString();
     }
 }

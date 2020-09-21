@@ -787,9 +787,11 @@ public class WheelView extends View {
         }
 
         if (!updated) {
+            assert range != null;
             updated = firstItem != range.getFirst() || itemsLayout.getChildCount() != range.getCount();
         }
 
+        assert range != null;
         if (firstItem > range.getFirst() && firstItem <= range.getLast()) {
             for (int i = firstItem - 1; i >= range.getFirst(); i--) {
                 if (!addViewItem(i, true)) {

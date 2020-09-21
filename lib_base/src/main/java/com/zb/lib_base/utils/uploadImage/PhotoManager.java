@@ -31,6 +31,7 @@ public class PhotoManager {
     public PhotoManager() {
 
     }
+
     public PhotoManager(RxAppCompatActivity context, OnUpLoadImageListener listener) {
         this.context = context;
         this.instantUpload = false;
@@ -48,8 +49,6 @@ public class PhotoManager {
     private int failSize = 0;//失败的
     private int successSize = 0;//成功的
     private int reUploadCount = 0;
-
-
 
 
     public int getImageSize() {
@@ -82,23 +81,9 @@ public class PhotoManager {
      * 添加 文件  压缩 并上传
      *
      * @param file
-     * @return
      */
-    public PhotoManager addFile(File file) {
-        addFile(-1, file, true);
-        return this;
-    }
-
-    /**
-     * 添加 文件  压缩 并上传
-     *
-     * @param index
-     * @param file
-     * @return
-     */
-    public PhotoManager addFile(int index, File file) {
-        addFile(index, file, true);
-        return this;
+    public void addFile(File file) {
+        addFile(-1, file);
     }
 
     private int compressCount = 0;
@@ -118,15 +103,13 @@ public class PhotoManager {
      *
      * @param index
      * @param file
-     * @param compress 是否压缩
-     * @return
      */
-    public PhotoManager addFile(final int index, File file, boolean compress) {
+    public void addFile(final int index, File file) {
         if (null == file) {
-            return this;
+            return;
         }
         if (photos.size() >= maxSize) {
-            return this;//不能继续添加
+            return;//不能继续添加
         }
         final String srcFilePath = file.getAbsolutePath();
         compressCount++;
@@ -157,7 +140,6 @@ public class PhotoManager {
                 SCToastUtil.showToast(context, "压缩异常", true);
             }
         });
-        return this;
     }
 
     /**
@@ -165,11 +147,10 @@ public class PhotoManager {
      *
      * @param index
      * @param file
-     * @return
      */
-    public PhotoManager addFileUpload(final int index, File file) {
+    public void addFileUpload(final int index, File file) {
         if (null == file) {
-            return this;
+            return;
         }
         final String srcFilePath = file.getAbsolutePath();
         compressCount = 0;
@@ -196,15 +177,14 @@ public class PhotoManager {
 
             }
         });
-        return this;
     }
 
-    public PhotoManager addFiles(List<String> filePaths, final CompressOver compressOver) {
+    public void addFiles(List<String> filePaths, final CompressOver compressOver) {
         if (null == filePaths || filePaths.size() == 0) {
-            return this;
+            return;
         }
         if (photos.size() + filePaths.size() >= maxSize) {
-            return this;//不能继续添加
+            return;//不能继续添加
         }
         compressOverBack = compressOver;
         compressCount = compressCount + filePaths.size();
@@ -246,7 +226,6 @@ public class PhotoManager {
                 SCToastUtil.showToast(context, "压缩异常", true);
             }
         });
-        return this;
     }
 
     private CompressOver compressOverBack;
@@ -254,10 +233,8 @@ public class PhotoManager {
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case 0:
-                    compressOverBack.success();
-                    break;
+            if (msg.what == 0) {
+                compressOverBack.success();
             }
             return false;
         }
@@ -267,12 +244,12 @@ public class PhotoManager {
         void success();
     }
 
-    public PhotoManager addFiles(List<String> filePaths) {
+    public void addFiles(List<String> filePaths) {
         if (null == filePaths || filePaths.size() == 0) {
-            return this;
+            return;
         }
         if (photos.size() + filePaths.size() >= maxSize) {
-            return this;//不能继续添加
+            return;//不能继续添加
         }
         compressCount = compressCount + filePaths.size();
         final List<File> files = new ArrayList<>();
@@ -304,7 +281,6 @@ public class PhotoManager {
                 SCToastUtil.showToast(context, "压缩异常", true);
             }
         });
-        return this;
     }
 
     /**
@@ -353,14 +329,13 @@ public class PhotoManager {
      * 删除文件
      *
      * @param file
-     * @return
      */
-    public PhotoManager deleteSrcFile(String file) {
+    public void deleteSrcFile(String file) {
         if (null == file) {
-            return this;
+            return;
         }
         if (photos.size() <= 0) {
-            return this;//不能删除了
+            return;//不能删除了
             //throw new Exception("不能删除了");
         }
         for (int i = 0; i < photos.size(); i++) {
@@ -371,17 +346,15 @@ public class PhotoManager {
             }
         }
         statisticsUploadStatus();
-        return this;
     }
 
 
-    public PhotoManager deleteAllFile() {
+    public void deleteAllFile() {
         for (PhotoFile file : photos) {
             if (file.getPhotoeFile() != null) file.getPhotoeFile().deleteOnExit();
         }
         photos.clear();
         statisticsUploadStatus();
-        return this;
     }
 
     /**
@@ -391,17 +364,17 @@ public class PhotoManager {
      * @return
      */
     public String jointWebUrl(String separator) {
-        String allWebUrl = "";
+        StringBuilder allWebUrl = new StringBuilder();
         for (int i = 0; i < photos.size(); i++) {
             PhotoFile photoFile = photos.get(i);
             if (photoFile.getUploadStatus() == 3) {
-                allWebUrl += "" + photoFile.getWebUrl() + separator;
+                allWebUrl.append("").append(photoFile.getWebUrl()).append(separator);
             }
         }
         if (allWebUrl.length() > 1) {
-            allWebUrl = allWebUrl.substring(0, allWebUrl.length() - separator.length());
+            allWebUrl = new StringBuilder(allWebUrl.substring(0, allWebUrl.length() - separator.length()));
         }
-        return allWebUrl;
+        return allWebUrl.toString();
     }
 
 
@@ -410,7 +383,7 @@ public class PhotoManager {
     /**
      * 统计状态
      */
-    public synchronized PhotoManager statisticsUploadStatus() {
+    public synchronized void statisticsUploadStatus() {
         ////1 未上传  2.正在上传  3.上传成功  4.上传失败
         clearSize();
         for (int i = 0; i < photos.size(); i++) {
@@ -432,7 +405,6 @@ public class PhotoManager {
                     break;
             }
         }
-        return this;
     }
 
     private void clearSize() {

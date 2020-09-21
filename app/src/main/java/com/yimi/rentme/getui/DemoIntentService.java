@@ -176,9 +176,9 @@ public class DemoIntentService extends GTIntentService {
         try {
             if (mPlayer != null) {
                 mPlayer.stop();
+                mPlayer.prepare();
+                mPlayer.start();
             }
-            mPlayer.prepare();
-            mPlayer.start();
         } catch (Exception e) {
             e.printStackTrace();
         }

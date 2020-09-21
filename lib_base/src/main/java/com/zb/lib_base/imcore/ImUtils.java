@@ -147,7 +147,7 @@ public class ImUtils {
     public void markRead() {
         try {
             mConversationService.markReaded(conversation);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

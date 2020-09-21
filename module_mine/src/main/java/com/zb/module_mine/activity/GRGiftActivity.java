@@ -12,8 +12,6 @@ public class GRGiftActivity extends MineBaseActivity {
     @Autowired(name = "friendDynGiftType")
     int friendDynGiftType;
 
-    private GRGiftViewModel viewModel;
-
     @Override
     public int getRes() {
         return R.layout.mine_give_receive_gift;
@@ -21,7 +19,7 @@ public class GRGiftActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
-        viewModel = new GRGiftViewModel();
+        GRGiftViewModel viewModel = new GRGiftViewModel();
         viewModel.friendDynGiftType = friendDynGiftType;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);

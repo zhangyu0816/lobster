@@ -64,14 +64,11 @@ public class ForegroundLiveService extends Service {
             builder.setContentText(getString(R.string.app_name_running));
             builder.setWhen(System.currentTimeMillis()); //发送时间
             startForeground(NOTIFICATION_ID, builder.build());
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    stopForeground(true);
-                    NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                    manager.cancel(NOTIFICATION_ID);
-                    stopSelf();
-                }
+            new Handler().postDelayed(() -> {
+                stopForeground(true);
+                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                manager.cancel(NOTIFICATION_ID);
+                stopSelf();
             }, 100);
         }
     }

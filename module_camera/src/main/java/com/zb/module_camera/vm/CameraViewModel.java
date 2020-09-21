@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import androidx.databinding.ViewDataBinding;
 
@@ -32,12 +33,11 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
     private List<String> images = new ArrayList<>();
     private CameraMainBinding mainBinding;
     private List<FileModel> fileList = new ArrayList<>();
-    private String columns[] = new String[]{MediaStore.Images.Media.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+    private String[] columns = new String[]{MediaStore.Images.Media.DATA, MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
     private Cursor cur;
     public CameraAdapter fileAdapter;
 
     private int selectCount = 0; // 选中的张数
-    private int maxCount = 9; // 最大数量
     private int selectIndex = -1;
     public boolean isMore = false;
     public boolean showBottom = false;
@@ -98,9 +98,9 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
         mainBinding.setShowList(false);
         mainBinding.setTitle(fileList.get(position).getFileName());
         images.clear();
-        images.addAll(imageMap.get(fileList.get(position).getFileName()));
+        images.addAll(Objects.requireNonNull(imageMap.get(fileList.get(position).getFileName())));
+        adapter.setSelectIndex(-1);
         adapter.notifyDataSetChanged();
-        selectImage(0);
     }
 
 
@@ -120,7 +120,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
     private void selectMoreImage(int position) {
         String selectImage = images.get(position);
         if (MineApp.selectMap.containsKey(selectImage)) {
-            int count = MineApp.selectMap.get(selectImage);
+            int count = Objects.requireNonNull(MineApp.selectMap.get(selectImage));
             selectCount--;
             MineApp.selectMap.remove(selectImage);
             adapter.notifyItemChanged(position);
@@ -131,6 +131,8 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                 }
             }
         } else {
+            // 最大数量
+            int maxCount = 9;
             if (selectCount == maxCount) {
                 SCToastUtil.showToast(activity, "一次最多可选取" + maxCount + "张图片", true);
                 return;
@@ -160,15 +162,14 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                     MineApp.isMore = true;
                     MineApp.filePath = TextUtils.join(",", imageList);
                     ActivityUtils.getHomePublishImage();
-                    activity.finish();
                 } else {
                     Intent data = new Intent("lobster_camera");
                     data.putExtra("cameraType", 0);
                     data.putExtra("isMore", true);
                     data.putExtra("filePath", TextUtils.join(",", imageList));
                     activity.sendBroadcast(data);
-                    activity.finish();
                 }
+                activity.finish();
             }).start();
         } else {
             if (selectIndex == -1) {
@@ -186,7 +187,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
      * 获取本地图片
      */
     private void buildImagesBucketList() {
-        File file = null;
+        File file;
         if (cur.moveToFirst()) {
             int photoPathIndex = cur.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             do {
@@ -207,26 +208,25 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                 }
                 if (!hasName) {
                     fileList.add(new FileModel(fileName, "", 0));
+                    assert fileName != null;
                     imageMap.put(fileName, new ArrayList<>());
                 }
 
                 file = new File(path);
                 if (file.length() != 0) {
-                    imageMap.get(fileName).add(path);
-                    imageMap.get("所有图片").add(path);
-                } else
-                    file = null;
+                    Objects.requireNonNull(imageMap.get(fileName)).add(path);
+                    Objects.requireNonNull(imageMap.get("所有图片")).add(path);
+                }
             } while (cur.moveToNext());
         }
         cur.close();
-        for (int i = 0; i < imageMap.get("所有图片").size(); i++) {
-            images.add(imageMap.get("所有图片").get(i));
-        }
+        images.addAll(Objects.requireNonNull(imageMap.get("所有图片")));
         Collections.reverse(images);
         adapter.notifyDataSetChanged();
 
         for (FileModel item : fileList) {
             List<String> temp = imageMap.get(item.getFileName());
+            assert temp != null;
             if (temp.size() == 0) return;
             Collections.reverse(temp);
             item.setImage(temp.get(0));

@@ -33,6 +33,7 @@ import com.zb.lib_base.utils.ObjectUtils;
 
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -140,8 +141,8 @@ public class BaseViewModel implements BaseVMInterface {
             }
         });
         try {
-            changeTab(tabLayout.getTabAt(index), 18, selectColor);
-        } catch (Exception e) {
+            changeTab(Objects.requireNonNull(tabLayout.getTabAt(index)), 18, selectColor);
+        } catch (Exception ignored) {
 
         }
     }
@@ -232,16 +233,12 @@ public class BaseViewModel implements BaseVMInterface {
             }
             mPlayer.prepare();
             mPlayer.start();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (IllegalStateException | IOException e) {
             e.printStackTrace();
         }
         new Handler().postDelayed(() -> {
-            if (mPlayer != null) {
-                mPlayer.stop();
-                mPlayer.release();//释放资源
-            }
+            mPlayer.stop();
+            mPlayer.release();//释放资源
         }, 500);
     }
 
@@ -300,35 +297,28 @@ public class BaseViewModel implements BaseVMInterface {
     }
 
     public static InputFilter getInputFilterProhibitEmoji() {
-        InputFilter filter = new InputFilter() {
-            @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                StringBuffer buffer = new StringBuffer();
-                for (int i = start; i < end; i++) {
-                    char codePoint = source.charAt(i);
-                    if (!getIsEmoji(codePoint)) {
-                        buffer.append(codePoint);
-                    } else {
-                        i++;
-                        continue;
-                    }
-                }
-                if (source instanceof Spanned) {
-                    SpannableString sp = new SpannableString(buffer);
-                    TextUtils.copySpansFrom((Spanned) source, start, end, null, sp, 0);
-                    return sp;
+        return (source, start, end, dest, dstart, dend) -> {
+            StringBuffer buffer = new StringBuffer();
+            for (int i = start; i < end; i++) {
+                char codePoint = source.charAt(i);
+                if (!getIsEmoji(codePoint)) {
+                    buffer.append(codePoint);
                 } else {
-                    return buffer;
+                    i++;
                 }
             }
+            if (source instanceof Spanned) {
+                SpannableString sp = new SpannableString(buffer);
+                TextUtils.copySpansFrom((Spanned) source, start, end, null, sp, 0);
+                return sp;
+            } else {
+                return buffer;
+            }
         };
-        return filter;
     }
 
     public static boolean getIsEmoji(char codePoint) {
-        if ((codePoint == 0x0) || (codePoint == 0x9) || (codePoint == 0xA) || (codePoint == 0xD) || ((codePoint >= 0x20) && (codePoint <= 0xD7FF)) || ((codePoint >= 0xE000) && (codePoint <= 0xFFFD)) || ((codePoint >= 0x10000) && (codePoint <= 0x10FFFF)))
-            return false;
-        return true;
+        return codePoint != 0x0 && codePoint != 0x9 && codePoint != 0xA && codePoint != 0xD && (codePoint < 0x20 || codePoint > 0xD7FF) && (codePoint < 0xE000 || codePoint > 0xFFFD);
     }
 
     /**
@@ -343,8 +333,4 @@ public class BaseViewModel implements BaseVMInterface {
             ((BaseActivity) activity).performCodeWithPermission(permissionDes, runnable, permissions);
         }
     }
-
-
-    /********************** 公用网络请求 ***************************/
-
 }

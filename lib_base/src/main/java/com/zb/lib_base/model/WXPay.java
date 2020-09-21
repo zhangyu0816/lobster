@@ -1,5 +1,7 @@
 package com.zb.lib_base.model;
 
+import androidx.annotation.NonNull;
+
 /**
  * Created by DIY on 2017-10-24.
  */
@@ -13,6 +15,7 @@ public class WXPay {
     private String appid = ""; // 应用唯一标识，在微信开放平台提交应用审核通过后获得
     private String prepayid = "";
 
+    @NonNull
     @Override
     public String toString() {
         return "WXPay{" +

@@ -92,14 +92,11 @@ public class DouYinLayoutManager extends LinearLayoutManager implements Recycler
 
     @Override
     public void onScrollStateChanged(int state) {
-        switch (state) {
-            case RecyclerView.SCROLL_STATE_IDLE:
-                //当前显示的item
-                View snapView = pagerSnapHelper.findSnapView(this);
-                if (onViewPagerListener != null) {
-                    onViewPagerListener.onPageSelected(false, snapView);
-                }
-                break;
+        if (state == RecyclerView.SCROLL_STATE_IDLE) {//当前显示的item
+            View snapView = pagerSnapHelper.findSnapView(this);
+            if (onViewPagerListener != null) {
+                onViewPagerListener.onPageSelected(false, snapView);
+            }
         }
         super.onScrollStateChanged(state);
 

@@ -35,7 +35,6 @@ public class OpenNotice {
             isOpened = NotificationManagerCompat.from(activity).areNotificationsEnabled();
         } catch (Exception e) {
             e.printStackTrace();
-            isOpened = false;
         }
         return isOpened;
     }

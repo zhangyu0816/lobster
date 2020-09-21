@@ -1,5 +1,7 @@
 package com.zb.lib_base.model;
 
+import android.annotation.SuppressLint;
+
 import com.zb.lib_base.BR;
 
 import androidx.databinding.BaseObservable;
@@ -28,8 +30,6 @@ public class DiscoverInfo extends BaseObservable {
     private String friendTitle = "";
     private String addressInfo = "";
     private String videoPath = "";
-    private String goodNumStr = "";
-    private String reviewsStr = "";
     private int width;
     private int height;
 
@@ -179,24 +179,14 @@ public class DiscoverInfo extends BaseObservable {
         notifyPropertyChanged(BR.goodNum);
     }
 
-    @Bindable
+    @SuppressLint("DefaultLocale")
     public String getGoodNumStr() {
-        return goodNum < 10000 ? goodNum + "" : (String.format("%0.1f万", goodNum / 10000f));
+        return goodNum < 10000 ? goodNum + "" : (String.format("%.1f万", goodNum / 10000f));
     }
 
-    public void setGoodNumStr(String goodNumStr) {
-        this.goodNumStr = goodNumStr;
-        notifyPropertyChanged(BR.goodNumStr);
-    }
-
-    @Bindable
+    @SuppressLint("DefaultLocale")
     public String getReviewsStr() {
-        return reviews < 10000 ? reviews + "" : (String.format("%0.1f万", reviews / 10000f));
-    }
-
-    public void setReviewsStr(String reviewsStr) {
-        this.reviewsStr = reviewsStr;
-        notifyPropertyChanged(BR.reviewsStr);
+        return reviews < 10000 ? reviews + "" : (String.format("%.1f万", reviews / 10000f));
     }
 
     @Bindable

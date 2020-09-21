@@ -12,8 +12,6 @@ public class NewsListActivity extends MineBaseActivity {
     @Autowired(name = "reviewType")
     int reviewType;
 
-    private NewsListViewModel viewModel;
-
     @Override
     public int getRes() {
         return R.layout.mine_news_list;
@@ -21,7 +19,7 @@ public class NewsListActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
-        viewModel = new NewsListViewModel();
+        NewsListViewModel viewModel = new NewsListViewModel();
         viewModel.reviewType = reviewType;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);

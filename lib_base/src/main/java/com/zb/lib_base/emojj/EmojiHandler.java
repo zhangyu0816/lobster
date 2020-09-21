@@ -8,7 +8,6 @@ import com.zb.lib_base.app.MineApp;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -20,18 +19,14 @@ public final class EmojiHandler {
     }
 
     public static int maxEmojiCount = 88;
-    public static final Map<Integer, Integer> sCustomizeEmojisMap = new HashMap<Integer, Integer>();
+    public static final Map<Integer, Integer> sCustomizeEmojisMap = new HashMap<>();
 
     private static int getPic(String pid) {
         Field f;
         try {
             f = R.mipmap.class.getField(pid);
             return f.getInt(null);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
+        } catch (NoSuchFieldException | IllegalAccessException | IllegalArgumentException e) {
             e.printStackTrace();
         }
         return 0;
@@ -48,9 +43,8 @@ public final class EmojiHandler {
     public static int getCusEmojisResource(Integer index) {
         int key = 0;
         Set set = ((Map) sCustomizeEmojisMap).entrySet();
-        Iterator it = set.iterator();
-        while (it.hasNext()) {
-            Map.Entry entry = (Map.Entry) it.next();
+        for (Object o : set) {
+            Map.Entry entry = (Map.Entry) o;
             if (entry.getValue().equals(index)) {
                 key = (Integer) entry.getKey();
             }
@@ -73,8 +67,8 @@ public final class EmojiHandler {
     public static void addEmojis(Context context, Spannable text, int emojiSize) {
         int length = text.length();
         EmojiSpan[] oldSpans = text.getSpans(0, length, EmojiSpan.class);
-        for (int i = 0; i < oldSpans.length; i++) {
-            text.removeSpan(oldSpans[i]);
+        for (EmojiSpan oldSpan : oldSpans) {
+            text.removeSpan(oldSpan);
         }
 
         String m = "\\{f:\\d+\\}";
@@ -86,7 +80,7 @@ public final class EmojiHandler {
             String content = "";
             if (start > -1) {
                 content = mSr.substring(3, end);
-                int icon = cusEmojisResource(Integer.valueOf(content));
+                int icon = cusEmojisResource(Integer.parseInt(content));
                 if (icon > 0) {
                     text.setSpan(new EmojiSpan(context, icon,
                                     (int) (MineApp.W * (60f / 1080f))), match

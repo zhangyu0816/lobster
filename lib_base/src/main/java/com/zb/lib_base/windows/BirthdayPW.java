@@ -35,18 +35,16 @@ public class BirthdayPW extends BasePopupWindow {
     private ArrayList<String> monthList = new ArrayList<>();
     private ArrayList<String> dayList = new ArrayList<>();
 
-    private String selectDate = "";
     private String nowDate = "";
 
     public BirthdayPW(RxAppCompatActivity activity, View parentView, String birthday, CallBack callBack) {
         super(activity, parentView, true);
         mCallBack = callBack;
         nowDate = DateUtil.getNow(DateUtil.yyyy_MM_dd);
-        selectDate = birthday;
-        if (selectDate.isEmpty()) {
-            selectDate = "2000-01-01";
+        if (birthday.isEmpty()) {
+            birthday = "2000-01-01";
         }
-        String[] strs = selectDate.split("-");
+        String[] strs = birthday.split("-");
         mYear = Integer.parseInt(strs[0]);
         mMonth = Integer.parseInt(strs[1]);
         mDay = Integer.parseInt(strs[2]);
@@ -133,9 +131,7 @@ public class BirthdayPW extends BasePopupWindow {
         wheelView.setViewAdapter(adapter);
         wheelView.setCurrentItem(defaultIndex);
         adapter.setSelectIndex(defaultIndex);
-        wheelView.addChangingListener((wheel, oldValue, newValue) -> {
-            adapter.setSelectIndex(wheel.getCurrentItem());
-        });
+        wheelView.addChangingListener((wheel, oldValue, newValue) -> adapter.setSelectIndex(wheel.getCurrentItem()));
         wheelView.addScrollingListener(new OnWheelScrollListener() {
 
             @Override
@@ -204,8 +200,7 @@ public class BirthdayPW extends BasePopupWindow {
 
         @Override
         protected CharSequence getItemText(int index) {
-            String str = list.get(index) + "";
-            return str;
+            return list.get(index) + "";
         }
     }
 }

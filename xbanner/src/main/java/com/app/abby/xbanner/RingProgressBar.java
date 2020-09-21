@@ -117,7 +117,6 @@ public class RingProgressBar extends View {
     }
 
 
-
     private void drawCircle(Canvas canvas) {
 
         paint.setColor(ringColor);
@@ -130,8 +129,6 @@ public class RingProgressBar extends View {
 
         canvas.drawCircle(centre, centre, radius, paint);
     }
-
-
 
 
     private void drawTextContent(Canvas canvas) {
@@ -154,8 +151,6 @@ public class RingProgressBar extends View {
     }
 
 
-
-
     private void drawProgress(Canvas canvas) {
 
         paint.setStrokeWidth(ringWidth);
@@ -173,14 +168,14 @@ public class RingProgressBar extends View {
             case STROKE: {
                 paint.setStyle(Paint.Style.STROKE);
                 paint.setStrokeCap(Paint.Cap.ROUND);
-                canvas.drawArc(strokeOval, -90, 360 * progress / max, false, paint);
+                canvas.drawArc(strokeOval, -90, 360f * progress / max, false, paint);
                 break;
             }
             case FILL: {
                 paint.setStyle(Paint.Style.FILL_AND_STROKE);
                 paint.setStrokeCap(Paint.Cap.ROUND);
                 if (progress != 0) {
-                    canvas.drawArc(fillOval, -90, 360 * progress / max, true, paint);
+                    canvas.drawArc(fillOval, -90, 360f * progress / max, true, paint);
                 }
                 break;
             }
@@ -190,11 +185,13 @@ public class RingProgressBar extends View {
     }
 
 
-    @IntDef({STROKE,FILL})
+    @IntDef({STROKE, FILL})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface  PROGRESS_STYLE{};
-    public void setStyle(@PROGRESS_STYLE int style){
-        this.style=style;
+    public @interface PROGRESS_STYLE {
+    }
+
+    public void setStyle(@PROGRESS_STYLE int style) {
+        this.style = style;
     }
 
     @Override
@@ -236,16 +233,13 @@ public class RingProgressBar extends View {
     }
 
 
-
-
-    public  int getMax() {
+    public int getMax() {
 
         return max;
     }
 
 
-
-    public  void setMax(int max) {
+    public void setMax(int max) {
 
         if (max < 0) {
             throw new IllegalArgumentException("The max progress of 0");
@@ -254,16 +248,13 @@ public class RingProgressBar extends View {
     }
 
 
-
-    public  int getProgress() {
+    public int getProgress() {
 
         return progress;
     }
 
 
-
-
-    public  void setProgress(int progress) {
+    public void setProgress(int progress) {
 
         if (progress < 0) {
             throw new IllegalArgumentException("The progress of 0");
@@ -271,10 +262,8 @@ public class RingProgressBar extends View {
         if (progress > max) {
             progress = max;
         }
-        if (progress <= max) {
-            this.progress = progress;
-            postInvalidate();
-        }
+        this.progress = progress;
+        postInvalidate();
         if (progress == max) {
             if (mOnProgressListener != null) {
                 mOnProgressListener.progressToComplete();
@@ -283,14 +272,10 @@ public class RingProgressBar extends View {
     }
 
 
-
-
     public int getRingColor() {
 
         return ringColor;
     }
-
-
 
 
     public void setRingColor(int ringColor) {
@@ -299,14 +284,10 @@ public class RingProgressBar extends View {
     }
 
 
-
-
     public int getRingProgressColor() {
 
         return ringProgressColor;
     }
-
-
 
 
     public void setRingProgressColor(int ringProgressColor) {
@@ -315,13 +296,10 @@ public class RingProgressBar extends View {
     }
 
 
-
     public int getTextColor() {
 
         return textColor;
     }
-
-
 
 
     public void setTextColor(int textColor) {
@@ -330,14 +308,10 @@ public class RingProgressBar extends View {
     }
 
 
-
-
     public float getTextSize() {
 
         return textSize;
     }
-
-
 
 
     public void setTextSize(float textSize) {
@@ -346,14 +320,10 @@ public class RingProgressBar extends View {
     }
 
 
-
-
     public float getRingWidth() {
 
         return ringWidth;
     }
-
-
 
 
     public void setRingWidth(float ringWidth) {
@@ -362,13 +332,11 @@ public class RingProgressBar extends View {
     }
 
 
-
     public int dp2px(int dp) {
 
         float density = getContext().getResources().getDisplayMetrics().density;
         return (int) (dp * density + 0.5f);
     }
-
 
 
     public interface OnProgressListener {

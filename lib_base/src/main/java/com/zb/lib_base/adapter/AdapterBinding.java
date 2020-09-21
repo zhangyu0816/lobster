@@ -107,8 +107,7 @@ public class AdapterBinding {
             view.setItemAnimator(new DefaultItemAnimator());
 
             ItemTouchHelper touchHelper = new ItemTouchHelper(cardCallback);
-            CardLayoutManager cardLayoutManager = new CardLayoutManager(view, touchHelper);
-            view.setLayoutManager(cardLayoutManager);
+            view.setLayoutManager(new CardLayoutManager());
             touchHelper.attachToRecyclerView(view);
             view.addOnItemTouchListener(new OnRecyclerItemClickListener(view, touchHelper) {
             });
@@ -116,7 +115,7 @@ public class AdapterBinding {
         try {
             if (view.getItemAnimator() != null)
                 view.getItemAnimator().setChangeDuration(0);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -241,7 +240,7 @@ public class AdapterBinding {
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }

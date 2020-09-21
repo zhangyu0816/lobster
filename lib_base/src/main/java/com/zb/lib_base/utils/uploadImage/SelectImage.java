@@ -104,7 +104,7 @@ public class SelectImage {
                             else
                                 positions.remove(index - 1);
                         }
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
                     }
 
                     photoManager.deleteSrcFile(path);
@@ -180,9 +180,9 @@ public class SelectImage {
     public void addByOnline(String images) {
         List<String> imageList = new ArrayList<>();
         String[] imageStr = images.split(",");
-        for (int i = 0; i < imageStr.length; i++) {
-            if (!imageStr[i].equals("0"))
-                imageList.add(imageStr[i]);
+        for (String s : imageStr) {
+            if (!s.equals("0"))
+                imageList.add(s);
         }
         setOnlineImages(imageList);
         addAllSysImage(-1, getOnlineImages());

@@ -95,7 +95,7 @@ public class MNGestureView extends RelativeLayout {
                     mTracking = false;
                     float currentTranslateY = getTranslationY();
 
-                    if (currentTranslateY > mHeight / 3) {
+                    if (currentTranslateY > mHeight / 3f) {
                         onSwipeListener.downSwipe();
                         break;
                     }

@@ -45,9 +45,7 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
         super.setBinding(binding);
         mBinding = (HomeReportBinding) binding;
         setAdapter();
-        photoManager = new PhotoManager(activity, () -> {
-            comsub(photoManager.jointWebUrl(","));
-        });
+        photoManager = new PhotoManager(activity, () -> comsub(photoManager.jointWebUrl(",")));
     }
 
     @Override
@@ -121,7 +119,7 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
                             MineApp.selectMap.put(entry.getKey(), entry.getValue() - 1);
                         }
                     }
-                } catch (Exception e) {
+                } catch (Exception ignored) {
 
                 }
                 imageAdapter.notifyItemRemoved(position12);
