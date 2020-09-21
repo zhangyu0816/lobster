@@ -378,7 +378,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 String otherHead = memberInfo.getImage();
                 if (o == 1) {
                     LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 2);
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, MineApp.mineInfo.getSex(), memberInfo.getSex(), null);
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex());
                 } else if (o == 4) {
                     SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
                 } else {

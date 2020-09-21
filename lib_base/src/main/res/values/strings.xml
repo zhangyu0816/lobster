@@ -6,4 +6,5 @@
     <string name="quotation">”</string>
     <string name="open_btn">￥%.2f 获取VIP特权</string>
     <string name="pay_btn">立即续费VIP特权</string>
+    <string name="we_like">你和%s已互相喜欢</string>
 </resources>

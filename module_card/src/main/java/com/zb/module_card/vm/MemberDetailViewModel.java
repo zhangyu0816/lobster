@@ -433,13 +433,13 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                             LikeTypeDb.getInstance().setType(otherUserId, 2);
                             closeBtn(mBinding.ivSuperLike);
                             activity.sendBroadcast(new Intent("lobster_updateFCL"));
-                            new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, MineApp.mineInfo.getSex(), memberInfo.getSex(), null);
+                            new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex());
                         }
                     }
                 } else if (o == 2) {
                     // 匹配成功
                     LikeDb.getInstance().saveLike(new CollectID(otherUserId));
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, MineApp.mineInfo.getSex(), memberInfo.getSex(),
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex(), memberInfo.getNick(),
                             () -> ActivityUtils.getChatActivity(otherUserId, false));
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                     activity.sendBroadcast(new Intent("lobster_isLike"));

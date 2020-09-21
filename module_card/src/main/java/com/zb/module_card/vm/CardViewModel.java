@@ -280,6 +280,9 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         } else {
             new VipAdPW(activity, mBinding.getRoot(), false, 3, pairInfo.getSingleImage());
         }
+//          new SuperLikePW(activity, mBinding.getRoot(), MineApp.mineInfo.getImage(), MineApp.mineInfo.getImage(), MineApp.mineInfo.getSex(), MineApp.mineInfo.getSex(), "哈哈哈",
+//                        () -> SCToastUtil.showToast(activity, "聊天", true));
+//        new SuperLikePW(activity, mBinding.getRoot(), MineApp.mineInfo.getImage(), MineApp.mineInfo.getImage(), MineApp.mineInfo.getSex(), MineApp.mineInfo.getSex());
     }
 
     @Override
@@ -433,12 +436,13 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                         activity.sendBroadcast(data);
                         activity.sendBroadcast(new Intent("lobster_pairList"));
                         LikeTypeDb.getInstance().setType(pairInfo.getOtherUserId(), 2);
-                        new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, MineApp.mineInfo.getSex(), pairInfo.getSex(), null);
+                        new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), pairInfo.getSex());
                     }
                 } else if (o == 2) {
                     // 匹配成功
                     LikeDb.getInstance().saveLike(new CollectID(pairInfo.getOtherUserId()));
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, MineApp.mineInfo.getSex(), pairInfo.getSex(), () -> ActivityUtils.getChatActivity(pairInfo.getOtherUserId(), false));
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), pairInfo.getSex(), pairInfo.getNick(),
+                            () -> ActivityUtils.getChatActivity(pairInfo.getOtherUserId(), false));
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                     LikeTypeDb.getInstance().setType(pairInfo.getOtherUserId(), 1);
                 } else if (o == 3) {
@@ -462,7 +466,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                         activity.sendBroadcast(data);
                         activity.sendBroadcast(new Intent("lobster_pairList"));
                         LikeTypeDb.getInstance().setType(pairInfo.getOtherUserId(), 2);
-                        new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, MineApp.mineInfo.getSex(), pairInfo.getSex(), null);
+                        new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), pairInfo.getSex());
                     }
                 }
             }

@@ -388,7 +388,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 String otherHead = discoverInfo.getImage();
                 if (o == 1) {
                     LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 2);
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, MineApp.mineInfo.getSex(), MineApp.mineInfo.getSex() == 1 ? 0 : 1, null);
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), MineApp.mineInfo.getSex() == 1 ? 0 : 1);
                 } else if (o == 4) {
                     SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
                 } else {
@@ -547,6 +547,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             }
         });
     }
+
     private void dynVisit(long friendDynId) {
         dynVisitApi api = new dynVisitApi(new HttpOnNextListener() {
             @Override
@@ -556,6 +557,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);
     }
+
     private void seeLikers(int pageNo) {
         seeLikersApi api = new seeLikersApi(new HttpOnNextListener<List<Review>>() {
             @Override

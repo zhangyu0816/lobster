@@ -152,7 +152,7 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
                     content = "兴趣：" + content.replace("#", ",");
                 }
 
-                new FunctionPW(activity, mBinding.getRoot(),  memberInfo.getImage().replace("YM0000", "430X430"), sharedName, content, sharedUrl,
+                new FunctionPW(activity, mBinding.getRoot(), memberInfo.getImage().replace("YM0000", "430X430"), sharedName, content, sharedUrl,
                         otherUserId == BaseActivity.userId, false, false, false, new FunctionPW.CallBack() {
                     @Override
                     public void gift() {
@@ -205,7 +205,7 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
                 // 1喜欢成功 2匹配成功 3喜欢次数用尽
                 if (o == 1) {
                     LikeTypeDb.getInstance().setType(otherUserId, 2);
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, false, MineApp.mineInfo.getSex(), memberInfo.getSex(), null);
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex());
                 } else if (o == 4) {
                     // 超级喜欢时，非会员或超级喜欢次数用尽
                     if (MineApp.mineInfo.getMemberType() == 2) {

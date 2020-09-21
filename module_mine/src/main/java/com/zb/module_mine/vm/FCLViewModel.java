@@ -203,7 +203,8 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                     LikeTypeDb.getInstance().setType(otherUserId, 1);
                     adapter.notifyItemChanged(_selectIndex);
                 } else if (o == 2) {
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, true, MineApp.mineInfo.getSex(), memberInfoList.get(_selectIndex).getSex(), () -> ActivityUtils.getChatActivity(memberInfoList.get(_selectIndex).getUserId(), false));
+                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfoList.get(_selectIndex).getSex(), memberInfoList.get(_selectIndex).getNick(),
+                            () -> ActivityUtils.getChatActivity(memberInfoList.get(_selectIndex).getUserId(), false));
                     LikeDb.getInstance().saveLike(new CollectID(otherUserId));
                     adapter.notifyItemChanged(_selectIndex);
                     activity.sendBroadcast(new Intent("lobster_pairList"));

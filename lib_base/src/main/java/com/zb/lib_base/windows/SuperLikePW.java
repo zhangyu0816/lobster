@@ -20,16 +20,28 @@ public class SuperLikePW extends BasePopupWindow {
     private boolean isPair;
     private int mySex;
     private int otherSex;
+    private String otherNick = "";
     private CallBack callBack;
     private PwsSuperLikeBinding binding;
 
-    public SuperLikePW(RxAppCompatActivity activity, View parentView, String myHead, String otherHead, boolean isPair, int mySex, int otherSex, CallBack callBack) {
+    public SuperLikePW(RxAppCompatActivity activity, View parentView, String myHead, String otherHead, int mySex, int otherSex) {
         super(activity, parentView, false);
         this.myHead = myHead;
         this.otherHead = otherHead;
-        this.isPair = isPair;
+        this.isPair = false;
         this.mySex = mySex;
         this.otherSex = otherSex;
+        initUI();
+    }
+
+    public SuperLikePW(RxAppCompatActivity activity, View parentView, String myHead, String otherHead, int mySex, int otherSex, String otherNick, CallBack callBack) {
+        super(activity, parentView, false);
+        this.myHead = myHead;
+        this.otherHead = otherHead;
+        this.isPair = true;
+        this.mySex = mySex;
+        this.otherSex = otherSex;
+        this.otherNick = otherNick;
         this.callBack = callBack;
         initUI();
     }
@@ -46,19 +58,21 @@ public class SuperLikePW extends BasePopupWindow {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void initUI() {
-        mBinding.getRoot().setOnTouchListener((v, event) -> {
-            if (isShowing()) {
-                onDestroy();
-                dismiss();
-            }
-            return false;
-        });
+        if (!isPair)
+            mBinding.getRoot().setOnTouchListener((v, event) -> {
+                if (isShowing()) {
+                    onDestroy();
+                    dismiss();
+                }
+                return false;
+            });
         mBinding.setVariable(BR.pw, this);
         mBinding.setVariable(BR.myHead, myHead);
         mBinding.setVariable(BR.otherHead, otherHead);
         mBinding.setVariable(BR.isPair, isPair);
         mBinding.setVariable(BR.mySex, mySex);
         mBinding.setVariable(BR.otherSex, otherSex);
+        mBinding.setVariable(BR.otherNick, otherNick);
         binding = (PwsSuperLikeBinding) mBinding;
         binding.ivSuperLike1.setVisibility(View.GONE);
         binding.ivSuperLike2.setVisibility(View.GONE);
@@ -123,7 +137,6 @@ public class SuperLikePW extends BasePopupWindow {
     private AnimatorSet animatorStarSet4 = new AnimatorSet();
     private AnimatorSet animatorStarSet5 = new AnimatorSet();
     private AnimatorSet animatorStarSet6 = new AnimatorSet();
-
 
 
     private void start1() {
@@ -228,6 +241,13 @@ public class SuperLikePW extends BasePopupWindow {
         dismiss();
         if (callBack != null)
             callBack.success();
+    }
+
+    @Override
+    public void cancel(View view) {
+        super.cancel(view);
+        onDestroy();
+        dismiss();
     }
 
     private void onDestroy() {
