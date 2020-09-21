@@ -274,7 +274,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                 CustomProgressDialog.stopLoading();
                 break;
             case 1:
-                SCToastUtil.showToast(activity, "链接含中文路径，处理失败", true);
+                SCToastUtil.showToast(activity, "链接中含中文，处理失败", true);
                 CustomProgressDialog.stopLoading();
                 break;
             case 2:
