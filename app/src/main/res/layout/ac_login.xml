@@ -159,9 +159,7 @@
                                 onClickDelayed="@{v->viewModel.selectSex(1)}"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginEnd="30dp"
                                 android:drawableTop="@mipmap/boy_icon"
-                                android:drawablePadding="15dp"
                                 android:gravity="center"
                                 android:text="男"
                                 android:textColor="@color/white"
@@ -172,9 +170,7 @@
                                 onClickDelayed="@{v->viewModel.selectSex(0)}"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="30dp"
                                 android:drawableTop="@mipmap/girl_icon"
-                                android:drawablePadding="15dp"
                                 android:gravity="center"
                                 android:text="女"
                                 android:textColor="@color/white"
@@ -209,7 +205,7 @@
                                 android:layout_height="48dp"
                                 android:layout_marginStart="63dp"
                                 android:layout_marginEnd="63dp"
-                                android:background="@drawable/btn_bg_white_radius60_90"
+                                android:background="@drawable/btn_bg_white_radius60_66"
                                 android:gravity="center"
                                 android:orientation="horizontal">
 
@@ -219,7 +215,7 @@
                                     android:drawableStart="@mipmap/login_by_phone_icon"
                                     android:gravity="center"
                                     android:text="手机登录"
-                                    android:textColor="@color/black_252"
+                                    android:textColor="@color/white"
                                     android:textSize="18sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
@@ -231,7 +227,7 @@
                                 android:layout_marginStart="63dp"
                                 android:layout_marginTop="15dp"
                                 android:layout_marginEnd="63dp"
-                                android:background="@drawable/btn_bg_white_radius60_70"
+                                android:background="@drawable/btn_bg_white_radius60_66"
                                 android:gravity="center"
                                 android:orientation="horizontal"
                                 android:visibility="gone">
@@ -242,7 +238,7 @@
                                     android:drawableStart="@mipmap/login_by_qq_icon"
                                     android:gravity="center"
                                     android:text="QQ登录"
-                                    android:textColor="@color/black_252"
+                                    android:textColor="@color/white"
                                     android:textSize="18sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
@@ -254,7 +250,7 @@
                                 android:layout_marginStart="63dp"
                                 android:layout_marginTop="15dp"
                                 android:layout_marginEnd="63dp"
-                                android:background="@drawable/btn_bg_white_radius60_70"
+                                android:background="@drawable/btn_bg_white_radius60_66"
                                 android:gravity="center"
                                 android:orientation="horizontal">
 
@@ -264,7 +260,7 @@
                                     android:drawableStart="@mipmap/login_by_wx_icon"
                                     android:gravity="center"
                                     android:text="微信登录"
-                                    android:textColor="@color/black_252"
+                                    android:textColor="@color/white"
                                     android:textSize="18sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
