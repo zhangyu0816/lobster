@@ -71,13 +71,13 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     private boolean updateAll = false;
     private List<Integer> emojiList = new ArrayList<>();
     private BaseReceiver bottleChatReceiver;
-    private MemberInfo memberInfo;
-
+    public MemberInfo memberInfo;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (BottleChatBinding) binding;
+        mBinding.setMemberInfo(new MemberInfo());
         ImUtils.getInstance().setCallBackForMsg(this::updateMySend);
         setAdapter();
         setProhibitEmoji(mBinding.edContent);
@@ -236,10 +236,11 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     @Override
     public void otherInfo() {
         otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
+            @SuppressLint("CheckResult")
             @Override
             public void onNext(MemberInfo o) {
                 memberInfo = o;
-                activity.sendBroadcast(new Intent("lobster_bottleNum"));
+                mBinding.setMemberInfo(memberInfo);
                 new Thread(() -> bottleHistoryMsgList(1)).start();
             }
         }, activity).setOtherUserId(otherUserId);
@@ -292,6 +293,8 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                         Intent data = new Intent("lobster_singleBottleCache");
                         data.putExtra("driftBottleId", driftBottleId);
                         activity.sendBroadcast(data);
+
+                        activity.sendBroadcast(new Intent("lobster_bottleNum"));
                     } else {
                         BottleCacheDb.getInstance().updateBottleCache(driftBottleId, memberInfo.getImage(), memberInfo.getNick(), new BottleCacheDb.CallBack() {
                             @Override
@@ -322,6 +325,8 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                                 Intent data = new Intent("lobster_singleBottleCache");
                                 data.putExtra("driftBottleId", driftBottleId);
                                 activity.sendBroadcast(data);
+
+                                activity.sendBroadcast(new Intent("lobster_bottleNum"));
                             }
                         });
                     }
@@ -341,6 +346,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         readOverDriftBottleHistoryMsgApi api = new readOverDriftBottleHistoryMsgApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
+
             }
         }, activity).setOtherUserId(otherUserId).setMessageId(historyMsgId).setDriftBottleId(driftBottleId);
         HttpManager.getInstance().doHttpDeal(api);

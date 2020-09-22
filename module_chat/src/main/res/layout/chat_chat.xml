@@ -34,24 +34,91 @@
             android:id="@+id/relativeLayout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white">
+            android:background="@drawable/gradient_purple_6d5_ae7_noradius">
 
             <ImageView
-                onClickDelayed="@{viewModel::back}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(353)}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(261)}"
+                android:id="@+id/iv_top_bg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="15dp"
-                android:src="@mipmap/back_black_icon" />
+                android:layout_alignParentEnd="true"
+                android:background="@mipmap/chat_water_icon" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@{viewModel.memberInfo.nick}"
-                android:textColor="@color/black_252"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_alignBottom="@+id/iv_top_bg">
+
+                <ImageView
+                    onClickDelayed="@{viewModel::back}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:src="@mipmap/back_white_icon" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        onClickDelayed="@{viewModel::toDetail}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <View
+                            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.09f)}"
+                            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.09f)}"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/circle_white" />
+
+                        <ImageView
+                            imageUrl="@{viewModel.memberInfo.image}"
+                            isCircle="@{true}"
+                            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.08f)}"
+                            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.08f)}"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_centerInParent="true" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="@{viewModel.memberInfo.nick}"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="15dp"
+                    android:src="@mipmap/more_icon" />
+            </RelativeLayout>
         </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/iv_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/relativeLayout3"
+            android:scaleType="centerCrop" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/relativeLayout3"
+            android:alpha="0.2"
+            android:background="@color/black" />
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/refresh"
@@ -60,12 +127,14 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/bottom_layout"
             android:layout_below="@+id/relativeLayout3"
+            android:overScrollMode="never"
             android:paddingBottom="15dp"
-            android:background="@color/black_efe">
+            android:scrollbars="none">
 
             <com.zb.lib_base.views.MyHeaderView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/chat_list"
@@ -73,9 +142,64 @@
                 recyclerType="@{0}"
                 size="@{0}"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/black_efe" />
+                android:layout_height="match_parent" />
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+        <RelativeLayout
+            android:id="@+id/notice_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/relativeLayout3"
+            android:background="@color/white"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:text="打开通知，第一时间回复他"
+                android:textColor="@color/black_252"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                onClickDelayed="@{viewModel::closeNotice}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:padding="15dp"
+                android:src="@mipmap/close_grey_icon" />
+
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:text="别因为等太久，让缘分悄悄溜走"
+                android:textColor="@color/black_827"
+                android:textSize="14sp" />
+
+            <TextView
+                onClickDelayed="@{viewModel::openNotice}"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_below="@+id/tv_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/gradient_purple_6d5_ae7"
+                android:gravity="center"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:text="打开通知"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
 
         <ImageView
             android:id="@+id/audio_btn"
@@ -90,6 +214,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:background="@color/white"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -113,13 +238,13 @@
                     android:layout_marginBottom="10dp"
                     android:layout_toStartOf="@+id/btn_linear"
                     android:layout_toEndOf="@+id/iv_voice_keyboard"
-                    android:background="@drawable/btn_bg_black_efe_radius5"
+                    android:background="@color/white"
                     android:hint="输入文字"
                     android:imeOptions="actionSend"
                     android:onClick="@{viewModel::toKeyboard}"
                     android:paddingStart="12dp"
-                    android:paddingEnd="12dp"
                     android:paddingTop="8dp"
+                    android:paddingEnd="12dp"
                     android:paddingBottom="8dp"
                     android:singleLine="true"
                     android:text="@={content}"
@@ -139,8 +264,8 @@
                     android:layout_toEndOf="@+id/iv_voice_keyboard"
                     android:gravity="center"
                     android:paddingStart="12dp"
-                    android:paddingEnd="12dp"
                     android:paddingTop="8dp"
+                    android:paddingEnd="12dp"
                     android:paddingBottom="8dp"
                     android:text="按住  说话"
                     android:textColor="#303846"
@@ -185,6 +310,7 @@
                     size="@{10}"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
+                    android:background="@color/white"
                     android:padding="15dp" />
 
                 <RelativeLayout
@@ -204,7 +330,7 @@
                         viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(90)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"/>
+                        android:layout_alignParentBottom="true" />
                 </RelativeLayout>
             </RelativeLayout>
 

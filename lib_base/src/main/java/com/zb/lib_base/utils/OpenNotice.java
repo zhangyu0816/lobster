@@ -1,4 +1,4 @@
-package com.yimi.rentme.utils;
+package com.zb.lib_base.utils;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -8,7 +8,6 @@ import android.provider.Settings;
 import android.view.View;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.windows.TextPW;
 
 import androidx.core.app.NotificationManagerCompat;
@@ -29,7 +28,7 @@ public class OpenNotice {
         }
     }
 
-    private boolean isNotificationEnabled(RxAppCompatActivity activity) {
+    public static boolean isNotificationEnabled(RxAppCompatActivity activity) {
         boolean isOpened = false;
         try {
             isOpened = NotificationManagerCompat.from(activity).areNotificationsEnabled();
@@ -39,7 +38,7 @@ public class OpenNotice {
         return isOpened;
     }
 
-    private void gotoSet(RxAppCompatActivity activity) {
+    public static void gotoSet(RxAppCompatActivity activity) {
 
         if (Build.VERSION.SDK_INT >= 26) {
             // android 8.0引导

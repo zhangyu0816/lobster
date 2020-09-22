@@ -29,6 +29,10 @@ public interface ChatVMInterface {
 
     void toEmoji(View view);
 
+    void closeNotice(View view);
+
+    void openNotice(View view);
+
     void addEmoji(int position, int emojiRes);
 
     void deleteContent(View view);

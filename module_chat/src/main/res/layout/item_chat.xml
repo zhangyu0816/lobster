@@ -14,6 +14,8 @@
 
         <import type="com.zb.lib_base.db.ResFileDb" />
 
+        <import type="com.zb.lib_base.utils.DateUtil" />
+
         <variable
             name="item"
             type="com.zb.lib_base.model.HistoryMsg" />
@@ -33,23 +35,24 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/black_efe">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:background="@drawable/btn_bg_black_efe_radius5"
-            android:padding="2dp"
-            android:text="@{item.creationDate}"
-            android:textColor="@color/black_827"
+            android:background="@drawable/btn_bg_black_a33_radius20"
+            android:paddingStart="10dp"
+            android:gravity="center"
+            android:paddingEnd="10dp"
+            android:text="@{DateUtil.strToStr(item.creationDate)}"
+            android:textColor="@color/white"
             android:textSize="12sp"
             android:visibility="@{item.showTime?View.VISIBLE:View.GONE}"
-            tools:text="2020-22-22 12:12:12" />
+            tools:text="2020-22-22 12:12" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -229,6 +232,53 @@
                     android:textColor="#6d87b4"
                     android:textSize="16sp"
                     tools:text="查看" />
+            </LinearLayout>
+
+            <LinearLayout
+                onClickDelayed="@{viewModel::toDetail}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_toEndOf="@+id/iv_other_logo"
+                android:orientation="vertical"
+                android:visibility="@{item.msgType==1000?View.VISIBLE:View.GONE}">
+
+                <ImageView
+                    defaultRes="@{ObjectUtils.getDefaultRes()}"
+                    imageUrl='@{viewModel.memberInfo.singleImage}'
+                    isRound="@{true}"
+                    roundSize="@{5}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp" />
+
+                <LinearLayout
+                    viewHeightSize="@{-2}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_bg_white_radius_bottom5"
+                    android:orientation="vertical"
+                    android:layout_marginTop="-5dp"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.memberInfo.title}"
+                        android:textColor="@color/black_252"
+                        android:textSize="14sp"
+                        tools:text="小咪酱，25，瓯海（10km），互联网/设计" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.memberInfo.content}"
+                        android:textSize="14sp"
+                        android:layout_marginTop="10dp"
+                        tools:text="谢谢你喜欢了我！我们一起聊聊" />
+                </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
 

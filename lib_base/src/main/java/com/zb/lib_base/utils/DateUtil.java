@@ -95,7 +95,7 @@ public class DateUtil {
         } catch (Exception e) {
             return "";
         }
-        SimpleDateFormat sdf = new SimpleDateFormat(MM_dd_HH_mm);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
         return sdf.format(date);
     }
 

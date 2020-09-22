@@ -53,6 +53,15 @@ public class BottleCacheDb extends BaseDao {
         commitTransaction();
     }
 
+    public void setRead(long driftBottleId) {
+        beginTransaction();
+        BottleCache bottleCache = realm.where(BottleCache.class).equalTo("driftBottleId", driftBottleId).equalTo("mainUserId", BaseActivity.userId).findFirst();
+        if (bottleCache != null) {
+            bottleCache.setNoReadNum(0);
+        }
+        commitTransaction();
+    }
+
     @FunctionalInterface
     public interface CallBack {
         void success();

@@ -16,6 +16,7 @@ public abstract class BottleBaseActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         StatusBarUtil.statusBarLightMode(this);
     }
+
     public void fitScreen() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().addFlags(View.SYSTEM_UI_FLAG_FULLSCREEN);// 导致华为手机模糊

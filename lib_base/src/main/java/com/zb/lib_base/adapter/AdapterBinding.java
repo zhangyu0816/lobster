@@ -20,6 +20,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.R;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.model.PairInfo;
 import com.zb.lib_base.utils.glide.BlurTransformation;
 import com.zb.lib_base.utils.glide.GlideRoundTransform;
@@ -165,7 +166,6 @@ public class AdapterBinding {
                     if (cornerType == 6) {
                         cornerType = GlideRoundTransform.CORNER_TOP;
                     }
-//                multiTransformation = new MultiTransformation<>(new CenterCrop(), new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
                     cropOptions.transform(new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
                     defaultOptions.transform(new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
                 }
@@ -187,11 +187,14 @@ public class AdapterBinding {
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         float width = (float) resource.getWidth();
                         float height = (float) resource.getHeight();
-
-                        if (width > height) {
-                            viewSize(view, (int) ((float) resource.getWidth() * heightSize * 0.7 / (float) resource.getHeight()), (int) (heightSize * 0.7f));
+                        if (widthSize == 0) {
+                            viewSize(view, (int) (width * MineApp.H / height), MineApp.H);
                         } else {
-                            viewSize(view, widthSize, (int) ((float) resource.getHeight() * widthSize / (float) resource.getWidth()));
+                            if (width > height) {
+                                viewSize(view, (int) (width * heightSize * 0.7 / height), (int) (heightSize * 0.7f));
+                            } else {
+                                viewSize(view, widthSize, (int) (height * widthSize / width));
+                            }
                         }
                         view.setImageBitmap(resource);
                     }

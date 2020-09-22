@@ -12,8 +12,6 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import androidx.annotation.RequiresApi;
-
 public class StatusBarUtil {
     /**
      * 修改状态栏为全透明
@@ -67,7 +65,6 @@ public class StatusBarUtil {
      *
      * @param activity
      */
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public static void statusBarLightMode(RxAppCompatActivity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (MIUISetStatusBarLightMode(activity, true)) {
@@ -78,7 +75,6 @@ public class StatusBarUtil {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public static void statusBarLightModeNotFull(RxAppCompatActivity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (MIUISetStatusBarLightMode(activity, false)) {

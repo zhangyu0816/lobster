@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.os.Handler;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -19,6 +20,11 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.zb.lib_base.activity.BaseActivity;
@@ -33,6 +39,7 @@ import com.zb.lib_base.api.thirdReadChatApi;
 import com.zb.lib_base.api.uploadSoundApi;
 import com.zb.lib_base.api.uploadVideoApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.emojj.EmojiHandler;
@@ -55,7 +62,9 @@ import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.utils.KeyboardStateObserver;
 import com.zb.lib_base.utils.MNImage;
+import com.zb.lib_base.utils.OpenNotice;
 import com.zb.lib_base.utils.PreferenceUtil;
+import com.zb.lib_base.utils.glide.BlurTransformation;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.views.SoundView;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -71,6 +80,7 @@ import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.databinding.ViewDataBinding;
 import io.realm.RealmResults;
 
@@ -214,6 +224,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             }
             return false;
         });
+        if (!OpenNotice.isNotificationEnabled(activity))
+            mBinding.noticeLayout.setVisibility(PreferenceUtil.readIntValue(activity, "chat_notice_" + BaseActivity.userId) == 1 ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -272,9 +284,20 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     @Override
     public void otherInfo() {
         otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
+            @SuppressLint("CheckResult")
             @Override
             public void onNext(MemberInfo o) {
                 memberInfo = o;
+                RequestOptions cropOptions = new RequestOptions();
+                MultiTransformation<Bitmap> multiTransformation = new MultiTransformation<>(new BlurTransformation());
+                cropOptions.transform(multiTransformation);
+                Glide.with(activity).asBitmap().load(memberInfo.getSingleImage()).apply(cropOptions).into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        mBinding.ivBg.setImageBitmap(resource);
+                    }
+                });
+
                 mBinding.setVariable(BR.viewModel, ChatViewModel.this);
                 new Thread(() -> historyMsgList(1)).start();
             }
@@ -366,25 +389,48 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
 
                             @Override
                             public void fail() {
-                                ChatList chatList = new ChatList();
-                                chatList.setUserId(otherUserId);
-                                chatList.setNick(memberInfo.getNick());
-                                chatList.setImage(memberInfo.getImage());
-                                chatList.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
-                                chatList.setStanza("欢迎留言");
-                                chatList.setMsgType(1);
-                                chatList.setNoReadNum(0);
-                                chatList.setPublicTag("");
-                                chatList.setEffectType(1);
-                                chatList.setAuthType(1);
-                                chatList.setChatType(otherUserId == BaseActivity.dynUserId ? 5 : 4);
-                                chatList.setMainUserId(BaseActivity.userId);
-                                ChatListDb.getInstance().saveChatList(chatList);
-                                Intent data = new Intent("lobster_updateChat");
-                                data.putExtra("userId", otherUserId);
-                                data.putExtra("updateImage", true);
-                                activity.sendBroadcast(data);
-                                activity.sendBroadcast(new Intent("lobster_unReadCount"));
+                                String address = "";
+                                float temp = 0f;
+                                if (!memberInfo.getDistance().isEmpty())
+                                    temp = Float.parseFloat(memberInfo.getDistance());
+
+                                @SuppressLint("DefaultLocale")
+                                String distance = temp == 0f ? "" : String.format("%.1f" + (temp < 1000 ? "m" : "km"), temp < 1000 ? temp : temp / 1000f);
+                                if (memberInfo.getDistrictId() != 0)
+                                    address = AreaDb.getInstance().getDistrictName(memberInfo.getDistrictId());
+                                else if (memberInfo.getCityId() != 0)
+                                    address = AreaDb.getInstance().getCityName(memberInfo.getCityId());
+                                else if (memberInfo.getProvinceId() != 0) {
+                                    address = AreaDb.getInstance().getProvinceName(memberInfo.getProvinceId());
+                                }
+                                if (!distance.isEmpty())
+                                    address = address + "(" + distance + ")";
+
+                                memberInfo.setTitle(memberInfo.getNick() + "，" + DateUtil.getAge(memberInfo.getBirthday(), memberInfo.getAge()) + "，" + address + "，" + memberInfo.getJob());
+                                String[] colors = new String[]{"#FF3158", "#7A44F5"};
+
+                                String htmlStr = "<font color='#C3BDCD'>谢谢你喜欢了我！我们一起聊聊</font>";
+                                if (memberInfo.getServiceTags().length() > 0) {
+                                    String[] tags = memberInfo.getServiceTags().substring(1, memberInfo.getServiceTags().length() - 1).split("#");
+                                    for (int i = 0; i < Math.min(tags.length, 2); i++) {
+                                        if (i < Math.min(tags.length, 2) - 1)
+                                            htmlStr = htmlStr + "<font color='" + colors[i % 2] + "'>" + tags[i] + "</font>" + "<font color='#C3BDCD'>、</font>";
+                                        else
+                                            htmlStr = htmlStr + "<font color='" + colors[i % 2] + "'>" + tags[i] + "</font>";
+                                    }
+                                }
+                                htmlStr = htmlStr + "<font color='#C3BDCD'>吧</font>";
+
+                                memberInfo.setContent(Html.fromHtml(htmlStr));
+                                HistoryMsg historyMsg = new HistoryMsg();
+                                historyMsg.setFromId(memberInfo.getUserId());
+                                historyMsg.setToId(BaseActivity.userId);
+                                historyMsg.setMainUserId(BaseActivity.userId);
+                                historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
+                                historyMsg.setMsgType(1000);
+                                historyMsg.setShowTime(true);
+                                historyMsgList.add(historyMsg);
+                                adapter.notifyDataSetChanged();
                             }
                         });
                     }
@@ -524,6 +570,19 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                 mBinding.setIsEmoji(true);
             }, 300);
         }
+    }
+
+    @Override
+    public void closeNotice(View view) {
+        mBinding.noticeLayout.setVisibility(View.GONE);
+        PreferenceUtil.saveIntValue(activity, "chat_notice_" + BaseActivity.userId, 1);
+    }
+
+    @Override
+    public void openNotice(View view) {
+        OpenNotice.gotoSet(activity);
+        mBinding.noticeLayout.setVisibility(View.GONE);
+        PreferenceUtil.saveIntValue(activity, "chat_notice_" + BaseActivity.userId, 1);
     }
 
     @Override
