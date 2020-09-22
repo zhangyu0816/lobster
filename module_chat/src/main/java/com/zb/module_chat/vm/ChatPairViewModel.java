@@ -69,8 +69,8 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 try {
                     if (isUpdate) {
                         if (chatMsgList.size() != 0) {
-                            chatMsgList.set(chatType - 1, ChatListDb.getInstance().getChatList(chatType).get(0));
-                            adapter.notifyItemChanged(chatType - 1);
+                            chatMsgList.set(chatType == 1 ? 1 : 0, ChatListDb.getInstance().getChatList(chatType).get(0));
+                            adapter.notifyItemChanged(chatType == 1 ? 1 : 0);
                         }
                     } else {
                         if (chatType == 1) {
@@ -78,8 +78,8 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                             chatMsgList.clear();
                             adapter.notifyDataSetChanged();
                         }
-                        chatMsgList.addAll(ChatListDb.getInstance().getChatList(chatType));
-                        adapter.notifyItemChanged(chatType - 1);
+                        chatMsgList.addAll(0, ChatListDb.getInstance().getChatList(chatType));
+                        adapter.notifyItemChanged(0);
                         if (chatType == 2) {
                             beSuperLikeList();
                         }
@@ -159,8 +159,8 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         chatType4List.clear();
         chatMsgList.clear();
         adapter.notifyDataSetChanged();
-        chatMsgList.addAll(ChatListDb.getInstance().getChatList(1));
         chatMsgList.addAll(ChatListDb.getInstance().getChatList(2));
+        chatMsgList.addAll(ChatListDb.getInstance().getChatList(1));
         MineApp.pairList.clear();
         beSuperLikeList();
     }

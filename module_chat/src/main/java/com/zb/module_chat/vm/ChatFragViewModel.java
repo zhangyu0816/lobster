@@ -127,8 +127,23 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
     }
 
     @Override
-    public void toNews(View view) {
-        ActivityUtils.getMineNewsManager();
+    public void toGift(View view) {
+        ActivityUtils.getMineNewsList(3);
+    }
+
+    @Override
+    public void toReview(View view) {
+        ActivityUtils.getMineNewsList(1);
+    }
+
+    @Override
+    public void toGood(View view) {
+        ActivityUtils.getMineNewsList(2);
+    }
+
+    @Override
+    public void toService(View view) {
+        ActivityUtils.getMineSystemMsg();
     }
 
     @Override

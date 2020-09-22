@@ -460,6 +460,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onNext(ContactNum o) {
                 MineApp.contactNum = o;
+                int lastBeLikeCount = PreferenceUtil.readIntValue(activity, "nowBeLikeCount" + BaseActivity.userId);
+                int count = o.getBeLikeCount() - lastBeLikeCount;
                 ChatList chatList = new ChatList();
                 chatList.setUserId(BaseActivity.likeUserId);
                 chatList.setImage("be_like_logo_icon");
@@ -469,7 +471,9 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 chatList.setNoReadNum(MineApp.contactNum.getBeLikeCount());
                 chatList.setChatType(1);
                 chatList.setMainUserId(BaseActivity.userId);
+                chatList.setNewLikeCount(count);
                 ChatListDb.getInstance().saveChatList(chatList);
+
                 activity.sendBroadcast(new Intent("lobster_newsCount"));
                 new Handler().postDelayed(() -> {
                     Intent data = new Intent("lobster_updateChatType");
@@ -480,7 +484,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 if (!isUpdate) {
                     noReadBottleNum(false);
                 }
-                initRemind(o.getBeLikeCount());
+                initRemind(o.getBeLikeCount(), count);
             }
 
             @Override
@@ -513,9 +517,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         }, 500);
     }
 
-    private void initRemind(int beLikeCount) {
-        int lastBeLikeCount = PreferenceUtil.readIntValue(activity, "nowBeLikeCount" + BaseActivity.userId);
-        int count = beLikeCount - lastBeLikeCount;
+    private void initRemind(int beLikeCount, int count) {
         if (count > 0) {
             PreferenceUtil.saveIntValue(activity, "nowBeLikeCount" + BaseActivity.userId, beLikeCount);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBinding.remindRelative.getLayoutParams();
