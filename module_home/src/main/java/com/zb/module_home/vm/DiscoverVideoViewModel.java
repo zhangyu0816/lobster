@@ -25,6 +25,7 @@ import com.zb.lib_base.api.dynDetailApi;
 import com.zb.lib_base.api.dynDoLikeApi;
 import com.zb.lib_base.api.dynVisitApi;
 import com.zb.lib_base.api.makeEvaluateApi;
+import com.zb.lib_base.api.memberInfoConfApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.seeLikersApi;
 import com.zb.lib_base.api.seeReviewsApi;
@@ -40,6 +41,7 @@ import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.Review;
+import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.utils.ObjectUtils;
@@ -184,50 +186,56 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
 
     @Override
     public void toShare(View view) {
-        if (discoverInfo == null) return;
-        String sharedName = discoverInfo.getNick();
-        String content = discoverInfo.getText();
-        String sharedUrl = HttpManager.BASE_URL + "mobile/Dyn_dynDetail?friendDynId=" + friendDynId;
-        new FunctionPW(mBinding.getRoot(), discoverInfo.getImage().replace("YM0000", "430X430"), sharedName, content, sharedUrl,
-                discoverInfo.getUserId() == BaseActivity.userId, true, true, false, new FunctionPW.CallBack() {
+        memberInfoConfApi api = new memberInfoConfApi(new HttpOnNextListener<ShareInfo>() {
             @Override
-            public void gift() {
-                mBinding.videoView.pause();
-                mBinding.reviewList.stop();
-                ActivityUtils.getHomeRewardList(friendDynId);
-            }
+            public void onNext(ShareInfo o) {
+                if (discoverInfo == null) return;
+                String sharedName = o.getText().replace("{userId}", discoverInfo.getUserId() + "").replace("{nick}", discoverInfo.getNick());
+                String content = discoverInfo.getText().isEmpty() ? discoverInfo.getFriendTitle() : discoverInfo.getText();
+                String sharedUrl = HttpManager.BASE_URL + "mobile/Dyn_dynDetail?friendDynId=" + friendDynId;
+                new FunctionPW(mBinding.getRoot(), discoverInfo.getImage().replace("YM0000", "430X430"), sharedName, content, sharedUrl,
+                        discoverInfo.getUserId() == BaseActivity.userId, true, true, false, new FunctionPW.CallBack() {
+                    @Override
+                    public void gift() {
+                        mBinding.videoView.pause();
+                        mBinding.reviewList.stop();
+                        ActivityUtils.getHomeRewardList(friendDynId);
+                    }
 
-            @Override
-            public void delete() {
-                new TextPW(mBinding.getRoot(), "删除动态", "删除后，动态不可找回！", "删除", () -> deleteDyn());
-            }
+                    @Override
+                    public void delete() {
+                        new TextPW(mBinding.getRoot(), "删除动态", "删除后，动态不可找回！", "删除", () -> deleteDyn());
+                    }
 
-            @Override
-            public void report() {
-                // 举报
-                mBinding.videoView.pause();
-                mBinding.reviewList.stop();
-                ActivityUtils.getHomeReport(discoverInfo.getUserId());
-            }
+                    @Override
+                    public void report() {
+                        // 举报
+                        mBinding.videoView.pause();
+                        mBinding.reviewList.stop();
+                        ActivityUtils.getHomeReport(discoverInfo.getUserId());
+                    }
 
-            @Override
-            public void download() {
-                DownLoad.downloadLocation(discoverInfo.getVideoUrl(), (filePath, bitmap) -> {
-                    downloadPath = filePath;
-                    getPermissions();
+                    @Override
+                    public void download() {
+                        DownLoad.downloadLocation(discoverInfo.getVideoUrl(), (filePath, bitmap) -> {
+                            downloadPath = filePath;
+                            getPermissions();
+                        });
+                    }
+
+                    @Override
+                    public void like() {
+                        // 超级喜欢
+                        if (MineApp.mineInfo.getMemberType() == 2) {
+                            makeEvaluate();
+                        } else {
+                            new VipAdPW(mBinding.getRoot(), 3, discoverInfo.getImage());
+                        }
+                    }
                 });
             }
-
-            @Override
-            public void like() {
-                // 超级喜欢
-                if (MineApp.mineInfo.getMemberType() == 2) {
-                    makeEvaluate();
-                } else {
-                    new VipAdPW(mBinding.getRoot(), 3, discoverInfo.getImage());
-                }
-            }
-        });
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override

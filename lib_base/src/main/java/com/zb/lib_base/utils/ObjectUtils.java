@@ -59,7 +59,7 @@ public class ObjectUtils {
     }
 
     public static int getVipBgHeight(float scale) {
-        return (int) (getViewSizeByWidth(scale) * 254f / 1035f);
+        return (int) (getViewSizeByWidth(scale) * 149f / 501f);
     }
 
     public static int getVipIntroHeight() {

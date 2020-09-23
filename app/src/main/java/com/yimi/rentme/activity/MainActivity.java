@@ -38,7 +38,7 @@ public class MainActivity extends AppBaseActivity {
         // 个推注册
         PushManager.getInstance().initialize(this.getApplicationContext(), DemoPushService.class);
         PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), DemoIntentService.class);
-
+        fitComprehensiveScreen();
         viewModel = new MainViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);

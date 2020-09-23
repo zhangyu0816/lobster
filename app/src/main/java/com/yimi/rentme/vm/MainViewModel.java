@@ -541,7 +541,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBinding.remindRelative.getLayoutParams();
             params.setMarginEnd(ObjectUtils.getViewSizeByWidthFromMax(220));
             mBinding.remindRelative.setLayoutParams(params);
-            mBinding.tvTitle.setText("快来看看有");
+            mBinding.tvTitle.setText("快来看看又有");
             mBinding.tvContent.setText(count < 99 ? (count + "") : "99+");
             mBinding.tvSubContent.setText("人喜欢你啦");
             mBinding.setOtherHead("");

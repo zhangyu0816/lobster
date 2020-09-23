@@ -31,6 +31,7 @@ import com.zb.lib_base.api.dynDoLikeApi;
 import com.zb.lib_base.api.dynDoReviewApi;
 import com.zb.lib_base.api.dynVisitApi;
 import com.zb.lib_base.api.makeEvaluateApi;
+import com.zb.lib_base.api.memberInfoConfApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.seeGiftRewardsApi;
 import com.zb.lib_base.api.seeReviewsApi;
@@ -48,6 +49,7 @@ import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.model.Reward;
+import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.MNImage;
 import com.zb.lib_base.utils.ObjectUtils;
@@ -175,42 +177,52 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void more(View view) {
         super.more(view);
-        if (discoverInfo == null) return;
-        String sharedName = discoverInfo.getNick();
-        String content = discoverInfo.getText();
-        String sharedUrl = HttpManager.BASE_URL + "mobile/Dyn_dynDetail?friendDynId=" + friendDynId;
+        memberInfoConf();
+    }
 
-        new FunctionPW(mBinding.getRoot(), discoverInfo.getImage().replace("YM0000", "430X430"), sharedName, content, sharedUrl,
-                discoverInfo.getUserId() == BaseActivity.userId, false, true, false, new FunctionPW.CallBack() {
+    private void memberInfoConf() {
+        memberInfoConfApi api = new memberInfoConfApi(new HttpOnNextListener<ShareInfo>() {
             @Override
-            public void gift() {
-                ActivityUtils.getHomeRewardList(friendDynId);
-            }
+            public void onNext(ShareInfo o) {
+                if (discoverInfo == null) return;
+                String sharedName = o.getText().replace("{userId}", discoverInfo.getUserId() + "").replace("{nick}", discoverInfo.getNick());
+                String content = discoverInfo.getText().isEmpty() ? discoverInfo.getFriendTitle() : discoverInfo.getText();
+                String sharedUrl = HttpManager.BASE_URL + "mobile/Dyn_dynDetail?friendDynId=" + friendDynId;
 
-            @Override
-            public void delete() {
-                new TextPW(mBinding.getRoot(), "删除动态", "删除后，动态不可找回！", "删除", () -> deleteDyn());
-            }
+                new FunctionPW(mBinding.getRoot(), discoverInfo.getImage().replace("YM0000", "430X430"), sharedName, content, sharedUrl,
+                        discoverInfo.getUserId() == BaseActivity.userId, false, true, false, new FunctionPW.CallBack() {
+                    @Override
+                    public void gift() {
+                        ActivityUtils.getHomeRewardList(friendDynId);
+                    }
 
-            @Override
-            public void report() {
-                ActivityUtils.getHomeReport(discoverInfo.getUserId());
-            }
+                    @Override
+                    public void delete() {
+                        new TextPW(mBinding.getRoot(), "删除动态", "删除后，动态不可找回！", "删除", () -> deleteDyn());
+                    }
 
-            @Override
-            public void download() {
+                    @Override
+                    public void report() {
+                        ActivityUtils.getHomeReport(discoverInfo.getUserId());
+                    }
 
-            }
+                    @Override
+                    public void download() {
 
-            @Override
-            public void like() {
-                if (MineApp.mineInfo.getMemberType() == 2) {
-                    makeEvaluate();
-                } else {
-                    new VipAdPW(mBinding.getRoot(), 3, discoverInfo.getImage());
-                }
+                    }
+
+                    @Override
+                    public void like() {
+                        if (MineApp.mineInfo.getMemberType() == 2) {
+                            makeEvaluate();
+                        } else {
+                            new VipAdPW(mBinding.getRoot(), 3, discoverInfo.getImage());
+                        }
+                    }
+                });
             }
-        });
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override

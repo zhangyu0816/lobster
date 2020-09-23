@@ -36,76 +36,9 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/top_relative"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="22dp">
-
-            <ImageView
-                android:id="@+id/iv_news"
-                onClickDelayed="@{viewModel::toNews}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:padding="20dp"
-                app:srcCompat="@mipmap/news_icon" />
-
-            <TextView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_alignEnd="@+id/iv_news"
-                android:layout_marginTop="13dp"
-                android:layout_marginEnd="13dp"
-                android:background="@drawable/circle_white_red"
-                android:gravity="center"
-                android:text="@{ObjectUtils.count(mineNewsCount.friendDynamicGoodNum+mineNewsCount.friendDynamicReviewNum+mineNewsCount.friendDynamicGiftNum+mineNewsCount.systemNewsNum)}"
-                android:textColor="@android:color/white"
-                android:textSize="10sp"
-                android:visibility="@{(mineNewsCount.friendDynamicGoodNum+mineNewsCount.friendDynamicReviewNum+mineNewsCount.friendDynamicGiftNum+mineNewsCount.systemNewsNum)==0?View.GONE:View.VISIBLE}"
-                tools:text="···" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{mineInfo.nick}"
-                    android:textColor="@color/black_252"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    tools:text="租我吧" />
-
-                <ImageView
-                    onClickDelayed="@{viewModel::openVip}"
-                    viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(105)}"
-                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(183)}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="3dp"
-                    android:background="@mipmap/vip_icon"
-                    android:visibility="@{mineInfo.memberType==2?View.VISIBLE:View.GONE}" />
-            </LinearLayout>
-
-            <ImageView
-                onClickDelayed="@{viewModel::toSetting}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:padding="15dp"
-                app:srcCompat="@mipmap/set_icon" />
-        </RelativeLayout>
-
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/top_relative"
             android:splitMotionEvents="false">
 
             <com.google.android.material.appbar.AppBarLayout
@@ -124,59 +57,144 @@
                     app:contentInsetStart="0dp"
                     app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:paddingStart="15dp"
-                        android:paddingEnd="15dp">
+                        android:background="@mipmap/mine_top_bg"
+                        android:orientation="vertical">
 
                         <RelativeLayout
-                            android:id="@+id/image_layout"
-                            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(240)}"
-                            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(240)}"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp">
-
-                            <ImageView
-                                android:id="@+id/iv_image"
-                                defaultRes="@{ObjectUtils.getDefaultRes()}"
-                                imageUrl="@{mineInfo.image}"
-                                isCircle="@{true}"
-                                onClickDelayed="@{viewModel::toEditMember}"
-                                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(220)}"
-                                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(220)}"
-                                android:layout_width="76dp"
-                                android:layout_height="76dp"
-                                android:layout_centerHorizontal="true" />
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentBottom="true"
-                                android:layout_centerHorizontal="true"
-                                android:background="@mipmap/real_icon"
-                                android:visibility="@{mineInfo.faceAttest==1?View.VISIBLE:View.GONE}" />
-                        </RelativeLayout>
-
-                        <LinearLayout
-                            android:id="@+id/num_linear"
+                            android:id="@+id/top_relative"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="50dp"
-                            android:layout_toEndOf="@+id/image_layout"
-                            android:orientation="horizontal">
+                            android:layout_marginTop="22dp">
+
+                            <ImageView
+                                android:id="@+id/iv_news"
+                                onClickDelayed="@{viewModel::toNews}"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:padding="20dp"
+                                android:visibility="gone"
+                                app:srcCompat="@mipmap/news_icon" />
+
+                            <!--            <TextView-->
+                            <!--                android:layout_width="16dp"-->
+                            <!--                android:layout_height="16dp"-->
+                            <!--                android:layout_alignEnd="@+id/iv_news"-->
+                            <!--                android:layout_marginTop="13dp"-->
+                            <!--                android:layout_marginEnd="13dp"-->
+                            <!--                android:background="@drawable/circle_white_red"-->
+                            <!--                android:gravity="center"-->
+                            <!--                android:text="@{ObjectUtils.count(mineNewsCount.friendDynamicGoodNum+mineNewsCount.friendDynamicReviewNum+mineNewsCount.friendDynamicGiftNum+mineNewsCount.systemNewsNum)}"-->
+                            <!--                android:textColor="@android:color/white"-->
+                            <!--                android:textSize="10sp"-->
+                            <!--                android:visibility="@{(mineNewsCount.friendDynamicGoodNum+mineNewsCount.friendDynamicReviewNum+mineNewsCount.friendDynamicGiftNum+mineNewsCount.systemNewsNum)==0?View.GONE:View.VISIBLE}"-->
+                            <!--                tools:text="···" />-->
+
+
+                            <ImageView
+                                onClickDelayed="@{viewModel::toSetting}"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:padding="15dp"
+                                app:srcCompat="@mipmap/set_icon" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp">
+
+                            <RelativeLayout
+                                android:id="@+id/image_layout"
+                                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(240)}"
+                                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(240)}"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp">
+
+                                <ImageView
+                                    android:id="@+id/iv_image"
+                                    defaultRes="@{ObjectUtils.getDefaultRes()}"
+                                    imageUrl="@{mineInfo.image}"
+                                    isCircle="@{true}"
+                                    onClickDelayed="@{viewModel::toEditMember}"
+                                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(220)}"
+                                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(220)}"
+                                    android:layout_width="76dp"
+                                    android:layout_height="76dp"
+                                    android:layout_centerHorizontal="true" />
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_centerHorizontal="true"
+                                    android:background="@mipmap/real_icon"
+                                    android:visibility="@{mineInfo.faceAttest==1?View.VISIBLE:View.GONE}" />
+                            </RelativeLayout>
 
                             <LinearLayout
-                                onClickDelayed="@{v->viewModel.contactNumDetail(0)}"
-                                android:layout_width="0dp"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
+                                android:layout_marginStart="15dp"
+                                android:layout_toEndOf="@+id/image_layout"
                                 android:orientation="vertical">
 
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:maxLength="10"
+                                        android:text="@{mineInfo.nick}"
+                                        android:textColor="@color/black_252"
+                                        android:textSize="22sp"
+                                        android:textStyle="bold"
+                                        tools:text="租我吧租我吧租我吧租我吧租我吧" />
+
+                                    <ImageView
+                                        onClickDelayed="@{viewModel::openVip}"
+                                        viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(105)}"
+                                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(183)}"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="5dp"
+                                        android:background="@mipmap/vip_icon"
+                                        android:visibility="@{mineInfo.memberType==2?View.VISIBLE:View.GONE}" />
+                                </LinearLayout>
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:singleLine="true"
+                                    android:text="@{mineInfo.personalitySign.empty?@string/mine_sign_content:mineInfo.personalitySign}"
+                                    android:textColor="@color/black_4d4"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    tools:text="为了减肥了我劳务纠纷另外二九六我来我家 " />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/num_linear"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/image_layout"
+                                android:layout_marginTop="15dp"
+                                android:orientation="horizontal">
+
+                                <LinearLayout
+                                    onClickDelayed="@{v->viewModel.contactNumDetail(0)}"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
                                     android:gravity="center"
                                     android:orientation="vertical">
 
@@ -197,113 +215,178 @@
                                         android:text="关注"
                                         android:textColor="@color/black_c3b"
                                         android:textSize="12sp" />
+
                                 </LinearLayout>
 
-                            </LinearLayout>
-
-                            <LinearLayout
-                                onClickDelayed="@{v->viewModel.contactNumDetail(1)}"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:singleLine="true"
-                                    android:text='@{String.format("%d",contactNum.fansCount)}'
-                                    android:textColor="@color/black_252"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold"
-                                    tools:text="35" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="5dp"
-                                    android:text="粉丝"
-                                    android:textColor="@color/black_c3b"
-                                    android:textSize="12sp" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                onClickDelayed="@{v->viewModel.contactNumDetail(2)}"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="right"
-                                android:orientation="vertical">
-
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
+                                    onClickDelayed="@{v->viewModel.contactNumDetail(1)}"
+                                    android:layout_width="0dp"
                                     android:layout_height="wrap_content"
+                                    android:layout_weight="1"
                                     android:gravity="center"
                                     android:orientation="vertical">
 
-                                    <RelativeLayout
+                                    <TextView
                                         android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content">
-
-                                        <TextView
-                                            android:id="@+id/tv_beLike"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:singleLine="true"
-                                            android:text='@{String.format("%d",contactNum.beLikeCount)}'
-                                            android:textColor="@color/black_252"
-                                            android:textSize="18sp"
-                                            android:textStyle="bold"
-                                            tools:text="3124125" />
-
-                                        <TextView
-                                            android:layout_width="5dp"
-                                            android:layout_height="5dp"
-                                            android:layout_alignEnd="@+id/tv_beLike"
-                                            android:layout_marginTop="5dp"
-                                            android:background="@drawable/circle_red"
-                                            android:visibility="@{hasNewBeLike?View.VISIBLE:View.GONE}" />
-                                    </RelativeLayout>
+                                        android:layout_height="wrap_content"
+                                        android:singleLine="true"
+                                        android:text='@{String.format("%d",contactNum.fansCount)}'
+                                        android:textColor="@color/black_252"
+                                        android:textSize="18sp"
+                                        android:textStyle="bold"
+                                        tools:text="35" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="5dp"
-                                        android:text="被喜欢"
+                                        android:text="粉丝"
                                         android:textColor="@color/black_c3b"
                                         android:textSize="12sp" />
                                 </LinearLayout>
 
+                                <LinearLayout
+                                    onClickDelayed="@{v->viewModel.contactNumDetail(2)}"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:orientation="vertical">
+
+                                        <RelativeLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content">
+
+                                            <TextView
+                                                android:id="@+id/tv_beLike"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:singleLine="true"
+                                                android:text='@{String.format("%d",contactNum.beLikeCount)}'
+                                                android:textColor="@color/black_252"
+                                                android:textSize="18sp"
+                                                android:textStyle="bold"
+                                                tools:text="3124125" />
+
+                                            <TextView
+                                                android:layout_width="5dp"
+                                                android:layout_height="5dp"
+                                                android:layout_alignEnd="@+id/tv_beLike"
+                                                android:layout_marginTop="5dp"
+                                                android:background="@drawable/circle_red"
+                                                android:visibility="@{hasNewBeLike?View.VISIBLE:View.GONE}" />
+                                        </RelativeLayout>
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="5dp"
+                                            android:text="被喜欢"
+                                            android:textColor="@color/black_c3b"
+                                            android:textSize="12sp" />
+                                    </LinearLayout>
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    onClickDelayed="@{v->viewModel.contactNumDetail(4)}"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:orientation="vertical">
+
+                                        <RelativeLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content">
+
+                                            <TextView
+                                                android:id="@+id/tv_beLook"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:singleLine="true"
+                                                android:text='@{String.format("%d",contactNum.beLikeCount)}'
+                                                android:textColor="@color/black_252"
+                                                android:textSize="18sp"
+                                                android:textStyle="bold"
+                                                tools:text="3124125" />
+
+                                            <TextView
+                                                android:layout_width="5dp"
+                                                android:layout_height="5dp"
+                                                android:layout_alignEnd="@+id/tv_beLook"
+                                                android:layout_marginTop="5dp"
+                                                android:background="@drawable/circle_red"
+                                                android:visibility="@{hasNewBeLike?View.VISIBLE:View.GONE}" />
+                                        </RelativeLayout>
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="5dp"
+                                            android:text="谁看过我"
+                                            android:textColor="@color/black_c3b"
+                                            android:textSize="12sp" />
+                                    </LinearLayout>
+                                </LinearLayout>
                             </LinearLayout>
-                        </LinearLayout>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/num_linear"
-                            android:layout_marginStart="50dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_toEndOf="@+id/image_layout"
-                            android:singleLine="true"
-                            android:text="@{mineInfo.personalitySign.empty?@string/mine_sign_content:mineInfo.personalitySign}"
-                            android:textColor="@color/black_4d4"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            tools:text="为了减肥了我劳务纠纷另外二九六我来我家 " />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/num_linear"
+                                android:layout_centerHorizontal="true"
+                                android:orientation="horizontal">
 
-                        <ImageView
-                            onClickDelayed="@{viewModel::openVip}"
-                            viewHeightSize="@{ObjectUtils.getVipBgHeight(0.95f)}"
-                            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.95f)}"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/image_layout"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="15dp"
-                            android:background="@mipmap/vip_long_icon"
-                            android:visibility="@{mineInfo.memberType==2?View.GONE:View.VISIBLE}" />
-                    </RelativeLayout>
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        onClickDelayed="@{viewModel::openVip}"
+                                        viewHeightSize="@{ObjectUtils.getVipBgHeight(0.44f)}"
+                                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.44f)}"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="15dp"
+                                        android:background="@mipmap/vip_long_icon" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="right"
+                                    android:orientation="vertical">
+
+                                    <ImageView
+                                        onClickDelayed="@{viewModel::openVip}"
+                                        viewHeightSize="@{ObjectUtils.getVipBgHeight(0.44f)}"
+                                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.44f)}"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="15dp"
+                                        android:background="@mipmap/red_long_icon" />
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
+                    </LinearLayout>
                 </androidx.appcompat.widget.Toolbar>
 
                 <RelativeLayout
