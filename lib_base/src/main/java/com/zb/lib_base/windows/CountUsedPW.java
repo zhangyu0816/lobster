@@ -1,5 +1,6 @@
 package com.zb.lib_base.windows;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 
 import com.zb.lib_base.BR;
@@ -20,6 +21,7 @@ public class CountUsedPW extends BasePopupWindow {
         return R.layout.pws_count_used;
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @Override
     public void initUI() {
         mBinding.setVariable(BR.pw, this);

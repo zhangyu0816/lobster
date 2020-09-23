@@ -8,8 +8,8 @@ import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
 
 public class TextPW extends BasePopupWindow {
-    private String content = "";
-    private String title = "";
+    private String content;
+    private String title;
     private CallBack mCallBack;
     private String btnName = "我知道了";
 

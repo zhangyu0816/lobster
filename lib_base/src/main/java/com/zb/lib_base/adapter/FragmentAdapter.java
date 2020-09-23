@@ -1,6 +1,5 @@
 package com.zb.lib_base.adapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -9,7 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 public class FragmentAdapter extends FragmentPagerAdapter {
-    private List<Fragment> fragments = new ArrayList<>();
+    private List<Fragment> fragments;
 
     public FragmentAdapter(FragmentManager fm, List<Fragment> fragments) {
         super(fm);

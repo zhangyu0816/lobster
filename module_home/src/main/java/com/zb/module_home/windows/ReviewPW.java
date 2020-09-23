@@ -34,7 +34,7 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
     private long friendDynId;
     private long reviewId;
     private CallBack callBack;
-    private int reviews = 0;
+    private int reviews;
 
     public ReviewPW(View parentView, long friendDynId, int reviews, CallBack callBack) {
         super(parentView, false);

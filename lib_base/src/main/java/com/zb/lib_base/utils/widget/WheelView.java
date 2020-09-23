@@ -20,6 +20,7 @@
 package com.zb.lib_base.utils.widget;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Canvas;
@@ -450,6 +451,7 @@ public class WheelView extends View {
     /**
      * Initializes resources
      */
+    @SuppressLint("UseCompatLoadingForDrawables")
     private void initResourcesIfNecessary() {
         if (centerDrawable == null) {
             centerDrawable = getContext().getResources().getDrawable(R.drawable.wheel_date_val);
@@ -775,7 +777,7 @@ public class WheelView extends View {
      * @return true if items are rebuilt
      */
     private boolean rebuildItems() {
-        boolean updated = false;
+        boolean updated;
         ItemsRange range = getItemsRange();
         if (itemsLayout != null) {
             int first = recycle.recycleItems(itemsLayout, firstItem, range);

@@ -27,15 +27,15 @@ public class BirthdayPW extends BasePopupWindow {
     private int MAX_TEXT_SIZE = 20;
     private int MIN_TEXT_SIZE = 16;
 
-    private int mYear = 0;
-    private int mMonth = 0;
-    private int mDay = 0;
+    private int mYear;
+    private int mMonth;
+    private int mDay;
 
     private ArrayList<String> yearList = new ArrayList<>();
     private ArrayList<String> monthList = new ArrayList<>();
     private ArrayList<String> dayList = new ArrayList<>();
 
-    private String nowDate = "";
+    private String nowDate;
 
     public BirthdayPW(View parentView, String birthday, CallBack callBack) {
         super(parentView, true);

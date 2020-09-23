@@ -9,7 +9,7 @@ class EmojiSpan extends DynamicDrawableSpan {
 	private final Context mContext;
 	private final int mResourceId;
 	private Drawable mDrawable;
-	private int mSize = 0;
+	private int mSize;
 
 	public EmojiSpan(Context context, int resourceId, int size) {
 		super();

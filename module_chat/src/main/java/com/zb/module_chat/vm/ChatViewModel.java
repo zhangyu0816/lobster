@@ -495,7 +495,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             soundPosition = position;
             // direction 0 左  1右
             stopVoiceDrawable();
-            ImageView voiceView = null;
+            ImageView voiceView;
             if (direction == 0) {
                 voiceView = view.findViewById(R.id.iv_voice_left);
             } else {
@@ -719,7 +719,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     }
 
     private void updateTime() {
-        String time = "";
+        String time;
         if (historyMsgList.size() > 0) {
             historyMsgList.get(0).setShowTime(true);
             time = historyMsgList.get(0).getCreationDate();

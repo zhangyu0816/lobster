@@ -16,22 +16,17 @@ import android.widget.TextView;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 
-import java.lang.ref.WeakReference;
-
 public class CustomProgressDialog extends Dialog implements DialogInterface.OnCancelListener {
 
-    private WeakReference<RxAppCompatActivity> mContext = new WeakReference<>(null);
     private volatile static CustomProgressDialog sDialog;
     private static ObjectAnimator animator;
 
     private CustomProgressDialog(RxAppCompatActivity context, CharSequence message) {
         super(context, R.style.CustomProgressDialog);
 
-        mContext = new WeakReference<>(context);
-
         @SuppressLint("InflateParams")
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_custom_progress, null);
-        TextView tvMessage = (TextView) view.findViewById(R.id.tv_message);
+        TextView tvMessage = view.findViewById(R.id.tv_message);
         ImageView progress = view.findViewById(R.id.progress);
         animator = ObjectAnimator.ofFloat(progress, "rotation", 0, 360).setDuration(700);
         animator.setRepeatMode(ValueAnimator.RESTART);
@@ -47,10 +42,6 @@ public class CustomProgressDialog extends Dialog implements DialogInterface.OnCa
 
     @Override
     public void onCancel(DialogInterface dialog) {
-    }
-
-    public static synchronized void showLoading(RxAppCompatActivity context) {
-        showLoading(context, "loading...");
     }
 
     public static synchronized void showLoading(RxAppCompatActivity context, CharSequence message) {

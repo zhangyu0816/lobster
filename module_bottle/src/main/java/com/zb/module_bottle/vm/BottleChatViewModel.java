@@ -446,7 +446,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     }
 
     private void updateTime() {
-        String time = "";
+        String time;
         if (historyMsgList.size() > 0) {
             historyMsgList.get(0).setShowTime(true);
             time = historyMsgList.get(0).getCreationDate();

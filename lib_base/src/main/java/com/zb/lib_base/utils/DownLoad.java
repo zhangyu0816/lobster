@@ -50,7 +50,6 @@ public class DownLoad {
                 // 下载失败则将本地的空文件删除
                 File file = new File(filePath);
                 file.deleteOnExit();
-                file = null;
             }
 
             @Override
@@ -82,7 +81,6 @@ public class DownLoad {
                 // 下载失败则将本地的空文件删除
                 File file = new File(filePath);
                 file.deleteOnExit();
-                file = null;
             }
 
             @Override
@@ -130,7 +128,6 @@ public class DownLoad {
                 // 下载失败则将本地的空文件删除
                 File file = new File(filePath);
                 file.deleteOnExit();
-                file = null;
                 if (callBack != null)
                     callBack.fail();
             }

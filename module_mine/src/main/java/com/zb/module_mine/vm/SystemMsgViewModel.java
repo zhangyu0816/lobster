@@ -98,7 +98,7 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
     }
 
     private void updateTime() {
-        String time = "";
+        String time;
         systemMsgList.get(0).setShowTime(true);
         time = systemMsgList.get(0).getCreationDate();
         for (int i = 1; i < systemMsgList.size(); i++) {

@@ -28,9 +28,9 @@ public class RingProgressBar extends View {
 
     private int height;
 
-    private int result = 0;
+    private int result;
 
-    private float padding = 0;
+    private float padding;
 
     private int ringColor;
 

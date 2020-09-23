@@ -43,7 +43,7 @@ public class HttpTimeException extends RuntimeException {
      * @return
      */
     private static String getApiExceptionMessage(int code) {
-        String message = "";
+        String message;
         switch (code) {
             case NO_DATA:
                 message = "无数据";

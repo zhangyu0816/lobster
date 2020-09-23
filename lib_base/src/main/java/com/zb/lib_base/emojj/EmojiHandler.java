@@ -77,7 +77,7 @@ public final class EmojiHandler {
             String mSr = match.group();
             int start = mSr.indexOf("{f:");
             int end = mSr.indexOf("}");
-            String content = "";
+            String content;
             if (start > -1) {
                 content = mSr.substring(3, end);
                 int icon = cusEmojisResource(Integer.parseInt(content));

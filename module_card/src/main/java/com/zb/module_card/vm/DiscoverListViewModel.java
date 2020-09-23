@@ -144,7 +144,7 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
                         + o.getSharetextId();
                 String sharedName = o.getText().replace("{userId}", memberInfo.getUserId() + "");
                 sharedName = sharedName.replace("{nick}", memberInfo.getNick());
-                String content = "";
+                String content;
                 if (memberInfo.getServiceTags().isEmpty()) {
                     content = o.getText();
                 } else {

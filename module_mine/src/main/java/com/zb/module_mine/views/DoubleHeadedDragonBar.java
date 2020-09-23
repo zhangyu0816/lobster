@@ -37,18 +37,18 @@ public class DoubleHeadedDragonBar extends View {
         this.callBack = callBack;
     }
 
-    float buttonWidth = 0;//按钮宽
-    float buttonHeight = 0;//按钮高
+    float buttonWidth;//按钮宽
+    float buttonHeight;//按钮高
     private int viewWidth;//控件宽
     Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     int textColor, bgColor;
     String unitStr1 = "";
     String unitStr2 = "";
-    float unitTextSize = 0;// 显示单位的字体大小
+    float unitTextSize;// 显示单位的字体大小
 
     Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     Paint valuePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    private int bgHeight = dp2px(4);//进度条宽度
+    private int bgHeight;//进度条宽度
 
     float seekWidth;//进度条宽
 

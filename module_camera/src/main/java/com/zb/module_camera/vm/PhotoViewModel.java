@@ -129,9 +129,8 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
     @Override
     public void changeCameraId(View view) {
         //切换前后摄像头
-        int cameraCount = 0;
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
-        cameraCount = Camera.getNumberOfCameras();//得到摄像头的个数
+        int cameraCount = Camera.getNumberOfCameras();//得到摄像头的个数
         for (int i = 0; i < cameraCount; i++) {
             Camera.getCameraInfo(i, cameraInfo);//得到每一个摄像头的信息
             if (cameraCount >= 2 && cameraPosition == 1) {

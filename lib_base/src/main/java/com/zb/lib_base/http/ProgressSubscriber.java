@@ -20,7 +20,7 @@ import rx.Subscriber;
  */
 public class ProgressSubscriber<T> extends Subscriber<T> {
     /*是否弹框*/
-    private boolean showProgressAndCancel = true;
+    private boolean showProgressAndCancel;
     //    回调接口
     private HttpOnNextListener mSubscriberOnNextListener;
     //    弱引用反正内存泄露

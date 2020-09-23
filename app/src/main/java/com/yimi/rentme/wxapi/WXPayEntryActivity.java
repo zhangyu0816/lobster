@@ -42,7 +42,7 @@ public class WXPayEntryActivity extends RxAppCompatActivity implements IWXAPIEve
     public void onResp(BaseResp resp) {
         if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
             int code = resp.errCode;
-            String msg = "";
+            String msg;
             switch (code) {
                 case 0:
                     msg = "支付成功！";

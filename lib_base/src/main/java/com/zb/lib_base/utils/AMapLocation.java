@@ -14,9 +14,9 @@ import com.zb.lib_base.app.MineApp;
 public class AMapLocation {
 
     //声明AMapLocationClient类对象
-    public AMapLocationClient mLocationClient = null;
+    public AMapLocationClient mLocationClient;
     //声明AMapLocationClientOption对象
-    public AMapLocationClientOption mLocationOption = null;
+    public AMapLocationClientOption mLocationOption;
     //声明定位回调监听器
 //    public AMapLocationListener mLocationListener;
 

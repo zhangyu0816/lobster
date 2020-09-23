@@ -71,7 +71,7 @@ public class DateUtil {
      * @return
      */
     public static Date strToDate(String str, String pattern) {
-        Date date = null;
+        Date date;
         try {
             SimpleDateFormat fmt = new SimpleDateFormat(pattern, Locale.CHINA);
             date = fmt.parse(str);
@@ -392,7 +392,7 @@ public class DateUtil {
      */
     @SuppressWarnings("deprecation")
     public static String getChatTime(String datestr) {
-        String chatTime = "";
+        String chatTime;
         Date date = strToDate(datestr, yyyy_MM_dd_HH_mm_ss);
         double dayCount = getDateCount(getNow(yyyy_MM_dd), datestr.substring(0, 10), yyyy_MM_dd, 1000f * 3600f * 24f);
         if (dayCount == 0) {// 今天
@@ -419,7 +419,7 @@ public class DateUtil {
      */
     public static String getTimeToToday(String strDate) {
         SimpleDateFormat dfs = new SimpleDateFormat(yyyy_MM_dd_HH_mm_ss);
-        long between = 0;
+        long between;
         try {
             Date end = new Date();
             Date begin = dfs.parse(strDate);
