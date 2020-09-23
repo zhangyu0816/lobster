@@ -413,6 +413,24 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
         mBinding.edContent.onKeyDown(KeyEvent.KEYCODE_DEL, new KeyEvent(R.id.ed_content, KeyEvent.ACTION_DOWN));
     }
 
+    @Override
+    public void sendMsg(View view) {
+        if (bottleInfo == null)
+            return;
+        if (bottleInfo.getDestroyType() != 0) {
+            SCToastUtil.showToast(activity, "该漂流瓶已被对方销毁", true);
+            return;
+        }
+        if (Objects.requireNonNull(mBinding.edContent.getText()).toString().trim().isEmpty()) {
+            SCToastUtil.showToast(activity, "请输入回复内容", true);
+            return;
+        }
+        ImUtils.getInstance().sendChatMessage(activity, 1, mBinding.edContent.getText().toString(), "", 0, "【文字】", driftBottleId, 2);
+        mBinding.edContent.setText("");
+        mBinding.setIsEmoji(false);
+        hintKeyBoard();
+    }
+
     private void updateMySend(String msgId, CustomMessageBody body) {
         // 会话列表
         BottleCache bottleCache = new BottleCache();

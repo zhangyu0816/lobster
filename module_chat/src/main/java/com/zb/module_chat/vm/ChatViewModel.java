@@ -599,6 +599,17 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
     }
 
     @Override
+    public void sendMsg(View view) {
+        if (mBinding.getContent().trim().isEmpty()) {
+            return;
+        }
+        ImUtils.getInstance().sendChatMessage(activity, 1, mBinding.getContent(), "", 0, "【文字】", 0, 1);
+        mBinding.setContent("");
+        mBinding.setIsEmoji(false);
+        closeImplicit(mBinding.edContent);
+    }
+
+    @Override
     public void stopPlayer() {
         soundView.stopPlayer();
     }

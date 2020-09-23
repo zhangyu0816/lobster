@@ -41,8 +41,8 @@
 
             <ImageView
                 android:id="@+id/iv_top_bg"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(314)}"
                 viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(232)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(314)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -160,10 +160,10 @@
                     android:hint="输入文字"
                     android:imeOptions="actionSend"
                     android:onClick="@{viewModel::toKeyboard}"
-                    android:paddingStart="12dp"
                     android:paddingTop="8dp"
-                    android:paddingEnd="12dp"
                     android:paddingBottom="8dp"
+                    android:paddingEnd="12dp"
+                    android:paddingStart="2dp"
                     android:singleLine="true"
                     android:textColor="@color/black_4d4"
                     android:textColorHint="#C3BDCD"
@@ -193,6 +193,21 @@
                         android:padding="15dp"
                         android:src="@mipmap/chat_emoji_icon" />
                 </LinearLayout>
+
+                <TextView
+                    onClickDelayed="@{viewModel::sendMsg}"
+                    android:layout_width="40dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/btn_bg_purple_7a4_radius5"
+                    android:gravity="center"
+                    android:text="发送"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="@{isEmoji?View.VISIBLE:View.GONE}" />
             </RelativeLayout>
 
             <RelativeLayout

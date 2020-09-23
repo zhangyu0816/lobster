@@ -2,4 +2,5 @@
     <string name="app_name">对话模块</string>
     <string name="msg_no_type">暂不支付该类型</string>
     <string name="mp3">.mp3</string>
+    <string name="notice_ta">打开通知，第一时间回复</string>
 </resources>

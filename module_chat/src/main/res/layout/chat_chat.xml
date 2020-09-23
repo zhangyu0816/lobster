@@ -37,9 +37,9 @@
             android:background="@drawable/gradient_purple_6d5_ae7_noradius">
 
             <ImageView
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(353)}"
-                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(261)}"
                 android:id="@+id/iv_top_bg"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(261)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(353)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -159,7 +159,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="15dp"
-                android:text="打开通知，第一时间回复他"
+                android:text='@{@string/notice_ta+(viewModel.memberInfo.sex==0?"她":"他")}'
                 android:textColor="@color/black_252"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -242,9 +242,7 @@
                     android:hint="输入文字"
                     android:imeOptions="actionSend"
                     android:onClick="@{viewModel::toKeyboard}"
-                    android:paddingStart="12dp"
                     android:paddingTop="8dp"
-                    android:paddingEnd="12dp"
                     android:paddingBottom="8dp"
                     android:singleLine="true"
                     android:text="@={content}"
@@ -295,6 +293,21 @@
                         android:padding="15dp"
                         android:src="@mipmap/chat_emoji_icon" />
                 </LinearLayout>
+
+                <TextView
+                    onClickDelayed="@{viewModel::sendMsg}"
+                    android:layout_width="50dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/btn_bg_purple_7a4_radius5"
+                    android:gravity="center"
+                    android:text="发送"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:visibility="@{isEmoji?View.VISIBLE:View.GONE}" />
             </RelativeLayout>
 
             <RelativeLayout

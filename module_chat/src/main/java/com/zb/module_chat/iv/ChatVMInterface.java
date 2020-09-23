@@ -37,6 +37,8 @@ public interface ChatVMInterface {
 
     void deleteContent(View view);
 
+    void sendMsg(View view);
+
     void stopPlayer();
 
     void uploadSound(File file, int resTime);
