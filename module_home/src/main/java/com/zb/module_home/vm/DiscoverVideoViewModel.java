@@ -59,7 +59,6 @@ import com.zb.module_home.windows.GiftPayPW;
 import com.zb.module_home.windows.ReviewPW;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -76,7 +75,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     private String downloadPath = "";
     private int videoWidth, videoHeight;
     private List<Review> reviewList = new ArrayList<>();
-    private List<Review> tempList = new ArrayList<>();
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -163,7 +161,9 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
         new ReviewPW(mBinding.getRoot(), friendDynId, discoverInfo.getReviews(), () -> {
             discoverInfo.setReviews(discoverInfo.getReviews() + 1);
             mBinding.setDiscoverInfo(discoverInfo);
-            seeLikers(1);
+            reviewList.clear();
+            adapter.notifyDataSetChanged();
+            seeReviews(1);
         });
     }
 
@@ -241,7 +241,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
 
     @Override
     public void doReward(View view) {
-        new GiftPW( mBinding.getRoot(), giftInfo ->
+        new GiftPW(mBinding.getRoot(), giftInfo ->
                 new GiftPayPW(mBinding.getRoot(), giftInfo, discoverInfo.getFriendDynId(), () -> {
                 }));
     }
@@ -263,7 +263,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             public void onNext(DiscoverInfo o) {
                 discoverInfo = o;
                 mBinding.setDiscoverInfo(discoverInfo);
-                seeLikers(1);
+                seeReviews(1);
                 DownLoad.getFilePath(discoverInfo.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), (filePath, bitmap) -> {
                     discoverInfo.setVideoPath(filePath);
                     mBinding.setIsProgress(false);
@@ -369,7 +369,9 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                 data.putExtra("goodNum", goodNum);
                 data.putExtra("friendDynId", friendDynId);
                 activity.sendBroadcast(data);
-                seeLikers(1);
+                reviewList.clear();
+                adapter.notifyDataSetChanged();
+                seeReviews(1);
             }
 
             @Override
@@ -459,60 +461,59 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     }
 
     @Override
-    public void seeLikers(int pageNo) {
-        seeLikersApi api = new seeLikersApi(new HttpOnNextListener<List<Review>>() {
-            @Override
-            public void onNext(List<Review> o) {
-                for (Review item : o) {
-                    item.setType(1);
-                    tempList.add(item);
-                }
-                seeLikers(pageNo + 1);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    seeReviews(1);
-                }
-            }
-        }, activity).setFriendDynId(friendDynId).setPageNo(pageNo);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
     public void seeReviews(int pageNo) {
         seeReviewsApi api = new seeReviewsApi(new HttpOnNextListener<List<Review>>() {
             @Override
             public void onNext(List<Review> o) {
+                mBinding.reviewList.setVisibility(View.VISIBLE);
+                int start = reviewList.size();
                 for (Review item : o) {
                     item.setType(2);
-                    tempList.add(item);
+                    reviewList.add(item);
                 }
+                adapter.notifyItemRangeChanged(start, reviewList.size());
+                if (reviewList.size() > 2) {
+                    mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(335)));
+                    mBinding.reviewList.start();
+                } else {
+                    mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
+                }
+
                 seeReviews(pageNo + 1);
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    Collections.sort(tempList, new CreateTimeComparator());
-                    if (tempList.size() > 0) {
-                        reviewList.clear();
-                        adapter.notifyDataSetChanged();
-                        reviewList.addAll(tempList);
-                        tempList.clear();
-                        mBinding.reviewList.setVisibility(View.VISIBLE);
-                        if (reviewList.size() > 2) {
-                            mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(335)));
-                            mBinding.reviewList.start();
-                        } else {
-                            mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
-                        }
-                        adapter.notifyDataSetChanged();
-                    }
+                    seeLikers(1);
                 }
             }
         }, activity).setFriendDynId(friendDynId).setTimeSortType(1).setPageNo(pageNo);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void seeLikers(int pageNo) {
+        seeLikersApi api = new seeLikersApi(new HttpOnNextListener<List<Review>>() {
+            @Override
+            public void onNext(List<Review> o) {
+                mBinding.reviewList.setVisibility(View.VISIBLE);
+                int start = reviewList.size();
+                for (Review item : o) {
+                    item.setType(1);
+                    reviewList.add(item);
+                }
+                adapter.notifyItemRangeChanged(start, reviewList.size());
+                if (reviewList.size() > 2) {
+                    mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(335)));
+                    mBinding.reviewList.start();
+                } else {
+                    mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
+                }
+
+                seeLikers(pageNo + 1);
+            }
+        }, activity).setFriendDynId(friendDynId).setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

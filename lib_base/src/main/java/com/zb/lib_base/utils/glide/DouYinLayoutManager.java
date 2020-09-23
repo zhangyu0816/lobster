@@ -56,6 +56,7 @@ public class DouYinLayoutManager extends LinearLayoutManager implements Recycler
     @Override
     public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
         mDrift = dy;
+        onViewPagerListener.onScroll();
         return super.scrollVerticallyBy(dy, recycler, state);
 
     }

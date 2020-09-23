@@ -20,7 +20,8 @@ public class VideoInfo extends BaseObservable {
         notifyPropertyChanged(BR.path);
     }
 
-    @Bindable public String getName() {
+    @Bindable
+    public String getName() {
         return name;
     }
 

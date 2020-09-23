@@ -3,14 +3,12 @@ package com.zb.module_camera.vm;
 import android.annotation.SuppressLint;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
-import android.os.Environment;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.model.VideoInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -19,11 +17,10 @@ import com.zb.module_camera.BR;
 import com.zb.module_camera.databinding.CameraVideoBinding;
 import com.zb.module_camera.iv.VideoVMInterface;
 import com.zb.module_camera.utils.CameraPreview;
+import com.zb.module_camera.utils.GetVideo;
 import com.zb.module_camera.utils.OverCameraView;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
 
@@ -40,7 +37,6 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
     private int _position = Camera.CameraInfo.CAMERA_FACING_BACK;
     private float x = 16f, y = 9f;
 
-    private List<VideoInfo> videoInfoList = new ArrayList<>();
     private MediaRecorder mRecorder;//音视频录制类
     private long time = 0;
 
@@ -68,8 +64,14 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
         videoBinding.cameraLayout.setOnTouchListener(this);
         AdapterBinding.viewSize(videoBinding.cameraLayout, MineApp.W, (int) (MineApp.W * x / y));
         initCamera();
-        videoInfoList.clear();
-        getVideoFile(Environment.getExternalStorageDirectory());
+        MineApp.videoInfoList.clear();
+
+        GetVideo.getAllLocalVideos(activity,new Handler(message -> {
+            if(message.what==0){
+                videoBinding.setVideoPath(MineApp.videoInfoList.get(0).getPath());
+            }
+            return false;
+        }));
     }
 
     private void initCamera() {
@@ -239,32 +241,4 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
             mHandler.removeCallbacks(mRunnable);
         }
     };
-    private boolean exit = false;
-
-    private void getVideoFile(File file) {// 获得视频文件
-        // sdCard找到视频名称
-        Thread mThread = new Thread(() -> file.listFiles(file1 -> {
-            if (!exit) {
-                // sdCard找到视频名称
-                String name = file1.getName();
-                int i = name.indexOf('.');
-                if (i != -1) {
-                    name = name.substring(i);
-                    if (name.equalsIgnoreCase(".mp4")) {
-                        VideoInfo vi = new VideoInfo();
-                        vi.setName(file1.getName());
-                        vi.setPath(file1.getAbsolutePath());
-                        videoInfoList.add(vi);
-                        videoBinding.setVideoPath(videoInfoList.get(0).getPath());
-                        exit = true;
-                        return true;
-                    }
-                } else if (file1.isDirectory()) {
-                    getVideoFile(file1);
-                }
-            }
-            return false;
-        }));
-        mThread.start();
-    }
 }

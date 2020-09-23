@@ -530,6 +530,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             mBinding.tvContent.setText(count < 99 ? (count + "") : "99+");
             mBinding.tvSubContent.setText("人喜欢你啦");
             mBinding.setOtherHead("");
+            mBinding.remindRelative.setVisibility(View.VISIBLE);
             startAnimator();
         }
     }
@@ -642,6 +643,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     }
 
     public void stopAnimator() {
+        mBinding.remindRelative.setVisibility(View.GONE);
         if (pvh_remind != null && pvh_remind.isRunning())
             pvh_remind.cancel();
     }

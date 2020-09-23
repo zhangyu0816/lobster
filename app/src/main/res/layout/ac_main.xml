@@ -163,7 +163,8 @@
             android:layout_above="@+id/linearLayout2"
             android:layout_alignParentEnd="true"
             android:scaleX="0"
-            android:scaleY="0">
+            android:scaleY="0"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="wrap_content"

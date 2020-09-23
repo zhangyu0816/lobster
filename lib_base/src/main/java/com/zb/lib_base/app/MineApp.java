@@ -28,6 +28,7 @@ import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.RecommendInfo;
 import com.zb.lib_base.model.RegisterInfo;
+import com.zb.lib_base.model.VideoInfo;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.DisplayUtils;
@@ -66,6 +67,7 @@ public class MineApp extends MultiDexApplication {
     public static String WX_PAY_APPID = "wxbdd7128e0a0a08f8";
 
     public static List<VipInfo> vipInfoList = new ArrayList<>();
+    public static List<VideoInfo> videoInfoList = new ArrayList<>();
     public static WalletInfo walletInfo = new WalletInfo();
     public static MineNewsCount mineNewsCount = new MineNewsCount();
     public static ContactNum contactNum = new ContactNum();

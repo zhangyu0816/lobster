@@ -65,7 +65,6 @@ import com.zb.module_home.windows.GiftPayPW;
 import com.zb.module_home.windows.ReviewPW;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -73,8 +72,9 @@ import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.OrientationHelper;
 
 public class VideoListViewModel extends BaseViewModel implements VideoListVMInterface {
-    public int position;
+    public int position = -1;
     public int pageNo;
+    private int showPosition = -1;
     private HomeAdapter adapter;
     private DouYinLayoutManager douYinLayoutManager;
     private HomeVideoListBinding mBinding;
@@ -83,6 +83,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     private BaseReceiver attentionReceiver;
     private String downloadPath = "";
     private int videoWidth, videoHeight;
+    private boolean canUpdate = false;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -142,15 +143,26 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
 
             @Override
             public void onPageSelected(boolean isButton, View view) {
+                setScroll(false);
                 isUp = douYinLayoutManager.getDrift() >= 0;
                 position = douYinLayoutManager.findFirstCompletelyVisibleItemPosition();
                 if (position == -1)
                     return;
+                if (showPosition == position)
+                    return;
+                showPosition = position;
+
+                canUpdate = false;
                 playVideo(view);
                 if (!isOver && position == MineApp.discoverInfoList.size() - 1 && isUp) {
                     pageNo++;
                     dynPiazzaList();
                 }
+            }
+
+            @Override
+            public void onScroll() {
+                setScroll(true);
             }
         });
     }
@@ -174,21 +186,13 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         dynPiazzaListApi api = new dynPiazzaListApi(new HttpOnNextListener<List<DiscoverInfo>>() {
             @Override
             public void onNext(List<DiscoverInfo> o) {
-                if (isUp) {
-                    // 上滑  底部加载更多
-                    int start = MineApp.discoverInfoList.size();
-                    MineApp.discoverInfoList.addAll(o);
-                    adapter.notifyItemRangeChanged(start, MineApp.discoverInfoList.size());
-
-                    for (DiscoverInfo item : o) {
-                        DownLoad.getFilePath(item.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), (filePath, bitmap) -> {
-                        });
-                    }
-                } else {
-                    // 下滑  顶部加载更多
-                    MineApp.discoverInfoList.addAll(0, o);
-                    adapter.notifyItemRangeChanged(0, o.size());
-                    mBinding.videoList.scrollToPosition(o.size());
+                // 上滑  底部加载更多
+                int start = MineApp.discoverInfoList.size();
+                MineApp.discoverInfoList.addAll(o);
+                adapter.notifyItemRangeChanged(start, MineApp.discoverInfoList.size());
+                for (DiscoverInfo item : o) {
+                    DownLoad.getFilePath(item.getVideoUrl(), BaseActivity.getDownloadFile(".mp4").getAbsolutePath(), (filePath, bitmap) -> {
+                    });
                 }
             }
 
@@ -229,7 +233,9 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         new ReviewPW(mBinding.getRoot(), discoverInfo.getFriendDynId(), discoverInfo.getReviews(), () -> {
             discoverInfo.setReviews(discoverInfo.getReviews() + 1);
             tvReviews.setText(ObjectUtils.count(discoverInfo.getReviews()));
-            seeLikers(1);
+            reviewList.clear();
+            reviewAdapter.notifyDataSetChanged();
+            seeReviews(1);
         });
     }
 
@@ -413,7 +419,9 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 data.putExtra("goodNum", goodNum);
                 data.putExtra("friendDynId", discoverInfo.getFriendDynId());
                 activity.sendBroadcast(data);
-                seeLikers(1);
+                reviewList.clear();
+                reviewAdapter.notifyDataSetChanged();
+                seeReviews(1);
             }
 
             @Override
@@ -477,7 +485,6 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     private AutoPollRecyclerView reviewListView;
     private HomeAdapter reviewAdapter;
     private List<Review> reviewList = new ArrayList<>();
-    private List<Review> tempList = new ArrayList<>();
     private VideoView lastVideoView;
 
     private void playVideo(View view) {
@@ -519,7 +526,6 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         ivPlay.setVisibility(View.GONE);
         if (reviewAdapter == null)
             reviewAdapter = new HomeAdapter<>(activity, R.layout.item_auto_review, reviewList, this);
-        reviewList.clear();
         reviewAdapter.setMax(true);
         reviewAdapter.notifyDataSetChanged();
         reviewListView.setAdapter(reviewAdapter);
@@ -558,59 +564,60 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    private void seeLikers(int pageNo) {
-        seeLikersApi api = new seeLikersApi(new HttpOnNextListener<List<Review>>() {
-            @Override
-            public void onNext(List<Review> o) {
-                for (Review item : o) {
-                    item.setType(1);
-                    tempList.add(item);
-                }
-                seeLikers(pageNo + 1);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    seeReviews(1);
-                }
-            }
-        }, activity).setFriendDynId(discoverInfo.getFriendDynId()).setPageNo(pageNo);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
     private void seeReviews(int pageNo) {
         seeReviewsApi api = new seeReviewsApi(new HttpOnNextListener<List<Review>>() {
             @Override
             public void onNext(List<Review> o) {
-                for (Review item : o) {
-                    item.setType(2);
-                    tempList.add(item);
+                if (canUpdate) {
+                    reviewListView.setVisibility(View.VISIBLE);
+                    int start = reviewList.size();
+                    for (Review item : o) {
+                        item.setType(2);
+                        reviewList.add(item);
+                    }
+                    reviewAdapter.notifyItemRangeChanged(start, reviewList.size());
+                    if (reviewList.size() > 2) {
+                        reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(335)));
+                        reviewListView.start();
+                    } else {
+                        reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
+                    }
+                    seeReviews(pageNo + 1);
                 }
-                seeReviews(pageNo + 1);
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    Collections.sort(tempList, new CreateTimeComparator());
-                    if (tempList.size() > 0) {
-                        reviewList.clear();
-                        reviewAdapter.notifyDataSetChanged();
-                        reviewList.addAll(tempList);
-                        tempList.clear();
-                        reviewListView.setVisibility(View.VISIBLE);
-                        if (reviewList.size() > 2) {
-                            reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(335)));
-                            reviewListView.start();
-                        } else {
-                            reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
-                        }
-                        reviewAdapter.notifyDataSetChanged();
-                    }
+                    seeLikers(1);
                 }
             }
         }, activity).setFriendDynId(discoverInfo.getFriendDynId()).setTimeSortType(1).setPageNo(pageNo);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void seeLikers(int pageNo) {
+        seeLikersApi api = new seeLikersApi(new HttpOnNextListener<List<Review>>() {
+            @Override
+            public void onNext(List<Review> o) {
+                if (canUpdate) {
+                    reviewListView.setVisibility(View.VISIBLE);
+                    int start = reviewList.size();
+                    for (Review item : o) {
+                        item.setType(1);
+                        reviewList.add(item);
+                    }
+                    reviewAdapter.notifyItemRangeChanged(start, reviewList.size());
+                    if (reviewList.size() > 2) {
+                        reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(335)));
+                        reviewListView.start();
+                    } else {
+                        reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
+                    }
+                    seeLikers(pageNo + 1);
+                }
+            }
+        }, activity).setFriendDynId(discoverInfo.getFriendDynId()).setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -652,7 +659,10 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 ivProgress.setVisibility(View.GONE);
                 ivImage.setVisibility(View.GONE);
                 videoView.setBackgroundColor(Color.TRANSPARENT);
-                seeLikers(1);
+                reviewList.clear();
+                reviewAdapter.notifyDataSetChanged();
+                canUpdate = true;
+                seeReviews(1);
             }
             return false; //如果方法处理了信息，则为true；如果没有，则为false。返回false或根本没有OnInfoListener，将导致丢弃该信息。
         });

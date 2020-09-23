@@ -9,5 +9,6 @@ public interface OnViewPagerListener {
     //播放的监听
     void onPageSelected(boolean isButton, View view);
 
+    void onScroll();
 
 }

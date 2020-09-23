@@ -27,12 +27,9 @@ import com.zb.lib_base.R;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.iv.BaseVMInterface;
-import com.zb.lib_base.model.Review;
-import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.ObjectUtils;
 
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -87,26 +84,6 @@ public class BaseViewModel implements BaseVMInterface {
 
     @Override
     public void question(View view) {
-    }
-
-    public static class CreateTimeComparator implements Comparator<Review> {
-        @Override
-        public int compare(Review o1, Review o2) {
-            if (o1 == null && o2 == null) {
-                return 0;
-            }
-            if (o1 == null) {
-                return -1;
-            }
-            if (o2 == null) {
-                return 1;
-            }
-            if (o1.getCreateTime().isEmpty())
-                return -1;
-            if (o2.getCreateTime().isEmpty())
-                return -1;
-            return DateUtil.getDateCount(o2.getCreateTime(), o1.getCreateTime(), DateUtil.yyyy_MM_dd_HH_mm_ss, 1000f);
-        }
     }
 
     public void initTabLayout(String[] tabNames, TabLayout tabLayout, ViewPager viewPager, int selectColor, int color, int index) {
@@ -171,6 +148,7 @@ public class BaseViewModel implements BaseVMInterface {
      * 自定义Tab的View * @param currentPosition * @return
      */
     private View getTabView(String name, boolean showRed) {
+        @SuppressLint("InflateParams")
         View view = LayoutInflater.from(activity).inflate(R.layout.layout_tab, null);
         TextView textView = view.findViewById(R.id.tab_item_textview);
         TextView tvRed = view.findViewById(R.id.tv_red);
@@ -239,21 +217,31 @@ public class BaseViewModel implements BaseVMInterface {
         try {
             if (mPlayer != null) {
                 mPlayer.stop();
+                mPlayer.prepare();
+                mPlayer.start();
             }
-            mPlayer.prepare();
-            mPlayer.start();
         } catch (IllegalStateException | IOException e) {
             e.printStackTrace();
         }
         new Handler().postDelayed(() -> {
-            mPlayer.stop();
-            mPlayer.release();//释放资源
+            if (mPlayer != null) {
+                mPlayer.stop();
+                mPlayer.release();//释放资源
+            }
         }, 500);
     }
 
     private Handler mHandler = new Handler();
     private long exitTime = 0;
+    private boolean isScroll = false;
 
+    public void setScroll(boolean scroll) {
+        isScroll = scroll;
+    }
+
+    /**
+     * 视频页双击点赞
+     */
     @SuppressLint("ClickableViewAccessibility")
     public void initGood(View clickView, View imageView, Runnable ra, Runnable successRa) {
         imageView.setRotation(45f);
@@ -262,34 +250,25 @@ public class BaseViewModel implements BaseVMInterface {
         pvhA = PropertyValuesHolder.ofFloat("alpha", 1, 1, 1, 0.5f, 0);
         pvh = ObjectAnimator.ofPropertyValuesHolder(imageView, pvhSY, pvhSX, pvhA).setDuration(500);
         clickView.setOnTouchListener((view, motionEvent) -> {
-            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                if ((System.currentTimeMillis() - exitTime) > 500) {
-                    exitTime = System.currentTimeMillis();
-                    mHandler.postDelayed(ra, 500);
-                } else {
-                    exitTime = 0;
-                    mHandler.removeCallbacks(ra);
-                    imageView.setX(motionEvent.getX() - ObjectUtils.getViewSizeByWidthFromMax(102));
-                    imageView.setY(motionEvent.getY() - ObjectUtils.getViewSizeByWidthFromMax(102));
-                    imageView.setAlpha(1f);
-                    if (pvh != null)
-                        pvh.start();
-                    mHandler.postDelayed(successRa, 500);
+            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                if (!isScroll) {
+                    if ((System.currentTimeMillis() - exitTime) > 500) {
+                        exitTime = System.currentTimeMillis();
+                        mHandler.postDelayed(ra, 500);
+                    } else {
+                        exitTime = 0;
+                        mHandler.removeCallbacks(ra);
+                        imageView.setX(motionEvent.getX() - ObjectUtils.getViewSizeByWidthFromMax(102));
+                        imageView.setY(motionEvent.getY() - ObjectUtils.getViewSizeByWidthFromMax(102));
+                        imageView.setAlpha(1f);
+                        if (pvh != null)
+                            pvh.start();
+                        mHandler.postDelayed(successRa, 500);
+                    }
                 }
             }
             return true;
         });
-    }
-
-    /**
-     * 打开软键盘
-     *
-     * @param v
-     */
-
-    public void showImplicit(View v) {
-        imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(v, InputMethodManager.SHOW_FORCED);
     }
 
     /**
