@@ -75,8 +75,6 @@ public class ImUtils {
 
     /**
      * 删除聊天记录
-     *
-     * @param delete
      */
     public void setDelete(boolean delete, RxAppCompatActivity activity) {
         isDelete = delete;
@@ -94,12 +92,6 @@ public class ImUtils {
 
     /**
      * 发送消息
-     *
-     * @param msgType
-     * @param stanza
-     * @param resLink
-     * @param resTime
-     * @param summary
      */
     private CustomMessageBody body;
     private YWMessage message;
@@ -191,8 +183,10 @@ public class ImUtils {
                     requestCount++;
                     if (requestCount < 6)
                         new Handler().postDelayed(() -> myImAccountInfo(activity), 3000);
-                    else
-                        SCToastUtil.showToast(activity, "当前聊天网络有波动，攻城狮正在修复，请稍后使用聊天功能", true);
+                    else {
+                        loginOutIM();
+                        SCToastUtil.showToast(activity, "当前聊天网络拥挤，请稍后再试", true);
+                    }
                 }
             }
         }, activity);

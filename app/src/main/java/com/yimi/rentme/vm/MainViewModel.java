@@ -21,6 +21,7 @@ import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.api.chatListApi;
 import com.zb.lib_base.api.contactNumApi;
 import com.zb.lib_base.api.driftBottleChatListApi;
+import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.newDynMsgAllNumApi;
 import com.zb.lib_base.api.openedMemberPriceListApi;
 import com.zb.lib_base.api.otherInfoApi;
@@ -40,6 +41,7 @@ import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.model.VipInfo;
@@ -236,6 +238,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
         handler.sendEmptyMessageDelayed(0, time);
         createAnimator();
+        if (MineApp.mineInfo.getUserId() == 0)
+            myInfo();
     }
 
     public void onDestroy() {
@@ -334,6 +338,17 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         nowIndex = index;
         mBinding.setIndex(nowIndex);
         mBinding.viewPage.setCurrentItem(index);
+    }
+
+    @Override
+    public void myInfo() {
+        myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
+            @Override
+            public void onNext(MineInfo o) {
+                MineApp.mineInfo = o;
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override

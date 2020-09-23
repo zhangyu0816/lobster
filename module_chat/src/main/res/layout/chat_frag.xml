@@ -38,7 +38,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp">
 
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -73,186 +72,186 @@
                     app:contentInsetStart="0dp"
                     app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
+                    <com.zb.lib_base.views.BottleTitleView
+                        isPlay="@{isPlay}"
+                        onClickDelayed="@{viewModel::entryBottle}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp" />
+                </androidx.appcompat.widget.Toolbar>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="horizontal"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp">
 
-                        <com.zb.lib_base.views.BottleTitleView
-                            isPlay="@{isPlay}"
-                            onClickDelayed="@{viewModel::entryBottle}"
-                            android:layout_width="match_parent"
+                        <RelativeLayout
+                            onClickDelayed="@{viewModel::toGift}"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_margin="5dp" />
+                            android:layout_weight="1">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                            <TextView
+                                android:id="@+id/tv_gift_msg"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="15dp"
+                                android:drawableTop="@mipmap/gift_msg_icon"
+                                android:drawablePadding="10dp"
+                                android:text="我的礼物"
+                                android:textColor="@color/black_827"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_alignEnd="@+id/tv_gift_msg"
+                                android:layout_marginEnd="-5dp"
+                                android:background="@drawable/circle_white_red"
+                                android:gravity="center"
+                                android:text="@{ObjectUtils.count(mineNewsCount.friendDynamicGiftNum)}"
+                                android:textColor="@android:color/white"
+                                android:textSize="11sp"
+                                android:visibility="@{mineNewsCount.friendDynamicGiftNum==0?View.INVISIBLE:View.VISIBLE}"
+                                tools:text="···" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            onClickDelayed="@{viewModel::toReview}"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:background="@color/white"
-                            android:paddingStart="20dp"
-                            android:paddingEnd="20dp"
-                            android:orientation="horizontal">
+                            android:layout_weight="1">
 
-                            <RelativeLayout
-                                onClickDelayed="@{viewModel::toGift}"
-                                android:layout_width="0dp"
+                            <TextView
+                                android:id="@+id/tv_comment_msg"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1">
+                                android:layout_centerInParent="true"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="15dp"
+                                android:drawableTop="@mipmap/comment_msg_icon"
+                                android:drawablePadding="10dp"
+                                android:text="我的消息"
+                                android:textColor="@color/black_827"
+                                android:textSize="12sp" />
 
-                                <TextView
-                                    android:id="@+id/tv_gift_msg"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerInParent="true"
-                                    android:layout_marginTop="5dp"
-                                    android:layout_marginBottom="15dp"
-                                    android:drawableTop="@mipmap/gift_msg_icon"
-                                    android:drawablePadding="10dp"
-                                    android:text="我的礼物"
-                                    android:textColor="@color/black_827"
-                                    android:textSize="12sp" />
+                            <TextView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_alignEnd="@+id/tv_comment_msg"
+                                android:layout_marginEnd="-5dp"
+                                android:background="@drawable/circle_white_red"
+                                android:gravity="center"
+                                android:text="@{ObjectUtils.count(mineNewsCount.friendDynamicReviewNum)}"
+                                android:textColor="@android:color/white"
+                                android:textSize="11sp"
+                                android:visibility="@{mineNewsCount.friendDynamicReviewNum==0?View.INVISIBLE:View.VISIBLE}"
+                                tools:text="···" />
+                        </RelativeLayout>
 
-                                <TextView
-                                    android:layout_width="22dp"
-                                    android:layout_height="22dp"
-                                    android:layout_marginEnd="-5dp"
-                                    android:layout_alignEnd="@+id/tv_gift_msg"
-                                    android:background="@drawable/circle_white_red"
-                                    android:gravity="center"
-                                    android:text="@{ObjectUtils.count(mineNewsCount.friendDynamicGiftNum)}"
-                                    android:textColor="@android:color/white"
-                                    android:textSize="11sp"
-                                    android:visibility="@{mineNewsCount.friendDynamicGiftNum==0?View.INVISIBLE:View.VISIBLE}"
-                                    tools:text="···" />
-                            </RelativeLayout>
+                        <RelativeLayout
+                            onClickDelayed="@{viewModel::toGood}"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
 
-                            <RelativeLayout
-                                onClickDelayed="@{viewModel::toReview}"
-                                android:layout_width="0dp"
+                            <TextView
+                                android:id="@+id/tv_good_msg"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1">
+                                android:layout_centerInParent="true"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="15dp"
+                                android:drawableTop="@mipmap/good_msg_icon"
+                                android:drawablePadding="10dp"
+                                android:text="我的点赞"
+                                android:textColor="@color/black_827"
+                                android:textSize="12sp" />
 
-                                <TextView
-                                    android:id="@+id/tv_comment_msg"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerInParent="true"
-                                    android:layout_marginTop="5dp"
-                                    android:layout_marginBottom="15dp"
-                                    android:drawableTop="@mipmap/comment_msg_icon"
-                                    android:drawablePadding="10dp"
-                                    android:text="我的消息"
-                                    android:textColor="@color/black_827"
-                                    android:textSize="12sp" />
+                            <TextView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_alignEnd="@+id/tv_good_msg"
+                                android:layout_marginEnd="-5dp"
+                                android:background="@drawable/circle_white_red"
+                                android:gravity="center"
+                                android:text="@{ObjectUtils.count(mineNewsCount.friendDynamicGoodNum)}"
+                                android:textColor="@android:color/white"
+                                android:textSize="11sp"
+                                android:visibility="@{mineNewsCount.friendDynamicGoodNum==0?View.INVISIBLE:View.VISIBLE}"
+                                tools:text="···" />
+                        </RelativeLayout>
 
-                                <TextView
-                                    android:layout_width="22dp"
-                                    android:layout_height="22dp"
-                                    android:layout_marginEnd="-5dp"
-                                    android:layout_alignEnd="@+id/tv_comment_msg"
-                                    android:background="@drawable/circle_white_red"
-                                    android:gravity="center"
-                                    android:text="@{ObjectUtils.count(mineNewsCount.friendDynamicReviewNum)}"
-                                    android:textColor="@android:color/white"
-                                    android:textSize="11sp"
-                                    android:visibility="@{mineNewsCount.friendDynamicReviewNum==0?View.INVISIBLE:View.VISIBLE}"
-                                    tools:text="···" />
-                            </RelativeLayout>
+                        <RelativeLayout
+                            onClickDelayed="@{viewModel::toService}"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1">
 
-                            <RelativeLayout
-                                onClickDelayed="@{viewModel::toGood}"
-                                android:layout_width="0dp"
+                            <TextView
+                                android:id="@+id/tv_service_msg"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1">
+                                android:layout_centerInParent="true"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="15dp"
+                                android:drawableTop="@mipmap/service_msg_icon"
+                                android:drawablePadding="10dp"
+                                android:text="客服消息"
+                                android:textColor="@color/black_827"
+                                android:textSize="12sp" />
 
-                                <TextView
-                                    android:id="@+id/tv_good_msg"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerInParent="true"
-                                    android:layout_marginTop="5dp"
-                                    android:layout_marginBottom="15dp"
-                                    android:drawableTop="@mipmap/good_msg_icon"
-                                    android:drawablePadding="10dp"
-                                    android:text="我的点赞"
-                                    android:textColor="@color/black_827"
-                                    android:textSize="12sp" />
-
-                                <TextView
-                                    android:layout_width="22dp"
-                                    android:layout_height="22dp"
-                                    android:layout_alignEnd="@+id/tv_good_msg"
-                                    android:background="@drawable/circle_white_red"
-                                    android:gravity="center"
-                                    android:layout_marginEnd="-5dp"
-                                    android:text="@{ObjectUtils.count(mineNewsCount.friendDynamicGoodNum)}"
-                                    android:textColor="@android:color/white"
-                                    android:textSize="11sp"
-                                    android:visibility="@{mineNewsCount.friendDynamicGoodNum==0?View.INVISIBLE:View.VISIBLE}"
-                                    tools:text="···" />
-                            </RelativeLayout>
-
-                            <RelativeLayout
-                                onClickDelayed="@{viewModel::toService}"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1">
-
-                                <TextView
-                                    android:id="@+id/tv_service_msg"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_centerInParent="true"
-                                    android:layout_marginTop="5dp"
-                                    android:layout_marginBottom="15dp"
-                                    android:drawableTop="@mipmap/service_msg_icon"
-                                    android:drawablePadding="10dp"
-                                    android:text="客服消息"
-                                    android:textColor="@color/black_827"
-                                    android:textSize="12sp" />
-
-                                <TextView
-                                    android:layout_width="22dp"
-                                    android:layout_height="22dp"
-                                    android:layout_marginEnd="-5dp"
-                                    android:layout_alignEnd="@+id/tv_service_msg"
-                                    android:background="@drawable/circle_white_red"
-                                    android:gravity="center"
-                                    android:text="@{ObjectUtils.count(mineNewsCount.systemNewsNum)}"
-                                    android:textColor="@android:color/white"
-                                    android:textSize="11sp"
-                                    android:visibility="@{mineNewsCount.systemNewsNum==0?View.INVISIBLE:View.VISIBLE}"
-                                    tools:text="···" />
-                            </RelativeLayout>
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:layout_marginTop="5dp"
-                            android:background="@color/black_efe" />
-
+                            <TextView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_alignEnd="@+id/tv_service_msg"
+                                android:layout_marginEnd="-5dp"
+                                android:background="@drawable/circle_white_red"
+                                android:gravity="center"
+                                android:text="@{ObjectUtils.count(mineNewsCount.systemNewsNum)}"
+                                android:textColor="@android:color/white"
+                                android:textSize="11sp"
+                                android:visibility="@{mineNewsCount.systemNewsNum==0?View.INVISIBLE:View.VISIBLE}"
+                                tools:text="···" />
+                        </RelativeLayout>
                     </LinearLayout>
-                </androidx.appcompat.widget.Toolbar>
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tab_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@android:color/white"
-                    app:tabBackground="@android:color/transparent"
-                    app:tabGravity="start"
-                    app:tabIndicator="@drawable/indicator"
-                    app:tabIndicatorColor="@color/purple_7a4"
-                    app:tabIndicatorFullWidth="false"
-                    app:tabIndicatorHeight="3dp"
-                    app:tabMaxWidth="0dp"
-                    app:tabMinWidth="0dp"
-                    app:tabMode="scrollable"
-                    app:tabPaddingBottom="-15dp"
-                    app:tabRippleColor="@android:color/transparent"
-                    app:tabSelectedTextColor="@color/black_252"
-                    app:tabTextColor="@color/black_827" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/black_efe" />
+
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tab_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@android:color/white"
+                        app:tabBackground="@android:color/transparent"
+                        app:tabGravity="start"
+                        app:tabIndicator="@drawable/indicator"
+                        app:tabIndicatorColor="@color/purple_7a4"
+                        app:tabIndicatorFullWidth="false"
+                        app:tabIndicatorHeight="3dp"
+                        app:tabMaxWidth="0dp"
+                        app:tabMinWidth="0dp"
+                        app:tabMode="scrollable"
+                        app:tabPaddingBottom="-15dp"
+                        app:tabRippleColor="@android:color/transparent"
+                        app:tabSelectedTextColor="@color/black_252"
+                        app:tabTextColor="@color/black_827" />
+                </LinearLayout>
+
             </com.google.android.material.appbar.AppBarLayout>
 
             <androidx.viewpager.widget.ViewPager
