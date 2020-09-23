@@ -172,7 +172,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     @Override
     public void selectCity(View view) {
         if (PreferenceUtil.readStringValue(activity, "latitude").isEmpty()) {
-            new TextPW(activity, mBinding.getRoot(), "定位失败", "定位失败，无法选取地址，请重新定位", "重新定位", () -> getPermissions(2));
+            new TextPW(mBinding.getRoot(), "定位失败", "定位失败，无法选取地址，请重新定位", "重新定位", () -> getPermissions(2));
         } else {
             ActivityUtils.getMineLocation(true);
         }

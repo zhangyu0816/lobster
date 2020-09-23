@@ -73,7 +73,7 @@ public class BindingPhoneViewModel extends BaseViewModel implements BindingPhone
             SCToastUtil.showToast(activity, "请输入正确的手机号", true);
             return;
         }
-        new ImageCaptchaPW(activity, mBinding.getRoot(), new ImageCaptchaPW.CallBack() {
+        new ImageCaptchaPW(mBinding.getRoot(), new ImageCaptchaPW.CallBack() {
             @Override
             public void success(ImageCaptcha imageCaptcha, String code) {
                 banderCaptcha(imageCaptcha, code);

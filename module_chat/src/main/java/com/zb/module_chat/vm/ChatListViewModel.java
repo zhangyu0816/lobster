@@ -175,7 +175,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
 
     @Override
     public void deleteItem(int position) {
-        new TextPW(activity, mBinding.getRoot(), "清除聊天记录", "清除记录后，将无法找回",
+        new TextPW(mBinding.getRoot(), "清除聊天记录", "清除记录后，将无法找回",
                 "清除", false, new TextPW.CallBack() {
             @Override
             public void sure() {

@@ -183,7 +183,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         } else {
             isLike(mBinding.ivLike);
             if (PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1) == 0 && MineApp.mineInfo.getMemberType() == 1) {
-                new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
+                new VipAdPW(mBinding.getRoot(), 6, "");
                 SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 return;
             }
@@ -433,13 +433,13 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                             LikeTypeDb.getInstance().setType(otherUserId, 2);
                             closeBtn(mBinding.ivSuperLike);
                             activity.sendBroadcast(new Intent("lobster_updateFCL"));
-                            new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex());
+                            new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex());
                         }
                     }
                 } else if (o == 2) {
                     // 匹配成功
                     LikeDb.getInstance().saveLike(new CollectID(otherUserId));
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex(), memberInfo.getNick(),
+                    new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex(), memberInfo.getNick(),
                             () -> ActivityUtils.getChatActivity(otherUserId, false));
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                     activity.sendBroadcast(new Intent("lobster_isLike"));
@@ -448,14 +448,14 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     mBinding.setLikeType(1);
                 } else if (o == 3) {
                     // 喜欢次数用尽
-                    new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
+                    new VipAdPW(mBinding.getRoot(), 6, "");
                     SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else if (o == 4) {
                     // 超级喜欢时，非会员或超级喜欢次数用尽
                     if (MineApp.mineInfo.getMemberType() == 2) {
                         SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
                     } else {
-                        new VipAdPW(activity, mBinding.getRoot(), false, 3, otherHead);
+                        new VipAdPW(mBinding.getRoot(), 3, otherHead);
                     }
                 } else {
                     if (likeOtherStatus == 0) {
@@ -520,7 +520,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     content = "兴趣：" + content.replace("#", ",");
                 }
 
-                new FunctionPW(activity, mBinding.getRoot(), memberInfo.getImage().replace("YM0000", "430X430"), sharedName, content, sharedUrl,
+                new FunctionPW(mBinding.getRoot(), memberInfo.getImage().replace("YM0000", "430X430"), sharedName, content, sharedUrl,
                         otherUserId == BaseActivity.userId, false, false, false, new FunctionPW.CallBack() {
                     @Override
                     public void gift() {
@@ -557,7 +557,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             makeEvaluate(2);
         } else {
             if (memberInfo != null)
-                new VipAdPW(activity, mBinding.getRoot(), false, 3, memberInfo.getImage());
+                new VipAdPW(mBinding.getRoot(), 3, memberInfo.getImage());
         }
     }
 

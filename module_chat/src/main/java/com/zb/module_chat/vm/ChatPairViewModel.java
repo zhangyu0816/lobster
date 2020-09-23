@@ -174,7 +174,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 ActivityUtils.getMineFCL(2);
                 return;
             }
-            new VipAdPW(activity, mBinding.getRoot(), false, 4, "");
+            new VipAdPW(mBinding.getRoot(), 4, "");
         } else if (chatList.getChatType() == 2) {
             // 漂流瓶
             ActivityUtils.getBottleList();
@@ -190,7 +190,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
     @Override
     public void deleteItem(int position) {
         if (chatMsgList.get(position).getChatType() == 4) {
-            new TextPW(activity, mBinding.getRoot(), "解除匹配关系", "解除匹配关系后，将对方移除匹配列表及聊天列表。",
+            new TextPW(mBinding.getRoot(), "解除匹配关系", "解除匹配关系后，将对方移除匹配列表及聊天列表。",
                     "解除", false, new TextPW.CallBack() {
                 @Override
                 public void sure() {

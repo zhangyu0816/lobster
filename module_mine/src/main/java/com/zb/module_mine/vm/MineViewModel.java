@@ -139,7 +139,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                 ActivityUtils.getMineFCL(2);
                 return;
             }
-            new VipAdPW(activity, mBinding.getRoot(), false, 4, "");
+            new VipAdPW(mBinding.getRoot(), 4, "");
         } else {
             ActivityUtils.getMineFCL(position);
         }

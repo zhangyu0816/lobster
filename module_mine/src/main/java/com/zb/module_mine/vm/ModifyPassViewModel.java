@@ -154,7 +154,7 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
             SCToastUtil.showToast(activity, "请输入正确的手机号", true);
             return;
         }
-        new ImageCaptchaPW(activity, mBinding.getRoot(), new ImageCaptchaPW.CallBack() {
+        new ImageCaptchaPW( mBinding.getRoot(), new ImageCaptchaPW.CallBack() {
             @Override
             public void success(ImageCaptcha imageCaptcha, String code) {
                 findPassCaptcha(imageCaptcha, code);

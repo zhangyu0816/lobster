@@ -143,7 +143,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
 
     @Override
     public void toSelectBirthday(View view) {
-        new BirthdayPW(activity, mBinding.getRoot(), MineApp.mineInfo.getBirthday(), birthday -> {
+        new BirthdayPW( mBinding.getRoot(), MineApp.mineInfo.getBirthday(), birthday -> {
             updateContent(birthday, 5);
             mineEditMemberBinding.setMineInfo(MineApp.mineInfo);
         });

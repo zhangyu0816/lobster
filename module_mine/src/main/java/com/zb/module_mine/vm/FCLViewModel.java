@@ -137,7 +137,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
         if (position == 2) {
             // 被喜欢
             if (LikeDb.getInstance().hasLike(otherUserId)) {
-                new TextPW(activity, mBinding.getRoot(), "解除匹配关系", "解除匹配关系后，将对方移除匹配列表及聊天列表。",
+                new TextPW( mBinding.getRoot(), "解除匹配关系", "解除匹配关系后，将对方移除匹配列表及聊天列表。",
                         "解除", () -> relievePair(otherUserId));
             } else {
                 makeEvaluate(otherUserId);
@@ -203,7 +203,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                     LikeTypeDb.getInstance().setType(otherUserId, 1);
                     adapter.notifyItemChanged(_selectIndex);
                 } else if (o == 2) {
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfoList.get(_selectIndex).getSex(), memberInfoList.get(_selectIndex).getNick(),
+                    new SuperLikePW( mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfoList.get(_selectIndex).getSex(), memberInfoList.get(_selectIndex).getNick(),
                             () -> ActivityUtils.getChatActivity(memberInfoList.get(_selectIndex).getUserId(), false));
                     LikeDb.getInstance().saveLike(new CollectID(otherUserId));
                     adapter.notifyItemChanged(_selectIndex);
@@ -211,7 +211,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                     activity.sendBroadcast(new Intent("lobster_isLike"));
                     LikeTypeDb.getInstance().setType(otherUserId, 1);
                 } else if (o == 3) {
-                    new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
+                    new VipAdPW(mBinding.getRoot(), 6, "");
                     SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else if (o == 5) {
                     LikeTypeDb.getInstance().setType(otherUserId, 1);

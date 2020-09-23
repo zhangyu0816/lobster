@@ -293,7 +293,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
 
     @Override
     public void selectBirthday(View view) {
-        new BirthdayPW(activity, mBinding.getRoot(), MineApp.registerInfo.getBirthday(), birthday -> {
+        new BirthdayPW(mBinding.getRoot(), MineApp.registerInfo.getBirthday(), birthday -> {
             MineApp.registerInfo.setBirthday(birthday);
             mBinding.setRegisterInfo(MineApp.registerInfo);
             mBinding.setCanNext(true);
@@ -431,7 +431,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 12) {
-                    new TextPW(activity, mBinding.getRoot(), "温馨提示", "该手机号已注册过，是否前往登录？", "去登录", () -> {
+                    new TextPW(mBinding.getRoot(), "温馨提示", "该手机号已注册过，是否前往登录？", "去登录", () -> {
                         mBinding.setCodeRemark("");
                         mBinding.setRight("密码登录");
                         mBinding.setBtnName("获取登录验证码");

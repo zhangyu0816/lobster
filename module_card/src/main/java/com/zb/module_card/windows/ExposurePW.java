@@ -2,7 +2,6 @@ package com.zb.module_card.windows;
 
 import android.view.View;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.api.superExposureApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -17,8 +16,8 @@ public class ExposurePW extends BasePopupWindow {
 
     private CallBack callBack;
 
-    public ExposurePW(RxAppCompatActivity activity, View parentView, CallBack callBack) {
-        super(activity, parentView, true);
+    public ExposurePW(View parentView, CallBack callBack) {
+        super(parentView, true);
         this.callBack = callBack;
         initUI();
     }

@@ -171,7 +171,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         super.question(view);
         if (canClose) {
             close(null);
-            new BottleQuestionPW(activity, mBinding.getRoot());
+            new BottleQuestionPW(mBinding.getRoot());
         }
     }
 
@@ -273,7 +273,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         if (friendDynId == 0)
             pickBottle(2);
         else {
-            new EditPW(activity, mBinding.getRoot(), friendDynId);
+            new EditPW(mBinding.getRoot(), friendDynId);
             close(null);
         }
     }
@@ -285,7 +285,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
             close(null);
             return;
         }
-        new BottleVipPW(activity, mBinding.getRoot());
+        new BottleVipPW(mBinding.getRoot());
     }
 
     @Override

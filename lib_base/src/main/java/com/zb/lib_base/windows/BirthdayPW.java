@@ -37,8 +37,8 @@ public class BirthdayPW extends BasePopupWindow {
 
     private String nowDate = "";
 
-    public BirthdayPW(RxAppCompatActivity activity, View parentView, String birthday, CallBack callBack) {
-        super(activity, parentView, true);
+    public BirthdayPW(View parentView, String birthday, CallBack callBack) {
+        super(parentView, true);
         mCallBack = callBack;
         nowDate = DateUtil.getNow(DateUtil.yyyy_MM_dd);
         if (birthday.isEmpty()) {

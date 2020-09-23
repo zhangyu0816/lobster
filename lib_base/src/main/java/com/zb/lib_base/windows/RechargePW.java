@@ -2,7 +2,6 @@ package com.zb.lib_base.windows;
 
 import android.view.View;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
 import com.zb.lib_base.adapter.AdapterBinding;
@@ -27,8 +26,8 @@ public class RechargePW extends BasePopupWindow {
     private PwsHomeVipRechargeBinding binding;
     private List<RechargeInfo> rechargeInfoList = new ArrayList<>();
 
-    public RechargePW(RxAppCompatActivity activity, View parentView) {
-        super(activity, parentView, true);
+    public RechargePW(View parentView) {
+        super(parentView, true);
         initUI();
     }
 
@@ -88,7 +87,7 @@ public class RechargePW extends BasePopupWindow {
             @Override
             public void onNext(OrderTran o) {
                 dismiss();
-                new PaymentPW(activity, mBinding.getRoot(), o, 2);
+                new PaymentPW(mBinding.getRoot(), o, 2);
             }
         }, activity).setMoney(rechargeInfoList.get(preIndex).getOriginalMoney()).setMoneyDiscountId(rechargeInfoList.get(preIndex).getId());
         HttpManager.getInstance().doHttpDeal(api);
@@ -110,14 +109,14 @@ public class RechargePW extends BasePopupWindow {
                     } else {
                         item.setContent("优惠最大");
                     }
-                   rechargeInfoList.add(item);
+                    rechargeInfoList.add(item);
                 }
                 adapter.notifyDataSetChanged();
                 binding.walletList.postDelayed(() -> {
                     if (rechargeInfoList.size() < 4) {
                         AdapterBinding.viewSize(binding.walletList, ObjectUtils.getViewSizeByWidth(1.0f), ObjectUtils.getViewSizeByWidth(0.25f));
                     }
-                },200);
+                }, 200);
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

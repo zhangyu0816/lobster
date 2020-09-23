@@ -2,7 +2,6 @@ package com.zb.lib_base.windows;
 
 import android.view.View;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
 import com.zb.lib_base.api.dynDoReviewApi;
@@ -16,8 +15,8 @@ public class EditPW extends BasePopupWindow {
     private PwsEditBinding binding;
     private long friendDynId;
 
-    public EditPW(RxAppCompatActivity activity, View parentView, long friendDynId) {
-        super(activity, parentView, true);
+    public EditPW(View parentView, long friendDynId) {
+        super(parentView, true);
         this.friendDynId = friendDynId;
         initUI();
     }

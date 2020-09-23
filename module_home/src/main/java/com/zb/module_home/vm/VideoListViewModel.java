@@ -226,7 +226,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     @Override
     public void toReviews(int position) {
         DiscoverInfo discoverInfo = MineApp.discoverInfoList.get(position);
-        new ReviewPW(activity, mBinding.getRoot(), discoverInfo.getFriendDynId(), discoverInfo.getReviews(), () -> {
+        new ReviewPW(mBinding.getRoot(), discoverInfo.getFriendDynId(), discoverInfo.getReviews(), () -> {
             discoverInfo.setReviews(discoverInfo.getReviews() + 1);
             tvReviews.setText(ObjectUtils.count(discoverInfo.getReviews()));
             seeLikers(1);
@@ -251,8 +251,8 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
 
     @Override
     public void doReward(DiscoverInfo discoverInfo) {
-        new GiftPW(activity, mBinding.getRoot(), giftInfo ->
-                new GiftPayPW(activity, mBinding.getRoot(), giftInfo, discoverInfo.getFriendDynId(), () -> {
+        new GiftPW(mBinding.getRoot(), giftInfo ->
+                new GiftPayPW(mBinding.getRoot(), giftInfo, discoverInfo.getFriendDynId(), () -> {
                 }));
     }
 
@@ -270,7 +270,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         String sharedName = discoverInfo.getNick();
         String content = discoverInfo.getText();
         String sharedUrl = HttpManager.BASE_URL + "mobile/Dyn_dynDetail?friendDynId=" + discoverInfo.getFriendDynId();
-        new FunctionPW(activity, mBinding.getRoot(), discoverInfo.getImage().replace("YM0000", "430X430"), sharedName, content, sharedUrl,
+        new FunctionPW(mBinding.getRoot(), discoverInfo.getImage().replace("YM0000", "430X430"), sharedName, content, sharedUrl,
                 discoverInfo.getUserId() == BaseActivity.userId, true, true, true, new FunctionPW.CallBack() {
             @Override
             public void gift() {
@@ -306,7 +306,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 if (MineApp.mineInfo.getMemberType() == 2) {
                     makeEvaluate(discoverInfo);
                 } else {
-                    new VipAdPW(activity, mBinding.getRoot(), false, 3, discoverInfo.getImage());
+                    new VipAdPW(mBinding.getRoot(), 3, discoverInfo.getImage());
                 }
             }
         });
@@ -388,7 +388,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 String otherHead = discoverInfo.getImage();
                 if (o == 1) {
                     LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 2);
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), MineApp.mineInfo.getSex() == 1 ? 0 : 1);
+                    new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), MineApp.mineInfo.getSex() == 1 ? 0 : 1);
                 } else if (o == 4) {
                     SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
                 } else {

@@ -156,6 +156,7 @@
         </LinearLayout>
 
         <RelativeLayout
+            onClickDelayed="@{viewModel::toLike}"
             android:id="@+id/remind_relative"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

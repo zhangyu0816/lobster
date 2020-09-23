@@ -1,5 +1,7 @@
 package com.yimi.rentme.iv;
 
+import android.view.View;
+
 import com.zb.lib_base.imcore.CustomMessageBody;
 
 public interface MainVMInterface {
@@ -23,4 +25,6 @@ public interface MainVMInterface {
     void otherInfo(long otherUserId, CustomMessageBody body, String msgId);
 
     void pushGoodUser();
+
+    void toLike(View view);
 }

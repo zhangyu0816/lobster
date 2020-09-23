@@ -2,7 +2,6 @@ package com.zb.module_home.windows;
 
 import android.view.View;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_home.BR;
@@ -13,8 +12,8 @@ public class GiveSuccessPW extends BasePopupWindow {
     private GiftInfo giftInfo;
     private int giftNum;
 
-    public GiveSuccessPW(RxAppCompatActivity activity, View parentView, GiftInfo giftInfo, int giftNum) {
-        super(activity, parentView, true);
+    public GiveSuccessPW(View parentView, GiftInfo giftInfo, int giftNum) {
+        super(parentView, true);
         this.giftInfo = giftInfo;
         this.giftNum = giftNum;
         initUI();

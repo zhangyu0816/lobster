@@ -359,7 +359,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             ActivityUtils.getCardMemberDetail(otherUserId, false);
             return;
         }
-        new BottleVipPW(activity, mBinding.getRoot());
+        new BottleVipPW(mBinding.getRoot());
     }
 
     @Override

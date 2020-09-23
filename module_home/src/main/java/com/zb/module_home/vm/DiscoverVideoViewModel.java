@@ -160,7 +160,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
 
     @Override
     public void toReviews(View view) {
-        new ReviewPW(activity, mBinding.getRoot(), friendDynId, discoverInfo.getReviews(), () -> {
+        new ReviewPW(mBinding.getRoot(), friendDynId, discoverInfo.getReviews(), () -> {
             discoverInfo.setReviews(discoverInfo.getReviews() + 1);
             mBinding.setDiscoverInfo(discoverInfo);
             seeLikers(1);
@@ -188,7 +188,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
         String sharedName = discoverInfo.getNick();
         String content = discoverInfo.getText();
         String sharedUrl = HttpManager.BASE_URL + "mobile/Dyn_dynDetail?friendDynId=" + friendDynId;
-        new FunctionPW(activity, mBinding.getRoot(), discoverInfo.getImage().replace("YM0000", "430X430"), sharedName, content, sharedUrl,
+        new FunctionPW(mBinding.getRoot(), discoverInfo.getImage().replace("YM0000", "430X430"), sharedName, content, sharedUrl,
                 discoverInfo.getUserId() == BaseActivity.userId, true, true, false, new FunctionPW.CallBack() {
             @Override
             public void gift() {
@@ -199,7 +199,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
 
             @Override
             public void delete() {
-                new TextPW(activity, mBinding.getRoot(), "删除动态", "删除后，动态不可找回！", "删除", () -> deleteDyn());
+                new TextPW(mBinding.getRoot(), "删除动态", "删除后，动态不可找回！", "删除", () -> deleteDyn());
             }
 
             @Override
@@ -224,7 +224,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                 if (MineApp.mineInfo.getMemberType() == 2) {
                     makeEvaluate();
                 } else {
-                    new VipAdPW(activity, mBinding.getRoot(), false, 3, discoverInfo.getImage());
+                    new VipAdPW(mBinding.getRoot(), 3, discoverInfo.getImage());
                 }
             }
         });
@@ -241,8 +241,8 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
 
     @Override
     public void doReward(View view) {
-        new GiftPW(activity, mBinding.getRoot(), giftInfo ->
-                new GiftPayPW(activity, mBinding.getRoot(), giftInfo, discoverInfo.getFriendDynId(), () -> {
+        new GiftPW( mBinding.getRoot(), giftInfo ->
+                new GiftPayPW(mBinding.getRoot(), giftInfo, discoverInfo.getFriendDynId(), () -> {
                 }));
     }
 
@@ -446,7 +446,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                 String otherHead = memberInfo.getImage();
                 if (o == 1) {
                     LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 2);
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex());
+                    new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex());
                 } else if (o == 4) {
                     SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
                 } else {

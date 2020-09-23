@@ -2,7 +2,6 @@ package com.zb.module_mine.windows;
 
 import android.view.View;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.model.BankInfo;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_mine.BR;
@@ -16,8 +15,8 @@ public class BankPW extends BasePopupWindow {
     private List<BankInfo> bankInfoList;
     private CallBack callBack;
 
-    public BankPW(RxAppCompatActivity activity, View parentView, List<BankInfo> bankInfoList, CallBack callBack) {
-        super(activity, parentView, true);
+    public BankPW(View parentView, List<BankInfo> bankInfoList, CallBack callBack) {
+        super(parentView, true);
         this.bankInfoList = bankInfoList;
         this.callBack = callBack;
         initUI();

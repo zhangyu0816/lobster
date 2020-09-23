@@ -278,11 +278,11 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             this.pairInfo = pairInfo;
             makeEvaluate(pairInfo, 2);
         } else {
-            new VipAdPW(activity, mBinding.getRoot(), false, 3, pairInfo.getSingleImage());
+            new VipAdPW(mBinding.getRoot(), 3, pairInfo.getSingleImage());
         }
-//          new SuperLikePW(activity, mBinding.getRoot(), MineApp.mineInfo.getImage(), MineApp.mineInfo.getImage(), MineApp.mineInfo.getSex(), MineApp.mineInfo.getSex(), "哈哈哈",
+//          new SuperLikePW(mBinding.getRoot(), MineApp.mineInfo.getImage(), MineApp.mineInfo.getImage(), MineApp.mineInfo.getSex(), MineApp.mineInfo.getSex(), "哈哈哈",
 //                        () -> SCToastUtil.showToast(activity, "聊天", true));
-//        new SuperLikePW(activity, mBinding.getRoot(), MineApp.mineInfo.getImage(), MineApp.mineInfo.getImage(), MineApp.mineInfo.getSex(), MineApp.mineInfo.getSex());
+//        new SuperLikePW(mBinding.getRoot(), MineApp.mineInfo.getImage(), MineApp.mineInfo.getImage(), MineApp.mineInfo.getSex(), MineApp.mineInfo.getSex());
     }
 
     @Override
@@ -294,18 +294,18 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 setCardAnimationLeftToRight(pairInfo);
             }
         } else {
-            new VipAdPW(activity, mBinding.getRoot(), false, 2, "");
+            new VipAdPW(mBinding.getRoot(), 2, "");
         }
     }
 
     @Override
     public void exposure(View view) {
         if (MineApp.mineInfo.getMemberType() == 2) {
-            new TextPW(activity, mBinding.getRoot(), "VIP专享", "虾菇每日自动为你增加曝光度，让10的人优先看到你", "明白了", () -> {
+            new TextPW(mBinding.getRoot(), "VIP专享", "虾菇每日自动为你增加曝光度，让10的人优先看到你", "明白了", () -> {
 
             });
         } else {
-            new VipAdPW(activity, mBinding.getRoot(), false, 1, "");
+            new VipAdPW(mBinding.getRoot(), 1, "");
         }
     }
 
@@ -341,11 +341,11 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     @Override
     public void selectCity(View view) {
         if (MineApp.mineInfo.getMemberType() == 1) {
-            new VipAdPW(activity, mBinding.getRoot(), false, 5, "");
+            new VipAdPW(mBinding.getRoot(), 5, "");
             return;
         }
         if (PreferenceUtil.readStringValue(activity, "latitude").isEmpty()) {
-            new TextPW(activity, mBinding.getRoot(), "定位失败", "定位失败，无法选取地址，请重新定位", "重新定位", () -> getPermissions(2));
+            new TextPW(mBinding.getRoot(), "定位失败", "定位失败，无法选取地址，请重新定位", "重新定位", () -> getPermissions(2));
         } else {
             ActivityUtils.getMineLocation(false);
         }
@@ -436,25 +436,25 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                         activity.sendBroadcast(data);
                         activity.sendBroadcast(new Intent("lobster_pairList"));
                         LikeTypeDb.getInstance().setType(pairInfo.getOtherUserId(), 2);
-                        new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), pairInfo.getSex());
+                        new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), pairInfo.getSex());
                     }
                 } else if (o == 2) {
                     // 匹配成功
                     LikeDb.getInstance().saveLike(new CollectID(pairInfo.getOtherUserId()));
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), pairInfo.getSex(), pairInfo.getNick(),
+                    new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), pairInfo.getSex(), pairInfo.getNick(),
                             () -> ActivityUtils.getChatActivity(pairInfo.getOtherUserId(), false));
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                     LikeTypeDb.getInstance().setType(pairInfo.getOtherUserId(), 1);
                 } else if (o == 3) {
                     // 喜欢次数用尽
-                    new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
+                    new VipAdPW(mBinding.getRoot(), 6, "");
                     SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else if (o == 4) {
                     // 超级喜欢时，非会员或超级喜欢次数用尽
                     if (MineApp.mineInfo.getMemberType() == 2) {
                         SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
                     } else {
-                        new VipAdPW(activity, mBinding.getRoot(), false, 3, otherHead);
+                        new VipAdPW(mBinding.getRoot(), 3, otherHead);
                     }
                 } else {
                     if (likeOtherStatus == 1) {
@@ -466,7 +466,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                         activity.sendBroadcast(data);
                         activity.sendBroadcast(new Intent("lobster_pairList"));
                         LikeTypeDb.getInstance().setType(pairInfo.getOtherUserId(), 2);
-                        new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), pairInfo.getSex());
+                        new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), pairInfo.getSex());
                     }
                 }
             }
@@ -590,7 +590,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             updateCount(likeCount);
         }
         if (likeCount == 0 && likeOtherStatus == 1 && MineApp.mineInfo.getMemberType() == 1) {
-            new VipAdPW(activity, mBinding.getRoot(), false, 6, "");
+            new VipAdPW(mBinding.getRoot(), 6, "");
             SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
             return;
         }

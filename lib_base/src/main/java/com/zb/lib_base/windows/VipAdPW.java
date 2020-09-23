@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
 import com.zb.lib_base.adapter.AdapterBinding;
@@ -34,16 +33,14 @@ public class VipAdPW extends BasePopupWindow {
     private List<Ads> adsList = new ArrayList<>();
     private BaseAdapter adapter;
     private int preIndex = -1;
-    private boolean isAutoPlay;
     private int type;
     private int sex;
     private String otherImage;
     private PwsVipAdBinding binding;
 
-    public VipAdPW(RxAppCompatActivity activity, View parentView, boolean isAutoPlay, int type, String otherImage) {
-        super(activity, parentView, false);
+    public VipAdPW(View parentView, int type, String otherImage) {
+        super(parentView, false);
         sex = MineApp.mineInfo.getSex();
-        this.isAutoPlay = isAutoPlay;
         this.type = type;
         this.otherImage = otherImage;
         if (type == 0) {
@@ -183,7 +180,7 @@ public class VipAdPW extends BasePopupWindow {
                 .setIndicatorGravity(XBanner.INDICATOR_START)
                 .setDelay(5000)
                 .setUpIndicators(R.drawable.vip_circle_pressed, R.drawable.vip_circle_unpressed)
-                .isAutoPlay(isAutoPlay)
+                .isAutoPlay(false)
                 .setShowBg(true)
                 .setType(type)
                 .start();

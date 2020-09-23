@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.yimi.rentme.R;
@@ -43,12 +44,14 @@ import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WalletInfo;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.OpenNotice;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_card.windows.GuidancePW;
 
 import java.util.ArrayList;
@@ -286,7 +289,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         selectPage(1);
         new Handler().postDelayed(() -> {
             if (PreferenceUtil.readIntValue(activity, "showGuidance") == 0) {
-                new GuidancePW(activity, mBinding.getRoot());
+                new GuidancePW(mBinding.getRoot());
             }
         }, 500);
 
@@ -597,6 +600,16 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void toLike(View view) {
+        // 喜欢我
+        if (MineApp.mineInfo.getMemberType() == 2) {
+            ActivityUtils.getMineFCL(2);
+            return;
+        }
+        new VipAdPW(mBinding.getRoot(), 4, "");
     }
 
     private ObjectAnimator pvh_remind;

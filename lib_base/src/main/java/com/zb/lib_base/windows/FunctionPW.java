@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -41,11 +40,11 @@ public class FunctionPW extends BasePopupWindow {
     private SHARE_MEDIA media;
     private Map<SHARE_MEDIA, String> mediaMap = new HashMap<>();
     private CallBack callBack;
-    private boolean isDiscover = false;
+    private boolean isDiscover;
 
-    public FunctionPW(RxAppCompatActivity activity, View parentView, String logo, String sharedName, String content, String sharedUrl,
+    public FunctionPW(View parentView, String logo, String sharedName, String content, String sharedUrl,
                       boolean isMine, boolean isVideo, boolean isDiscover, boolean isList, CallBack callBack) {
-        super(activity, parentView, true);
+        super(parentView, true);
         this.umImage = new UMImage(activity, logo);
         this.sharedName = sharedName;
         this.content = content.isEmpty() ? "这里藏着喜欢你的人" : content;

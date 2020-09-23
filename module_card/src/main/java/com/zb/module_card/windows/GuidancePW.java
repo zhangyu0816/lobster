@@ -2,7 +2,6 @@ package com.zb.module_card.windows;
 
 import android.view.View;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_card.BR;
@@ -11,8 +10,8 @@ import com.zb.module_card.R;
 
 public class GuidancePW extends BasePopupWindow {
 
-    public GuidancePW(RxAppCompatActivity activity, View parentView) {
-        super(activity, parentView, false);
+    public GuidancePW(View parentView) {
+        super(parentView, false);
         initUI();
     }
 

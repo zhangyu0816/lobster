@@ -54,7 +54,7 @@ public class BindingBankViewModel extends BaseViewModel implements BindingBankVM
 
     @Override
     public void selectBank(View view) {
-        new BankPW(activity, mBinding.getRoot(), bankInfoList, bankInfo1 -> {
+        new BankPW(mBinding.getRoot(), bankInfoList, bankInfo1 -> {
             bankInfo = bankInfo1;
             mBinding.tvBankName.setText(bankInfo.getBankName());
             mBinding.tvBankName.setTextColor(activity.getResources().getColor(R.color.black_252));

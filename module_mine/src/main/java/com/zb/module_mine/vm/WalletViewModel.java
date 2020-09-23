@@ -23,7 +23,7 @@ public class WalletViewModel extends BaseViewModel implements WalletVMInterface 
 
     @Override
     public void recharge(View view) {
-        new RechargePW(activity, mBinding.getRoot());
+        new RechargePW(mBinding.getRoot());
     }
 
     @Override

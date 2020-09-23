@@ -10,7 +10,6 @@ import android.view.View;
 import com.alipay.sdk.app.PayTask;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
 import com.zb.lib_base.activity.BaseReceiver;
@@ -30,8 +29,8 @@ public class PaymentPW extends BasePopupWindow {
     private int payType; // 1 开通VIP  2 充值
     private BaseReceiver paySuccessReceiver;
 
-    public PaymentPW(RxAppCompatActivity activity, View parentView, OrderTran orderTran, int payType) {
-        super(activity, parentView, true);
+    public PaymentPW(View parentView, OrderTran orderTran, int payType) {
+        super(parentView, true);
         this.orderTran = orderTran;
         this.payType = payType;
         initUI();

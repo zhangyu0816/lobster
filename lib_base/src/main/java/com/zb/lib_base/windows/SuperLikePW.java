@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
 import com.zb.lib_base.databinding.PwsSuperLikeBinding;
@@ -24,8 +23,8 @@ public class SuperLikePW extends BasePopupWindow {
     private CallBack callBack;
     private PwsSuperLikeBinding binding;
 
-    public SuperLikePW(RxAppCompatActivity activity, View parentView, String myHead, String otherHead, int mySex, int otherSex) {
-        super(activity, parentView, false);
+    public SuperLikePW(View parentView, String myHead, String otherHead, int mySex, int otherSex) {
+        super(parentView, false);
         this.myHead = myHead;
         this.otherHead = otherHead;
         this.isPair = false;
@@ -34,8 +33,8 @@ public class SuperLikePW extends BasePopupWindow {
         initUI();
     }
 
-    public SuperLikePW(RxAppCompatActivity activity, View parentView, String myHead, String otherHead, int mySex, int otherSex, String otherNick, CallBack callBack) {
-        super(activity, parentView, false);
+    public SuperLikePW(View parentView, String myHead, String otherHead, int mySex, int otherSex, String otherNick, CallBack callBack) {
+        super(parentView, false);
         this.myHead = myHead;
         this.otherHead = otherHead;
         this.isPair = true;

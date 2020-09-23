@@ -26,6 +26,28 @@ public abstract class BasePopupWindow extends PopupWindow {
     public ViewDataBinding mBinding;
 
     @SuppressLint("ClickableViewAccessibility")
+    public BasePopupWindow(View parentView, boolean canClick) {
+        this.activity = (RxAppCompatActivity) parentView.getContext();
+        mBinding = DataBindingUtil.inflate(LayoutInflater.from(activity), getRes(), null, false);
+        View view = mBinding.getRoot();
+        setWidth(LinearLayout.LayoutParams.FILL_PARENT);
+        setHeight(LinearLayout.LayoutParams.FILL_PARENT);
+        setBackgroundDrawable(new BitmapDrawable());
+        setFocusable(true);
+        setOutsideTouchable(true);
+        setContentView(view);
+        showAtLocation(parentView, Gravity.CENTER, 0, 0);
+        update();
+        if (canClick)
+            view.setOnTouchListener((v, event) -> {
+                if (isShowing()) {
+                    dismiss();
+                }
+                return false;
+            });
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
     public BasePopupWindow(RxAppCompatActivity activity, View parentView, boolean canClick) {
         this.activity = activity;
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(activity), getRes(), null, false);
@@ -131,7 +153,7 @@ public abstract class BasePopupWindow extends PopupWindow {
                 dismiss();
                 if (callBack != null)
                     callBack.canDismiss();
-                new PaymentPW(activity, mBinding.getRoot(), o, payType);
+                new PaymentPW(mBinding.getRoot(), o, payType);
             }
         }, activity).setOrderNumber(orderNumber);
         HttpManager.getInstance().doHttpDeal(api);

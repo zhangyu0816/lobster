@@ -215,7 +215,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
 
     @Override
     public void deleteBottle(int position) {
-        new TextPW(activity, mBinding.getRoot(), "销毁漂流瓶", "销毁后，你将与对方失去联系", "销毁", false, new TextPW.CallBack() {
+        new TextPW(mBinding.getRoot(), "销毁漂流瓶", "销毁后，你将与对方失去联系", "销毁", false, new TextPW.CallBack() {
             @Override
             public void sure() {
                 pickBottle(position);

@@ -3,7 +3,6 @@ package com.zb.lib_base.windows;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
 import com.zb.lib_base.api.findImageCaptchaApi;
@@ -19,8 +18,8 @@ public class ImageCaptchaPW extends BasePopupWindow {
     private PwsImageCapptchaBinding binding;
     private CallBack callBack;
 
-    public ImageCaptchaPW(RxAppCompatActivity activity, View parentView, CallBack callBack) {
-        super(activity, parentView, false);
+    public ImageCaptchaPW(View parentView, CallBack callBack) {
+        super(parentView, false);
         this.callBack = callBack;
         initUI();
     }

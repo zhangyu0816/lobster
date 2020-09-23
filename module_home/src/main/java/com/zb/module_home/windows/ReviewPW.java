@@ -5,7 +5,6 @@ import android.view.View;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.dynDoReviewApi;
 import com.zb.lib_base.api.seeReviewsApi;
@@ -37,8 +36,8 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
     private CallBack callBack;
     private int reviews = 0;
 
-    public ReviewPW(RxAppCompatActivity activity, View parentView, long friendDynId, int reviews, CallBack callBack) {
-        super(activity, parentView, false);
+    public ReviewPW(View parentView, long friendDynId, int reviews, CallBack callBack) {
+        super(parentView, false);
         this.friendDynId = friendDynId;
         this.callBack = callBack;
         this.reviews = reviews;

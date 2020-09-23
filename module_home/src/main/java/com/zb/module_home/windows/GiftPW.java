@@ -2,7 +2,6 @@ package com.zb.module_home.windows;
 
 import android.view.View;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.api.giftListApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
@@ -25,8 +24,8 @@ public class GiftPW extends BasePopupWindow {
     private CallBack mCallBack;
     private List<GiftInfo> giftInfoList = new ArrayList<>();
 
-    public GiftPW(RxAppCompatActivity activity, View parentView, CallBack callBack) {
-        super(activity, parentView, true);
+    public GiftPW(View parentView, CallBack callBack) {
+        super(parentView, true);
         mCallBack = callBack;
         initUI();
     }
@@ -55,7 +54,7 @@ public class GiftPW extends BasePopupWindow {
     public void recharge(View view) {
         super.recharge(view);
         dismiss();
-        new RechargePW(activity, mBinding.getRoot());
+        new RechargePW(mBinding.getRoot());
     }
 
     @Override

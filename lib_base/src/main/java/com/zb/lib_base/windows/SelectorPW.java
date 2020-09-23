@@ -2,7 +2,6 @@ package com.zb.lib_base.windows;
 
 import android.view.View;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
 import com.zb.lib_base.adapter.BaseAdapter;
@@ -15,8 +14,8 @@ public class SelectorPW extends BasePopupWindow {
     private List<String> selectorList;
     private CallBack mCallBack;
 
-    public SelectorPW(RxAppCompatActivity activity, View parentView, List<String> selectorList, CallBack callBack) {
-        super(activity, parentView, true);
+    public SelectorPW(View parentView, List<String> selectorList, CallBack callBack) {
+        super(parentView, true);
         this.selectorList = selectorList;
         mCallBack = callBack;
         initUI();

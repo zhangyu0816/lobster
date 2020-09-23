@@ -22,7 +22,7 @@ public class OpenNotice {
             if (!isNotificationEnabled(activity)) {
                 new Handler().postDelayed(() -> {
                     PreferenceUtil.saveIntValue(activity, "isNotificationEnabled", 1);
-                    new TextPW(activity, view, "应用通知", "为了及时收到虾菇通知，请开启通知", "去开启", () -> gotoSet(activity));
+                    new TextPW(view, "应用通知", "为了及时收到虾菇通知，请开启通知", "去开启", () -> gotoSet(activity));
                 }, 1000);
             }
         }

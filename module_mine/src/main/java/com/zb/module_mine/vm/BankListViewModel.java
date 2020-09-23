@@ -64,7 +64,7 @@ public class BankListViewModel extends BaseViewModel implements BankListVMInterf
             activity.sendBroadcast(data);
             activity.finish();
         } else
-            new SelectorPW(activity, mBinding.getRoot(), selectorList, position1 -> removeBankCard(position));
+            new SelectorPW(mBinding.getRoot(), selectorList, position1 -> removeBankCard(position));
     }
 
     @Override

@@ -2,15 +2,14 @@ package com.zb.lib_base.windows;
 
 import android.view.View;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
 
 
 public class BottleQuestionPW extends BasePopupWindow {
 
-    public BottleQuestionPW(RxAppCompatActivity activity, View parentView) {
-        super(activity, parentView,true);
+    public BottleQuestionPW(View parentView) {
+        super(parentView, true);
         initUI();
     }
 

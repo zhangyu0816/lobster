@@ -104,7 +104,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
 
     @Override
     public void toSex(View view) {
-        new SelectorPW(activity, mBinding.getRoot(), selectList, position -> {
+        new SelectorPW(mBinding.getRoot(), selectList, position -> {
             mBinding.setSexName(selectList.get(position));
             MineApp.sex = position == 2 ? -1 : position;
             PreferenceUtil.saveIntValue(activity, "mySex", MineApp.sex);
@@ -133,11 +133,11 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     public void toLocation(View view) {
         if (MineApp.mineInfo.getMemberType() == 1) {
             if (MineApp.vipInfoList.size() > 0)
-                new TextPW(activity, mBinding.getRoot(), "VIP特权", "位置漫游服务为VIP用户专享功能", "开通会员", ActivityUtils::getMineOpenVip);
+                new TextPW(mBinding.getRoot(), "VIP特权", "位置漫游服务为VIP用户专享功能", "开通会员", ActivityUtils::getMineOpenVip);
             return;
         }
         if (PreferenceUtil.readStringValue(activity, "latitude").isEmpty()) {
-            new TextPW(activity, mBinding.getRoot(), "定位失败", "定位失败，无法选取地址，请重新定位", "重新定位", this::getPermissions);
+            new TextPW(mBinding.getRoot(), "定位失败", "定位失败，无法选取地址，请重新定位", "重新定位", this::getPermissions);
         } else {
             ActivityUtils.getMineLocation(false);
         }

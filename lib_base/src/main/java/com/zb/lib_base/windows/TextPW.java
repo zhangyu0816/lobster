@@ -13,15 +13,15 @@ public class TextPW extends BasePopupWindow {
     private CallBack mCallBack;
     private String btnName = "我知道了";
 
-    public TextPW(RxAppCompatActivity activity, View parentView, String title, String content) {
-        super(activity, parentView, true);
+    public TextPW(View parentView, String title, String content) {
+        super(parentView, true);
         this.title = title;
         this.content = content;
         initUI();
     }
 
-    public TextPW(RxAppCompatActivity activity, View parentView, String title, String content, String btnName, CallBack callBack) {
-        super(activity, parentView, true);
+    public TextPW(View parentView, String title, String content, String btnName, CallBack callBack) {
+        super(parentView, true);
         this.title = title;
         this.content = content;
         this.btnName = btnName;
@@ -29,12 +29,30 @@ public class TextPW extends BasePopupWindow {
         initUI();
     }
 
-    public TextPW(RxAppCompatActivity activity, View parentView, String title, String content, boolean canClick, CallBack callBack) {
-        super(activity, parentView, canClick);
+    public TextPW(View parentView, String title, String content, boolean canClick, CallBack callBack) {
+        super(parentView, canClick);
         this.title = title;
         this.content = content;
         this.btnName = "明白了";
         mCallBack = callBack;
+        initUI();
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    public TextPW(View parentView, String title, String content, String btnName, boolean canClick, CallBack callBack) {
+        super(parentView, canClick);
+        this.title = title;
+        this.content = content;
+        this.btnName = btnName;
+        mCallBack = callBack;
+        mBinding.getRoot().setOnTouchListener((v, event) -> {
+            if (isShowing()) {
+                dismiss();
+                if (mCallBack != null)
+                    mCallBack.cancel();
+            }
+            return false;
+        });
         initUI();
     }
 

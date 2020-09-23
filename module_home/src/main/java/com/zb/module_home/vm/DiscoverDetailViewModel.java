@@ -180,7 +180,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         String content = discoverInfo.getText();
         String sharedUrl = HttpManager.BASE_URL + "mobile/Dyn_dynDetail?friendDynId=" + friendDynId;
 
-        new FunctionPW(activity, mBinding.getRoot(), discoverInfo.getImage().replace("YM0000", "430X430"), sharedName, content, sharedUrl,
+        new FunctionPW(mBinding.getRoot(), discoverInfo.getImage().replace("YM0000", "430X430"), sharedName, content, sharedUrl,
                 discoverInfo.getUserId() == BaseActivity.userId, false, true, false, new FunctionPW.CallBack() {
             @Override
             public void gift() {
@@ -189,7 +189,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 
             @Override
             public void delete() {
-                new TextPW(activity, mBinding.getRoot(), "删除动态", "删除后，动态不可找回！", "删除", () -> deleteDyn());
+                new TextPW(mBinding.getRoot(), "删除动态", "删除后，动态不可找回！", "删除", () -> deleteDyn());
             }
 
             @Override
@@ -207,7 +207,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 if (MineApp.mineInfo.getMemberType() == 2) {
                     makeEvaluate();
                 } else {
-                    new VipAdPW(activity, mBinding.getRoot(), false, 3, discoverInfo.getImage());
+                    new VipAdPW(mBinding.getRoot(), 3, discoverInfo.getImage());
                 }
             }
         });
@@ -226,8 +226,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void selectGift(View view) {
         hintKeyBoard();
-        new GiftPW(activity, mBinding.getRoot(), giftInfo ->
-                new GiftPayPW(activity, mBinding.getRoot(), giftInfo, friendDynId, this::seeGiftRewards));
+        new GiftPW(mBinding.getRoot(), giftInfo ->
+                new GiftPayPW(mBinding.getRoot(), giftInfo, friendDynId, this::seeGiftRewards));
     }
 
     @Override
@@ -378,7 +378,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 String otherHead = memberInfo.getImage();
                 if (o == 1) {
                     LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 2);
-                    new SuperLikePW(activity, mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex());
+                    new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex());
                 } else if (o == 4) {
                     SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
                 } else {
