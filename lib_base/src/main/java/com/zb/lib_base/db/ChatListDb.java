@@ -130,4 +130,12 @@ public class ChatListDb extends BaseDao {
         return unReadNum;
     }
 
+    public void setHasNewBeLike(boolean hasNewBeLike) {
+        beginTransaction();
+        ChatList chatList = realm.where(ChatList.class).equalTo("chatType", 1).equalTo("userId", BaseActivity.likeUserId).equalTo("mainUserId", BaseActivity.userId).findFirst();
+        if (chatList != null)
+            chatList.setHasNewBeLike(hasNewBeLike);
+        commitTransaction();
+    }
+
 }

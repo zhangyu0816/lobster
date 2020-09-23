@@ -489,7 +489,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 chatList.setNoReadNum(MineApp.contactNum.getBeLikeCount());
                 chatList.setChatType(1);
                 chatList.setMainUserId(BaseActivity.userId);
-                chatList.setNewLikeCount(count);
+                chatList.setHasNewBeLike(MineApp.contactNum.getBeLikeCount() > PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId));
                 ChatListDb.getInstance().saveChatList(chatList);
 
                 activity.sendBroadcast(new Intent("lobster_newsCount"));

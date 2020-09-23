@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.likeMeListApi;
 import com.zb.lib_base.api.pairListApi;
@@ -21,6 +22,7 @@ import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.TextPW;
@@ -171,6 +173,9 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         if (chatList.getChatType() == 1) {
             // 喜欢我
             if (MineApp.mineInfo.getMemberType() == 2) {
+                PreferenceUtil.saveIntValue(activity, "beLikeCount" + BaseActivity.userId, MineApp.contactNum.getBeLikeCount());
+                ChatListDb.getInstance().setHasNewBeLike(false);
+                adapter.notifyItemChanged(1);
                 ActivityUtils.getMineFCL(2);
                 return;
             }

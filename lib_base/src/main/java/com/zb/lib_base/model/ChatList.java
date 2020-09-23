@@ -20,7 +20,7 @@ public class ChatList extends RealmObject {
     int effectType;//作用类型 1.无  2.系统内置      默认 null
     int authType; //权限类型  1.无限制  2.以下限制      默认 null
     long mainUserId = BaseActivity.userId;
-    int newLikeCount = 0;
+    boolean hasNewBeLike = false;
     // 用户-> 该账号
     //不能发送红包
     //不能发视频
@@ -138,11 +138,11 @@ public class ChatList extends RealmObject {
         this.driftBottleId = driftBottleId;
     }
 
-    public int getNewLikeCount() {
-        return newLikeCount;
+    public boolean isHasNewBeLike() {
+        return hasNewBeLike;
     }
 
-    public void setNewLikeCount(int newLikeCount) {
-        this.newLikeCount = newLikeCount;
+    public void setHasNewBeLike(boolean hasNewBeLike) {
+        this.hasNewBeLike = hasNewBeLike;
     }
 }

@@ -204,35 +204,33 @@
                 android:textStyle="bold"
                 android:visibility="@{item.chatType==3?View.VISIBLE:View.GONE}" />
 
-            <TextView
-                android:id="@+id/tv_check"
-                android:layout_width="58dp"
-                android:layout_height="24dp"
-                android:background="@drawable/btn_bg_purple_e6d_radius40"
-                android:gravity="center"
-                android:text="查看"
-                android:textColor="@color/purple_7a4"
-                android:textSize="14sp"
-                android:textStyle="bold"
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="15dp"
-                android:visibility="@{item.chatType==1?View.VISIBLE:View.GONE}"/>
+                android:visibility="@{item.chatType==1?View.VISIBLE:View.GONE}">
 
-            <TextView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_alignTop="@+id/tv_check"
-                android:layout_alignEnd="@+id/tv_check"
-                android:background="@drawable/circle_white_red"
-                android:gravity="center"
-                android:layout_marginTop="15dp"
-                android:text="@{ObjectUtils.count(item.newLikeCount)}"
-                android:textColor="@android:color/white"
-                android:textSize="11sp"
-                android:visibility="@{item.chatType!=1?View.GONE:(item.newLikeCount==0?View.GONE:View.VISIBLE)}"
-                tools:text="99" />
+                <TextView
+                    android:id="@+id/tv_check"
+                    android:layout_width="58dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/btn_bg_purple_e6d_radius40"
+                    android:gravity="center"
+                    android:text="查看"
+                    android:textColor="@color/purple_7a4"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
+                <TextView
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:layout_alignTop="@+id/tv_check"
+                    android:layout_alignEnd="@+id/tv_check"
+                    android:background="@drawable/circle_red"
+                    android:visibility="@{item.hasNewBeLike?View.VISIBLE:View.GONE}" />
+            </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>
 </layout>
