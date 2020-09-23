@@ -16,8 +16,6 @@
     <string name="msg_no_type">暂不支付该类型</string>
     <string name="authen_fail">失败原因：%s</string>
     <string name="mine_sign_content">未填写签名</string>
-    <string name="open_vip">立即开通</string>
-    <string name="pay_vip">立即续费</string>
     <string name="member_expire_time">有效期至\n%s</string>
     <string name="open_btn">￥%.2f 获取VIP特权</string>
     <string name="pay_btn">立即续费VIP特权</string>

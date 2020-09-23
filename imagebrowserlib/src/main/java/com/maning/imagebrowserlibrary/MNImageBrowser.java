@@ -99,7 +99,6 @@ public class MNImageBrowser {
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             context.startActivity(intent);
-//            ((Activity) context).overridePendingTransition(R.anim.browser_enter_anim, 0);
         }
     }
 
