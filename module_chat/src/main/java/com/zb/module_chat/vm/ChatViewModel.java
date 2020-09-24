@@ -220,7 +220,8 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             if (motionEvent.getAction() == MotionEvent.ACTION_MOVE && isSoftShowing() && isFirst) {
                 isFirst = false;
                 hintKeyBoard();
-                new Handler().postDelayed(() -> isFirst = true, 500);
+            } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                isFirst = true;
             }
             return false;
         });

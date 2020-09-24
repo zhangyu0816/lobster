@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -72,7 +73,9 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     private List<Integer> emojiList = new ArrayList<>();
     private BaseReceiver bottleChatReceiver;
     public MemberInfo memberInfo;
+    private boolean isFirst = true;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
@@ -141,6 +144,16 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                     AdapterBinding.viewSize(mBinding.emojiList, MineApp.W, height);
                 }, false);
         AdapterBinding.viewSize(mBinding.emojiList, MineApp.W, PreferenceUtil.readIntValue(activity, "keyboardHeight") == 0 ? MineApp.H / 3 : PreferenceUtil.readIntValue(activity, "keyboardHeight"));
+
+        mBinding.chatList.setOnTouchListener((view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_MOVE && isSoftShowing() && isFirst) {
+                isFirst = false;
+                hintKeyBoard();
+            } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                isFirst = true;
+            }
+            return false;
+        });
     }
 
     public void onDestroy() {

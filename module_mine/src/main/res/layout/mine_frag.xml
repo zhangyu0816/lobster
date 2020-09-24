@@ -54,13 +54,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/white"
+                    android:minHeight="22dp"
                     app:contentInsetStart="0dp"
-                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+                    app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@mipmap/mine_top_bg"
+                        android:background="@drawable/gradient_red_white"
                         android:orientation="vertical">
 
                         <RelativeLayout
