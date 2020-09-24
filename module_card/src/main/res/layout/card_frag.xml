@@ -104,6 +104,26 @@
                 android:background="@mipmap/exposure_icon" />
         </RelativeLayout>
 
+        <View
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(40)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.86f)}"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_below="@+id/card_relative"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-30dp"
+            android:background="@drawable/btn_bg_purple_c4b_radius_bottom5" />
+
+        <View
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(20)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.9f)}"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_below="@+id/card_relative"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-30dp"
+            android:background="@drawable/btn_bg_purple_c5b_radius_bottom5" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/card_list"
             adapter="@{viewModel.adapter}"
@@ -345,6 +365,7 @@
                     android:visibility="@{showRemind?View.VISIBLE:View.GONE}" />
             </RelativeLayout>
         </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/count_layout"
