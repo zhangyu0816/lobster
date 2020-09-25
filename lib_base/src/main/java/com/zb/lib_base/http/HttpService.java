@@ -39,6 +39,7 @@ import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.model.TranRecord;
 import com.zb.lib_base.model.VipInfo;
+import com.zb.lib_base.model.VisitorCount;
 import com.zb.lib_base.model.WXPay;
 import com.zb.lib_base.model.WalletInfo;
 
@@ -215,6 +216,12 @@ public interface HttpService {
 
     @GET("api/SimpleRent_otherInfo")
     Observable<BaseResultEntity<RentInfo>> otherRentInfo(@Query("otherUserId") long otherUserId);
+
+    @GET("api/Interactive_visitorBySeeMeList")
+    Observable<BaseResultEntity<List<MemberInfo>>> visitorBySeeMeList(@Query("pageNo") int pageNo);
+
+    @GET("api/Interactive_visitorBySeeMeCount")
+    Observable<BaseResultEntity<VisitorCount>> visitorBySeeMeCount();
 
     /******************************* 首页 **********************************/
 

@@ -18,6 +18,10 @@
             type="boolean" />
 
         <variable
+            name="hasNewVisitor"
+            type="boolean" />
+
+        <variable
             name="mineNewsCount"
             type="com.zb.lib_base.model.MineNewsCount" />
 
@@ -149,6 +153,7 @@
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
                                     android:orientation="horizontal">
 
                                     <TextView
@@ -163,13 +168,11 @@
 
                                     <ImageView
                                         onClickDelayed="@{viewModel::openVip}"
-                                        viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(105)}"
-                                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(183)}"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="5dp"
-                                        android:background="@mipmap/vip_icon"
-                                        android:visibility="@{mineInfo.memberType==2?View.VISIBLE:View.GONE}" />
+                                        android:background="@{mineInfo.memberType==2?@drawable/small_vip_icon:@drawable/unopen_vip_icon}"
+                                        tools:background="@drawable/small_vip_icon"/>
                                 </LinearLayout>
 
                                 <TextView
@@ -180,6 +183,7 @@
                                     android:textColor="@color/black_4d4"
                                     android:textSize="14sp"
                                     android:textStyle="bold"
+                                    android:layout_marginTop="10dp"
                                     tools:text="为了减肥了我劳务纠纷另外二九六我来我家 " />
                             </LinearLayout>
 
@@ -295,7 +299,7 @@
                                 </LinearLayout>
 
                                 <LinearLayout
-                                    onClickDelayed="@{v->viewModel.contactNumDetail(4)}"
+                                    onClickDelayed="@{v->viewModel.contactNumDetail(3)}"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
@@ -317,7 +321,7 @@
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
                                                 android:singleLine="true"
-                                                android:text='@{String.format("%d",contactNum.beLikeCount)}'
+                                                android:text='@{String.format("%d",contactNum.visitorCount)}'
                                                 android:textColor="@color/black_252"
                                                 android:textSize="18sp"
                                                 android:textStyle="bold"
@@ -329,7 +333,7 @@
                                                 android:layout_alignEnd="@+id/tv_beLook"
                                                 android:layout_marginTop="5dp"
                                                 android:background="@drawable/circle_red"
-                                                android:visibility="@{hasNewBeLike?View.VISIBLE:View.GONE}" />
+                                                android:visibility="@{hasNewVisitor?View.VISIBLE:View.GONE}" />
                                         </RelativeLayout>
 
                                         <TextView

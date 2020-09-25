@@ -63,7 +63,7 @@ public class ObjectUtils {
     }
 
     public static int getVipIntroHeight() {
-        return (int) (MineApp.W * 2082 / 1125f);
+        return (int) (MineApp.W * 2196 / 1125f);
     }
 
     public static int getVipIntroBgHeight(float scale) {
@@ -185,8 +185,10 @@ public class ObjectUtils {
             return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_anth_data);
         } else if (position == 1) {
             return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_fan_data);
-        } else {
+        } else if (position == 2) {
             return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_belike_data);
+        } else {
+            return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_visitor_data);
         }
     }
 

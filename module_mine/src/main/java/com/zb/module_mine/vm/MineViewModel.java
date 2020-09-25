@@ -39,6 +39,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     private BaseReceiver newsCountReceiver;
     private BaseReceiver openVipReceiver;
     private BaseReceiver updateChatTypeReceiver;
+    private BaseReceiver visitorReceiver;
     private List<Fragment> fragments = new ArrayList<>();
 
     @Override
@@ -50,6 +51,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         mBinding.setMineInfo(MineApp.mineInfo);
         mBinding.setContactNum(MineApp.contactNum);
         mBinding.setHasNewBeLike(MineApp.contactNum.getBeLikeCount() > PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId));
+        mBinding.setHasNewVisitor(MineApp.contactNum.getVisitorCount() > PreferenceUtil.readIntValue(activity, "visitorCount" + BaseActivity.userId));
 
         updateMineInfoReceiver = new BaseReceiver(activity, "lobster_updateMineInfo") {
             @Override
@@ -79,7 +81,16 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                 if (chatType == 1) {
                     mBinding.setContactNum(MineApp.contactNum);
                     mBinding.setHasNewBeLike(MineApp.contactNum.getBeLikeCount() > PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId));
+
                 }
+            }
+        };
+
+        visitorReceiver = new BaseReceiver(activity, "lobster_visitor") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.setContactNum(MineApp.contactNum);
+                mBinding.setHasNewVisitor(MineApp.contactNum.getVisitorCount() > PreferenceUtil.readIntValue(activity, "visitorCount" + BaseActivity.userId));
             }
         };
         initFragments();
@@ -91,6 +102,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             newsCountReceiver.unregisterReceiver();
             openVipReceiver.unregisterReceiver();
             updateChatTypeReceiver.unregisterReceiver();
+            visitorReceiver.unregisterReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -140,8 +152,11 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                 return;
             }
             new VipAdPW(mBinding.getRoot(), 4, "");
-        } else if (position == 4) {
         } else {
+            if(position==3){
+                PreferenceUtil.saveIntValue(activity, "visitorCount" + BaseActivity.userId, MineApp.contactNum.getVisitorCount());
+                mBinding.setVariable(BR.hasNewVisitor, false);
+            }
             ActivityUtils.getMineFCL(position);
         }
     }

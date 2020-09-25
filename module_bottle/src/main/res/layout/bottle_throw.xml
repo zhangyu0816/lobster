@@ -246,7 +246,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:layout_centerHorizontal="true"
-                        android:background="@mipmap/small_vip_icon"
+                        android:background="@drawable/small_vip_icon"
                         android:visibility="@{memberInfo.memberType==2?View.VISIBLE:View.GONE}" />
                 </RelativeLayout>
 

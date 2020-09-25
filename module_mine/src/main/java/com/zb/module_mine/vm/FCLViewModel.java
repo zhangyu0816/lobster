@@ -16,6 +16,7 @@ import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.myConcernsApi;
 import com.zb.lib_base.api.myFansApi;
 import com.zb.lib_base.api.relievePairApi;
+import com.zb.lib_base.api.visitorBySeeMeListApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AttentionDb;
 import com.zb.lib_base.db.LikeDb;
@@ -125,8 +126,10 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
             myConcerns();
         } else if (position == 1) {
             myFans();
-        } else {
+        } else if (position == 2) {
             likeMeList();
+        } else {
+            visitorBySeeMeList();
         }
     }
 
@@ -137,7 +140,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
         if (position == 2) {
             // 被喜欢
             if (LikeDb.getInstance().hasLike(otherUserId)) {
-                new TextPW( mBinding.getRoot(), "解除匹配关系", "解除匹配关系后，将对方移除匹配列表及聊天列表。",
+                new TextPW(mBinding.getRoot(), "解除匹配关系", "解除匹配关系后，将对方移除匹配列表及聊天列表。",
                         "解除", () -> relievePair(otherUserId));
             } else {
                 makeEvaluate(otherUserId);
@@ -203,7 +206,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                     LikeTypeDb.getInstance().setType(otherUserId, 1);
                     adapter.notifyItemChanged(_selectIndex);
                 } else if (o == 2) {
-                    new SuperLikePW( mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfoList.get(_selectIndex).getSex(), memberInfoList.get(_selectIndex).getNick(),
+                    new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfoList.get(_selectIndex).getSex(), memberInfoList.get(_selectIndex).getNick(),
                             () -> ActivityUtils.getChatActivity(memberInfoList.get(_selectIndex).getUserId(), false));
                     LikeDb.getInstance().saveLike(new CollectID(otherUserId));
                     adapter.notifyItemChanged(_selectIndex);
@@ -341,6 +344,34 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 }
             }
         }, activity).setPageNo(pageNo).setLikeOtherStatus(0);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void visitorBySeeMeList() {
+        visitorBySeeMeListApi api = new visitorBySeeMeListApi(new HttpOnNextListener<List<MemberInfo>>() {
+            @Override
+            public void onNext(List<MemberInfo> o) {
+                int start = memberInfoList.size();
+                memberInfoList.addAll(o);
+                adapter.notifyItemRangeChanged(start, memberInfoList.size());
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
+                mBinding.setNoData(false);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    mBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
+                    if (memberInfoList.size() == 0) {
+                        mBinding.setNoData(true);
+                    }
+                }
+            }
+        }, activity).setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

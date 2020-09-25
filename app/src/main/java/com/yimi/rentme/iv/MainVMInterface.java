@@ -20,6 +20,8 @@ public interface MainVMInterface {
 
     void contactNum(boolean isUpdate);
 
+    void visitorBySeeMeCount();
+
     void noReadBottleNum(boolean isUpdate);
 
     void otherInfo(long otherUserId, CustomMessageBody body, String msgId);

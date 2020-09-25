@@ -28,7 +28,7 @@ public class FCLActivity extends MineBaseActivity {
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.position, position);
-        mBinding.setVariable(BR.title, position == 0 ? "我的关注" : (position == 1 ? "我的粉丝" : "被喜欢"));
+        mBinding.setVariable(BR.title, position == 0 ? "我的关注" : (position == 1 ? "我的粉丝" : (position == 2 ? "被喜欢" : "我的访客")));
         mBinding.setVariable(BR.noData, true);
     }
 

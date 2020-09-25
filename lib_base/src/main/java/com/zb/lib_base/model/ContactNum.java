@@ -13,6 +13,7 @@ public class ContactNum extends BaseObservable {
     int beLikeCount; //被喜欢数量
     int likeCount; //喜欢数量
     int beSuperLikeCount;// 被超级喜欢
+    int visitorCount;
 
     @Bindable
     public long getUserId() {
@@ -72,5 +73,15 @@ public class ContactNum extends BaseObservable {
     public void setBeSuperLikeCount(int beSuperLikeCount) {
         this.beSuperLikeCount = beSuperLikeCount;
         notifyPropertyChanged(BR.beSuperLikeCount);
+    }
+
+    @Bindable
+    public int getVisitorCount() {
+        return visitorCount;
+    }
+
+    public void setVisitorCount(int visitorCount) {
+        this.visitorCount = visitorCount;
+        notifyPropertyChanged(BR.visitorCount);
     }
 }

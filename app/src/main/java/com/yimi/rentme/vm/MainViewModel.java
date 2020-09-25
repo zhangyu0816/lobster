@@ -27,6 +27,7 @@ import com.zb.lib_base.api.openedMemberPriceListApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.pushGoodUserApi;
 import com.zb.lib_base.api.systemChatApi;
+import com.zb.lib_base.api.visitorBySeeMeCountApi;
 import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.BottleCacheDb;
@@ -45,6 +46,7 @@ import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.model.VipInfo;
+import com.zb.lib_base.model.VisitorCount;
 import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
@@ -86,6 +88,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         public boolean handleMessage(Message message) {
             handler.sendEmptyMessageDelayed(0, time);
             pushGoodUser();
+            visitorBySeeMeCount();
             return false;
         }
     });
@@ -443,6 +446,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 MineApp.mineNewsCount.setSystemNewsNum(o.getNoReadNum());
                 activity.sendBroadcast(new Intent("lobster_newsCount"));
                 contactNum(false);
+                visitorBySeeMeCount();
             }
 
             @Override
@@ -450,6 +454,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     activity.sendBroadcast(new Intent("lobster_newsCount"));
                     contactNum(false);
+                    visitorBySeeMeCount();
                 }
             }
         }, activity);
@@ -477,7 +482,12 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         contactNumApi api = new contactNumApi(new HttpOnNextListener<ContactNum>() {
             @Override
             public void onNext(ContactNum o) {
-                MineApp.contactNum = o;
+                MineApp.contactNum.setUserId(o.getUserId());
+                MineApp.contactNum.setFansCount(o.getFansCount());
+                MineApp.contactNum.setConcernCount(o.getConcernCount());
+                MineApp.contactNum.setBeLikeCount(o.getBeLikeCount());
+                MineApp.contactNum.setLikeCount(o.getLikeCount());
+                MineApp.contactNum.setBeSuperLikeCount(o.getBeSuperLikeCount());
                 int lastBeLikeCount = PreferenceUtil.readIntValue(activity, "nowBeLikeCount" + BaseActivity.userId);
                 int count = o.getBeLikeCount() - lastBeLikeCount;
                 ChatList chatList = new ChatList();
@@ -510,6 +520,18 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 super.onError(e);
             }
         }, activity).setOtherUserId(BaseActivity.userId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void visitorBySeeMeCount() {
+        visitorBySeeMeCountApi api = new visitorBySeeMeCountApi(new HttpOnNextListener<VisitorCount>() {
+            @Override
+            public void onNext(VisitorCount o) {
+                MineApp.contactNum.setVisitorCount(o.getTotalCount());
+                activity.sendBroadcast(new Intent("lobster_visitor"));
+            }
+        },activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
