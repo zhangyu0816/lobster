@@ -140,17 +140,22 @@ public class FunctionPW extends BasePopupWindow {
     public void selectBottom(ShareItem shareItem) {
         dismiss();
         if (TextUtils.equals(shareItem.getShareName(), "查看礼物")) {
-            callBack.gift();
+            if (callBack != null)
+                callBack.gift();
         } else if (TextUtils.equals(shareItem.getShareName(), "删除动态")) {
-            callBack.delete();
+            if (callBack != null)
+                callBack.delete();
         } else if (TextUtils.equals(shareItem.getShareName(), "举报")) {
-            callBack.report();
+            if (callBack != null)
+                callBack.report();
         } else if (TextUtils.equals(shareItem.getShareName(), "保存至相册")) {
-            callBack.download();
+            if (callBack != null)
+                callBack.download();
         } else if (TextUtils.equals(shareItem.getShareName(), "复制链接")) {
             copy(sharedUrl);
         } else if (TextUtils.equals(shareItem.getShareName(), "超级喜欢")) {
-            callBack.like();
+            if (callBack != null)
+                callBack.like();
         }
     }
 

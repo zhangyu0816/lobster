@@ -128,6 +128,11 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     }
 
     @Override
+    public void openShare(View view) {
+        ActivityUtils.getMineWeb("邀请好友", HttpManager.BASE_URL + "share.html?id=" + BaseActivity.userId);
+    }
+
+    @Override
     public void toEditMember(View view) {
         ActivityUtils.getMineEditMember();
     }
@@ -153,7 +158,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             }
             new VipAdPW(mBinding.getRoot(), 4, "");
         } else {
-            if(position==3){
+            if (position == 3) {
                 PreferenceUtil.saveIntValue(activity, "visitorCount" + BaseActivity.userId, MineApp.contactNum.getVisitorCount());
                 mBinding.setVariable(BR.hasNewVisitor, false);
             }

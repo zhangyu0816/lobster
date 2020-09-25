@@ -8,6 +8,8 @@ public interface MineVMInterface {
 
     void openVip(View view);
 
+    void openShare(View view);
+
     void toEditMember(View view);
 
     void toNews(View view);

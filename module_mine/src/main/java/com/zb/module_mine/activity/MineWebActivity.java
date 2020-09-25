@@ -12,8 +12,11 @@ import android.webkit.WebViewClient;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.lib_base.utils.SCToastUtil;
+import com.zb.lib_base.windows.FunctionPW;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.R;
 import com.zb.module_mine.databinding.MineWebBinding;
@@ -72,7 +75,13 @@ public class MineWebActivity extends MineBaseActivity {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
+                if (url.contains("xg_register")) {
+                    new FunctionPW(mBinding.getRoot(), MineApp.mineInfo.getImage().replace("YM0000", "430X430"), "邂逅不过一场梦",
+                            "来虾菇，送你VIP，心动女生任你挑选", url, true, false, false, false, null);
+                } else if (url.contains("xg_withdraw")) {
+                    ActivityUtils.getMineWeb("返佣提现", url);
+                } else
+                    view.loadUrl(url);
                 return true;
             }
 
