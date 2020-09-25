@@ -1,4 +1,7 @@
 <resources>
+    <string name="app_name_sub">虾菇</string>
+    <string name="app_name_running">虾菇正在运行</string>
+    <string name="code_second">%ds以后重试</string>
     <string name="symbol_money">￥</string>
     <string name="symbol_money_">￥ </string>
     <string name="price_moth">￥%.1f/月</string>
@@ -7,4 +10,50 @@
     <string name="open_btn">￥%.2f 获取VIP特权</string>
     <string name="pay_btn">立即续费VIP特权</string>
     <string name="we_like">你和%s已互相喜欢</string>
+
+    <string name="throw_repeat">立即回复</string>
+    <string name="tv_context">在这里写下你想说的话…(100字)</string>
+
+    <string name="sex_0">女</string>
+    <string name="sex_1">男</string>
+    <string name="sign_content">未填写签名</string>
+    <string name="attention_true">关注</string>
+    <string name="attention_false">已关注</string>
+    <string name="user_id">虾菇号：%d</string>
+    <string name="no_data">card_no_data_icon</string>
+    <string name="out_line">card_out_line_bg</string>
+    <string name="card_progress">card_progress_icon</string>
+    <string name="text_age">%d岁</string>
+    <string name="mine_sign_content">未填写签名</string>
+    <string name="km">km</string>
+    <string name="m">m</string>
+
+    <string name="msg_no_type">暂不支付该类型</string>
+    <string name="mp3">.mp3</string>
+    <string name="notice_ta">打开通知，第一时间回复</string>
+
+    <string name="gift_price">%d虾菇币</string>
+    <string name="give_success">您已成功赠送%d个%s！</string>
+    <string name="gift_pay">%.1f虾菇币</string>
+    <string name="at_name">\@ %s</string>
+    <string name="at_nick">\@%s</string>
+    <string name="reviews">评论(%d)</string>
+
+    <string name="member_nick">你好！%s</string>
+    <string name="give_gift_news">你给Ta送了 %s x%d</string>
+    <string name="get_gift_news">给你送了 %s x%d</string>
+    <string name="select_tag">%s X</string>
+    <string name="be_like_count">喜欢数 %d</string>
+    <string name="fan_count">粉丝数 %d</string>
+    <string name="dyn_text">我的动态：%s</string>
+    <string name="dyn_good">赞了你的动态</string>
+    <string name="pass_by_pass">通过输入旧密码修改</string>
+    <string name="pass_by_code">通过手机验证码修改</string>
+    <string name="authen_fail">失败原因：%s</string>
+    <string name="member_expire_time">有效期至%s</string>
+    <string name="add">+</string>
+    <string name="sub">-</string>
+    <string name="tv_open">立即开通</string>
+    <string name="tv_renew">会员续费</string>
+    <string name="vip_intro">开通VIP特权,专享超值权益</string>
 </resources>

@@ -27,4 +27,7 @@
     <color name="yellow_e89">#E89211</color>
     <color name="blue_37a">#37A0FF</color>
     <color name="green_34c">#34CF17</color>
+
+    <color name="black_3e4">#3E4557</color>
+    <color name="white_cc">#ccffffff</color>
 </resources>
