@@ -1,7 +1,5 @@
 package com.zb.module_chat.fragment;
 
-import android.os.Handler;
-
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseFragment;
 import com.zb.lib_base.adapter.FragmentAdapter;
