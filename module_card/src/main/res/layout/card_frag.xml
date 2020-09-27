@@ -56,16 +56,13 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="30dp">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/tv_city"
             onClickDelayed="@{viewModel::selectCity}"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="15dp"
             android:background="@drawable/btn_bg_black_efe_radius40"
             android:drawableStart="@mipmap/address_icon"
             android:drawablePadding="5dp"
@@ -78,11 +75,11 @@
             android:textStyle="bold" />
 
         <RelativeLayout
+            android:id="@+id/expisure_layout"
             onClickDelayed="@{viewModel::exposure}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="15dp">
+            android:layout_alignParentEnd="true">
 
             <ImageView
                 android:id="@+id/iv_exposured"

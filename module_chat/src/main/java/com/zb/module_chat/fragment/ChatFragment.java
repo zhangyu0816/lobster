@@ -38,7 +38,7 @@ public class ChatFragment extends BaseFragment {
         mBinding.setVariable(BR.viewModel, viewModel);
         binding = (ChatFragBinding) mBinding;
 
-        new Handler().postDelayed(this::initFragments, 200);
+        initFragments();
     }
 
     private void initFragments() {

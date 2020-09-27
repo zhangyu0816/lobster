@@ -295,9 +295,9 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
         selectPage(1);
         new Handler().postDelayed(() -> {
-            if (PreferenceUtil.readIntValue(activity, "showGuidance") == 0) {
+//            if (PreferenceUtil.readIntValue(activity, "showGuidance") == 0) {
                 new GuidancePW(mBinding.getRoot());
-            }
+//            }
         }, 500);
 
     }

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.CycleInterpolator;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
@@ -38,10 +39,12 @@ import com.zb.lib_base.model.ProvinceInfo;
 import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
+import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.SimulateNetAPI;
+import com.zb.lib_base.utils.StatusBarUtil;
 import com.zb.lib_base.views.MyRecyclerView;
 import com.zb.lib_base.views.card.CardConfig;
 import com.zb.lib_base.views.card.CardItemTouchHelperCallback;
@@ -218,6 +221,20 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         mHandler.postDelayed(ra, 5000);
         initArea();
         setAdapter();
+
+        int height = StatusBarUtil.getStatusBarHeight(activity);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBinding.tvCity.getLayoutParams();
+                params.setMargins(DisplayUtils.dip2px(15f), height +DisplayUtils.dip2px(15f), DisplayUtils.dip2px(15f), DisplayUtils.dip2px(15f));
+                mBinding.tvCity.setLayoutParams(params);
+
+                RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) mBinding.expisureLayout.getLayoutParams();
+                params1.setMargins(DisplayUtils.dip2px(15f), height +DisplayUtils.dip2px(15f), DisplayUtils.dip2px(15f), DisplayUtils.dip2px(15f));
+                mBinding.expisureLayout.setLayoutParams(params1);
+            }
+        }, 500);
     }
 
     private void playExposure() {

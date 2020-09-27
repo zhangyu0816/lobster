@@ -895,7 +895,8 @@ public class XBanner extends RelativeLayout {
         mAdapter = null;
         mBannerPageListner = null;
         mImageLoader = null;
-        binding.viewpager.setAdapter(null);
+        if (binding.viewpager != null)
+            binding.viewpager.setAdapter(null);
         try {
             Field f = ViewPager.class.getDeclaredField("mOnPageChangeListeners");
             f.setAccessible(true);
