@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
 
@@ -51,14 +50,33 @@
                 android:textStyle="bold"
                 android:visibility="invisible" />
 
-            <ImageView
+            <RelativeLayout
                 android:id="@+id/imageView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:padding="15dp"
-                android:visibility="invisible"
-                app:srcCompat="@mipmap/exposure_icon" />
+                android:layout_margin="15dp"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:id="@+id/iv_exposured"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(76)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(76)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@mipmap/exposured_icon"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/iv_exposure"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(76)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(76)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:background="@mipmap/exposure_icon" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/card_relative"
@@ -131,13 +149,10 @@
             </LinearLayout>
 
             <ImageView
-                viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(572,217)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(572)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="10dp"
+                android:layout_alignEnd="@+id/imageView2"
+                android:layout_alignTop="@+id/imageView2"
                 android:background="@mipmap/guidance_exposure"
                 android:visibility="@{position==8?View.VISIBLE:View.GONE}" />
 

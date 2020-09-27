@@ -508,7 +508,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                     data.putExtra("chatType", 1);
                     data.putExtra("isUpdate", isUpdate);
                     activity.sendBroadcast(data);
-                }, 500);
+                }, 800);
                 if (!isUpdate) {
                     noReadBottleNum(false);
                 }
@@ -531,7 +531,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 MineApp.contactNum.setVisitorCount(o.getTotalCount());
                 activity.sendBroadcast(new Intent("lobster_visitor"));
             }
-        },activity);
+        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -554,7 +554,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             data.putExtra("chatType", 2);
             data.putExtra("isUpdate", isUpdate);
             activity.sendBroadcast(data);
-        }, 500);
+        }, 800);
     }
 
     private void initRemind(int beLikeCount, int count) {

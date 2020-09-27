@@ -16,6 +16,10 @@ public interface BottleChatVMInterface {
 
     void toCamera(View view);
 
+    void closeNotice(View view);
+
+    void openNotice(View view);
+
     void toEmoji(View view);
 
     void addEmoji(int position, int emojiRes);

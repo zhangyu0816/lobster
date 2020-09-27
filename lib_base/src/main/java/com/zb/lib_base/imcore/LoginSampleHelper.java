@@ -96,6 +96,7 @@ public class LoginSampleHelper {
 
             @Override
             public void onError(int i, String s) {
+//                loginOut_Sample();
                 SCToastUtil.showToast(activity, "聊天异常：" + s + ",请联系客服解决", true);
             }
 

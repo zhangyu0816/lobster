@@ -1,6 +1,7 @@
 package com.zb.module_mine.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.KeyEvent;
@@ -12,6 +13,7 @@ import android.webkit.WebViewClient;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.RouteUtils;
@@ -32,11 +34,17 @@ public class MineWebActivity extends MineBaseActivity {
     String url = "";
 
     private MineWebBinding binding;
+    private MineWebViewModel viewModel;
+    private BaseReceiver openPartnerReceiver;
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         binding.webView.destroy();
+        try {
+            openPartnerReceiver.unregisterReceiver();
+        } catch (Exception ignored) {
+        }
     }
 
     @Override
@@ -47,12 +55,12 @@ public class MineWebActivity extends MineBaseActivity {
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void initUI() {
-        MineWebViewModel viewModel = new MineWebViewModel();
+        viewModel = new MineWebViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.title, title);
-        binding = (MineWebBinding) mBinding;
 
+        binding = (MineWebBinding) mBinding;
         WebSettings webSettings = binding.webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
@@ -80,6 +88,8 @@ public class MineWebActivity extends MineBaseActivity {
                             "来虾菇，送你VIP，心动女生任你挑选", url, true, false, false, false, null);
                 } else if (url.contains("xg_withdraw")) {
                     ActivityUtils.getMineWeb("返佣提现", url);
+                } else if (url.contains("xg_openPartner")) {
+                    viewModel.openMakePartner();
                 } else
                     view.loadUrl(url);
                 return true;
@@ -103,7 +113,6 @@ public class MineWebActivity extends MineBaseActivity {
                     binding.progress.setProgress(newProgress);
                 }
             }
-
         });
         binding.webView.setDownloadListener((url, userAgent, contentDisposition, mimeType, contentLength) -> {
             Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -111,6 +120,13 @@ public class MineWebActivity extends MineBaseActivity {
             intent.setData(Uri.parse(url));
             startActivity(intent);
         });
+
+        openPartnerReceiver = new BaseReceiver(activity, "lobster_openPartner") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                binding.webView.loadUrl(url);
+            }
+        };
     }
 
     //通过反射隐藏webview的缩放按钮 适用于3.0和以后

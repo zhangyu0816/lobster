@@ -36,6 +36,7 @@ import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.model.Reward;
 import com.zb.lib_base.model.ShareInfo;
+import com.zb.lib_base.model.ShareProduct;
 import com.zb.lib_base.model.SystemMsg;
 import com.zb.lib_base.model.TranRecord;
 import com.zb.lib_base.model.VipInfo;
@@ -183,6 +184,18 @@ public interface HttpService {
     // 分享
     @GET("api/Share_memberInfoConf")
     Observable<BaseResultEntity<ShareInfo>> memberInfoConf();
+
+    // 成为合伙人
+    @GET("api/Share_openMarkePartner")
+    Observable<BaseResultEntity<OrderNumber>> openMakePartner(@Query("markeProductId") long markeProductId);
+
+    // 获取营销产品
+    @GET("api/Share_markeProductList")
+    Observable<BaseResultEntity<List<ShareProduct>>> markProductList();
+
+    // 获取交易订单号
+    @GET("api/Share_payOrderForTran")
+    Observable<BaseResultEntity<OrderTran>> payOrderForTranShare(@Query("orderNumber") String orderNumber);
 
     /******************************* app **********************************/
 

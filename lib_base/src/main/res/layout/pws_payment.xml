@@ -10,10 +10,6 @@
             name="pw"
             type="com.zb.lib_base.windows.BasePopupWindow" />
 
-        <variable
-            name="payType"
-            type="Integer" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

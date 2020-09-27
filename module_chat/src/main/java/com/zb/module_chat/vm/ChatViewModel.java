@@ -164,13 +164,13 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     mBinding.tvSpeak.setPressed(true);
-                    mBinding.tvSpeak.setText("松开  结束");
+                    mBinding.tvSpeak.setText("松开结束");
                     getPermissions(3);
                     return true;
                 case MotionEvent.ACTION_UP:
                     mBinding.audioBtn.setVisibility(View.GONE);
                     soundView.stop();
-                    mBinding.tvSpeak.setText("按住  说话");
+                    mBinding.tvSpeak.setText("按住说话");
                     break;
             }
             return false;
@@ -407,7 +407,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                                 if (!distance.isEmpty())
                                     address = address + "(" + distance + ")";
 
-                                memberInfo.setTitle(memberInfo.getNick() + "，" + DateUtil.getAge(memberInfo.getBirthday(), memberInfo.getAge()) + "，" + address + "，" + memberInfo.getJob());
+                                memberInfo.setTitle(memberInfo.getNick() + "，" + DateUtil.getAge(memberInfo.getBirthday(), memberInfo.getAge()) + "，" + address + (memberInfo.getJob().isEmpty() ? "" : ("，" + memberInfo.getJob())));
                                 String[] colors = new String[]{"#FF3158", "#7A44F5"};
 
                                 String htmlStr = "<font color='#C3BDCD'>谢谢你喜欢了我！我们一起聊聊</font>";

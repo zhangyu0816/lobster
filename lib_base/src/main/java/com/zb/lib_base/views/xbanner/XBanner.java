@@ -890,22 +890,19 @@ public class XBanner extends RelativeLayout {
 
         mHandler.removeCallbacks(mRunnable);
         mRunnable = null;
-
-        mAdapter.releaseAdapter();
+        if (mAdapter != null)
+            mAdapter.releaseAdapter();
         mAdapter = null;
         mBannerPageListner = null;
         mImageLoader = null;
-
         binding.viewpager.setAdapter(null);
         try {
             Field f = ViewPager.class.getDeclaredField("mOnPageChangeListeners");
             f.setAccessible(true);
             f.set(binding.viewpager, null);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         binding.viewpager.removeAllViews();
         System.gc();

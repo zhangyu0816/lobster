@@ -51,15 +51,13 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true">
+            android:layout_height="match_parent">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/image_linear"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="50dp"
+                android:layout_marginTop="80dp"
                 android:background="@drawable/pair_success_title_icon"
                 android:visibility="@{isPair?View.VISIBLE:View.GONE}" />
 
@@ -67,7 +65,8 @@
                 android:id="@+id/image_linear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="220dp"
                 android:background="@{isPair?@drawable/pair_success_icon:@drawable/pws_super_like}"
                 android:gravity="center"
                 android:orientation="horizontal"

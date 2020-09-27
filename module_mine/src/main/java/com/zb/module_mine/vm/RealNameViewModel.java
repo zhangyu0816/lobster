@@ -154,7 +154,8 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
 
     @Override
     public void toAuthentication(View view) {
-        timer.start();
+        if (timer != null)
+            timer.start();
         mBinding.setVariable(BR.step, 2);
     }
 

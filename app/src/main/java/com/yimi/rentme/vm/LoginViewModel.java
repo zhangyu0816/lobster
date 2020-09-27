@@ -78,7 +78,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     private TextView[] array = new TextView[4];
     private CountDownTimer timer;
     private int second = 120;
-    private boolean getCode = true;
+    private boolean canGetCode = true;
     private int _position;
     private BaseReceiver cameraReceiver;
     private BaseReceiver bindPhoneReceiver;
@@ -136,14 +136,14 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         array[3] = mBinding.tvCode4;
         timer = new CountDownTimer(second * 1000, 1000) {
             public void onTick(long millisUntilFinished) {
-                getCode = false;
+                canGetCode = false;
                 mBinding.setCodeRemark(activity.getResources().getString(R.string.code_second, millisUntilFinished / 1000));
             }
 
             public void onFinish() {
                 mBinding.setCodeRemark("验证码没收到？重新试试！");
                 timer.cancel();
-                getCode = true;
+                canGetCode = true;
             }
         };
 
@@ -259,8 +259,12 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             mBinding.setRight("验证码登录");
             step(7);
         } else {
-            mBinding.setRight("密码登录");
-            step(4);
+            if (canGetCode)
+                loginCaptcha();
+            else {
+                mBinding.setRight("密码登录");
+                step(4);
+            }
         }
     }
 
@@ -302,12 +306,14 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
 
     @Override
     public void resetCode(View view) {
-        if (getCode) {
+        if (canGetCode) {
             if (mBinding.getRight().isEmpty()) {
                 registerCaptcha();
             } else {
                 loginCaptcha();
             }
+        } else {
+            SCToastUtil.showToast(activity, "短信验证码已发送，请稍后再重试", true);
         }
     }
 
@@ -452,7 +458,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "验证码已发送，请注意查收", false);
                 mBinding.setRight("密码登录");
-                if (mBinding.getLoginStep() == 3) {
+                if (mBinding.getLoginStep() == 3 || mBinding.getLoginStep() == 7) {
                     step(4);
                     mBinding.setCodeRemark(activity.getResources().getString(R.string.code_second, second));
                     timer.start();

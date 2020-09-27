@@ -107,34 +107,93 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:padding="15dp"
-                    android:src="@{MineApp.mineInfo.memberType==2?@drawable/look_icon:@drawable/unlook_icon}" />
+                    android:src="@drawable/look_icon" />
             </RelativeLayout>
         </RelativeLayout>
 
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/refresh"
-            onRefreshListener="@{viewModel}"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/bottom_layout"
             android:layout_below="@+id/relativeLayout3"
-            android:paddingBottom="15dp">
+            android:layout_above="@+id/bottom_layout"
+            android:orientation="vertical">
 
-            <com.zb.lib_base.views.MyHeaderView
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/notice_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp" />
+                android:background="@color/white"
+                android:visibility="gone">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/chat_list"
-                adapter="@{viewModel.adapter}"
-                recyclerType="@{0}"
-                size="@{0}"
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="15dp"
+                    android:text='@{@string/notice_ta+(viewModel.memberInfo.sex==0?"她":"他")}'
+                    android:textColor="@color/black_252"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    onClickDelayed="@{viewModel::closeNotice}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:padding="15dp"
+                    android:src="@mipmap/close_grey_icon" />
+
+                <TextView
+                    android:id="@+id/tv_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_title"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="15dp"
+                    android:text="别因为等太久，让缘分悄悄溜走"
+                    android:textColor="@color/black_827"
+                    android:textSize="14sp" />
+
+                <TextView
+                    onClickDelayed="@{viewModel::openNotice}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/tv_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/gradient_purple_6d5_ae7"
+                    android:gravity="center"
+                    android:paddingStart="30dp"
+                    android:paddingEnd="30dp"
+                    android:text="打开通知"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                android:id="@+id/refresh"
+                onRefreshListener="@{viewModel}"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/bottom_layout"
-                android:layout_below="@+id/relativeLayout3" />
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+                android:paddingBottom="15dp">
+
+                <com.zb.lib_base.views.MyHeaderView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/chat_list"
+                    adapter="@{viewModel.adapter}"
+                    recyclerType="@{0}"
+                    size="@{0}"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/bottom_layout"

@@ -37,6 +37,7 @@ import com.zb.lib_base.model.PrivateMsg;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.KeyboardStateObserver;
+import com.zb.lib_base.utils.OpenNotice;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -154,6 +155,9 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             }
             return false;
         });
+
+        if (!OpenNotice.isNotificationEnabled(activity))
+            mBinding.noticeLayout.setVisibility(PreferenceUtil.readIntValue(activity, "chat_notice_" + BaseActivity.userId) == 1 ? View.GONE : View.VISIBLE);
     }
 
     public void onDestroy() {
@@ -395,6 +399,19 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
     @Override
     public void toCamera(View view) {
 
+    }
+
+    @Override
+    public void closeNotice(View view) {
+        mBinding.noticeLayout.setVisibility(View.GONE);
+        PreferenceUtil.saveIntValue(activity, "chat_notice_" + BaseActivity.userId, 1);
+    }
+
+    @Override
+    public void openNotice(View view) {
+        OpenNotice.gotoSet(activity);
+        mBinding.noticeLayout.setVisibility(View.GONE);
+        PreferenceUtil.saveIntValue(activity, "chat_notice_" + BaseActivity.userId, 1);
     }
 
     @Override

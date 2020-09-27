@@ -539,17 +539,24 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 0, ObjectUtils.getDefaultRes(), ObjectUtils.getViewSizeByWidth(0.94f),
                 -1, false, true, 10,
                 false, 0, false);
+        uiHandler.removeCallbacks(uiRa);
         animatorUI = ObjectAnimator.ofFloat(view, "rotationY", 0, 1);
         animatorUI.setInterpolator(new CycleInterpolator(1));
         animatorUI.setRepeatCount(1);
         animatorUI.setDuration(100);
         animatorUI.start();
-        new Handler().postDelayed(() -> {
+        uiHandler.postDelayed(uiRa, 500);
+    }
+
+    private Handler uiHandler = new Handler();
+    private Runnable uiRa = new Runnable() {
+        @Override
+        public void run() {
             if (animatorUI != null)
                 animatorUI.cancel();
             animatorUI = null;
-        }, 100);
-    }
+        }
+    };
 
     private ImageView ivLike, ivDislike;
 
