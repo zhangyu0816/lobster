@@ -27,6 +27,11 @@
         android:layout_height="match_parent"
         android:background="@android:color/white">
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/mine_top_bg" />
+
         <RelativeLayout
             android:id="@+id/top_relative"
             android:layout_width="match_parent"

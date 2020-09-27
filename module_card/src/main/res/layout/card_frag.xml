@@ -58,12 +58,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/mine_top_bg" />
+
         <TextView
             android:id="@+id/tv_city"
             onClickDelayed="@{viewModel::selectCity}"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
-            android:background="@drawable/btn_bg_black_efe_radius40"
+            android:background="@drawable/btn_bg_white_radius60"
             android:drawableStart="@mipmap/address_icon"
             android:drawablePadding="5dp"
             android:gravity="center"

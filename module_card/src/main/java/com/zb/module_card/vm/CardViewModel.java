@@ -225,11 +225,11 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         int height = StatusBarUtil.getStatusBarHeight(activity);
         new Handler().postDelayed(() -> {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBinding.tvCity.getLayoutParams();
-            params.setMargins(DisplayUtils.dip2px(15f), height +DisplayUtils.dip2px(15f), DisplayUtils.dip2px(15f),0);
+            params.setMargins(DisplayUtils.dip2px(15f), height + DisplayUtils.dip2px(15f), DisplayUtils.dip2px(15f), 0);
             mBinding.tvCity.setLayoutParams(params);
 
             RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) mBinding.expisureLayout.getLayoutParams();
-            params1.setMargins(DisplayUtils.dip2px(15f), height +DisplayUtils.dip2px(15f), DisplayUtils.dip2px(15f),0);
+            params1.setMargins(DisplayUtils.dip2px(15f), height + DisplayUtils.dip2px(15f), DisplayUtils.dip2px(15f), 0);
             mBinding.expisureLayout.setLayoutParams(params1);
         }, 500);
     }

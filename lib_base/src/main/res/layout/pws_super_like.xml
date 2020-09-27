@@ -57,7 +57,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="80dp"
+                android:layout_alignTop="@+id/image_linear"
+                android:layout_marginTop="-100dp"
                 android:background="@drawable/pair_success_title_icon"
                 android:visibility="@{isPair?View.VISIBLE:View.GONE}" />
 
@@ -66,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="220dp"
+                android:layout_marginTop="180dp"
                 android:background="@{isPair?@drawable/pair_success_icon:@drawable/pws_super_like}"
                 android:gravity="center"
                 android:orientation="horizontal"
@@ -156,7 +157,7 @@
                 android:layout_height="40dp"
                 android:layout_below="@+id/tv_send"
                 android:layout_marginStart="68dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginEnd="68dp"
                 android:background="@drawable/btn_bg_white_radius40"
                 android:gravity="center"

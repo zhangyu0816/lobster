@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
@@ -15,6 +16,7 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -94,6 +96,12 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             }
         };
         initFragments();
+
+        new Handler().postDelayed(() -> {
+            int height = DisplayUtils.dip2px(30) - mBinding.topLinear.getHeight();
+            mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) ->
+                    mBinding.setShowBg(verticalOffset <= height));
+        }, 300);
     }
 
     public void onDestroy() {
