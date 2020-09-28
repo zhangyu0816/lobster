@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="pw"
+            type="com.zb.lib_base.windows.CashPW" />
+
+        <variable
+            name="mineBank"
+            type="com.zb.lib_base.model.MineBank" />
+
+        <variable
+            name="money"
+            type="String" />
+
+        <variable
+            name="showList"
+            type="boolean" />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.5"
+            android:background="@color/black" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:background="@mipmap/qr_code_bg"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="15dp"
+                android:text="请选择提现方式"
+                android:textColor="@color/black_827"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@{money}"
+                android:textColor="@color/black_252"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                tools:text="￥ 100.0" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="15dp"
+                android:background="@color/black_efe" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="提现方式"
+                    android:textColor="@color/black_827"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:drawableEnd="@mipmap/arrow_right_icon"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
+                    android:onClick="@{pw.selectBank}"
+                    android:text="@{mineBank.bankInfo}"
+                    android:textColor="@color/black_252"
+                    android:textSize="14sp"
+                    tools:text="支付宝" />
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                adapter="@{pw.adapter}"
+                recyclerType="@{0}"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="15dp"
+                android:visibility="@{showList?View.VISIBLE:View.GONE}" />
+
+            <TextView
+                onClickDelayed="@{pw::changeCash}"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/gradient_purple_6d5_ae7"
+                android:gravity="center"
+                android:text="提现"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

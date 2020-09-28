@@ -60,6 +60,7 @@ public class MineWebActivity extends MineBaseActivity {
     @Override
     public void initUI() {
         viewModel = new MineWebViewModel();
+        viewModel.shareSignUrl = url;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.title, title);
@@ -94,7 +95,6 @@ public class MineWebActivity extends MineBaseActivity {
                     if (url.contains("shareSign")) {
                         activity.finish();
                     }
-                    viewModel.shareSignUrl = mUrl;
                     ActivityUtils.getMineWeb("邀请好友赚钱", mUrl + "?userId=" + BaseActivity.userId + "&sessionId=" + BaseActivity.sessionId +
                             "&pfDevice=Android&pfAppType=203&pfAppVersion=" + MineApp.versionName);
                 } else if (mUrl.contains("xg_openPartner")) {

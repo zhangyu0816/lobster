@@ -55,4 +55,5 @@
     <string name="tv_open">立即开通</string>
     <string name="tv_renew">会员续费</string>
     <string name="vip_intro">开通VIP特权,专享超值权益</string>
+    <string name="bank_account">(%s)</string>
 </resources>

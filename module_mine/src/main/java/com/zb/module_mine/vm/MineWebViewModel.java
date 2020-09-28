@@ -23,6 +23,7 @@ import com.zb.lib_base.model.ShareProduct;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.CashPW;
 import com.zb.lib_base.windows.PaymentPW;
 import com.zb.lib_base.windows.TextPW;
 import com.zb.module_mine.databinding.MineWebBinding;
@@ -38,24 +39,26 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
     private BaseReceiver addBankReceiver;
     private long bankAccountId;
     public double money;
-    public String shareSignUrl;
+    public String shareSignUrl = "";
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (MineWebBinding) binding;
         markProductList();
-        addBankReceiver = new BaseReceiver(activity, "lobster_addBank") {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                myBankCards();
-            }
-        };
+        if (shareSignUrl.contains("shareSign"))
+            addBankReceiver = new BaseReceiver(activity, "lobster_addBank") {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    myBankCards();
+                }
+            };
     }
 
     public void onDestroy() {
         try {
-            addBankReceiver.unregisterReceiver();
+            if (addBankReceiver != null)
+                addBankReceiver.unregisterReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -140,8 +143,10 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
         myBankCardsApi api = new myBankCardsApi(new HttpOnNextListener<List<MineBank>>() {
             @Override
             public void onNext(List<MineBank> o) {
-                bankAccountId = o.get(0).getId();
-                shareChangeCash();
+                new CashPW(mBinding.getRoot(), o.get(0), money, o, mineBank -> {
+                    bankAccountId = mineBank.getId();
+                    shareChangeCash();
+                });
             }
 
             @Override

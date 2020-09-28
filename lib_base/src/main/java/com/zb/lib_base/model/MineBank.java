@@ -17,6 +17,7 @@ public class MineBank extends BaseObservable implements Serializable {
     String accountNo = "";    //银行卡号 Or 支付宝?..百付宝?..
     String accountPerson = "";   //账号所有人的名字
     String openAccountLocation = ""; //开户网点
+    String bankInfo = "";
 
     public MineBank() {
     }
@@ -100,5 +101,15 @@ public class MineBank extends BaseObservable implements Serializable {
     public void setOpenAccountLocation(String openAccountLocation) {
         this.openAccountLocation = openAccountLocation;
         notifyPropertyChanged(BR.openAccountLocation);
+    }
+
+    @Bindable
+    public String getBankInfo() {
+        return bankInfo;
+    }
+
+    public void setBankInfo(String bankInfo) {
+        this.bankInfo = bankInfo;
+        notifyPropertyChanged(BR.bankInfo);
     }
 }
