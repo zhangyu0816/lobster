@@ -359,6 +359,6 @@ public class LoginSampleHelper {
                 mPlayer.stop();
                 mPlayer.release();//释放资源
             }
-        }, 500);
+        }, 1000);
     }
 }

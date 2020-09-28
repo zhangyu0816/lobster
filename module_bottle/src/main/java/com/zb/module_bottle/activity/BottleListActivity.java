@@ -6,7 +6,6 @@ import android.view.KeyEvent;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.utils.RouteUtils;
-import com.zb.lib_base.utils.StatusBarUtil;
 import com.zb.module_bottle.BR;
 import com.zb.module_bottle.R;
 import com.zb.module_bottle.vm.BottleListViewModel;

@@ -280,7 +280,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@{viewModel.memberInfo==null?@drawable/default_bg:@drawable/empty_bg}"
-                        android:text="@{viewModel.memberInfo.personalitySign.isEmpty()?@string/sign_content:viewModel.memberInfo.personalitySign}"
+                        android:text="@{viewModel.memberInfo.personalitySign.trim().isEmpty()?@string/sign_content:viewModel.memberInfo.personalitySign}"
                         android:textColor="@color/black_4d4"
                         android:textSize="14sp"
                         tools:text="默认仓库" />

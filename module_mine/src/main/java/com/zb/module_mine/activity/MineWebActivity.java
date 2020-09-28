@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -90,7 +89,7 @@ public class MineWebActivity extends MineBaseActivity {
             public boolean shouldOverrideUrlLoading(WebView view, String mUrl) {
                 if (mUrl.contains("shareRegister")) {
                     new FunctionPW(mBinding.getRoot(), MineApp.mineInfo.getImage().replace("YM0000", "430X430"), "邂逅不过一场梦",
-                            "来虾菇，送你VIP，心动女生任你挑选", mUrl, true, false, false, false, null);
+                            "来虾菇，送你VIP，心动女生任你挑选", mUrl + "?superUserId=" + BaseActivity.userId, true, false, false, false, null);
                 } else if (mUrl.contains("shareSign")) {
                     if (url.contains("shareSign")) {
                         activity.finish();
