@@ -107,8 +107,19 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
 
         new Handler().postDelayed(() -> {
             int height = DisplayUtils.dip2px(30) - mBinding.topLinear.getHeight();
-            mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) ->
-                    mBinding.setShowBg(verticalOffset <= height));
+            mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+                        int y = verticalOffset - height;
+                        float alpha = (float) y / DisplayUtils.dip2px(30);
+                        if (alpha >= 1f)
+                            alpha = 1f;
+                        else if (alpha <= 0) {
+                            alpha = 0f;
+                        }
+                        mBinding.viewTop.setAlpha(1 - alpha);
+                        mBinding.tvTitle.setAlpha(alpha);
+//                        mBinding.setShowBg(verticalOffset <= height);
+                    }
+            );
         }, 300);
     }
 

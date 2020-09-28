@@ -9,10 +9,10 @@ import com.zb.lib_base.model.OrderNumber;
 import rx.Observable;
 
 public class openMakePartnerApi extends BaseEntity<OrderNumber> {
-    long markeProductId;
+    long makeProductId;
 
-    public openMakePartnerApi setMarkeProductId(long markeProductId) {
-        this.markeProductId = markeProductId;
+    public openMakePartnerApi setMakeProductId(long makeProductId) {
+        this.makeProductId = makeProductId;
         return this;
     }
 
@@ -23,6 +23,6 @@ public class openMakePartnerApi extends BaseEntity<OrderNumber> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.openMakePartner(markeProductId);
+        return methods.openMakePartner(makeProductId);
     }
 }

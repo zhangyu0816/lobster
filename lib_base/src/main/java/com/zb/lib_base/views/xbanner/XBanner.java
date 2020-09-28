@@ -895,17 +895,19 @@ public class XBanner extends RelativeLayout {
         mAdapter = null;
         mBannerPageListner = null;
         mImageLoader = null;
-        if (binding.viewpager != null)
-            binding.viewpager.setAdapter(null);
-        try {
-            Field f = ViewPager.class.getDeclaredField("mOnPageChangeListeners");
-            f.setAccessible(true);
-            f.set(binding.viewpager, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        if (binding != null){
+            if (binding.viewpager != null)
+                binding.viewpager.setAdapter(null);
+            try {
+                Field f = ViewPager.class.getDeclaredField("mOnPageChangeListeners");
+                f.setAccessible(true);
+                f.set(binding.viewpager, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        binding.viewpager.removeAllViews();
+            binding.viewpager.removeAllViews();
+        }
         System.gc();
         System.runFinalization();
 

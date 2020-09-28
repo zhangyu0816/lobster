@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
-import com.zb.lib_base.utils.StatusBarUtil;
 import com.zb.module_bottle.R;
 
 public abstract class BottleBaseActivity extends BaseActivity {
@@ -14,7 +13,6 @@ public abstract class BottleBaseActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.BottleTheme);
         super.onCreate(savedInstanceState);
-        StatusBarUtil.statusBarLightMode(this);
     }
 
     public void fitScreen() {

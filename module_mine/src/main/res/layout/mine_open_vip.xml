@@ -28,10 +28,34 @@
         android:layout_height="match_parent"
         android:background="@mipmap/vip_bg">
 
+        <RelativeLayout
+            android:id="@+id/top_relative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp">
+
+            <ImageView
+                onClickDelayed="@{viewModel::back}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                app:srcCompat="@mipmap/back_white_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="我的权益"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
         <androidx.core.widget.NestedScrollView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_above="@+id/bottom_layout"
+            android:layout_below="@+id/top_relative"
             android:layout_centerHorizontal="true"
             android:overScrollMode="never"
             android:scrollbars="none">
@@ -42,32 +66,11 @@
                 android:orientation="vertical">
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="22dp">
-
-                    <ImageView
-                        onClickDelayed="@{viewModel::back}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="15dp"
-                        app:srcCompat="@mipmap/back_white_icon" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="我的权益"
-                        android:textColor="@android:color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-                </RelativeLayout>
-
-                <RelativeLayout
                     viewHeightSize="@{ObjectUtils.getVipIntroBgHeight(0.95f)}"
                     viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.95f)}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginEnd="15dp"
@@ -109,8 +112,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:layout_toStartOf="@+id/tv_open"
                         android:layout_marginEnd="15dp"
+                        android:layout_toStartOf="@+id/tv_open"
                         android:layout_toEndOf="@+id/image_relative"
                         android:text="@{String.format(@string/member_nick, mineInfo.nick)}"
                         android:textColor="@android:color/white"
@@ -122,8 +125,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/tv_nick"
-                        android:layout_toStartOf="@+id/tv_open"
                         android:layout_marginTop="10dp"
+                        android:layout_toStartOf="@+id/tv_open"
                         android:layout_toEndOf="@+id/image_relative"
                         android:text='@{mineInfo.memberType==2?(mineInfo.memberExpireTime.empty ?"" : String.format(@string/member_expire_time, mineInfo.memberExpireTime.substring(0,10))):@string/vip_intro}'
                         android:textColor="#b0ffffff"

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -70,7 +71,7 @@ public class MineWebActivity extends MineBaseActivity {
         webSettings.setDomStorageEnabled(true);
         webSettings.setSupportZoom(true);
         webSettings.setBuiltInZoomControls(true);
-        setZoomControlGoneX(binding.webView.getSettings(), new Object[]{false});
+        setZoomControlGoneX(binding.webView.getSettings());
         binding.webView.loadUrl(url);
         binding.webView.removeJavascriptInterface("searchBoxJavaBridge_");
         binding.webView.removeJavascriptInterface("accessibilityTraversal");
@@ -86,18 +87,21 @@ public class MineWebActivity extends MineBaseActivity {
             }
 
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains("shareRegister")) {
+            public boolean shouldOverrideUrlLoading(WebView view, String mUrl) {
+                if (mUrl.contains("shareRegister")) {
                     new FunctionPW(mBinding.getRoot(), MineApp.mineInfo.getImage().replace("YM0000", "430X430"), "邂逅不过一场梦",
-                            "来虾菇，送你VIP，心动女生任你挑选", url, true, false, false, false, null);
-                } else if (url.contains("shareSign")) {
-                    viewModel.shareSignUrl = url;
-                    ActivityUtils.getMineWeb("奖励提现", url + "?userId=" + BaseActivity.userId + "&sessionId=" + BaseActivity.sessionId +
+                            "来虾菇，送你VIP，心动女生任你挑选", mUrl, true, false, false, false, null);
+                } else if (mUrl.contains("shareSign")) {
+                    if (url.contains("shareSign")) {
+                        activity.finish();
+                    }
+                    viewModel.shareSignUrl = mUrl;
+                    ActivityUtils.getMineWeb("邀请好友赚钱", mUrl + "?userId=" + BaseActivity.userId + "&sessionId=" + BaseActivity.sessionId +
                             "&pfDevice=Android&pfAppType=203&pfAppVersion=" + MineApp.versionName);
-                } else if (url.contains("xg_openPartner")) {
+                } else if (mUrl.contains("xg_openPartner")) {
                     viewModel.openMakePartner();
-                } else if (url.contains("xg_changeCash_")) {
-                    String money = url.substring(url.indexOf("xg_changeCash_")).replace("xg_changeCash_", "");
+                } else if (mUrl.contains("xg_changeCash_")) {
+                    String money = mUrl.substring(mUrl.indexOf("xg_changeCash_")).replace("xg_changeCash_", "");
                     if (!money.isEmpty()) {
                         DecimalFormat df = new DecimalFormat("#####0.0");
                         viewModel.money = Double.parseDouble(df.format(Double.parseDouble(money)));
@@ -105,7 +109,7 @@ public class MineWebActivity extends MineBaseActivity {
                     CustomProgressDialog.showLoading(activity, "提现处理中");
                     viewModel.realNameVerify();
                 } else
-                    view.loadUrl(url);
+                    view.loadUrl(mUrl);
                 return true;
             }
 
@@ -144,14 +148,9 @@ public class MineWebActivity extends MineBaseActivity {
     }
 
     //通过反射隐藏webview的缩放按钮 适用于3.0和以后
-    private void setZoomControlGoneX(WebSettings view, Object[] args) {
+    private void setZoomControlGoneX(WebSettings view) {
         Class classType = view.getClass();
         try {
-            Class[] argsClass = new Class[args.length];
-
-            for (int i = 0, j = args.length; i < j; i++) {
-                argsClass[i] = args[i].getClass();
-            }
             Method[] ms = classType.getMethods();
             for (Method m : ms) {
                 if (m.getName().equals("setDisplayZoomControls")) {

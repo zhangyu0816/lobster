@@ -420,7 +420,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                                             htmlStr = htmlStr + "<font color='" + colors[i % 2] + "'>" + tags[i] + "</font>";
                                     }
                                 }
-                                htmlStr = htmlStr + "<font color='#C3BDCD'>吧</font>";
+                                htmlStr = htmlStr + "<font color='#C3BDCD'>吧。</font>";
 
                                 memberInfo.setContent(Html.fromHtml(htmlStr));
                                 HistoryMsg historyMsg = new HistoryMsg();

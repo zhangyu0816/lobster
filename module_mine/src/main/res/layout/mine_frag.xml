@@ -184,7 +184,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="10dp"
                                     android:singleLine="true"
-                                    android:text="@{mineInfo.personalitySign.empty?@string/mine_sign_content:mineInfo.personalitySign}"
+                                    android:text="@{mineInfo.personalitySign.empty?@string/sign_content:mineInfo.personalitySign}"
                                     android:textColor="@color/black_4d4"
                                     android:textSize="14sp"
                                     android:textStyle="bold"

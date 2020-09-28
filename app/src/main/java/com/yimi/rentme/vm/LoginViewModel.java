@@ -256,6 +256,10 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         super.right(view);
         hintKeyBoard();
         if (TextUtils.equals(mBinding.getRight(), "密码登录")) {
+            if (!MineApp.registerInfo.getPhone().matches(MineApp.PHONE_NUMBER_REG)) {
+                SCToastUtil.showToast(activity, "请输入正确的手机号", true);
+                return;
+            }
             mBinding.setRight("验证码登录");
             step(7);
         } else {
@@ -372,10 +376,14 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                     step(3);
                     break;
                 case 3: // 跳转验证码页
-                    if (mBinding.getRight().isEmpty()) {
-                        registerCaptcha();
+                    if (!MineApp.registerInfo.getPhone().matches(MineApp.PHONE_NUMBER_REG)) {
+                        SCToastUtil.showToast(activity, "请输入正确的手机号", true);
                     } else {
-                        loginCaptcha();
+                        if (mBinding.getRight().isEmpty()) {
+                            registerCaptcha();
+                        } else {
+                            loginCaptcha();
+                        }
                     }
                     break;
                 case 4: // 跳转个人头像页 or 验证码登录

@@ -69,12 +69,12 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginTop="22dp"
-                            android:padding="15dp"
+                            android:paddingTop="15dp"
                             android:text="对话"
                             android:textColor="@color/black_252"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            tools:text="租我吧" />
+                            android:visibility="invisible"/>
 
                         <com.zb.lib_base.views.BottleTitleView
                             isPlay="@{isPlay}"
@@ -328,9 +328,24 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/view_top"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:background="@color/white"
-            android:visibility="@{showBg?View.VISIBLE:View.GONE}"/>
+            android:alpha="0"/>
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="22dp"
+            android:paddingTop="15dp"
+            android:text="对话"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/black_252"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
     </RelativeLayout>
 </layout>

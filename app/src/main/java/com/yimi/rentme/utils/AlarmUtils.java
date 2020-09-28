@@ -195,7 +195,7 @@ public class AlarmUtils {
         noticeMap.put(101, "给我一首歌的时间#我想让你看到一整年的快乐");
         noticeMap.put(102, "你知道嘛#有人喜欢你很久了");
         noticeMap.put(103, "你知道孤独是什么感觉吗#手机亮了却只有推送");
-        noticeMap.put(104, "你和" + (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) + "们擦肩而过#快来看看是谁");
+        noticeMap.put(104, "你和" + (mineInfo == null ? "TA" : (mineInfo.getSex() == 0 ? "他" : "她")) + "们擦肩而过#快来看看是谁");
         noticeMap.put(105, "#亲，你不在的这段时间里，有人多次访问了你的资料");
         noticeMap.put(106, "甜甜的恋爱是真的#不信？你滑我试试？");
         noticeMap.put(107, "聊天选我#超会聊天，还秒回");
@@ -207,8 +207,8 @@ public class AlarmUtils {
         noticeMap.put(113, "宝贝～总有人在角落偷偷爱你#比如：我");
         noticeMap.put(114, "来自同城的<name>访问了你#你们都在同一个城市哦，周末约出来玩玩~");
         noticeMap.put(115, "滴～滴~，喜欢的人已送到#请进入右滑模式");
-        noticeMap.put(116, "有人在角落里偷偷看了你！#快来找到" + (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")));
-        noticeMap.put(117, (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) + "反复查看了你的动态#快来左滑");
+        noticeMap.put(116, "有人在角落里偷偷看了你！#快来找到" + (mineInfo == null ? "TA" : (mineInfo.getSex() == 0 ? "他" : "她")));
+        noticeMap.put(117, (mineInfo == null ? "TA" : (mineInfo.getSex() == 0 ? "他" : "她")) + "反复查看了你的动态#快来左滑");
 
         id = ra.nextInt(18) + 100;
         String[] temp = Objects.requireNonNull(noticeMap.get(id)).split("#");
@@ -216,7 +216,7 @@ public class AlarmUtils {
         if (MineApp.recommendInfoList.size() > 0 && id > 113) {
             recommendInfo = MineApp.recommendInfoList.get(new Random().nextInt(MineApp.recommendInfoList.size()));
         }
-        setNoticeManager(context, temp[0].replace("name", recommendInfo == null ? (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) : recommendInfo.getUserNick()), temp[1], recommendInfo);
+        setNoticeManager(context, temp[0].replace("name", recommendInfo == null ? (mineInfo == null ? "TA" : (mineInfo.getSex() == 0 ? "他" : "她")) : recommendInfo.getUserNick()), temp[1], recommendInfo);
     }
 
     private static void setNoticeShort(Context context, int type) {
@@ -224,7 +224,7 @@ public class AlarmUtils {
         noticeShortMap.put(118, "#<name>向你打招呼");
         noticeShortMap.put(119, "#<name>想和你聊天");
         noticeShortMap.put(120, "有人在角落里偷偷看了你！#快来找到他");
-        noticeShortMap.put(121, (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) + "反复查看了你的动态#快来右滑");
+        noticeShortMap.put(121, (mineInfo == null ? "TA" : (mineInfo.getSex() == 0 ? "他" : "她")) + "反复查看了你的动态#快来右滑");
 
         id = ra.nextInt(4) + 118;
         String[] temp = Objects.requireNonNull(noticeShortMap.get(id)).split("#");
@@ -233,7 +233,7 @@ public class AlarmUtils {
             recommendInfo = MineApp.recommendInfoList.get(new Random().nextInt(MineApp.recommendInfoList.size()));
         }
 
-        setNoticeManager(context, temp[0], temp[1].replace("name", recommendInfo == null ? (mineInfo == null ? "Ta" : (mineInfo.getSex() == 0 ? "他" : "她")) : recommendInfo.getUserNick()), recommendInfo);
+        setNoticeManager(context, temp[0], temp[1].replace("name", recommendInfo == null ? (mineInfo == null ? "TA" : (mineInfo.getSex() == 0 ? "他" : "她")) : recommendInfo.getUserNick()), recommendInfo);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

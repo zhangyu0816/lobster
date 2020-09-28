@@ -19,7 +19,6 @@ public class BottleListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.BottleBlackTheme);
         super.onCreate(savedInstanceState);
-        StatusBarUtil.statusBarLightModeNotFull(this);
     }
 
     @Override

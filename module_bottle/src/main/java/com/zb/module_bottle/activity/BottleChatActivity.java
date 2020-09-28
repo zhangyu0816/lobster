@@ -1,24 +1,34 @@
 package com.zb.module_bottle.activity;
 
+import android.os.Bundle;
 import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.lib_base.utils.SoftHideKeyBoardUtil;
+import com.zb.lib_base.utils.StatusBarUtil;
 import com.zb.module_bottle.BR;
 import com.zb.module_bottle.R;
 import com.zb.module_bottle.vm.BottleChatViewModel;
 
 
 @Route(path = RouteUtils.Bottle_Chat)
-public class BottleChatActivity extends BottleBaseActivity {
+public class BottleChatActivity extends BaseActivity {
     @Autowired(name = "driftBottleId")
     long driftBottleId;
     @Autowired(name = "isNotice")
     boolean isNotice;
 
     private BottleChatViewModel viewModel;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.BottleBlackTheme);
+        super.onCreate(savedInstanceState);
+        StatusBarUtil.statusBarLightMode(this);
+    }
 
     @Override
     public int getRes() {

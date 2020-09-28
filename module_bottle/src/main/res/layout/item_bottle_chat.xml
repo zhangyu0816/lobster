@@ -54,6 +54,7 @@
             android:visibility="@{item.fromId!=BaseActivity.userId?View.VISIBLE:View.GONE}">
 
             <RelativeLayout
+                onClickDelayed="@{viewModel::toMemberDetail}"
                 android:id="@+id/iv_other_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">

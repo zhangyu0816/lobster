@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
-import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.markProductListApi;
 import com.zb.lib_base.api.myBankCardsApi;
@@ -12,7 +11,6 @@ import com.zb.lib_base.api.openMakePartnerApi;
 import com.zb.lib_base.api.payOrderForTranShareApi;
 import com.zb.lib_base.api.realNameVerifyApi;
 import com.zb.lib_base.api.shareChangeCashApi;
-import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -36,7 +34,7 @@ import androidx.databinding.ViewDataBinding;
 
 public class MineWebViewModel extends BaseViewModel implements MineWebVMInterface {
     private MineWebBinding mBinding;
-    private long markeProductId;
+    private long makeProductId;
     private BaseReceiver addBankReceiver;
     private long bankAccountId;
     public double money;
@@ -59,8 +57,8 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
         try {
             addBankReceiver.unregisterReceiver();
         } catch (Exception e) {
+            e.printStackTrace();
         }
-
     }
 
     @Override
@@ -76,7 +74,7 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
             public void onNext(List<ShareProduct> o) {
                 for (ShareProduct item : o) {
                     if (item.getMarkeType() == 1) {
-                        markeProductId = item.getId();
+                        makeProductId = item.getId();
                     }
                 }
             }
@@ -86,7 +84,7 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
 
     @Override
     public void openMakePartner() {
-        if (markeProductId == 0) {
+        if (makeProductId == 0) {
             return;
         }
         openMakePartnerApi api = new openMakePartnerApi(new HttpOnNextListener<OrderNumber>() {
@@ -94,7 +92,7 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
             public void onNext(OrderNumber o) {
                 payOrderForTranShare(o.getOrderNumber());
             }
-        }, activity).setMarkeProductId(markeProductId);
+        }, activity).setMakeProductId(makeProductId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

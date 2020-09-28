@@ -252,7 +252,7 @@
                             android:layout_marginTop="10dp"
                             android:layout_toEndOf="@+id/image_layout"
                             android:singleLine="true"
-                            android:text="@{memberInfo.personalitySign.empty?@string/mine_sign_content:memberInfo.personalitySign}"
+                            android:text="@{memberInfo.personalitySign.empty?@string/sign_content:memberInfo.personalitySign}"
                             android:textColor="@color/black_4d4"
                             android:textSize="14sp"
                             android:textStyle="bold"
