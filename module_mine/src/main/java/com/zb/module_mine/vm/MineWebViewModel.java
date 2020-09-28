@@ -1,12 +1,19 @@
 package com.zb.module_mine.vm;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 
+import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.markProductListApi;
 import com.zb.lib_base.api.myBankCardsApi;
 import com.zb.lib_base.api.openMakePartnerApi;
 import com.zb.lib_base.api.payOrderForTranShareApi;
 import com.zb.lib_base.api.realNameVerifyApi;
+import com.zb.lib_base.api.shareChangeCashApi;
+import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -16,9 +23,11 @@ import com.zb.lib_base.model.OrderNumber;
 import com.zb.lib_base.model.OrderTran;
 import com.zb.lib_base.model.ShareProduct;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.PaymentPW;
 import com.zb.lib_base.windows.TextPW;
+import com.zb.module_mine.databinding.MineWebBinding;
 import com.zb.module_mine.iv.MineWebVMInterface;
 
 import java.util.List;
@@ -26,12 +35,32 @@ import java.util.List;
 import androidx.databinding.ViewDataBinding;
 
 public class MineWebViewModel extends BaseViewModel implements MineWebVMInterface {
+    private MineWebBinding mBinding;
     private long markeProductId;
+    private BaseReceiver addBankReceiver;
+    private long bankAccountId;
+    public double money;
+    public String shareSignUrl;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
+        mBinding = (MineWebBinding) binding;
         markProductList();
+        addBankReceiver = new BaseReceiver(activity, "lobster_addBank") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                myBankCards();
+            }
+        };
+    }
+
+    public void onDestroy() {
+        try {
+            addBankReceiver.unregisterReceiver();
+        } catch (Exception e) {
+        }
+
     }
 
     @Override
@@ -88,6 +117,7 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                 if (o.getIsChecked() == 1) {
                     myBankCards();
                 } else {
+                    CustomProgressDialog.stopLoading();
                     if (o.getIsChecked() == 0 || o.getIsChecked() == 100) {
                         new TextPW(mBinding.getRoot(), "实名认证", "实名认证还在审核中，请稍后再试！");
                     } else {
@@ -98,6 +128,7 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
 
             @Override
             public void onError(Throwable e) {
+                CustomProgressDialog.stopLoading();
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     new TextPW(mBinding.getRoot(), "实名认证", "你还未实名认证无法提现,请前往提交实名认证信息！", "去认证", () -> ActivityUtils.getMineAuthentication(new Authentication()));
                 }
@@ -111,9 +142,36 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
         myBankCardsApi api = new myBankCardsApi(new HttpOnNextListener<List<MineBank>>() {
             @Override
             public void onNext(List<MineBank> o) {
+                bankAccountId = o.get(0).getId();
+                shareChangeCash();
+            }
 
+            @Override
+            public void onError(Throwable e) {
+                CustomProgressDialog.stopLoading();
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    ActivityUtils.getMineBindingBank();
+                }
             }
         }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void shareChangeCash() {
+        shareChangeCashApi api = new shareChangeCashApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                CustomProgressDialog.stopLoading();
+                SCToastUtil.showToast(activity, "已提交提现信息", true);
+                mBinding.webView.reload();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                CustomProgressDialog.stopLoading();
+            }
+        }, activity).setMoney(money).setBankAccountId(bankAccountId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

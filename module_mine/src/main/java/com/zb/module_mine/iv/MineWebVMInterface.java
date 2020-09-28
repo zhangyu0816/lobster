@@ -11,4 +11,6 @@ public interface MineWebVMInterface {
     void realNameVerify();
 
     void myBankCards();
+
+    void shareChangeCash();
 }

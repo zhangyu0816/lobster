@@ -137,7 +137,9 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
 
     @Override
     public void openShare(View view) {
-        ActivityUtils.getMineWeb("邀请好友", HttpManager.BASE_URL + "share.html?id=" + BaseActivity.userId);
+        ActivityUtils.getMineWeb("邀请好友", HttpManager.BASE_URL + "share.html" +
+                "?userId=" + BaseActivity.userId + "&sessionId=" + BaseActivity.sessionId +
+                "&pfDevice=Android&pfAppType=203&pfAppVersion=" + MineApp.versionName);
     }
 
     @Override

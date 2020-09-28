@@ -146,8 +146,6 @@ public class AdapterBinding {
     @BindingAdapter(value = {"imageUrl", "imageRes", "defaultRes", "viewWidthSize", "viewHeightSize", "isCircle", "isRound", "roundSize", "countSize", "cornerType", "isBlur"}, requireAll = false)
     public static void loadImage(ImageView view, String imageUrl, int imageRes, int defaultRes, int widthSize, int heightSize, boolean isCircle, boolean isRound, int roundSize, boolean countSize, int cornerType, boolean isBlur) {
         try {
-
-
             RequestOptions cropOptions = new RequestOptions().centerCrop();
             RequestOptions defaultOptions = new RequestOptions().centerCrop();
             if (isCircle) {

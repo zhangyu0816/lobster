@@ -197,6 +197,10 @@ public interface HttpService {
     @GET("api/Share_payOrderForTran")
     Observable<BaseResultEntity<OrderTran>> payOrderForTranShare(@Query("orderNumber") String orderNumber);
 
+    // 活动金额 提现
+    @GET("api/Share_changeCash")
+    Observable<BaseResultEntity> shareChangeCash(@Query("money") double money, @Query("bankAccountId") long bankAccountId);
+
     /******************************* app **********************************/
 
     // 会员价格

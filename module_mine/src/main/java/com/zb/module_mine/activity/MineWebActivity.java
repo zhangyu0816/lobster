@@ -13,8 +13,10 @@ import android.webkit.WebViewClient;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -25,6 +27,7 @@ import com.zb.module_mine.databinding.MineWebBinding;
 import com.zb.module_mine.vm.MineWebViewModel;
 
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 
 @Route(path = RouteUtils.Mine_Web)
 public class MineWebActivity extends MineBaseActivity {
@@ -41,6 +44,7 @@ public class MineWebActivity extends MineBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         binding.webView.destroy();
+        viewModel.onDestroy();
         try {
             openPartnerReceiver.unregisterReceiver();
         } catch (Exception ignored) {
@@ -83,13 +87,23 @@ public class MineWebActivity extends MineBaseActivity {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.contains("xg_register")) {
+                if (url.contains("shareRegister")) {
                     new FunctionPW(mBinding.getRoot(), MineApp.mineInfo.getImage().replace("YM0000", "430X430"), "邂逅不过一场梦",
                             "来虾菇，送你VIP，心动女生任你挑选", url, true, false, false, false, null);
-                } else if (url.contains("xg_withdraw")) {
-                    ActivityUtils.getMineWeb("返佣提现", url);
+                } else if (url.contains("shareSign")) {
+                    viewModel.shareSignUrl = url;
+                    ActivityUtils.getMineWeb("奖励提现", url + "?userId=" + BaseActivity.userId + "&sessionId=" + BaseActivity.sessionId +
+                            "&pfDevice=Android&pfAppType=203&pfAppVersion=" + MineApp.versionName);
                 } else if (url.contains("xg_openPartner")) {
                     viewModel.openMakePartner();
+                } else if (url.contains("xg_changeCash_")) {
+                    String money = url.substring(url.indexOf("xg_changeCash_")).replace("xg_changeCash_", "");
+                    if (!money.isEmpty()) {
+                        DecimalFormat df = new DecimalFormat("#####0.0");
+                        viewModel.money = Double.parseDouble(df.format(Double.parseDouble(money)));
+                    }
+                    CustomProgressDialog.showLoading(activity, "提现处理中");
+                    viewModel.realNameVerify();
                 } else
                     view.loadUrl(url);
                 return true;
