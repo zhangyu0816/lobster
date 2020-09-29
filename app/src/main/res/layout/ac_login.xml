@@ -96,7 +96,7 @@
 
                         <ImageView
                             android:id="@+id/iv_back"
-                            onClickDelayed="@{viewModel::back}"
+                            android:onClick="@{viewModel::back}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"

@@ -14,7 +14,7 @@ import com.zb.lib_base.api.clearHistoryMsgApi;
 import com.zb.lib_base.api.dynDetailApi;
 import com.zb.lib_base.api.systemHistoryMsgListApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.http.CustomProgressDialog;
+import com.zb.lib_base.db.SystemMsgDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -28,6 +28,7 @@ import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.utils.MNImage;
 import com.zb.lib_base.views.SoundView;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.module_mine.BR;
 import com.zb.module_mine.R;
 import com.zb.module_mine.adapter.MineAdapter;
 import com.zb.module_mine.databinding.MineSystemMsgBinding;
@@ -68,8 +69,10 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
 
     @Override
     public void setAdapter() {
+        systemMsgList.addAll(SystemMsgDb.getInstance().getSystemMsgList());
         adapter = new MineAdapter<>(activity, R.layout.item_system_msg, systemMsgList, this);
-        CustomProgressDialog.showLoading(activity, "拉取系统消息");
+        if (systemMsgList.size() > 0)
+            updateTime();
         systemHistoryMsgList();
     }
 
@@ -78,9 +81,11 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
         systemHistoryMsgListApi api = new systemHistoryMsgListApi(new HttpOnNextListener<List<SystemMsg>>() {
             @Override
             public void onNext(List<SystemMsg> o) {
-                int start = systemMsgList.size();
-                systemMsgList.addAll(o);
-                adapter.notifyItemRangeChanged(start, systemMsgList.size());
+                mBinding.setVariable(BR.noData, false);
+                for (SystemMsg item : o) {
+                    item.setMainUserId(BaseActivity.userId);
+                    SystemMsgDb.getInstance().saveSystemMsg(item);
+                }
                 pageNo++;
                 systemHistoryMsgList();
             }
@@ -88,28 +93,34 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    CustomProgressDialog.stopLoading();
-                    if (systemMsgList.size() != 0)
+                    systemMsgList.clear();
+                    adapter.notifyDataSetChanged();
+                    systemMsgList.addAll(SystemMsgDb.getInstance().getSystemMsgList());
+                    if (systemMsgList.size() > 0)
                         updateTime();
+                    else
+                        mBinding.setVariable(BR.noData, true);
                 }
             }
         }, activity).setPageNo(pageNo);
+        api.setShowProgress(systemMsgList.size() == 0);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
     private void updateTime() {
         String time;
-        systemMsgList.get(0).setShowTime(true);
+        SystemMsgDb.getInstance().setShowTime(systemMsgList.get(0).getId(), true);
         time = systemMsgList.get(0).getCreationDate();
         for (int i = 1; i < systemMsgList.size(); i++) {
             if (DateUtil.getDateCount(systemMsgList.get(i).getCreationDate(), time, DateUtil.yyyy_MM_dd_HH_mm_ss, 1000f * 60f) > 3) {
                 time = systemMsgList.get(i).getCreationDate();
-                systemMsgList.get(i).setShowTime(true);
+                SystemMsgDb.getInstance().setShowTime(systemMsgList.get(i).getId(), true);
             } else {
-                systemMsgList.get(i).setShowTime(false);
+                SystemMsgDb.getInstance().setShowTime(systemMsgList.get(i).getId(), false);
             }
         }
         adapter.notifyDataSetChanged();
+        mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
     }
 
     @Override

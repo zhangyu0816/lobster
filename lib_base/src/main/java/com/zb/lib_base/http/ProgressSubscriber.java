@@ -1,5 +1,6 @@
 package com.zb.lib_base.http;
 
+import android.os.Handler;
 import android.text.TextUtils;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
@@ -76,7 +77,8 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
      */
     @Override
     public void onStart() {
-        CustomProgressDialog.showLoading(mActivity.get(), dialogTitle, showProgressAndCancel);
+        new Handler().postDelayed(() -> CustomProgressDialog.showLoading(mActivity.get(), dialogTitle, showProgressAndCancel),200);
+
     }
 
     /**

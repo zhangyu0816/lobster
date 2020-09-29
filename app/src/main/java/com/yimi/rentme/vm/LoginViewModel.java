@@ -89,12 +89,9 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        moreImageList.add("");
-        moreImageList.add("");
-        moreImageList.add("");
-        moreImageList.add("");
-        moreImageList.add("");
-        moreImageList.add("");
+        for (int i = 0; i < 6; i++) {
+            moreImageList.add("");
+        }
         titleMap.put(0, "嗨！您的性别为...");
         titleMap.put(1, "下一步，您叫什么名字？");
         titleMap.put(3, "您的手机号码是？");

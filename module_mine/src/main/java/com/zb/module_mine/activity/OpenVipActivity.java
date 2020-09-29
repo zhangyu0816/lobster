@@ -17,9 +17,8 @@ public class OpenVipActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.MineBlackTheme);
         super.onCreate(savedInstanceState);
-        StatusBarUtil.statusBarLightMode(this);
+        StatusBarUtil.transparencyBar(this);
     }
 
     @Override

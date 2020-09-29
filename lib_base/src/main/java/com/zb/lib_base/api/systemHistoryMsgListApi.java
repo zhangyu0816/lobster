@@ -20,7 +20,7 @@ public class systemHistoryMsgListApi extends BaseEntity<List<SystemMsg>> {
 
     public systemHistoryMsgListApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
-        setShowProgress(false);
+        setDialogTitle("拉取系统消息");
     }
 
     @Override

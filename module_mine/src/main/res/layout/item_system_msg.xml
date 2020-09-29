@@ -10,6 +10,8 @@
 
         <import type="com.zb.lib_base.db.ResFileDb" />
 
+        <import type="com.zb.lib_base.utils.DateUtil" />
+
         <variable
             name="item"
             type="com.zb.lib_base.model.SystemMsg" />
@@ -34,23 +36,25 @@
         <TextView
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:background="@drawable/btn_bg_black_efe_radius5"
-            android:padding="2dp"
-            android:text="@{item.creationDate}"
-            android:textColor="@color/black_827"
+            android:background="@drawable/btn_bg_black_a33_radius20"
+            android:gravity="center"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="@{DateUtil.strToStr(item.creationDate)}"
+            android:textColor="@color/white"
             android:textSize="12sp"
             android:visibility="@{item.showTime?View.VISIBLE:View.GONE}"
-            tools:text="2020-22-22 12:12:12" />
+            tools:text="2020-22-22 12:12" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
             android:layout_below="@+id/tv_time"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="15dp">
 

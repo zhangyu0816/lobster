@@ -23,6 +23,7 @@ public class SystemMsgActivity extends MineBaseActivity {
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.title, "系统消息");
+        mBinding.setVariable(BR.noData, false);
     }
 
     @Override

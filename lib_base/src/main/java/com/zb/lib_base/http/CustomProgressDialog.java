@@ -49,13 +49,12 @@ public class CustomProgressDialog extends Dialog implements DialogInterface.OnCa
     }
 
     public static synchronized void showLoading(RxAppCompatActivity context, CharSequence message, boolean cancelable) {
-        if (sDialog != null && sDialog.isShowing()) {
+        if (sDialog != null && cancelable) {
             sDialog.dismiss();
         }
-
-        if (context == null || !cancelable) {
+        if (!cancelable)
             return;
-        }
+
         sDialog = new CustomProgressDialog(context, message);
         sDialog.setCancelable(true);
 

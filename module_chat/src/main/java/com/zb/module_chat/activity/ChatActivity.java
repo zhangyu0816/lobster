@@ -2,6 +2,7 @@ package com.zb.module_chat.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
@@ -10,6 +11,7 @@ import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.lib_base.utils.SoftHideKeyBoardUtil;
+import com.zb.lib_base.utils.StatusBarUtil;
 import com.zb.module_chat.BR;
 import com.zb.module_chat.R;
 import com.zb.module_chat.vm.ChatViewModel;
@@ -23,6 +25,13 @@ public class ChatActivity extends ChatBaseActivity {
 
     private ChatViewModel viewModel;
     private BaseReceiver cameraReceiver;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.ChatTheme);
+        super.onCreate(savedInstanceState);
+        StatusBarUtil.transparencyBar(this);
+    }
 
     @Override
     public int getRes() {

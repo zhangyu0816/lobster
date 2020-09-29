@@ -3,6 +3,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.zb.module_mine.vm.SystemMsgViewModel" />
@@ -11,27 +13,43 @@
             name="title"
             type="String" />
 
+        <variable
+            name="noData"
+            type="boolean" />
+
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <include
+            android:id="@+id/back_black_layout"
             layout="@layout/back_black_layout"
             showRight="@{false}"
             title="@{title}"
             viewModel="@{viewModel}" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chat_list"
             adapter="@{viewModel.adapter}"
             recyclerType="@{0}"
             size="@{0}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@+id/back_black_layout"
             android:background="@color/black_efe"
             android:paddingBottom="15dp" />
 
-    </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/back_black_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:text="暂无系统消息"
+            android:textColor="@color/black_252"
+            android:textSize="16sp"
+            android:visibility="@{noData?View.VISIBLE:View.GONE}" />
+    </RelativeLayout>
 </layout>
