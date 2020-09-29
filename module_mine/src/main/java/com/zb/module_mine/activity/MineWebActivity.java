@@ -21,6 +21,7 @@ import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.windows.FunctionPW;
+import com.zb.lib_base.windows.TextPW;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.R;
 import com.zb.module_mine.databinding.MineWebBinding;
@@ -98,7 +99,7 @@ public class MineWebActivity extends MineBaseActivity {
                     ActivityUtils.getMineWeb("邀请好友赚钱", mUrl + "?userId=" + BaseActivity.userId + "&sessionId=" + BaseActivity.sessionId +
                             "&pfDevice=Android&pfAppType=203&pfAppVersion=" + MineApp.versionName);
                 } else if (mUrl.contains("xg_openPartner")) {
-                    viewModel.openMakePartner();
+                    new TextPW(mBinding.getRoot(), "开通合伙人", "成为虾菇合伙人享受以下特权：\n  1，送一年VIP会员特权。\n  2，邀请新用户使用虾菇可以享受佣金。\n  3，本活动最终解释权归虾菇所有。", "￥88 确认开通", () -> viewModel.openMakePartner());
                 } else if (mUrl.contains("xg_changeCash_")) {
                     String money = mUrl.substring(mUrl.indexOf("xg_changeCash_")).replace("xg_changeCash_", "");
                     if (!money.isEmpty()) {

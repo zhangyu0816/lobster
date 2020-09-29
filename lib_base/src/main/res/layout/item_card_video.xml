@@ -73,6 +73,10 @@
                     android:layout_marginStart="-5dp"
                     android:text='@{String.format("%d",item.goodNum)}'
                     android:textColor="@color/white"
+                    android:shadowColor="@color/black"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="1"
                     android:textSize="14sp"
                     tools:text="7" />
             </LinearLayout>
