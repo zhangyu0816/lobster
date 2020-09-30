@@ -51,17 +51,19 @@ import androidx.databinding.ViewDataBinding;
 public class MineWebViewModel extends BaseViewModel implements MineWebVMInterface {
     private MineWebBinding mBinding;
     private long makeProductId;
+    private double openMoney;
     private BaseReceiver addBankReceiver;
     private BaseReceiver openPartnerReceiver;
     private long bankAccountId;
     private double mMoney;
     public String url = "";
+    private DecimalFormat df;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (MineWebBinding) binding;
-        markProductList();
+        df = new DecimalFormat("#####0.0");
         if (url.contains("shareSign"))
             addBankReceiver = new BaseReceiver(activity, "lobster_addBank") {
                 @Override
@@ -69,7 +71,8 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                     myBankCards();
                 }
             };
-        if (url.contains("share"))
+        if (url.contains("share.html")) {
+            markProductList();
             openPartnerReceiver = new BaseReceiver(activity, "lobster_openPartner") {
                 @Override
                 public void onReceive(Context context, Intent intent) {
@@ -77,6 +80,8 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                     myInfo();
                 }
             };
+        }
+
         init();
     }
 
@@ -115,11 +120,10 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                             "&pfDevice=Android&pfAppType=203&pfAppVersion=" + MineApp.versionName);
                 } else if (mUrl.contains("xg_openPartner")) {
                     new TextPW(mBinding.getRoot(), "开通合伙人", "成为虾菇合伙人享受以下特权：\n  1，送一年VIP会员特权。\n  2，邀请新用户使用虾菇可以享受佣金。\n  3，本活动最终解释权归虾菇所有。",
-                            "￥88 确认开通", () -> openMakePartner());
+                            "￥" + df.format(openMoney) + " 确认开通", () -> openMakePartner());
                 } else if (mUrl.contains("xg_changeCash_")) {
                     String money = mUrl.substring(mUrl.indexOf("xg_changeCash_")).replace("xg_changeCash_", "");
                     if (!money.isEmpty()) {
-                        DecimalFormat df = new DecimalFormat("#####0.0");
                         mMoney = Double.parseDouble(df.format(Double.parseDouble(money)));
                     }
                     CustomProgressDialog.showLoading(activity, "提现处理中");
@@ -189,7 +193,7 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                 MineApp.mineInfo = o;
             }
         }, activity);
-        new Handler().postDelayed(() -> HttpManager.getInstance().doHttpDeal(api),500);
+        new Handler().postDelayed(() -> HttpManager.getInstance().doHttpDeal(api), 500);
     }
 
     @Override
@@ -200,6 +204,7 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                 for (ShareProduct item : o) {
                     if (item.getMarkeType() == 1) {
                         makeProductId = item.getId();
+                        openMoney = item.getPrice();
                     }
                 }
             }

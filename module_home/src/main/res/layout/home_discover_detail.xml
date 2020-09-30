@@ -191,7 +191,7 @@
                             android:layout_marginEnd="15dp"
                             android:background="@{viewModel.discoverInfo==null?@drawable/default_bg:@drawable/empty_bg}"
                             android:lineSpacingExtra="3dp"
-                            android:text="@{viewModel.discoverInfo.text}"
+                            android:text="@{viewModel.discoverInfo.text.empty?viewModel.discoverInfo.friendTitle:viewModel.discoverInfo.text}"
                             android:textColor="@color/black_827"
                             android:textSize="14sp"
                             android:visibility="@{viewModel.discoverInfo.text.isEmpty()?View.GONE:View.VISIBLE}"

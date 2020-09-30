@@ -143,7 +143,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
                 android:maxLines="4"
-                android:text="@{discoverInfo.text}"
+                android:text="@{discoverInfo.text.empty?discoverInfo.friendTitle:discoverInfo.text}"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 tools:text="我看见佛二五九佛微积分围殴就佛为访问哦哦ij" />

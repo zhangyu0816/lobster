@@ -444,8 +444,12 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                     activity.sendBroadcast(new Intent("lobster_isLike"));
                     activity.sendBroadcast(new Intent("lobster_updateFCL"));
-                    LikeTypeDb.getInstance().setType(otherUserId, 1);
-                    mBinding.setLikeType(1);
+                    if (LikeTypeDb.getInstance().getType(otherUserId) != 1) {
+                        closeBtn(mBinding.ivLike);
+                        closeBtn(mBinding.ivDislike);
+                    }
+                    closeBtn(mBinding.ivSuperLike);
+                    LikeTypeDb.getInstance().setType(otherUserId, 2);
                 } else if (o == 3) {
                     // 喜欢次数用尽
                     new VipAdPW(mBinding.getRoot(), 6, "");

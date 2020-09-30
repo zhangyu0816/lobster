@@ -237,7 +237,7 @@ public interface HttpService {
     @GET("api/Interactive_visitorBySeeMeList")
     Observable<BaseResultEntity<List<MemberInfo>>> visitorBySeeMeList(@Query("pageNo") int pageNo);
 
-    @GET("api/Interactive_visitorBySeeMeCount")
+    @GET("api/Interactive_visitorBySeeMeCountV2")
     Observable<BaseResultEntity<VisitorCount>> visitorBySeeMeCount();
 
     /******************************* 首页 **********************************/
