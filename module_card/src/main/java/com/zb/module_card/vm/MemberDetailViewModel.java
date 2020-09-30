@@ -268,6 +268,13 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 personOtherDyn();
                 mBinding.setVariable(BR.viewModel, MemberDetailViewModel.this);
             }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof HttpTimeException&&((HttpTimeException) e).getCode()==HttpTimeException.ERROR){
+                    back(null);
+                }
+            }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
     }
