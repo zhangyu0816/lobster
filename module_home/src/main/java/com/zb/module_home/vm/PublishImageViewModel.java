@@ -196,6 +196,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                     imageList.add(url);
                 }
             }
+            photoManager.setNeedProgress(true);
             photoManager.addFiles(imageList, () -> photoManager.reUploadByUnSuccess());
         } else {
             CustomProgressDialog.showLoading(activity, "正在处理视频", true);
@@ -278,6 +279,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                 CustomProgressDialog.stopLoading();
                 break;
             case 2:
+                photoManager.setNeedProgress(false);
                 photoManager.addFileUpload(0, videoImageFile);
                 break;
         }

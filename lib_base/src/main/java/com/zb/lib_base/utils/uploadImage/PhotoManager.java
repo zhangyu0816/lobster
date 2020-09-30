@@ -480,6 +480,10 @@ public class PhotoManager {
         this.isChat = isChat;
     }
 
+    public void setNeedProgress(boolean needProgress) {
+        this.needProgress = needProgress;
+    }
+
     public void uploadImage(final PhotoFile photoFile) {
         photoFile.setUploadStatus(2);
         uploadImagesApi api = new uploadImagesApi(new HttpOnNextListener<ResourceUrl>() {

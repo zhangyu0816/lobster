@@ -19,8 +19,6 @@ import androidx.databinding.ViewDataBinding;
 public class VideosViewModel extends BaseViewModel implements VideosVMInterface {
     public boolean showBottom;
     public CameraAdapter adapter;
-    private List<VideoInfo> videoInfoList = new ArrayList<>();
-    private int i = 0;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -41,7 +39,7 @@ public class VideosViewModel extends BaseViewModel implements VideosVMInterface 
 
     @Override
     public void selectVideo(int position) {
-        VideoInfo videoInfo = videoInfoList.get(position);
+        VideoInfo videoInfo = MineApp.videoInfoList.get(position);
         MineApp.isLocation = true;
         MineApp.showBottom = showBottom;
         ActivityUtils.getCameraVideoPlay(videoInfo.getPath(), true, false);
