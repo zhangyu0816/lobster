@@ -162,7 +162,9 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 MemberInfo memberInfo = memberInfoList.get(_selectIndex);
                 memberInfo.setFansQuantity(memberInfo.getFansQuantity() + 1);
                 AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
-                activity.sendBroadcast(new Intent("lobster_attentionList"));
+                Intent data = new Intent("lobster_attentionList");
+                data.putExtra("isAdd", true);
+                activity.sendBroadcast(data);
             }
 
             @Override
@@ -187,7 +189,9 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 MemberInfo memberInfo = memberInfoList.get(_selectIndex);
                 memberInfo.setFansQuantity(memberInfo.getFansQuantity() - 1);
                 AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
-                activity.sendBroadcast(new Intent("lobster_attentionList"));
+                Intent data = new Intent("lobster_attentionList");
+                data.putExtra("isAdd", false);
+                activity.sendBroadcast(data);
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);

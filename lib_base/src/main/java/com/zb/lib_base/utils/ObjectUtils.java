@@ -277,7 +277,7 @@ public class ObjectUtils {
         } else if (position == 1) {
             return AttentionDb.getInstance().isAttention(otherUserId) ? "已关注" : "回粉";
         } else {
-            return AttentionDb.getInstance().isAttention(otherUserId) ? "已关注" : "关注Ta";
+            return AttentionDb.getInstance().isAttention(otherUserId) ? "已关注" : "关注TA";
         }
     }
 

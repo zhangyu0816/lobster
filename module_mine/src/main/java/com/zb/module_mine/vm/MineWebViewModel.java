@@ -4,9 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.http.SslError;
+import android.os.Build;
 import android.os.Handler;
 import android.view.View;
 import android.webkit.JsResult;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -92,6 +95,13 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
         webSettings.setDomStorageEnabled(true);
         webSettings.setSupportZoom(true);
         webSettings.setBuiltInZoomControls(true);
+        webSettings.setAllowFileAccess(true);
+        webSettings.setAppCacheEnabled(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
+
         setZoomControlGoneX(mBinding.webView.getSettings());
         mBinding.webView.loadUrl(url);
         mBinding.webView.removeJavascriptInterface("searchBoxJavaBridge_");
@@ -136,6 +146,7 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
             @Override
             public void onLoadResource(WebView view, String url) {
             }
+
         });
         mBinding.webView.setWebChromeClient(new WebChromeClient() {
             //网页加载进度

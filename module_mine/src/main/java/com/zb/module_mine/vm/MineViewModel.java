@@ -42,6 +42,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     private BaseReceiver openVipReceiver;
     private BaseReceiver updateChatTypeReceiver;
     private BaseReceiver visitorReceiver;
+    private BaseReceiver attentionListReceiver;
     private List<Fragment> fragments = new ArrayList<>();
 
     @Override
@@ -94,6 +95,16 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                 mBinding.setHasNewVisitor(MineApp.contactNum.getVisitorCount() > PreferenceUtil.readIntValue(activity, "visitorCount" + BaseActivity.userId));
             }
         };
+
+        attentionListReceiver = new BaseReceiver(activity, "lobster_attentionList") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                boolean isAdd = intent.getBooleanExtra("isAdd", false);
+                MineApp.contactNum.setConcernCount(isAdd ? (MineApp.contactNum.getConcernCount() + 1) : (MineApp.contactNum.getConcernCount() - 1));
+                mBinding.setContactNum(MineApp.contactNum);
+            }
+        };
+
         initFragments();
 
         new Handler().postDelayed(() -> {
@@ -114,6 +125,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             openVipReceiver.unregisterReceiver();
             updateChatTypeReceiver.unregisterReceiver();
             visitorReceiver.unregisterReceiver();
+            attentionListReceiver.unregisterReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
