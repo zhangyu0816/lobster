@@ -1,22 +1,34 @@
 package com.zb.module_mine.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Handler;
 import android.view.View;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.markProductListApi;
 import com.zb.lib_base.api.myBankCardsApi;
+import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.openMakePartnerApi;
 import com.zb.lib_base.api.payOrderForTranShareApi;
 import com.zb.lib_base.api.realNameVerifyApi;
 import com.zb.lib_base.api.shareChangeCashApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.Authentication;
 import com.zb.lib_base.model.MineBank;
+import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.OrderNumber;
 import com.zb.lib_base.model.OrderTran;
 import com.zb.lib_base.model.ShareProduct;
@@ -24,11 +36,14 @@ import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.CashPW;
+import com.zb.lib_base.windows.FunctionPW;
 import com.zb.lib_base.windows.PaymentPW;
 import com.zb.lib_base.windows.TextPW;
 import com.zb.module_mine.databinding.MineWebBinding;
 import com.zb.module_mine.iv.MineWebVMInterface;
 
+import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
@@ -37,37 +52,144 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
     private MineWebBinding mBinding;
     private long makeProductId;
     private BaseReceiver addBankReceiver;
+    private BaseReceiver openPartnerReceiver;
     private long bankAccountId;
-    public double money;
-    public String shareSignUrl = "";
+    private double mMoney;
+    public String url = "";
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (MineWebBinding) binding;
         markProductList();
-        if (shareSignUrl.contains("shareSign"))
+        if (url.contains("shareSign"))
             addBankReceiver = new BaseReceiver(activity, "lobster_addBank") {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     myBankCards();
                 }
             };
+        if (url.contains("share"))
+            openPartnerReceiver = new BaseReceiver(activity, "lobster_openPartner") {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    mBinding.webView.loadUrl(url);
+                    myInfo();
+                }
+            };
+        init();
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private void init() {
+        WebSettings webSettings = mBinding.webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setSupportZoom(true);
+        webSettings.setBuiltInZoomControls(true);
+        setZoomControlGoneX(mBinding.webView.getSettings());
+        mBinding.webView.loadUrl(url);
+        mBinding.webView.removeJavascriptInterface("searchBoxJavaBridge_");
+        mBinding.webView.removeJavascriptInterface("accessibilityTraversal");
+        mBinding.webView.removeJavascriptInterface("accessibility");
+        mBinding.webView.setWebViewClient(new WebViewClient() {
+            @SuppressWarnings("deprecation")
+            public void onReceivedError(WebView view, int errorCode,
+                                        String description, String failingUrl) {
+                view.stopLoading();
+                view.clearView();
+                SCToastUtil.showToast(activity, "页面加载失败,请检查您的网络连接 !", true);
+                activity.finish();
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String mUrl) {
+                if (mUrl.contains("shareRegister")) {
+                    new FunctionPW(mBinding.getRoot(), MineApp.mineInfo.getImage().replace("YM0000", "430X430"), "邂逅不过一场梦",
+                            "来虾菇，送你VIP，心动女生任你挑选", mUrl + "?superUserId=" + BaseActivity.userId, true, false, false, false, null);
+                } else if (mUrl.contains("shareSign")) {
+                    if (url.contains("shareSign")) {
+                        activity.finish();
+                    }
+                    ActivityUtils.getMineWeb("邀请好友赚钱", mUrl + "?userId=" + BaseActivity.userId + "&sessionId=" + BaseActivity.sessionId +
+                            "&pfDevice=Android&pfAppType=203&pfAppVersion=" + MineApp.versionName);
+                } else if (mUrl.contains("xg_openPartner")) {
+                    new TextPW(mBinding.getRoot(), "开通合伙人", "成为虾菇合伙人享受以下特权：\n  1，送一年VIP会员特权。\n  2，邀请新用户使用虾菇可以享受佣金。\n  3，本活动最终解释权归虾菇所有。",
+                            "￥88 确认开通", () -> openMakePartner());
+                } else if (mUrl.contains("xg_changeCash_")) {
+                    String money = mUrl.substring(mUrl.indexOf("xg_changeCash_")).replace("xg_changeCash_", "");
+                    if (!money.isEmpty()) {
+                        DecimalFormat df = new DecimalFormat("#####0.0");
+                        mMoney = Double.parseDouble(df.format(Double.parseDouble(money)));
+                    }
+                    CustomProgressDialog.showLoading(activity, "提现处理中");
+                    realNameVerify();
+                } else
+                    view.loadUrl(mUrl);
+                return true;
+            }
+
+            @Override
+            public void onLoadResource(WebView view, String url) {
+            }
+        });
+        mBinding.webView.setWebChromeClient(new WebChromeClient() {
+            //网页加载进度
+            @Override
+            public void onProgressChanged(WebView view, int newProgress) {
+                super.onProgressChanged(view, newProgress);
+                if (newProgress == 100) {
+                    mBinding.progress.setVisibility(View.GONE);
+                } else {
+                    if (mBinding.progress.getVisibility() == View.GONE) {
+                        mBinding.progress.setVisibility(View.VISIBLE);
+                    }
+                    mBinding.progress.setProgress(newProgress);
+                }
+            }
+
+            @Override
+            public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+                result.confirm();
+                SCToastUtil.showToast(activity, message, true);
+                return true;
+            }
+        });
+        mBinding.webView.setDownloadListener((url, userAgent, contentDisposition, mimeType, contentLength) -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.addCategory(Intent.CATEGORY_BROWSABLE);
+            intent.setData(Uri.parse(url));
+            activity.startActivity(intent);
+        });
     }
 
     public void onDestroy() {
         try {
             if (addBankReceiver != null)
                 addBankReceiver.unregisterReceiver();
+            if (openPartnerReceiver != null)
+                openPartnerReceiver.unregisterReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        mBinding.webView.destroy();
     }
 
     @Override
     public void back(View view) {
         super.back(view);
         activity.finish();
+    }
+
+    @Override
+    public void myInfo() {
+        myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
+            @Override
+            public void onNext(MineInfo o) {
+                MineApp.mineInfo = o;
+            }
+        }, activity);
+        new Handler().postDelayed(() -> HttpManager.getInstance().doHttpDeal(api),500);
     }
 
     @Override
@@ -143,7 +265,7 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
         myBankCardsApi api = new myBankCardsApi(new HttpOnNextListener<List<MineBank>>() {
             @Override
             public void onNext(List<MineBank> o) {
-                new CashPW(mBinding.getRoot(), o.get(0), money, o, mineBank -> {
+                new CashPW(mBinding.getRoot(), o.get(0), mMoney, o, mineBank -> {
                     bankAccountId = mineBank.getId();
                     shareChangeCash();
                 });
@@ -174,7 +296,27 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
             public void onError(Throwable e) {
                 CustomProgressDialog.stopLoading();
             }
-        }, activity).setMoney(money).setBankAccountId(bankAccountId);
+        }, activity).setMoney(mMoney).setBankAccountId(bankAccountId);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    //通过反射隐藏webview的缩放按钮 适用于3.0和以后
+    private void setZoomControlGoneX(WebSettings view) {
+        Class classType = view.getClass();
+        try {
+            Method[] ms = classType.getMethods();
+            for (Method m : ms) {
+                if (m.getName().equals("setDisplayZoomControls")) {
+                    try {
+                        m.invoke(view, false);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -675,8 +675,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         new Handler().postDelayed(() -> {
             pvh_remind.setValues(pvhSX_L, pvhSY_L);
             pvh_remind.start();
-        }, 11000);
-        new Handler().postDelayed(this::stopAnimator, 11500);
+        }, 6000);
+        new Handler().postDelayed(this::stopAnimator, 6500);
     }
 
     public void stopAnimator() {

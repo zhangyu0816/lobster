@@ -29,4 +29,10 @@ public class MineFragment extends BaseFragment {
         super.onDestroy();
         viewModel.onDestroy();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        viewModel.onResume();
+    }
 }

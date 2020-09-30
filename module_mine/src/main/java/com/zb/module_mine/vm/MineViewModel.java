@@ -50,7 +50,6 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         mBinding = (MineFragBinding) binding;
         playAnimator(mBinding.circleView);
         mBinding.setMineNewsCount(MineApp.mineNewsCount);
-        mBinding.setMineInfo(MineApp.mineInfo);
         mBinding.setContactNum(MineApp.contactNum);
         mBinding.setHasNewBeLike(MineApp.contactNum.getBeLikeCount() > PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId));
         mBinding.setHasNewVisitor(MineApp.contactNum.getVisitorCount() > PreferenceUtil.readIntValue(activity, "visitorCount" + BaseActivity.userId));
@@ -102,6 +101,10 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) ->
                     mBinding.setShowBg(verticalOffset <= height));
         }, 300);
+    }
+
+    public void onResume() {
+        mBinding.setMineInfo(MineApp.mineInfo);
     }
 
     public void onDestroy() {
