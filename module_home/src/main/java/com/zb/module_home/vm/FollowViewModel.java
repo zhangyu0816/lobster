@@ -63,6 +63,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (HomeFollowBinding) binding;
+        mBinding.setNoData(false);
         publishReceiver = new BaseReceiver(activity, "lobster_publish") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -121,6 +122,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
             @Override
             public void onNext(List<DiscoverInfo> o) {
                 mBinding.noNetLinear.setVisibility(View.GONE);
+                mBinding.setNoData(false);
                 for (DiscoverInfo item : o) {
                     String url = item.getVideoUrl().isEmpty() ? (item.getImages().isEmpty() ? AttentionDb.getInstance().getAttentionInfo(item.getOtherUserId()).getImage() : item.getImages().split(",")[0]) : item.getVideoUrl();
                     if (url.contains(".mp4")) {
@@ -158,6 +160,8 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
                     mBinding.refresh.finishLoadMore();
+                    if (discoverInfoList.size() == 0)
+                        mBinding.setNoData(true);
                 }
             }
         }, activity).setPageNo(pageNo).setTimeSortType(1);

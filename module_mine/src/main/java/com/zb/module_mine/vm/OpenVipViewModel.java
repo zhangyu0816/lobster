@@ -25,7 +25,6 @@ public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterfac
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         vipBinding = (MineOpenVipBinding) binding;
-        vipBinding.setMineInfo(MineApp.mineInfo);
         // 开通会员
         openVipReceiver = new BaseReceiver(activity, "lobster_openVip") {
             @Override
@@ -33,6 +32,7 @@ public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterfac
                 myInfo();
             }
         };
+        myInfo();
     }
 
     @Override

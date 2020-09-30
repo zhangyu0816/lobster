@@ -85,6 +85,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     private PhotoManager photoManager;
     private AMapLocation aMapLocation;
     private ThreeLogin threeLogin;
+    private int passErrorCount = 0;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -124,6 +125,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             ActivityUtils.getMainActivity();
             MineApp.registerInfo = new RegisterInfo();
             timer.cancel();
+            passErrorCount = 0;
             activity.finish();
         });
 
@@ -220,6 +222,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 }
                 break;
             case 1: // 昵称页返回
+                mBinding.setIsThree(false);
                 step(0);
                 break;
             case 2: // 生日页返回
@@ -556,6 +559,19 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 SCToastUtil.showToast(activity, "登录成功", true);
                 myInfo();
             }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
+                    if (TextUtils.equals(e.getMessage(), "账号尚未注册")) {
+                        new TextPW(mBinding.getRoot(), "完善个人信息", "请完成个人信息填写流程", "去完善", () -> {
+                            mBinding.setRight("");
+                            mBinding.setIsThree(false);
+                            step(0);
+                        });
+                    }
+                }
+            }
         }, activity)
                 .setUserName(MineApp.registerInfo.getPhone())
                 .setCaptcha(mBinding.edCode.getText().toString());
@@ -576,6 +592,27 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 PreferenceUtil.saveIntValue(activity, "myIsThreeLogin", 0);
                 SCToastUtil.showToast(activity, "登录成功", true);
                 myInfo();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
+                    if (TextUtils.equals(e.getMessage(), "用户名或密码错误")) {
+                        passErrorCount++;
+                        if (passErrorCount >= 3) {
+                            new TextPW(mBinding.getRoot(), "忘记密码", "如果忘记密码，请使用验证码登录，登录成功后前往我的--设置--修改密码，重设密码",
+                                    "验证码登录", () -> {
+                                if (canGetCode)
+                                    loginCaptcha();
+                                else {
+                                    mBinding.setRight("密码登录");
+                                    step(4);
+                                }
+                            });
+                        }
+                    }
+
+                }
             }
         }, activity)
                 .setUserName(MineApp.registerInfo.getPhone())

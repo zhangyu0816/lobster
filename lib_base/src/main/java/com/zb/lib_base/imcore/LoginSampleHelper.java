@@ -96,7 +96,7 @@ public class LoginSampleHelper {
 
             @Override
             public void onError(int i, String s) {
-//                loginOut_Sample();
+                loginOut_Sample();
                 SCToastUtil.showToast(activity, "聊天异常：" + s + ",请联系客服解决", true);
             }
 
@@ -260,9 +260,6 @@ public class LoginSampleHelper {
 
     /**
      * 解析消息
-     *
-     * @param content
-     * @return
      */
     private CustomMessageBody unpack(String content) {
         CustomMessageBody body = new CustomMessageBody();
@@ -314,9 +311,6 @@ public class LoginSampleHelper {
 
     /**
      * 封装消息
-     *
-     * @param body
-     * @return
      */
     public String pack(CustomMessageBody body) {
         // 自定义消息的实现可以使用jsonObject实现，或者也可以根据自定义其他格式，只需要个unpack中一致即可
