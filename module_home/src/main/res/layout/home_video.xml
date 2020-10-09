@@ -18,10 +18,6 @@
             type="com.zb.lib_base.model.DiscoverInfo" />
 
         <variable
-            name="memberInfo"
-            type="com.zb.lib_base.model.MemberInfo" />
-
-        <variable
             name="isAttention"
             type="boolean" />
 
@@ -60,7 +56,7 @@
         <ImageView
             android:id="@+id/iv_image"
             countSize="@{true}"
-            imageUrl="@{discoverInfo.videoUrl}"
+            imageUrl='@{discoverInfo.images.empty?discoverInfo.videoUrl:discoverInfo.images.split(",")[0]}'
             viewHeightSize="@{0}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(1f)}"
             android:layout_width="match_parent"

@@ -298,7 +298,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             @Override
             public void onNext(MemberInfo o) {
                 memberInfo = o;
-                mBinding.setMemberInfo(memberInfo);
             }
         }, activity).setOtherUserId(discoverInfo.getUserId());
         HttpManager.getInstance().doHttpDeal(api);
