@@ -43,8 +43,10 @@ public class BottleCacheDb extends BaseDao {
         beginTransaction();
         BottleCache bottleCache = realm.where(BottleCache.class).equalTo("driftBottleId", driftBottleId).equalTo("mainUserId", BaseActivity.userId).findFirst();
         if (bottleCache != null) {
-            bottleCache.setImage(image);
-            bottleCache.setNick(nick);
+            if (!image.isEmpty())
+                bottleCache.setImage(image);
+            if (!nick.isEmpty())
+                bottleCache.setNick(nick);
             bottleCache.setNoReadNum(0);
             callBack.success();
         } else {

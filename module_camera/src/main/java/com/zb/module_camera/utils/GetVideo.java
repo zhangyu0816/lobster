@@ -47,7 +47,8 @@ public class GetVideo {
             } finally {
                 cursor.close();
             }
-            handler.sendEmptyMessage(0);
+            if (MineApp.videoInfoList.size() > 0)
+                handler.sendEmptyMessage(0);
         }).start();
     }
 }

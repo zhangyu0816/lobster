@@ -109,7 +109,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
                     mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
                 }
 
-                BottleCacheDb.getInstance().updateBottleCache(driftBottleId, memberInfo.getImage(), memberInfo.getNick(), () -> new Handler().postDelayed(() -> {
+                BottleCacheDb.getInstance().updateBottleCache(driftBottleId, memberInfo == null ? "" : memberInfo.getImage(), memberInfo == null ? "" : memberInfo.getNick(), () -> new Handler().postDelayed(() -> {
                     // 更新会话列表
                     Intent data = new Intent("lobster_singleBottleCache");
                     data.putExtra("driftBottleId", body.getDriftBottleId());

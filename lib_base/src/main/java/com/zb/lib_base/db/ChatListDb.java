@@ -86,8 +86,10 @@ public class ChatListDb extends BaseDao {
         beginTransaction();
         ChatList chatList = realm.where(ChatList.class).equalTo("chatType", chatType).equalTo("userId", otherUserId).equalTo("mainUserId", BaseActivity.userId).findFirst();
         if (chatList != null) {
-            chatList.setImage(image);
-            chatList.setNick(nick);
+            if (!image.isEmpty())
+                chatList.setImage(image);
+            if (!nick.isEmpty())
+                chatList.setNick(nick);
             chatList.setNoReadNum(0);
             callBack.success();
         } else {

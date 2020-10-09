@@ -49,8 +49,14 @@ public class SuperLikeView extends RelativeLayout {
     private void init(Context context) {
         mBinding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.super_like, null, false);
         addView(mBinding.getRoot());
-        AdapterBinding.onClick(mBinding.likeLayout, view -> mSuperLikeInterface.superLike(mCurrentView, mPairInfo));
-        AdapterBinding.onClick(mBinding.returnLayout, view -> mSuperLikeInterface.returnBack());
+        AdapterBinding.onClick(mBinding.likeLayout, view -> {
+            if (mSuperLikeInterface != null)
+                mSuperLikeInterface.superLike(mCurrentView, mPairInfo);
+        });
+        AdapterBinding.onClick(mBinding.returnLayout, view -> {
+            if (mSuperLikeInterface != null)
+                mSuperLikeInterface.returnBack();
+        });
     }
 
     private static PropertyValuesHolder pvhTY, pvhTX;
@@ -94,7 +100,7 @@ public class SuperLikeView extends RelativeLayout {
 
     public static void stop() {
         handler.removeCallbacks(runnable);
-        if (pvh_star1 != null && pvh_star1.isRunning()){
+        if (pvh_star1 != null && pvh_star1.isRunning()) {
             pvh_star1.cancel();
         }
         if (pvh_star2 != null && pvh_star2.isRunning())

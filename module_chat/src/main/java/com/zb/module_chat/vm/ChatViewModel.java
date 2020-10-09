@@ -198,7 +198,7 @@ public class ChatViewModel extends BaseViewModel implements ChatVMInterface, OnR
                     adapter.notifyItemChanged(adapter.getItemCount() - 1);
                     mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
                 }
-                ChatListDb.getInstance().updateMember(otherUserId, memberInfo.getImage(), memberInfo.getNick(), otherUserId == BaseActivity.dynUserId ? 5 : 4,
+                ChatListDb.getInstance().updateMember(otherUserId, memberInfo == null ? "" : memberInfo.getImage(), memberInfo == null ? "" : memberInfo.getNick(), otherUserId == BaseActivity.dynUserId ? 5 : 4,
                         () -> new Handler().postDelayed(() -> {
                             Intent data = new Intent("lobster_updateChat");
                             data.putExtra("userId", otherUserId);

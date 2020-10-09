@@ -10,9 +10,6 @@ import com.zb.module_camera.R;
 import com.zb.module_camera.adapter.CameraAdapter;
 import com.zb.module_camera.iv.VideosVMInterface;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.databinding.ViewDataBinding;
 
 

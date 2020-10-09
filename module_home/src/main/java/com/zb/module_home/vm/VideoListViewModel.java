@@ -630,8 +630,10 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     }
 
     public void onResume() {
-        videoView.setVideoPath(discoverInfo.getVideoPath());
-        videoView.start();
+        if (discoverInfo != null) {
+            videoView.setVideoPath(discoverInfo.getVideoPath());
+            videoView.start();
+        }
         reviewListView.start();
         ivPlay.setVisibility(View.GONE);
     }
