@@ -574,7 +574,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(Object o) {
                 mBinding.setIsAttention(true);
-                AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
+                if (memberInfo != null)
+                    AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
             }
 
@@ -583,7 +584,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
                     if (e.getMessage().equals("已经关注过")) {
                         mBinding.setIsAttention(true);
-                        AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
+                        if (memberInfo != null)
+                            AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                         activity.sendBroadcast(new Intent("lobster_attentionList"));
                     }
                 }
@@ -599,7 +601,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(Object o) {
                 mBinding.setIsAttention(false);
-                AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
+                if (memberInfo != null)
+                    AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
             }
         }, activity).setOtherUserId(discoverInfo.getUserId());

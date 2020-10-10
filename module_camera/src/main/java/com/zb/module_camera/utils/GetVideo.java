@@ -34,7 +34,7 @@ public class GetVideo {
             try {
                 while (cursor.moveToNext()) {
                     long size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)); // 大小
-                    if (size < 10 * 1024 * 1024) {//<600M
+                    if (size < 20 * 1024 * 1024) {//<600M
                         String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)); // 路径
                         VideoInfo vi = new VideoInfo();
                         vi.setName(cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME)));

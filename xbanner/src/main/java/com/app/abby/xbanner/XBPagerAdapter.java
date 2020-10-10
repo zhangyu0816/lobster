@@ -109,8 +109,8 @@ public class XBPagerAdapter extends PagerAdapter {
             }
             mData.clear();
         }
-
-        view.setOnClickListener(null);
+        if (view != null)
+            view.setOnClickListener(null);
         view = null;
     }
 
