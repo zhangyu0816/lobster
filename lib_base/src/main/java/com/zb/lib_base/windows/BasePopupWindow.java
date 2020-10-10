@@ -75,48 +75,36 @@ public abstract class BasePopupWindow extends PopupWindow {
 
     /**
      * 取消
-     *
-     * @param view
      */
     public void cancel(View view) {
     }
 
     /**
      * 确认
-     *
-     * @param view
      */
     public void sure(View view) {
     }
 
     /**
      * 选中
-     *
-     * @param position
      */
     public void selectIndex(int position) {
     }
 
     /**
      * 充值
-     *
-     * @param view
      */
     public void recharge(View view) {
     }
 
     /**
      * 支付礼物
-     *
-     * @param view
      */
     public void payGift(View view) {
     }
 
     /**
      * 充值协议
-     *
-     * @param view
      */
     public void showRule(View view) {
         ActivityUtils.getMineWeb("用户充值协议", HttpManager.BASE_URL + "mobile/xiagu_recharge_protocol.html");
@@ -127,8 +115,6 @@ public abstract class BasePopupWindow extends PopupWindow {
 
     /**
      * 提交VIP订单
-     *
-     * @param memberOfOpenedProductId
      */
     public void submitOpenedMemberOrder(long memberOfOpenedProductId, CallBack callBack) {
         submitOpenedMemberOrderApi api = new submitOpenedMemberOrderApi(new HttpOnNextListener<OrderNumber>() {
@@ -143,8 +129,6 @@ public abstract class BasePopupWindow extends PopupWindow {
 
     /**
      * 获取交易订单号
-     *
-     * @param orderNumber
      */
     public void payOrderForTran(String orderNumber, int payType, CallBack callBack) {
         payOrderForTranApi api = new payOrderForTranApi(new HttpOnNextListener<OrderTran>() {

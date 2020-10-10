@@ -32,12 +32,6 @@ public class BaseDao {
 
     /**
      * 分页查询（Realm不支持分页查询）
-     *
-     * @param data   所有的list数据
-     * @param offset 上次的下标
-     * @param limit  每页大小
-     * @param <E>    返回数据
-     * @return
      */
     public <E extends RealmModel> List<E> getLimitList(RealmResults<E> data, int offset, int limit) {
         List<E> obtainList = new ArrayList();

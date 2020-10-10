@@ -26,7 +26,7 @@ import androidx.databinding.ViewDataBinding;
 public class BindingBankViewModel extends BaseViewModel implements BindingBankVMInterface {
     private MineBindingBankBinding mBinding;
     private BankInfo bankInfo;
-    private List<BankInfo> bankInfoList = new ArrayList<>();
+    private final List<BankInfo> bankInfoList = new ArrayList<>();
 
     @Override
     public void setBinding(ViewDataBinding binding) {

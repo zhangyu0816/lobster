@@ -7,12 +7,6 @@ import android.content.IntentFilter;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
-
-/**
- * @author DIY
- * @date 2019-03-13
- */
-
 public abstract class BaseReceiver extends BroadcastReceiver {
 
     public RxAppCompatActivity activity;

@@ -35,7 +35,7 @@ public class CashPW extends BasePopupWindow {
     public void initUI() {
         binding = (PwsCashBinding) mBinding;
         mMineBank.setBankInfo(mMineBank.getBankName() + "(" + mMineBank.getAccountNo().substring(mMineBank.getAccountNo().length() - 4) + ")");
-        adapter = new BaseAdapter(activity, R.layout.item_cash_bank, mMineBankList, this);
+        adapter = new BaseAdapter<>(activity, R.layout.item_cash_bank, mMineBankList, this);
         binding.setPw(this);
         binding.setMineBank(mMineBank);
         binding.setMoney("￥ " + mMoney);

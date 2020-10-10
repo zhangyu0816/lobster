@@ -156,7 +156,7 @@ public class BottleChatViewModel extends BaseViewModel implements BottleChatVMIn
             return false;
         });
 
-        if (!OpenNotice.isNotificationEnabled(activity))
+        if (OpenNotice.isNotNotification(activity))
             mBinding.noticeLayout.setVisibility(PreferenceUtil.readIntValue(activity, "chat_notice_" + BaseActivity.userId) == 1 ? View.GONE : View.VISIBLE);
     }
 

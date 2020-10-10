@@ -10,7 +10,6 @@ import java.util.List;
 
 public class SelectorPW extends BasePopupWindow {
 
-    private BaseAdapter adapter;
     private List<String> selectorList;
     private CallBack mCallBack;
 
@@ -28,7 +27,7 @@ public class SelectorPW extends BasePopupWindow {
 
     @Override
     public void initUI() {
-        adapter = new BaseAdapter<>(activity, R.layout.item_selector, selectorList, this);
+        BaseAdapter adapter = new BaseAdapter<>(activity, R.layout.item_selector, selectorList, this);
         mBinding.setVariable(BR.adapter, adapter);
         mBinding.setVariable(BR.pw, this);
     }

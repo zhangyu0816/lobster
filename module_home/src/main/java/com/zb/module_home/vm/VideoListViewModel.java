@@ -23,7 +23,6 @@ import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.attentionOtherApi;
 import com.zb.lib_base.api.attentionStatusApi;
 import com.zb.lib_base.api.cancelAttentionApi;
-import com.zb.lib_base.api.deleteDynApi;
 import com.zb.lib_base.api.dynCancelLikeApi;
 import com.zb.lib_base.api.dynDoLikeApi;
 import com.zb.lib_base.api.dynPiazzaListApi;
@@ -377,20 +376,6 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             }
         }, activity).setOtherUserId(discoverInfo.getUserId());
         HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    private void deleteDyn(DiscoverInfo discoverInfo) {
-        deleteDynApi api = new deleteDynApi(new HttpOnNextListener() {
-            @Override
-            public void onNext(Object o) {
-                activity.sendBroadcast(new Intent("lobster_publish"));
-                SCToastUtil.showToast(activity, "删除成功", true);
-                adapter.notifyItemRemoved(position);
-                MineApp.discoverInfoList.remove(position);
-            }
-        }, activity).setFriendDynId(discoverInfo.getFriendDynId());
-        HttpManager.getInstance().doHttpDeal(api);
-
     }
 
     private void makeEvaluate(DiscoverInfo discoverInfo) {

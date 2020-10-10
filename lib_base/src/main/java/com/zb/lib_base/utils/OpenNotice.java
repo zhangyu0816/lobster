@@ -19,7 +19,7 @@ public class OpenNotice {
 
     public OpenNotice(RxAppCompatActivity activity, View view) {
         if (PreferenceUtil.readIntValue(activity, "isNotificationEnabled") == 0) {
-            if (!isNotificationEnabled(activity)) {
+            if (isNotNotification(activity)) {
                 new Handler().postDelayed(() -> {
                     PreferenceUtil.saveIntValue(activity, "isNotificationEnabled", 1);
                     new TextPW(view, "应用通知", "为了及时收到虾菇通知，请开启通知", "去开启", () -> gotoSet(activity));
@@ -28,14 +28,14 @@ public class OpenNotice {
         }
     }
 
-    public static boolean isNotificationEnabled(RxAppCompatActivity activity) {
+    public static boolean isNotNotification(RxAppCompatActivity activity) {
         boolean isOpened = false;
         try {
             isOpened = NotificationManagerCompat.from(activity).areNotificationsEnabled();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return isOpened;
+        return !isOpened;
     }
 
     public static void gotoSet(RxAppCompatActivity activity) {
