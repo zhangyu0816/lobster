@@ -46,7 +46,7 @@ public class DiscoverVideoActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!isFirst) {
+        if (!isFirst && viewModel != null) {
             viewModel.videoPlay(null);
         }
         isFirst = false;
@@ -55,13 +55,15 @@ public class DiscoverVideoActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        viewModel.onDestroy();
+        if (viewModel != null)
+            viewModel.onDestroy();
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            viewModel.back(null);
+            if (viewModel != null)
+                viewModel.back(null);
             return true;
         }
         return false;

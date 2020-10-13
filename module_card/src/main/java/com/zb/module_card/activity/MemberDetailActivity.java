@@ -35,6 +35,7 @@ public class MemberDetailActivity extends CardBaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        viewModel.onDestroy();
+        if (viewModel != null)
+            viewModel.onDestroy();
     }
 }

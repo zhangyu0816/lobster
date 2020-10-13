@@ -25,18 +25,23 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         if (PreferenceUtil.readIntValue(activity, "ruleType2") == 0) {
-            new Handler().postDelayed(() -> new RulePW(activity, mBinding.getRoot(), 2, new RulePW.CallBack() {
-                @Override
-                public void sureBack() {
-                    PreferenceUtil.saveIntValue(activity, "ruleType2", 1);
-                    myInfo();
-                }
+            new Handler().postDelayed(() -> {
+                try {
+                    new RulePW(activity, mBinding.getRoot(), 2, new RulePW.CallBack() {
+                        @Override
+                        public void sureBack() {
+                            PreferenceUtil.saveIntValue(activity, "ruleType2", 1);
+                            myInfo();
+                        }
 
-                @Override
-                public void cancelBack() {
-                    activity.finish();
+                        @Override
+                        public void cancelBack() {
+                            activity.finish();
+                        }
+                    });
+                } catch (Exception ignored) {
                 }
-            }), 1000);
+            }, 500);
         } else {
             myInfo();
         }

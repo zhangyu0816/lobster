@@ -30,7 +30,8 @@ public class FeedbackActivity extends MineBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        viewModel.onRefresh(binding.refresh);
+        if (viewModel != null)
+            viewModel.onRefresh(binding.refresh);
     }
 
 }

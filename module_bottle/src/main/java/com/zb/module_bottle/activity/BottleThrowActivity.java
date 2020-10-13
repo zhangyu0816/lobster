@@ -41,24 +41,28 @@ public class BottleThrowActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        viewModel.onDestroy();
+        if (viewModel != null)
+            viewModel.onDestroy();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        viewModel.onResume();
+        if (viewModel != null)
+            viewModel.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        viewModel.onPause();
+        if (viewModel != null)
+            viewModel.onPause();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        viewModel.onResume();
+        if (viewModel != null)
+            viewModel.onResume();
     }
 }

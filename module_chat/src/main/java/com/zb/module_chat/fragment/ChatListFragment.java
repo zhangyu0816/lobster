@@ -9,7 +9,8 @@ import com.zb.module_chat.vm.ChatListViewModel;
 
 @Route(path = RouteUtils.Chat_List_Fragment)
 public class ChatListFragment extends BaseFragment {
-    private  ChatListViewModel viewModel;
+    private ChatListViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.chat_list_fragment;
@@ -17,14 +18,15 @@ public class ChatListFragment extends BaseFragment {
 
     @Override
     public void initUI() {
-         viewModel = new ChatListViewModel();
+        viewModel = new ChatListViewModel();
         viewModel.setBinding(mBinding);
-        mBinding.setVariable(BR.viewModel,viewModel);
+        mBinding.setVariable(BR.viewModel, viewModel);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        viewModel.onDestroy();
+        if (viewModel != null)
+            viewModel.onDestroy();
     }
 }

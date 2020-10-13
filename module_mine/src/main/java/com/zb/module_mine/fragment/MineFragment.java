@@ -21,18 +21,20 @@ public class MineFragment extends BaseFragment {
         viewModel = new MineViewModel();
         viewModel.fm = getChildFragmentManager();
         viewModel.setBinding(mBinding);
-        mBinding.setVariable(BR.viewModel,viewModel);
+        mBinding.setVariable(BR.viewModel, viewModel);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        viewModel.onDestroy();
+        if (viewModel != null)
+            viewModel.onDestroy();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        viewModel.onResume();
+        if (viewModel != null)
+            viewModel.onResume();
     }
 }

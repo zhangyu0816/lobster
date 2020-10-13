@@ -50,19 +50,22 @@ public class BottleChatActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        viewModel.onDestroy();
+        if (viewModel != null)
+            viewModel.onDestroy();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        viewModel.onResume();
+        if (viewModel != null)
+            viewModel.onResume();
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            viewModel.back(null);
+            if (viewModel != null)
+                viewModel.back(null);
             return true;
         }
         return false;

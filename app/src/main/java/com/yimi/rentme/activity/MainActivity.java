@@ -4,7 +4,6 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.graphics.Color;
 import android.os.Build;
-import android.util.Log;
 import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -52,8 +51,10 @@ public class MainActivity extends AppBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         MineApp.exit();
-        viewModel.onDestroy();
-        viewModel.stopAnimator();
+        if (viewModel != null) {
+            viewModel.onDestroy();
+            viewModel.stopAnimator();
+        }
     }
 
     /**
@@ -103,8 +104,8 @@ public class MainActivity extends AppBaseActivity {
         if (MineApp.mActivityList.get(0) instanceof MainActivity) {
             alarmUtils.cancelAlarm();
             ImUtils.getInstance().setChat(false, activity);
-            viewModel.onResume();
-            Log.e("MainActivity", "111111111111111111111");
+            if (viewModel != null)
+                viewModel.onResume();
         }
     }
 
@@ -115,19 +116,12 @@ public class MainActivity extends AppBaseActivity {
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
         alarmUtils.startAlarm();
         ImUtils.getInstance().loginOutIM();
-        Log.e("MainActivity", "2222222222222222222");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.e("MainActivity", "333333333333333333");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        viewModel.onPause();
-        Log.e("MainActivity", "444444444444444444444444");
+        if (viewModel != null)
+            viewModel.onPause();
     }
 }
