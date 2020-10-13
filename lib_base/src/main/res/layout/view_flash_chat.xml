@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <variable
+            name="recommendInfo1"
+            type="com.zb.lib_base.model.RecommendInfo" />
+
+        <variable
+            name="recommendInfo2"
+            type="com.zb.lib_base.model.RecommendInfo" />
+
+        <variable
+            name="recommendInfo3"
+            type="com.zb.lib_base.model.RecommendInfo" />
+
+        <variable
+            name="flashChat"
+            type="com.zb.lib_base.views.FlashChat" />
+
+
+    </data>
+
+    <LinearLayout
+        android:id="@+id/flash_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/recommend_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/logo_layout3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="34dp"
+                android:layout_marginEnd="10dp">
+
+                <View
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(104)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(104)}"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/circle_white" />
+
+                <ImageView
+                    imageUrl="@{recommendInfo3.singleImage}"
+                    isBlur="@{true}"
+                    isCircle="@{true}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(96)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(96)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/logo_layout2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="34dp"
+                android:layout_marginEnd="10dp">
+
+                <View
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(104)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(104)}"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/circle_white" />
+
+                <ImageView
+                    imageUrl="@{recommendInfo2.singleImage}"
+                    isBlur="@{true}"
+                    isCircle="@{true}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(96)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(96)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/logo_layout1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="10dp">
+
+                <View
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(104)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(104)}"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/circle_white" />
+
+                <ImageView
+                    imageUrl="@{recommendInfo1.singleImage}"
+                    isBlur="@{true}"
+                    isCircle="@{true}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(96)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(96)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/recommend_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="优质推荐"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="每日优质用户推荐"
+                android:textColor="@color/white"
+                android:textSize="11sp" />
+        </LinearLayout>
+    </LinearLayout>
+</layout>

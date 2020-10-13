@@ -81,6 +81,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private BaseReceiver unReadCountReceiver;
     private BaseReceiver newDynMsgAllNumReceiver;
     private BaseReceiver contactNumReceiver;
+    private BaseReceiver flashChatReceiver;
 
     private int time = 2 * 60 * 1000;
     private Handler handler = new Handler(new Handler.Callback() {
@@ -237,6 +238,13 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             }
         };
 
+        flashChatReceiver = new BaseReceiver(activity, "lobster_flashChat") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+            }
+        };
+
         new OpenNotice(activity, mBinding.getRoot());
 
         handler.sendEmptyMessageDelayed(0, time);
@@ -255,6 +263,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             unReadCountReceiver.unregisterReceiver();
             newDynMsgAllNumReceiver.unregisterReceiver();
             contactNumReceiver.unregisterReceiver();
+            flashChatReceiver.unregisterReceiver();
         } catch (Exception ignored) {
         }
     }

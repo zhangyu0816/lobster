@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="com.zb.lib_base.utils.DateUtil" />
+
+        <variable
+            name="pw"
+            type="com.zb.lib_base.windows.FlashChatPW" />
+
+        <variable
+            name="memberInfo"
+            type="com.zb.lib_base.model.MemberInfo" />
+
+        <variable
+            name="recommendInfo"
+            type="com.zb.lib_base.model.RecommendInfo" />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.5"
+            android:background="@color/black" />
+
+        <RelativeLayout
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(1350)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(1035)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_bg_black_2e2_radius10" />
+
+            <ImageView
+                android:id="@+id/iv_bg"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(1350)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(1035)}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/btn_bg_black_1c1_radius10" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:background="@mipmap/flash_chat_wear" />
+
+            <ImageView
+                android:id="@+id/iv_back"
+                onClickDelayed="@{pw::cancel}"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:src="@mipmap/close_white_icon" />
+
+            <RelativeLayout
+                android:id="@+id/logo_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/iv_back"
+                android:layout_centerHorizontal="true">
+
+                <View
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(310)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(310)}"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:background="@drawable/circle_white" />
+
+                <ImageView
+                    defaultRes="@{ObjectUtils.getDefaultRes()}"
+                    imageUrl="@{recommendInfo.singleImage}"
+                    isBlur="@{true}"
+                    isCircle="@{true}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(290)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(290)}"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="54dp"
+                android:layout_height="24dp"
+                android:layout_below="@+id/logo_layout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="-14dp"
+                android:background="@drawable/btn_bg_green_34c_radius2"
+                android:gravity="center"
+                android:text="在线"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_nick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/logo_layout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="29dp"
+                android:text='@{memberInfo.nick+"，"+DateUtil.getAge(memberInfo.birthday,memberInfo.age)}'
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="租我，29" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_nick"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/btn_chat"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="38dp"
+                android:text="她正在等你聊天......"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/btn_chat"
+                onClickDelayed="@{pw::toChat}"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/gradient_purple_6d5_ae7"
+                android:gravity="center"
+                android:text="立即闪聊"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </RelativeLayout>
+</layout>

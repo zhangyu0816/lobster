@@ -14,10 +14,6 @@
             type="com.zb.module_chat.vm.ChatFragViewModel" />
 
         <variable
-            name="recommendInfo"
-            type="com.zb.lib_base.model.RecommendInfo" />
-
-        <variable
             name="mineNewsCount"
             type="com.zb.lib_base.model.MineNewsCount" />
 
@@ -28,7 +24,6 @@
         <variable
             name="showBg"
             type="boolean" />
-
     </data>
 
     <RelativeLayout
@@ -74,7 +69,7 @@
                             android:textColor="@color/black_252"
                             android:textSize="18sp"
                             android:textStyle="bold"
-                            android:visibility="invisible"/>
+                            android:visibility="invisible" />
 
                         <com.zb.lib_base.views.BottleTitleView
                             isPlay="@{isPlay}"
@@ -267,85 +262,33 @@
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-        <LinearLayout
-            android:id="@+id/recommend_main_layout"
-            onClickDelayed="@{viewModel::toMemberInfo}"
+        <com.zb.lib_base.views.FlashChat
+            android:id="@+id/flash_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:background="@mipmap/recommend_bg"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="10dp">
-
-                <View
-                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(104)}"
-                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(104)}"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/circle_white" />
-
-                <ImageView
-                    imageUrl="@{recommendInfo.singleImage}"
-                    isCircle="@{true}"
-                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(96)}"
-                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(96)}"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true" />
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/recommend_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="优质推荐"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="每日优质用户推荐"
-                    android:textColor="@color/white"
-                    android:textSize="11sp" />
-            </LinearLayout>
-        </LinearLayout>
+            android:visibility="gone"/>
 
         <View
             android:id="@+id/view_top"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:background="@color/white"
-            android:alpha="0"/>
+            android:alpha="0"
+            android:background="@color/white" />
 
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:layout_gravity="center"
             android:layout_marginTop="22dp"
             android:paddingTop="15dp"
             android:text="对话"
-            android:layout_centerHorizontal="true"
             android:textColor="@color/black_252"
             android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
     </RelativeLayout>
 </layout>

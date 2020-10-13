@@ -5,8 +5,6 @@ import android.view.View;
 public interface ChatFragVMInterface {
     void entryBottle(View view);
 
-    void toMemberInfo(View view);
-
     void toGift(View view);
 
     void toReview(View view);
