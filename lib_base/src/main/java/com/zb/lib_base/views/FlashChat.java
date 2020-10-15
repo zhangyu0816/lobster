@@ -4,17 +4,23 @@ import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.jakewharton.rxbinding2.view.RxView;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.ViewFlashChatBinding;
+import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.DisplayUtils;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.windows.FlashChatPW;
 
 import java.util.concurrent.TimeUnit;
@@ -53,7 +59,7 @@ public class FlashChat extends LinearLayout {
             new Handler().postDelayed(() -> mBinding.logoLayout1.setVisibility(View.GONE), 300);
 
             new Handler().postDelayed(() -> {
-                mBinding.setRecommendInfo1(mBinding.getRecommendInfo2());
+                mBinding.setFlashInfo1(mBinding.getFlashInfo2());
                 pvhSX = PropertyValuesHolder.ofFloat("scaleX", 0, 1);
                 pvhSY = PropertyValuesHolder.ofFloat("scaleY", 0, 1);
                 pvh_logo1 = ObjectAnimator.ofPropertyValuesHolder(mBinding.logoLayout1, pvhSY, pvhSX).setDuration(100);
@@ -69,9 +75,9 @@ public class FlashChat extends LinearLayout {
             }, 700);
 
             new Handler().postDelayed(() -> {
-                mBinding.setRecommendInfo2(mBinding.getRecommendInfo3());
+                mBinding.setFlashInfo2(mBinding.getFlashInfo3());
                 mBinding.logoLayout2.setVisibility(View.VISIBLE);
-                mBinding.setRecommendInfo3(MineApp.recommendInfoList.get(index));
+                mBinding.setFlashInfo3(MineApp.sFlashInfoList.get(index));
             }, 900);
             handler.postDelayed(ra, time);
         }
@@ -99,27 +105,33 @@ public class FlashChat extends LinearLayout {
 
         RxView.clicks(mBinding.flashLayout)
                 .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(o -> new FlashChatPW(mBinding.getRoot(),mBinding.getRecommendInfo1()));
+                .subscribe(o -> new FlashChatPW(mBinding.getRoot(), mBinding.getFlashInfo1()));
     }
 
-    public void initData() {
-        maxSize = MineApp.recommendInfoList.size();
+    public void initData(RxAppCompatActivity activity) {
+        maxSize = MineApp.sFlashInfoList.size();
         if (maxSize == 1) {
-            mBinding.setRecommendInfo1(MineApp.recommendInfoList.get(0));
+            mBinding.setFlashInfo1(MineApp.sFlashInfoList.get(0));
             mBinding.logoLayout2.setVisibility(View.GONE);
             mBinding.logoLayout3.setVisibility(View.GONE);
         } else if (maxSize == 2) {
-            mBinding.setRecommendInfo1(MineApp.recommendInfoList.get(0));
-            mBinding.setRecommendInfo2(MineApp.recommendInfoList.get(1));
+            mBinding.setFlashInfo1(MineApp.sFlashInfoList.get(0));
+            mBinding.setFlashInfo2(MineApp.sFlashInfoList.get(1));
             mBinding.logoLayout3.setVisibility(View.GONE);
         } else {
-            mBinding.setRecommendInfo1(MineApp.recommendInfoList.get(index - 2));
-            mBinding.setRecommendInfo2(MineApp.recommendInfoList.get(index - 1));
-            mBinding.setRecommendInfo3(MineApp.recommendInfoList.get(index));
+            mBinding.setFlashInfo1(MineApp.sFlashInfoList.get(index - 2));
+            mBinding.setFlashInfo2(MineApp.sFlashInfoList.get(index - 1));
+            mBinding.setFlashInfo3(MineApp.sFlashInfoList.get(index));
             handler.postDelayed(ra, time);
         }
-
-
+        if (MineApp.mineInfo.getMemberType() == 1 && !TextUtils.equals(PreferenceUtil.readStringValue(activity, "flashChatTime" + BaseActivity.userId), DateUtil.getNow(DateUtil.yyyy_MM_dd))) {
+            new Handler().postDelayed(() -> {
+                PreferenceUtil.saveStringValue(activity, "flashChatTime" + BaseActivity.userId, DateUtil.getNow(DateUtil.yyyy_MM_dd));
+                Intent data = new Intent("lobster_flashChat");
+                data.putExtra("flashInfo", mBinding.getFlashInfo1());
+                activity.sendBroadcast(data);
+            }, 10 * 1000);
+        }
     }
 
 }

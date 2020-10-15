@@ -14,4 +14,6 @@ public interface ChatFragVMInterface {
     void toService(View view);
 
     void recommendRankingList();
+
+    void flashUserList();
 }

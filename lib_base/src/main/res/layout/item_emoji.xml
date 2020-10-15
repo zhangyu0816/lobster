@@ -15,7 +15,7 @@
 
         <variable
             name="viewModel"
-            type="com.zb.module_bottle.vm.BottleChatViewModel" />
+            type="com.zb.lib_base.vm.BaseChatViewModel" />
 
     </data>
 

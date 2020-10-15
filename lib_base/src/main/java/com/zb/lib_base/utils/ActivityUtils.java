@@ -81,6 +81,11 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Chat_Activity).withLong("otherUserId", otherUserId).withBoolean("isNotice", isNotice).navigation();
     }
 
+    // 对话页
+    public static void getFlashChatActivity(long otherUserId, long flashTalkId, boolean isNotice) {
+        ARouter.getInstance().build(RouteUtils.Flash_Chat_Activity).withLong("otherUserId", otherUserId).withLong("flashTalkId", flashTalkId).withBoolean("isNotice", isNotice).navigation();
+    }
+
     /*********************** 我的 **************************/
     // 会员
     public static void getMineOpenVip() {

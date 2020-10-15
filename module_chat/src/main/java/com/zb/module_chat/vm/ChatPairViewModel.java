@@ -116,6 +116,8 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
             @Override
             public void onReceive(Context context, Intent intent) {
                 long userId = intent.getLongExtra("userId", 0);
+                long flashTalkId = intent.getLongExtra("flashTalkId", 0);
+                if (flashTalkId != 0) return;
                 if (userId != 0) {
                     for (int i = 0; i < chatMsgList.size(); i++) {
                         if (chatMsgList.get(i) != null)

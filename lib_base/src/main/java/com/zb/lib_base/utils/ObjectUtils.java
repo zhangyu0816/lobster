@@ -7,6 +7,7 @@ import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AttentionDb;
 import com.zb.lib_base.db.LikeDb;
+import com.zb.lib_base.model.ChatList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -252,6 +253,12 @@ public class ObjectUtils {
             return "继续验证";
         else
             return "立即验证";
+    }
+
+    public static String getLockProgress(ChatList chatList) {
+        int myCount = Math.min(chatList.getMyChatCount(), 10);
+        int otherCount = Math.min(chatList.getOtherChatCount(), 10);
+        return (myCount + otherCount) * 5 + "%";
     }
 
     public static int textColor(long otherUserId, int position) {

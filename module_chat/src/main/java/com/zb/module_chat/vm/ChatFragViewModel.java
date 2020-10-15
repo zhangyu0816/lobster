@@ -6,12 +6,14 @@ import android.os.Handler;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.api.flashUserListApi;
 import com.zb.lib_base.api.recommendRankingListApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.model.FlashInfo;
 import com.zb.lib_base.model.RecommendInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DisplayUtils;
@@ -59,7 +61,7 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
             }
         };
         recommendRankingList();
-
+        flashUserList();
         new Handler().postDelayed(() -> {
             int height = DisplayUtils.dip2px(30) - mBinding.topLinear.getHeight();
             mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
@@ -119,11 +121,21 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
             @Override
             public void onNext(List<RecommendInfo> o) {
                 MineApp.recommendInfoList.addAll(o);
-
-                mBinding.flashChat.setVisibility(View.VISIBLE);
-                mBinding.flashChat.initData();
             }
         }, activity).setCityId(AreaDb.getInstance().getCityId(PreferenceUtil.readStringValue(activity, "cityName"))).setSex(MineApp.mineInfo.getSex() == 0 ? 1 : 0);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void flashUserList() {
+        flashUserListApi api = new flashUserListApi(new HttpOnNextListener<List<FlashInfo>>() {
+            @Override
+            public void onNext(List<FlashInfo> o) {
+                MineApp.sFlashInfoList.addAll(o);
+                mBinding.flashChat.setVisibility(View.VISIBLE);
+                mBinding.flashChat.initData(activity);
+            }
+        },activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

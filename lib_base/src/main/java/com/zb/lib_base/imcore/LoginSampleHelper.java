@@ -126,7 +126,7 @@ public class LoginSampleHelper {
         public void onPushMessage(IYWContact contact, YWMessage ywMessage) {
             CustomMessageBody body = unpack(ywMessage.getContent());
             long otherUserId = body.getFromId();
-            if (body.getDriftBottleId() == 0) {
+            if (body.getDriftBottleId() == 0&&body.getFlashTalkId()==0) {
                 if (otherUserId != BaseActivity.dynUserId) {
                     boolean hasOtherUserId = false;
                     for (LikeMe item : MineApp.pairList) {
@@ -286,6 +286,8 @@ public class LoginSampleHelper {
                     body.setResTime(valueBean.getInt("resTime"));
                 if (valueBean.has("driftBottleId"))
                     body.setDriftBottleId(valueBean.getLong("driftBottleId"));
+                if (valueBean.has("flashTalkId"))
+                    body.setFlashTalkId(valueBean.getLong("flashTalkId"));
                 if (valueBean.has("msgChannelType"))
                     body.setMsgChannelType(valueBean.getInt("msgChannelType"));
             } else if (data.has("rosterApply")) {
@@ -324,8 +326,9 @@ public class LoginSampleHelper {
             valueBean.put("resTime", body.getResTime());
             if (body.getDriftBottleId() != 0)
                 valueBean.put("driftBottleId", body.getDriftBottleId());
-            if (body.getMsgChannelType() == 2)
-                valueBean.put("msgChannelType", body.getMsgChannelType());
+            if (body.getFlashTalkId() != 0)
+                valueBean.put("flashTalkId", body.getFlashTalkId());
+            valueBean.put("msgChannelType", body.getMsgChannelType());
             message.put("fromId", body.getFromId());
             message.put("toId", body.getToId());
             message.put("valueBean", valueBean);

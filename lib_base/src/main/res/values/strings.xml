@@ -16,6 +16,8 @@
 
     <string name="sex_0">女</string>
     <string name="sex_1">男</string>
+    <string name="sex_ta_0">她</string>
+    <string name="sex_ta_1">他</string>
     <string name="sign_content">无个性不签名！</string>
     <string name="attention_true">关注</string>
     <string name="attention_false">已关注</string>
@@ -56,4 +58,5 @@
     <string name="tv_renew">会员续费</string>
     <string name="vip_intro">开通VIP特权,专享超值权益</string>
     <string name="bank_account">(%s)</string>
+    <string name="wait_chat">%s正在等你聊天......</string>
 </resources>

@@ -1,17 +1,16 @@
-package com.zb.module_bottle.windows;
+package com.zb.lib_base.windows;
 
 import android.view.View;
 
+import com.zb.lib_base.BR;
+import com.zb.lib_base.R;
+import com.zb.lib_base.adapter.BaseAdapter;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.SCToastUtil;
-import com.zb.lib_base.windows.BasePopupWindow;
-import com.zb.module_bottle.BR;
-import com.zb.module_bottle.R;
-import com.zb.module_bottle.adapter.BottleAdapter;
 
 public class BottleVipPW extends BasePopupWindow {
 
-    private BottleAdapter adapter;
+    private BaseAdapter adapter;
     private int preIndex = -1;
 
     public BottleVipPW(View parentView) {
@@ -26,7 +25,7 @@ public class BottleVipPW extends BasePopupWindow {
 
     @Override
     public void initUI() {
-        adapter = new BottleAdapter<>(activity, R.layout.item_bottle_vip, MineApp.vipInfoList, this);
+        adapter = new BaseAdapter<>(activity, R.layout.item_bottle_vip, MineApp.vipInfoList, this);
         if (MineApp.vipInfoList.size() < 2) {
             preIndex = MineApp.vipInfoList.size() - 1;
         } else {

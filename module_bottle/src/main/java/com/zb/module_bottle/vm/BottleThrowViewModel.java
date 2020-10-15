@@ -28,13 +28,13 @@ import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BottleQuestionPW;
+import com.zb.lib_base.windows.BottleVipPW;
 import com.zb.lib_base.windows.EditPW;
 import com.zb.module_bottle.BR;
 import com.zb.module_bottle.R;
 import com.zb.module_bottle.activity.BottleThrowActivity;
 import com.zb.module_bottle.databinding.BottleThrowBinding;
 import com.zb.module_bottle.iv.BottleThrowVMInterface;
-import com.zb.module_bottle.windows.BottleVipPW;
 
 import androidx.databinding.ViewDataBinding;
 

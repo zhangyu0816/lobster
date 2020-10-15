@@ -27,9 +27,12 @@ public class ChatList extends RealmObject {
     //不能发起预约
     //订单信息  人气  不可见
     //租号不可见
-    int chatType=0;// 1 喜欢我  2 漂流瓶  3超级喜欢  4 匹配成功
+    int chatType = 0;// 1 喜欢我  2 漂流瓶  3超级喜欢  4 匹配成功  5 动态  6 闪聊
 
-    long driftBottleId;	//所属漂流瓶
+    long driftBottleId;    //所属漂流瓶
+    long flashTalkId;
+    int myChatCount;
+    int otherChatCount;
 
     public ChatList() {
     }
@@ -144,5 +147,29 @@ public class ChatList extends RealmObject {
 
     public void setHasNewBeLike(boolean hasNewBeLike) {
         this.hasNewBeLike = hasNewBeLike;
+    }
+
+    public long getFlashTalkId() {
+        return flashTalkId;
+    }
+
+    public void setFlashTalkId(long flashTalkId) {
+        this.flashTalkId = flashTalkId;
+    }
+
+    public int getMyChatCount() {
+        return myChatCount;
+    }
+
+    public void setMyChatCount(int myChatCount) {
+        this.myChatCount = myChatCount;
+    }
+
+    public int getOtherChatCount() {
+        return otherChatCount;
+    }
+
+    public void setOtherChatCount(int otherChatCount) {
+        this.otherChatCount = otherChatCount;
     }
 }

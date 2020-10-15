@@ -13,6 +13,8 @@ import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.FaceStatus;
 import com.zb.lib_base.model.FeedbackInfo;
+import com.zb.lib_base.model.FlashInfo;
+import com.zb.lib_base.model.FlashUser;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.GiftRecord;
 import com.zb.lib_base.model.ImAccount;
@@ -402,6 +404,31 @@ public interface HttpService {
     // 清除与这个人的消息
     @GET("api/Contact_clearHistoryMsg")
     Observable<BaseResultEntity> clearAllHistoryMsg(@Query("otherUserId") long otherUserId);
+
+    // 推荐闪聊用户列表
+    @GET("api/FlashTalk_userList")
+    Observable<BaseResultEntity<List<FlashInfo>>> flashUserList(@QueryMap Map<String, String> map);
+
+    // 开启闪聊
+    @GET("api/FlashTalk_saveTalk")
+    Observable<BaseResultEntity<FlashUser>> saveTalk(@Query("otherUserId") long otherUserId);
+
+    // 未读会话列表
+    @GET("api/FlashTalk_chatList")
+    Observable<BaseResultEntity<List<ChatList>>> flashChatList(@Query("pageNo") int pageNo, @Query("pageSize") int pageSize,
+                                                          @Query("isPublicAccount") int isPublicAccount);
+
+    // 获取闪聊历史消息
+    @GET("api/FlashTalk_historyMsgList")
+    Observable<BaseResultEntity<List<PrivateMsg>>> flashHistoryMsgList(@Query("otherUserId") long otherUserId, @Query("flashTalkId") long flashTalkId, @Query("pageNo") int pageNo);
+
+    // 清除与这个人的消息
+    @GET("api/FlashTalk_clearHistoryMsg")
+    Observable<BaseResultEntity> flashClearHistoryMsg(@Query("otherUserId") long otherUserId, @Query("flashTalkId") long flashTalkId);
+
+    // 历史消息读取完。 将最大的消息id 传上来
+    @GET("api/FlashTalk_readOverHistoryMsg")
+    Observable<BaseResultEntity> flashReadOverHistoryMsg(@Query("otherUserId") long otherUserId, @Query("flashTalkId") long flashTalkId, @Query("messageId") long messageId);
 
     /******************************* 漂流瓶 **********************************/
 

@@ -33,24 +33,26 @@ public class HistoryMsgDb extends BaseDao {
         commitTransaction();
     }
 
-    public RealmResults<HistoryMsg> getRealmResults(long otherUserId, int msgChannelType, long driftBottleId) {
+    public RealmResults<HistoryMsg> getRealmResults(long otherUserId, int msgChannelType, long driftBottleId, long flashTalkId) {
         beginTransaction();
         RealmResults<HistoryMsg> results = realm.where(HistoryMsg.class).
                 equalTo("otherUserId", otherUserId).
                 equalTo("msgChannelType", msgChannelType).
                 equalTo("driftBottleId", driftBottleId).
+                equalTo("flashTalkId", flashTalkId).
                 equalTo("mainUserId", BaseActivity.userId).
                 findAllSorted("creationDate", Sort.DESCENDING);
         commitTransaction();
         return results;
     }
 
-    public void deleteHistoryMsg(long otherUserId, int msgChannelType, long driftBottleId) {
+    public void deleteHistoryMsg(long otherUserId, int msgChannelType, long driftBottleId, long flashTalkId) {
         beginTransaction();
         RealmResults<HistoryMsg> results = realm.where(HistoryMsg.class).
                 equalTo("otherUserId", otherUserId).
                 equalTo("msgChannelType", msgChannelType).
                 equalTo("driftBottleId", driftBottleId).
+                equalTo("flashTalkId", flashTalkId).
                 equalTo("mainUserId", BaseActivity.userId).
                 findAll();
         if (results.size() > 0) {

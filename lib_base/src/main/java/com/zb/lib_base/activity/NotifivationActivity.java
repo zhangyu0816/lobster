@@ -17,6 +17,7 @@ public class NotifivationActivity extends RxAppCompatActivity {
     private long otherUserId = 0;
     private long discoverId = 0;
     private long driftBottleId = 0;
+    private long flashTalkId = 0;
     private int dynType = 0;
     private int reviewType = 0;
 
@@ -46,6 +47,8 @@ public class NotifivationActivity extends RxAppCompatActivity {
                                 discoverId = Long.parseLong(value);
                             } else if (TextUtils.equals(finalKey[0], "driftBottleId")) {
                                 driftBottleId = Long.parseLong(value);
+                            } else if (TextUtils.equals(finalKey[0], "flashTalkId")) {
+                                flashTalkId = Long.parseLong(value);
                             }
                         }
                         if ("Integer".equals(finalKey[1])) {
@@ -66,6 +69,8 @@ public class NotifivationActivity extends RxAppCompatActivity {
                     } else {
                         ActivityUtils.getChatActivity(otherUserId, true);
                     }
+                } else if (TextUtils.equals(activity, "FlashChatActivity")) {
+                    ActivityUtils.getFlashChatActivity(otherUserId, flashTalkId, true);
                 } else if (TextUtils.equals(activity, "DiscoverDetailActivity")) {
                     if (dynType == 1) {
                         ActivityUtils.getHomeDiscoverDetail(discoverId);

@@ -8,17 +8,19 @@
 
         <import type="com.zb.lib_base.utils.DateUtil" />
 
+        <import type="com.zb.lib_base.app.MineApp" />
+
         <variable
             name="pw"
             type="com.zb.lib_base.windows.FlashChatPW" />
 
         <variable
-            name="memberInfo"
-            type="com.zb.lib_base.model.MemberInfo" />
+            name="flashInfo"
+            type="com.zb.lib_base.model.FlashInfo" />
 
         <variable
-            name="recommendInfo"
-            type="com.zb.lib_base.model.RecommendInfo" />
+            name="adapter"
+            type="com.zb.lib_base.adapter.BaseAdapter" />
 
     </data>
 
@@ -88,7 +90,7 @@
 
                 <ImageView
                     defaultRes="@{ObjectUtils.getDefaultRes()}"
-                    imageUrl="@{recommendInfo.singleImage}"
+                    imageUrl="@{flashInfo.singleImage}"
                     isBlur="@{true}"
                     isCircle="@{true}"
                     viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(290)}"
@@ -118,13 +120,15 @@
                 android:layout_below="@+id/logo_layout"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="29dp"
-                android:text='@{memberInfo.nick+"，"+DateUtil.getAge(memberInfo.birthday,memberInfo.age)}'
+                android:text='@{flashInfo.nick+"，"+DateUtil.getAge(flashInfo.birthday,flashInfo.age)}'
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 tools:text="租我，29" />
 
             <androidx.recyclerview.widget.RecyclerView
+                adapter="@{adapter}"
+                recyclerType="@{5}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_nick"
@@ -137,7 +141,7 @@
                 android:layout_above="@+id/btn_chat"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="38dp"
-                android:text="她正在等你聊天......"
+                android:text="@{String.format(@string/wait_chat,MineApp.mineInfo.sex==0?@string/sex_ta_1:@string/sex_ta_0)}"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 

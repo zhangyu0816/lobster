@@ -21,6 +21,7 @@ import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.api.chatListApi;
 import com.zb.lib_base.api.contactNumApi;
 import com.zb.lib_base.api.driftBottleChatListApi;
+import com.zb.lib_base.api.flashChatListApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.newDynMsgAllNumApi;
 import com.zb.lib_base.api.openedMemberPriceListApi;
@@ -40,6 +41,7 @@ import com.zb.lib_base.imcore.CustomMessageBody;
 import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.ContactNum;
+import com.zb.lib_base.model.FlashInfo;
 import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
@@ -55,6 +57,7 @@ import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.OpenNotice;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.FlashChatPW;
 import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_card.windows.GuidancePW;
 
@@ -139,7 +142,59 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 String msgId = intent.getStringExtra("msgId");
                 long otherUserId = body.getFromId() == BaseActivity.userId ? body.getToId() : body.getFromId();
 
-                if (body.getDriftBottleId() == 0) {
+                if (body.getDriftBottleId() != 0) {
+                    HistoryMsgDb.getInstance().saveHistoryMsg(HistoryMsg.createHistory(msgId, body, otherUserId, 2, body.getDriftBottleId()));
+
+                    BottleCache dbData = BottleCacheDb.getInstance().getBottleCache(body.getDriftBottleId());
+                    BottleCache bottleCache = new BottleCache();
+                    bottleCache.setDriftBottleId(body.getDriftBottleId());
+                    bottleCache.setUserId(otherUserId);
+                    bottleCache.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
+                    bottleCache.setStanza(body.getStanza());
+                    bottleCache.setMsgType(body.getMsgType());
+                    bottleCache.setNoReadNum(dbData == null ? 1 : dbData.getNoReadNum() + 1);
+                    bottleCache.setMainUserId(BaseActivity.userId);
+                    BottleCacheDb.getInstance().saveBottleCache(bottleCache);
+
+                    // 更新会话列表
+                    Intent data = new Intent("lobster_singleBottleCache");
+                    data.putExtra("driftBottleId", body.getDriftBottleId());
+                    activity.sendBroadcast(data);
+
+                    // 更新对话页面
+                    Intent upMessage = new Intent("lobster_upMessage/driftBottleId=" + body.getDriftBottleId());
+                    upMessage.putExtra("customMessageBody", body);
+                    upMessage.putExtra("msgId", msgId);
+                    activity.sendBroadcast(upMessage);
+
+                    noReadBottleNum(true);
+
+                } else if (body.getFlashTalkId() != 0) {
+                    HistoryMsgDb.getInstance().saveHistoryMsg(HistoryMsg.createHistory(msgId, body, otherUserId, 3, body.getFlashTalkId()));
+
+                    ChatListDb.getInstance().updateChatMsg(otherUserId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType(), new ChatListDb.CallBack() {
+                        @Override
+                        public void success() {
+                            // 更新会话列表
+                            mBinding.setUnReadCount(ChatListDb.getInstance().getAllUnReadNum());
+                            Intent data = new Intent("lobster_updateChat");
+                            data.putExtra("userId", otherUserId);
+                            data.putExtra("flashTalkId", body.getFlashTalkId());
+                            activity.sendBroadcast(data);
+
+                            // 更新对话页面
+                            Intent upMessage = new Intent("lobster_upMessage/flashTalkId=" + body.getFlashTalkId());
+                            upMessage.putExtra("customMessageBody", body);
+                            upMessage.putExtra("msgId", msgId);
+                            activity.sendBroadcast(upMessage);
+                        }
+
+                        @Override
+                        public void fail() {
+                            otherInfo(otherUserId, body, msgId);
+                        }
+                    });
+                } else {
                     if (otherUserId == BaseActivity.systemUserId) {
                         MineApp.mineNewsCount.setSystemNewsNum(MineApp.mineNewsCount.getSystemNewsNum() + 1);
                         activity.sendBroadcast(new Intent("lobster_newsCount"));
@@ -171,32 +226,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                             newDynMsgAllNum(true);
                         }
                     }
-                } else {
-                    HistoryMsgDb.getInstance().saveHistoryMsg(HistoryMsg.createHistory(msgId, body, otherUserId, 2, body.getDriftBottleId()));
-
-                    BottleCache dbData = BottleCacheDb.getInstance().getBottleCache(body.getDriftBottleId());
-                    BottleCache bottleCache = new BottleCache();
-                    bottleCache.setDriftBottleId(body.getDriftBottleId());
-                    bottleCache.setUserId(otherUserId);
-                    bottleCache.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
-                    bottleCache.setStanza(body.getStanza());
-                    bottleCache.setMsgType(body.getMsgType());
-                    bottleCache.setNoReadNum(dbData == null ? 1 : dbData.getNoReadNum() + 1);
-                    bottleCache.setMainUserId(BaseActivity.userId);
-                    BottleCacheDb.getInstance().saveBottleCache(bottleCache);
-
-                    // 更新会话列表
-                    Intent data = new Intent("lobster_singleBottleCache");
-                    data.putExtra("driftBottleId", body.getDriftBottleId());
-                    activity.sendBroadcast(data);
-
-                    // 更新对话页面
-                    Intent upMessage = new Intent("lobster_upMessage/driftBottleId=" + body.getDriftBottleId());
-                    upMessage.putExtra("customMessageBody", body);
-                    upMessage.putExtra("msgId", msgId);
-                    activity.sendBroadcast(upMessage);
-
-                    noReadBottleNum(true);
                 }
             }
         };
@@ -241,7 +270,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         flashChatReceiver = new BaseReceiver(activity, "lobster_flashChat") {
             @Override
             public void onReceive(Context context, Intent intent) {
-
+                FlashInfo flashInfo = (FlashInfo) intent.getSerializableExtra("flashInfo");
+                new FlashChatPW(mBinding.getRoot(), flashInfo);
             }
         };
 
@@ -436,8 +466,30 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    activity.sendBroadcast(new Intent("lobster_updateChat"));
                     systemChat();
+                    flashChatList(1);
+                }
+            }
+        }, activity).setPageNo(pageNo);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void flashChatList(int pageNo) {
+        flashChatListApi api = new flashChatListApi(new HttpOnNextListener<List<ChatList>>() {
+            @Override
+            public void onNext(List<ChatList> o) {
+                for (ChatList chatMsg : o) {
+                    chatMsg.setMainUserId(BaseActivity.userId);
+                    chatMsg.setChatType(6);
+                    ChatListDb.getInstance().saveChatList(chatMsg);
+                }
+                flashChatList(pageNo + 1);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    activity.sendBroadcast(new Intent("lobster_updateChat"));
                 }
             }
         }, activity).setPageNo(pageNo);
@@ -606,7 +658,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
             @Override
             public void onNext(MemberInfo o) {
-                ChatList dbData = ChatListDb.getInstance().getChatMsg(otherUserId, otherUserId == BaseActivity.dynUserId ? 5 : 4);
+                ChatList dbData = ChatListDb.getInstance().getChatMsg(otherUserId, body.getFlashTalkId() != 0 ? 6 : (otherUserId == BaseActivity.dynUserId ? 5 : 4));
                 ChatList chatList = new ChatList();
                 chatList.setUserId(otherUserId);
                 chatList.setNick(o.getNick());
@@ -615,20 +667,29 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 chatList.setStanza(body.getStanza());
                 chatList.setMsgType(body.getMsgType());
                 chatList.setNoReadNum(dbData == null ? 1 : dbData.getNoReadNum() + 1);
-                chatList.setChatType(otherUserId == BaseActivity.dynUserId ? 5 : 4);
+                chatList.setChatType(body.getFlashTalkId() != 0 ? 6 : (otherUserId == BaseActivity.dynUserId ? 5 : 4));
                 chatList.setPublicTag("");
                 chatList.setEffectType(1);
                 chatList.setAuthType(1);
+                chatList.setFlashTalkId(body.getFlashTalkId());
+                if (chatList.getMsgType() == 6)
+                    chatList.setOtherChatCount(1);
                 chatList.setMainUserId(BaseActivity.userId);
                 ChatListDb.getInstance().saveChatList(chatList);
                 activity.sendBroadcast(new Intent("lobster_newsCount"));
                 // 更新会话列表
                 Intent data = new Intent("lobster_updateChat");
                 data.putExtra("userId", otherUserId);
+                data.putExtra("flashTalkId", body.getFlashTalkId());
                 activity.sendBroadcast(data);
 
                 // 更新对话页面
-                Intent upMessage = new Intent("lobster_upMessage/friend=" + otherUserId);
+                Intent upMessage;
+                if (body.getFlashTalkId() == 0) {
+                    upMessage = new Intent("lobster_upMessage/friend=" + otherUserId);
+                } else {
+                    upMessage = new Intent("lobster_upMessage/flashTalkId=" + body.getFlashTalkId());
+                }
                 upMessage.putExtra("customMessageBody", body);
                 upMessage.putExtra("msgId", msgId);
                 activity.sendBroadcast(upMessage);

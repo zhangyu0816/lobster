@@ -1,6 +1,7 @@
 package com.zb.lib_base.model;
 
 public class PrivateMsg {
+
     private long id;
     private long fromId; // 发送人ID
     private long toId; // 接收人ID
@@ -18,6 +19,8 @@ public class PrivateMsg {
     private int isRead;           //状态 0：未读 1已读
     private int msgChannelType = 1; //消息渠道类型  1.普通聊天 （默认）  2. 漂流瓶
     private long driftBottleId = 0;    //所属漂流瓶
+
+    private long flashTalkId;    //所属闪聊
 
     public long getId() {
         return id;
@@ -137,5 +140,13 @@ public class PrivateMsg {
 
     public void setDriftBottleId(long driftBottleId) {
         this.driftBottleId = driftBottleId;
+    }
+
+    public long getFlashTalkId() {
+        return flashTalkId;
+    }
+
+    public void setFlashTalkId(long flashTalkId) {
+        this.flashTalkId = flashTalkId;
     }
 }

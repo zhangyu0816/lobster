@@ -12,6 +12,7 @@ import android.graphics.Shader;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
+import com.zb.lib_base.utils.DisplayUtils;
 
 import java.security.MessageDigest;
 
@@ -59,7 +60,7 @@ public class GlideRoundTransform extends BitmapTransformation {
     }
 
     public GlideRoundTransform(int dpRadius, int marginDp, int cornerType, @ScaleType int scaleType) {
-        this.radius = (int) (Resources.getSystem().getDisplayMetrics().density * dpRadius + 0.5f);
+        this.radius = DisplayUtils.dip2px(dpRadius);
         this.diameter = this.radius * 2;
         this.margin = Resources.getSystem().getDisplayMetrics().density * marginDp;
         this.cornerType = cornerType;

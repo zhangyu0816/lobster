@@ -44,39 +44,12 @@ public class VipAdPW extends BasePopupWindow {
         this.type = type;
         this.otherImage = otherImage;
         if (type == 0) {
-            for (int i = 0; i < 6; i++) {
+            for (int i = 1; i < 8; i++) {
                 Ads ads = new Ads();
-                if (i == 0) {
-                    ads.setView(adView(1));
-                } else if (i == 1) {
-                    ads.setView(adView(2));
-                } else if (i == 2) {
-                    ads.setView(adView(3));
-                } else if (i == 3) {
-                    ads.setView(adView(4));
-                } else if (i == 4) {
-                    ads.setView(adView(5));
-                } else {
-                    ads.setView(adView(6));
-                }
+                ads.setView(adView(i));
                 adsList.add(ads);
             }
-        } else if (type == 6) {
-            Ads ads = new Ads(adView(type));
-            adsList.add(ads);
-        } else if (type == 5) {
-            Ads ads = new Ads(adView(type));
-            adsList.add(ads);
-        } else if (type == 4) {
-            Ads ads = new Ads(adView(type));
-            adsList.add(ads);
-        } else if (type == 3) {
-            Ads ads = new Ads(adView(type));
-            adsList.add(ads);
-        } else if (type == 2) {
-            Ads ads = new Ads(adView(type));
-            adsList.add(ads);
-        } else if (type == 1) {
+        } else {
             Ads ads = new Ads(adView(type));
             adsList.add(ads);
         }
@@ -127,6 +100,12 @@ public class VipAdPW extends BasePopupWindow {
             binding.setMyHead("empty_icon");
             binding.setOtherHead("empty_icon");
             binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_6_male : R.mipmap.vip_ad_6);
+        } else if (type == 7) {
+            binding.setTitle("立即匹配闪聊");
+            binding.setContent("每日五次机会，立即匹配实时聊天");
+            binding.setMyHead(MineApp.mineInfo.getImage());
+            binding.setOtherHead("empty_icon");
+            binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
         }
         return binding.getRoot();
     }

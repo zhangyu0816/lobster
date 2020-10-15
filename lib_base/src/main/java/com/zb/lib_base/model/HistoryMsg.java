@@ -25,9 +25,13 @@ public class HistoryMsg extends RealmObject {
     int isRead;           //状态 0：未读 1已读
     int msgChannelType = 1; //消息渠道类型  1.普通聊天 （默认）  2. 漂流瓶
     long driftBottleId = 0;    //所属漂流瓶
+    long flashTalkId = 0;    //所属漂流瓶
     int imPlatformType; //
     boolean showTime = false;
     String theChatUk = "";        //两个人的Id拼接起来，小的在前面  #12#101#
+
+    int myChatCount = 0;
+    int otherChatCount = 0;
 
     public long getFromId() {
         return fromId;
@@ -173,6 +177,31 @@ public class HistoryMsg extends RealmObject {
         this.theChatUk = theChatUk;
     }
 
+    public long getFlashTalkId() {
+        return flashTalkId;
+    }
+
+    public HistoryMsg setFlashTalkId(long flashTalkId) {
+        this.flashTalkId = flashTalkId;
+        return this;
+    }
+
+    public int getMyChatCount() {
+        return myChatCount;
+    }
+
+    public void setMyChatCount(int myChatCount) {
+        this.myChatCount = myChatCount;
+    }
+
+    public int getOtherChatCount() {
+        return otherChatCount;
+    }
+
+    public void setOtherChatCount(int otherChatCount) {
+        this.otherChatCount = otherChatCount;
+    }
+
     public static HistoryMsg createHistory(String msgId, CustomMessageBody body, long otherUserId, int msgChannelType, long driftBottleId) {
         HistoryMsg historyMsg = new HistoryMsg();
         historyMsg.setThirdMessageId(msgId);
@@ -187,6 +216,23 @@ public class HistoryMsg extends RealmObject {
         historyMsg.setOtherUserId(otherUserId);
         historyMsg.setMsgChannelType(msgChannelType);
         historyMsg.setDriftBottleId(driftBottleId);
+        historyMsg.setMainUserId(BaseActivity.userId);
+        return historyMsg;
+    }
+    public static HistoryMsg createHistoryForFlash(String msgId, CustomMessageBody body, long otherUserId, int msgChannelType, long flashTalkId) {
+        HistoryMsg historyMsg = new HistoryMsg();
+        historyMsg.setThirdMessageId(msgId);
+        historyMsg.setFromId(body.getFromId());
+        historyMsg.setToId(body.getToId());
+        historyMsg.setTitle(body.getSummary());
+        historyMsg.setStanza(body.getStanza());
+        historyMsg.setMsgType(body.getMsgType());
+        historyMsg.setResLink(body.getResLink());
+        historyMsg.setResTime(body.getResTime());
+        historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
+        historyMsg.setOtherUserId(otherUserId);
+        historyMsg.setMsgChannelType(msgChannelType);
+        historyMsg.setFlashTalkId(flashTalkId);
         historyMsg.setMainUserId(BaseActivity.userId);
         return historyMsg;
     }
@@ -206,6 +252,24 @@ public class HistoryMsg extends RealmObject {
         historyMsg.setOtherUserId(otherUserId);
         historyMsg.setMsgChannelType(msgChannelType);
         historyMsg.setDriftBottleId(driftBottleId);
+        return historyMsg;
+    }
+
+    public static HistoryMsg createHistoryForPrivate(PrivateMsg privateMsg, long otherUserId) {
+        HistoryMsg historyMsg = new HistoryMsg();
+        historyMsg.setThirdMessageId(privateMsg.getThirdMessageId());
+        historyMsg.setMainUserId(BaseActivity.userId);
+        historyMsg.setFromId(privateMsg.getFromId());
+        historyMsg.setToId(privateMsg.getToId());
+        historyMsg.setCreationDate(privateMsg.getCreationDate());
+        historyMsg.setStanza(privateMsg.getStanza());
+        historyMsg.setMsgType(privateMsg.getMsgType());
+        historyMsg.setTitle(privateMsg.getTitle());
+        historyMsg.setResTime(privateMsg.getResTime());
+        historyMsg.setResLink(privateMsg.getResLink());
+        historyMsg.setOtherUserId(otherUserId);
+        historyMsg.setMsgChannelType(3);
+        historyMsg.setFlashTalkId(privateMsg.getFlashTalkId());
         return historyMsg;
     }
 }

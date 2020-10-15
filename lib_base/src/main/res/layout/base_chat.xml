@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="com.zb.module_chat.vm.ChatViewModel" />
+            type="com.zb.lib_base.vm.BaseChatViewModel" />
 
         <variable
             name="content"
@@ -23,12 +23,25 @@
             name="isEmoji"
             type="boolean" />
 
+        <variable
+            name="msgChannelType"
+            type="Integer" />
+
+        <variable
+            name="memberInfo"
+            type="com.zb.lib_base.model.MemberInfo" />
+
+        <variable
+            name="isLockImage"
+            type="boolean" />
+
     </data>
 
     <RelativeLayout
         android:id="@+id/main_relative"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/black_efe">
 
         <RelativeLayout
             android:id="@+id/relativeLayout3"
@@ -68,7 +81,7 @@
                         onClickDelayed="@{viewModel::toDetail}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:visibility="@{viewModel.memberInfo.userId>10010?View.VISIBLE:View.GONE}">
+                        android:visibility="@{memberInfo.userId>10010?View.VISIBLE:View.GONE}">
 
                         <View
                             viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.09f)}"
@@ -78,8 +91,9 @@
                             android:background="@drawable/circle_white" />
 
                         <ImageView
-                            imageUrl="@{viewModel.memberInfo.image}"
+                            imageUrl="@{memberInfo.image}"
                             isCircle="@{true}"
+                            isBlur="@{isLockImage}"
                             viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.08f)}"
                             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.08f)}"
                             android:layout_width="48dp"
@@ -91,20 +105,21 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:text="@{viewModel.memberInfo.nick}"
+                        android:text="@{memberInfo.nick}"
                         android:textColor="@color/white"
                         android:textSize="18sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
                 <ImageView
+                    onClickDelayed="@{viewModel::toDetail}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_margin="15dp"
-                    android:src="@mipmap/more_icon"
-                    android:visibility="gone" />
+                    android:padding="15dp"
+                    android:src="@drawable/look_icon"
+                    android:visibility="@{msgChannelType==2?View.VISIBLE:View.GONE}" />
             </RelativeLayout>
         </RelativeLayout>
 
@@ -114,7 +129,7 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/relativeLayout3"
             android:scaleType="centerCrop"
-            android:visibility="@{viewModel.memberInfo.userId>10010?View.VISIBLE:View.GONE}"/>
+            android:visibility="@{viewModel.msgChannelType==2?View.GONE:View.VISIBLE}" />
 
         <View
             android:layout_width="match_parent"
@@ -122,7 +137,7 @@
             android:layout_below="@+id/relativeLayout3"
             android:alpha="0.2"
             android:background="@color/black"
-            android:visibility="@{viewModel.memberInfo.userId>10010?View.VISIBLE:View.GONE}"/>
+            android:visibility="@{viewModel.msgChannelType==2?View.GONE:View.VISIBLE}" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -144,7 +159,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="15dp"
-                    android:text='@{@string/notice_ta+(viewModel.memberInfo.sex==0?"她":"他")}'
+                    android:text='@{@string/notice_ta+(memberInfo.sex==0?"她":"他")}'
                     android:textColor="@color/black_252"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -210,7 +225,6 @@
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
         </LinearLayout>
 
-
         <ImageView
             android:id="@+id/audio_btn"
             android:layout_width="wrap_content"
@@ -237,13 +251,18 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:onClick="@{viewModel::toVoiceKeyboard}"
-                    android:padding="15dp"
-                    android:src="@{isVoice?@drawable/chat_keyboard_icon:@drawable/chat_voice_icon}" />
+                    android:paddingStart="15dp"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"
+                    android:paddingEnd="1dp"
+                    android:src="@{isVoice?@drawable/chat_keyboard_icon:@drawable/chat_voice_icon}"
+                    android:visibility="@{msgChannelType==2?View.GONE:View.VISIBLE}" />
 
                 <com.zb.lib_base.emojj.EmojiEditText
                     android:id="@+id/ed_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:layout_toStartOf="@+id/btn_linear"
@@ -266,6 +285,7 @@
                     android:id="@+id/tv_speak"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:layout_toStartOf="@+id/btn_linear"
@@ -295,7 +315,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="15dp"
-                        android:src="@mipmap/chat_camera_icon" />
+                        android:src="@mipmap/chat_camera_icon"
+                        android:visibility="@{msgChannelType==2?View.INVISIBLE:View.VISIBLE}" />
 
                     <ImageView
                         onClickDelayed="@{viewModel::toEmoji}"

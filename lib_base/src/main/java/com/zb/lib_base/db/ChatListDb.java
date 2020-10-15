@@ -77,6 +77,8 @@ public class ChatListDb extends BaseDao {
             chatList.setStanza(stanza);
             chatList.setMsgType(msgType);
             chatList.setNoReadNum(chatList.getNoReadNum() + 1);
+            if (chatList.getMsgType() == 6)
+                chatList.setOtherChatCount(chatList.getOtherChatCount() + 1);
             callBack.success();
         }
         commitTransaction();

@@ -14,6 +14,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
@@ -23,6 +24,7 @@ import com.zb.lib_base.iv.DemoPushService;
 import com.zb.lib_base.log.LogUtil;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
+import com.zb.lib_base.model.FlashInfo;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.MineNewsCount;
@@ -73,6 +75,7 @@ public class MineApp extends MultiDexApplication {
     public static ContactNum contactNum = new ContactNum();
     public static List<LikeMe> pairList = new ArrayList<>();
     public static List<RecommendInfo> recommendInfoList = new ArrayList<>();
+    public static List<FlashInfo> sFlashInfoList = new ArrayList<>();
     public static int noReadBottleNum = 0;
     public static int chatSelectIndex = 0;
     public static String NOTIFICATION_CHANNEL_ID = "com.yimi.rentme_notice";
@@ -123,6 +126,8 @@ public class MineApp extends MultiDexApplication {
         PlatformConfig.setWeixin("wxb83427622a6740f6", "97f837c0ae8b11af734041828ba4a737");
         PlatformConfig.setQQZone("1104574025", "ayk3uI7axNJlfGDk");
         UMShareAPI.get(this);
+        // 页面统计
+        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.LEGACY_AUTO);
 
         try {
             PackageInfo packageInfo = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0);

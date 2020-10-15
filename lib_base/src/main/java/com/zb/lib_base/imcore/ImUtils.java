@@ -57,6 +57,10 @@ public class ImUtils {
         this.otherUserId = otherUserId;
     }
 
+    public long getOtherUserId() {
+        return otherUserId;
+    }
+
     public void setCallBackForMsg(CallBackForMsg callBackForMsg) {
         this.callBackForMsg = callBackForMsg;
     }
@@ -96,9 +100,9 @@ public class ImUtils {
     private CustomMessageBody body;
     private YWMessage message;
 
-    public void sendChatMessage(RxAppCompatActivity activity, final int msgType, final String stanza, final String resLink, final int resTime, final String summary, long driftBottleId, int msgChannelType) {
+    public void sendChatMessage(RxAppCompatActivity activity, final int msgType, final String stanza, final String resLink, final int resTime, final String summary, long driftBottleId, long flashTalkId, int msgChannelType) {
         YWMessageBody mainBody = new YWMessageBody();
-        body = new CustomMessageBody(msgType, stanza, resLink, resTime, BaseActivity.userId, otherUserId, summary, driftBottleId, msgChannelType);
+        body = new CustomMessageBody(msgType, stanza, resLink, resTime, BaseActivity.userId, otherUserId, summary, driftBottleId, flashTalkId, msgChannelType);
         mainBody.setSummary(body.getSummary());
         mainBody.setContent(loginHelper.pack(body));
         message = YWMessageChannel.createCustomMessage(mainBody);

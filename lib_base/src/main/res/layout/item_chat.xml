@@ -22,7 +22,7 @@
 
         <variable
             name="viewModel"
-            type="com.zb.module_chat.vm.ChatViewModel" />
+            type="com.zb.lib_base.vm.BaseChatViewModel" />
 
         <variable
             name="stanzaInfo"
@@ -45,8 +45,8 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:background="@drawable/btn_bg_black_a33_radius20"
-            android:paddingStart="10dp"
             android:gravity="center"
+            android:paddingStart="10dp"
             android:paddingEnd="10dp"
             android:text="@{DateUtil.strToStr(item.creationDate)}"
             android:textColor="@color/white"
@@ -67,6 +67,7 @@
                 android:id="@+id/iv_other_logo"
                 defaultRes="@{ObjectUtils.getDefaultRes()}"
                 imageUrl='@{viewModel.memberInfo.image}'
+                isBlur="@{viewModel.isLockImage}"
                 isCircle="@{true}"
                 onClickDelayed="@{viewModel::toDetail}"
                 viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.12f)}"
@@ -235,6 +236,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/flash_layout"
                 onClickDelayed="@{viewModel::toDetail}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -243,24 +245,45 @@
                 android:orientation="vertical"
                 android:visibility="@{item.msgType==1000?View.VISIBLE:View.GONE}">
 
-                <ImageView
-                    defaultRes="@{ObjectUtils.getDefaultRes()}"
-                    imageUrl='@{viewModel.memberInfo.singleImage}'
-                    isRound="@{true}"
-                    roundSize="@{5}"
-                    viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
-                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp" />
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <com.zb.lib_base.views.RoundBlurImage
+                        isBlur="@{viewModel.isLockImage}"
+                        rbUrl='@{viewModel.memberInfo.singleImage.replace("YM0000","430X430")}'
+                        roundSize="@{5}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp" />
+
+                    <ImageView
+                        android:id="@+id/iv_bg"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_bg_black_99000_radius5"
+                        android:visibility="@{viewModel.isLockImage?View.VISIBLE:View.GONE}" />
+
+                    <ImageView
+                        onClickDelayed="@{viewModel::toDetail}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:background="@mipmap/chat_look_icon"
+                        android:visibility="@{viewModel.isLockImage?View.VISIBLE:View.GONE}" />
+                </RelativeLayout>
 
                 <LinearLayout
                     viewHeightSize="@{-2}"
                     viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="-5dp"
                     android:background="@drawable/btn_bg_white_radius_bottom5"
                     android:orientation="vertical"
-                    android:layout_marginTop="-5dp"
                     android:padding="10dp">
 
                     <TextView
@@ -274,12 +297,48 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:text="@{viewModel.memberInfo.content}"
                         android:textSize="14sp"
-                        android:layout_marginTop="10dp"
                         tools:text="谢谢你喜欢了我！我们一起聊聊" />
                 </LinearLayout>
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="26dp"
+                android:layout_below="@+id/flash_layout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/btn_bg_white_radius60"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:visibility="@{(item.msgType==1000&amp;&amp;viewModel.msgChannelType==3)?View.VISIBLE:View.GONE}">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="双方各发"
+                    android:textColor="@color/black_4d4"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10"
+                    android:textColor="@color/red_ff3"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="句可以解锁头像哦～"
+                    android:textColor="@color/black_4d4"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
         </RelativeLayout>
 
         <RelativeLayout

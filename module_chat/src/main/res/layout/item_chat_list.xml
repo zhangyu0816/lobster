@@ -28,22 +28,41 @@
         android:layout_height="wrap_content"
         android:padding="15dp">
 
-        <ImageView
-            android:id="@+id/iv_image"
-            defaultRes="@{ObjectUtils.getDefaultRes()}"
-            imageUrl="@{item.image}"
-            isCircle="@{true}"
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="15dp" />
+        <RelativeLayout
+            android:id="@+id/logo_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp">
+
+            <ImageView
+                android:id="@+id/iv_image"
+                defaultRes="@{ObjectUtils.getDefaultRes()}"
+                imageUrl="@{item.image}"
+                isBlur='@{item.chatType==6&amp;&amp;!ObjectUtils.getLockProgress(item).equals("100%")}'
+                isCircle="@{true}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.15f)}"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@{ObjectUtils.getLockProgress(item)}"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility='@{(item.chatType==6&amp;&amp;!ObjectUtils.getLockProgress(item).equals("100%"))?View.VISIBLE:View.GONE}'
+                tools:text="50%" />
+        </RelativeLayout>
+
 
         <TextView
             android:id="@+id/tv_nick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/iv_image"
+            android:layout_toEndOf="@+id/logo_layout"
             android:text="@{item.nick}"
             android:textColor="@color/black_252"
             android:textSize="16sp"
@@ -65,7 +84,7 @@
             android:layout_below="@+id/tv_nick"
             android:layout_marginTop="10dp"
             android:layout_toStartOf="@+id/tv_num"
-            android:layout_toEndOf="@+id/iv_image"
+            android:layout_toEndOf="@+id/logo_layout"
             android:singleLine="true"
             android:text='@{ObjectUtils.getStanza(item.stanza,item.msgType)}'
             android:textColor="@color/black_827"

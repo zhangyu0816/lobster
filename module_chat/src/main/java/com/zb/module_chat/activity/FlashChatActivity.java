@@ -1,32 +1,23 @@
-package com.zb.module_bottle.activity;
+package com.zb.module_chat.activity;
 
-import android.os.Bundle;
 import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.utils.RouteUtils;
-import com.zb.lib_base.utils.StatusBarUtil;
 import com.zb.lib_base.vm.BaseChatViewModel;
-import com.zb.module_bottle.R;
+import com.zb.module_chat.R;
 
-
-@Route(path = RouteUtils.Bottle_Chat)
-public class BottleChatActivity extends BaseActivity {
-    @Autowired(name = "driftBottleId")
-    long driftBottleId;
+@Route(path = RouteUtils.Flash_Chat_Activity)
+public class FlashChatActivity extends ChatBaseActivity {
+    @Autowired(name = "otherUserId")
+    long otherUserId;
+    @Autowired(name = "flashTalkId")
+    long flashTalkId;
     @Autowired(name = "isNotice")
     boolean isNotice;
 
     private BaseChatViewModel viewModel;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.BottleBlackTheme);
-        super.onCreate(savedInstanceState);
-        StatusBarUtil.transparencyBar(this);
-    }
 
     @Override
     public int getRes() {
@@ -37,9 +28,10 @@ public class BottleChatActivity extends BaseActivity {
     public void initUI() {
         fitComprehensiveScreen();
         viewModel = new BaseChatViewModel();
-        viewModel.driftBottleId = driftBottleId;
+        viewModel.otherUserId = otherUserId;
+        viewModel.flashTalkId = flashTalkId;
         viewModel.isNotice = isNotice;
-        viewModel.msgChannelType = 2;
+        viewModel.msgChannelType = 3;
         viewModel.setBinding(mBinding);
     }
 

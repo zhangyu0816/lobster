@@ -12,7 +12,7 @@
 
         <variable
             name="adapter"
-            type="com.zb.module_bottle.adapter.BottleAdapter" />
+            type="com.zb.lib_base.adapter.BaseAdapter" />
 
     </data>
 

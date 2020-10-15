@@ -237,7 +237,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 long otherUserId = bottleInfo.getUserId() == BaseActivity.userId ? bottleInfo.getOtherUserId() : bottleInfo.getUserId();
 
                 BottleCacheDb.getInstance().deleteBottleCache(bottleInfo.getDriftBottleId());
-                HistoryMsgDb.getInstance().deleteHistoryMsg(otherUserId, 2, bottleInfo.getDriftBottleId());
+                HistoryMsgDb.getInstance().deleteHistoryMsg(otherUserId, 2, bottleInfo.getDriftBottleId(), 0);
                 adapter.notifyItemRemoved(position);
                 bottleInfoList.remove(position);
                 adapter.notifyDataSetChanged();
