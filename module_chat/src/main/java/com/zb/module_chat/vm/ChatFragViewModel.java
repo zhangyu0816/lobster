@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.flashUserListApi;
+import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.recommendRankingListApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
@@ -14,6 +15,7 @@ import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.FlashInfo;
+import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.RecommendInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DisplayUtils;
@@ -23,6 +25,7 @@ import com.zb.module_chat.R;
 import com.zb.module_chat.databinding.ChatFragBinding;
 import com.zb.module_chat.iv.ChatFragVMInterface;
 
+import java.util.Iterator;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
@@ -32,6 +35,9 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
     private BaseReceiver newsCountReceiver;
     private BaseReceiver bottleTitleReceiver;
     private BaseReceiver updateRedReceiver;
+    private BaseReceiver locationReceiver;
+    private BaseReceiver openVipReceiver;
+    private BaseReceiver updateFlashReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -60,6 +66,36 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
                 initTabLayout(new String[]{"所有匹配", temp}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, MineApp.chatSelectIndex);
             }
         };
+
+        // 位置漫游
+        locationReceiver = new BaseReceiver(activity, "lobster_location") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                flashUserList();
+            }
+        };
+        // 开通会员
+        openVipReceiver = new BaseReceiver(activity, "lobster_openVip") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                myInfo();
+            }
+        };
+        updateFlashReceiver = new BaseReceiver(activity, "lobster_updateFlash") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Iterator<FlashInfo> iterator = MineApp.sFlashInfoList.iterator();
+                while (iterator.hasNext()) {
+                    FlashInfo item = iterator.next();
+                    if (item.getUserId() == MineApp.sFlashInfo.getUserId()) {
+                        iterator.remove();
+                        mBinding.flashChat.setVisibility(View.VISIBLE);
+                        mBinding.flashChat.initData(activity);
+                        break;
+                    }
+                }
+            }
+        };
         recommendRankingList();
         flashUserList();
         new Handler().postDelayed(() -> {
@@ -85,6 +121,9 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
             updateRedReceiver.unregisterReceiver();
             newsCountReceiver.unregisterReceiver();
             bottleTitleReceiver.unregisterReceiver();
+            locationReceiver.unregisterReceiver();
+            openVipReceiver.unregisterReceiver();
+            updateFlashReceiver.unregisterReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -131,11 +170,24 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
         flashUserListApi api = new flashUserListApi(new HttpOnNextListener<List<FlashInfo>>() {
             @Override
             public void onNext(List<FlashInfo> o) {
+                MineApp.sFlashInfoList.clear();
                 MineApp.sFlashInfoList.addAll(o);
                 mBinding.flashChat.setVisibility(View.VISIBLE);
                 mBinding.flashChat.initData(activity);
             }
-        },activity);
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void myInfo() {
+        myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
+            @Override
+            public void onNext(MineInfo o) {
+                MineApp.mineInfo = o;
+                activity.sendBroadcast(new Intent("lobster_flashChat"));
+            }
+        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

@@ -36,7 +36,51 @@ public class FlashChat extends LinearLayout {
     private static PropertyValuesHolder pvhTX, pvhSX, pvhSY;
     private ObjectAnimator pvh_logo1;
     private ObjectAnimator pvh_logo2;
+    private ObjectAnimator pvh_logo3;
     private int index = 2;
+
+    private Handler mHandler1 = new Handler();
+    private Handler mHandler2 = new Handler();
+    private Handler mHandler3 = new Handler();
+    private Handler mHandler4 = new Handler();
+
+    private Runnable ra1 = new Runnable() {
+        @Override
+        public void run() {
+            if (mBinding.logoLayout1 != null)
+                mBinding.logoLayout1.setVisibility(View.GONE);
+        }
+    };
+    private Runnable ra2 = new Runnable() {
+        @Override
+        public void run() {
+            mBinding.setFlashInfo1(mBinding.getFlashInfo2());
+            pvhSX = PropertyValuesHolder.ofFloat("scaleX", 0, 1);
+            pvhSY = PropertyValuesHolder.ofFloat("scaleY", 0, 1);
+            pvh_logo1 = ObjectAnimator.ofPropertyValuesHolder(mBinding.logoLayout1, pvhSY, pvhSX).setDuration(100);
+            pvh_logo1.start();
+        }
+    };
+    private Runnable ra3 = new Runnable() {
+        @Override
+        public void run() {
+            mBinding.logoLayout2.setVisibility(View.GONE);
+            mBinding.logoLayout1.setVisibility(View.VISIBLE);
+            pvhTX = PropertyValuesHolder.ofFloat("translationX", -DisplayUtils.dip2px(30), 0);
+            pvh_logo2 = ObjectAnimator.ofPropertyValuesHolder(mBinding.logoLayout2, pvhTX).setDuration(200);
+            pvh_logo2.start();
+        }
+    };
+    private Runnable ra4 = new Runnable() {
+        @Override
+        public void run() {
+            mBinding.setFlashInfo2(mBinding.getFlashInfo3());
+            mBinding.logoLayout2.setVisibility(View.VISIBLE);
+            if (index >= maxSize)
+                index = 0;
+            mBinding.setFlashInfo3(MineApp.sFlashInfoList.get(index));
+        }
+    };
 
     private Runnable ra = new Runnable() {
         @Override
@@ -53,32 +97,14 @@ public class FlashChat extends LinearLayout {
 
             pvhSX = PropertyValuesHolder.ofFloat("scaleX", 0.5f, 1);
             pvhSY = PropertyValuesHolder.ofFloat("scaleY", 0.5f, 1);
-            ObjectAnimator pvh_logo3 = ObjectAnimator.ofPropertyValuesHolder(mBinding.logoLayout3, pvhSY, pvhSX).setDuration(600);
+            pvh_logo3 = ObjectAnimator.ofPropertyValuesHolder(mBinding.logoLayout3, pvhSY, pvhSX).setDuration(600);
             pvh_logo3.start();
 
-            new Handler().postDelayed(() -> mBinding.logoLayout1.setVisibility(View.GONE), 300);
+            mHandler1.postDelayed(ra1, 300);
+            mHandler2.postDelayed(ra2, 600);
+            mHandler3.postDelayed(ra3, 700);
+            mHandler4.postDelayed(ra4, 900);
 
-            new Handler().postDelayed(() -> {
-                mBinding.setFlashInfo1(mBinding.getFlashInfo2());
-                pvhSX = PropertyValuesHolder.ofFloat("scaleX", 0, 1);
-                pvhSY = PropertyValuesHolder.ofFloat("scaleY", 0, 1);
-                pvh_logo1 = ObjectAnimator.ofPropertyValuesHolder(mBinding.logoLayout1, pvhSY, pvhSX).setDuration(100);
-                pvh_logo1.start();
-            }, 600);
-
-            new Handler().postDelayed(() -> {
-                mBinding.logoLayout2.setVisibility(View.GONE);
-                mBinding.logoLayout1.setVisibility(View.VISIBLE);
-                pvhTX = PropertyValuesHolder.ofFloat("translationX", -DisplayUtils.dip2px(30), 0);
-                pvh_logo2 = ObjectAnimator.ofPropertyValuesHolder(mBinding.logoLayout2, pvhTX).setDuration(200);
-                pvh_logo2.start();
-            }, 700);
-
-            new Handler().postDelayed(() -> {
-                mBinding.setFlashInfo2(mBinding.getFlashInfo3());
-                mBinding.logoLayout2.setVisibility(View.VISIBLE);
-                mBinding.setFlashInfo3(MineApp.sFlashInfoList.get(index));
-            }, 900);
             handler.postDelayed(ra, time);
         }
     };
@@ -105,11 +131,29 @@ public class FlashChat extends LinearLayout {
 
         RxView.clicks(mBinding.flashLayout)
                 .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(o -> new FlashChatPW(mBinding.getRoot(), mBinding.getFlashInfo1()));
+                .subscribe(o -> {
+                    MineApp.sFlashInfo = mBinding.getFlashInfo1();
+                    new FlashChatPW(mBinding.getRoot());
+                });
     }
 
     public void initData(RxAppCompatActivity activity) {
         maxSize = MineApp.sFlashInfoList.size();
+        mBinding.logoLayout2.setVisibility(View.VISIBLE);
+        mBinding.logoLayout3.setVisibility(View.VISIBLE);
+        index = 2;
+        if (pvh_logo1 != null)
+            pvh_logo1.cancel();
+        if (pvh_logo2 != null)
+            pvh_logo2.cancel();
+        if (pvh_logo3 != null)
+            pvh_logo3.cancel();
+        handler.removeCallbacks(ra);
+        mHandler1.removeCallbacks(ra1);
+        mHandler2.removeCallbacks(ra2);
+        mHandler3.removeCallbacks(ra3);
+        mHandler4.removeCallbacks(ra4);
+
         if (maxSize == 1) {
             mBinding.setFlashInfo1(MineApp.sFlashInfoList.get(0));
             mBinding.logoLayout2.setVisibility(View.GONE);
@@ -127,10 +171,9 @@ public class FlashChat extends LinearLayout {
         if (MineApp.mineInfo.getMemberType() == 1 && !TextUtils.equals(PreferenceUtil.readStringValue(activity, "flashChatTime" + BaseActivity.userId), DateUtil.getNow(DateUtil.yyyy_MM_dd))) {
             new Handler().postDelayed(() -> {
                 PreferenceUtil.saveStringValue(activity, "flashChatTime" + BaseActivity.userId, DateUtil.getNow(DateUtil.yyyy_MM_dd));
-                Intent data = new Intent("lobster_flashChat");
-                data.putExtra("flashInfo", mBinding.getFlashInfo1());
-                activity.sendBroadcast(data);
-            }, 10 * 1000);
+                MineApp.sFlashInfo = mBinding.getFlashInfo1();
+                activity.sendBroadcast(new Intent("lobster_flashChat"));
+            }, 3 * 60 * 1000);
         }
     }
 

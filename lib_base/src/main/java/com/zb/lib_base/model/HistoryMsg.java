@@ -30,9 +30,6 @@ public class HistoryMsg extends RealmObject {
     boolean showTime = false;
     String theChatUk = "";        //两个人的Id拼接起来，小的在前面  #12#101#
 
-    int myChatCount = 0;
-    int otherChatCount = 0;
-
     public long getFromId() {
         return fromId;
     }
@@ -186,22 +183,6 @@ public class HistoryMsg extends RealmObject {
         return this;
     }
 
-    public int getMyChatCount() {
-        return myChatCount;
-    }
-
-    public void setMyChatCount(int myChatCount) {
-        this.myChatCount = myChatCount;
-    }
-
-    public int getOtherChatCount() {
-        return otherChatCount;
-    }
-
-    public void setOtherChatCount(int otherChatCount) {
-        this.otherChatCount = otherChatCount;
-    }
-
     public static HistoryMsg createHistory(String msgId, CustomMessageBody body, long otherUserId, int msgChannelType, long driftBottleId) {
         HistoryMsg historyMsg = new HistoryMsg();
         historyMsg.setThirdMessageId(msgId);
@@ -219,6 +200,7 @@ public class HistoryMsg extends RealmObject {
         historyMsg.setMainUserId(BaseActivity.userId);
         return historyMsg;
     }
+
     public static HistoryMsg createHistoryForFlash(String msgId, CustomMessageBody body, long otherUserId, int msgChannelType, long flashTalkId) {
         HistoryMsg historyMsg = new HistoryMsg();
         historyMsg.setThirdMessageId(msgId);
@@ -255,7 +237,7 @@ public class HistoryMsg extends RealmObject {
         return historyMsg;
     }
 
-    public static HistoryMsg createHistoryForPrivate(PrivateMsg privateMsg, long otherUserId) {
+    public static HistoryMsg createHistoryForPrivate(PrivateMsg privateMsg, long otherUserId, long flashTalkId) {
         HistoryMsg historyMsg = new HistoryMsg();
         historyMsg.setThirdMessageId(privateMsg.getThirdMessageId());
         historyMsg.setMainUserId(BaseActivity.userId);
@@ -269,7 +251,7 @@ public class HistoryMsg extends RealmObject {
         historyMsg.setResLink(privateMsg.getResLink());
         historyMsg.setOtherUserId(otherUserId);
         historyMsg.setMsgChannelType(3);
-        historyMsg.setFlashTalkId(privateMsg.getFlashTalkId());
+        historyMsg.setFlashTalkId(flashTalkId);
         return historyMsg;
     }
 }

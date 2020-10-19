@@ -60,4 +60,27 @@ public class HistoryMsgDb extends BaseDao {
         }
         commitTransaction();
     }
+
+    public int getMyChatCount(long otherUserId,  long flashTalkId){
+        beginTransaction();
+        RealmResults<HistoryMsg> results =  realm.where(HistoryMsg.class). equalTo("otherUserId", otherUserId).
+                equalTo("msgChannelType", 3).
+                equalTo("flashTalkId", flashTalkId).
+                equalTo("fromId", BaseActivity.userId).
+                equalTo("mainUserId", BaseActivity.userId).findAllSorted("creationDate", Sort.DESCENDING);
+        commitTransaction();
+
+        return results.size();
+    }
+
+    public int getOtherChatCount(long otherUserId,  long flashTalkId){
+        beginTransaction();
+        RealmResults<HistoryMsg> results =  realm.where(HistoryMsg.class). equalTo("otherUserId", otherUserId).
+                equalTo("msgChannelType", 3).
+                equalTo("flashTalkId", flashTalkId).
+                equalTo("fromId", otherUserId).
+                equalTo("mainUserId", BaseActivity.userId).findAllSorted("creationDate", Sort.DESCENDING);
+        commitTransaction();
+        return results.size();
+    }
 }

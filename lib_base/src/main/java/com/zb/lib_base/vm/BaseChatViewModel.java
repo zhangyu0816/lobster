@@ -213,11 +213,13 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         }
         pagerNo++;
         List<HistoryMsg> tempList = HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize);
-        Collections.reverse(tempList);
-        updateTime();
-        historyMsgList.addAll(0, tempList);
-        adapter.notifyItemRangeChanged(0, tempList.size());
         updateAll = tempList.size() == 0;
+        if (!updateAll) {
+            Collections.reverse(tempList);
+            historyMsgList.addAll(0, tempList);
+            updateTime();
+            adapter.notifyDataSetChanged();
+        }
         mBinding.refresh.finishRefresh();
     }
 
@@ -230,9 +232,9 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         } else if (msgChannelType == 2) {
             isLockImage = MineApp.mineInfo.getMemberType() == 1;
         } else if (msgChannelType == 3) {
-            myChatCount = Math.min(historyMsgList.size() == 0 ? 0 : historyMsgList.get(0).getMyChatCount(), 10);
-            otherChatCount = Math.min(historyMsgList.size() == 0 ? 0 : historyMsgList.get(0).getOtherChatCount(), 10);
-            isLockImage = (myChatCount + otherChatCount) != 20;
+            myChatCount = Math.min(HistoryMsgDb.getInstance().getMyChatCount(otherUserId, flashTalkId), 10);
+            otherChatCount = Math.min(HistoryMsgDb.getInstance().getOtherChatCount(otherUserId, flashTalkId), 10);
+            isLockImage = (myChatCount + otherChatCount) < 20;
         }
         mBinding.setIsLockImage(isLockImage);
 
@@ -271,7 +273,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
             if (!isLockImage)
                 ActivityUtils.getCardMemberDetail(otherUserId, false);
             else
-                SCToastUtil.showToast(activity,"双方各发10句可以解锁头像哦",true);
+                SCToastUtil.showToast(activity, "每人发10句可以解锁资料哦～", true);
         }
     }
 
@@ -425,15 +427,20 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                 ImUtils.getInstance().setChat(true, activity);
 
                 if (msgChannelType == 1 || msgChannelType == 3) {
-                    RequestOptions cropOptions = new RequestOptions();
-                    MultiTransformation<Bitmap> multiTransformation = new MultiTransformation<>(new BlurTransformation());
-                    cropOptions.transform(multiTransformation);
-                    Glide.with(activity).asBitmap().load(memberInfo.getSingleImage()).apply(cropOptions).into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                            mBinding.ivBg.setImageBitmap(resource);
-                        }
-                    });
+                    new Handler().postDelayed(() -> {
+                        RequestOptions cropOptions = new RequestOptions();
+                        MultiTransformation<Bitmap> multiTransformation = new MultiTransformation<>(new BlurTransformation());
+                        cropOptions.transform(multiTransformation);
+                        Glide.with(activity).asBitmap().load(memberInfo.getSingleImage()).apply(cropOptions).into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                mBinding.ivBg.setImageBitmap(resource);
+                            }
+                        });
+                    }, 300);
+                    if (msgChannelType == 3) {
+                        setMemberUI();
+                    }
                     new Thread(() -> {
                         if (msgChannelType == 1)
                             historyMsgList(1);
@@ -638,7 +645,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
             @Override
             public void onNext(List<PrivateMsg> o) {
                 for (PrivateMsg privateMsg : o) {
-                    HistoryMsgDb.getInstance().saveHistoryMsg(HistoryMsg.createHistoryForPrivate(privateMsg, otherUserId));
+                    HistoryMsgDb.getInstance().saveHistoryMsg(HistoryMsg.createHistoryForPrivate(privateMsg, otherUserId, flashTalkId));
                 }
                 if (historyMsgId == 0)
                     historyMsgId = o.get(0).getId();
@@ -654,7 +661,13 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                     realmResults = HistoryMsgDb.getInstance().getRealmResults(otherUserId, msgChannelType, driftBottleId, flashTalkId);
                     historyMsgList.addAll(HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize));
                     Collections.reverse(historyMsgList);
+                    myChatCount = Math.min(HistoryMsgDb.getInstance().getMyChatCount(otherUserId, flashTalkId), 10);
+                    otherChatCount = Math.min(HistoryMsgDb.getInstance().getOtherChatCount(otherUserId, flashTalkId), 10);
+                    isLockImage = (myChatCount + otherChatCount) < 20;
                     updateTime();
+                    if (msgChannelType == 3) {
+                        setMemberUI();
+                    }
                     adapter.notifyDataSetChanged();
                     mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
 
@@ -702,7 +715,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                                 chatList.setNick(memberInfo.getNick());
                                 chatList.setImage(memberInfo.getImage());
                                 chatList.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
-                                chatList.setStanza("");
+                                chatList.setStanza("每人发10句可以解锁资料哦~");
                                 chatList.setMsgType(1);
                                 chatList.setNoReadNum(0);
                                 chatList.setPublicTag("");
@@ -719,7 +732,6 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                                 data.putExtra("updateImage", false);
                                 data.putExtra("flashTalkId", flashTalkId);
                                 activity.sendBroadcast(data);
-                                setMemberUI();
                             }
                         });
                     }
@@ -769,8 +781,8 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         historyMsg.setMainUserId(BaseActivity.userId);
         historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
         historyMsg.setMsgType(1000);
-        historyMsg.setShowTime(true);
-        historyMsgList.add(historyMsg);
+        historyMsg.setShowTime(historyMsgList.size() == 0);
+        historyMsgList.add(0, historyMsg);
         adapter.notifyDataSetChanged();
     }
 
@@ -989,12 +1001,6 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                         adapter.notifyItemChanged(adapter.getItemCount() - 1);
                         mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
                     }
-//                    ChatListDb.getInstance().updateMember(otherUserId, memberInfo == null ? "" : memberInfo.getImage(), memberInfo == null ? "" : memberInfo.getNick(), otherUserId == BaseActivity.dynUserId ? 5 : 4,
-//                            () -> new Handler().postDelayed(() -> {
-//                                Intent data = new Intent("lobster_updateChat");
-//                                data.putExtra("userId", otherUserId);
-//                                activity.sendBroadcast(data);
-//                            }, 500));
                 }
             };
         else if (msgChannelType == 2)
@@ -1021,13 +1027,6 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                         adapter.notifyItemChanged(adapter.getItemCount() - 1);
                         mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
                     }
-
-//                    BottleCacheDb.getInstance().updateBottleCache(driftBottleId, memberInfo == null ? "" : memberInfo.getImage(), memberInfo == null ? "" : memberInfo.getNick(), () -> new Handler().postDelayed(() -> {
-//                        // 更新会话列表
-//                        Intent data = new Intent("lobster_singleBottleCache");
-//                        data.putExtra("driftBottleId", body.getDriftBottleId());
-//                        activity.sendBroadcast(data);
-//                    }, 500));
                 }
             };
         else if (msgChannelType == 3)
@@ -1037,11 +1036,35 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                     CustomMessageBody body = (CustomMessageBody) intent.getSerializableExtra("customMessageBody");
                     String msgId = intent.getStringExtra("msgId");
                     HistoryMsg historyMsg = HistoryMsg.createHistoryForFlash(msgId, body, otherUserId, msgChannelType, flashTalkId);
-                    otherChatCount++;
-                    historyMsg.setOtherChatCount(otherChatCount);
                     HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
-                    isLockImage = (myChatCount + otherChatCount) != 20;
+                    otherChatCount++;
+                    isLockImage = (myChatCount + otherChatCount) < 20;
                     mBinding.setIsLockImage(isLockImage);
+                    boolean updateAll = (myChatCount + otherChatCount) == 20;
+                    ChatList chatList = new ChatList();
+                    chatList.setUserId(otherUserId);
+                    chatList.setNick(memberInfo.getNick());
+                    chatList.setImage(memberInfo.getImage());
+                    chatList.setCreationDate(historyMsg.getCreationDate());
+                    chatList.setStanza(historyMsg.getStanza());
+                    chatList.setMsgType(historyMsg.getMsgType());
+                    chatList.setNoReadNum(0);
+                    chatList.setPublicTag("");
+                    chatList.setEffectType(1);
+                    chatList.setAuthType(1);
+                    chatList.setChatType(6);
+                    chatList.setFlashTalkId(flashTalkId);
+                    chatList.setMyChatCount(myChatCount);
+                    chatList.setOtherChatCount(otherChatCount);
+                    chatList.setMainUserId(BaseActivity.userId);
+                    ChatListDb.getInstance().saveChatList(chatList);
+
+                    // 更新会话列表
+                    Intent data = new Intent("lobster_updateChat");
+                    data.putExtra("userId", otherUserId);
+                    data.putExtra("flashTalkId", flashTalkId);
+                    activity.sendBroadcast(data);
+
                     boolean hasId = false;
                     if (isNotice) {
                         for (HistoryMsg item : historyMsgList) {
@@ -1055,16 +1078,12 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                         historyMsgList.add(adapter.getItemCount(), historyMsg);
                     }
                     updateTime();
-                    adapter.notifyItemChanged(adapter.getItemCount() - 1);
+                    if (updateAll) {
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        adapter.notifyItemChanged(adapter.getItemCount() - 1);
+                    }
                     mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
-
-//                    ChatListDb.getInstance().updateMember(otherUserId, memberInfo == null ? "" : memberInfo.getImage(), memberInfo == null ? "" : memberInfo.getNick(), 6,
-//                            () -> new Handler().postDelayed(() -> {
-//                                Intent data = new Intent("lobster_updateChat");
-//                                data.putExtra("userId", otherUserId);
-//                                data.putExtra("flashTalkId", flashTalkId);
-//                                activity.sendBroadcast(data);
-//                            }, 500));
                 }
             };
 
@@ -1143,20 +1162,24 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         body.setFromId(BaseActivity.userId);
         body.setToId(otherUserId);
         HistoryMsg historyMsg;
-
+        boolean updateAll = false;
         if (msgChannelType == 3) {
             historyMsg = HistoryMsg.createHistoryForFlash(msgId, body, otherUserId, msgChannelType, flashTalkId);
             myChatCount++;
-            historyMsg.setMyChatCount(myChatCount);
-            isLockImage = (myChatCount + otherChatCount) != 20;
+            isLockImage = (myChatCount + otherChatCount) < 20;
+            updateAll = (myChatCount + otherChatCount) == 20;
             mBinding.setIsLockImage(isLockImage);
-        }else{
+        } else {
             historyMsg = HistoryMsg.createHistory(msgId, body, otherUserId, msgChannelType, driftBottleId);
         }
         HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
         historyMsgList.add(historyMsg);
         updateTime();
-        adapter.notifyItemChanged(adapter.getItemCount() - 1);
+        if (updateAll) {
+            adapter.notifyDataSetChanged();
+        } else {
+            adapter.notifyItemChanged(adapter.getItemCount() - 1);
+        }
         mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
 
         if (msgChannelType == 1) {

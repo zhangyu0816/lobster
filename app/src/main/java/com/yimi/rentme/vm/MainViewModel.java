@@ -41,7 +41,6 @@ import com.zb.lib_base.imcore.CustomMessageBody;
 import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.ContactNum;
-import com.zb.lib_base.model.FlashInfo;
 import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
@@ -170,9 +169,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                     noReadBottleNum(true);
 
                 } else if (body.getFlashTalkId() != 0) {
-                    HistoryMsgDb.getInstance().saveHistoryMsg(HistoryMsg.createHistory(msgId, body, otherUserId, 3, body.getFlashTalkId()));
-
-                    ChatListDb.getInstance().updateChatMsg(otherUserId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType(), new ChatListDb.CallBack() {
+                    int otherChatCount = Math.min(HistoryMsgDb.getInstance().getOtherChatCount(otherUserId, body.getFlashTalkId()), 10);
+                    ChatListDb.getInstance().updateChatMsg(otherUserId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType(), otherChatCount, new ChatListDb.CallBack() {
                         @Override
                         public void success() {
                             // 更新会话列表
@@ -201,7 +199,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                     } else {
                         HistoryMsgDb.getInstance().saveHistoryMsg(HistoryMsg.createHistory(msgId, body, otherUserId, 1, 0));
 
-                        ChatListDb.getInstance().updateChatMsg(otherUserId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType(), new ChatListDb.CallBack() {
+                        ChatListDb.getInstance().updateChatMsg(otherUserId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType(), 0, new ChatListDb.CallBack() {
                             @Override
                             public void success() {
                                 // 更新会话列表
@@ -270,8 +268,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         flashChatReceiver = new BaseReceiver(activity, "lobster_flashChat") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                FlashInfo flashInfo = (FlashInfo) intent.getSerializableExtra("flashInfo");
-                new FlashChatPW(mBinding.getRoot(), flashInfo);
+                new FlashChatPW(mBinding.getRoot());
             }
         };
 
@@ -479,9 +476,12 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onNext(List<ChatList> o) {
                 for (ChatList chatMsg : o) {
-                    chatMsg.setMainUserId(BaseActivity.userId);
-                    chatMsg.setChatType(6);
-                    ChatListDb.getInstance().saveChatList(chatMsg);
+                    int otherChatCount = Math.min(HistoryMsgDb.getInstance().getOtherChatCount(chatMsg.getUserId(), chatMsg.getFlashTalkId()), 10);
+                    if (!ChatListDb.getInstance().hasFlashChat(chatMsg, otherChatCount)) {
+                        chatMsg.setChatType(6);
+                        chatMsg.setOtherChatCount(chatMsg.getNoReadNum());
+                        ChatListDb.getInstance().saveChatList(chatMsg);
+                    }
                 }
                 flashChatList(pageNo + 1);
             }
@@ -658,7 +658,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
             @Override
             public void onNext(MemberInfo o) {
-                ChatList dbData = ChatListDb.getInstance().getChatMsg(otherUserId, body.getFlashTalkId() != 0 ? 6 : (otherUserId == BaseActivity.dynUserId ? 5 : 4));
                 ChatList chatList = new ChatList();
                 chatList.setUserId(otherUserId);
                 chatList.setNick(o.getNick());
@@ -666,13 +665,13 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 chatList.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
                 chatList.setStanza(body.getStanza());
                 chatList.setMsgType(body.getMsgType());
-                chatList.setNoReadNum(dbData == null ? 1 : dbData.getNoReadNum() + 1);
+                chatList.setNoReadNum(1);
                 chatList.setChatType(body.getFlashTalkId() != 0 ? 6 : (otherUserId == BaseActivity.dynUserId ? 5 : 4));
                 chatList.setPublicTag("");
                 chatList.setEffectType(1);
                 chatList.setAuthType(1);
                 chatList.setFlashTalkId(body.getFlashTalkId());
-                if (chatList.getMsgType() == 6)
+                if (body.getFlashTalkId() != 0)
                     chatList.setOtherChatCount(1);
                 chatList.setMainUserId(BaseActivity.userId);
                 ChatListDb.getInstance().saveChatList(chatList);

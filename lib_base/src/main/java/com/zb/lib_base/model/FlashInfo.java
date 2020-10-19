@@ -15,6 +15,7 @@ public class FlashInfo extends BaseObservable implements Serializable {
     private String birthday = "";    //生日
     private int age;        //年龄
     private String serviceTags = "";
+    private int sex;
 
     @Bindable
     public long getUserId() {
@@ -26,7 +27,8 @@ public class FlashInfo extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.userId);
     }
 
-    @Bindable public String getNick() {
+    @Bindable
+    public String getNick() {
         return nick;
     }
 
@@ -35,7 +37,8 @@ public class FlashInfo extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.nick);
     }
 
-    @Bindable public String getSingleImage() {
+    @Bindable
+    public String getSingleImage() {
         return singleImage;
     }
 
@@ -44,7 +47,8 @@ public class FlashInfo extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.singleImage);
     }
 
-    @Bindable public String getLastJoinTime() {
+    @Bindable
+    public String getLastJoinTime() {
         return lastJoinTime;
     }
 
@@ -53,7 +57,8 @@ public class FlashInfo extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.lastJoinTime);
     }
 
-    @Bindable public String getBirthday() {
+    @Bindable
+    public String getBirthday() {
         return birthday;
     }
 
@@ -62,7 +67,8 @@ public class FlashInfo extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.birthday);
     }
 
-    @Bindable public int getAge() {
+    @Bindable
+    public int getAge() {
         return age;
     }
 
@@ -71,12 +77,23 @@ public class FlashInfo extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.age);
     }
 
-    @Bindable public String getServiceTags() {
+    @Bindable
+    public String getServiceTags() {
         return serviceTags;
     }
 
     public void setServiceTags(String serviceTags) {
         this.serviceTags = serviceTags;
         notifyPropertyChanged(BR.serviceTags);
+    }
+
+    @Bindable
+    public int getSex() {
+        return sex;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
+        notifyPropertyChanged(BR.sex);
     }
 }

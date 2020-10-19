@@ -1,5 +1,7 @@
 package com.zb.lib_base.db;
 
+import android.text.TextUtils;
+
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.model.ChatList;
 
@@ -67,7 +69,7 @@ public class ChatListDb extends BaseDao {
     }
 
 
-    public void updateChatMsg(long otherUserId, String creationDate, String stanza, int msgType, CallBack callBack) {
+    public void updateChatMsg(long otherUserId, String creationDate, String stanza, int msgType, int otherChatCount, CallBack callBack) {
         beginTransaction();
         ChatList chatList = realm.where(ChatList.class).equalTo("userId", otherUserId).equalTo("mainUserId", BaseActivity.userId).findFirst();
         if (chatList == null) {
@@ -77,11 +79,25 @@ public class ChatListDb extends BaseDao {
             chatList.setStanza(stanza);
             chatList.setMsgType(msgType);
             chatList.setNoReadNum(chatList.getNoReadNum() + 1);
-            if (chatList.getMsgType() == 6)
-                chatList.setOtherChatCount(chatList.getOtherChatCount() + 1);
+            if (chatList.getChatType() == 6)
+                chatList.setOtherChatCount(otherChatCount + chatList.getNoReadNum());
             callBack.success();
         }
         commitTransaction();
+    }
+
+    public boolean hasFlashChat(ChatList chatMsg, int otherChatCount) {
+        beginTransaction();
+        ChatList chatList = realm.where(ChatList.class).equalTo("userId", chatMsg.getUserId()).equalTo("mainUserId", BaseActivity.userId).equalTo("flashTalkId", chatMsg.getFlashTalkId()).findFirst();
+        if (chatList != null) {
+            chatList.setCreationDate(chatMsg.getCreationDate());
+            chatList.setStanza(chatMsg.getStanza());
+            chatList.setMsgType(chatMsg.getMsgType());
+            chatList.setNoReadNum(chatMsg.getNoReadNum());
+            chatList.setOtherChatCount(otherChatCount + chatMsg.getNoReadNum());
+        }
+        commitTransaction();
+        return chatList != null;
     }
 
     public void updateMember(long otherUserId, String image, String nick, int chatType, CallBack callBack) {
@@ -93,7 +109,10 @@ public class ChatListDb extends BaseDao {
             if (!nick.isEmpty())
                 chatList.setNick(nick);
             chatList.setNoReadNum(0);
-            callBack.success();
+            if (TextUtils.equals("每人发10句可以解锁资料哦~", chatList.getStanza()))
+                callBack.fail();
+            else
+                callBack.success();
         } else {
             callBack.fail();
         }

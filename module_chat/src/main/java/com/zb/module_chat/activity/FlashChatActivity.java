@@ -1,5 +1,6 @@
 package com.zb.module_chat.activity;
 
+import android.content.Intent;
 import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
@@ -33,6 +34,14 @@ public class FlashChatActivity extends ChatBaseActivity {
         viewModel.isNotice = isNotice;
         viewModel.msgChannelType = 3;
         viewModel.setBinding(mBinding);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1001 && resultCode == 1) {
+            viewModel.uploadImage(data.getStringExtra("fileName"));
+        }
     }
 
     @Override

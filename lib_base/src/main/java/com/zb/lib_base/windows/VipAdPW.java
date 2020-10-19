@@ -1,6 +1,7 @@
 package com.zb.lib_base.windows;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +68,7 @@ public class VipAdPW extends BasePopupWindow {
         if (type == 1) {
             binding.setTitle("超级曝光");
             binding.setContent("增加10倍曝光度，让更多人先发现你");
-            binding.setMyHead(MineApp.mineInfo.getImage());
+            binding.setMyHead(MineApp.mineInfo.getImage().replace("YM0000", "240X240"));
             binding.setOtherHead("empty_icon");
             binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
         } else if (type == 2) {
@@ -79,19 +80,19 @@ public class VipAdPW extends BasePopupWindow {
         } else if (type == 3) {
             binding.setTitle("超级喜欢");
             binding.setContent("每天10个超级喜欢，开通专属私信通道");
-            binding.setMyHead(MineApp.mineInfo.getImage());
+            binding.setMyHead(MineApp.mineInfo.getImage().replace("YM0000", "240X240"));
             binding.setOtherHead(otherImage.isEmpty() ? (sex == 0 ? "vip_ad_3_logo_male" : "vip_ad_3_logo") : otherImage);
             binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
         } else if (type == 4) {
             binding.setTitle("立即查看谁喜欢我？");
             binding.setContent("第一时间查看喜欢你的人！立即匹配哦～");
-            binding.setMyHead(MineApp.mineInfo.getImage());
+            binding.setMyHead(MineApp.mineInfo.getImage().replace("YM0000", "240X240"));
             binding.setOtherHead("empty_icon");
             binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_4_male : R.mipmap.vip_ad_4);
         } else if (type == 5) {
             binding.setTitle("位置漫游");
             binding.setContent("让你随时随地认识全世界的朋友！");
-            binding.setMyHead(MineApp.mineInfo.getImage());
+            binding.setMyHead(MineApp.mineInfo.getImage().replace("YM0000", "240X240"));
             binding.setOtherHead("empty_icon");
             binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_5_male : R.mipmap.vip_ad_5);
         } else if (type == 6) {
@@ -103,7 +104,7 @@ public class VipAdPW extends BasePopupWindow {
         } else if (type == 7) {
             binding.setTitle("立即匹配闪聊");
             binding.setContent("每日五次机会，立即匹配实时聊天");
-            binding.setMyHead(MineApp.mineInfo.getImage());
+            binding.setMyHead(MineApp.mineInfo.getImage().replace("YM0000", "240X240"));
             binding.setOtherHead("empty_icon");
             binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
         }
@@ -194,6 +195,9 @@ public class VipAdPW extends BasePopupWindow {
         super.cancel(view);
         binding.banner.releaseBanner();
         dismiss();
+        if (type == 7) {
+            activity.sendBroadcast(new Intent("lobster_flashChat"));
+        }
     }
 
     private void openedMemberPriceList() {

@@ -64,7 +64,7 @@ public class ObjectUtils {
     }
 
     public static int getVipIntroHeight() {
-        return (int) (MineApp.W * 2196 / 1125f);
+        return (int) (MineApp.W * 2850 / 1125f);
     }
 
     public static int getVipIntroBgHeight(float scale) {
@@ -223,6 +223,8 @@ public class ObjectUtils {
             }
             assert object != null;
             return object.has("content") ? object.optString("content") : "[你有新的动态消息]";
+        } else if (msgType == 1000) {
+            return "每人发10句可以解锁资料哦~";
         } else
             return "[暂不支付该类型消息]";
     }

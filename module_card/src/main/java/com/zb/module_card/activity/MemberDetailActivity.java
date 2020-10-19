@@ -24,7 +24,7 @@ public class MemberDetailActivity extends CardBaseActivity {
 
     @Override
     public void initUI() {
-        MineApp.activityMap.put("MemberDetailActivity", new MemberDetailActivity());
+        MineApp.activityMap.put("MemberDetailActivity", activity);
         viewModel = new MemberDetailViewModel();
         viewModel.otherUserId = userId;
         viewModel.showLike = showLike;

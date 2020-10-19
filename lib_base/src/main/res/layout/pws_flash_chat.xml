@@ -8,8 +8,6 @@
 
         <import type="com.zb.lib_base.utils.DateUtil" />
 
-        <import type="com.zb.lib_base.app.MineApp" />
-
         <variable
             name="pw"
             type="com.zb.lib_base.windows.FlashChatPW" />
@@ -90,7 +88,7 @@
 
                 <ImageView
                     defaultRes="@{ObjectUtils.getDefaultRes()}"
-                    imageUrl="@{flashInfo.singleImage}"
+                    imageUrl='@{flashInfo.singleImage.replace("YM0000","240X240")}'
                     isBlur="@{true}"
                     isCircle="@{true}"
                     viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(290)}"
@@ -141,13 +139,13 @@
                 android:layout_above="@+id/btn_chat"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="38dp"
-                android:text="@{String.format(@string/wait_chat,MineApp.mineInfo.sex==0?@string/sex_ta_1:@string/sex_ta_0)}"
+                android:text="@{String.format(@string/wait_chat,flashInfo.sex==0?@string/sex_ta_0:@string/sex_ta_1)}"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/btn_chat"
-                onClickDelayed="@{pw::toChat}"
+                android:onClick="@{pw::toChat}"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_alignParentBottom="true"

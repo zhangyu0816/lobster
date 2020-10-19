@@ -250,13 +250,25 @@
                     android:layout_height="wrap_content">
 
                     <com.zb.lib_base.views.RoundBlurImage
-                        isBlur="@{viewModel.isLockImage}"
+                        isBlur="@{true}"
                         rbUrl='@{viewModel.memberInfo.singleImage.replace("YM0000","430X430")}'
                         roundSize="@{5}"
                         viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
                         viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
                         android:layout_width="100dp"
-                        android:layout_height="100dp" />
+                        android:layout_height="100dp"
+                        android:visibility="@{viewModel.isLockImage?View.VISIBLE:View.GONE}" />
+
+                    <ImageView
+                        defaultRes="@{ObjectUtils.getDefaultRes()}"
+                        imageUrl='@{viewModel.memberInfo.singleImage.replace("YM0000","430X430")}'
+                        isRound="@{true}"
+                        roundSize="@{5}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:visibility="@{viewModel.isLockImage?View.GONE:View.VISIBLE}" />
 
                     <ImageView
                         android:id="@+id/iv_bg"
@@ -320,7 +332,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="双方各发"
+                    android:text="每人发"
                     android:textColor="@color/black_4d4"
                     android:textSize="12sp" />
 
@@ -334,7 +346,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="句可以解锁头像哦～"
+                    android:text="句可以解锁资料哦～"
                     android:textColor="@color/black_4d4"
                     android:textSize="12sp" />
             </LinearLayout>

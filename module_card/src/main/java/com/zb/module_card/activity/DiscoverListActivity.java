@@ -25,7 +25,7 @@ public class DiscoverListActivity extends CardBaseActivity {
 
     @Override
     public void initUI() {
-        MineApp.activityMap.put("DiscoverListActivity", new DiscoverListActivity());
+        MineApp.activityMap.put("DiscoverListActivity", activity);
         DiscoverListViewModel viewModel = new DiscoverListViewModel();
         viewModel.otherUserId = userId;
         viewModel.memberInfo = memberInfo;

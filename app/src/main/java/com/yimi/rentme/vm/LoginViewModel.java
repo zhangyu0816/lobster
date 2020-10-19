@@ -90,6 +90,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
+        MineApp.activityMap.put("LoginActivity", activity);
         for (int i = 0; i < 6; i++) {
             moreImageList.add("");
         }
@@ -126,6 +127,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             MineApp.registerInfo = new RegisterInfo();
             timer.cancel();
             passErrorCount = 0;
+            MineApp.removeActivity(MineApp.activityMap.get("LoginActivity"));
             activity.finish();
         });
 

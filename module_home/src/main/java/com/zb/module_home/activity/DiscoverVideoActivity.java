@@ -35,7 +35,7 @@ public class DiscoverVideoActivity extends BaseActivity {
 
     @Override
     public void initUI() {
-        MineApp.activityMap.put("DiscoverVideoActivity", new DiscoverVideoActivity());
+        MineApp.activityMap.put("DiscoverVideoActivity", activity);
         viewModel = new DiscoverVideoViewModel();
         viewModel.friendDynId = friendDynId;
         viewModel.setBinding(mBinding);
