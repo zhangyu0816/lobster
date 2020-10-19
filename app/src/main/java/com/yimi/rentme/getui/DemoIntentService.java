@@ -9,10 +9,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -167,27 +165,6 @@ public class DemoIntentService extends GTIntentService {
             }
 
         }
-
-    }
-
-    private void appSound(Context context) {
-        // 播放声音
-        MediaPlayer mPlayer = MediaPlayer.create(context, R.raw.msn);
-        try {
-            if (mPlayer != null) {
-                mPlayer.stop();
-                mPlayer.prepare();
-                mPlayer.start();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        new Handler().postDelayed(() -> {
-            if (mPlayer != null) {
-                mPlayer.stop();
-                mPlayer.release();//释放资源
-            }
-        }, 500);
     }
 
     @Override

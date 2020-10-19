@@ -438,7 +438,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                             }
                         });
                     }, 300);
-                    if (msgChannelType == 3) {
+                    if (isLockImage) {
                         setMemberUI();
                     }
                     new Thread(() -> {
@@ -665,9 +665,8 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                     otherChatCount = Math.min(HistoryMsgDb.getInstance().getOtherChatCount(otherUserId, flashTalkId), 10);
                     isLockImage = (myChatCount + otherChatCount) < 20;
                     updateTime();
-                    if (msgChannelType == 3) {
+                    if (isLockImage)
                         setMemberUI();
-                    }
                     adapter.notifyDataSetChanged();
                     mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
 

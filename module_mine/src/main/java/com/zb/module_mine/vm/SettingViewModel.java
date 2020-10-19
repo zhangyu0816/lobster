@@ -115,6 +115,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
 
     @Override
     public void toRealName(View view) {
+        if (mBinding == null) return;
         if (mBinding.getIsChecked() == -1 || mBinding.getIsChecked() == 2)
             ActivityUtils.getMineRealName();
         else if (mBinding.getIsChecked() == 0) {

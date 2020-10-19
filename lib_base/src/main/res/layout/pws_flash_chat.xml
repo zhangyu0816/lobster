@@ -77,6 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/iv_back"
+                android:layout_marginTop="15dp"
                 android:layout_centerHorizontal="true">
 
                 <View
@@ -125,6 +126,7 @@
                 tools:text="租我，29" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/service_list"
                 adapter="@{adapter}"
                 recyclerType="@{5}"
                 android:layout_width="wrap_content"
@@ -135,10 +137,12 @@
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_above="@+id/btn_chat"
+                android:layout_below="@+id/service_list"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="38dp"
+                android:gravity="center"
                 android:text="@{String.format(@string/wait_chat,flashInfo.sex==0?@string/sex_ta_0:@string/sex_ta_1)}"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
@@ -146,11 +150,10 @@
             <TextView
                 android:id="@+id/btn_chat"
                 android:onClick="@{pw::toChat}"
-                android:layout_width="match_parent"
+                android:layout_width="240dp"
                 android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/gradient_purple_6d5_ae7"
                 android:gravity="center"
