@@ -507,25 +507,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
 
                     if (historyMsgList.size() > 0) {
                         HistoryMsg historyMsg = historyMsgList.get(historyMsgList.size() - 1);
-                        ChatList chatList = new ChatList();
-                        chatList.setUserId(otherUserId);
-                        chatList.setNick(memberInfo.getNick());
-                        chatList.setImage(memberInfo.getImage());
-                        chatList.setCreationDate(historyMsg.getCreationDate());
-                        chatList.setStanza(historyMsg.getStanza());
-                        chatList.setMsgType(historyMsg.getMsgType());
-                        chatList.setNoReadNum(0);
-                        chatList.setPublicTag("");
-                        chatList.setEffectType(1);
-                        chatList.setAuthType(1);
-                        chatList.setChatType(otherUserId == BaseActivity.dynUserId ? 5 : 4);
-                        chatList.setMainUserId(BaseActivity.userId);
-                        ChatListDb.getInstance().saveChatList(chatList);
-                        Intent data = new Intent("lobster_updateChat");
-                        data.putExtra("userId", otherUserId);
-                        data.putExtra("updateImage", true);
-                        activity.sendBroadcast(data);
-                        activity.sendBroadcast(new Intent("lobster_unReadCount"));
+                        setChatList(historyMsg, otherUserId == BaseActivity.dynUserId ? 5 : 4, true);
                     } else {
                         ChatListDb.getInstance().updateMember(otherUserId, memberInfo.getImage(), memberInfo.getNick(), otherUserId == BaseActivity.dynUserId ? 5 : 4, new ChatListDb.CallBack() {
                             @Override
@@ -672,29 +654,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
 
                     if (historyMsgList.size() > 0) {
                         HistoryMsg historyMsg = historyMsgList.get(historyMsgList.size() - 1);
-                        ChatList chatList = new ChatList();
-                        chatList.setUserId(otherUserId);
-                        chatList.setNick(memberInfo.getNick());
-                        chatList.setImage(memberInfo.getImage());
-                        chatList.setCreationDate(historyMsg.getCreationDate());
-                        chatList.setStanza(historyMsg.getStanza());
-                        chatList.setMsgType(historyMsg.getMsgType());
-                        chatList.setNoReadNum(0);
-                        chatList.setPublicTag("");
-                        chatList.setEffectType(1);
-                        chatList.setAuthType(1);
-                        chatList.setChatType(6);
-                        chatList.setFlashTalkId(flashTalkId);
-                        chatList.setMyChatCount(myChatCount);
-                        chatList.setOtherChatCount(otherChatCount);
-                        chatList.setMainUserId(BaseActivity.userId);
-                        ChatListDb.getInstance().saveChatList(chatList);
-                        Intent data = new Intent("lobster_updateChat");
-                        data.putExtra("userId", otherUserId);
-                        data.putExtra("updateImage", true);
-                        data.putExtra("flashTalkId", flashTalkId);
-                        activity.sendBroadcast(data);
-                        activity.sendBroadcast(new Intent("lobster_unReadCount"));
+                        setChatList(historyMsg, 6, true);
                     } else {
                         ChatListDb.getInstance().updateMember(otherUserId, memberInfo.getImage(), memberInfo.getNick(), 6, new ChatListDb.CallBack() {
                             @Override
@@ -709,28 +669,11 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
 
                             @Override
                             public void fail() {
-                                ChatList chatList = new ChatList();
-                                chatList.setUserId(otherUserId);
-                                chatList.setNick(memberInfo.getNick());
-                                chatList.setImage(memberInfo.getImage());
-                                chatList.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
-                                chatList.setStanza("每人发10句可以解锁资料哦~");
-                                chatList.setMsgType(1);
-                                chatList.setNoReadNum(0);
-                                chatList.setPublicTag("");
-                                chatList.setEffectType(1);
-                                chatList.setAuthType(1);
-                                chatList.setChatType(6);
-                                chatList.setFlashTalkId(flashTalkId);
-                                chatList.setMyChatCount(myChatCount);
-                                chatList.setOtherChatCount(otherChatCount);
-                                chatList.setMainUserId(BaseActivity.userId);
-                                ChatListDb.getInstance().saveChatList(chatList);
-                                Intent data = new Intent("lobster_updateChat");
-                                data.putExtra("userId", otherUserId);
-                                data.putExtra("updateImage", false);
-                                data.putExtra("flashTalkId", flashTalkId);
-                                activity.sendBroadcast(data);
+                                HistoryMsg historyMsg = new HistoryMsg();
+                                historyMsg.setStanza("每人发10句可以解锁资料哦~");
+                                historyMsg.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
+                                historyMsg.setMsgType(1);
+                                setChatList(historyMsg, 6, false);
                             }
                         });
                     }
@@ -985,6 +928,28 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                     String msgId = intent.getStringExtra("msgId");
                     HistoryMsg historyMsg = HistoryMsg.createHistory(msgId, body, otherUserId, 1, 0);
                     HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
+
+                    ChatListDb.getInstance().updateMember(otherUserId, memberInfo == null ? "" : memberInfo.getImage(), memberInfo == null ? "" : memberInfo.getNick(), otherUserId == BaseActivity.dynUserId ? 5 : 4,
+                            new ChatListDb.CallBack() {
+                                @Override
+                                public void success() {
+                                    new Handler().postDelayed(() -> {
+                                        Intent data = new Intent("lobster_updateChat");
+                                        data.putExtra("userId", otherUserId);
+                                        activity.sendBroadcast(data);
+                                    }, 500);
+                                }
+
+                                @Override
+                                public void fail() {
+                                    if (memberInfo == null) {
+                                        getOtherInfo(historyMsg, 4);
+                                    } else {
+                                        setChatList(historyMsg, 4, false);
+                                    }
+                                }
+                            });
+                    setChatList(historyMsg, 4, true);
                     boolean hasId = false;
                     if (isNotice) {
                         for (HistoryMsg item : historyMsgList) {
@@ -1026,6 +991,28 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                         adapter.notifyItemChanged(adapter.getItemCount() - 1);
                         mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
                     }
+
+                    BottleCacheDb.getInstance().updateBottleCache(driftBottleId, memberInfo == null ? "" : memberInfo.getImage(), memberInfo == null ? "" : memberInfo.getNick(),
+                            new BottleCacheDb.CallBack() {
+                                @Override
+                                public void success() {
+                                    new Handler().postDelayed(() -> {
+                                        // 更新会话列表
+                                        Intent data = new Intent("lobster_singleBottleCache");
+                                        data.putExtra("driftBottleId", body.getDriftBottleId());
+                                        activity.sendBroadcast(data);
+                                    }, 500);
+                                }
+
+                                @Override
+                                public void fail() {
+                                    if (memberInfo == null) {
+                                        getOtherInfo(historyMsg, 2);
+                                    } else {
+                                        setBottleChatList(historyMsg.getCreationDate(), historyMsg.getStanza(), historyMsg.getMsgType());
+                                    }
+                                }
+                            });
                 }
             };
         else if (msgChannelType == 3)
@@ -1040,29 +1027,25 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                     isLockImage = (myChatCount + otherChatCount) < 20;
                     mBinding.setIsLockImage(isLockImage);
                     boolean updateAll = (myChatCount + otherChatCount) == 20;
-                    ChatList chatList = new ChatList();
-                    chatList.setUserId(otherUserId);
-                    chatList.setNick(memberInfo.getNick());
-                    chatList.setImage(memberInfo.getImage());
-                    chatList.setCreationDate(historyMsg.getCreationDate());
-                    chatList.setStanza(historyMsg.getStanza());
-                    chatList.setMsgType(historyMsg.getMsgType());
-                    chatList.setNoReadNum(0);
-                    chatList.setPublicTag("");
-                    chatList.setEffectType(1);
-                    chatList.setAuthType(1);
-                    chatList.setChatType(6);
-                    chatList.setFlashTalkId(flashTalkId);
-                    chatList.setMyChatCount(myChatCount);
-                    chatList.setOtherChatCount(otherChatCount);
-                    chatList.setMainUserId(BaseActivity.userId);
-                    ChatListDb.getInstance().saveChatList(chatList);
+                    ChatListDb.getInstance().updateMemberForFlash(otherUserId, memberInfo == null ? "" : memberInfo.getImage(), memberInfo == null ? "" : memberInfo.getNick(), flashTalkId, myChatCount, otherChatCount, new ChatListDb.CallBack() {
+                        @Override
+                        public void success() {
+                            new Handler().postDelayed(() -> {
+                                Intent data = new Intent("lobster_updateChat");
+                                data.putExtra("userId", otherUserId);
+                                activity.sendBroadcast(data);
+                            }, 500);
+                        }
 
-                    // 更新会话列表
-                    Intent data = new Intent("lobster_updateChat");
-                    data.putExtra("userId", otherUserId);
-                    data.putExtra("flashTalkId", flashTalkId);
-                    activity.sendBroadcast(data);
+                        @Override
+                        public void fail() {
+                            if (memberInfo == null) {
+                                getOtherInfo(historyMsg, 6);
+                            } else {
+                                setChatList(historyMsg, 6, false);
+                            }
+                        }
+                    });
 
                     boolean hasId = false;
                     if (isNotice) {
@@ -1085,7 +1068,73 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                     mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
                 }
             };
+    }
 
+    private void getOtherInfo(HistoryMsg historyMsg, int chatType) {
+        otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
+            @Override
+            public void onNext(MemberInfo o) {
+                memberInfo = o;
+                if (chatType == 2)
+                    setBottleChatList(historyMsg.getCreationDate(), historyMsg.getStanza(), historyMsg.getMsgType());
+                else
+                    setChatList(historyMsg, chatType, true);
+            }
+        }, activity).setOtherUserId(otherUserId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void setChatList(HistoryMsg historyMsg, int chatType, boolean updateImage) {
+        ChatList chatList = new ChatList();
+        chatList.setUserId(otherUserId);
+        chatList.setNick(memberInfo.getNick());
+        chatList.setImage(memberInfo.getImage());
+        chatList.setCreationDate(historyMsg.getCreationDate());
+        chatList.setStanza(historyMsg.getStanza());
+        chatList.setMsgType(historyMsg.getMsgType());
+        chatList.setNoReadNum(0);
+        chatList.setPublicTag("");
+        chatList.setEffectType(1);
+        chatList.setAuthType(1);
+        chatList.setChatType(chatType);
+        chatList.setFlashTalkId(flashTalkId);
+        chatList.setMyChatCount(myChatCount);
+        chatList.setOtherChatCount(otherChatCount);
+        chatList.setMainUserId(BaseActivity.userId);
+        ChatListDb.getInstance().saveChatList(chatList);
+
+        // 更新会话列表
+        new Handler().postDelayed(() -> {
+            Intent data = new Intent("lobster_updateChat");
+            data.putExtra("userId", otherUserId);
+            data.putExtra("flashTalkId", flashTalkId);
+            data.putExtra("updateImage", updateImage);
+            activity.sendBroadcast(data);
+
+            activity.sendBroadcast(new Intent("lobster_unReadCount"));
+        }, 500);
+    }
+
+    private void setBottleChatList(String creationDate, String stanza, int msgType) {
+        BottleCache bottleCache = new BottleCache();
+        bottleCache.setDriftBottleId(driftBottleId);
+        bottleCache.setUserId(otherUserId);
+        bottleCache.setNick(memberInfo.getNick());
+        bottleCache.setImage(memberInfo.getImage());
+        bottleCache.setCreationDate(creationDate);
+        bottleCache.setStanza(stanza);
+        bottleCache.setMsgType(msgType);
+        bottleCache.setNoReadNum(0);
+        bottleCache.setPublicTag("");
+        bottleCache.setEffectType(1);
+        bottleCache.setAuthType(1);
+        bottleCache.setMainUserId(BaseActivity.userId);
+        BottleCacheDb.getInstance().saveBottleCache(bottleCache);
+
+        // 更新会话列表
+        Intent data = new Intent("lobster_singleBottleCache");
+        data.putExtra("driftBottleId", driftBottleId);
+        activity.sendBroadcast(data);
     }
 
     /**
@@ -1182,69 +1231,11 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
 
         if (msgChannelType == 1) {
-            ChatList chatList = new ChatList();
-            chatList.setUserId(otherUserId);
-            chatList.setNick(memberInfo.getNick());
-            chatList.setImage(memberInfo.getImage());
-            chatList.setCreationDate(historyMsg.getCreationDate());
-            chatList.setStanza(historyMsg.getStanza());
-            chatList.setMsgType(historyMsg.getMsgType());
-            chatList.setNoReadNum(0);
-            chatList.setPublicTag("");
-            chatList.setEffectType(1);
-            chatList.setAuthType(1);
-            chatList.setChatType(4);
-            chatList.setMainUserId(BaseActivity.userId);
-            ChatListDb.getInstance().saveChatList(chatList);
-
-            // 更新会话列表
-            Intent data = new Intent("lobster_updateChat");
-            data.putExtra("userId", otherUserId);
-            activity.sendBroadcast(data);
+            setChatList(historyMsg, 4, false);
         } else if (msgChannelType == 2) {
-            BottleCache bottleCache = new BottleCache();
-            bottleCache.setDriftBottleId(driftBottleId);
-            bottleCache.setUserId(otherUserId);
-            bottleCache.setNick(memberInfo.getNick());
-            bottleCache.setImage(memberInfo.getImage());
-            bottleCache.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
-            bottleCache.setStanza(body.getStanza());
-            bottleCache.setMsgType(body.getMsgType());
-            bottleCache.setNoReadNum(0);
-            bottleCache.setPublicTag("");
-            bottleCache.setEffectType(1);
-            bottleCache.setAuthType(1);
-            bottleCache.setMainUserId(BaseActivity.userId);
-            BottleCacheDb.getInstance().saveBottleCache(bottleCache);
-
-            // 更新会话列表
-            Intent data = new Intent("lobster_singleBottleCache");
-            data.putExtra("driftBottleId", driftBottleId);
-            activity.sendBroadcast(data);
+            setBottleChatList(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType());
         } else if (msgChannelType == 3) {
-            ChatList chatList = new ChatList();
-            chatList.setUserId(otherUserId);
-            chatList.setNick(memberInfo.getNick());
-            chatList.setImage(memberInfo.getImage());
-            chatList.setCreationDate(historyMsg.getCreationDate());
-            chatList.setStanza(historyMsg.getStanza());
-            chatList.setMsgType(historyMsg.getMsgType());
-            chatList.setNoReadNum(0);
-            chatList.setPublicTag("");
-            chatList.setEffectType(1);
-            chatList.setAuthType(1);
-            chatList.setChatType(6);
-            chatList.setFlashTalkId(flashTalkId);
-            chatList.setMyChatCount(myChatCount);
-            chatList.setOtherChatCount(otherChatCount);
-            chatList.setMainUserId(BaseActivity.userId);
-            ChatListDb.getInstance().saveChatList(chatList);
-
-            // 更新会话列表
-            Intent data = new Intent("lobster_updateChat");
-            data.putExtra("userId", otherUserId);
-            data.putExtra("flashTalkId", flashTalkId);
-            activity.sendBroadcast(data);
+            setChatList(historyMsg, 6, false);
         }
     }
 

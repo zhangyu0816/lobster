@@ -119,6 +119,27 @@ public class ChatListDb extends BaseDao {
         commitTransaction();
     }
 
+    public void updateMemberForFlash(long otherUserId, String image, String nick, long flashTalkId,  int myChatCount, int otherChatCount,CallBack callBack) {
+        beginTransaction();
+        ChatList chatList = realm.where(ChatList.class).equalTo("flashTalkId", flashTalkId).equalTo("chatType", 6).equalTo("userId", otherUserId).equalTo("mainUserId", BaseActivity.userId).findFirst();
+        if (chatList != null) {
+            if (!image.isEmpty())
+                chatList.setImage(image);
+            if (!nick.isEmpty())
+                chatList.setNick(nick);
+            chatList.setNoReadNum(0);
+            chatList.setMyChatCount(myChatCount);
+            chatList.setOtherChatCount(otherChatCount);
+            if (TextUtils.equals("每人发10句可以解锁资料哦~", chatList.getStanza()))
+                callBack.fail();
+            else
+                callBack.success();
+        } else {
+            callBack.fail();
+        }
+        commitTransaction();
+    }
+
     @FunctionalInterface
     public interface CallBack {
         void success();
