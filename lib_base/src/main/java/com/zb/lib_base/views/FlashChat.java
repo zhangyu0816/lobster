@@ -76,8 +76,11 @@ public class FlashChat extends LinearLayout {
         public void run() {
             mBinding.setFlashInfo2(mBinding.getFlashInfo3());
             mBinding.logoLayout2.setVisibility(View.VISIBLE);
-            if (index >= maxSize)
+            if (index >= MineApp.sFlashInfoList.size()) {
+                maxSize = MineApp.sFlashInfoList.size();
                 index = 0;
+            }
+
             mBinding.setFlashInfo3(MineApp.sFlashInfoList.get(index));
         }
     };

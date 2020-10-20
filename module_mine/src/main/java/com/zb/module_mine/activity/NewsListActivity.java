@@ -25,6 +25,6 @@ public class NewsListActivity extends MineBaseActivity {
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.noData, true);
         mBinding.setVariable(BR.reviewType, reviewType);
-        mBinding.setVariable(BR.title, reviewType == 1 ? "我的评论" : (reviewType == 2 ? "我的点赞" : "我的礼物"));
+        mBinding.setVariable(BR.title, reviewType == 1 ? "我的消息" : (reviewType == 2 ? "我的点赞" : "我的礼物"));
     }
 }

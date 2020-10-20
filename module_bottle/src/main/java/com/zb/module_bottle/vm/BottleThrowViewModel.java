@@ -28,7 +28,6 @@ import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BottleQuestionPW;
-import com.zb.lib_base.windows.BottleVipPW;
 import com.zb.lib_base.windows.EditPW;
 import com.zb.module_bottle.BR;
 import com.zb.module_bottle.R;
@@ -280,12 +279,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
 
     @Override
     public void toMemberDetail(View view) {
-        if (MineApp.mineInfo.getMemberType() == 2) {
-            ActivityUtils.getCardMemberDetail(otherUserId, false);
-            close(null);
-            return;
-        }
-        new BottleVipPW(mBinding.getRoot());
+
     }
 
     @Override
