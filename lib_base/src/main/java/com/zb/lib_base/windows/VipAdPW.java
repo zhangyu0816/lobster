@@ -103,7 +103,7 @@ public class VipAdPW extends BasePopupWindow {
             binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_6_male : R.mipmap.vip_ad_6);
         } else if (type == 7) {
             binding.setTitle("立即匹配闪聊");
-            binding.setContent("每日五次机会，立即匹配实时聊天");
+            binding.setContent("随机匹配，无需互相喜欢，直接在线闪聊");
             binding.setMyHead(MineApp.mineInfo.getImage().replace("YM0000", "240X240"));
             binding.setOtherHead("empty_icon");
             binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
