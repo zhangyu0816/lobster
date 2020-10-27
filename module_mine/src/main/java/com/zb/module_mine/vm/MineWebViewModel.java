@@ -1,11 +1,14 @@
 package com.zb.module_mine.vm;
 
 import android.annotation.SuppressLint;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.text.ClipboardManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
@@ -33,6 +36,7 @@ import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.OrderNumber;
 import com.zb.lib_base.model.OrderTran;
 import com.zb.lib_base.model.ShareProduct;
+import com.zb.lib_base.model.WebShare;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -43,7 +47,11 @@ import com.zb.lib_base.windows.TextPW;
 import com.zb.module_mine.databinding.MineWebBinding;
 import com.zb.module_mine.iv.MineWebVMInterface;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.reflect.Method;
+import java.net.URLDecoder;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -59,6 +67,8 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
     private double mMoney;
     public String url = "";
     private DecimalFormat df;
+
+    private WebShare mWebShare;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -88,6 +98,8 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
 
     @SuppressLint("SetJavaScriptEnabled")
     private void init() {
+        mWebShare = new WebShare();
+
         WebSettings webSettings = mBinding.webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true);
@@ -136,6 +148,14 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                     }
                     CustomProgressDialog.showLoading(activity, "提现处理中");
                     realNameVerify();
+                } else if (mUrl.contains("qqshare:")) {
+                    share(mUrl.replace("qqshare:", ""), "qqshare");
+                } else if (mUrl.contains("wxshare:")) {
+                    share(mUrl.replace("wxshare:", ""), "wxshare");
+                } else if (mUrl.contains("contentcopy:")) {
+                    share(mUrl.replace("contentcopy:", ""), "contentcopy");
+                } else if (mUrl.contains("wxfriend:")) {
+                    share(mUrl.replace("wxfriend:", ""), "wxfriend");
                 } else
                     view.loadUrl(mUrl);
                 return true;
@@ -144,7 +164,6 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
             @Override
             public void onLoadResource(WebView view, String url) {
             }
-
         });
         mBinding.webView.setWebChromeClient(new WebChromeClient() {
             //网页加载进度
@@ -192,6 +211,29 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
     public void back(View view) {
         super.back(view);
         activity.finish();
+    }
+
+    private void share(String jsonStr, String type) {
+        try {
+            String share = URLDecoder.decode(jsonStr, "utf-8");
+            if (TextUtils.equals("contentcopy", type))
+                copy(share);
+            else {
+                JSONObject object = new JSONObject(share);
+                if (object.has("imgUrl"))
+                    mWebShare.setImgUrl(object.optString("imgUrl"));
+                if (object.has("url"))
+                    mWebShare.setUrl(object.optString("url"));
+                if (object.has("shareTitle"))
+                    mWebShare.setShareTitle(object.optString("shareTitle"));
+                if (object.has("title"))
+                    mWebShare.setTitle(object.optString("title"));
+                if (object.has("desc"))
+                    mWebShare.setDesc(object.optString("desc"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -332,5 +374,18 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 实现文本复制功能
+     *
+     * @param content 要复制的内容
+     */
+
+    private void copy(String content) {
+        // 得到剪贴板管理器
+        ClipboardManager cmb = (ClipboardManager) activity
+                .getSystemService(Context.CLIPBOARD_SERVICE);
+        cmb.setText(content.trim());
     }
 }
