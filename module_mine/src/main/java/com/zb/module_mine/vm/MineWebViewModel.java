@@ -1,7 +1,7 @@
 package com.zb.module_mine.vm;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -39,6 +39,7 @@ import com.zb.lib_base.model.ShareProduct;
 import com.zb.lib_base.model.WebShare;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SCToastUtil;
+import com.zb.lib_base.utils.ShareUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.CashPW;
 import com.zb.lib_base.windows.FunctionPW;
@@ -46,8 +47,8 @@ import com.zb.lib_base.windows.PaymentPW;
 import com.zb.lib_base.windows.TextPW;
 import com.zb.module_mine.databinding.MineWebBinding;
 import com.zb.module_mine.iv.MineWebVMInterface;
+import com.zb.module_mine.views.CodeLayout;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Method;
@@ -156,6 +157,8 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                     share(mUrl.replace("contentcopy:", ""), "contentcopy");
                 } else if (mUrl.contains("wxfriend:")) {
                     share(mUrl.replace("wxfriend:", ""), "wxfriend");
+                } else if (mUrl.contains("shareimage:")) {
+                    share(mUrl.replace("shareimage:", ""), "shareimage");
                 } else
                     view.loadUrl(mUrl);
                 return true;
@@ -230,10 +233,47 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                     mWebShare.setTitle(object.optString("title"));
                 if (object.has("desc"))
                     mWebShare.setDesc(object.optString("desc"));
+                if (object.has("coorX"))
+                    mWebShare.setCoorX(object.optInt("coorX"));
+                if (object.has("coorY"))
+                    mWebShare.setCoorY(object.optInt("coorY"));
+                if (object.has("qrCodeW"))
+                    mWebShare.setQrCodeW(object.optInt("qrCodeW"));
+                if (object.has("qrCodeH"))
+                    mWebShare.setQrCodeH(object.optInt("qrCodeH"));
+                if (TextUtils.equals("shareimage", type)) {
+                    getPermissions();
+                } else
+                    ShareUtil.share(activity, mWebShare.getImgUrl(), mWebShare.getShareTitle(), mWebShare.getDesc(), mWebShare.getUrl(), type);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 权限
+     */
+    private void getPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            performCodeWithPermission("虾菇需要访问读写外部存储权限", new BaseActivity.PermissionCallback() {
+                @Override
+                public void hasPermission() {
+                    setPermissions();
+                }
+
+                @Override
+                public void noPermission() {
+                }
+            }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        } else {
+            setPermissions();
+        }
+    }
+
+    private void setPermissions() {
+        CodeLayout codeLayout = new CodeLayout(activity);
+        codeLayout.setData(mWebShare);
     }
 
     @Override

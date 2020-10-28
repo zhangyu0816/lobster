@@ -1,8 +1,11 @@
 package com.zb.lib_base.utils;
 
+import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
@@ -13,27 +16,47 @@ import java.util.Map;
 
 public class ShareUtil {
     private static RxAppCompatActivity mActivity;
-    private Map<SHARE_MEDIA, String> mediaMap = new HashMap<>();
-    private static UMImage umImage;
-    private static String sharedName;
-    private static String content;
-    private String sharedUrl;
-    private UMWeb web;
-    private SHARE_MEDIA media;
+    private static Map<SHARE_MEDIA, String> mediaMap = new HashMap<>();
 
-    {
+    static {
         mediaMap.put(SHARE_MEDIA.WEIXIN, "微信");
         mediaMap.put(SHARE_MEDIA.WEIXIN_CIRCLE, "朋友圈");
         mediaMap.put(SHARE_MEDIA.QQ, "QQ");
         mediaMap.put(SHARE_MEDIA.QZONE, "QQ空间");
     }
 
-    public static void share(RxAppCompatActivity activity, String logo, String sharedName, String content, String sharedUrl, SHARE_MEDIA media) {
+    public static void share(RxAppCompatActivity activity, String logo, String sharedName, String content, String sharedUrl, String type) {
         mActivity = activity;
-        umImage = new UMImage(activity, logo);
+        SHARE_MEDIA media;
+        UMImage umImage = new UMImage(activity, logo);
+        umImage.compressStyle = UMImage.CompressStyle.SCALE;//大小压缩，默认为大小压缩，适合普通很大的图
+        umImage.compressFormat = Bitmap.CompressFormat.PNG;
+        UMWeb web = new UMWeb(sharedUrl);
+        web.setThumb(umImage);
+        if (TextUtils.equals("wxfriend", type)) {
+            media = SHARE_MEDIA.WEIXIN_CIRCLE;
+            web.setTitle(sharedName + "\n" + content);//标题
+            web.setDescription(sharedName + "\n" + content);//描述
+        } else {
+            if (TextUtils.equals("qqshare", type)) {
+                media = SHARE_MEDIA.QQ;
+            } else if (TextUtils.equals("wxshare", type)) {
+                media = SHARE_MEDIA.WEIXIN;
+            } else {
+                media = SHARE_MEDIA.QZONE;
+            }
+            web.setTitle(sharedName);//标题
+            web.setDescription(content);//描述
+        }
+
+        // 微信
+        new ShareAction(activity).setPlatform(media)
+                .withMedia(web)
+                .setCallback(umShareListener)
+                .share();
     }
 
-    private UMShareListener umShareListener = new UMShareListener() {
+    private static UMShareListener umShareListener = new UMShareListener() {
         @Override
         public void onStart(SHARE_MEDIA platform) {
             SCToastUtil.showToast(mActivity, mediaMap.get(platform) + " 开始分享", true);

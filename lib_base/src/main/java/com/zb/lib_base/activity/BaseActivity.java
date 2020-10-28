@@ -2,11 +2,15 @@ package com.zb.lib_base.activity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -18,8 +22,12 @@ import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.PwsPerformBinding;
 import com.zb.lib_base.utils.PreferenceUtil;
+import com.zb.lib_base.utils.SCToastUtil;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Random;
 
@@ -151,6 +159,35 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             getWindow().setNavigationBarColor(Color.TRANSPARENT);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
+    }
+
+    /**
+     * 保存本地图片
+     *
+     * @param bm
+     * @throws IOException
+     */
+    public static void saveFile(Bitmap bm) {
+        if (bm == null)
+            return;
+        File dirFile = new File(Environment.getExternalStorageDirectory(), "DCIM/Camera");
+        if (!dirFile.exists()) {
+            dirFile.mkdir();
+        }
+        String fileName = randomString(15) + ".jpg";
+        File myCaptureFile = new File(dirFile, fileName);
+        try {
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
+            bm.compress(Bitmap.CompressFormat.PNG, 100, bos);
+            bos.flush();
+            bos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        SCToastUtil.showToast(activity, "保存成功", true);
+        // 最后通知图库更新
+        activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                Uri.parse("file://" + myCaptureFile.getAbsolutePath())));
     }
 
     //**************** Android M Permission (Android 6.0权限控制代码封装)*****************************************************

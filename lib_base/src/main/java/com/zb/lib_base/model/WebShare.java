@@ -7,6 +7,10 @@ public class WebShare {
     String title = "";
     String shareTitle = "";
     String desc = "";
+    int coorX;
+    int coorY;
+    int qrCodeW;
+    int qrCodeH;
 
     public String getImgUrl() {
         return imgUrl;
@@ -46,5 +50,37 @@ public class WebShare {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public int getCoorX() {
+        return coorX;
+    }
+
+    public void setCoorX(int coorX) {
+        this.coorX = coorX;
+    }
+
+    public int getCoorY() {
+        return coorY;
+    }
+
+    public void setCoorY(int coorY) {
+        this.coorY = coorY;
+    }
+
+    public int getQrCodeW() {
+        return qrCodeW;
+    }
+
+    public void setQrCodeW(int qrCodeW) {
+        this.qrCodeW = qrCodeW;
+    }
+
+    public int getQrCodeH() {
+        return qrCodeH;
+    }
+
+    public void setQrCodeH(int qrCodeH) {
+        this.qrCodeH = qrCodeH;
     }
 }
