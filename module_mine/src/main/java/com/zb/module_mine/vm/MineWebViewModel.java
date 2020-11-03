@@ -139,6 +139,8 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                     }
                     ActivityUtils.getMineWeb("邀请好友赚钱", mUrl + "?userId=" + BaseActivity.userId + "&sessionId=" + BaseActivity.sessionId +
                             "&pfDevice=Android&pfAppType=203&pfAppVersion=" + MineApp.versionName);
+                } else if (mUrl.contains("Share_faceToFacePage")) {
+                    ActivityUtils.getMineWeb("邀请好友赚钱", mUrl);
                 } else if (mUrl.contains("xg_openPartner")) {
                     new TextPW(mBinding.getRoot(), "开通合伙人", "成为虾菇合伙人享受以下特权：\n  1，送一年VIP会员特权。\n  2，邀请新用户使用虾菇可以享受佣金。\n  3，本活动最终解释权归虾菇所有。",
                             "￥" + df.format(openMoney) + " 确认开通", () -> openMakePartner());
@@ -233,6 +235,8 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                     mWebShare.setTitle(object.optString("title"));
                 if (object.has("desc"))
                     mWebShare.setDesc(object.optString("desc"));
+                if (object.has("contentType"))
+                    mWebShare.setContentType(object.optInt("contentType"));
                 if (object.has("coorX"))
                     mWebShare.setCoorX(object.optInt("coorX"));
                 if (object.has("coorY"))

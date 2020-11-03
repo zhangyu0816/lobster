@@ -7,6 +7,7 @@ public class WebShare {
     String title = "";
     String shareTitle = "";
     String desc = "";
+    int contentType;//1.文字 2.图片 3.图文
     int coorX;
     int coorY;
     int qrCodeW;
@@ -50,6 +51,14 @@ public class WebShare {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public int getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(int contentType) {
+        this.contentType = contentType;
     }
 
     public int getCoorX() {

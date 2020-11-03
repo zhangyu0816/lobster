@@ -28,15 +28,21 @@ public class ShareUtil {
     public static void share(RxAppCompatActivity activity, String logo, String sharedName, String content, String sharedUrl, String type) {
         mActivity = activity;
         SHARE_MEDIA media;
-        UMImage umImage = new UMImage(activity, logo);
-        umImage.compressStyle = UMImage.CompressStyle.SCALE;//大小压缩，默认为大小压缩，适合普通很大的图
-        umImage.compressFormat = Bitmap.CompressFormat.PNG;
+        UMImage umImage;
         UMWeb web = new UMWeb(sharedUrl);
-        web.setThumb(umImage);
+        if (!logo.isEmpty()) {
+            umImage = new UMImage(activity, logo);
+            umImage.compressStyle = UMImage.CompressStyle.SCALE;//大小压缩，默认为大小压缩，适合普通很大的图
+            umImage.compressFormat = Bitmap.CompressFormat.PNG;
+            web.setThumb(umImage);
+        }
+
         if (TextUtils.equals("wxfriend", type)) {
             media = SHARE_MEDIA.WEIXIN_CIRCLE;
-            web.setTitle(sharedName + "\n" + content);//标题
-            web.setDescription(sharedName + "\n" + content);//描述
+            if (!sharedName.isEmpty() || !content.isEmpty()) {
+                web.setTitle(sharedName + "\n" + content);//标题
+                web.setDescription(sharedName + "\n" + content);//描述
+            }
         } else {
             if (TextUtils.equals("qqshare", type)) {
                 media = SHARE_MEDIA.QQ;
@@ -45,8 +51,10 @@ public class ShareUtil {
             } else {
                 media = SHARE_MEDIA.QZONE;
             }
-            web.setTitle(sharedName);//标题
-            web.setDescription(content);//描述
+            if (!sharedName.isEmpty())
+                web.setTitle(sharedName);//标题
+            if (!content.isEmpty())
+                web.setDescription(content);//描述
         }
 
         // 微信

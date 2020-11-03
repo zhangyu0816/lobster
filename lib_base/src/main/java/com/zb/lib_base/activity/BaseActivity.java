@@ -42,7 +42,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     public static RxAppCompatActivity activity;
     public static long userId = 0;
     public static String sessionId = "";
-
     public static long systemUserId = 10000;
     public static long dynUserId = 10002;
     public static long likeUserId = 1001;
@@ -57,7 +56,11 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
         ARouter.getInstance().inject(this);
         update();
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        try {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         initUI();
     }
 

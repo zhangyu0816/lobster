@@ -629,7 +629,16 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             @Override
             public void onNext(MineInfo o) {
                 MineApp.mineInfo = o;
-                ImUtils.getInstance().setChat(false, activity);
+                if (TextUtils.equals("http://192.168.1.88:8090/", HttpManager.BASE_URL)) {
+                    ActivityUtils.getMainActivity();
+                    MineApp.registerInfo = new RegisterInfo();
+                    timer.cancel();
+                    passErrorCount = 0;
+                    MineApp.removeActivity(MineApp.activityMap.get("LoginActivity"));
+                    activity.finish();
+                } else {
+                    ImUtils.getInstance().setChat(false, activity);
+                }
             }
         }, activity);
         api.setPosition(1);
