@@ -12,6 +12,7 @@ public class WebShare {
     int coorY;
     int qrCodeW;
     int qrCodeH;
+    int shareType;// 1.QQ邀请  2.微信邀请  3.朋友圈邀请  4.微信群邀请  5.海报分享
 
     public String getImgUrl() {
         return imgUrl;
@@ -91,5 +92,13 @@ public class WebShare {
 
     public void setQrCodeH(int qrCodeH) {
         this.qrCodeH = qrCodeH;
+    }
+
+    public int getShareType() {
+        return shareType;
+    }
+
+    public void setShareType(int shareType) {
+        this.shareType = shareType;
     }
 }

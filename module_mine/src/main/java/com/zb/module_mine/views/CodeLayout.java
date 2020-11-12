@@ -1,10 +1,12 @@
 package com.zb.module_mine.views;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.os.Handler;
+import android.net.Uri;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -19,11 +21,17 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.model.WebShare;
+import com.zb.lib_base.utils.SCToastUtil;
+import com.zb.lib_base.utils.ShareUtil;
 import com.zb.module_mine.R;
 import com.zb.module_mine.databinding.MinePosterBinding;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Hashtable;
 
 import androidx.annotation.NonNull;
@@ -53,19 +61,71 @@ public class CodeLayout extends RelativeLayout {
         addView(mBinding.getRoot());
     }
 
-    public void setData(WebShare webShare) {
+    public void setData(RxAppCompatActivity activity, WebShare webShare) {
         Bitmap qrCode = createImage(webShare.getUrl(), webShare.getQrCodeW(), webShare.getQrCodeH(), null);
         Glide.with(mBinding.getRoot().getContext()).asBitmap().load(webShare.getImgUrl()).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                 Bitmap bitmap = mergeWithCrop(resource, qrCode, webShare.getCoorX(), webShare.getCoorY());
-                new Handler().postDelayed(() -> {
+                File myCaptureFile = getFile();
+                if (webShare.getShareType() == 5) {
                     Canvas canvas = new Canvas(bitmap);
                     mBinding.ivQrCode.draw(canvas);
-                    BaseActivity.saveFile(bitmap);
-                }, 500);
+                    try {
+                        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+                        bos.flush();
+                        bos.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    saveFile(activity, myCaptureFile);
+                } else {
+                    try {
+                        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+                        bos.flush();
+                        bos.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    // 1.QQ邀请  2.微信邀请  3.朋友圈邀请  4.微信群邀请  5.海报分享
+                    String type = "";
+                    switch (webShare.getShareType()) {
+                        case 1:
+                            type = "qqshare";
+                            break;
+                        case 2:
+                        case 4:
+                            type = "wxshare";
+                            break;
+                        case 3:
+                            type = "wxfriend";
+                            break;
+                    }
+                    ShareUtil.share(activity, myCaptureFile, type);
+                }
             }
         });
+    }
+
+    private File getFile() {
+        File dirFile = new File(Environment.getExternalStorageDirectory(), "DCIM/Camera");
+        if (!dirFile.exists()) {
+            dirFile.mkdir();
+        }
+        String fileName = BaseActivity.randomString(15) + ".jpg";
+        return new File(dirFile, fileName);
+    }
+
+    /**
+     * 保存本地图片
+     */
+    private void saveFile(RxAppCompatActivity activity, File myCaptureFile) {
+        SCToastUtil.showToast(activity, "保存成功", true);
+        // 最后通知图库更新
+        activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                Uri.parse("file://" + myCaptureFile.getAbsolutePath())));
     }
 
     /**

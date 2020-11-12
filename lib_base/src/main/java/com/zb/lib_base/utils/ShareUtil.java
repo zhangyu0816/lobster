@@ -10,7 +10,9 @@ import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
+import com.zb.lib_base.R;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +30,7 @@ public class ShareUtil {
     public static void share(RxAppCompatActivity activity, String logo, String sharedName, String content, String sharedUrl, String type) {
         mActivity = activity;
         SHARE_MEDIA media;
-        UMImage umImage;
+        UMImage umImage = null;
         UMWeb web = new UMWeb(sharedUrl);
         if (!logo.isEmpty()) {
             umImage = new UMImage(activity, logo);
@@ -63,6 +65,27 @@ public class ShareUtil {
                 .setCallback(umShareListener)
                 .share();
     }
+
+    public static void share(RxAppCompatActivity activity, File file, String type) {
+        mActivity = activity;
+        SHARE_MEDIA media;
+        UMImage umImage = new UMImage(activity, file);
+        umImage.setThumb(new UMImage(activity, R.drawable.thumb));
+
+        if (TextUtils.equals("wxfriend", type)) {
+            media = SHARE_MEDIA.WEIXIN_CIRCLE;
+        } else if (TextUtils.equals("qqshare", type)) {
+            media = SHARE_MEDIA.QQ;
+        } else if (TextUtils.equals("wxshare", type)) {
+            media = SHARE_MEDIA.WEIXIN;
+        } else {
+            media = SHARE_MEDIA.QZONE;
+        }
+        new ShareAction(activity).setPlatform(media).withMedia(umImage)
+                .setCallback(umShareListener)
+                .share();
+    }
+
 
     private static UMShareListener umShareListener = new UMShareListener() {
         @Override

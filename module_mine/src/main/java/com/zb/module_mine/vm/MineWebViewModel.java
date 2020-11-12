@@ -2,8 +2,12 @@ package com.zb.module_mine.vm;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -161,6 +165,10 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                     share(mUrl.replace("wxfriend:", ""), "wxfriend");
                 } else if (mUrl.contains("shareimage:")) {
                     share(mUrl.replace("shareimage:", ""), "shareimage");
+                } else if (mUrl.contains("openwx:")) {
+                    share(mUrl.replace("openwx:", ""), "openwx");
+                } else if (mUrl.contains("openqq:")) {
+                    share(mUrl.replace("openqq:", ""), "openqq");
                 } else
                     view.loadUrl(mUrl);
                 return true;
@@ -245,10 +253,19 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                     mWebShare.setQrCodeW(object.optInt("qrCodeW"));
                 if (object.has("qrCodeH"))
                     mWebShare.setQrCodeH(object.optInt("qrCodeH"));
+                if (object.has("shareType"))
+                    mWebShare.setShareType(object.optInt("shareType"));
+
                 if (TextUtils.equals("shareimage", type)) {
                     getPermissions();
-                } else
+                } else if (TextUtils.equals("openwx", type)) {
+                    openWX();
+                } else if (TextUtils.equals("openqq", type)) {
+                    openQQ();
+                } else {
                     ShareUtil.share(activity, mWebShare.getImgUrl(), mWebShare.getShareTitle(), mWebShare.getDesc(), mWebShare.getUrl(), type);
+                }
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -277,7 +294,7 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
 
     private void setPermissions() {
         CodeLayout codeLayout = new CodeLayout(activity);
-        codeLayout.setData(mWebShare);
+        codeLayout.setData(activity, mWebShare);
     }
 
     @Override
@@ -431,5 +448,47 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
         ClipboardManager cmb = (ClipboardManager) activity
                 .getSystemService(Context.CLIPBOARD_SERVICE);
         cmb.setText(content.trim());
+    }
+
+    /**
+     * 跳转到微信
+     */
+
+    private void openWX() {
+        try {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            ComponentName cmp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.LauncherUI");
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setComponent(cmp);
+            activity.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            SCToastUtil.showToast(activity, "检查到您手机没有安装微信，请安装后使用该功能", true);
+        }
+    }
+
+    private void openQQ() {
+        if (checkApkExist(activity, "com.tencent.mobileqq")) {
+            Intent intent = activity.getPackageManager().getLaunchIntentForPackage("com.tencent.mobileqq");
+            activity.startActivity(intent);
+        } else if (checkApkExist(activity, "com.tencent.tim")) {
+            Intent intent = activity.getPackageManager().getLaunchIntentForPackage("com.tencent.tim");
+            activity.startActivity(intent);
+        } else {
+            SCToastUtil.showToast(activity, "本机未安装QQ应用或TIM应用", true);
+        }
+    }
+
+    private boolean checkApkExist(Context context, String packageName) {
+        if (packageName == null || "".equals(packageName)) {
+            return false;
+        }
+        try {
+            ApplicationInfo info = context.getPackageManager().getApplicationInfo(packageName,
+                    PackageManager.GET_UNINSTALLED_PACKAGES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 }

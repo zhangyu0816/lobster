@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -812,12 +813,22 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        PreferenceUtil.saveStringValue(activity, "deviceCode", tm.getDeviceId());
+        String ANDROID_ID = Settings.System.getString(activity.getContentResolver(), Settings.System.ANDROID_ID);
+        String imei = "";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            imei = tm.getImei();
+        } else {
+            imei = tm.getDeviceId();
+        }
+
+        if (imei == null) {
+            imei = ANDROID_ID;
+        }
+        PreferenceUtil.saveStringValue(activity, "deviceCode", imei);
         String iccid = tm.getSimSerialNumber();
         // CDMA手机返回MEID
-        String meid = tm.getDeviceId();
+        String meid = imei;
         // GSM手机返回IMEI
-        String imei = tm.getDeviceId();
         String mac = Mac.getMac(activity);
 
         JSONObject object = new JSONObject();

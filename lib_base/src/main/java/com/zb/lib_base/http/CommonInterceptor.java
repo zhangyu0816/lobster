@@ -26,7 +26,7 @@ public class CommonInterceptor implements Interceptor {
         // 添加新的参数
         HttpUrl.Builder authorizedUrlBuilder = oldRequest.url().newBuilder().scheme(oldRequest.url().scheme()).host
                 (oldRequest.url().host()).addQueryParameter("pfDevice", "Android").addQueryParameter("pfAppType", "203").addQueryParameter("pfAppVersion",
-                MineApp.versionName).addQueryParameter("userId", BaseActivity.userId + "").addQueryParameter("sessionId", BaseActivity.sessionId);
+                MineApp.versionName).addQueryParameter("fullVersion", MineApp.versionName + ".1").addQueryParameter("userId", BaseActivity.userId + "").addQueryParameter("sessionId", BaseActivity.sessionId);
 
         // 新的请求
         Request newRequest = oldRequest.newBuilder().method(oldRequest.method(), oldRequest.body()).url
