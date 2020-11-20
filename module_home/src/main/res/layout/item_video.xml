@@ -184,17 +184,26 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true" />
 
-                <ImageView
-                    android:id="@+id/iv_attention"
+                <RelativeLayout
+                    android:id="@+id/attention_layout"
                     onClickDelayed="@{v->viewModel.attentionOther(item)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="35dp"
                     android:paddingStart="11dp"
                     android:paddingEnd="11dp"
-                    android:src="@mipmap/attention_icon"
-                    android:visibility="invisible" />
+                    android:visibility="invisible">
+
+                    <ImageView
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(60)}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(60)}"
+                        android:id="@+id/iv_attention"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/attention_icon" />
+                </RelativeLayout>
+
 
             </RelativeLayout>
 

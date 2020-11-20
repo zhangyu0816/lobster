@@ -97,9 +97,10 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             public void onReceive(Context context, Intent intent) {
                 boolean isAttention = intent.getBooleanExtra("isAttention", false);
                 if (isAttention) {
-                    ivAttention.setVisibility(View.INVISIBLE);
+                    layout.setVisibility(View.INVISIBLE);
                 } else {
-                    ivAttention.setVisibility(View.VISIBLE);
+                    layout.setVisibility(View.VISIBLE);
+                    ivAttention.setBackgroundResource(R.drawable.attention_icon);
                 }
             }
         };
@@ -265,7 +266,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
 
     @Override
     public void follow(DiscoverInfo discoverInfo) {
-        if (ivAttention.getVisibility() == View.INVISIBLE) {
+        if (layout.getVisibility() == View.INVISIBLE) {
             attentionOther(discoverInfo);
         } else {
             cancelAttention(discoverInfo);
@@ -330,10 +331,10 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             @Override
             public void onNext(Object o) {
                 if (o == null) {
-                    ivAttention.setVisibility(View.INVISIBLE);
+                    layout.setVisibility(View.INVISIBLE);
                     AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), true, BaseActivity.userId));
                 } else {
-                    ivAttention.setVisibility(View.VISIBLE);
+                    layout.setVisibility(View.VISIBLE);
                     AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), false, BaseActivity.userId));
                 }
             }
@@ -346,7 +347,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         attentionOtherApi api = new attentionOtherApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                ivAttention.setVisibility(View.INVISIBLE);
+                isAttention(layout, ivAttention);
                 AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), true, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
             }
@@ -355,7 +356,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
                     if (e.getMessage().equals("已经关注过")) {
-                        ivAttention.setVisibility(View.INVISIBLE);
+                        isAttention(layout,ivAttention);
                         AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), true, BaseActivity.userId));
                         activity.sendBroadcast(new Intent("lobster_attentionList"));
                     }
@@ -370,7 +371,8 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         cancelAttentionApi api = new cancelAttentionApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                ivAttention.setVisibility(View.VISIBLE);
+                layout.setVisibility(View.VISIBLE);
+                ivAttention.setBackgroundResource(R.drawable.attention_icon);
                 AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), false, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
             }
@@ -479,6 +481,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     private HomeAdapter reviewAdapter;
     private List<Review> reviewList = new ArrayList<>();
     private VideoView lastVideoView;
+    private RelativeLayout layout;
 
     private void playVideo(View view) {
         if (lastVideoView != null) {
@@ -494,6 +497,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         ivLike = view.findViewById(R.id.iv_like);
         tvGood = view.findViewById(R.id.tv_good);
         tvReviews = view.findViewById(R.id.tv_reviews);
+        layout = view.findViewById(R.id.attention_layout);
         ivAttention = view.findViewById(R.id.iv_attention);
         ivImage = view.findViewById(R.id.iv_image);
         ivPlay = view.findViewById(R.id.iv_play);

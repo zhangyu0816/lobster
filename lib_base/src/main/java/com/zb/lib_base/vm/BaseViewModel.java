@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -187,7 +188,7 @@ public class BaseViewModel implements BaseVMInterface {
         return screenHeight * 2 / 3 > rect.bottom;
     }
 
-    private PropertyValuesHolder pvhSY, pvhSX, pvhA;
+    private PropertyValuesHolder pvhSY, pvhSX, pvhA, pvhR;
     private ObjectAnimator pvh;
 
     public void playAnimator(View view) {
@@ -198,9 +199,10 @@ public class BaseViewModel implements BaseVMInterface {
         pvh.setRepeatCount(Animation.INFINITE);
         pvh.start();
     }
+
     public void goAnimator(View view) {
-        pvhSY = PropertyValuesHolder.ofFloat("scaleY", 0.7f, 1,0.7f);
-        pvhSX = PropertyValuesHolder.ofFloat("scaleX", 0.7f, 1,0.7f);
+        pvhSY = PropertyValuesHolder.ofFloat("scaleY", 0.7f, 1, 0.7f);
+        pvhSX = PropertyValuesHolder.ofFloat("scaleX", 0.7f, 1, 0.7f);
         pvh = ObjectAnimator.ofPropertyValuesHolder(view, pvhSY, pvhSX).setDuration(600);
         pvh.setRepeatCount(Animation.INFINITE);
         pvh.start();
@@ -216,6 +218,28 @@ public class BaseViewModel implements BaseVMInterface {
                 pvh.cancel();
             pvh = null;
         }, 500);
+    }
+
+    public void isAttention(RelativeLayout layout,ImageView iv) {
+        pvhR = PropertyValuesHolder.ofFloat("rotation", 0, 90);
+        pvhA = PropertyValuesHolder.ofFloat("alpha", 1, 0);
+        pvh = ObjectAnimator.ofPropertyValuesHolder(iv, pvhR, pvhA).setDuration(200);
+        pvh.start();
+
+        new Handler().postDelayed(() -> {
+            iv.setBackgroundResource(R.drawable.attention_get_icon);
+            pvhR = PropertyValuesHolder.ofFloat("rotation", 90, 0);
+            pvh = ObjectAnimator.ofPropertyValuesHolder(iv, pvhR).setDuration(50);
+            pvh.start();
+        }, 200);
+
+        new Handler().postDelayed(() -> {
+            pvhA = PropertyValuesHolder.ofFloat("alpha", 0, 1);
+            pvh = ObjectAnimator.ofPropertyValuesHolder(iv, pvhA).setDuration(100);
+            pvh.start();
+        }, 250);
+
+        new Handler().postDelayed(() -> layout.setVisibility(View.INVISIBLE), 1000);
     }
 
     public void openBottle() {

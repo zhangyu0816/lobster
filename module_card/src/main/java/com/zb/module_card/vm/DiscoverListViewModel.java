@@ -1,9 +1,11 @@
 package com.zb.module_card.vm;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.FragmentAdapter;
 import com.zb.lib_base.api.attentionOtherApi;
 import com.zb.lib_base.api.cancelAttentionApi;
@@ -42,6 +44,7 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
     private CardDiscoverListBinding mBinding;
     private List<Fragment> fragments = new ArrayList<>();
     public MemberInfo memberInfo;
+    private BaseReceiver attentionReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -49,6 +52,14 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
         mBinding = (CardDiscoverListBinding) binding;
         contactNum();
         initFragments();
+
+        attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                boolean isAttention = intent.getBooleanExtra("isAttention", false);
+                mBinding.setIsAttention(isAttention);
+            }
+        };
     }
 
     private void initFragments() {
@@ -62,6 +73,11 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
     @Override
     public void back(View view) {
         super.back(view);
+        try {
+            attentionReceiver.unregisterReceiver();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
         activity.finish();
     }
 

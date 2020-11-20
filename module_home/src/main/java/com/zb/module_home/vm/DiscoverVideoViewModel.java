@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
@@ -97,7 +98,13 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
         attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                mBinding.setIsAttention(intent.getBooleanExtra("isAttention", false));
+                boolean isAttention = intent.getBooleanExtra("isAttention", false);
+                if (isAttention) {
+                    mBinding.attentionLayout.setVisibility(View.INVISIBLE);
+                } else {
+                    mBinding.attentionLayout.setVisibility(View.VISIBLE);
+                    mBinding.ivAttention.setBackgroundResource(R.drawable.attention_icon);
+                }
             }
         };
 
@@ -282,7 +289,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                 });
                 otherInfo();
                 if (discoverInfo.getUserId() == BaseActivity.userId) {
-                    mBinding.setIsAttention(true);
+                    mBinding.ivAttention.setVisibility(View.INVISIBLE);
                     mBinding.setIsMine(true);
                 } else
                     attentionStatus();
@@ -309,9 +316,10 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             @Override
             public void onNext(Object o) {
                 if (o == null) {
-                    mBinding.setIsAttention(true);
+                    mBinding.attentionLayout.setVisibility(View.INVISIBLE);
                     AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 } else {
+                    mBinding.attentionLayout.setVisibility(View.VISIBLE);
                     AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
                 }
             }
@@ -324,21 +332,25 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
         attentionOtherApi api = new attentionOtherApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                mBinding.setIsAttention(true);
+                isAttention(mBinding.attentionLayout, mBinding.ivAttention);
                 AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
-                activity.sendBroadcast(new Intent("lobster_attentionList"));
-                Intent intent = new Intent("lobster_attention");
-                intent.putExtra("isAttention", mBinding.getIsAttention());
-                activity.sendBroadcast(intent);
+               new Handler().postDelayed(() -> {
+                   activity.sendBroadcast(new Intent("lobster_attentionList"));
+                   Intent intent = new Intent("lobster_attention");
+                   intent.putExtra("isAttention", true);
+                   activity.sendBroadcast(intent);
+               },1000);
+
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
                     if (e.getMessage().equals("已经关注过")) {
-                        mBinding.setIsAttention(true);
+                        isAttention(mBinding.attentionLayout, mBinding.ivAttention);
                         AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
-                        activity.sendBroadcast(new Intent("lobster_attentionList"));
+
+                        new Handler().postDelayed(() -> activity.sendBroadcast(new Intent("lobster_attentionList")),1000);
                     }
                 }
             }
@@ -351,11 +363,12 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
         cancelAttentionApi api = new cancelAttentionApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                mBinding.setIsAttention(false);
+                mBinding.attentionLayout.setVisibility(View.VISIBLE);
+                mBinding.ivAttention.setBackgroundResource(R.drawable.attention_icon);
                 AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
                 Intent intent = new Intent("lobster_attention");
-                intent.putExtra("isAttention", mBinding.getIsAttention());
+                intent.putExtra("isAttention", false);
                 activity.sendBroadcast(intent);
             }
         }, activity).setOtherUserId(discoverInfo.getUserId());
