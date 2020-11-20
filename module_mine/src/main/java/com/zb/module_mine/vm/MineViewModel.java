@@ -20,6 +20,7 @@ import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.SelectorPW;
 import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.R;
@@ -44,12 +45,16 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     private BaseReceiver visitorReceiver;
     private BaseReceiver attentionListReceiver;
     private List<Fragment> fragments = new ArrayList<>();
+    private List<String> selectorList = new ArrayList<>();
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (MineFragBinding) binding;
         playAnimator(mBinding.circleView);
+        goAnimator(mBinding.ivGo);
+        selectorList.add("发布照片");
+        selectorList.add("发布小视频");
         mBinding.setMineNewsCount(MineApp.mineNewsCount);
         mBinding.setContactNum(MineApp.contactNum);
         mBinding.setHasNewBeLike(MineApp.contactNum.getBeLikeCount() > PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId));
@@ -227,10 +232,12 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     private void setPermissions() {
         MineApp.toPublish = true;
         MineApp.toContinue = false;
-        if (mBinding.viewPage.getCurrentItem() == 1) {
-            ActivityUtils.getCameraVideo(false);
-        } else {
-            ActivityUtils.getCameraMain(activity, true, true, false);
-        }
+        new SelectorPW(mBinding.getRoot(), selectorList, position1 -> {
+            if (position1 == 0) {
+                ActivityUtils.getCameraMain(activity, true, true, false);
+            } else {
+                ActivityUtils.getCameraVideo(false);
+            }
+        });
     }
 }

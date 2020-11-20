@@ -11,13 +11,18 @@ import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.SelectorPW;
 import com.zb.module_home.databinding.HomeFragBinding;
 import com.zb.module_home.iv.HomeVMInterface;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
 
 public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
     private HomeFragBinding mBinding;
+    private List<String> selectorList = new ArrayList<>();
     private BaseReceiver homeBottleReceiver;
     private BaseReceiver bottleTitleReceiver;
 
@@ -26,6 +31,9 @@ public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
         super.setBinding(binding);
         mBinding = (HomeFragBinding) binding;
         playAnimator(mBinding.circleView);
+        selectorList.add("发布照片");
+        selectorList.add("发布小视频");
+
         mBinding.setShowBottle(true);
         homeBottleReceiver = new BaseReceiver(activity, "lobster_homeBottle") {
             @Override
@@ -67,6 +75,7 @@ public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
         ActivityUtils.getBottleThrow();
     }
 
+
     /**
      * 权限
      */
@@ -91,10 +100,12 @@ public class HomeViewModel extends BaseViewModel implements HomeVMInterface {
     private void setPermissions() {
         MineApp.toPublish = true;
         MineApp.toContinue = false;
-        if (mBinding.viewPage.getCurrentItem() == 2) {
-            ActivityUtils.getCameraVideo(false);
-        } else {
-            ActivityUtils.getCameraMain(activity, true, true, false);
-        }
+        new SelectorPW(mBinding.getRoot(), selectorList, position1 -> {
+            if (position1 == 0) {
+                ActivityUtils.getCameraMain(activity, true, true, false);
+            } else {
+                ActivityUtils.getCameraVideo(false);
+            }
+        });
     }
 }

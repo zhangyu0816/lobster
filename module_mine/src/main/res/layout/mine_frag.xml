@@ -355,52 +355,125 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/num_linear"
-                                android:layout_centerHorizontal="true"
-                                android:orientation="horizontal">
+                                android:layout_marginTop="15dp"
+                                android:background="@mipmap/mine_vip_bg"
+                                android:orientation="vertical"
+                                android:paddingBottom="15dp">
+
+                                <View
+                                    onClickDelayed="@{viewModel::openVip}"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="60dp" />
 
                                 <LinearLayout
-                                    android:layout_width="0dp"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:orientation="vertical">
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginTop="15dp"
+                                    android:layout_marginEnd="10dp"
+                                    android:orientation="horizontal">
 
-                                    <ImageView
-                                        onClickDelayed="@{viewModel::openVip}"
-                                        viewHeightSize="@{ObjectUtils.getVipBgHeight(0.44f)}"
-                                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.44f)}"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="15dp"
-                                        android:background="@mipmap/vip_long_icon" />
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:gravity="right"
-                                    android:orientation="vertical">
-
-                                    <ImageView
+                                    <LinearLayout
                                         onClickDelayed="@{viewModel::openShare}"
-                                        viewHeightSize="@{ObjectUtils.getVipBgHeight(0.44f)}"
-                                        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.44f)}"
-                                        android:layout_width="wrap_content"
+                                        android:layout_width="0dp"
                                         android:layout_height="wrap_content"
-                                        android:layout_marginTop="15dp"
-                                        android:background="@mipmap/red_long_icon" />
+                                        android:layout_marginEnd="5dp"
+                                        android:layout_weight="1"
+                                        android:background="@mipmap/mine_share_item_bg"
+                                        android:gravity="center_vertical"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="10dp"
+                                            android:text="分享送VIP"
+                                            android:textColor="@color/white"
+                                            android:textSize="14sp" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="10dp"
+                                            android:layout_marginTop="5dp"
+                                            android:text="推广1人，各得3天vip"
+                                            android:textColor="@color/white"
+                                            android:textSize="11sp" />
+
+                                    </LinearLayout>
+
+                                    <RelativeLayout
+                                        onClickDelayed="@{v->viewModel.contactNumDetail(2)}"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="5dp"
+                                        android:layout_weight="1"
+                                        android:background="@mipmap/mine_like_item_bg">
+
+                                        <LinearLayout
+                                            android:id="@+id/like_layout"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerVertical="true"
+                                            android:layout_marginStart="10dp"
+                                            android:gravity="center_vertical"
+                                            android:orientation="vertical">
+
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="谁喜欢我"
+                                                android:textColor="@color/white"
+                                                android:textSize="14sp" />
+
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginTop="5dp"
+                                                android:text='@{String.format("%d人喜欢你",contactNum.beLikeCount)}'
+                                                android:textColor="@color/white"
+                                                android:textSize="11sp" />
+                                        </LinearLayout>
+
+                                        <ImageView
+                                            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(194)}"
+                                            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(72)}"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerVertical="true"
+                                            android:layout_toEndOf="@+id/like_layout"
+                                            android:layout_marginStart="5dp"
+                                            android:background="@{mineInfo.sex==0?@drawable/be_like_male_icon:@drawable/be_like_female_icon}"
+                                            tools:background="@drawable/be_like_male_icon" />
+                                    </RelativeLayout>
                                 </LinearLayout>
 
+                                <RelativeLayout
+                                    onClickDelayed="@{viewModel::openShare}"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginEnd="10dp"
+                                    android:background="@mipmap/red_long_icon">
 
+                                    <ImageView
+                                        android:id="@+id/iv_go"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginEnd="10dp"
+                                        android:background="@mipmap/go_icon" />
+                                </RelativeLayout>
                             </LinearLayout>
-
                         </RelativeLayout>
                     </LinearLayout>
                 </androidx.appcompat.widget.Toolbar>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="70dp">
+                    android:layout_height="wrap_content">
 
                     <com.google.android.material.tabs.TabLayout
                         android:id="@+id/tab_layout"
@@ -429,8 +502,8 @@
                         android:layout_marginEnd="15dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:visibility="@{contactNum.beLikeCount==0?View.GONE:View.VISIBLE}">
-
+                        android:visibility="gone">
+                        <!--                        android:visibility="@{contactNum.beLikeCount==0?View.GONE:View.VISIBLE}"-->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

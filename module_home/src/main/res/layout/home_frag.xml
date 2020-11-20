@@ -69,21 +69,47 @@
                 android:src="@mipmap/search_icon" />
         </RelativeLayout>
 
-        <com.zb.lib_base.views.BottleTitleView
-            android:id="@+id/bottle_layout"
-            isPlay="@{isPlay}"
-            onClickDelayed="@{viewModel::entryBottle}"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/top_relative"
-            android:layout_margin="5dp"
-            android:visibility="@{showBottle?View.VISIBLE:View.GONE}" />
-
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/view_page"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/bottle_layout" />
+            android:layout_below="@+id/top_relative"
+            android:splitMotionEvents="false">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:elevation="0dp">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:visibility="@{showBottle?View.VISIBLE:View.GONE}"
+                    app:contentInsetStart="0dp"
+                    app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
+
+                    <com.zb.lib_base.views.BottleTitleView
+                        android:id="@+id/bottle_layout"
+                        isPlay="@{isPlay}"
+                        onClickDelayed="@{viewModel::entryBottle}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp" />
+                </androidx.appcompat.widget.Toolbar>
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/view_page"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <RelativeLayout
             onClickDelayed="@{viewModel::publishDiscover}"
