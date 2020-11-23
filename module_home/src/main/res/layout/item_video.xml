@@ -144,12 +144,33 @@
                 android:textSize="14sp"
                 tools:text="我看见佛二五九佛微积分围殴就佛为访问哦哦ij" />
 
-            <ImageView
-                onClickDelayed="@{viewModel::back}"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="15dp"
-                android:src="@mipmap/video_play_back_ico" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    onClickDelayed="@{viewModel::back}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:src="@mipmap/video_play_back_ico" />
+                <TextView
+                    onClickDelayed="@{v->viewModel.toReviews(position)}"
+                    android:layout_width="match_parent"
+                    android:layout_height="37dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/btn_bg_black_3b_radius60"
+                    android:gravity="center_vertical"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:text="留下你的精彩评论吧..."
+                    android:textColor="@color/black_80"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -196,9 +217,9 @@
                     android:visibility="invisible">
 
                     <ImageView
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(60)}"
-                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(60)}"
                         android:id="@+id/iv_attention"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(60)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(60)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/attention_icon" />

@@ -141,7 +141,7 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                     if (url.contains("shareSign")) {
                         activity.finish();
                     }
-                    ActivityUtils.getMineWeb("邀请好友赚钱", mUrl + "?userId=" + BaseActivity.userId + "&sessionId=" + BaseActivity.sessionId +
+                    ActivityUtils.getMineWeb("提现", mUrl + "?userId=" + BaseActivity.userId + "&sessionId=" + BaseActivity.sessionId +
                             "&pfDevice=Android&pfAppType=203&pfAppVersion=" + MineApp.versionName);
                 } else if (mUrl.contains("Share_faceToFacePage")) {
                     ActivityUtils.getMineWeb("面对面邀请", mUrl);
@@ -171,6 +171,14 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                     share(mUrl.replace("openwx:", ""), "openwx");
                 } else if (mUrl.contains("openqq:")) {
                     share(mUrl.replace("openqq:", ""), "openqq");
+                } else if (mUrl.contains("xgotheruserinfo:")) {
+                    if (!mUrl.isEmpty()) {
+                        try {
+                            ActivityUtils.getCardMemberDetail(Long.parseLong(mUrl.replace("xgotheruserinfo:", "")), false);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
                 } else
                     view.loadUrl(mUrl);
                 return true;
