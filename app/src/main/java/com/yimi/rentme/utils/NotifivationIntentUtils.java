@@ -33,11 +33,11 @@ public class NotifivationIntentUtils {
                 String[] finalKey = key.split("-");
                 String value = object.optString(key);
                 if ("Long".equals(finalKey[1])) {
-                    Long longValue = Long.valueOf(value);
+                    Long longValue = value.isEmpty() ? 0 : Long.parseLong(value);
                     intent.putExtra(finalKey[0], longValue);
                 }
                 if ("Integer".equals(finalKey[1])) {
-                    Integer longValue = Integer.valueOf(value);
+                    Integer longValue = value.isEmpty() ? 0 : Integer.parseInt(value);
                     intent.putExtra(finalKey[0], longValue);
                 }
                 if ("String".equals(finalKey[1])) {

@@ -101,7 +101,7 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
                 @Override
                 public void sure() {
                     MineApp.exit();
-                    ActivityUtils.getLoginActivity(3);
+                    ActivityUtils.getLoginVideoActivity();
                 }
 
                 @Override

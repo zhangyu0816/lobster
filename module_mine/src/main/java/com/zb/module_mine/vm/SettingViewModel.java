@@ -194,7 +194,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
                 PreferenceUtil.saveLongValue(activity, "userId", 0L);
                 PreferenceUtil.saveStringValue(activity, "loginPass", "");
                 BaseActivity.update();
-                ActivityUtils.getLoginActivity(0);
+                ActivityUtils.getLoginVideoActivity();
                 MineApp.exit();
             }
         }, activity);

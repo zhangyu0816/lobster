@@ -5,6 +5,7 @@ public class RouteUtils {
     public static final String Main_MainActivity = "/main/MainActivity";
     public static final String Main_Login = "/main/LoginActivity";
     public static final String Main_Binding_Phone = "/main/BindingPhoneActivity";
+    public static final String Main_Login_Video = "/main/LoginVideoActivity";
 
     /*********************** 首页 **************************/
     // 首页主fragment

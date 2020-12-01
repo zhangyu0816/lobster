@@ -24,6 +24,11 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Main_Binding_Phone).navigation(activity, 1002);
     }
 
+    // 登录视频
+    public static void getLoginVideoActivity() {
+        ARouter.getInstance().build(RouteUtils.Main_Login_Video).navigation();
+    }
+
     /*********************** 首页 **************************/
     // 图文动态
     public static void getHomePublishImage() {
