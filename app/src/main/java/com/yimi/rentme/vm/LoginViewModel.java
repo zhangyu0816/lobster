@@ -1,7 +1,6 @@
 package com.yimi.rentme.vm;
 
 import android.Manifest;
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +11,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
@@ -23,11 +23,12 @@ import com.yimi.rentme.databinding.AcLoginBinding;
 import com.yimi.rentme.iv.LoginVMInterface;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
-import com.zb.lib_base.adapter.AdapterBinding;
+import com.zb.lib_base.api.checkUserNameApi;
 import com.zb.lib_base.api.loginByCaptchaApi;
 import com.zb.lib_base.api.loginByPassApi;
 import com.zb.lib_base.api.loginByUnionApi;
 import com.zb.lib_base.api.loginCaptchaApi;
+import com.zb.lib_base.api.modifyMemberInfoApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.registerApi;
 import com.zb.lib_base.api.registerCaptchaApi;
@@ -37,17 +38,16 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.imcore.ImUtils;
+import com.zb.lib_base.model.CheckUser;
 import com.zb.lib_base.model.LoginInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
-import com.zb.lib_base.utils.MNImage;
 import com.zb.lib_base.utils.Mac;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
-import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
 import com.zb.lib_base.utils.ThreeLogin;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -67,59 +67,62 @@ import java.util.Map;
 
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.ViewDataBinding;
-import androidx.recyclerview.widget.ItemTouchHelper;
 
 public class LoginViewModel extends BaseViewModel implements LoginVMInterface, TextWatcher {
     public Map<Integer, String> titleMap = new HashMap<>();
-    public int loginStep = 0;// 0：主页  1：昵称  2：生日  3：手机号  4：验证码  5：个人头像  6：多图  7：密码登录
-    public MainAdapter adapter;
-    public List<String> moreImageList = new ArrayList<>();
+    public Map<Integer, String> contentMap = new HashMap<>();
+    public int loginStep = 0;// 0：手机号  1：密码登录  2：验证码
+    public MainAdapter mAdapter;
+    private List<String> tagList = new ArrayList<>();
     private AcLoginBinding mBinding;
     private long changeTime = 0;
     private TextView[] array = new TextView[4];
     private CountDownTimer timer;
     private int second = 120;
     private boolean canGetCode = true;
-    private int _position;
     private BaseReceiver cameraReceiver;
     private BaseReceiver bindPhoneReceiver;
     private PhotoManager photoManager;
     private AMapLocation aMapLocation;
     private ThreeLogin threeLogin;
     private int passErrorCount = 0;
+    private CheckUser mCheckUser;
+    private BaseReceiver memberReceiver;
+    private boolean needMoreInfo = false;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         MineApp.activityMap.put("LoginActivity", activity);
-        for (int i = 0; i < 6; i++) {
-            moreImageList.add("");
-        }
-        titleMap.put(0, "嗨！您的性别为...");
-        titleMap.put(1, "下一步，您叫什么名字？");
-        titleMap.put(3, "您的手机号码是？");
-        titleMap.put(4, "请输入验证码");
-        titleMap.put(5, "请选择您的照片哦");
-        titleMap.put(6, "眼光不错！\n一般来说照片越多越好");
-        titleMap.put(7, "请输入密码");
+        titleMap.put(0, "登录/注册 更精彩");
+        contentMap.put(0, "输入手机号后，开始探索虾菇！未注册手机，\n将自动进入注册页面。");
+
+        titleMap.put(1, "账号登录");
+        contentMap.put(1, "输入密码后请点击“开启虾菇”即刻进入虾菇世界！");
+
+        titleMap.put(3, "选择性别");
+        contentMap.put(3, "请告诉我们你是小哥哥还是小姐姐哦～");
+
+        titleMap.put(4, "输入昵称");
+        contentMap.put(4, "你想取什么名字，这是你在虾菇上使用的名字哦～");
+
+        titleMap.put(5, "选择你的生日哦");
+        contentMap.put(5, "必须满18岁以上才能使用虾菇哦～");
+
+        titleMap.put(6, "请选择您的照片哦");
+        contentMap.put(6, "第一张照片将会当成头像和首图");
+
+        titleMap.put(7, "快完成啦！");
+        contentMap.put(7, "最后补充好你的个人资料吧～不填写就显示默认");
 
         mBinding = (AcLoginBinding) binding;
-        AdapterBinding.viewSize(mBinding.whiteBg, MineApp.W, 10);
-        MineApp.registerInfo.setPhone(PreferenceUtil.readStringValue(activity, "userName"));
-        mBinding.setPass(PreferenceUtil.readStringValue(activity, "loginPass"));
-        mBinding.setRegisterInfo(MineApp.registerInfo);
-        mBinding.setCanNext(false);
-        mBinding.edNick.addTextChangedListener(this);
+
         mBinding.edPhone.addTextChangedListener(this);
         mBinding.edCode.addTextChangedListener(this);
         mBinding.edPass.addTextChangedListener(this);
-
-        if (loginStep == 3) {
-            toLogin(null);
-        } else {
-            mBinding.setLoginStep(loginStep);
-            mBinding.setRight("");
-        }
+        mBinding.edNick.addTextChangedListener(this);
+        mBinding.setSexIndex(2);
+        mBinding.setSexIndex(2);
 
         threeLogin = new ThreeLogin(activity, this::loginByUnion);
         ImUtils.getInstance().setCallBackForLogin(() -> {
@@ -139,11 +142,11 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         timer = new CountDownTimer(second * 1000, 1000) {
             public void onTick(long millisUntilFinished) {
                 canGetCode = false;
-                mBinding.setCodeRemark(activity.getResources().getString(R.string.code_second, millisUntilFinished / 1000));
+                mBinding.setCodeRemark(Html.fromHtml(activity.getResources().getString(R.string.code_second, millisUntilFinished / 1000)));
             }
 
             public void onFinish() {
-                mBinding.setCodeRemark("验证码没收到？重新试试！");
+                mBinding.setCodeRemark(Html.fromHtml("验证码没收到？重新试试！"));
                 timer.cancel();
                 canGetCode = true;
             }
@@ -159,8 +162,22 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         bindPhoneReceiver = new BaseReceiver(activity, "lobster_bindPhone") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                moreImageList.set(0, MineApp.registerInfo.getUnionImage());
-                mBinding.setIsThree(true);
+                MineApp.registerInfo.setImage(MineApp.registerInfo.getUnionImage());
+                ActivityUtils.getBindingPhoneActivity(activity, true);
+            }
+        };
+
+        memberReceiver = new BaseReceiver(activity, "lobster_member") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String content = intent.getStringExtra("content");
+                MineApp.registerInfo.setServiceTags(content);
+                tagList.clear();
+                mAdapter.notifyDataSetChanged();
+                if (!content.isEmpty()) {
+                    tagList.addAll(Arrays.asList(content.substring(1, content.length() - 1).split("#")));
+                    mAdapter.notifyDataSetChanged();
+                }
             }
         };
 
@@ -168,18 +185,42 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
         getPermissions(0);
 
+        photoManager = new PhotoManager(activity, () -> {
+            MineApp.registerInfo.setMoreImages(photoManager.jointWebUrl("#"));
+            MineApp.registerInfo.setImage(photoManager.jointWebUrl("#"));
+            photoManager.deleteAllFile();
+            needMoreInfo = true;
+            if (MineApp.registerInfo.getOpenId().isEmpty())
+                register();
+            else {
+                MineApp.registerInfo.setUnionImage(photoManager.jointWebUrl("#"));
+                loginByUnion();
+            }
+        });
+        step(0);
         setAdapter();
+    }
+
+    @Override
+    public void setAdapter() {
+        tagList.add("旅行");
+        tagList.add("摄影");
+        tagList.add("乐观主义");
+        tagList.add("老实孩子");
+        tagList.add("简单");
+        tagList.add("音乐会");
+        MineApp.registerInfo.setServiceTags("#旅行#摄影#乐观主义#老实孩子#简单#音乐会#");
+        mAdapter = new MainAdapter<>(activity, R.layout.item_select_tag, tagList, this);
     }
 
     public void onDestroy() {
         try {
             cameraReceiver.unregisterReceiver();
             bindPhoneReceiver.unregisterReceiver();
+            memberReceiver.unregisterReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (outAlpha != null)
-            outAlpha = null;
     }
 
     /**
@@ -187,23 +228,15 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
      */
     public void setSingleLogo(String filePath) {
         mBinding.setCanNext(true);
-        if (moreImageList.get(_position).isEmpty()) {
-            for (int i = 0; i < moreImageList.size(); i++) {
-                if (moreImageList.get(i).isEmpty()) {
-                    _position = i;
-                    moreImageList.set(_position, filePath);
-                    adapter.notifyItemChanged(_position);
-                    if (_position == 0)
-                        mBinding.setImageUrl(moreImageList.get(0));
-                    return;
-                }
-            }
-        } else {
-            moreImageList.set(_position, filePath);
-            adapter.notifyItemChanged(_position);
-            if (_position == 0)
-                mBinding.setImageUrl(moreImageList.get(0));
-        }
+        MineApp.registerInfo.setImage(filePath);
+        mBinding.setImageUrl(filePath);
+    }
+
+    public void setInfo(String bindPhone, String captcha) {
+        MineApp.registerInfo.setBindPhone(bindPhone);
+        MineApp.registerInfo.setCaptcha(captcha);
+        mBinding.setIsThree(true);
+        step(3);
     }
 
     private long exitTime = 0;
@@ -224,32 +257,34 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                     System.exit(0);
                 }
                 break;
-            case 1: // 昵称页返回
-                mBinding.setIsThree(false);
+            case 1: // 账号登录返回
                 step(0);
                 break;
-            case 2: // 生日页返回
-                step(1);
-                break;
-            case 3: // 手机号页返回
-                if (mBinding.getRight().isEmpty()) {
-                    step(2);
-                } else {
-                    mBinding.setRight("");
-                    mBinding.setIsThree(false);
+            case 2: // 验证码登录返回
+                if (mCheckUser.getIsRegister() == 0)
                     step(0);
+                else {
+                    step(1);
                 }
                 break;
-            case 4: // 验证码页返回
-            case 5: // 个人头像返回  直接返回手机页
+            case 3: // 性别页返回
+                if (mBinding.getIsThree()) {
+                    step(0);
+                } else {
+                    step(2);
+                }
+                break;
+            case 4: // 名字页返回
                 step(3);
+                break;
+            case 5: //
+                step(4);
                 break;
             case 6:
                 step(5);
                 break;
             case 7:
-                mBinding.setRight("密码登录");
-                step(3);
+                step(6);
                 break;
         }
     }
@@ -258,48 +293,24 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     public void right(View view) {
         super.right(view);
         hintKeyBoard();
-        if (TextUtils.equals(mBinding.getRight(), "密码登录")) {
-            if (!MineApp.registerInfo.getPhone().matches(MineApp.PHONE_NUMBER_REG)) {
-                SCToastUtil.showToast(activity, "请输入正确的手机号", true);
-                return;
-            }
-            mBinding.setRight("验证码登录");
-            step(7);
-        } else {
-            if (canGetCode)
-                loginCaptcha();
-            else {
-                mBinding.setRight("密码登录");
-                step(4);
-            }
+        if (canGetCode)
+            loginCaptcha();
+        else {
+            step(2);
         }
     }
 
     @Override
-    public void setAdapter() {
-        adapter = new MainAdapter<>(activity, R.layout.item_logo, moreImageList, this);
-        SimpleItemTouchHelperCallback callback = new SimpleItemTouchHelperCallback(adapter);
-        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(mBinding.imagesList);
-        callback.setSort(true);
-        callback.setDragFlags(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT);
-
-        photoManager = new PhotoManager(activity, () -> {
-            MineApp.registerInfo.setMoreImages(photoManager.jointWebUrl("#"));
-            photoManager.deleteAllFile();
-            if (MineApp.registerInfo.getOpenId().isEmpty())
-                register();
-            else {
-                MineApp.registerInfo.setUnionImage(MineApp.registerInfo.getMoreImages().split("#")[0]);
-                loginByUnion();
-            }
-        });
+    public void cleanPhone(View view) {
+        MineApp.registerInfo.setPhone("");
+        mBinding.setRegisterInfo(MineApp.registerInfo);
     }
 
     @Override
     public void selectSex(int sex) {
+        mBinding.setCanNext(true);
         MineApp.registerInfo.setSex(sex);
-        showRule();// 跳转昵称页
+        mBinding.setSexIndex(sex);
     }
 
     @Override
@@ -314,41 +325,17 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     @Override
     public void resetCode(View view) {
         if (canGetCode) {
-            if (mBinding.getRight().isEmpty()) {
+            if (mCheckUser.getIsRegister() == 0) {
                 registerCaptcha();
             } else {
                 loginCaptcha();
             }
-        } else {
-            SCToastUtil.showToast(activity, "短信验证码已发送，请稍后再重试", true);
         }
     }
 
     @Override
     public void upload(View view) {
-        _position = 0;
         getPermissions(1);
-    }
-
-    @Override
-    public void selectImage(int position) {
-        if (moreImageList.get(position).isEmpty()) {
-            _position = position;
-            getPermissions(1);
-        } else {
-            ArrayList<String> imageList = new ArrayList<>();
-            for (String s : moreImageList) {
-                if (!s.isEmpty()) {
-                    imageList.add(s);
-                }
-            }
-            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, true, position12 -> {
-                adapter.notifyItemRemoved(position12);
-                moreImageList.remove(position12);
-                moreImageList.add("");
-                adapter.notifyDataSetChanged();
-            });
-        }
     }
 
     @Override
@@ -372,49 +359,35 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         hintKeyBoard();
         if (mBinding.getCanNext())
             switch (mBinding.getLoginStep()) {
-                case 1: // 跳转生日页
-                    step(2);
+                case 0: // 验证手机号
+                    PreferenceUtil.saveStringValue(activity, "userName", MineApp.registerInfo.getPhone());
+                    checkUserName();
                     break;
-                case 2: // 跳转手机页
+                case 1: // 账号登录
+                    loginByPass();
+                    break;
+                case 2: // 注册验证码
                     step(3);
                     break;
-                case 3: // 跳转验证码页
-                    if (!MineApp.registerInfo.getPhone().matches(MineApp.PHONE_NUMBER_REG)) {
-                        SCToastUtil.showToast(activity, "请输入正确的手机号", true);
-                    } else {
-                        if (mBinding.getRight().isEmpty()) {
-                            registerCaptcha();
-                        } else {
-                            loginCaptcha();
-                        }
-                    }
+                case 3: // 选择性别
+                    step(4);
                     break;
-                case 4: // 跳转个人头像页 or 验证码登录
-                    if (mBinding.getRight().isEmpty()) {
-                        step(5);
-                    } else {
-                        loginByCaptcha();
-                    }
+                case 4: // 名字
+                    step(5);
+                    selectBirthday(view);
                     break;
                 case 5:
                     step(6);
                     break;
                 case 6:
-                    StringBuilder images = new StringBuilder();
-                    for (String image : moreImageList) {
-                        if (!image.isEmpty()) {
-                            images.append("#").append(image);
-                        }
-                    }
-                    if (images.length() == 0) {
+                    step(7);
+                    break;
+                case 7:
+                    if (MineApp.registerInfo.getImage().isEmpty()) {
                         SCToastUtil.showToast(activity, "请上传至少1张照片", false);
                         return;
                     }
-                    images = new StringBuilder(images.substring(1));
-                    photoManager.addFiles(Arrays.asList(images.toString().split("#")), () -> photoManager.reUploadByUnSuccess());
-                    break;
-                case 7:
-                    loginByPass();
+                    photoManager.addFileUpload(0, new File(MineApp.registerInfo.getImage()));
                     break;
             }
     }
@@ -432,32 +405,28 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     }
 
     @Override
+    public void selectTag(View view) {
+        String selectList = "";
+        for (String item : tagList) {
+            selectList += item + "#";
+        }
+        if (!selectList.isEmpty())
+            selectList = "#" + selectList;
+
+        ActivityUtils.getMineSelectTag(selectList);
+    }
+
+    @Override
     public void registerCaptcha() {
         // 注册验证码
         registerCaptchaApi api = new registerCaptchaApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToast(activity, "验证码已发送，请注意查收", false);
-                if (mBinding.getLoginStep() == 3) {
-                    step(4);
-                    mBinding.setCodeRemark(activity.getResources().getString(R.string.code_second, second));
-                    timer.start();
-                }
+                step(2);
+                mBinding.setCodeRemark(Html.fromHtml(activity.getResources().getString(R.string.code_second, second)));
+                timer.start();
             }
-
-            @Override
-            public void onError(Throwable e) {
-                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 12) {
-                    new TextPW(mBinding.getRoot(), "温馨提示", "该手机号已注册过，是否前往登录？", "去登录", () -> {
-                        mBinding.setCodeRemark("");
-                        mBinding.setRight("密码登录");
-                        mBinding.setBtnName("获取登录验证码");
-                        loginCaptcha();
-                    });
-                }
-            }
-        }, activity)
-                .setUserName(MineApp.registerInfo.getPhone());
+        }, activity).setUserName(MineApp.registerInfo.getPhone());
         api.setPosition(1);
         HttpManager.getInstance().doHttpDeal(api);
     }
@@ -467,13 +436,9 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         loginCaptchaApi api = new loginCaptchaApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToast(activity, "验证码已发送，请注意查收", false);
-                mBinding.setRight("密码登录");
-                if (mBinding.getLoginStep() == 3 || mBinding.getLoginStep() == 7) {
-                    step(4);
-                    mBinding.setCodeRemark(activity.getResources().getString(R.string.code_second, second));
-                    timer.start();
-                }
+                step(2);
+                mBinding.setCodeRemark(Html.fromHtml(activity.getResources().getString(R.string.code_second, second)));
+                timer.start();
             }
         }, activity).setUserName(MineApp.registerInfo.getPhone());
         api.setPosition(1);
@@ -493,7 +458,10 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
                 PreferenceUtil.saveIntValue(activity, "myIsThreeLogin", 0);
                 SCToastUtil.showToast(activity, "注册成功", true);
-                myInfo();
+                if (needMoreInfo) {
+                    modifyMemberInfo();
+                } else
+                    myInfo();
             }
         }, activity)
                 .setUserName(MineApp.registerInfo.getPhone())
@@ -522,10 +490,13 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 PreferenceUtil.saveStringValue(activity, "userName", "");
                 PreferenceUtil.saveStringValue(activity, "loginPass", "");
                 if (o.getPhoneNum().isEmpty()) {
-                    ActivityUtils.getBindingPhoneActivity(activity);
+                    ActivityUtils.getBindingPhoneActivity(activity, false);
                 } else {
                     SCToastUtil.showToast(activity, "登录成功", true);
-                    myInfo();
+                    if (needMoreInfo) {
+                        modifyMemberInfo();
+                    } else
+                        myInfo();
                 }
             }
         }, activity)
@@ -535,8 +506,8 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 .setUnionNick(MineApp.registerInfo.getName())
                 .setUnionSex(MineApp.registerInfo.getSex())
                 .setUnionType(MineApp.registerInfo.getUnionType())
-                .setUserName(MineApp.registerInfo.getPhone())
-                .setCaptcha(mBinding.edCode.getText().toString())
+                .setUserName(MineApp.registerInfo.getBindPhone())
+                .setCaptcha(MineApp.registerInfo.getCaptcha())
                 .setNick(MineApp.registerInfo.getName())
                 .setBirthday(MineApp.registerInfo.getBirthday())
                 .setMoreImages(MineApp.registerInfo.getMoreImages())
@@ -544,6 +515,29 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 .setProvinceId(AreaDb.getInstance().getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
                 .setCityId(AreaDb.getInstance().getCityId(MineApp.cityName))
                 .setDistrictId(AreaDb.getInstance().getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void modifyMemberInfo() {
+        needMoreInfo = false;
+        modifyMemberInfoApi api = new modifyMemberInfoApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                myInfo();
+            }
+        }, activity)
+                .setBirthday(MineApp.registerInfo.getBirthday())
+                .setImage(MineApp.registerInfo.getImage())
+                .setMoreImages(MineApp.registerInfo.getMoreImages())
+                .setNick(MineApp.registerInfo.getName())
+                .setJob(MineApp.registerInfo.getJob().isEmpty() ? "设计师" : MineApp.registerInfo.getJob())
+                .setPersonalitySign(MineApp.registerInfo.getPersonalitySign().isEmpty() ? "有趣之人终相遇" : MineApp.registerInfo.getPersonalitySign())
+                .setSex(MineApp.registerInfo.getSex())
+                .setServiceTags(MineApp.registerInfo.getServiceTags())
+                .setProvinceId(AreaDb.getInstance().getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
+                .setCityId(AreaDb.getInstance().getCityId(MineApp.cityName))
+                .setDistrictId(AreaDb.getInstance().getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
+        api.setShowProgress(false);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -562,19 +556,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 SCToastUtil.showToast(activity, "登录成功", true);
                 myInfo();
             }
-
-            @Override
-            public void onError(Throwable e) {
-                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
-                    if (TextUtils.equals(e.getMessage(), "账号尚未注册")) {
-                        new TextPW(mBinding.getRoot(), "完善个人信息", "请完成个人信息填写流程", "去完善", () -> {
-                            mBinding.setRight("");
-                            mBinding.setIsThree(false);
-                            step(0);
-                        });
-                    }
-                }
-            }
         }, activity)
                 .setUserName(MineApp.registerInfo.getPhone())
                 .setCaptcha(mBinding.edCode.getText().toString());
@@ -590,7 +571,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 PreferenceUtil.saveLongValue(activity, "userId", o.getId());
                 PreferenceUtil.saveStringValue(activity, "sessionId", o.getSessionId());
                 PreferenceUtil.saveStringValue(activity, "userName", o.getUserName());
-                PreferenceUtil.saveStringValue(activity, "loginPass", mBinding.getPass());
+                PreferenceUtil.saveStringValue(activity, "loginPass", MineApp.registerInfo.getPass());
                 BaseActivity.update();
                 PreferenceUtil.saveIntValue(activity, "myIsThreeLogin", 0);
                 SCToastUtil.showToast(activity, "登录成功", true);
@@ -608,8 +589,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                                 if (canGetCode)
                                     loginCaptcha();
                                 else {
-                                    mBinding.setRight("密码登录");
-                                    step(4);
+                                    step(2);
                                 }
                             });
                         }
@@ -619,8 +599,25 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             }
         }, activity)
                 .setUserName(MineApp.registerInfo.getPhone())
-                .setPassWord(mBinding.getPass());
+                .setPassWord(MineApp.registerInfo.getPass());
         api.setPosition(1);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void checkUserName() {
+        checkUserNameApi api = new checkUserNameApi(new HttpOnNextListener<CheckUser>() {
+            @Override
+            public void onNext(CheckUser o) {
+                // 1.已注册 0.未注册
+                mCheckUser = o;
+                if (mCheckUser.getIsRegister() == 0) {
+                    showRule();// 显示协议
+                } else {
+                    step(1);
+                }
+            }
+        }, activity).setUserName(MineApp.registerInfo.getPhone());
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -659,11 +656,11 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     @Override
     public void afterTextChanged(Editable editable) {
         String content = editable.toString();
-        if (mBinding.getLoginStep() == 1)
-            mBinding.setCanNext(!content.isEmpty());
-        else if (mBinding.getLoginStep() == 3) {
+        if (mBinding.getLoginStep() == 0) {
             mBinding.setCanNext(content.length() == 11);
-        } else if (mBinding.getLoginStep() == 4) {
+        } else if (mBinding.getLoginStep() == 1) {
+            mBinding.setCanNext(content.length() >= 6);
+        } else if (mBinding.getLoginStep() == 2) {
             for (int i = 0; i < 4; i++) {
                 if (i < content.length()) {
                     array[i].setText(String.valueOf(content.charAt(i)));
@@ -674,14 +671,14 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             mBinding.setCanNext(content.length() == 4);
             if (content.length() == 4) {
                 hintKeyBoard();
-                if (mBinding.getRight().isEmpty()) {
-                    step(5);
+                if (mCheckUser.getIsRegister() == 0) {
+                    step(3);
                 } else {
                     loginByCaptcha();
                 }
             }
-        } else if (mBinding.getLoginStep() == 7) {
-            mBinding.setCanNext(content.length() >= 6);
+        } else if (mBinding.getLoginStep() == 4) {
+            mBinding.setCanNext(!content.isEmpty());
         }
     }
 
@@ -691,7 +688,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 @Override
                 public void sureBack() {
                     PreferenceUtil.saveIntValue(activity, "ruleType1", 1);
-                    step(1);
+                    registerCaptcha();
                 }
 
                 @Override
@@ -700,75 +697,54 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 }
             }), 200);
         } else {
-            step(1);
+            registerCaptcha();
         }
     }
 
     private void step(int step) {
         mBinding.setLoginStep(step);
+        mBinding.setRight("");
         switch (step) {
-            case 0:
-                outAlpha(mBinding.step0Layout);
-                MineApp.registerInfo.setOpenId("");
-                MineApp.registerInfo.setUnionId("");
+            case 0: // 手机号
+                MineApp.registerInfo = new RegisterInfo();
+                MineApp.registerInfo.setPhone(PreferenceUtil.readStringValue(activity, "userName"));
+                MineApp.registerInfo.setPass(PreferenceUtil.readStringValue(activity, "loginPass"));
+                mBinding.setRegisterInfo(MineApp.registerInfo);
+                mBinding.setCanNext(!MineApp.registerInfo.getPhone().isEmpty());
                 mBinding.setIsThree(false);
+                mBinding.setBtnName("下一步");
                 break;
-            case 1:
-                outAlpha(mBinding.step1Layout);
-                AdapterBinding.viewSize(mBinding.whiteView, MineApp.W / 6, 10);
-                mBinding.setBtnName("继续");
-                mBinding.setCanNext(!MineApp.registerInfo.getName().isEmpty());
+            case 1: // 密码登录
+                mBinding.setCanNext(MineApp.registerInfo.getPass().length() >= 6);
+                mBinding.setRight("验证码登录");
+                mBinding.setBtnName("开启虾菇");
                 break;
-            case 2:
-                outAlpha(mBinding.step2Layout);
-                titleMap.put(2, "嗨 " + MineApp.registerInfo.getName() + "！\n您的生日是？");
-                AdapterBinding.viewSize(mBinding.whiteView, MineApp.W / 3, 10);
-                mBinding.setBtnName("继续");
-                mBinding.setCanNext(!MineApp.registerInfo.getBirthday().isEmpty());
-                break;
-            case 3:
-                if (mBinding.getRight().isEmpty()) {
-                    mBinding.setBtnName("获取注册验证码");
-                } else {
-                    mBinding.setBtnName("获取登录验证码");
-                }
-                outAlpha(mBinding.step3Layout);
-                AdapterBinding.viewSize(mBinding.whiteView, MineApp.W / 2, 10);
-                mBinding.setCanNext(MineApp.registerInfo.getPhone().length() == 11);
-                if (!MineApp.registerInfo.getPhone().isEmpty()) {
-                    mBinding.edPhone.setText(MineApp.registerInfo.getPhone());
-                    mBinding.edPhone.setSelection(MineApp.registerInfo.getPhone().length());
-                }
-                break;
-            case 4:
-                outAlpha(mBinding.step4Layout);
-                AdapterBinding.viewSize(mBinding.whiteView, mBinding.getRight().isEmpty() ? MineApp.W * 2 / 3 : MineApp.W, 10);
+            case 2: // 验证码
                 mBinding.setCanNext(false);
-                mBinding.setBtnName("确认");
                 mBinding.edCode.setText("");
+                titleMap.put(2, mCheckUser.getIsRegister() == 0 ? "注册虾菇" : "账号登录");
+                contentMap.put(2, "");
+                mBinding.setBtnName(mCheckUser.getIsRegister() == 0 ? "下一步" : "开启虾菇");
                 break;
-            case 5:
-                outAlpha(mBinding.step5Layout);
-                AdapterBinding.viewSize(mBinding.whiteView, MineApp.W * 5 / 6, 10);
-                mBinding.setCanNext(!moreImageList.get(0).isEmpty());
-                mBinding.setBtnName("确认上传");
-                mBinding.setImageUrl(moreImageList.get(0));
+            case 3: // 性别
+                mBinding.setCanNext(mBinding.getSexIndex() != 2);
+                mBinding.setBtnName("下一步");
+                break;
+            case 4: // 名字
+                mBinding.setCanNext(!MineApp.registerInfo.getName().isEmpty());
+                mBinding.setBtnName("下一步");
+                break;
+            case 5: // 生日
+                mBinding.setCanNext(!MineApp.registerInfo.getBirthday().isEmpty());
+                mBinding.setBtnName("下一步");
                 break;
             case 6:
-                outAlpha(mBinding.step6Layout);
-                AdapterBinding.viewSize(mBinding.whiteView, MineApp.W, 10);
-                mBinding.setBtnName("开始使用吧");
-                mBinding.setCanNext(true);
+                mBinding.setCanNext(mBinding.getImageUrl() != null);
+                mBinding.setBtnName("下一步");
                 break;
             case 7:
-                outAlpha(mBinding.step7Layout);
-                AdapterBinding.viewSize(mBinding.whiteView, MineApp.W, 10);
-                mBinding.setBtnName("登录");
-                mBinding.setCanNext(MineApp.registerInfo.getPass().length() > 5);
-                if (!mBinding.getPass().isEmpty()) {
-                    mBinding.edPass.setText(mBinding.getPass());
-                    mBinding.edPass.setSelection(mBinding.getPass().length());
-                }
+                mBinding.setCanNext(true);
+                mBinding.setBtnName("开启虾菇吧");
                 break;
         }
     }
@@ -841,17 +817,5 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             e.printStackTrace();
         }
         PreferenceUtil.saveStringValue(activity, "deviceHardwareInfo", object.toString());
-    }
-
-    private ObjectAnimator outAlpha;
-
-    private void outAlpha(View view) {
-        outAlpha = ObjectAnimator.ofFloat(view, "alpha", 0f, 1f).setDuration(500);
-        outAlpha.start();
-        new Handler().postDelayed(() -> {
-            if (outAlpha != null)
-                outAlpha.cancel();
-            outAlpha = null;
-        }, 500);
     }
 }

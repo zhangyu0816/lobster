@@ -39,15 +39,15 @@
 
         <variable
             name="codeRemark"
-            type="String" />
+            type="android.text.Spanned" />
 
         <variable
             name="imageUrl"
             type="String" />
 
         <variable
-            name="pass"
-            type="String" />
+            name="sexIndex"
+            type="Integer" />
 
     </data>
 
@@ -58,88 +58,123 @@
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/tv_next">
-
+            android:layout_height="match_parent">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-
                 <RelativeLayout
                     android:id="@+id/login_top_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:visibility="@{loginStep==0?View.INVISIBLE:View.VISIBLE}">
+                    android:layout_height="56dp">
 
-                    <TextView
-                        android:id="@+id/white_bg"
-                        android:layout_width="match_parent"
-                        android:layout_height="5dp"
-                        android:layout_above="@+id/relativeLayout"
-                        android:alpha="0.3"
-                        android:background="@android:color/white" />
-
-                    <TextView
-                        android:id="@+id/white_view"
+                    <ImageView
+                        android:id="@+id/iv_back"
                         android:layout_width="wrap_content"
-                        android:layout_height="5dp"
-                        android:layout_above="@+id/relativeLayout"
-                        android:background="@android:color/white" />
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:onClick="@{viewModel::back}"
+                        android:padding="15dp"
+                        app:srcCompat="@mipmap/back_white_icon" />
 
-                    <RelativeLayout
-                        android:id="@+id/relativeLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_alignParentBottom="true">
-
-                        <ImageView
-                            android:id="@+id/iv_back"
-                            android:onClick="@{viewModel::back}"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginStart="5dp"
-                            android:padding="10dp"
-                            app:srcCompat="@mipmap/back_white_icon" />
-
-                        <TextView
-                            android:id="@+id/tv_right"
-                            onClickDelayed="@{viewModel::right}"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginEnd="10dp"
-                            android:alpha="0.8"
-                            android:padding="5dp"
-                            android:text="@{right}"
-                            android:textColor="@android:color/white"
-                            android:textSize="16sp"
-                            android:visibility="@{right.empty?View.GONE:View.VISIBLE}" />
-                    </RelativeLayout>
+                    <TextView
+                        android:id="@+id/tv_right"
+                        onClickDelayed="@{viewModel::right}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:alpha="0.8"
+                        android:padding="15dp"
+                        android:text="@{right}"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp"
+                        android:visibility="@{right.empty?View.GONE:View.VISIBLE}"
+                        tools:text="密码登录" />
                 </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/tv_title"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/title_layout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/login_top_layout"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="60dp"
-                    android:layout_marginBottom="80dp"
-                    android:onClick="@{viewModel::changeUrl}"
-                    android:text="@{viewModel.titleMap.get(loginStep)}"
-                    android:textColor="@android:color/white"
-                    android:textSize="25sp"
-                    android:textStyle="bold"
-                    tools:text="下一步，您叫什么名字？" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="38dp"
+                        android:layout_marginTop="36dp"
+                        android:onClick="@{viewModel::changeUrl}"
+                        android:text="@{viewModel.titleMap.get(loginStep)}"
+                        android:textColor="@android:color/white"
+                        android:textSize="27sp"
+                        android:textStyle="bold"
+                        tools:text="选择你的生日哦" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="38dp"
+                        android:layout_marginTop="36dp"
+                        android:orientation="vertical"
+                        android:visibility="@{(loginStep==1||loginStep==2)?View.VISIBLE:View.GONE}"
+                        tools:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="25dp"
+                            android:text="验证码已通过短信发送至："
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:visibility="@{loginStep==2?View.VISIBLE:View.GONE}"
+                            tools:visibility="visible" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <View
+                                android:layout_width="7dp"
+                                android:layout_height="7dp"
+                                android:background="@drawable/circle_green" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@{registerInfo.phone}"
+                                android:textColor="@color/white"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                tools:text="18989799141" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="38dp"
+                        android:layout_marginTop="36dp"
+                        android:layout_marginBottom="45dp"
+                        android:alpha="0.6"
+                        android:text="@{viewModel.contentMap.get(loginStep)}"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"
+                        android:visibility="@{viewModel.contentMap.get(loginStep).empty?View.GONE:View.VISIBLE}"
+                        tools:text="这是您在虾菇上使用的名字"
+                        tools:visibility="visible" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_below="@+id/tv_title"
+                    android:layout_below="@+id/title_layout"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -148,321 +183,164 @@
                         android:layout_height="match_parent"
                         android:gravity="center_horizontal"
                         android:orientation="vertical"
-                        android:visibility="@{loginStep==0?View.VISIBLE:View.GONE}">
+                        android:visibility="@{loginStep==0?View.VISIBLE:View.GONE}"
+                        tools:visibility="gone">
 
-                        <LinearLayout
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="38dp"
+                            android:layout_marginEnd="38dp"
+                            android:background="@drawable/btn_bg_white_tran_radius60">
+
+                            <EditText
+                                android:id="@+id/ed_phone"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@null"
+                                android:hint="输入手机号注册或登录"
+                                android:inputType="phone"
+                                android:maxLength="11"
+                                android:paddingStart="25dp"
+                                android:paddingTop="13dp"
+                                android:paddingEnd="25dp"
+                                android:paddingBottom="13dp"
+                                android:text="@={registerInfo.phone}"
+                                android:textColor="@color/white"
+                                android:textColorHint="#CDB1FF"
+                                android:textSize="14sp"
+                                tools:text="18989799141" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:onClick="@{viewModel::cleanPhone}"
+                                android:padding="15dp"
+                                android:src="@mipmap/clean_phone_icon" />
+                        </RelativeLayout>
+
+                        <ImageView
+                            onClickDelayed="@{viewModel::toWX}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:layout_marginTop="94dp"
+                            android:background="@mipmap/login_by_wx_icon" />
 
-                            <TextView
-                                onClickDelayed="@{v->viewModel.selectSex(1)}"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:drawableTop="@mipmap/boy_icon"
-                                android:gravity="center"
-                                android:text="男"
-                                android:textColor="@color/white"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                onClickDelayed="@{v->viewModel.selectSex(0)}"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:drawableTop="@mipmap/girl_icon"
-                                android:gravity="center"
-                                android:text="女"
-                                android:textColor="@color/white"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
-                            android:gravity="center"
-                            android:text="请完善个人资料"
-                            android:textColor="@color/white"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            android:visibility="@{isThree?View.VISIBLE:View.INVISIBLE}" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="30dp"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:visibility="@{isThree?View.GONE:View.VISIBLE}"
-                            app:layout_constraintBottom_toTopOf="@+id/textView5"
-                            app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-                            <LinearLayout
-                                onClickDelayed="@{viewModel::toLogin}"
-                                android:layout_width="match_parent"
-                                android:layout_height="48dp"
-                                android:layout_marginStart="63dp"
-                                android:layout_marginEnd="63dp"
-                                android:background="@drawable/btn_bg_white_radius60_66"
-                                android:gravity="center"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="120dp"
-                                    android:layout_height="48dp"
-                                    android:drawableStart="@mipmap/login_by_phone_icon"
-                                    android:gravity="center"
-                                    android:text="手机登录"
-                                    android:textColor="@color/white"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                onClickDelayed="@{viewModel::toQQ}"
-                                android:layout_width="match_parent"
-                                android:layout_height="48dp"
-                                android:layout_marginStart="63dp"
-                                android:layout_marginTop="15dp"
-                                android:layout_marginEnd="63dp"
-                                android:background="@drawable/btn_bg_white_radius60_66"
-                                android:gravity="center"
-                                android:orientation="horizontal"
-                                android:visibility="gone">
-
-                                <TextView
-                                    android:layout_width="120dp"
-                                    android:layout_height="48dp"
-                                    android:drawableStart="@mipmap/login_by_qq_icon"
-                                    android:gravity="center"
-                                    android:text="QQ登录"
-                                    android:textColor="@color/white"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
-
-                            <LinearLayout
-                                onClickDelayed="@{viewModel::toWX}"
-                                android:layout_width="match_parent"
-                                android:layout_height="48dp"
-                                android:layout_marginStart="63dp"
-                                android:layout_marginTop="15dp"
-                                android:layout_marginEnd="63dp"
-                                android:background="@drawable/btn_bg_white_radius60_66"
-                                android:gravity="center"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="120dp"
-                                    android:layout_height="48dp"
-                                    android:drawableStart="@mipmap/login_by_wx_icon"
-                                    android:gravity="center"
-                                    android:text="微信登录"
-                                    android:textColor="@color/white"
-                                    android:textSize="18sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
-                        </LinearLayout>
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/step_1_layout"
+                    <EditText
+                        android:id="@+id/ed_pass"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:visibility="@{loginStep==1?View.VISIBLE:View.GONE}">
-
-                        <EditText
-                            android:id="@+id/ed_nick"
-                            style="@style/whiteEdit"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="30dp"
-                            android:layout_marginTop="50dp"
-                            android:layout_marginEnd="30dp"
-                            android:gravity="center"
-                            android:maxLength="10"
-                            android:text="@={registerInfo.name}" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:layout_marginStart="30dp"
-                            android:layout_marginEnd="30dp"
-                            android:background="#AC87FF" />
-
-                        <TextView
-                            android:id="@+id/textView3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="10dp"
-                            android:alpha="0.8"
-                            android:text="这是您在虾菇上使用的名字"
-                            android:textColor="@android:color/white"
-                            android:textSize="14sp" />
-                    </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="38dp"
+                        android:layout_marginEnd="38dp"
+                        android:background="@drawable/btn_bg_white_tran_radius60"
+                        android:hint="输入密码，开启虾菇吧~"
+                        android:inputType="textPassword"
+                        android:maxLength="20"
+                        android:paddingStart="25dp"
+                        android:paddingTop="13dp"
+                        android:paddingEnd="25dp"
+                        android:paddingBottom="13dp"
+                        android:text="@={registerInfo.pass}"
+                        android:textColor="@color/white"
+                        android:textColorHint="#CDB1FF"
+                        android:textSize="14sp"
+                        android:visibility="@{loginStep==1?View.VISIBLE:View.GONE}"
+                        tools:text="adfa"
+                        tools:visibility="gone" />
 
                     <LinearLayout
                         android:id="@+id/step_2_layout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
-                        android:visibility="@{loginStep==2?View.VISIBLE:View.GONE}">
-
-                        <TextView
-                            onClickDelayed="@{viewModel::selectBirthday}"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="30dp"
-                            android:layout_marginTop="50dp"
-                            android:layout_marginEnd="30dp"
-                            android:gravity="center"
-                            android:hint="选择生日"
-                            android:padding="15dp"
-                            android:text="@{registerInfo.birthday}"
-                            android:textColor="@android:color/white"
-                            android:textColorHint="#f4f4f4"
-                            android:textSize="16sp" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:layout_marginStart="30dp"
-                            android:layout_marginEnd="30dp"
-                            android:background="#AC87FF" />
+                        android:visibility="@{loginStep==2?View.VISIBLE:View.GONE}"
+                        tools:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="10dp"
-                            android:alpha="0.8"
-                            android:text="您必须满18岁或以上才能使用虾菇"
-                            android:textColor="@android:color/white"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/step_3_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:visibility="@{loginStep==3?View.VISIBLE:View.GONE}">
-
-                        <EditText
-                            android:id="@+id/ed_phone"
-                            style="@style/whiteEdit"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="30dp"
-                            android:layout_marginTop="50dp"
-                            android:layout_marginEnd="30dp"
-                            android:gravity="center"
-                            android:inputType="phone"
-                            android:maxLength="11"
-                            android:text="@={registerInfo.phone}" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:layout_marginStart="30dp"
-                            android:layout_marginEnd="30dp"
-                            android:background="#AC87FF" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="10dp"
-                            android:alpha="0.8"
-                            android:text="您的手机号将获取验证码"
-                            android:textColor="@android:color/white"
-                            android:textSize="14sp"
-                            android:visibility="@{right.empty?View.VISIBLE:View.GONE}" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/step_4_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:visibility="@{loginStep==4?View.VISIBLE:View.GONE}">
+                            android:layout_marginStart="38dp"
+                            android:layout_marginTop="46dp"
+                            android:text="输入获取的验证码"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="60dp">
+                            android:layout_marginTop="20dp">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginStart="38dp"
+                                android:layout_marginEnd="38dp"
                                 android:gravity="center"
                                 android:orientation="horizontal">
 
                                 <TextView
                                     android:id="@+id/tv_code1"
-                                    viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.11f)}"
-                                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
-                                    android:layout_width="55dp"
+                                    android:layout_width="0dp"
                                     android:layout_height="80dp"
-                                    android:background="@drawable/btn_bg_white_radius10"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/btn_bg_white_radius11"
                                     android:gravity="center"
                                     android:text=""
-                                    android:textColor="@color/purple_7a4"
+                                    android:textColor="@color/white"
                                     android:textSize="32sp" />
 
                                 <TextView
                                     android:id="@+id/tv_code2"
-                                    viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.11f)}"
-                                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
-                                    android:layout_width="55dp"
+                                    android:layout_width="0dp"
                                     android:layout_height="80dp"
                                     android:layout_marginStart="20dp"
                                     android:layout_marginEnd="10dp"
-                                    android:background="@drawable/btn_bg_white_radius10"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/btn_bg_white_radius11"
                                     android:gravity="center"
                                     android:text=""
-                                    android:textColor="@color/purple_7a4"
+                                    android:textColor="@color/white"
                                     android:textSize="32sp" />
 
                                 <TextView
                                     android:id="@+id/tv_code3"
-                                    viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.11f)}"
-                                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
-                                    android:layout_width="55dp"
+                                    android:layout_width="0dp"
                                     android:layout_height="80dp"
                                     android:layout_marginStart="10dp"
                                     android:layout_marginEnd="10dp"
-                                    android:background="@drawable/btn_bg_white_radius10"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/btn_bg_white_radius11"
                                     android:gravity="center"
                                     android:text=""
-                                    android:textColor="@color/purple_7a4"
-                                    android:textSize="32sp" />
+                                    android:textColor="@color/white"
+                                    android:textSize="32sp"
+                                    tools:text="1" />
 
                                 <TextView
                                     android:id="@+id/tv_code4"
-                                    viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.11f)}"
-                                    viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
-                                    android:layout_width="55dp"
+                                    android:layout_width="0dp"
                                     android:layout_height="80dp"
                                     android:layout_marginStart="10dp"
-                                    android:background="@drawable/btn_bg_white_radius10"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/btn_bg_white_radius11"
                                     android:gravity="center"
                                     android:text=""
-                                    android:textColor="@color/purple_7a4"
+                                    android:textColor="@color/white"
                                     android:textSize="32sp" />
                             </LinearLayout>
 
                             <EditText
                                 android:id="@+id/ed_code"
-                                viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.11f)}"
-                                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.8f)}"
-                                android:layout_width="280dp"
+                                android:layout_width="match_parent"
                                 android:layout_height="80dp"
                                 android:layout_centerHorizontal="true"
+                                android:layout_marginStart="38dp"
+                                android:layout_marginEnd="38dp"
                                 android:background="@android:color/transparent"
                                 android:inputType="number"
                                 android:maxLength="4"
@@ -477,39 +355,112 @@
                             onClickDelayed="@{viewModel::resetCode}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:layout_gravity="center_horizontal"
-                            android:alpha="0.8"
+                            android:layout_marginStart="38dp"
+                            android:layout_marginTop="24dp"
                             android:text="@{codeRemark}"
                             android:textColor="@android:color/white"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            tools:text=" 再次发送14s" />
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/step_5_layout"
+                        android:id="@+id/step_3_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:visibility="@{loginStep==3?View.VISIBLE:View.GONE}"
+                        tools:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="75dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                onClickDelayed="@{v->viewModel.selectSex(1)}"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:alpha="@{sexIndex==1?0.5f:1}"
+                                android:gravity="center"
+                                android:text="@string/sex_1"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                app:drawableTopCompat="@mipmap/boy_icon" />
+
+                            <TextView
+                                onClickDelayed="@{v->viewModel.selectSex(0)}"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:alpha="@{sexIndex==0?0.5f:1}"
+                                android:gravity="center"
+                                android:text="@string/sex_0"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                app:drawableTopCompat="@mipmap/girl_icon" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/ed_nick"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="38dp"
+                        android:layout_marginEnd="38dp"
+                        android:background="@drawable/btn_bg_white_tran_radius60"
+                        android:hint="输入你的昵称"
+                        android:maxLength="10"
+                        android:paddingStart="25dp"
+                        android:paddingTop="13dp"
+                        android:paddingEnd="25dp"
+                        android:paddingBottom="13dp"
+                        android:text="@={registerInfo.name}"
+                        android:textColor="@color/white"
+                        android:textColorHint="#CDB1FF"
+                        android:textSize="14sp"
+                        android:visibility="@{loginStep==4?View.VISIBLE:View.GONE}"
+                        tools:text="adfa"
+                        tools:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tv_birthday"
+                        onClickDelayed="@{viewModel::selectBirthday}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="38dp"
+                        android:layout_marginEnd="38dp"
+                        android:background="@drawable/btn_bg_white_tran_radius60"
+                        android:hint="选择生日"
+                        android:maxLength="10"
+                        android:paddingStart="25dp"
+                        android:paddingTop="13dp"
+                        android:paddingEnd="25dp"
+                        android:paddingBottom="13dp"
+                        android:text="@{registerInfo.birthday}"
+                        android:textColor="@color/white"
+                        android:textColorHint="#CDB1FF"
+                        android:textSize="14sp"
+                        android:visibility="@{loginStep==5?View.VISIBLE:View.GONE}"
+                        tools:text="adfa"
+                        tools:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/step_6_layout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_horizontal"
                         android:orientation="vertical"
-                        android:visibility="@{loginStep==5?View.VISIBLE:View.GONE}">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
-                            android:alpha="0.8"
-                            android:text="第一张照片将会当成头像和首图"
-                            android:textColor="@android:color/white"
-                            android:textSize="16sp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/textView" />
+                        android:visibility="@{loginStep==6?View.VISIBLE:View.GONE}"
+                        tools:visibility="gone">
 
                         <RelativeLayout
                             android:id="@+id/upload_relative"
                             onClickDelayed="@{viewModel::upload}"
-                            viewHeightSize="@{ObjectUtils.getLogoHeight(0.4f)}"
-                            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.4f)}"
+                            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
+                            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
                             android:layout_width="200dp"
                             android:layout_height="200dp"
                             android:layout_marginTop="32dp"
@@ -544,8 +495,8 @@
                                 imageUrl="@{imageUrl}"
                                 isRound="@{true}"
                                 roundSize="@{10}"
-                                viewHeightSize="@{ObjectUtils.getLogoHeight(0.4f)}"
-                                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.4f)}"
+                                viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
+                                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_centerInParent="true" />
@@ -553,78 +504,133 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/step_6_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical"
-                        android:visibility="@{loginStep==6?View.VISIBLE:View.GONE}">
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/images_list"
-                            adapter="@{viewModel.adapter}"
-                            gridNum="@{3}"
-                            recyclerType="@{3}"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="15dp"
-                            android:layout_marginEnd="15dp" />
-                    </LinearLayout>
-
-                    <LinearLayout
                         android:id="@+id/step_7_layout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:gravity="center_horizontal"
                         android:orientation="vertical"
-                        android:visibility="@{loginStep==7?View.VISIBLE:View.GONE}">
+                        android:paddingStart="38dp"
+                        android:paddingEnd="38dp"
+                        android:visibility="@{loginStep==7?View.VISIBLE:View.GONE}"
+                        tools:visibility="visible">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="职业"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                         <EditText
-                            android:id="@+id/ed_pass"
-                            style="@style/whiteEdit"
+                            android:id="@+id/ed_job"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="30dp"
-                            android:layout_marginTop="50dp"
-                            android:layout_marginEnd="30dp"
-                            android:gravity="center"
-                            android:hint="输入您的密码！"
-                            android:inputType="textPassword"
-                            android:maxLength="20"
-                            android:text="@={pass}" />
+                            android:layout_marginTop="15dp"
+                            android:background="@drawable/btn_bg_white_tran_radius60"
+                            android:hint="设计师（默认）"
+                            android:paddingStart="25dp"
+                            android:paddingTop="13dp"
+                            android:paddingEnd="25dp"
+                            android:paddingBottom="13dp"
+                            android:text="@={registerInfo.job}"
+                            android:textColor="@color/white"
+                            android:textColorHint="#CDB1FF"
+                            android:textSize="14sp"
+                            tools:text="adfa" />
 
-                        <View
-                            android:id="@+id/view1"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="32dp"
+                            android:text="个性签名"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/ed_personality_sign"
                             android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:layout_marginStart="30dp"
-                            android:layout_marginEnd="30dp"
-                            android:background="#AC87FF" />
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:background="@drawable/btn_bg_white_tran_radius60"
+                            android:hint="有趣之人终相遇（默认）"
+                            android:paddingStart="25dp"
+                            android:paddingTop="13dp"
+                            android:paddingEnd="25dp"
+                            android:paddingBottom="13dp"
+                            android:text="@={registerInfo.personalitySign}"
+                            android:textColor="@color/white"
+                            android:textColorHint="#CDB1FF"
+                            android:textSize="14sp"
+                            tools:text="adfa" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="32dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="个人标签"
+                                android:textColor="@color/white"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                onClickDelayed="@{viewModel::selectTag}"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:drawablePadding="5dp"
+                                android:gravity="center"
+                                android:text="编辑标签"
+                                android:textColor="@color/white"
+                                android:textSize="14sp"
+                                app:drawableEndCompat="@drawable/arrow_small_white_right_icon" />
+                        </RelativeLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            adapter="@{viewModel.mAdapter}"
+                            recyclerType="@{5}"
+                            android:layout_width="match_parent"
+                            android:layout_height="86dp"
+                            android:layout_marginTop="15dp" />
+
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/tv_next"
+                        onClickDelayed="@{viewModel::next}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="15dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="30dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@{btnName}"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            tools:text="下一步"
+                            tools:textColor="@{canNext?@color/white:@color/white_66}" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:background="@{canNext?@drawable/arrow_small_white_right_icon:@drawable/arrow_small_right_icon}" />
+                    </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <TextView
-            android:id="@+id/tv_next"
-            onClickDelayed="@{viewModel::next}"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="40dp"
-            android:background="@{canNext?@drawable/btn_bg_white_radius60:@drawable/btn_bg_purple_af9_radius60}"
-            android:gravity="center"
-            android:text="@{btnName}"
-            android:textColor="@{canNext?@color/black_252:@color/purple_cab}"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:visibility="@{loginStep==0?View.GONE:View.VISIBLE}"
-            tools:background="@drawable/btn_bg_white_radius60"
-            tools:text="继续"
-            tools:textColor="@color/black_252" />
     </RelativeLayout>
 </layout>

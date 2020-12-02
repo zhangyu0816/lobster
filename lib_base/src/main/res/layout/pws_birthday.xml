@@ -24,29 +24,52 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <RelativeLayout
-                onClickDelayed="@{pw::sure}"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right">
+                android:layout_gravity="right"
+                android:background="@drawable/btn_bg_black_f5_radius10">
+
+                <TextView
+                    onClickDelayed="@{pw::cancel}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:padding="16dp"
+                    android:text="取消"
+                    android:textColor="#666666" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="选择生日"
+                    android:textColor="#333333"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="64dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_margin="19dp"
+                    android:background="@drawable/btn_bg_purple_7a4_radius60"
+                    android:gravity="center"
                     android:text="完成"
-                    android:layout_margin="15dp"
-                    android:textColor="@color/purple_7a4"
-                    android:textSize="16sp" />
+                    onClickDelayed="@{pw::sure}"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
             </RelativeLayout>
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/white"
                 android:orientation="horizontal"
                 android:padding="15dp">
 

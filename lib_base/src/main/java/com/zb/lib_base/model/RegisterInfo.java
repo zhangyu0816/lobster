@@ -18,6 +18,12 @@ public class RegisterInfo extends BaseObservable {
     String unionId = "";
     int unionType;
     String unionImage = "";
+    String job = "";
+    String personalitySign = "";//个性签名
+    String serviceTags = "";
+    String image = "";
+
+    String bindPhone = "";
 
     @Bindable
     public String getOpenId() {
@@ -110,6 +116,16 @@ public class RegisterInfo extends BaseObservable {
     }
 
     @Bindable
+    public String getBindPhone() {
+        return bindPhone;
+    }
+
+    public void setBindPhone(String bindPhone) {
+        this.bindPhone = bindPhone;
+        notifyPropertyChanged(BR.bindPhone);
+    }
+
+    @Bindable
     public String getMoreImages() {
         return moreImages;
     }
@@ -127,5 +143,45 @@ public class RegisterInfo extends BaseObservable {
     public void setUnionImage(String unionImage) {
         this.unionImage = unionImage;
         notifyPropertyChanged(BR.unionImage);
+    }
+
+    @Bindable
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+        notifyPropertyChanged(BR.job);
+    }
+
+    @Bindable
+    public String getPersonalitySign() {
+        return personalitySign;
+    }
+
+    public void setPersonalitySign(String personalitySign) {
+        this.personalitySign = personalitySign;
+        notifyPropertyChanged(BR.personalitySign);
+    }
+
+    @Bindable
+    public String getServiceTags() {
+        return serviceTags;
+    }
+
+    public void setServiceTags(String serviceTags) {
+        this.serviceTags = serviceTags;
+        notifyPropertyChanged(BR.serviceTags);
+    }
+
+    @Bindable
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+        notifyPropertyChanged(BR.image);
     }
 }

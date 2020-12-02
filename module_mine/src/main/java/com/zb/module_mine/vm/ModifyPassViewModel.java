@@ -2,6 +2,7 @@ package com.zb.module_mine.vm;
 
 import android.os.CountDownTimer;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
@@ -33,16 +34,16 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (MineModifyPassBinding) binding;
-        mBinding.setRemark("获取验证码");
+        mBinding.setRemark(Html.fromHtml("获取验证码"));
         timer = new CountDownTimer(second * 1000, 1000) {
             public void onTick(long millisUntilFinished) {
                 isTimer = true;
-                mBinding.setRemark(MineApp.getInstance().getResources().getString(R.string.code_second, millisUntilFinished / 1000));
+                mBinding.setRemark(Html.fromHtml(MineApp.getInstance().getResources().getString(R.string.code_second, millisUntilFinished / 1000)));
             }
 
             public void onFinish() {
                 isTimer = false;
-                mBinding.setRemark("获取验证码");
+                mBinding.setRemark(Html.fromHtml("获取验证码"));
                 timer.cancel();
             }
         };
@@ -162,7 +163,7 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
 
             @Override
             public void fail() {
-                mBinding.setRemark("获取验证码");
+                mBinding.setRemark(Html.fromHtml("获取验证码"));
                 timer.cancel();
             }
         });
@@ -174,13 +175,13 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "短信验证码发送成功，请注意查看", true);
-                mBinding.setRemark(MineApp.getInstance().getResources().getString(R.string.code_second, second));
+                mBinding.setRemark(Html.fromHtml(MineApp.getInstance().getResources().getString(R.string.code_second, second)));
                 timer.start();
             }
 
             @Override
             public void onError(Throwable e) {
-                mBinding.setRemark("获取验证码");
+                mBinding.setRemark(Html.fromHtml("获取验证码"));
                 timer.cancel();
             }
         }, activity).setUserName(mBinding.getPhone()).setImageCaptchaCode(code).setImageCaptchaToken(imageCaptcha.getImageCaptchaToken());

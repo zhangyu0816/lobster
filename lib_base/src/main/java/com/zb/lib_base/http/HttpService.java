@@ -9,6 +9,7 @@ import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.BottleMsg;
 import com.zb.lib_base.model.ChatList;
+import com.zb.lib_base.model.CheckUser;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.FaceStatus;
@@ -133,6 +134,10 @@ public interface HttpService {
     // 退出登录
     @GET("api/Login_loginOut")
     Observable<BaseResultEntity> loginOut();
+
+    // 验证 手机号是否注册
+    @GET("api/Login_checkUserName")
+    Observable<BaseResultEntity<CheckUser>> checkUserName(@Query("userName") String userName);
 
     // 图片验证码
     @GET("api/ImageCaptca_findImageCaptcha")
@@ -416,7 +421,7 @@ public interface HttpService {
     // 未读会话列表
     @GET("api/FlashTalk_chatList")
     Observable<BaseResultEntity<List<ChatList>>> flashChatList(@Query("pageNo") int pageNo, @Query("pageSize") int pageSize,
-                                                          @Query("isPublicAccount") int isPublicAccount);
+                                                               @Query("isPublicAccount") int isPublicAccount);
 
     // 获取闪聊历史消息
     @GET("api/FlashTalk_historyMsgList")

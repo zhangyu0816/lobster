@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name_sub">虾菇</string>
     <string name="app_name_running">虾菇正在运行</string>
-    <string name="code_second">%ds以后重试</string>
+    <string name="code_second"><Data><![CDATA[再次发送<font color="#4EFB52"><b>%d</b></font>s]]></Data></string>
     <string name="symbol_money">￥</string>
     <string name="symbol_money_">￥ </string>
     <string name="price_moth">￥%.1f/月</string>
@@ -59,4 +59,5 @@
     <string name="vip_intro">开通VIP特权,专享超值权益</string>
     <string name="bank_account">(%s)</string>
     <string name="wait_chat">%s正在等你聊天......</string>
+    <string name="open_xg">开启虾菇</string>
 </resources>

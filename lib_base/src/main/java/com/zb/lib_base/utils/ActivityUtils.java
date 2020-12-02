@@ -20,8 +20,8 @@ public class ActivityUtils {
     }
 
     // 绑定手机号
-    public static void getBindingPhoneActivity(RxAppCompatActivity activity) {
-        ARouter.getInstance().build(RouteUtils.Main_Binding_Phone).navigation(activity, 1002);
+    public static void getBindingPhoneActivity(RxAppCompatActivity activity, boolean isRegister) {
+        ARouter.getInstance().build(RouteUtils.Main_Binding_Phone).withBoolean("isRegister", isRegister).navigation(activity, 1002);
     }
 
     // 登录视频

@@ -4,6 +4,8 @@ import android.view.View;
 
 public interface LoginVMInterface {
 
+    void cleanPhone(View view);
+
     void selectSex(int sex);
 
     void selectBirthday(View view);
@@ -11,8 +13,6 @@ public interface LoginVMInterface {
     void resetCode(View view);
 
     void upload(View view);
-
-    void selectImage(int position);
 
     void toLogin(View view);
 
@@ -23,6 +23,8 @@ public interface LoginVMInterface {
     void next(View view);
 
     void changeUrl(View view);
+
+    void selectTag(View view);
 
     void registerCaptcha();
 
@@ -35,4 +37,6 @@ public interface LoginVMInterface {
     void loginByCaptcha();
 
     void loginByPass();
+
+    void checkUserName();
 }

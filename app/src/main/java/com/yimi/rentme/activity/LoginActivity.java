@@ -50,7 +50,7 @@ public class LoginActivity extends BaseActivity {
         if (requestCode == 1001 && resultCode == 1) {
             viewModel.setSingleLogo(data.getStringExtra("fileName"));
         } else if (requestCode == 1002 && resultCode == Activity.RESULT_OK) {
-            activity.finish();
+            viewModel.setInfo(data.getStringExtra("bindPhone"),data.getStringExtra("captcha"));
         }
     }
 

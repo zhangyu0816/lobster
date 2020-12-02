@@ -1,7 +1,9 @@
 package com.yimi.rentme.vm;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.CountDownTimer;
+import android.text.Html;
 import android.view.View;
 
 import com.yimi.rentme.R;
@@ -10,6 +12,7 @@ import com.yimi.rentme.iv.BindingPhoneVMInterface;
 import com.zb.lib_base.api.banderCaptchaApi;
 import com.zb.lib_base.api.bindingPhoneApi;
 import com.zb.lib_base.api.myInfoApi;
+import com.zb.lib_base.api.registerCaptchaApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -24,6 +27,7 @@ import com.zb.lib_base.windows.ImageCaptchaPW;
 import androidx.databinding.ViewDataBinding;
 
 public class BindingPhoneViewModel extends BaseViewModel implements BindingPhoneVMInterface {
+    public boolean isRegister;
     private AcBindingPhoneBinding mBinding;
     private int second = 120;
     private CountDownTimer timer;
@@ -35,16 +39,16 @@ public class BindingPhoneViewModel extends BaseViewModel implements BindingPhone
         mBinding = (AcBindingPhoneBinding) binding;
         mBinding.setCode("");
         mBinding.setPhone("");
-        mBinding.setRemark("获取验证码");
+        mBinding.setRemark(Html.fromHtml("获取验证码"));
         timer = new CountDownTimer(second * 1000, 1000) {
             public void onTick(long millisUntilFinished) {
                 isTimer = true;
-                mBinding.setRemark(activity.getResources().getString(R.string.code_second, millisUntilFinished / 1000));
+                mBinding.setRemark(Html.fromHtml(activity.getResources().getString(R.string.code_second, millisUntilFinished / 1000)));
             }
 
             public void onFinish() {
                 isTimer = false;
-                mBinding.setRemark("获取验证码");
+                mBinding.setRemark(Html.fromHtml("获取验证码"));
                 timer.cancel();
             }
         };
@@ -73,18 +77,21 @@ public class BindingPhoneViewModel extends BaseViewModel implements BindingPhone
             SCToastUtil.showToast(activity, "请输入正确的手机号", true);
             return;
         }
-        new ImageCaptchaPW(mBinding.getRoot(), new ImageCaptchaPW.CallBack() {
-            @Override
-            public void success(ImageCaptcha imageCaptcha, String code) {
-                banderCaptcha(imageCaptcha, code);
-            }
+        if (isRegister)
+            registerCaptcha();
+        else
+            new ImageCaptchaPW(mBinding.getRoot(), new ImageCaptchaPW.CallBack() {
+                @Override
+                public void success(ImageCaptcha imageCaptcha, String code) {
+                    banderCaptcha(imageCaptcha, code);
+                }
 
-            @Override
-            public void fail() {
-                mBinding.setRemark("获取验证码");
-                timer.cancel();
-            }
-        });
+                @Override
+                public void fail() {
+                    mBinding.setRemark(Html.fromHtml("获取验证码"));
+                    timer.cancel();
+                }
+            });
     }
 
     @Override
@@ -101,7 +108,14 @@ public class BindingPhoneViewModel extends BaseViewModel implements BindingPhone
             SCToastUtil.showToast(activity, "请输入短信验证码", true);
             return;
         }
-        bindingPhone();
+        if (isRegister) {
+            Intent data = new Intent();
+            data.putExtra("bindPhone", mBinding.getPhone());
+            data.putExtra("captcha", mBinding.getCode());
+            activity.setResult(Activity.RESULT_OK, data);
+            activity.finish();
+        } else
+            bindingPhone();
     }
 
     @Override
@@ -110,16 +124,38 @@ public class BindingPhoneViewModel extends BaseViewModel implements BindingPhone
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "短信验证码发送成功，请注意查看", true);
-                mBinding.setRemark(MineApp.getInstance().getResources().getString(R.string.code_second, second));
+                mBinding.setRemark(Html.fromHtml(MineApp.getInstance().getResources().getString(R.string.code_second, second)));
                 timer.start();
             }
 
             @Override
             public void onError(Throwable e) {
-                mBinding.setRemark("获取验证码");
+                mBinding.setRemark(Html.fromHtml("获取验证码"));
                 timer.cancel();
             }
         }, activity).setUserName(mBinding.getPhone()).setImageCaptchaCode(code).setImageCaptchaToken(imageCaptcha.getImageCaptchaToken());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 注册验证码
+     */
+    private void registerCaptcha() {
+        registerCaptchaApi api = new registerCaptchaApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                SCToastUtil.showToast(activity, "短信验证码发送成功，请注意查看", true);
+                mBinding.setRemark(Html.fromHtml(MineApp.getInstance().getResources().getString(R.string.code_second, second)));
+                timer.start();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mBinding.setRemark(Html.fromHtml("获取验证码"));
+                timer.cancel();
+            }
+        }, activity).setUserName(mBinding.getPhone());
+        api.setPosition(1);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -128,7 +164,6 @@ public class BindingPhoneViewModel extends BaseViewModel implements BindingPhone
         bindingPhoneApi api = new bindingPhoneApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToast(activity, "绑定成功,请前往我的--点击头像完成个人信息", false);
                 activity.setResult(Activity.RESULT_OK);
                 myInfo();
             }

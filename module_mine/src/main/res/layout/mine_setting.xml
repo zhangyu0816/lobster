@@ -109,7 +109,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:drawableEnd="@mipmap/arrow_small_right_icon"
+                            android:drawableEnd="@drawable/arrow_small_right_icon"
                             android:drawablePadding="5dp"
                             android:gravity="center"
                             android:text="@{sexName}"
@@ -219,7 +219,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:background="@mipmap/arrow_small_right_icon" />
+                            android:background="@drawable/arrow_small_right_icon" />
                     </RelativeLayout>
 
                     <View
@@ -247,7 +247,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:drawableEnd="@mipmap/arrow_small_right_icon"
+                            android:drawableEnd="@drawable/arrow_small_right_icon"
                             android:drawablePadding="5dp"
                             android:gravity="center"
                             android:text='@{@string/symbol_money + String.format("%.2f",walletInfo.wallet)}'
@@ -280,7 +280,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:background="@mipmap/arrow_small_right_icon" />
+                            android:background="@drawable/arrow_small_right_icon" />
                     </RelativeLayout>
                 </LinearLayout>
 
@@ -329,7 +329,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:background="@mipmap/arrow_small_right_icon" />
+                            android:background="@drawable/arrow_small_right_icon" />
                     </RelativeLayout>
 
                     <View
@@ -359,7 +359,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:background="@mipmap/arrow_small_right_icon" />
+                            android:background="@drawable/arrow_small_right_icon" />
                     </RelativeLayout>
 
                     <View
@@ -387,7 +387,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:drawableEnd="@mipmap/arrow_small_right_icon"
+                            android:drawableEnd="@drawable/arrow_small_right_icon"
                             android:drawablePadding="5dp"
                             android:gravity="center"
                             android:text="@{cacheSize}"
@@ -438,7 +438,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:background="@mipmap/arrow_small_right_icon" />
+                            android:background="@drawable/arrow_small_right_icon" />
                     </RelativeLayout>
 
                     <View
@@ -466,7 +466,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:background="@mipmap/arrow_small_right_icon" />
+                            android:background="@drawable/arrow_small_right_icon" />
                     </RelativeLayout>
 
                     <View
@@ -494,7 +494,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:background="@mipmap/arrow_small_right_icon" />
+                            android:background="@drawable/arrow_small_right_icon" />
                     </RelativeLayout>
 
                     <View
@@ -522,7 +522,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
-                            android:background="@mipmap/arrow_small_right_icon" />
+                            android:background="@drawable/arrow_small_right_icon" />
                     </RelativeLayout>
                 </LinearLayout>
 

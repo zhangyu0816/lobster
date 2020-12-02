@@ -59,10 +59,6 @@ public class ObjectUtils {
         return (int) (getViewSizeByWidth(scale) * (float) height / (float) width);
     }
 
-    public static int getVipBgHeight(float scale) {
-        return (int) (getViewSizeByWidth(scale) * 149f / 501f);
-    }
-
     public static int getVipIntroHeight() {
         return (int) (MineApp.W * 2850 / 1125f);
     }
@@ -103,11 +99,6 @@ public class ObjectUtils {
     // 漂流瓶顶部背景图
     public static int getBottleTopRes() {
         return R.mipmap.bottle_top_icon;
-    }
-
-    // 漂流瓶顶部背景图
-    public static int getHaidi1Res() {
-        return R.mipmap.haidi1;
     }
 
     // 线条颜色

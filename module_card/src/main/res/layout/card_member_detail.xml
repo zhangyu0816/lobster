@@ -245,7 +245,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:background="@mipmap/arrow_small_right_icon" />
+                        android:background="@drawable/arrow_small_right_icon" />
 
                 </RelativeLayout>
 

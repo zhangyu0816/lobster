@@ -10,17 +10,17 @@ import com.zb.lib_base.utils.DateUtil;
 import rx.Observable;
 
 public class modifyMemberInfoApi extends BaseEntity<BaseResultEntity> {
-    String nick;          //昵称
-    String image;    //头像
-    String moreImages;    //多图 【虾菇】
-    String personalitySign;//个性签名
-    String birthday;    //生日
+    String nick="";          //昵称
+    String image="";    //头像
+    String moreImages="";    //多图 【虾菇】
+    String personalitySign="";//个性签名
+    String birthday="";    //生日
     int sex;         //性别  0女  1男
-    String job;         //职业
+    String job="";         //职业
     long provinceId;    //省份ID
     long cityId;       //城市ID
     long districtId;       //城市ID
-    String serviceTags;
+    String serviceTags="";
 
     public modifyMemberInfoApi setNick(String nick) {
         this.nick = nick;

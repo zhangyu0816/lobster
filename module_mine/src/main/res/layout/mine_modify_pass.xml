@@ -48,7 +48,7 @@
 
         <variable
             name="remark"
-            type="String" />
+            type="android.text.Spanned" />
 
     </data>
 

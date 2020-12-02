@@ -115,6 +115,12 @@ public class BirthdayPW extends BasePopupWindow {
         dismiss();
     }
 
+    @Override
+    public void cancel(View view) {
+        super.cancel(view);
+        dismiss();
+    }
+
     /**
      * 设置日期
      *
