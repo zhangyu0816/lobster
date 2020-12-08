@@ -81,12 +81,24 @@
                     adapter="@{adapter}"
                     recyclerType="@{0}"
                     size="@{0}"
-                    viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.5f)}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.35f)}"
                     viewWidthSize="@{-2}"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/white" />
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+            <TextView
+                android:id="@+id/tv_no_data"
+                viewHeightSize="@{ObjectUtils.getViewSizeByHeight(0.35f)}"
+                viewWidthSize="@{-1}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="目前没有人评论!"
+                android:textSize="16sp"
+                android:textColor="#666666"
+                android:gravity="center"
+                android:visibility="gone"/>
         </LinearLayout>
 
         <View

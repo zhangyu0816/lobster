@@ -14,8 +14,6 @@ public interface LoginVMInterface {
 
     void upload(View view);
 
-    void toLogin(View view);
-
     void toQQ(View view);
 
     void toWX(View view);
@@ -25,6 +23,12 @@ public interface LoginVMInterface {
     void changeUrl(View view);
 
     void selectTag(View view);
+
+    void close(View view);
+
+    void selectJog(View view);
+
+    void editSign(View view);
 
     void registerCaptcha();
 

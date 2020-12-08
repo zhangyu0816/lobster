@@ -16,9 +16,9 @@
     </data>
 
     <ImageView
-        onClickDelayed="@{viewModel::toDiscoverList}"
-        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(120)}"
-        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(120)}"
+        onClickDelayed="@{v->viewModel.toDiscoverDetail(item)}"
+        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(220)}"
+        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(220)}"
         imageUrl='@{item.images.split(",")[0]}'
         defaultRes="@{ObjectUtils.getDefaultRes()}"
         isRound="@{true}"

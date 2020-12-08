@@ -37,33 +37,46 @@ android {
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86"
         }
+        flavorDimensions "app"
     }
 
     signingConfigs {
-        debug {
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-            storeFile file('C:\\Users\\yu\\Documents\\AndroidStudioProjects\\Lobster\\rentme.keystore')
-            storePassword 'android'
-        }
         release {
             keyAlias 'rm'
             keyPassword 'yimi2015yuwei'
             storeFile file('C:\\Users\\yu\\Documents\\rentme.keystore')
             storePassword 'yimi2015yuwei'
         }
+    }
+    productFlavors {
+        mainReless {
+            dimension "app"
+            buildConfigField ("boolean", "isHW", "false")
+        }
+        huawei {
+            dimension "app"
+            buildConfigField ("boolean", "isHW", "true")
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //apk命名
+            signingConfig signingConfigs.release
+        }
+
+        debug {
+            signingConfig signingConfigs.release
+            debuggable true
+        }
+
         android.applicationVariants.all { variant ->
             variant.outputs.all {
                 if (variant.buildType.name == 'release') {
                     outputFileName = "xiagu_${versionName}_${releaseTime()}.apk"
                 }
             }
-        }
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {

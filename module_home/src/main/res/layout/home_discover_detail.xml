@@ -422,7 +422,7 @@
                         android:layout_marginStart="-5dp"
                         android:layout_marginEnd="15dp"
                         android:text='@{String.format("%d",viewModel.discoverInfo.goodNum)}'
-                        android:textColor="@color/black_4d4"
+                        android:textColor="#cccccc"
                         android:textSize="14sp"
                         tools:text="7" />
 
@@ -433,7 +433,7 @@
                         android:drawableStart="@mipmap/comment_icon"
                         android:drawablePadding="5dp"
                         android:text='@{String.format("%d",viewModel.discoverInfo.reviews)}'
-                        android:textColor="@color/black_4d4"
+                        android:textColor="#cccccc"
                         android:textSize="14sp"
                         tools:text="7" />
                 </LinearLayout>

@@ -44,17 +44,34 @@
             android:layout_toEndOf="@+id/iv_logo"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_nick"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="@{item.reviewUserNick}"
-                android:ellipsize="end"
-                android:textColor="@color/black_252"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                tools:text="分为发" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_nick"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:ellipsize="end"
+                    android:text="@{item.reviewUserNick}"
+                    android:textColor="@color/black_252"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="分为发" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="10dp"
+                    android:text="@{item.createTime}"
+                    android:visibility="@{viewModel.reviewType==3?View.GONE:View.VISIBLE}"
+                    android:textColor="@color/black_827"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -70,6 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@{item.createTime}"
+                android:visibility="@{viewModel.reviewType==3?View.VISIBLE:View.GONE}"
                 android:textColor="@color/black_827"
                 android:textSize="12sp" />
 
@@ -94,7 +112,7 @@
                 android:visibility="@{viewModel.reviewType==3?View.VISIBLE:View.GONE}" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/btn_bg_black_efe_radius5"

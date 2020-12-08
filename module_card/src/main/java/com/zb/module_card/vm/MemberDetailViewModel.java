@@ -5,15 +5,10 @@ import android.animation.PropertyValuesHolder;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.transition.Transition;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
@@ -46,7 +41,6 @@ import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.MNImage;
-import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.views.xbanner.XUtils;
@@ -64,8 +58,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.databinding.ViewDataBinding;
 
 public class MemberDetailViewModel extends BaseViewModel implements MemberDetailVMInterface, SuperLikeInterface {
@@ -75,13 +67,13 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     public MemberInfo memberInfo;
     public CardAdapter tagAdapter;
     public CardAdapter discoverAdapter;
+    public CardAdapter imageAdapter;
     private List<String> tagList = new ArrayList<>();
     private List<DiscoverInfo> discoverInfoList = new ArrayList<>();
+    private List<String> imageList = new ArrayList<>();
     private BaseReceiver attentionReceiver;
     private int bannerWidth = MineApp.W;
     private int bannerHeight = MineApp.W;
-    private int mainW = 0;
-    private int mainH = 0;
     private List<Ads> adsList = new ArrayList<>();
     private boolean isLike = false;
 
@@ -89,9 +81,12 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (CardMemberDetailBinding) binding;
-        mBinding.setConstellation("");
+        mBinding.setConstellation("-");
+        mBinding.setDistrict("-");
+        mBinding.setCityName("-");
+        mBinding.setDistant("0.0");
+        mBinding.setJob("-");
         mBinding.setIsAttention(false);
-        mBinding.setInfo("");
         mBinding.setLikeType(LikeTypeDb.getInstance().getType(otherUserId));
         mBinding.setIsPlay(true);
         attentionReceiver = new BaseReceiver(activity, "lobster_attention") {
@@ -133,6 +128,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         tagAdapter = new CardAdapter<>(activity, R.layout.item_card_tag, tagList, this);
 
         discoverAdapter = new CardAdapter<>(activity, R.layout.item_card_discover_image, discoverInfoList, this);
+
+        imageAdapter = new CardAdapter<>(activity, R.layout.item_member_image, imageList, this);
         otherUserInfoVisit();
     }
 
@@ -198,6 +195,34 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     }
 
     @Override
+    public void toDiscoverDetail(DiscoverInfo discoverInfo) {
+        if (discoverInfo.getVideoUrl().isEmpty())
+            ActivityUtils.getHomeDiscoverDetail(discoverInfo.getFriendDynId());
+        else
+            ActivityUtils.getHomeDiscoverVideo(discoverInfo.getFriendDynId());
+    }
+
+    private int preIndex = 0;
+
+    @Override
+    public void selectImage(int position) {
+        if (preIndex != position) {
+            imageAdapter.setSelectImageIndex(position);
+            if (preIndex != -1) {
+                imageAdapter.notifyItemChanged(preIndex);
+            }
+            imageAdapter.notifyItemChanged(position);
+            preIndex = position;
+            mBinding.banner.setCurrentItem(position + 1);
+        }
+    }
+
+    @Override
+    public void openVip(View view) {
+        ActivityUtils.getMineOpenVip(true);
+    }
+
+    @Override
     public void otherInfo() {
         otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
             @SuppressLint("DefaultLocale")
@@ -213,17 +238,16 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 }
                 mBinding.setConstellation(DateUtil.getConstellations(memberInfo.getBirthday()));
 
-                String distant = "";
+                String distant = "-";
                 if (!memberInfo.getDistance().isEmpty()) {
-                    distant = String.format("%.1f", Float.parseFloat(memberInfo.getDistance()) / 1000f) + "km";
+                    distant = String.format("%.1f", Float.parseFloat(memberInfo.getDistance()) / 1000f);
                 }
-
-                String cityName = AreaDb.getInstance().getCityName(memberInfo.getCityId()) + " ";
+                mBinding.setJob(memberInfo.getJob().isEmpty() ? "-" : memberInfo.getJob());
+                mBinding.setDistant(distant);
+                String cityName = AreaDb.getInstance().getCityName(memberInfo.getCityId()).replace("市","");
                 String districtName = AreaDb.getInstance().getDistrictName(memberInfo.getDistrictId());
-                if (cityName.trim().isEmpty())
-                    mBinding.setInfo(distant + (memberInfo.getSex() == 0 ? "/女" : "/男"));
-                else
-                    mBinding.setInfo(distant + (memberInfo.getSex() == 0 ? "/女/" : "/男/") + cityName + " " + districtName);
+                mBinding.setCityName(cityName);
+                mBinding.setDistrict(cityName + " " + districtName);
 
                 new Thread(() -> {
                     if (!memberInfo.getMoreImages().isEmpty()) {
@@ -233,35 +257,16 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                                 Ads ads = new Ads();
                                 ads.setSmallImage(image);
                                 adsList.add(ads);
-                                try {
-                                    Bitmap bitmap = Glide.with(activity).asBitmap().load(ads.getSmallImage()).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
-                                    int h = bitmap.getHeight();
-                                    int w = bitmap.getWidth();
-                                    if (mainW < w && mainH < h) {
-                                        mainW = w;
-                                        mainH = h;
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+                                imageList.add(ads.getSmallImage());
                             }
                         }
                     } else {
                         Ads ads = new Ads();
                         ads.setSmallImage(memberInfo.getSingleImage().isEmpty() ? memberInfo.getImage() : memberInfo.getSingleImage());
                         adsList.add(ads);
-                        try {
-                            Bitmap bitmap = Glide.with(activity).asBitmap().load(ads.getSmallImage()).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
-                            int h = bitmap.getHeight();
-                            int w = bitmap.getWidth();
-                            if (mainW < w && mainH < h) {
-                                mainW = w;
-                                mainH = h;
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        imageList.add(ads.getSmallImage());
                     }
+
                     handler.sendEmptyMessage(0);
                 }).start();
                 attentionStatus();
@@ -271,7 +276,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
 
             @Override
             public void onError(Throwable e) {
-                if(e instanceof HttpTimeException&&((HttpTimeException) e).getCode()==HttpTimeException.ERROR){
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
                     back(null);
                 }
             }
@@ -295,29 +300,31 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
-            bannerWidth = MineApp.W;
-            bannerHeight = (int) (MineApp.W * (float) mainH / (float) mainW);
-            if (bannerHeight > ObjectUtils.getLogoHeight(1f)) {
-                bannerHeight = ObjectUtils.getLogoHeight(1f);
-            }
-            AdapterBinding.viewSize(mBinding.banner, bannerWidth, bannerHeight);
-            XUtils.showBanner(mBinding.banner, adsList,
-                    (context, ads, image, position) ->
-                            Glide.with(activity).asBitmap().load(ads.getSmallImage()).into(new SimpleTarget<Bitmap>() {
-                                @Override
-                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                    int w = resource.getWidth();
-                                    int h = resource.getHeight();
-                                    if (w >= h) {
-                                        AdapterBinding.viewSize(image, bannerWidth, (int) ((float) bannerWidth * h / w));
-                                    } else {
-                                        AdapterBinding.viewSize(image, (int) ((float) bannerHeight * w / h), bannerHeight);
-                                    }
-                                    image.setImageBitmap(resource);
-                                }
-                            }),
+            imageAdapter.notifyDataSetChanged();
+            int height = (int) (bannerHeight * 1.2f);
+            AdapterBinding.viewSize(mBinding.banner, bannerWidth, height);
+            XUtils.showBanner(mBinding.banner, adsList, 5,
+                    (context, ads, image, position) -> {
+                        AdapterBinding.loadImage(image, ads.getSmallImage(), 0, R.drawable.empty_bg, bannerWidth, height, false,
+                                true, 10, false, 0, false);
+                    }
+                    ,
                     (position, imageList) ->
-                            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, false, null));
+                            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, false, null),
+                    position -> {
+                        if (position <= imageList.size()) {
+                            position--;
+                            if (preIndex != position) {
+                                imageAdapter.setSelectImageIndex(position);
+                                if (preIndex != -1) {
+                                    imageAdapter.notifyItemChanged(preIndex);
+                                }
+                                imageAdapter.notifyItemChanged(position);
+                                preIndex = position;
+                            }
+                        }
+
+                    });
             return false;
         }
     });

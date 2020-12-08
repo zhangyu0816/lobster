@@ -56,11 +56,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@android:color/white" />
-
                 <androidx.recyclerview.widget.RecyclerView
                     adapter="@{pw.bottomAdapter}"
                     recyclerType="@{1}"

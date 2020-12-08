@@ -5,6 +5,7 @@ import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.yimi.rentme.BR;
+import com.yimi.rentme.BuildConfig;
 import com.yimi.rentme.R;
 import com.yimi.rentme.vm.LoginVideoViewModel;
 import com.zb.lib_base.activity.BaseActivity;
@@ -21,7 +22,11 @@ public class LoginVideoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
-        StatusBarUtil.statusBarLightMode(this);
+        if (BuildConfig.isHW) {
+            StatusBarUtil.setStatusBarColor(activity, R.color.black);
+        } else {
+            StatusBarUtil.statusBarLightMode(this);
+        }
     }
 
     @Override
@@ -31,7 +36,9 @@ public class LoginVideoActivity extends BaseActivity {
 
     @Override
     public void initUI() {
-        fitComprehensiveScreen();
+        if (!BuildConfig.isHW) {
+            fitComprehensiveScreen();
+        }
         LoginVideoViewModel viewModel = new LoginVideoViewModel();
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);

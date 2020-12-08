@@ -82,6 +82,8 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
             @Override
             public void onNext(List<Review> o) {
                 int start = reviewList.size();
+                binding.tvNoData.setVisibility(View.GONE);
+                binding.refresh.setVisibility(View.VISIBLE);
                 reviewList.addAll(o);
                 adapter.notifyItemRangeChanged(start, reviewList.size());
                 binding.refresh.finishLoadMore();
@@ -94,6 +96,10 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
                     binding.refresh.setEnableLoadMore(false);
                     binding.refresh.finishLoadMore();
                     binding.refresh.finishRefresh();
+                    if (reviewList.size() == 0) {
+                        binding.tvNoData.setVisibility(View.VISIBLE);
+                        binding.refresh.setVisibility(View.GONE);
+                    }
                 }
             }
         }, activity).setFriendDynId(friendDynId).setTimeSortType(1).setPageNo(pageNo);

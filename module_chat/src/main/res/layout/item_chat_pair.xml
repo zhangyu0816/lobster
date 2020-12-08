@@ -116,25 +116,27 @@
                     android:textStyle="bold"
                     android:visibility="@{item.chatType==1?View.VISIBLE:View.GONE}"
                     tools:text="99+" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignEnd="@+id/iv_image"
-                    android:layout_alignBottom="@+id/iv_image"
-                    android:layout_marginEnd="-10dp"
-                    android:background="@mipmap/be_like_tag"
-                    android:visibility="@{item.chatType==1?View.VISIBLE:View.GONE}" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignEnd="@+id/iv_image"
-                    android:layout_alignBottom="@+id/iv_image"
-                    android:layout_marginEnd="-10dp"
-                    android:background="@mipmap/super_like_tag"
-                    android:visibility="@{item.chatType==3?View.VISIBLE:View.GONE}" />
             </RelativeLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/image_relative"
+                android:layout_alignBottom="@+id/image_relative"
+                android:layout_marginEnd="-10dp"
+                android:layout_marginBottom="-10dp"
+                android:background="@mipmap/be_like_tag"
+                android:visibility="@{item.chatType==1?View.VISIBLE:View.GONE}" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/image_relative"
+                android:layout_alignBottom="@+id/image_relative"
+                android:layout_marginEnd="-10dp"
+                android:layout_marginBottom="-10dp"
+                android:background="@mipmap/super_like_tag"
+                android:visibility="@{item.chatType==3?View.VISIBLE:View.GONE}" />
 
             <TextView
                 android:id="@+id/tv_nick"

@@ -26,7 +26,7 @@
             type="String" />
 
         <variable
-            name="info"
+            name="distant"
             type="String" />
 
         <variable
@@ -37,17 +37,39 @@
             name="isPlay"
             type="boolean" />
 
+        <variable
+            name="cityName"
+            type="String" />
+
+        <variable
+            name="district"
+            type="String" />
+
+        <variable
+            name="job"
+            type="String" />
+
+        <variable
+            name="mineInfo"
+            type="com.zb.lib_base.model.MineInfo" />
+
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#E9E8EE">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@mipmap/member_bg" />
 
         <RelativeLayout
             android:id="@+id/top_relative"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white">
+            android:layout_marginTop="34dp">
 
             <ImageView
                 android:id="@+id/iv_back"
@@ -87,36 +109,70 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingBottom="200dp">
+                android:orientation="vertical">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp">
 
                     <com.zb.lib_base.views.xbanner.XBanner
                         android:id="@+id/banner"
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
-                        android:layout_centerHorizontal="true"
-                        android:background="@color/white" />
+                        android:layout_centerHorizontal="true" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/btn_bg_black_2f2_radius60"
+                        android:gravity="center"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:text="@{String.format(@string/user_id_1,viewModel.otherUserId)}"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        tools:text="虾菇号 23165498" />
 
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:layout_margin="15dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp"
                         android:visibility="@{viewModel.memberInfo.faceAttest==1?View.VISIBLE:View.GONE}"
                         app:srcCompat="@mipmap/real_icon" />
-                </RelativeLayout>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginStart="21dp"
+                        android:layout_marginEnd="21dp"
+                        android:orientation="vertical">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            adapter="@{viewModel.imageAdapter}"
+                            recyclerType="@{1}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="26dp" />
+                    </LinearLayout>
+
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginEnd="15dp">
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/btn_bg_white_radius10"
+                    android:padding="12dp">
 
                     <TextView
                         android:id="@+id/tv_nick"
@@ -126,18 +182,31 @@
                         android:background="@{viewModel.memberInfo==null?@drawable/default_bg:@drawable/empty_bg}"
                         android:text="@{viewModel.memberInfo.remark.isEmpty()?viewModel.memberInfo.nick:viewModel.memberInfo.remark}"
                         android:textColor="@color/black_252"
-                        android:textSize="25sp"
+                        android:textSize="24sp"
                         android:textStyle="bold"
                         tools:text="默认仓库" />
 
                     <ImageView
                         android:id="@+id/imageView5"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(68)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(210)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@+id/tv_nick"
-                        android:visibility="@{viewModel.memberInfo.faceAttest==1?View.VISIBLE:View.GONE}"
-                        app:srcCompat="@mipmap/real_icon" />
+                        android:layout_below="@+id/tv_nick"
+                        android:layout_marginTop="8dp"
+                        android:background="@{viewModel.memberInfo.faceAttest==1?@drawable/big_real_icon:@drawable/big_noreal_icon}" />
+
+                    <ImageView
+                        android:id="@+id/imageView4"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(68)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(162)}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tv_nick"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toEndOf="@+id/imageView5"
+                        android:background="@{viewModel.memberInfo.memberType==2?@drawable/big_vip_icon:@drawable/big_novip_icon}" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -155,163 +224,317 @@
                         android:visibility="@{viewModel.otherUserId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
                 </RelativeLayout>
 
+                <ImageView
+                    onClickDelayed="@{viewModel::openVip}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@mipmap/member_open_vip"
+                    android:visibility="@{viewModel.memberInfo.memberType==2?View.VISIBLE:View.GONE}" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:background="@{viewModel.memberInfo==null?@drawable/default_bg:@drawable/empty_bg}"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/btn_bg_white_radius10"
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@{viewModel.memberInfo.sex==0?@drawable/btn_bg_red_fe5_radius2:@drawable/btn_bg_blue_37a_radius2}"
-                        android:paddingStart="7dp"
-                        android:paddingTop="2dp"
-                        android:paddingEnd="7dp"
-                        android:paddingBottom="2dp"
-                        android:text="@{String.format(@string/text_age,DateUtil.getAge(viewModel.memberInfo.birthday,viewModel.memberInfo.age))}"
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        tools:text="19岁" />
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:background="@{ObjectUtils.getConstellationBg(constellation)}"
-                        android:paddingStart="7dp"
-                        android:paddingTop="2dp"
-                        android:paddingEnd="7dp"
-                        android:paddingBottom="2dp"
-                        android:text="@{constellation}"
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        tools:text="双子座" />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{distant}"
+                                android:textColor="#221F23"
+                                android:textSize="25sp"
+                                android:textStyle="bold"
+                                tools:text="25.5" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="距离(KM)"
+                                android:textColor="#999999"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="1px"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="#DEDEDE" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{String.format(@string/user_age,DateUtil.getAge(viewModel.memberInfo.birthday,viewModel.memberInfo.age))}"
+                                android:textColor="#221F23"
+                                android:textSize="25sp"
+                                android:textStyle="bold"
+                                tools:text="25.5" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="年龄"
+                                android:textColor="#999999"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="1px"
+                            android:layout_height="30dp"
+                            android:layout_gravity="center_vertical"
+                            android:background="#DEDEDE" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{cityName}"
+                                android:textColor="#221F23"
+                                android:textSize="25sp"
+                                android:textStyle="bold"
+                                tools:text="温州" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="地区"
+                                android:textColor="#999999"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
 
                     <ImageView
-                        android:id="@+id/imageView4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:visibility="@{viewModel.memberInfo.memberType==2?View.VISIBLE:View.GONE}"
-                        app:srcCompat="@mipmap/vip_icon" />
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@{viewModel.memberInfo==null?@drawable/default_bg:@drawable/empty_bg}"
-                    android:text="@{String.format(@string/user_id,viewModel.otherUserId)}"
-                    android:textColor="@color/black_827"
-                    android:textSize="12sp"
-                    tools:text="虾菇号：21346" />
-
-                <RelativeLayout
-                    android:id="@+id/discover_layout"
-                    onClickDelayed="@{viewModel::toDiscoverList}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginEnd="15dp">
+                        android:layout_marginTop="16dp"
+                        android:background="@mipmap/fuhao_qian" />
 
                     <TextView
-                        android:id="@+id/tv_front"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@{viewModel.memberInfo==null?@drawable/default_bg:@drawable/empty_bg}"
+                        android:text="@{viewModel.memberInfo.personalitySign.trim().isEmpty()?@string/sign_content:viewModel.memberInfo.personalitySign}"
+                        android:textColor="#333333"
+                        android:textSize="18sp"
+                        tools:text="默认仓库" />
+
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="10dp"
-                        android:text="我的动态"
-                        android:textColor="@color/black_252"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:layout_gravity="end"
+                        android:background="@mipmap/fuhao_hou" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/discover_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/btn_bg_white_radius10"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="个人动态"
+                            android:textColor="@color/black_252"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            onClickDelayed="@{viewModel::toDiscoverList}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:drawablePadding="5dp"
+                            android:gravity="center"
+                            android:text="查看更多"
+                            android:textColor="#666666"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:drawableEndCompat="@drawable/arrow_small_right_icon" />
+                    </RelativeLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
                         adapter="@{viewModel.discoverAdapter}"
                         recyclerType="@{1}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="15dp"
-                        android:layout_toStartOf="@+id/iv_arrow"
-                        android:layout_toEndOf="@+id/tv_front" />
-
-                    <ImageView
-                        android:id="@+id/iv_arrow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/arrow_small_right_icon" />
-
-                </RelativeLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="15dp"
-                    android:background="@{viewModel.memberInfo==null?@drawable/default_bg:@drawable/empty_bg}"
-                    android:text="@{info}"
-                    android:textColor="@color/black_4d4"
-                    android:textSize="14sp"
-                    tools:text="13.3K" />
+                        android:layout_marginTop="12dp" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginEnd="15dp"
-                    android:orientation="horizontal">
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/btn_bg_white_radius10"
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="个性签名："
-                        android:textColor="@color/black_4d4"
-                        android:textSize="14sp" />
+                        android:text="个人信息"
+                        android:textColor="@color/black_252"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@{viewModel.memberInfo==null?@drawable/default_bg:@drawable/empty_bg}"
-                        android:text="@{viewModel.memberInfo.personalitySign.trim().isEmpty()?@string/sign_content:viewModel.memberInfo.personalitySign}"
-                        android:textColor="@color/black_4d4"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@{String.format(@string/user_id_2,viewModel.otherUserId)}"
+                            android:textColor="#666666"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            tools:text="虾菇 ID:216548" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:singleLine="true"
+                            android:text="@{String.format(@string/user_job,job)}"
+                            android:textColor="#666666"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            tools:text="职业：设计师" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@{String.format(@string/user_constellation,constellation)}"
+                            android:textColor="#666666"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            tools:text="星座：顶顶顶" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@{String.format(@string/user_district,district)}"
+                            android:textColor="#666666"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            tools:text="地区：顶顶顶顶" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@{String.format(@string/user_sex,viewModel.memberInfo.sex==0?@string/sex_0:@string/sex_1)}"
+                        android:textColor="#666666"
                         android:textSize="14sp"
-                        tools:text="默认仓库" />
+                        android:textStyle="bold"
+                        tools:text="性别：顶顶顶" />
                 </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="15dp"
-                    android:gravity="center_vertical"
-                    android:text="个性标签"
-                    android:textColor="@color/black_4d4"
-                    android:textSize="14sp"
-                    android:visibility="@{viewModel.memberInfo.getServiceTags().length() > 0?View.VISIBLE:View.GONE}" />
 
-                <com.zb.lib_base.views.MyRecyclerView
-                    adapter="@{viewModel.tagAdapter}"
-                    recyclerType="@{5}"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="15dp"
-                    android:visibility="@{viewModel.memberInfo.getServiceTags().length() > 0?View.VISIBLE:View.GONE}" />
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/btn_bg_white_radius10"
+                    android:orientation="vertical"
+                    android:padding="12dp"
+                    android:visibility="@{viewModel.memberInfo.getServiceTags().length() > 0?View.VISIBLE:View.GONE}">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="个性标签"
+                        android:textColor="@color/black_252"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <com.zb.lib_base.views.MyRecyclerView
+                        adapter="@{viewModel.tagAdapter}"
+                        recyclerType="@{5}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="110dp"
+                    android:layout_marginTop="8dp" />
+
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
         <com.zb.lib_base.views.SuperLikeBigView
             android:id="@+id/iv_super_like"
-            isPlay="@{isPlay}"
             bigSuperLikeInterface="@{viewModel}"
+            isPlay="@{isPlay}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

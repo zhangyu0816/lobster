@@ -3,7 +3,6 @@ package com.zb.module_home.vm;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -11,10 +10,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.Target;
-import com.bumptech.glide.request.transition.Transition;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -52,7 +47,6 @@ import com.zb.lib_base.model.Reward;
 import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.MNImage;
-import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.views.xbanner.XUtils;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -72,7 +66,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.databinding.ViewDataBinding;
 
 public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDetailVMInterface, OnRefreshListener, OnLoadMoreListener {
@@ -92,9 +85,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     private boolean isFirst = true;
     private int bannerWidth = MineApp.W;
     private int bannerHeight = MineApp.W;
-
-    private int mainW = 0;
-    private int mainH = 0;
     private List<Ads> adsList = new ArrayList<>();
 
     @SuppressLint("ClickableViewAccessibility")
@@ -270,34 +260,12 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                                 Ads ads = new Ads();
                                 ads.setSmallImage(image);
                                 adsList.add(ads);
-                                try {
-                                    Bitmap bitmap = Glide.with(activity).asBitmap().load(ads.getSmallImage()).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
-                                    int h = bitmap.getHeight();
-                                    int w = bitmap.getWidth();
-                                    if (mainW < w && mainH < h) {
-                                        mainW = w;
-                                        mainH = h;
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
                             }
                         }
                     } else {
                         Ads ads = new Ads();
                         ads.setSmallImage(discoverInfo.getImage());
                         adsList.add(ads);
-                        try {
-                            Bitmap bitmap = Glide.with(activity).asBitmap().load(ads.getSmallImage()).into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get();
-                            int h = bitmap.getHeight();
-                            int w = bitmap.getWidth();
-                            if (mainW < w && mainH < h) {
-                                mainW = w;
-                                mainH = h;
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
                     }
                     handler.sendEmptyMessage(0);
                 }).start();
@@ -312,30 +280,14 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     private Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
-            bannerWidth = MineApp.W;
-            bannerHeight = (int) (MineApp.W * (float) mainH / (float) mainW);
-            if (bannerHeight > ObjectUtils.getLogoHeight(1f)) {
-                bannerHeight = ObjectUtils.getLogoHeight(1f);
-            }
-            AdapterBinding.viewSize(mBinding.banner, bannerWidth, bannerHeight);
-            XUtils.showBanner(mBinding.banner, adsList,
+            int height = (int) (bannerHeight * 1.2f);
+            AdapterBinding.viewSize(mBinding.banner, bannerWidth, height);
+            XUtils.showBanner(mBinding.banner, adsList,1,
                     (context, ads, image, position) ->
-                            Glide.with(activity).asBitmap().load(ads.getSmallImage()).into(new SimpleTarget<Bitmap>() {
-                                @Override
-                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                    int w = resource.getWidth();
-                                    int h = resource.getHeight();
-
-                                    if (w >= h) {
-                                        AdapterBinding.viewSize(image, bannerWidth, (int) ((float) bannerWidth * h / w));
-                                    } else {
-                                        AdapterBinding.viewSize(image, (int) ((float) bannerHeight * w / h), bannerHeight);
-                                    }
-                                    image.setImageBitmap(resource);
-                                }
-                            }),
+                            AdapterBinding.loadImage(image, ads.getSmallImage(), 0, R.drawable.empty_bg, bannerWidth, height, false,
+                                    false, 0, false, 0, false),
                     (position, imageList) ->
-                            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, false, null));
+                            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, false, null),null);
             return false;
         }
     });
@@ -577,6 +529,9 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 if (memberInfo != null)
                     AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
+                Intent intent = new Intent("lobster_attention");
+                intent.putExtra("isAttention", true);
+                activity.sendBroadcast(intent);
             }
 
             @Override
@@ -587,6 +542,9 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                         if (memberInfo != null)
                             AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                         activity.sendBroadcast(new Intent("lobster_attentionList"));
+                        Intent intent = new Intent("lobster_attention");
+                        intent.putExtra("isAttention", true);
+                        activity.sendBroadcast(intent);
                     }
                 }
             }
@@ -604,6 +562,9 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 if (memberInfo != null)
                     AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
+                Intent intent = new Intent("lobster_attention");
+                intent.putExtra("isAttention", false);
+                activity.sendBroadcast(intent);
             }
         }, activity).setOtherUserId(discoverInfo.getUserId());
         HttpManager.getInstance().doHttpDeal(api);

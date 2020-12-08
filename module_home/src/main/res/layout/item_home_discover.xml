@@ -137,7 +137,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="-5dp"
                             android:text='@{String.format("%d",item.goodNum)}'
-                            android:textColor="@color/black_4d4"
+                            android:textColor="#cccccc"
                             android:textSize="14sp"
                             tools:text="7" />
                     </LinearLayout>

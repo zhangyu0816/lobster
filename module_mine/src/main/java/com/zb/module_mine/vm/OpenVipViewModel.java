@@ -20,6 +20,8 @@ import androidx.databinding.ViewDataBinding;
 public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterface {
     private MineOpenVipBinding vipBinding;
     public BaseReceiver openVipReceiver;
+    public boolean isFinish = false;
+    private boolean isOpen = false;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -29,6 +31,7 @@ public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterfac
         openVipReceiver = new BaseReceiver(activity, "lobster_openVip") {
             @Override
             public void onReceive(Context context, Intent intent) {
+                isOpen = true;
                 myInfo();
             }
         };
@@ -53,6 +56,8 @@ public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterfac
             public void onNext(MineInfo o) {
                 MineApp.mineInfo = o;
                 vipBinding.setMineInfo(MineApp.mineInfo);
+                if (isOpen && isFinish)
+                    activity.finish();
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

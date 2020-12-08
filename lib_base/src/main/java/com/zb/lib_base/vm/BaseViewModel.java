@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -109,7 +110,7 @@ public class BaseViewModel implements BaseVMInterface {
             public void onTabSelected(TabLayout.Tab tab) {
                 MineApp.chatSelectIndex = tab.getPosition();
                 viewPager.setCurrentItem(tab.getPosition());
-                changeTab(tab, 18, selectColor);
+                changeTab(tab, 16, selectColor);
                 if (tabNames[0].equals("关注")) {
                     Intent data = new Intent("lobster_homeBottle");
                     data.putExtra("index", tab.getPosition());
@@ -128,7 +129,7 @@ public class BaseViewModel implements BaseVMInterface {
             }
         });
         try {
-            changeTab(Objects.requireNonNull(tabLayout.getTabAt(index)), 18, selectColor);
+            changeTab(Objects.requireNonNull(tabLayout.getTabAt(index)), 16, selectColor);
         } catch (Exception ignored) {
 
         }
@@ -142,6 +143,8 @@ public class BaseViewModel implements BaseVMInterface {
             // 改变 tab 选择状态下的字体大小
             textView.setTextSize(size);
             textView.setTextColor(ContextCompat.getColor(activity, color));
+            TextPaint paint = textView.getPaint();
+            paint.setFakeBoldText(size == 16);
         }
     }
 
@@ -220,7 +223,7 @@ public class BaseViewModel implements BaseVMInterface {
         }, 500);
     }
 
-    public void isAttention(RelativeLayout layout,ImageView iv) {
+    public void isAttention(RelativeLayout layout, ImageView iv) {
         pvhR = PropertyValuesHolder.ofFloat("rotation", 0, 90);
         pvhA = PropertyValuesHolder.ofFloat("alpha", 1, 0);
         pvh = ObjectAnimator.ofPropertyValuesHolder(iv, pvhR, pvhA).setDuration(200);
@@ -308,6 +311,14 @@ public class BaseViewModel implements BaseVMInterface {
     public void closeImplicit(View view) {
         imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0); // 强制隐藏键盘
+    }
+
+    public void showImplicit(View view) {
+        view.setFocusable(true);
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(view, 0);
     }
 
     public static void setProhibitEmoji(EditText et) {

@@ -64,6 +64,7 @@ public class XBanner extends RelativeLayout {
     public static final int CUBE_INDICATOR = 2;
     public static final int NUM_INDICATOR = 3;
     public static final int NUM_INDICATOR_TITLE = 4;
+    public static final int INDICATOR_NON = 5;
 
     private Context mContext;
     private int mTitleHeight;
@@ -141,7 +142,7 @@ public class XBanner extends RelativeLayout {
     /**
      * Set the indicator type here
      */
-    @IntDef({CIRCLE_INDICATOR, CIRCLE_INDICATOR_TITLE, CUBE_INDICATOR, NUM_INDICATOR, NUM_INDICATOR_TITLE})
+    @IntDef({CIRCLE_INDICATOR, CIRCLE_INDICATOR_TITLE, CUBE_INDICATOR, NUM_INDICATOR, NUM_INDICATOR_TITLE, INDICATOR_NON})
     @Retention(RetentionPolicy.SOURCE)
     public @interface BANNER_TYPE {
     }
@@ -203,6 +204,8 @@ public class XBanner extends RelativeLayout {
         initScroller();
         if (mBannerType == CIRCLE_INDICATOR_TITLE || mBannerType == NUM_INDICATOR_TITLE) {
             initViewforTitleType();
+        } else if (mBannerType == INDICATOR_NON) {
+
         } else if (mTitles.size() > 0) {
             throw new RuntimeException(exceptionTitle);
         }
@@ -374,6 +377,8 @@ public class XBanner extends RelativeLayout {
             }
             binding.indicatorContainer.addView(mNumIndicator);
 
+        } else if (mBannerType == INDICATOR_NON) {
+            binding.indicatorContainer.setVisibility(GONE);
         } else {
             mIndicators.addAll(createIndicators());
             if (mIndicators.size() == 1) {
@@ -577,6 +582,7 @@ public class XBanner extends RelativeLayout {
         binding.viewpager.setBackground(gradientDrawable);
     }
 
+
     private void applyViewPagerAdapterListener() {
         if (mImageCount <= 1) {
             return;
@@ -592,6 +598,8 @@ public class XBanner extends RelativeLayout {
             @Override
             public void onPageSelected(int position) {
                 onIndicatorChange(position);
+                if (mCallBack != null)
+                    mCallBack.selectPosition(position);
             }
 
             @Override
@@ -632,6 +640,21 @@ public class XBanner extends RelativeLayout {
                 }
             }
         });
+    }
+
+    private CallBack mCallBack;
+
+    public XBanner setCallBack(CallBack callBack) {
+        mCallBack = callBack;
+        return this;
+    }
+
+    public interface CallBack {
+        void selectPosition(int position);
+    }
+
+    public void setCurrentItem(int currentItem) {
+        binding.viewpager.setCurrentItem(currentItem, false);
     }
 
     private void onIndicatorChange(int position) {

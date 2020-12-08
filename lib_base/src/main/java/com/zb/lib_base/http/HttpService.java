@@ -139,6 +139,10 @@ public interface HttpService {
     @GET("api/Login_checkUserName")
     Observable<BaseResultEntity<CheckUser>> checkUserName(@Query("userName") String userName);
 
+    // 验证 验证码
+    @GET("api/Login_verifyCaptcha")
+    Observable<BaseResultEntity> verifyCaptcha(@Query("userName") String userName, @Query("captcha") String captcha);
+
     // 图片验证码
     @GET("api/ImageCaptca_findImageCaptcha")
     Observable<BaseResultEntity<ImageCaptcha>> findImageCaptcha();

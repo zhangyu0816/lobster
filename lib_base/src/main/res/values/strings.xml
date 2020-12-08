@@ -2,6 +2,7 @@
     <string name="app_name_sub">虾菇</string>
     <string name="app_name_running">虾菇正在运行</string>
     <string name="code_second"><Data><![CDATA[再次发送<font color="#4EFB52"><b>%d</b></font>s]]></Data></string>
+    <string name="code_second_finish"><Data><![CDATA[<font color="#ffffff"><u>重新发送验证码</u></font>]]></Data></string>
     <string name="symbol_money">￥</string>
     <string name="symbol_money_">￥ </string>
     <string name="price_moth">￥%.1f/月</string>
@@ -19,9 +20,15 @@
     <string name="sex_ta_0">她</string>
     <string name="sex_ta_1">他</string>
     <string name="sign_content">无个性不签名！</string>
-    <string name="attention_true">关注</string>
+    <string name="attention_true">立即关注</string>
     <string name="attention_false">已关注</string>
-    <string name="user_id">虾菇号：%d</string>
+    <string name="user_id_1">虾菇号 %d</string>
+    <string name="user_id_2">虾菇 ID:%d</string>
+    <string name="user_job">职业：%s</string>
+    <string name="user_constellation">星座：%s</string>
+    <string name="user_district">地区：%s</string>
+    <string name="user_sex">性别：%s</string>
+    <string name="user_age">%d</string>
     <string name="no_data">card_no_data_icon</string>
     <string name="out_line">card_out_line_bg</string>
     <string name="card_progress">card_progress_icon</string>

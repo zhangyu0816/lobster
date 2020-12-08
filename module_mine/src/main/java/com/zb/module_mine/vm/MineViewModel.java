@@ -152,7 +152,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     @Override
     public void openVip(View view) {
         if (MineApp.vipInfoList.size() > 0)
-            ActivityUtils.getMineOpenVip();
+            ActivityUtils.getMineOpenVip(false);
     }
 
     @Override

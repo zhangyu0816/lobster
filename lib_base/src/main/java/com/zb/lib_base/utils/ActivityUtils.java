@@ -93,8 +93,8 @@ public class ActivityUtils {
 
     /*********************** 我的 **************************/
     // 会员
-    public static void getMineOpenVip() {
-        ARouter.getInstance().build(RouteUtils.Mine_Open_Vip).navigation();
+    public static void getMineOpenVip(boolean isFinish) {
+        ARouter.getInstance().build(RouteUtils.Mine_Open_Vip).withBoolean("isFinish", isFinish).navigation();
     }
 
     // 消息

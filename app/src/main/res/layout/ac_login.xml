@@ -64,6 +64,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <View
+                    onClickDelayed="@{viewModel::close}"
+                    android:layout_width="match_parent"
+                    android:layout_height="600dp" />
+
                 <RelativeLayout
                     android:id="@+id/login_top_layout"
                     android:layout_width="match_parent"
@@ -74,6 +79,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
+                        android:layout_marginStart="23dp"
                         android:onClick="@{viewModel::back}"
                         android:padding="15dp"
                         app:srcCompat="@mipmap/back_white_icon" />
@@ -105,7 +111,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="38dp"
-                        android:layout_marginTop="36dp"
+                        android:layout_marginTop="18dp"
                         android:onClick="@{viewModel::changeUrl}"
                         android:text="@{viewModel.titleMap.get(loginStep)}"
                         android:textColor="@android:color/white"
@@ -117,15 +123,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="38dp"
-                        android:layout_marginTop="36dp"
+                        android:layout_marginTop="25dp"
                         android:orientation="vertical"
                         android:visibility="@{(loginStep==1||loginStep==2)?View.VISIBLE:View.GONE}"
-                        tools:visibility="gone">
+                        tools:visibility="visible">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="25dp"
+                            android:layout_marginBottom="20dp"
                             android:text="验证码已通过短信发送至："
                             android:textColor="@color/white"
                             android:textSize="16sp"
@@ -148,7 +154,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="10dp"
-                                android:text="@{registerInfo.phone}"
+                                android:text="@{ObjectUtils.getPhone(registerInfo.phone)}"
                                 android:textColor="@color/white"
                                 android:textSize="20sp"
                                 android:textStyle="bold"
@@ -160,7 +166,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="38dp"
-                        android:layout_marginTop="36dp"
+                        android:layout_marginTop="25dp"
                         android:layout_marginBottom="45dp"
                         android:alpha="0.6"
                         android:text="@{viewModel.contentMap.get(loginStep)}"
@@ -168,7 +174,7 @@
                         android:textSize="12sp"
                         android:visibility="@{viewModel.contentMap.get(loginStep).empty?View.GONE:View.VISIBLE}"
                         tools:text="这是您在虾菇上使用的名字"
-                        tools:visibility="visible" />
+                        tools:visibility="gone" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -208,6 +214,7 @@
                                 android:text="@={registerInfo.phone}"
                                 android:textColor="@color/white"
                                 android:textColorHint="#CDB1FF"
+                                android:textCursorDrawable="@drawable/cursor_color_white"
                                 android:textSize="14sp"
                                 tools:text="18989799141" />
 
@@ -218,15 +225,9 @@
                                 android:layout_centerVertical="true"
                                 android:onClick="@{viewModel::cleanPhone}"
                                 android:padding="15dp"
-                                android:src="@mipmap/clean_phone_icon" />
+                                android:src="@mipmap/clean_phone_icon"
+                                android:visibility="@{registerInfo.phone.empty?View.GONE:View.VISIBLE}" />
                         </RelativeLayout>
-
-                        <ImageView
-                            onClickDelayed="@{viewModel::toWX}"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="94dp"
-                            android:background="@mipmap/login_by_wx_icon" />
 
                     </LinearLayout>
 
@@ -247,6 +248,7 @@
                         android:text="@={registerInfo.pass}"
                         android:textColor="@color/white"
                         android:textColorHint="#CDB1FF"
+                        android:textCursorDrawable="@drawable/cursor_color_white"
                         android:textSize="14sp"
                         android:visibility="@{loginStep==1?View.VISIBLE:View.GONE}"
                         tools:text="adfa"
@@ -258,13 +260,13 @@
                         android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:visibility="@{loginStep==2?View.VISIBLE:View.GONE}"
-                        tools:visibility="gone">
+                        tools:visibility="visible">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="38dp"
-                            android:layout_marginTop="46dp"
+                            android:layout_marginTop="38dp"
                             android:text="输入获取的验证码"
                             android:textColor="@color/white"
                             android:textSize="16sp"
@@ -278,16 +280,18 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
                                 android:layout_marginStart="38dp"
                                 android:layout_marginEnd="38dp"
-                                android:gravity="center"
                                 android:orientation="horizontal">
 
                                 <TextView
                                     android:id="@+id/tv_code1"
-                                    android:layout_width="0dp"
-                                    android:layout_height="80dp"
-                                    android:layout_weight="1"
+                                    viewHeightSize="@{ObjectUtils.getCodeWidth()}"
+                                    viewWidthSize="@{ObjectUtils.getCodeWidth()}"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="70dp"
+                                    android:layout_marginEnd="10dp"
                                     android:background="@drawable/btn_bg_white_radius11"
                                     android:gravity="center"
                                     android:text=""
@@ -296,11 +300,11 @@
 
                                 <TextView
                                     android:id="@+id/tv_code2"
-                                    android:layout_width="0dp"
-                                    android:layout_height="80dp"
-                                    android:layout_marginStart="20dp"
+                                    viewHeightSize="@{ObjectUtils.getCodeWidth()}"
+                                    viewWidthSize="@{ObjectUtils.getCodeWidth()}"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="70dp"
                                     android:layout_marginEnd="10dp"
-                                    android:layout_weight="1"
                                     android:background="@drawable/btn_bg_white_radius11"
                                     android:gravity="center"
                                     android:text=""
@@ -309,11 +313,11 @@
 
                                 <TextView
                                     android:id="@+id/tv_code3"
-                                    android:layout_width="0dp"
-                                    android:layout_height="80dp"
-                                    android:layout_marginStart="10dp"
+                                    viewHeightSize="@{ObjectUtils.getCodeWidth()}"
+                                    viewWidthSize="@{ObjectUtils.getCodeWidth()}"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="70dp"
                                     android:layout_marginEnd="10dp"
-                                    android:layout_weight="1"
                                     android:background="@drawable/btn_bg_white_radius11"
                                     android:gravity="center"
                                     android:text=""
@@ -323,10 +327,10 @@
 
                                 <TextView
                                     android:id="@+id/tv_code4"
-                                    android:layout_width="0dp"
-                                    android:layout_height="80dp"
-                                    android:layout_marginStart="10dp"
-                                    android:layout_weight="1"
+                                    viewHeightSize="@{ObjectUtils.getCodeWidth()}"
+                                    viewWidthSize="@{ObjectUtils.getCodeWidth()}"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="70dp"
                                     android:background="@drawable/btn_bg_white_radius11"
                                     android:gravity="center"
                                     android:text=""
@@ -356,9 +360,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="38dp"
-                            android:layout_marginTop="24dp"
+                            android:layout_marginTop="19dp"
                             android:text="@{codeRemark}"
-                            android:textColor="@android:color/white"
+                            android:textColor="@color/white"
                             android:textSize="14sp"
                             tools:text=" 再次发送14s" />
                     </LinearLayout>
@@ -382,7 +386,7 @@
                                 onClickDelayed="@{v->viewModel.selectSex(1)}"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:alpha="@{sexIndex==1?0.5f:1}"
+                                android:alpha="@{sexIndex==1?1.0f:0.5f}"
                                 android:gravity="center"
                                 android:text="@string/sex_1"
                                 android:textColor="@color/white"
@@ -394,7 +398,7 @@
                                 onClickDelayed="@{v->viewModel.selectSex(0)}"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:alpha="@{sexIndex==0?0.5f:1}"
+                                android:alpha="@{sexIndex==0?1.0f:0.5f}"
                                 android:gravity="center"
                                 android:text="@string/sex_0"
                                 android:textColor="@color/white"
@@ -413,6 +417,7 @@
                         android:background="@drawable/btn_bg_white_tran_radius60"
                         android:hint="输入你的昵称"
                         android:maxLength="10"
+                        android:textCursorDrawable="@drawable/cursor_color_white"
                         android:paddingStart="25dp"
                         android:paddingTop="13dp"
                         android:paddingEnd="25dp"
@@ -464,7 +469,7 @@
                             android:layout_width="200dp"
                             android:layout_height="200dp"
                             android:layout_marginTop="32dp"
-                            android:background="@drawable/btn_bg_purple_976_radius10"
+                            android:background="@drawable/btn_bg_white_radius11"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textView3">
@@ -480,15 +485,15 @@
                                     android:id="@+id/imageView"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    app:srcCompat="@mipmap/camera_icon" />
+                                    app:srcCompat="@mipmap/white_camera_icon" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp"
+                                    android:layout_marginTop="8dp"
                                     android:text="上传照片"
                                     android:textColor="@android:color/white"
-                                    android:textSize="14sp" />
+                                    android:textSize="12sp" />
                             </LinearLayout>
 
                             <ImageView
@@ -511,7 +516,7 @@
                         android:paddingStart="38dp"
                         android:paddingEnd="38dp"
                         android:visibility="@{loginStep==7?View.VISIBLE:View.GONE}"
-                        tools:visibility="visible">
+                        tools:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -521,8 +526,9 @@
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/ed_job"
+                        <TextView
+                            onClickDelayed="@{viewModel::selectJog}"
+                            android:id="@+id/tv_job"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
@@ -532,7 +538,7 @@
                             android:paddingTop="13dp"
                             android:paddingEnd="25dp"
                             android:paddingBottom="13dp"
-                            android:text="@={registerInfo.job}"
+                            android:text="@{registerInfo.job}"
                             android:textColor="@color/white"
                             android:textColorHint="#CDB1FF"
                             android:textSize="14sp"
@@ -547,8 +553,9 @@
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
-                        <EditText
-                            android:id="@+id/ed_personality_sign"
+                        <TextView
+                            onClickDelayed="@{viewModel::editSign}"
+                            android:id="@+id/tv_personality_sign"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
@@ -558,7 +565,7 @@
                             android:paddingTop="13dp"
                             android:paddingEnd="25dp"
                             android:paddingBottom="13dp"
-                            android:text="@={registerInfo.personalitySign}"
+                            android:text="@{registerInfo.personalitySign}"
                             android:textColor="@color/white"
                             android:textColorHint="#CDB1FF"
                             android:textSize="14sp"
@@ -572,7 +579,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="个人标签"
+                                android:text="个性标签"
                                 android:textColor="@color/white"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
@@ -599,38 +606,77 @@
                             android:layout_marginTop="15dp" />
 
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/tv_next"
-                        onClickDelayed="@{viewModel::next}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="15dp"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:padding="30dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="@{btnName}"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            tools:text="下一步"
-                            tools:textColor="@{canNext?@color/white:@color/white_66}" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:background="@{canNext?@drawable/arrow_small_white_right_icon:@drawable/arrow_small_right_icon}" />
-                    </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>
         </androidx.core.widget.NestedScrollView>
 
+        <LinearLayout
+            android:id="@+id/tv_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="30dp">
+
+            <LinearLayout
+                onClickDelayed="@{viewModel::next}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@{btnName}"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    tools:text="下一步"
+                    tools:textColor="@{canNext?@color/white:@color/white_66}" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:background="@{canNext?@drawable/arrow_small_white_right_icon:@drawable/arrow_small_right_icon}" />
+            </LinearLayout>
+
+            <LinearLayout
+                onClickDelayed="@{viewModel::toWX}"
+                android:layout_width="wrap_content"
+                android:layout_height="46dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/btn_bg_white_radius60"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingStart="33dp"
+                android:paddingEnd="33dp"
+                android:visibility="@{loginStep==0?View.VISIBLE:View.GONE}">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:background="@mipmap/login_by_wx_icon" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="46dp"
+                    android:gravity="center"
+                    android:text="微信  登录"
+                    android:textColor="#333333"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:visibility="visible" />
+            </LinearLayout>
+
+
+        </LinearLayout>
     </RelativeLayout>
 </layout>

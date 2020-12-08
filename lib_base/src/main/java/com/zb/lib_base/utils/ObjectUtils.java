@@ -42,6 +42,10 @@ public class ObjectUtils {
         return (int) (MineApp.W * width / 750f);
     }
 
+    public static int getCodeWidth() {
+        return (int) ((MineApp.W - DisplayUtils.dip2px(106)) / 4);
+    }
+
     // 根据屏幕高获取尺寸
     public static int getViewSizeByHeightFromMax1334(int width, int height) {
         return (int) (getViewSizeByWidthFromMax750(width) * (float) height / (float) width);
@@ -109,6 +113,13 @@ public class ObjectUtils {
     // 获取选中时显示的数量
     public static String getSelectCount(Map map, String s) {
         return map.containsKey(s) ? map.get(s) + "" : "";
+    }
+
+    public static String getPhone(String phone) {
+        if (phone.length() < 11)
+            return phone;
+        else
+            return phone.substring(0, 3) + " " + phone.substring(3, 7) + " " + phone.substring(7);
     }
 
     // 最大输入字数

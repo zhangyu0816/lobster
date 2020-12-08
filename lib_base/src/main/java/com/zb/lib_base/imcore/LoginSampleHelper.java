@@ -126,7 +126,7 @@ public class LoginSampleHelper {
         public void onPushMessage(IYWContact contact, YWMessage ywMessage) {
             CustomMessageBody body = unpack(ywMessage.getContent());
             long otherUserId = body.getFromId();
-            if (body.getDriftBottleId() == 0&&body.getFlashTalkId()==0) {
+            if (body.getDriftBottleId() == 0 && body.getFlashTalkId() == 0) {
                 if (otherUserId != BaseActivity.dynUserId) {
                     boolean hasOtherUserId = false;
                     for (LikeMe item : MineApp.pairList) {
@@ -139,6 +139,9 @@ public class LoginSampleHelper {
                         return;
                     }
                 }
+            }
+            if (otherUserId == 399583) { // 客服
+                return;
             }
             try {
                 JSONObject data = new JSONObject(new JSONObject(ywMessage.getContent()).getString("customize"));
