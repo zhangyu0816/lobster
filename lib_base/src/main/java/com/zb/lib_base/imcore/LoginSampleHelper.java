@@ -31,7 +31,6 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.NotifivationActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.model.LikeMe;
-import com.zb.lib_base.utils.SCToastUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -97,7 +96,7 @@ public class LoginSampleHelper {
             @Override
             public void onError(int i, String s) {
                 loginOut_Sample();
-                SCToastUtil.showToast(activity, "聊天异常：" + s + ",请联系客服解决", true);
+                callBack.registerSuccess();
             }
 
             @Override

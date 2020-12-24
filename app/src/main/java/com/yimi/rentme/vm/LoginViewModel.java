@@ -32,7 +32,6 @@ import com.zb.lib_base.api.modifyMemberInfoApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.registerApi;
 import com.zb.lib_base.api.registerCaptchaApi;
-import com.zb.lib_base.api.verifyCaptchaApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.http.HttpManager;
@@ -196,16 +195,15 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         getPermissions(0);
 
         photoManager = new PhotoManager(activity, () -> {
-            MineApp.registerInfo.setMoreImages(photoManager.jointWebUrl("#"));
-            MineApp.registerInfo.setImage(photoManager.jointWebUrl("#"));
+            String imageUrl = photoManager.jointWebUrl("#");
+            mBinding.setCanNext(true);
+            MineApp.registerInfo.setMoreImages(imageUrl);
+            MineApp.registerInfo.setImage(imageUrl);
+            mBinding.setImageUrl(imageUrl);
             photoManager.deleteAllFile();
             needMoreInfo = true;
-            if (MineApp.registerInfo.getOpenId().isEmpty())
-                register();
-            else {
-                MineApp.registerInfo.setUnionImage(photoManager.jointWebUrl("#"));
-                loginByUnion();
-            }
+
+
         });
         step(0);
         setAdapter();
@@ -237,9 +235,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
      * 更新单图
      */
     public void setSingleLogo(String filePath) {
-        mBinding.setCanNext(true);
-        MineApp.registerInfo.setImage(filePath);
-        mBinding.setImageUrl(filePath);
+        photoManager.addFileUpload(0, new File(filePath));
     }
 
     public void setInfo(String bindPhone, String captcha) {
@@ -387,11 +383,12 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                     step(7);
                     break;
                 case 7:
-                    if (MineApp.registerInfo.getImage().isEmpty()) {
-                        SCToastUtil.showToast(activity, "请上传至少1张照片", false);
-                        return;
+                    if (MineApp.registerInfo.getOpenId().isEmpty())
+                        register();
+                    else {
+                        MineApp.registerInfo.setUnionImage(photoManager.jointWebUrl("#"));
+                        loginByUnion();
                     }
-                    photoManager.addFileUpload(0, new File(MineApp.registerInfo.getImage()));
                     break;
             }
     }
@@ -663,13 +660,14 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     }
 
     private void verifyCaptcha() {
-        verifyCaptchaApi api = new verifyCaptchaApi(new HttpOnNextListener() {
-            @Override
-            public void onNext(Object o) {
-                step(3);
-            }
-        }, activity).setUserName(MineApp.registerInfo.getPhone()).setCaptcha(mBinding.edCode.getText().toString());
-        HttpManager.getInstance().doHttpDeal(api);
+        step(3);
+//        verifyCaptchaApi api = new verifyCaptchaApi(new HttpOnNextListener() {
+//            @Override
+//            public void onNext(Object o) {
+//                step(3);
+//            }
+//        }, activity).setUserName(MineApp.registerInfo.getPhone()).setCaptcha(mBinding.edCode.getText().toString());
+//        HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override

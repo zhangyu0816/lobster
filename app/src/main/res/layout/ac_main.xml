@@ -137,20 +137,6 @@
                     android:text="我的"
                     android:textColor="@color/black_3e4"
                     android:textSize="12sp" />
-
-<!--                <TextView-->
-<!--                    android:layout_width="16dp"-->
-<!--                    android:layout_height="16dp"-->
-<!--                    android:layout_alignEnd="@+id/tv_mine"-->
-<!--                    android:layout_marginTop="6dp"-->
-<!--                    android:layout_marginEnd="-5dp"-->
-<!--                    android:background="@drawable/circle_white_red"-->
-<!--                    android:gravity="center"-->
-<!--                    android:text="@{ObjectUtils.count(newsCount)}"-->
-<!--                    android:textColor="@android:color/white"-->
-<!--                    android:textSize="10sp"-->
-<!--                    android:visibility="@{newsCount==0?View.GONE:View.VISIBLE}"-->
-<!--                    tools:text="···" />-->
             </RelativeLayout>
 
         </LinearLayout>

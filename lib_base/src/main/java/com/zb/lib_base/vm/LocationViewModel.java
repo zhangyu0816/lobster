@@ -86,8 +86,13 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
 
     private void initMap() {
         aMap = mBinding.mapView.getMap();
-        LatLng myLl = new LatLng(Double.parseDouble(PreferenceUtil.readStringValue(activity, "latitude")),
-                Double.parseDouble(PreferenceUtil.readStringValue(activity, "longitude")));
+        LatLng myLl;
+        String latitude = PreferenceUtil.readStringValue(activity, "latitude");
+        String longitude = PreferenceUtil.readStringValue(activity, "longitude");
+        if (latitude.isEmpty() || longitude.isEmpty())
+            myLl = new LatLng(0, 0);
+        else
+            myLl = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
         aMap.moveCamera(CameraUpdateFactory.changeLatLng(myLl));//设置中心点
         aMap.moveCamera(CameraUpdateFactory.zoomTo(16)); // 设置地图可视缩放大小
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
