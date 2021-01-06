@@ -156,7 +156,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
 
                 canUpdate = false;
                 playVideo(view);
-                if (!isOver && position == MineApp.discoverInfoList.size() - 1 && isUp) {
+                if (!isOver && position == MineApp.discoverInfoList.size() - 4 && isUp) {
                     pageNo++;
                     dynPiazzaList();
                 }
@@ -356,7 +356,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
                     if (e.getMessage().equals("已经关注过")) {
-                        isAttention(layout,ivAttention);
+                        isAttention(layout, ivAttention);
                         AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), true, BaseActivity.userId));
                         activity.sendBroadcast(new Intent("lobster_attentionList"));
                     }
@@ -574,8 +574,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                     }
                     reviewAdapter.notifyItemRangeChanged(start, reviewList.size());
                     if (reviewList.size() > 2) {
-                        reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(335)));
-                        reviewListView.start();
+                        reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(400)));
                     } else {
                         reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
                     }
@@ -606,7 +605,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                     }
                     reviewAdapter.notifyItemRangeChanged(start, reviewList.size());
                     if (reviewList.size() > 2) {
-                        reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(335)));
+                        reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(400)));
                         reviewListView.start();
                     } else {
                         reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));

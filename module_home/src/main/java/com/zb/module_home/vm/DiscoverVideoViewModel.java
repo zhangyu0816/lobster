@@ -493,7 +493,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                 }
                 adapter.notifyItemRangeChanged(start, reviewList.size());
                 if (reviewList.size() > 2) {
-                    mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(335)));
+                    mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(400)));
                     mBinding.reviewList.start();
                 } else {
                     mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
@@ -525,7 +525,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                 }
                 adapter.notifyItemRangeChanged(start, reviewList.size());
                 if (reviewList.size() > 2) {
-                    mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(335)));
+                    mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, ObjectUtils.getViewSizeByWidthFromMax(400)));
                     mBinding.reviewList.start();
                 } else {
                     mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));

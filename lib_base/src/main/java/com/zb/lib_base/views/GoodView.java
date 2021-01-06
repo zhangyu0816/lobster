@@ -51,7 +51,7 @@ public class GoodView extends RelativeLayout {
         pvh_dislike = ObjectAnimator.ofPropertyValuesHolder(mBinding.ivUnLike, pvhSY, pvhSX).setDuration(500);
         pvh_dislike.start();
 
-        new Handler().postDelayed(() -> {
+        postDelayed(() -> {
             if (pvh_dislike != null)
                 pvh_dislike.cancel();
             pvh_dislike = null;
@@ -73,7 +73,7 @@ public class GoodView extends RelativeLayout {
         pvh_like = ObjectAnimator.ofPropertyValuesHolder(mBinding.ivLike, pvhSY, pvhSX).setDuration(500);
         pvh_like.start();
 
-        new Handler().postDelayed(() -> {
+        postDelayed(() -> {
             if (pvh_circle != null) {
                 pvh_circle.cancel();
             }

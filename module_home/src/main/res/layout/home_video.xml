@@ -107,6 +107,8 @@
                 viewWidthSize="@{-2}"
                 android:layout_width="wrap_content"
                 android:layout_height="240dp"
+                android:fadingEdgeLength="30dp"
+                android:requiresFadingEdge="vertical"
                 android:visibility="gone" />
         </RelativeLayout>
 
