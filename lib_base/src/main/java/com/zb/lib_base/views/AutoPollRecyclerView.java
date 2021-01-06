@@ -113,7 +113,7 @@ public class AutoPollRecyclerView extends RecyclerView {
                 lastY = (int) ev.getRawY();
                 if (running)
                     stop();
-                break;
+
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_OUTSIDE:

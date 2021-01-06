@@ -6,7 +6,6 @@
         <item name="android:windowEnableSplitTouch">false</item>
         <item name="android:splitMotionEvents">false</item>
         <item name="android:windowBackground">@android:color/white</item>
-        <item name="android:windowIsTranslucent">true</item>
         <item name="colorPrimaryDark">@android:color/white</item>
     </style>
 
@@ -15,13 +14,13 @@
         <item name="android:windowEnableSplitTouch">false</item>
         <item name="android:splitMotionEvents">false</item>
         <item name="android:windowBackground">@mipmap/register_bg</item>
-        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <!-- 应用启动页(StartingWindow)的theme -->
     <style name="StartingWindowTheme" parent="AppTheme">
         <!--也可以设置成一张图片 -->
         <item name="android:windowBackground">@drawable/bg_splash</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
 
     <style name="whiteEdit" parent="Widget.AppCompat.EditText">

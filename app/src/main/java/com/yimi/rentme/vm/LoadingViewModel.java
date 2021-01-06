@@ -1,6 +1,6 @@
 package com.yimi.rentme.vm;
 
-import android.os.Handler;
+import android.os.CountDownTimer;
 
 import com.yimi.rentme.iv.LoadingVMInterface;
 import com.zb.lib_base.activity.BaseActivity;
@@ -21,12 +21,20 @@ import java.net.UnknownHostException;
 import androidx.databinding.ViewDataBinding;
 
 public class LoadingViewModel extends BaseViewModel implements LoadingVMInterface {
+    private CountDownTimer mCountDownTimer;
+
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         if (PreferenceUtil.readIntValue(activity, "ruleType2") == 0) {
-            new Handler().postDelayed(() -> {
-                try {
+            mCountDownTimer = new CountDownTimer(500, 500) {
+                @Override
+                public void onTick(long l) {
+
+                }
+
+                @Override
+                public void onFinish() {
                     new RulePW(activity, mBinding.getRoot(), 2, new RulePW.CallBack() {
                         @Override
                         public void sureBack() {
@@ -39,12 +47,21 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
                             activity.finish();
                         }
                     });
-                } catch (Exception ignored) {
                 }
-            }, 500);
+            };
+            mCountDownTimer.start();
         } else {
             myInfo();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+        }
+        mCountDownTimer = null;
     }
 
     @Override

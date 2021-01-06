@@ -88,6 +88,10 @@ public class BaseViewModel implements BaseVMInterface {
     public void question(View view) {
     }
 
+    public void onDestroy() {
+
+    }
+
     public void initTabLayout(String[] tabNames, TabLayout tabLayout, ViewPager viewPager, int selectColor, int color, int index) {
         if (tabLayout == null)
             return;

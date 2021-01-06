@@ -7,7 +7,6 @@
         <item name="android:splitMotionEvents">false</item>
         <item name="android:windowBackground">@android:color/white</item>
         <item name="colorPrimaryDark">@android:color/white</item>
-        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="HomeVideoTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -16,7 +15,6 @@
         <item name="android:splitMotionEvents">false</item>
         <item name="android:windowBackground">@color/black_252</item>
         <item name="colorPrimaryDark">@color/black_252</item>
-        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="HomeGreyTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -25,6 +23,5 @@
         <item name="android:splitMotionEvents">false</item>
         <item name="android:windowBackground">@color/black_efe</item>
         <item name="colorPrimaryDark">@color/black_efe</item>
-        <item name="android:windowIsTranslucent">true</item>
     </style>
 </resources>
