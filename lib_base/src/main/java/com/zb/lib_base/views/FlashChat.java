@@ -31,18 +31,12 @@ import androidx.databinding.DataBindingUtil;
 public class FlashChat extends LinearLayout {
     private ViewFlashChatBinding mBinding;
     private int maxSize = 0;
-    private Handler handler = new Handler();
     private long time = 3 * 1000;
     private static PropertyValuesHolder pvhTX, pvhSX, pvhSY;
     private ObjectAnimator pvh_logo1;
     private ObjectAnimator pvh_logo2;
     private ObjectAnimator pvh_logo3;
     private int index = 2;
-
-    private Handler mHandler1 = new Handler();
-    private Handler mHandler2 = new Handler();
-    private Handler mHandler3 = new Handler();
-    private Handler mHandler4 = new Handler();
 
     private Runnable ra1 = new Runnable() {
         @Override
@@ -103,12 +97,12 @@ public class FlashChat extends LinearLayout {
             pvh_logo3 = ObjectAnimator.ofPropertyValuesHolder(mBinding.logoLayout3, pvhSY, pvhSX).setDuration(600);
             pvh_logo3.start();
 
-            mHandler1.postDelayed(ra1, 300);
-            mHandler2.postDelayed(ra2, 600);
-            mHandler3.postDelayed(ra3, 700);
-            mHandler4.postDelayed(ra4, 900);
+            postDelayed(ra1, 300);
+            postDelayed(ra2, 600);
+            postDelayed(ra3, 700);
+            postDelayed(ra4, 900);
 
-            handler.postDelayed(ra, time);
+            postDelayed(ra, time);
         }
     };
 
@@ -151,11 +145,11 @@ public class FlashChat extends LinearLayout {
             pvh_logo2.cancel();
         if (pvh_logo3 != null)
             pvh_logo3.cancel();
-        handler.removeCallbacks(ra);
-        mHandler1.removeCallbacks(ra1);
-        mHandler2.removeCallbacks(ra2);
-        mHandler3.removeCallbacks(ra3);
-        mHandler4.removeCallbacks(ra4);
+        removeCallbacks(ra);
+        removeCallbacks(ra1);
+        removeCallbacks(ra2);
+        removeCallbacks(ra3);
+        removeCallbacks(ra4);
 
         if (maxSize == 1) {
             mBinding.setFlashInfo1(MineApp.sFlashInfoList.get(0));
@@ -169,10 +163,10 @@ public class FlashChat extends LinearLayout {
             mBinding.setFlashInfo1(MineApp.sFlashInfoList.get(index - 2));
             mBinding.setFlashInfo2(MineApp.sFlashInfoList.get(index - 1));
             mBinding.setFlashInfo3(MineApp.sFlashInfoList.get(index));
-            handler.postDelayed(ra, time);
+            postDelayed(ra, time);
         }
         if (MineApp.mineInfo.getMemberType() == 1 && !TextUtils.equals(PreferenceUtil.readStringValue(activity, "flashChatTime" + BaseActivity.userId), DateUtil.getNow(DateUtil.yyyy_MM_dd))) {
-            new Handler().postDelayed(() -> {
+            postDelayed(() -> {
                 PreferenceUtil.saveStringValue(activity, "flashChatTime" + BaseActivity.userId, DateUtil.getNow(DateUtil.yyyy_MM_dd));
                 MineApp.sFlashInfo = mBinding.getFlashInfo1();
                 activity.sendBroadcast(new Intent("lobster_flashChat"));

@@ -36,4 +36,10 @@ public class RealNameActivity extends MineBaseActivity {
         }
         return false;
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
+    }
 }

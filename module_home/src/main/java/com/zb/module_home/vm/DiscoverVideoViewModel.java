@@ -78,6 +78,12 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     private String downloadPath = "";
     private int videoWidth, videoHeight;
     private List<Review> reviewList = new ArrayList<>();
+    private Handler mHandler = new Handler();
+    private Runnable ra = () -> {
+        Intent intent = new Intent("lobster_attention");
+        intent.putExtra("isAttention", true);
+        activity.sendBroadcast(intent);
+    };
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -143,6 +149,11 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     }
 
     public void onDestroy() {
+        super.onDestroy();
+        if (mHandler != null) {
+            mHandler.removeCallbacks(ra);
+        }
+        mHandler = null;
         try {
             attentionReceiver.unregisterReceiver();
         } catch (Exception e) {
@@ -334,13 +345,8 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             public void onNext(Object o) {
                 isAttention(mBinding.attentionLayout, mBinding.ivAttention);
                 AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
-               new Handler().postDelayed(() -> {
-                   activity.sendBroadcast(new Intent("lobster_attentionList"));
-                   Intent intent = new Intent("lobster_attention");
-                   intent.putExtra("isAttention", true);
-                   activity.sendBroadcast(intent);
-               },1000);
-
+                activity.sendBroadcast(new Intent("lobster_attentionList"));
+                mHandler.postDelayed(ra, 1000);
             }
 
             @Override
@@ -349,8 +355,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                     if (e.getMessage().equals("已经关注过")) {
                         isAttention(mBinding.attentionLayout, mBinding.ivAttention);
                         AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
-
-                        new Handler().postDelayed(() -> activity.sendBroadcast(new Intent("lobster_attentionList")),1000);
+                        activity.sendBroadcast(new Intent("lobster_attentionList"));
                     }
                 }
             }

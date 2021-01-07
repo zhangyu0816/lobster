@@ -78,9 +78,11 @@ public class SuperLikeBigView extends RelativeLayout {
             pvhTX = PropertyValuesHolder.ofFloat("translationX", 0, (ra.nextInt(ObjectUtils.getViewSizeByWidthFromMax(200)) + 50));
             pvh_star2.setValues(pvhTY, pvhTX);
             pvh_star2.start();
-
+            if (handler == null) {
+                handler = new Handler();
+            }
             handler.postDelayed(runnable, time + 2000);
-            new Handler().postDelayed(() -> {
+            handler.postDelayed(() -> {
                 mBinding.ivStar1.setVisibility(GONE);
                 mBinding.ivStar2.setVisibility(GONE);
             }, time);
@@ -88,7 +90,10 @@ public class SuperLikeBigView extends RelativeLayout {
     }
 
     private static void stop() {
-        handler.removeCallbacks(runnable);
+        if (handler != null) {
+            handler.removeCallbacks(runnable);
+        }
+        handler = null;
         if (pvh_star1 != null && pvh_star1.isRunning())
             pvh_star1.cancel();
         if (pvh_star2 != null && pvh_star2.isRunning())

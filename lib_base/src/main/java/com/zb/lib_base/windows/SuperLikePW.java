@@ -22,6 +22,56 @@ public class SuperLikePW extends BasePopupWindow {
     private String otherNick = "";
     private CallBack callBack;
     private PwsSuperLikeBinding binding;
+    private Handler mHandler = new Handler();
+    private Runnable ra1 = new Runnable() {
+        @Override
+        public void run() {
+            binding.ivSuperLike1.setVisibility(View.VISIBLE);
+            binding.ivSuperLike2.setVisibility(View.VISIBLE);
+        }
+    };
+    private Runnable ra2 = this::start1;
+    private Runnable ra3 = () -> binding.ivStar1.setVisibility(View.GONE);
+    private Runnable ra4 = new Runnable() {
+        @Override
+        public void run() {
+            binding.ivStar2.setVisibility(View.VISIBLE);
+            start2();
+        }
+    };
+    private Runnable ra5 = () -> binding.ivStar2.setVisibility(View.GONE);
+    private Runnable ra6 = new Runnable() {
+        @Override
+        public void run() {
+            binding.ivStar3.setVisibility(View.VISIBLE);
+            start3();
+        }
+    };
+    private Runnable ra7 = () -> binding.ivStar3.setVisibility(View.GONE);
+    private Runnable ra8 = new Runnable() {
+        @Override
+        public void run() {
+            binding.ivStar4.setVisibility(View.VISIBLE);
+            start4();
+        }
+    };
+    private Runnable ra9 = () -> binding.ivStar4.setVisibility(View.GONE);
+    private Runnable ra10 = new Runnable() {
+        @Override
+        public void run() {
+            binding.ivStar5.setVisibility(View.VISIBLE);
+            start5();
+        }
+    };
+    private Runnable ra11 = () -> binding.ivStar5.setVisibility(View.GONE);
+    private Runnable ra12 = new Runnable() {
+        @Override
+        public void run() {
+            binding.ivStar6.setVisibility(View.VISIBLE);
+            start6();
+        }
+    };
+    private Runnable ra13 = () -> binding.ivStar6.setVisibility(View.GONE);
 
     public SuperLikePW(View parentView, String myHead, String otherHead, int mySex, int otherSex) {
         super(parentView, false);
@@ -112,11 +162,8 @@ public class SuperLikePW extends BasePopupWindow {
         animatorSet.play(scale1X).with(scale1Y).with(scale2X).with(scale2Y).after(ivSuperLike1X);
         animatorSet.start();
 
-        new Handler().postDelayed(() -> {
-            binding.ivSuperLike1.setVisibility(View.VISIBLE);
-            binding.ivSuperLike2.setVisibility(View.VISIBLE);
-        }, time);
-        new Handler().postDelayed(this::start1, time * 3);
+        mHandler.postDelayed(ra1, time);
+        mHandler.postDelayed(ra2, time * 3);
     }
 
     int leftX1 = -100;
@@ -148,11 +195,8 @@ public class SuperLikePW extends BasePopupWindow {
         animatorStarSet1.setInterpolator(new LinearInterpolator());
         animatorStarSet1.playTogether(translationX, translationY);
         animatorStarSet1.start();
-        new Handler().postDelayed(() -> binding.ivStar1.setVisibility(View.GONE), time);
-        new Handler().postDelayed(() -> {
-            binding.ivStar2.setVisibility(View.VISIBLE);
-            start2();
-        }, 200);
+        mHandler.postDelayed(ra3, time);
+        mHandler.postDelayed(ra4, 200);
     }
 
     private void start2() {
@@ -164,11 +208,8 @@ public class SuperLikePW extends BasePopupWindow {
         animatorStarSet2.setInterpolator(new LinearInterpolator());
         animatorStarSet2.playTogether(translationX, translationY);
         animatorStarSet2.start();
-        new Handler().postDelayed(() -> binding.ivStar2.setVisibility(View.GONE), time);
-        new Handler().postDelayed(() -> {
-            binding.ivStar3.setVisibility(View.VISIBLE);
-            start3();
-        }, 200);
+        mHandler.postDelayed(ra5, time);
+        mHandler.postDelayed(ra6, 200);
     }
 
     private void start3() {
@@ -180,11 +221,8 @@ public class SuperLikePW extends BasePopupWindow {
         animatorStarSet3.setInterpolator(new LinearInterpolator());
         animatorStarSet3.playTogether(translationX, translationY);
         animatorStarSet3.start();
-        new Handler().postDelayed(() -> binding.ivStar3.setVisibility(View.GONE), time);
-        new Handler().postDelayed(() -> {
-            binding.ivStar4.setVisibility(View.VISIBLE);
-            start4();
-        }, 200);
+        mHandler.postDelayed(ra7, time);
+        mHandler.postDelayed(ra8, 200);
     }
 
     private void start4() {
@@ -196,11 +234,8 @@ public class SuperLikePW extends BasePopupWindow {
         animatorStarSet4.setInterpolator(new LinearInterpolator());
         animatorStarSet4.playTogether(translationX, translationY);
         animatorStarSet4.start();
-        new Handler().postDelayed(() -> binding.ivStar4.setVisibility(View.GONE), time);
-        new Handler().postDelayed(() -> {
-            binding.ivStar5.setVisibility(View.VISIBLE);
-            start5();
-        }, 200);
+        mHandler.postDelayed(ra9, time);
+        mHandler.postDelayed(ra10, 200);
     }
 
     private void start5() {
@@ -212,11 +247,8 @@ public class SuperLikePW extends BasePopupWindow {
         animatorStarSet5.setInterpolator(new LinearInterpolator());
         animatorStarSet5.playTogether(translationX, translationY);
         animatorStarSet5.start();
-        new Handler().postDelayed(() -> binding.ivStar5.setVisibility(View.GONE), time);
-        new Handler().postDelayed(() -> {
-            binding.ivStar6.setVisibility(View.VISIBLE);
-            start6();
-        }, 200);
+        mHandler.postDelayed(ra11, time);
+        mHandler.postDelayed(ra12, 200);
     }
 
     private void start6() {
@@ -228,7 +260,7 @@ public class SuperLikePW extends BasePopupWindow {
         animatorStarSet6.setInterpolator(new LinearInterpolator());
         animatorStarSet6.playTogether(translationX, translationY);
         animatorStarSet6.start();
-        new Handler().postDelayed(() -> binding.ivStar6.setVisibility(View.GONE), time);
+        mHandler.postDelayed(ra13, time);
     }
 
     public interface CallBack {
@@ -271,5 +303,21 @@ public class SuperLikePW extends BasePopupWindow {
         animatorStarSet4 = null;
         animatorStarSet5 = null;
         animatorStarSet6 = null;
+        if (mHandler != null) {
+            mHandler.removeCallbacks(ra1);
+            mHandler.removeCallbacks(ra2);
+            mHandler.removeCallbacks(ra3);
+            mHandler.removeCallbacks(ra4);
+            mHandler.removeCallbacks(ra5);
+            mHandler.removeCallbacks(ra6);
+            mHandler.removeCallbacks(ra7);
+            mHandler.removeCallbacks(ra8);
+            mHandler.removeCallbacks(ra9);
+            mHandler.removeCallbacks(ra10);
+            mHandler.removeCallbacks(ra11);
+            mHandler.removeCallbacks(ra12);
+            mHandler.removeCallbacks(ra13);
+        }
+        mHandler = null;
     }
 }

@@ -341,9 +341,13 @@ public class LoginSampleHelper {
         return data.toString();
     }
 
-    public void appSound() {
+    private MediaPlayer mPlayer;
+    private Handler mHandler;
+
+    private void appSound() {
         // 播放声音
-        MediaPlayer mPlayer = MediaPlayer.create(activity, R.raw.msn);
+        if (mPlayer == null)
+            mPlayer = MediaPlayer.create(activity, R.raw.msn);
         try {
             if (mPlayer != null) {
                 mPlayer.stop();
@@ -353,7 +357,10 @@ public class LoginSampleHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        new Handler().postDelayed(() -> {
+        if (mHandler == null) {
+            mHandler = new Handler();
+        }
+        mHandler.postDelayed(() -> {
             if (mPlayer != null) {
                 mPlayer.stop();
                 mPlayer.release();//释放资源

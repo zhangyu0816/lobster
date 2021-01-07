@@ -307,15 +307,21 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
         codeLayout.setData(activity, mWebShare);
     }
 
+    private Handler mHandler;
+
     @Override
     public void myInfo() {
         myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
             @Override
             public void onNext(MineInfo o) {
                 MineApp.mineInfo = o;
+                mHandler = null;
             }
         }, activity);
-        new Handler().postDelayed(() -> HttpManager.getInstance().doHttpDeal(api), 500);
+        if (mHandler == null) {
+            mHandler = new Handler();
+        }
+        mHandler.postDelayed(() -> HttpManager.getInstance().doHttpDeal(api), 500);
     }
 
     @Override

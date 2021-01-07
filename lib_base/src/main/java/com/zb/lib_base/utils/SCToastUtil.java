@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil;
 
 public class SCToastUtil {
     private static ObjectAnimator translateY;
+    private static Handler mHandler;
 
     public static void showToast(RxAppCompatActivity activity, CharSequence text, boolean isTop) {
         ToastViewBinding mBinding = DataBindingUtil.inflate(activity.getLayoutInflater(), R.layout.toast_view, null, false);
@@ -26,7 +27,10 @@ public class SCToastUtil {
             if (translateY == null || !translateY.isRunning()) {
                 translateY = ObjectAnimator.ofFloat(mBinding.toastLinear, "translationY", -DisplayUtils.dip2px(75f), 0).setDuration(500);
                 translateY.start();
-                new Handler().postDelayed(translateY::cancel, 2000);
+                if (mHandler == null) {
+                    mHandler = new Handler();
+                }
+                mHandler.postDelayed(translateY::cancel, 2000);
             }
         } else {
             toast.setGravity(Gravity.CENTER, 0, 0);

@@ -36,6 +36,14 @@ public class ImUtils {
     private boolean needLink = false;
     private boolean isDelete = false;
     private boolean isChat = true;
+    private RxAppCompatActivity activity;
+    private Handler mHandler;
+    private Runnable ra = new Runnable() {
+        @Override
+        public void run() {
+            myImAccountInfo(activity);
+        }
+    };
 
     public ImUtils() {
         loginHelper = LoginSampleHelper.getInstance();
@@ -174,6 +182,7 @@ public class ImUtils {
     }
 
     private void myImAccountInfo(RxAppCompatActivity activity) {
+        this.activity = activity;
         myImAccountInfoApi api = new myImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
             @Override
             public void onNext(ImAccount o) {
@@ -185,9 +194,16 @@ public class ImUtils {
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
                     requestCount++;
-                    if (requestCount < 6)
-                        new Handler().postDelayed(() -> myImAccountInfo(activity), 3000);
-                    else {
+                    if (requestCount < 6) {
+                        if (mHandler == null) {
+                            mHandler = new Handler();
+                        }
+                        mHandler.postDelayed(ra, 3000);
+                    } else {
+                        if (mHandler != null) {
+                            mHandler.removeCallbacks(ra);
+                        }
+                        mHandler = null;
                         loginOutIM();
                         SCToastUtil.showToast(activity, "当前聊天网络拥挤，请稍后再试", true);
                     }

@@ -36,6 +36,18 @@ public class AuthenticationViewModel extends BaseViewModel implements Authentica
     public List<String> imageList = new ArrayList<>();
     private PhotoManager photoManager;
     public int _position = -1;
+    private Handler mHandler;
+    private Runnable ra = () -> new RulePW(activity, mBinding.getRoot(), 3, new RulePW.CallBack() {
+        @Override
+        public void sureBack() {
+            PreferenceUtil.saveIntValue(activity, "ruleType3", 1);
+        }
+
+        @Override
+        public void cancelBack() {
+            back(null);
+        }
+    });
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -62,6 +74,15 @@ public class AuthenticationViewModel extends BaseViewModel implements Authentica
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mHandler != null) {
+            mHandler.removeCallbacks(ra);
+        }
+        mHandler = null;
+    }
+
+    @Override
     public void setAdapter() {
         imageList.add(authentication.getIdFrontImage().isEmpty() ? "add_image_icon" : authentication.getIdFrontImage());
         imageList.add(authentication.getIdBackImage().isEmpty() ? "add_image_icon" : authentication.getIdBackImage());
@@ -71,18 +92,12 @@ public class AuthenticationViewModel extends BaseViewModel implements Authentica
     }
 
     private void showRule() {
-        if (PreferenceUtil.readIntValue(activity, "ruleType3") == 0)
-            new Handler().postDelayed(() -> new RulePW(activity, mBinding.getRoot(), 3, new RulePW.CallBack() {
-                @Override
-                public void sureBack() {
-                    PreferenceUtil.saveIntValue(activity, "ruleType3", 1);
-                }
-
-                @Override
-                public void cancelBack() {
-                    back(null);
-                }
-            }), 200);
+        if (PreferenceUtil.readIntValue(activity, "ruleType3") == 0) {
+            if (mHandler == null) {
+                mHandler = new Handler();
+            }
+            mHandler.postDelayed(ra, 200);
+        }
     }
 
     @Override

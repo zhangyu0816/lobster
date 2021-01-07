@@ -4,7 +4,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.content.Context;
-import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,7 +95,7 @@ public class BottleBGView extends RelativeLayout {
         fsxq.setBackgroundResource(R.mipmap.bottle_star_icon);
         bl.setBackgroundResource(R.mipmap.bolan);
         yy.setBackgroundResource(R.mipmap.yinying);
-        new Handler().postDelayed(() -> fsxq.setVisibility(VISIBLE), 1300);
+        postDelayed(() -> fsxq.setVisibility(VISIBLE), 1300);
     }
 
     private ObjectAnimator anim_lsxq, anim_xx, anim_fsxq, anim_hd_s, anim_plp_d, anim_bl;
@@ -208,12 +207,12 @@ public class BottleBGView extends RelativeLayout {
         animatorSet.play(translateBackY2).after(translateX);
         animatorSet.start();
 
-        new Handler().postDelayed(() -> {
+        postDelayed(() -> {
             ivWangBack.setVisibility(View.VISIBLE);
             ivWang.setVisibility(View.GONE);
         }, 2000);
-        new Handler().postDelayed(callBack::success, 2500);
-        new Handler().postDelayed(() -> {
+        postDelayed(callBack::success, 2500);
+        postDelayed(() -> {
             ivWangBack.setVisibility(View.GONE);
             translateY = null;
             translateX = null;
@@ -235,7 +234,7 @@ public class BottleBGView extends RelativeLayout {
         pvh = ObjectAnimator.ofPropertyValuesHolder(ivBottle, pvhTY, pvhTX, pvhR).setDuration(time);
         pvh.start();
 
-        new Handler().postDelayed(() -> {
+        postDelayed(() -> {
             pvhTY = null;
             pvhTX = null;
             pvhR = null;

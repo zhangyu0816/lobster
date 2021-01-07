@@ -36,6 +36,7 @@ public class MineAdapter<T> extends BindingItemAdapter<T> implements ItemTouchHe
     private BasePopupWindow pw;
     private int selectIndex = -1;
     public List<Long> userIdList = new ArrayList<>();
+    private Handler mHandler;
 
     public MineAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
         super(activity, layoutId, list);
@@ -142,7 +143,13 @@ public class MineAdapter<T> extends BindingItemAdapter<T> implements ItemTouchHe
             if (viewModel instanceof EditMemberViewModel) {
                 ((EditMemberViewModel) viewModel).imageList = (List<String>) getList();
             }
-            new Handler().postDelayed(this::notifyDataSetChanged, 500);
+            if (mHandler == null) {
+                mHandler = new Handler();
+            }
+            mHandler.postDelayed(() -> {
+                notifyDataSetChanged();
+                mHandler = null;
+            }, 500);
         }
     }
 

@@ -45,6 +45,15 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     private List<Fragment> fragments = new ArrayList<>();
     private List<String> selectorList = new ArrayList<>();
     private ViewPagerAdapter mAdapter;
+    private Handler mHandler;
+    private Runnable ra = new Runnable() {
+        @Override
+        public void run() {
+            int height = DisplayUtils.dip2px(30) - mBinding.topLinear.getHeight();
+            mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) ->
+                    mBinding.setShowBg(verticalOffset <= height));
+        }
+    };
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -110,12 +119,10 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         };
 
         initFragments();
-
-        new Handler().postDelayed(() -> {
-            int height = DisplayUtils.dip2px(30) - mBinding.topLinear.getHeight();
-            mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) ->
-                    mBinding.setShowBg(verticalOffset <= height));
-        }, 300);
+        if (mHandler == null) {
+            mHandler = new Handler();
+        }
+        mHandler.postDelayed(ra, 300);
     }
 
     public void onResume() {
@@ -130,6 +137,10 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             updateChatTypeReceiver.unregisterReceiver();
             visitorReceiver.unregisterReceiver();
             attentionListReceiver.unregisterReceiver();
+            if (mHandler != null) {
+                mHandler.removeCallbacks(ra);
+            }
+            mHandler = null;
         } catch (Exception e) {
             e.printStackTrace();
         }

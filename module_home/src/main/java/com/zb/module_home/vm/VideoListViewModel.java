@@ -107,6 +107,11 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     }
 
     public void onDestroy() {
+        super.onDestroy();
+        if (mHandler != null) {
+            mHandler.removeCallbacks(ra);
+        }
+        mHandler = null;
         try {
             attentionReceiver.unregisterReceiver();
         } catch (Exception e) {
@@ -482,6 +487,12 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     private List<Review> reviewList = new ArrayList<>();
     private VideoView lastVideoView;
     private RelativeLayout layout;
+    private Handler mHandler;
+    private Runnable ra = () -> {
+        ivPlay.setVisibility(View.GONE);
+        videoView.setVideoPath(discoverInfo.getVideoPath());
+        videoView.start();
+    };
 
     private void playVideo(View view) {
         if (lastVideoView != null) {
@@ -664,11 +675,10 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             }
             return false; //如果方法处理了信息，则为true；如果没有，则为false。返回false或根本没有OnInfoListener，将导致丢弃该信息。
         });
-        new Handler().postDelayed(() -> {
-            ivPlay.setVisibility(View.GONE);
-            videoView.setVideoPath(discoverInfo.getVideoPath());
-            videoView.start();
-        }, 200);
+        if (mHandler == null) {
+            mHandler = new Handler();
+        }
+        mHandler.postDelayed(ra, 200);
 
     }
 
