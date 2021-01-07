@@ -38,6 +38,22 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
     private BaseReceiver locationReceiver;
     private BaseReceiver openVipReceiver;
     private BaseReceiver updateFlashReceiver;
+    private Handler mHandler;
+    private Runnable ra = () -> {
+        int height = DisplayUtils.dip2px(30) - mBinding.topLinear.getHeight();
+        mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+                    int y = verticalOffset - height;
+                    float alpha = (float) y / DisplayUtils.dip2px(30);
+                    if (alpha >= 1f)
+                        alpha = 1f;
+                    else if (alpha <= 0) {
+                        alpha = 0f;
+                    }
+                    mBinding.viewTop.setAlpha(1 - alpha);
+                    mBinding.tvTitle.setAlpha(alpha);
+                }
+        );
+    };
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -98,25 +114,18 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
         };
         recommendRankingList();
         flashUserList();
-        new Handler().postDelayed(() -> {
-            int height = DisplayUtils.dip2px(30) - mBinding.topLinear.getHeight();
-            mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
-                        int y = verticalOffset - height;
-                        float alpha = (float) y / DisplayUtils.dip2px(30);
-                        if (alpha >= 1f)
-                            alpha = 1f;
-                        else if (alpha <= 0) {
-                            alpha = 0f;
-                        }
-                        mBinding.viewTop.setAlpha(1 - alpha);
-                        mBinding.tvTitle.setAlpha(alpha);
-                    }
-            );
-        }, 300);
+        if (mHandler == null) {
+            mHandler = new Handler();
+        }
+        mHandler.postDelayed(ra, 300);
 
     }
 
     public void onDestroy() {
+        if (mHandler != null) {
+            mHandler.removeCallbacks(ra);
+        }
+        mHandler = null;
         try {
             updateRedReceiver.unregisterReceiver();
             newsCountReceiver.unregisterReceiver();

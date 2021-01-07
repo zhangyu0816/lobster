@@ -24,7 +24,7 @@ public class SuperLikeBigView extends RelativeLayout {
     private static Random ra = new Random();
     private static SuperLikeBigBinding mBinding;
     private static SuperLikeInterface mSuperLikeInterface;
-    private static Handler handler = new Handler();
+    private static Handler handler;
     private static Runnable runnable = SuperLikeBigView::play;
 
     public SuperLikeBigView(Context context) {

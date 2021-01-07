@@ -99,6 +99,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
     private ViewPagerAdapter mAdapter;
 
+    private Handler mHandler = new Handler();
+
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
@@ -331,7 +333,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             }
         });
         selectPage(1);
-        new Handler().postDelayed(() -> {
+        mHandler.postDelayed(() -> {
             if (PreferenceUtil.readIntValue(activity, "showGuidance") == 0) {
                 new GuidancePW(mBinding.getRoot());
             }
@@ -565,7 +567,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 ChatListDb.getInstance().saveChatList(chatList);
 
                 activity.sendBroadcast(new Intent("lobster_newsCount"));
-                new Handler().postDelayed(() -> {
+                mHandler.postDelayed(() -> {
                     Intent data = new Intent("lobster_updateChatType");
                     data.putExtra("chatType", 1);
                     data.putExtra("isUpdate", isUpdate);
@@ -611,7 +613,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         chatList.setMainUserId(BaseActivity.userId);
         ChatListDb.getInstance().saveChatList(chatList);
         activity.sendBroadcast(new Intent("lobster_newsCount"));
-        new Handler().postDelayed(() -> {
+        mHandler.postDelayed(() -> {
             Intent data = new Intent("lobster_updateChatType");
             data.putExtra("chatType", 2);
             data.putExtra("isUpdate", isUpdate);
@@ -646,7 +648,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        new Handler().postDelayed(() -> {
+        mHandler.postDelayed(() -> {
             if (mPlayer != null) {
                 mPlayer.stop();
                 mPlayer.release();//释放资源
@@ -737,16 +739,16 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         vibrator.vibrate(500);
         pvh_remind.setValues(pvhSX, pvhSY);
         pvh_remind.start();
-        new Handler().postDelayed(() -> {
+        mHandler.postDelayed(() -> {
             vibrator.cancel();
             pvh_remind.setValues(pvhTY);
             pvh_remind.start();
         }, 500);
-        new Handler().postDelayed(() -> {
+        mHandler.postDelayed(() -> {
             pvh_remind.setValues(pvhSX_L, pvhSY_L);
             pvh_remind.start();
         }, 6000);
-        new Handler().postDelayed(this::stopAnimator, 6500);
+        mHandler.postDelayed(this::stopAnimator, 6500);
     }
 
     public void stopAnimator() {

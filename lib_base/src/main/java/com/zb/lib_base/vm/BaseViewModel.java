@@ -195,6 +195,7 @@ public class BaseViewModel implements BaseVMInterface {
 
     private PropertyValuesHolder pvhSY, pvhSX, pvhA, pvhR;
     private ObjectAnimator pvh;
+    private Handler mHandler = new Handler();
 
     public void playAnimator(View view) {
         pvhSY = PropertyValuesHolder.ofFloat("scaleY", 0.5f, 1);
@@ -218,7 +219,7 @@ public class BaseViewModel implements BaseVMInterface {
         pvhSX = PropertyValuesHolder.ofFloat("scaleX", 0, 1, 0.8f, 1);
         pvh = ObjectAnimator.ofPropertyValuesHolder(view, pvhSY, pvhSX).setDuration(500);
         pvh.start();
-        new Handler().postDelayed(() -> {
+        mHandler.postDelayed(() -> {
             if (pvh != null)
                 pvh.cancel();
             pvh = null;
@@ -231,20 +232,20 @@ public class BaseViewModel implements BaseVMInterface {
         pvh = ObjectAnimator.ofPropertyValuesHolder(iv, pvhR, pvhA).setDuration(200);
         pvh.start();
 
-        new Handler().postDelayed(() -> {
+        mHandler.postDelayed(() -> {
             iv.setBackgroundResource(R.drawable.attention_get_icon);
             pvhR = PropertyValuesHolder.ofFloat("rotation", 90, 0);
             pvh = ObjectAnimator.ofPropertyValuesHolder(iv, pvhR).setDuration(50);
             pvh.start();
         }, 200);
 
-        new Handler().postDelayed(() -> {
+        mHandler.postDelayed(() -> {
             pvhA = PropertyValuesHolder.ofFloat("alpha", 0, 1);
             pvh = ObjectAnimator.ofPropertyValuesHolder(iv, pvhA).setDuration(100);
             pvh.start();
         }, 250);
 
-        new Handler().postDelayed(() -> layout.setVisibility(View.INVISIBLE), 1000);
+        mHandler.postDelayed(() -> layout.setVisibility(View.INVISIBLE), 1000);
     }
 
     public void openBottle() {
@@ -259,7 +260,7 @@ public class BaseViewModel implements BaseVMInterface {
         } catch (IllegalStateException | IOException e) {
             e.printStackTrace();
         }
-        new Handler().postDelayed(() -> {
+        mHandler.postDelayed(() -> {
             if (mPlayer != null) {
                 mPlayer.stop();
                 mPlayer.release();//释放资源
@@ -267,7 +268,6 @@ public class BaseViewModel implements BaseVMInterface {
         }, 500);
     }
 
-    private Handler mHandler = new Handler();
     private long exitTime = 0;
     private boolean isScroll = false;
 

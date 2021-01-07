@@ -23,6 +23,8 @@ public class HomeFragment extends BaseFragment {
     private List<Fragment> fragments = new ArrayList<>();
     private HomeViewModel viewModel;
     private ViewPagerAdapter mAdapter;
+    private Handler mHandler;
+    private Runnable ra = this::initFragments;
 
     @Override
     public int getRes() {
@@ -35,7 +37,9 @@ public class HomeFragment extends BaseFragment {
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         homeFragBinding = (HomeFragBinding) mBinding;
-        new Handler().postDelayed(this::initFragments, 500);
+        if (mHandler == null)
+            mHandler = new Handler();
+        mHandler.postDelayed(ra, 500);
     }
 
     private void initFragments() {
@@ -53,5 +57,8 @@ public class HomeFragment extends BaseFragment {
         super.onDestroy();
         if (viewModel != null)
             viewModel.onDestroy();
+        if (mHandler != null)
+            mHandler.removeCallbacks(ra);
+        mHandler = null;
     }
 }

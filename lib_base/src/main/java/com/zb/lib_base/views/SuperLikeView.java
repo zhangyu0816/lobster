@@ -28,7 +28,7 @@ public class SuperLikeView extends RelativeLayout {
     private static SuperLikeInterface mSuperLikeInterface;
     private static PairInfo mPairInfo;
     private static View mCurrentView;
-    private static Handler handler = new Handler();
+    private static Handler handler;
     private static Runnable runnable = SuperLikeView::play;
 
     public SuperLikeView(Context context) {

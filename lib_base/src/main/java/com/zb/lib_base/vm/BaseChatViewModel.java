@@ -134,6 +134,8 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
     private BaseReceiver bottleChatReceiver;
     private BaseReceiver flashChatReceiver;
 
+    private Handler mHandler = new Handler();
+
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
@@ -177,6 +179,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
     }
 
     public void onDestroy() {
+        mHandler = null;
         try {
             cameraReceiver.unregisterReceiver();
             if (chatReceiver != null)
@@ -427,7 +430,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                 ImUtils.getInstance().setChat(true, activity);
 
                 if (msgChannelType == 1 || msgChannelType == 3) {
-                    new Handler().postDelayed(() -> {
+                    mHandler.postDelayed(() -> {
                         RequestOptions cropOptions = new RequestOptions();
                         MultiTransformation<Bitmap> multiTransformation = new MultiTransformation<>(new BlurTransformation());
                         cropOptions.transform(multiTransformation);
@@ -782,7 +785,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         } else {
             mBinding.setIsVoice(false);
             hintKeyBoard();
-            new Handler().postDelayed(() -> {
+            mHandler.postDelayed(() -> {
                 mBinding.edContent.setFocusable(true);
                 mBinding.edContent.setFocusableInTouchMode(true);
                 mBinding.edContent.requestFocus();
@@ -933,7 +936,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                             new ChatListDb.CallBack() {
                                 @Override
                                 public void success() {
-                                    new Handler().postDelayed(() -> {
+                                    mHandler.postDelayed(() -> {
                                         Intent data = new Intent("lobster_updateChat");
                                         data.putExtra("userId", otherUserId);
                                         activity.sendBroadcast(data);
@@ -996,7 +999,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                             new BottleCacheDb.CallBack() {
                                 @Override
                                 public void success() {
-                                    new Handler().postDelayed(() -> {
+                                    mHandler.postDelayed(() -> {
                                         // 更新会话列表
                                         Intent data = new Intent("lobster_singleBottleCache");
                                         data.putExtra("driftBottleId", body.getDriftBottleId());
@@ -1030,7 +1033,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                     ChatListDb.getInstance().updateMemberForFlash(otherUserId, memberInfo == null ? "" : memberInfo.getImage(), memberInfo == null ? "" : memberInfo.getNick(), flashTalkId, myChatCount, otherChatCount, new ChatListDb.CallBack() {
                         @Override
                         public void success() {
-                            new Handler().postDelayed(() -> {
+                            mHandler.postDelayed(() -> {
                                 Intent data = new Intent("lobster_updateChat");
                                 data.putExtra("userId", otherUserId);
                                 activity.sendBroadcast(data);
@@ -1104,7 +1107,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         ChatListDb.getInstance().saveChatList(chatList);
 
         // 更新会话列表
-        new Handler().postDelayed(() -> {
+        mHandler.postDelayed(() -> {
             Intent data = new Intent("lobster_updateChat");
             data.putExtra("userId", otherUserId);
             data.putExtra("flashTalkId", flashTalkId);

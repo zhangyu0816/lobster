@@ -223,7 +223,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         setAdapter();
 
         int height = StatusBarUtil.getStatusBarHeight(activity);
-        new Handler().postDelayed(() -> {
+        mHandler.postDelayed(() -> {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBinding.tvCity.getLayoutParams();
             params.setMargins(DisplayUtils.dip2px(15f), height + DisplayUtils.dip2px(15f), DisplayUtils.dip2px(15f), 0);
             mBinding.tvCity.setLayoutParams(params);
@@ -255,6 +255,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     }
 
     public void onDestroy() {
+        mHandler = null;
         try {
             cardReceiver.unregisterReceiver();
             locationReceiver.unregisterReceiver();
@@ -397,7 +398,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 }
                 adapter.notifyItemRangeChanged(start, pairInfoList.size());
 
-                new Handler().postDelayed(() -> {
+                mHandler.postDelayed(() -> {
                     mBinding.setIsPlay(false);
                     mBinding.cardRelative.setAlpha(0f);
                     if (MineApp.mineInfo.getMemberType() == 1) {
@@ -553,16 +554,15 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 0, ObjectUtils.getDefaultRes(), ObjectUtils.getViewSizeByWidth(0.94f),
                 -1, false, true, 10,
                 false, 0, false);
-        uiHandler.removeCallbacks(uiRa);
+        mHandler.removeCallbacks(uiRa);
         animatorUI = ObjectAnimator.ofFloat(view, "rotationY", 0, 1);
         animatorUI.setInterpolator(new CycleInterpolator(1));
         animatorUI.setRepeatCount(1);
         animatorUI.setDuration(100);
         animatorUI.start();
-        uiHandler.postDelayed(uiRa, 500);
+        mHandler.postDelayed(uiRa, 500);
     }
 
-    private Handler uiHandler = new Handler();
     private Runnable uiRa = new Runnable() {
         @Override
         public void run() {
@@ -655,12 +655,12 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         ObjectAnimator pvh_card = ObjectAnimator.ofPropertyValuesHolder(mBinding.cardRelative, pvhR, pvhTX, pvhA).setDuration(500);
         pvh_card.start();
 
-        new Handler().postDelayed(() -> {
+        mHandler.postDelayed(() -> {
             canReturn = true;
             pairInfoList.add(0, pairInfo);
             adapter.notifyDataSetChanged();
         }, 500);
-        new Handler().postDelayed(() -> mBinding.cardRelative.setAlpha(0f), 600);
+        mHandler.postDelayed(() -> mBinding.cardRelative.setAlpha(0f), 600);
     }
 
     // 省市信息

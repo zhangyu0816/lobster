@@ -40,7 +40,6 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
     private MediaRecorder mRecorder;//音视频录制类
     private long time = 0;
 
-    private Handler handler = new Handler();
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
@@ -48,7 +47,7 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
             int s = (int) (time / 1000);
             int ms = (int) (time - s * 1000) / 10;
             videoBinding.setSecond("已录制" + s + "." + (ms < 10 ? "0" + ms : ms + "") + "S");
-            handler.postDelayed(this, 100);
+            mHandler.postDelayed(this, 100);
         }
     };
 
@@ -66,8 +65,8 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
         initCamera();
         MineApp.videoInfoList.clear();
 
-        GetVideo.getAllLocalVideos(activity,new Handler(message -> {
-            if(message.what==0){
+        GetVideo.getAllLocalVideos(activity, new Handler(message -> {
+            if (message.what == 0) {
                 videoBinding.setVideoPath(MineApp.videoInfoList.get(0).getPath());
             }
             return false;
@@ -94,6 +93,12 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
             preview.releaseMediaRecorder();
             activity.finish();
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mHandler = null;
     }
 
     @Override
@@ -167,7 +172,7 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
         });
         preview.startRecord();
         time = 0;
-        handler.postDelayed(runnable, 100);
+        mHandler.postDelayed(runnable, 100);
     }
 
     @Override
@@ -178,12 +183,12 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
             return;
         }
         preview.stopRecord();
-        handler.removeCallbacks(runnable);
+        mHandler.removeCallbacks(runnable);
         preview.releaseCamera();
         preview.releaseMediaRecorder();
         MineApp.isLocation = false;
         MineApp.showBottom = showBottom;
-        new Handler().postDelayed(() -> {
+        mHandler.postDelayed(() -> {
             ActivityUtils.getCameraVideoPlay(preview.videoPath, true, false);
             activity.finish();
         }, 500);

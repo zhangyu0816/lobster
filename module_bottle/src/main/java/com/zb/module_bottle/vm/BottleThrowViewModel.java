@@ -53,6 +53,12 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     private long otherUserId = 0;
     private boolean canClose = true;
     private ObjectAnimator translateX, scaleX, scaleY, alpha;
+    private Handler mHandler = new Handler();
+    private Runnable ra1 = this::appSound;
+    private Runnable ra2 = () -> {
+        mBinding.firstLayout.setVisibility(View.GONE);
+        mBinding.bottleWhiteBack.bottleBg.startBg();
+    };
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -90,7 +96,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         };
 
         mPlayer = MediaPlayer.create(activity, R.raw.sea_wave);
-        new Handler().postDelayed(this::appSound, 200);
+        mHandler.postDelayed(ra1, 200);
 
         long time = 1500;
         translateX = ObjectAnimator.ofFloat(mBinding.ivStar, "translationX", 0, MineApp.W - ObjectUtils.getViewSizeByWidthFromMax(250)).setDuration(time);
@@ -103,13 +109,15 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         animatorSet.playTogether(scaleX, scaleY, translateX, alpha);//同时执行
         animatorSet.start();
 
-        new Handler().postDelayed(() -> {
-            mBinding.firstLayout.setVisibility(View.GONE);
-            mBinding.bottleWhiteBack.bottleBg.startBg();
-        }, time);
+        mHandler.postDelayed(ra2, time);
     }
 
     public void onDestroy() {
+        if (mHandler != null) {
+            mHandler.removeCallbacks(ra1);
+            mHandler.removeCallbacks(ra2);
+        }
+        mHandler = null;
         try {
             updateChatTypeReceiver.unregisterReceiver();
             closeSoundReceiver.unregisterReceiver();

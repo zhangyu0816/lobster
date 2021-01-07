@@ -76,6 +76,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     private int bannerHeight = MineApp.W;
     private List<Ads> adsList = new ArrayList<>();
     private boolean isLike = false;
+    private Handler mHandler = new Handler();
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -144,6 +145,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     }
 
     public void onDestroy() {
+        mHandler = null;
         try {
             attentionReceiver.unregisterReceiver();
         } catch (Exception e) {
@@ -244,7 +246,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 }
                 mBinding.setJob(memberInfo.getJob().isEmpty() ? "-" : memberInfo.getJob());
                 mBinding.setDistant(distant);
-                String cityName = AreaDb.getInstance().getCityName(memberInfo.getCityId()).replace("市","");
+                String cityName = AreaDb.getInstance().getCityName(memberInfo.getCityId()).replace("市", "");
                 String districtName = AreaDb.getInstance().getDistrictName(memberInfo.getDistrictId());
                 mBinding.setCityName(cityName);
                 mBinding.setDistrict(cityName + " " + districtName);
@@ -505,7 +507,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         pvh = ObjectAnimator.ofPropertyValuesHolder(view, pvhSY, pvhSX).setDuration(500);
         pvh.start();
 
-        new Handler().postDelayed(() -> {
+        mHandler.postDelayed(() -> {
             if (pvh != null)
                 pvh.cancel();
             pvh = null;
@@ -515,7 +517,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     private void closeBtn(View view) {
         translateY = ObjectAnimator.ofFloat(view, "translationY", 0, 1000).setDuration(500);
         translateY.start();
-        new Handler().postDelayed(() -> {
+        mHandler.postDelayed(() -> {
             translateY = null;
             mBinding.setLikeType(view == mBinding.ivSuperLike ? 2 : 1);
         }, 500);

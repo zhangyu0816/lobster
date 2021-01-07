@@ -29,6 +29,13 @@ public class VideoActivity extends CameraBaseActivity {
         mBinding.setVariable(BR.showBottom, showBottom);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (viewModel != null) {
+            viewModel.onDestroy();
+        }
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
