@@ -37,8 +37,8 @@ public class AMapLocation {
         mLocationClient.setLocationOption(mLocationOption);
     }
 
+    //    latitude=0.0#longitude=0.0#province=#coordType=GCJ02#city=#district=#cityCode=#adCode=#address=#country=#road=#poiName=#street=#streetNum=#aoiName=#poiid=#floor=#errorCode=12#errorInfo=缺少定位权限#locationDetail=定位服务没有开启，请在设置中打开定位服务开关#1206#description=#locationType=0#conScenario=0
     public void start(RxAppCompatActivity activity, CallBack callBack) {
-
         //设置定位回调监听
         mLocationClient.setLocationListener(location -> {
             if (location != null) {
@@ -57,9 +57,12 @@ public class AMapLocation {
                     PreferenceUtil.saveStringValue(activity, "address", address);
                     if (callBack != null)
                         callBack.success(longitude, latitude, provinceName, MineApp.cityName, districtName);
+                    mLocationClient.stopLocation();
+                    mLocationClient.onDestroy();
+                } else {
+                    SCToastUtil.showToast(activity, location.getLocationDetail(), true);
                 }
-                mLocationClient.stopLocation();
-                mLocationClient.onDestroy();
+
             }
         });
         //启动定位

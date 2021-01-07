@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
-import com.zb.lib_base.adapter.FragmentAdapter;
+import com.zb.lib_base.adapter.ViewPagerAdapter;
 import com.zb.lib_base.api.attentionOtherApi;
 import com.zb.lib_base.api.cancelAttentionApi;
 import com.zb.lib_base.api.contactNumApi;
@@ -45,6 +45,7 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
     private List<Fragment> fragments = new ArrayList<>();
     public MemberInfo memberInfo;
     private BaseReceiver attentionReceiver;
+    private ViewPagerAdapter mAdapter;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -66,7 +67,8 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
         fragments.clear();
         fragments.add(FragmentUtils.getCardMemberDiscoverFragment(otherUserId));
         fragments.add(FragmentUtils.getCardMemberVideoFragment(otherUserId));
-        mBinding.viewPage.setAdapter(new FragmentAdapter(activity.getSupportFragmentManager(), fragments));
+        mAdapter = new ViewPagerAdapter(activity, fragments);
+        mBinding.viewPage.setAdapter(mAdapter);
         initTabLayout(new String[]{"动态", "小视频"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, 0);
     }
 

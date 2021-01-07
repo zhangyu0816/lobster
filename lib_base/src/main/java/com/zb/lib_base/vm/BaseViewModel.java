@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 import com.zb.lib_base.activity.BaseActivity;
@@ -37,7 +38,7 @@ import java.util.Objects;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.ViewDataBinding;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 public class BaseViewModel implements BaseVMInterface {
     public ViewDataBinding mBinding;
@@ -92,23 +93,20 @@ public class BaseViewModel implements BaseVMInterface {
 
     }
 
-    public void initTabLayout(String[] tabNames, TabLayout tabLayout, ViewPager viewPager, int selectColor, int color, int index) {
+    public void initTabLayout(String[] tabNames, TabLayout tabLayout, ViewPager2 viewPager, int selectColor, int color, int index) {
         if (tabLayout == null)
             return;
-        tabLayout.setupWithViewPager(viewPager);
-        viewPager.setCurrentItem(index);
-        for (int i = 0; i < tabLayout.getTabCount(); i++) {
-            TabLayout.Tab tab = tabLayout.getTabAt(i);
-            if (tab != null) {
-                if (tabNames[i].contains("-")) {
-                    String[] temp = tabNames[i].split("-");
-                    tab.setCustomView(getTabView(temp[0], Boolean.parseBoolean(temp[1])));
-                } else {
-                    tab.setCustomView(getTabView(tabNames[i], false));
-                }
-
+        TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout,viewPager, (tab, position) -> {
+            if (tabNames[position].contains("-")) {
+                String[] temp = tabNames[position].split("-");
+                tab.setCustomView(getTabView(temp[0], Boolean.parseBoolean(temp[1])));
+            } else {
+                tab.setCustomView(getTabView(tabNames[position], false));
             }
-        }
+        });
+        tabLayoutMediator.attach();
+
+        viewPager.setCurrentItem(index);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

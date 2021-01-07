@@ -1,18 +1,7 @@
 package com.zb.lib_base.views;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.Shader;
-import android.graphics.Xfermode;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewConfiguration;
 
 import com.zb.lib_base.adapter.BindingItemAdapter;
@@ -20,7 +9,6 @@ import com.zb.lib_base.utils.glide.ScrollSpeedLinearLayoutManger;
 
 import java.lang.ref.WeakReference;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.BindingAdapter;
 import androidx.recyclerview.widget.RecyclerView;

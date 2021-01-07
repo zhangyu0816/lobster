@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
-import com.zb.lib_base.adapter.FragmentAdapter;
+import com.zb.lib_base.adapter.ViewPagerAdapter;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
@@ -32,11 +32,9 @@ import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 public class MineViewModel extends BaseViewModel implements MineVMInterface {
 
-    public FragmentManager fm;
     private MineFragBinding mBinding;
     private BaseReceiver updateMineInfoReceiver;
     private BaseReceiver newsCountReceiver;
@@ -46,6 +44,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     private BaseReceiver attentionListReceiver;
     private List<Fragment> fragments = new ArrayList<>();
     private List<String> selectorList = new ArrayList<>();
+    private ViewPagerAdapter mAdapter;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -140,7 +139,9 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         fragments.clear();
         fragments.add(FragmentUtils.getCardMemberDiscoverFragment(1));
         fragments.add(FragmentUtils.getCardMemberVideoFragment(1));
-        mBinding.viewPage.setAdapter(new FragmentAdapter(fm, fragments));
+
+        mAdapter = new ViewPagerAdapter(activity, fragments);
+        mBinding.viewPage.setAdapter(mAdapter);
         initTabLayout(new String[]{"动态", "小视频"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, 0);
     }
 

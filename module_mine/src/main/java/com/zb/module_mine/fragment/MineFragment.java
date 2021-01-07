@@ -19,7 +19,6 @@ public class MineFragment extends BaseFragment {
     @Override
     public void initUI() {
         viewModel = new MineViewModel();
-        viewModel.fm = getChildFragmentManager();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
     }

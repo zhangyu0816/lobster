@@ -17,7 +17,7 @@ import com.yimi.rentme.databinding.AcMainBinding;
 import com.yimi.rentme.iv.MainVMInterface;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
-import com.zb.lib_base.adapter.FragmentAdapter;
+import com.zb.lib_base.adapter.ViewPagerAdapter;
 import com.zb.lib_base.api.chatListApi;
 import com.zb.lib_base.api.contactNumApi;
 import com.zb.lib_base.api.driftBottleChatListApi;
@@ -65,7 +65,7 @@ import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 public class MainViewModel extends BaseViewModel implements MainVMInterface {
     private ArrayList<Fragment> fragments = new ArrayList<>();
@@ -96,6 +96,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         }
     });
     private Vibrator vibrator;
+
+    private ViewPagerAdapter mAdapter;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -295,21 +297,21 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         }
     }
 
-
     private void initFragments() {
         fragments.clear();
         fragments.add(FragmentUtils.getHomeFragment());
         fragments.add(FragmentUtils.getCardFragment());
         fragments.add(FragmentUtils.getChatFragment());
         fragments.add(FragmentUtils.getMineFragment());
-        mBinding.viewPage.setAdapter(new FragmentAdapter(activity.getSupportFragmentManager(), fragments));
-        mBinding.viewPage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
+
+        mAdapter = new ViewPagerAdapter(activity, fragments);
+        mBinding.viewPage.setAdapter(mAdapter);
+        mBinding.viewPage.setUserInputEnabled(false);
+        mBinding.viewPage.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 
             @Override
             public void onPageSelected(int position) {
+                super.onPageSelected(position);
                 nowIndex = position;
                 if (nowIndex == 0 || nowIndex == 2) {
                     bottleTileStatus(true);
@@ -328,7 +330,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 mBinding.setIndex(nowIndex);
             }
         });
-
         selectPage(1);
         new Handler().postDelayed(() -> {
             if (PreferenceUtil.readIntValue(activity, "showGuidance") == 0) {

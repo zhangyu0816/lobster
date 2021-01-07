@@ -155,6 +155,8 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         callback.setSwipeFlags(ItemTouchHelper.START | ItemTouchHelper.END);
         callback.setDragFlags(0);
         mBinding.refresh.setEnableLoadMore(false);
+
+        onRefresh(mBinding.refresh);
     }
 
     @Override

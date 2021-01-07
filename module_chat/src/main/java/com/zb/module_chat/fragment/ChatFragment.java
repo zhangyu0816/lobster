@@ -2,7 +2,7 @@ package com.zb.module_chat.fragment;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseFragment;
-import com.zb.lib_base.adapter.FragmentAdapter;
+import com.zb.lib_base.adapter.ViewPagerAdapter;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.utils.FragmentUtils;
@@ -23,6 +23,7 @@ public class ChatFragment extends BaseFragment {
     private ChatFragBinding binding;
     private List<Fragment> fragments = new ArrayList<>();
     private ChatFragViewModel viewModel;
+    private ViewPagerAdapter mAdapter;
 
     @Override
     public int getRes() {
@@ -35,7 +36,6 @@ public class ChatFragment extends BaseFragment {
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         binding = (ChatFragBinding) mBinding;
-
         initFragments();
     }
 
@@ -43,8 +43,10 @@ public class ChatFragment extends BaseFragment {
         fragments.clear();
         fragments.add(FragmentUtils.getChatPairFragment());
         fragments.add(FragmentUtils.getChatListFragment());
-        binding.viewPage.setAdapter(new FragmentAdapter(getChildFragmentManager(), fragments));
+        mAdapter = new ViewPagerAdapter(activity, fragments);
+        binding.viewPage.setAdapter(mAdapter);
         String temp = "聊天-" + (ChatListDb.getInstance().getChatTabRed() > 0 ? "true" : "false");
+        MineApp.chatSelectIndex = 0;
         viewModel.initTabLayout(new String[]{"所有匹配", temp}, binding.tabLayout, binding.viewPage, R.color.black_252, R.color.black_827, MineApp.chatSelectIndex);
 
     }
