@@ -1,7 +1,5 @@
 package com.zb.module_home.fragment;
 
-import android.util.Log;
-
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseFragment;
 import com.zb.lib_base.adapter.ViewPagerAdapter;
@@ -86,17 +84,10 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("Fragment", "HomeFragment_onResume");
         if (!createFragment) {
             createFragment = true;
             initFragments();
         }
 
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.i("Fragment", "HomeFragment_onPause");
     }
 }
