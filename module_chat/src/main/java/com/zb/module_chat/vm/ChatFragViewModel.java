@@ -63,7 +63,7 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
             @Override
             public void onReceive(Context context, Intent intent) {
                 String temp = "聊天-" + (ChatListDb.getInstance().getChatTabRed() > 0 ? "true" : "false");
-                initTabLayout(new String[]{"所有匹配", temp}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, MineApp.chatSelectIndex);
+                initTabLayout(new String[]{"所有匹配", temp}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, MineApp.chatSelectIndex, true);
             }
         };
 

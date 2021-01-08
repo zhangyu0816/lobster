@@ -17,6 +17,7 @@ public class DiscoverListActivity extends CardBaseActivity {
     boolean isAttention;
     @Autowired(name = "memberInfo")
     MemberInfo memberInfo;
+    private DiscoverListViewModel viewModel;
 
     @Override
     public int getRes() {
@@ -26,12 +27,20 @@ public class DiscoverListActivity extends CardBaseActivity {
     @Override
     public void initUI() {
         MineApp.getApp().getActivityMap().put("DiscoverListActivity", activity);
-        DiscoverListViewModel viewModel = new DiscoverListViewModel();
+        viewModel = new DiscoverListViewModel();
         viewModel.otherUserId = userId;
         viewModel.memberInfo = memberInfo;
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.isAttention, isAttention);
         mBinding.setVariable(BR.memberInfo, memberInfo);
         viewModel.setBinding(mBinding);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (viewModel != null) {
+            viewModel.onStart();
+        }
     }
 }

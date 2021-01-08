@@ -1,11 +1,10 @@
 package com.zb.module_home.fragment;
 
-import android.os.SystemClock;
+import android.util.Log;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseFragment;
 import com.zb.lib_base.adapter.ViewPagerAdapter;
-import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_home.BR;
@@ -16,13 +15,18 @@ import com.zb.module_home.vm.HomeViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
 
 @Route(path = RouteUtils.Home_Fragment)
 public class HomeFragment extends BaseFragment {
     private HomeFragBinding homeFragBinding;
     private List<Fragment> fragments = new ArrayList<>();
     private HomeViewModel viewModel;
+    private ViewPagerAdapter adapter;
+    private boolean createFragment = false;
 
     @Override
     public int getRes() {
@@ -32,23 +36,36 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void initUI() {
         viewModel = new HomeViewModel();
-        viewModel.setBinding(mBinding);
-        mBinding.setVariable(BR.viewModel, viewModel);
         homeFragBinding = (HomeFragBinding) mBinding;
-        MineApp.getApp().getFixedThreadPool().execute(() -> {
-            SystemClock.sleep(1000);
-            activity.runOnUiThread(this::initFragments);
-        });
+        mBinding.setVariable(BR.viewModel, viewModel);
     }
 
     private void initFragments() {
+        viewModel.setBinding(mBinding);
         fragments.clear();
         fragments.add(FragmentUtils.getHomeFollowFragment());
         fragments.add(FragmentUtils.getCardMemberDiscoverFragment(0));
         fragments.add(FragmentUtils.getCardMemberVideoFragment(0));
-        ViewPagerAdapter adapter = new ViewPagerAdapter(activity, fragments);
+        adapter = new ViewPagerAdapter(getChildFragmentManager(), new Lifecycle() {
+            @Override
+            public void addObserver(@NonNull LifecycleObserver observer) {
+
+            }
+
+            @Override
+            public void removeObserver(@NonNull LifecycleObserver observer) {
+
+            }
+
+            @NonNull
+            @Override
+            public State getCurrentState() {
+                return null;
+            }
+        }, fragments);
+        homeFragBinding.viewPage.setSaveEnabled(false);
         homeFragBinding.viewPage.setAdapter(adapter);
-        viewModel.initTabLayout(new String[]{"关注", "推荐", "小视频"}, homeFragBinding.tabLayout, homeFragBinding.viewPage, R.color.black_252, R.color.black_827, 1);
+        viewModel.initTabLayout(new String[]{"关注", "推荐", "小视频"}, homeFragBinding.tabLayout, homeFragBinding.viewPage, R.color.black_252, R.color.black_827, 1,false);
     }
 
     @Override
@@ -56,5 +73,30 @@ public class HomeFragment extends BaseFragment {
         super.onDestroy();
         if (viewModel != null)
             viewModel.onDestroy();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (adapter != null) {
+            adapter.notifyItemChanged(homeFragBinding.viewPage.getCurrentItem());
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("Fragment", "HomeFragment_onResume");
+        if (!createFragment) {
+            createFragment = true;
+            initFragments();
+        }
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i("Fragment", "HomeFragment_onPause");
     }
 }

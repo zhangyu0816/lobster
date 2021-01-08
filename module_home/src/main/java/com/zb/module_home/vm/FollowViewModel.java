@@ -93,6 +93,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
                 onRefreshForNet(null);
             }
         };
+        setAdapter();
     }
 
     public void onDestroy() {

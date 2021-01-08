@@ -19,9 +19,8 @@ public class FollowFragment extends BaseFragment {
     @Override
     public void initUI() {
         viewModel = new FollowViewModel();
-        viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
-        viewModel.setAdapter();
+        viewModel.setBinding(mBinding);
     }
 
     @Override

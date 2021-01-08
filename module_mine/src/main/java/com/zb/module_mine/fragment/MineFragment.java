@@ -19,6 +19,7 @@ public class MineFragment extends BaseFragment {
     @Override
     public void initUI() {
         viewModel = new MineViewModel();
+        viewModel.fm = getChildFragmentManager();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
     }
@@ -35,5 +36,12 @@ public class MineFragment extends BaseFragment {
         super.onResume();
         if (viewModel != null)
             viewModel.onResume();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (viewModel != null)
+            viewModel.onStart();
     }
 }

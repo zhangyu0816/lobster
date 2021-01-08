@@ -1,6 +1,8 @@
 package com.zb.module_card.fragment;
 
 
+import android.util.Log;
+
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseFragment;
 import com.zb.lib_base.app.MineApp;
@@ -32,5 +34,16 @@ public class CardFragment extends BaseFragment {
         super.onDestroy();
         if (viewModel != null)
             viewModel.onDestroy();
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("Fragment", "CardFragment_onResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.i("Fragment", "CardFragment_onPause");
     }
 }

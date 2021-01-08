@@ -35,14 +35,16 @@ public class MainActivity extends AppBaseActivity {
     @Override
     public void initUI() {
         // 个推注册
-        PushManager.getInstance().initialize(this.getApplicationContext(), DemoPushService.class);
-        PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), DemoIntentService.class);
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            PushManager.getInstance().initialize(this.getApplicationContext(), DemoPushService.class);
+            PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), DemoIntentService.class);
+            setNotificationChannel();
+        });
+
         fitComprehensiveScreen();
         viewModel = new MainViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
-        setNotificationChannel();
-
         alarmUtils = new AlarmUtils(activity, MineApp.mineInfo);
 
     }
@@ -54,6 +56,14 @@ public class MainActivity extends AppBaseActivity {
         if (viewModel != null) {
             viewModel.onDestroy();
             viewModel.stopAnimator();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (viewModel != null) {
+            viewModel.onStart();
         }
     }
 

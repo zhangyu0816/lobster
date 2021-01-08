@@ -15,7 +15,10 @@ import com.zb.module_chat.vm.ChatFragViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
 
 @Route(path = RouteUtils.Chat_Fragment)
 public class ChatFragment extends BaseFragment {
@@ -23,6 +26,8 @@ public class ChatFragment extends BaseFragment {
     private ChatFragBinding binding;
     private List<Fragment> fragments = new ArrayList<>();
     private ChatFragViewModel viewModel;
+    private ViewPagerAdapter adapter;
+    private boolean createFragment = false;
 
     @Override
     public int getRes() {
@@ -32,21 +37,37 @@ public class ChatFragment extends BaseFragment {
     @Override
     public void initUI() {
         viewModel = new ChatFragViewModel();
-        viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         binding = (ChatFragBinding) mBinding;
-        initFragments();
     }
 
     private void initFragments() {
+        viewModel.setBinding(mBinding);
         fragments.clear();
         fragments.add(FragmentUtils.getChatPairFragment());
         fragments.add(FragmentUtils.getChatListFragment());
-        ViewPagerAdapter adapter = new ViewPagerAdapter(activity, fragments);
+        adapter = new ViewPagerAdapter(getChildFragmentManager(), new Lifecycle() {
+            @Override
+            public void addObserver(@NonNull LifecycleObserver observer) {
+
+            }
+
+            @Override
+            public void removeObserver(@NonNull LifecycleObserver observer) {
+
+            }
+
+            @NonNull
+            @Override
+            public State getCurrentState() {
+                return null;
+            }
+        }, fragments);
+        binding.viewPage.setSaveEnabled(false);
         binding.viewPage.setAdapter(adapter);
         String temp = "聊天-" + (ChatListDb.getInstance().getChatTabRed() > 0 ? "true" : "false");
         MineApp.chatSelectIndex = 0;
-        viewModel.initTabLayout(new String[]{"所有匹配", temp}, binding.tabLayout, binding.viewPage, R.color.black_252, R.color.black_827, MineApp.chatSelectIndex);
+        viewModel.initTabLayout(new String[]{"所有匹配", temp}, binding.tabLayout, binding.viewPage, R.color.black_252, R.color.black_827, MineApp.chatSelectIndex,true);
 
     }
 
@@ -55,5 +76,22 @@ public class ChatFragment extends BaseFragment {
         super.onDestroy();
         if (viewModel != null)
             viewModel.onDestroy();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (adapter != null) {
+            adapter.notifyItemChanged(binding.viewPage.getCurrentItem());
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!createFragment) {
+            createFragment = true;
+            initFragments();
+        }
     }
 }

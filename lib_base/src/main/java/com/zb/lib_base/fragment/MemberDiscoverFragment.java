@@ -25,9 +25,8 @@ public class MemberDiscoverFragment extends BaseFragment {
     public void initUI() {
         viewModel = new MemberDiscoverViewModel();
         viewModel.otherUserId = userId;
-        viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
-        viewModel.setAdapter();
+        viewModel.setBinding(mBinding);
     }
 
     @Override

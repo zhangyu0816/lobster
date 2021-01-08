@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 
 import com.yimi.rentme.databinding.AcMainBinding;
 import com.yimi.rentme.iv.MainVMInterface;
-import com.yimi.rentme.service.ForegroundLiveService;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.ViewPagerAdapter;
@@ -107,17 +106,14 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         mBinding.setUnReadCount(0);
         mBinding.setNewsCount(0);
 
+        initFragments();
+
         vibrator = (Vibrator) activity.getSystemService(Service.VIBRATOR_SERVICE);
 
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
         MineApp.sex = PreferenceUtil.readIntValue(activity, "mySex", -2) == -2 ? (MineApp.mineInfo.getSex() == 0 ? 1 : 0) : PreferenceUtil.readIntValue(activity, "mySex", -2);
         MineApp.minAge = PreferenceUtil.readIntValue(activity, "myMinAge", 18);
         MineApp.maxAge = PreferenceUtil.readIntValue(activity, "myMaxAge", 70);
-
-        initFragments();
-        openedMemberPriceList();
-
-        activity.startService(new Intent(activity, ForegroundLiveService.class));
 
         rechargeReceiver = new BaseReceiver(activity, "lobster_recharge") {
             @Override
@@ -274,12 +270,25 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             }
         };
 
-        new OpenNotice(activity, mBinding.getRoot());
-
         handler.sendEmptyMessageDelayed(0, time);
         createAnimator();
-        if (MineApp.mineInfo.getUserId() == 0)
-            myInfo();
+
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(1000);
+            new OpenNotice(activity, mBinding.getRoot());
+            activity.runOnUiThread(() -> {
+                if (MineApp.mineInfo.getUserId() == 0)
+                    myInfo();
+                else
+                    openedMemberPriceList();
+            });
+        });
+
+        if (PreferenceUtil.readIntValue(activity, "showGuidance") == 0)
+            MineApp.getApp().getFixedThreadPool().execute(() -> {
+                SystemClock.sleep(500);
+                activity.runOnUiThread(() -> new GuidancePW(mBinding.getRoot()));
+            });
     }
 
     public void onDestroy() {
@@ -297,6 +306,12 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         }
     }
 
+    public void onStart() {
+        adapter.notifyItemChanged(mBinding.viewPage.getCurrentItem());
+    }
+
+    private ViewPagerAdapter adapter;
+
     private void initFragments() {
         fragments.clear();
         fragments.add(FragmentUtils.getHomeFragment());
@@ -304,9 +319,10 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         fragments.add(FragmentUtils.getChatFragment());
         fragments.add(FragmentUtils.getMineFragment());
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter(activity, fragments);
-        mBinding.viewPage.setAdapter(adapter);
+        adapter = new ViewPagerAdapter(activity, fragments);
         mBinding.viewPage.setUserInputEnabled(false);
+        mBinding.viewPage.setSaveEnabled(false);
+        mBinding.viewPage.setAdapter(adapter);
         mBinding.viewPage.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 
             @Override
@@ -331,11 +347,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             }
         });
         selectPage(1);
-        if (PreferenceUtil.readIntValue(activity, "showGuidance") == 0)
-            MineApp.getApp().getFixedThreadPool().execute(() -> {
-                SystemClock.sleep(500);
-                activity.runOnUiThread(() -> new GuidancePW(mBinding.getRoot()));
-            });
     }
 
     private void bottleTileStatus(boolean isPlay) {
@@ -385,6 +396,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onNext(MineInfo o) {
                 MineApp.mineInfo = o;
+                openedMemberPriceList();
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

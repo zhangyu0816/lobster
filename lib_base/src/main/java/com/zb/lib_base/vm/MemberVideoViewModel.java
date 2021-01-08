@@ -86,6 +86,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
         };
 
         mBinding.ivNoData.setBackgroundResource(otherUserId == 1 ? R.mipmap.my_no_discover_data : R.mipmap.other_no_discover_data);
+        setAdapter();
     }
 
     public void onDestroy() {

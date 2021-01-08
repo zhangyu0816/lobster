@@ -30,8 +30,12 @@ import com.zb.module_mine.iv.MineVMInterface;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
 
 public class MineViewModel extends BaseViewModel implements MineVMInterface {
 
@@ -44,6 +48,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     private BaseReceiver attentionListReceiver;
     private List<Fragment> fragments = new ArrayList<>();
     private List<String> selectorList = new ArrayList<>();
+    private boolean createFragment = false;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -108,7 +113,6 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             }
         };
 
-        initFragments();
         MineApp.getApp().getFixedThreadPool().execute(() -> {
             SystemClock.sleep(300);
             activity.runOnUiThread(() -> {
@@ -121,6 +125,10 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
 
     public void onResume() {
         mBinding.setMineInfo(MineApp.mineInfo);
+        if (!createFragment) {
+            createFragment = true;
+            initFragments();
+        }
     }
 
     public void onDestroy() {
@@ -136,14 +144,40 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         }
     }
 
+    public void onStart() {
+        if (adapter != null) {
+            adapter.notifyItemChanged(mBinding.viewPage.getCurrentItem());
+        }
+    }
+
+    private ViewPagerAdapter adapter;
+    public FragmentManager fm;
+
     private void initFragments() {
         fragments.clear();
         fragments.add(FragmentUtils.getCardMemberDiscoverFragment(1));
         fragments.add(FragmentUtils.getCardMemberVideoFragment(1));
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter(activity, fragments);
+        adapter = new ViewPagerAdapter(fm, new Lifecycle() {
+            @Override
+            public void addObserver(@NonNull LifecycleObserver observer) {
+
+            }
+
+            @Override
+            public void removeObserver(@NonNull LifecycleObserver observer) {
+
+            }
+
+            @NonNull
+            @Override
+            public State getCurrentState() {
+                return null;
+            }
+        }, fragments);
+        mBinding.viewPage.setSaveEnabled(false);
         mBinding.viewPage.setAdapter(adapter);
-        initTabLayout(new String[]{"动态", "小视频"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, 0);
+        initTabLayout(new String[]{"动态", "小视频"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, 0, false);
     }
 
     @Override

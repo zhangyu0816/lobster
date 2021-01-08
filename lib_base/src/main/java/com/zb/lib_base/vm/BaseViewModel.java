@@ -94,10 +94,10 @@ public class BaseViewModel implements BaseVMInterface {
 
     }
 
-    public void initTabLayout(String[] tabNames, TabLayout tabLayout, ViewPager2 viewPager, int selectColor, int color, int index) {
+    public void initTabLayout(String[] tabNames, TabLayout tabLayout, ViewPager2 viewPager, int selectColor, int color, int index, boolean isChatSelectIndex) {
         if (tabLayout == null)
             return;
-        TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout,viewPager, (tab, position) -> {
+        TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             if (tabNames[position].contains("-")) {
                 String[] temp = tabNames[position].split("-");
                 tab.setCustomView(getTabView(temp[0], Boolean.parseBoolean(temp[1])));
@@ -111,7 +111,8 @@ public class BaseViewModel implements BaseVMInterface {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                MineApp.chatSelectIndex = tab.getPosition();
+                if (isChatSelectIndex)
+                    MineApp.chatSelectIndex = tab.getPosition();
                 viewPager.setCurrentItem(tab.getPosition());
                 changeTab(tab, 16, selectColor);
                 if (tabNames[0].equals("关注")) {
@@ -279,6 +280,7 @@ public class BaseViewModel implements BaseVMInterface {
     private long exitTime = 0;
     private boolean isScroll = false;
     private Handler mHandler = new Handler();
+
     public void setScroll(boolean scroll) {
         isScroll = scroll;
     }

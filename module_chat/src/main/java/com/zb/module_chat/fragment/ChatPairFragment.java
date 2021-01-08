@@ -19,8 +19,8 @@ public class ChatPairFragment extends BaseFragment {
     @Override
     public void initUI() {
         viewModel = new ChatPairViewModel();
-        viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
+        viewModel.setBinding(mBinding);
     }
 
     @Override

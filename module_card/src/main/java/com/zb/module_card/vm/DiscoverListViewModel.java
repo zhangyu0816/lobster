@@ -62,13 +62,20 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
         };
     }
 
+    public void onStart() {
+        adapter.notifyItemChanged(mBinding.viewPage.getCurrentItem());
+    }
+
+    private ViewPagerAdapter adapter;
+
     private void initFragments() {
         fragments.clear();
         fragments.add(FragmentUtils.getCardMemberDiscoverFragment(otherUserId));
         fragments.add(FragmentUtils.getCardMemberVideoFragment(otherUserId));
-        ViewPagerAdapter adapter = new ViewPagerAdapter(activity, fragments);
+        adapter = new ViewPagerAdapter(activity, fragments);
+        mBinding.viewPage.setSaveEnabled(false);
         mBinding.viewPage.setAdapter(adapter);
-        initTabLayout(new String[]{"动态", "小视频"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, 0);
+        initTabLayout(new String[]{"动态", "小视频"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, 0,false);
     }
 
     @Override
@@ -76,7 +83,7 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
         super.back(view);
         try {
             attentionReceiver.unregisterReceiver();
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         activity.finish();
