@@ -38,7 +38,7 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
         timer = new CountDownTimer(second * 1000, 1000) {
             public void onTick(long millisUntilFinished) {
                 isTimer = true;
-                mBinding.setRemark(Html.fromHtml(MineApp.getInstance().getResources().getString(R.string.code_second, millisUntilFinished / 1000)));
+                mBinding.setRemark(Html.fromHtml(MineApp.getApp().getResources().getString(R.string.code_second, millisUntilFinished / 1000)));
             }
 
             public void onFinish() {
@@ -175,7 +175,7 @@ public class ModifyPassViewModel extends BaseViewModel implements ModifyPassVMIn
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "短信验证码发送成功，请注意查看", true);
-                mBinding.setRemark(Html.fromHtml(MineApp.getInstance().getResources().getString(R.string.code_second, second)));
+                mBinding.setRemark(Html.fromHtml(MineApp.getApp().getResources().getString(R.string.code_second, second)));
                 timer.start();
             }
 

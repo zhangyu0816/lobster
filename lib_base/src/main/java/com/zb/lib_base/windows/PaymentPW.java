@@ -2,8 +2,6 @@ package com.zb.lib_base.windows;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -16,6 +14,7 @@ import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.alipayFastPayTranApi;
 import com.zb.lib_base.api.walletPayTranApi;
 import com.zb.lib_base.api.wxpayAppPayTranApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.AliPay;
@@ -101,47 +100,38 @@ public class PaymentPW extends BasePopupWindow {
         alipayFastPayTranApi api = new alipayFastPayTranApi(new HttpOnNextListener<AliPay>() {
             @Override
             public void onNext(AliPay o) {
-                Runnable payRunnable = () -> {
+                Runnable ra = () -> {
                     // 构造PayTask 对象
                     PayTask alipay = new PayTask(activity);
                     // 调用支付接口，获取支付结果
                     String result = alipay.pay(o.getPayInfo());
-                    Message msg = new Message();
-                    msg.what = 1;
-                    msg.obj = result;
-                    mHandler.sendMessage(msg);
+
+                    activity.runOnUiThread(() -> {
+                        PayResult payResult = new PayResult(result);
+                        String resultStatus = payResult.getResultStatus();
+                        if (TextUtils.equals(resultStatus, "9000")) {
+                            SCToastUtil.showToast(activity, "支付成功", true);
+                            paySuccess();
+                        } else {
+                            if (TextUtils.equals(resultStatus, "8000")) {
+                                SCToastUtil.showToast(activity, "支付结果确认中", true);
+                            } else {
+                                SCToastUtil.showToast(activity, "支付失败", true);
+                            }
+                            try {
+                                paySuccessReceiver.unregisterReceiver();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            dismiss();
+                        }
+                    });
                 };
-                // 必须异步调用
-                Thread payThread = new Thread(payRunnable);
-                payThread.start();
+                MineApp.getApp().getFixedThreadPool().execute(ra);
             }
         }, activity).setTranOrderId(tranOrderId);
         HttpManager.getInstance().doHttpDeal(api);
     }
-
-    private Handler mHandler = new Handler(msg -> {
-        if (msg.what == 1) {
-            PayResult payResult = new PayResult((String) msg.obj);
-            String resultStatus = payResult.getResultStatus();
-            if (TextUtils.equals(resultStatus, "9000")) {
-                SCToastUtil.showToast(activity, "支付成功", true);
-                paySuccess();
-            } else {
-                if (TextUtils.equals(resultStatus, "8000")) {
-                    SCToastUtil.showToast(activity, "支付结果确认中", true);
-                } else {
-                    SCToastUtil.showToast(activity, "支付失败", true);
-                }
-                try {
-                    paySuccessReceiver.unregisterReceiver();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                dismiss();
-            }
-        }
-        return false;
-    });
 
     // 微信支付
     private void wxpayAppPayTran(String tranOrderId) {

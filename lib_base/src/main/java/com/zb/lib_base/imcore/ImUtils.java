@@ -1,6 +1,6 @@
 package com.zb.lib_base.imcore;
 
-import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.alibaba.mobileim.channel.event.IWxCallback;
@@ -15,6 +15,7 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.otherImAccountInfoApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -36,14 +37,6 @@ public class ImUtils {
     private boolean needLink = false;
     private boolean isDelete = false;
     private boolean isChat = true;
-    private RxAppCompatActivity activity;
-    private Handler mHandler;
-    private Runnable ra = new Runnable() {
-        @Override
-        public void run() {
-            myImAccountInfo(activity);
-        }
-    };
 
     public ImUtils() {
         loginHelper = LoginSampleHelper.getInstance();
@@ -182,7 +175,6 @@ public class ImUtils {
     }
 
     private void myImAccountInfo(RxAppCompatActivity activity) {
-        this.activity = activity;
         myImAccountInfoApi api = new myImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
             @Override
             public void onNext(ImAccount o) {
@@ -195,15 +187,11 @@ public class ImUtils {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
                     requestCount++;
                     if (requestCount < 6) {
-                        if (mHandler == null) {
-                            mHandler = new Handler();
-                        }
-                        mHandler.postDelayed(ra, 3000);
+                        MineApp.getApp().getFixedThreadPool().execute(() -> {
+                            SystemClock.sleep(3000);
+                            myImAccountInfo(activity);
+                        });
                     } else {
-                        if (mHandler != null) {
-                            mHandler.removeCallbacks(ra);
-                        }
-                        mHandler = null;
                         loginOutIM();
                         SCToastUtil.showToast(activity, "当前聊天网络拥挤，请稍后再试", true);
                     }

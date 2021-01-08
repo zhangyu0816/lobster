@@ -50,7 +50,7 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MineApp.exit();
+        MineApp.getApp().exit();
         if (viewModel != null) {
             viewModel.onDestroy();
             viewModel.stopAnimator();
@@ -90,7 +90,7 @@ public class MainActivity extends AppBaseActivity {
                 DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
                 alarmUtils.startAlarm();
                 ImUtils.getInstance().loginOutIM();
-                MineApp.exit();
+                MineApp.getApp().exit();
                 System.exit(0);
             }
             return true;
@@ -101,7 +101,7 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (MineApp.mActivityList.get(0) instanceof MainActivity) {
+        if (MineApp.getApp().getActivityList().get(0) instanceof MainActivity) {
             alarmUtils.cancelAlarm();
             ImUtils.getInstance().setChat(false, activity);
             if (viewModel != null)

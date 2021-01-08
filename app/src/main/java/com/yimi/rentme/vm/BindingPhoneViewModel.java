@@ -124,7 +124,7 @@ public class BindingPhoneViewModel extends BaseViewModel implements BindingPhone
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "短信验证码发送成功，请注意查看", true);
-                mBinding.setRemark(Html.fromHtml(MineApp.getInstance().getResources().getString(R.string.code_second, second)));
+                mBinding.setRemark(Html.fromHtml(MineApp.getApp().getResources().getString(R.string.code_second, second)));
                 timer.start();
             }
 
@@ -145,7 +145,7 @@ public class BindingPhoneViewModel extends BaseViewModel implements BindingPhone
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "短信验证码发送成功，请注意查看", true);
-                mBinding.setRemark(Html.fromHtml(MineApp.getInstance().getResources().getString(R.string.code_second, second)));
+                mBinding.setRemark(Html.fromHtml(MineApp.getApp().getResources().getString(R.string.code_second, second)));
                 timer.start();
             }
 

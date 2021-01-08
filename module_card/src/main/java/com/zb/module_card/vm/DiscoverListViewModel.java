@@ -45,7 +45,6 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
     private List<Fragment> fragments = new ArrayList<>();
     public MemberInfo memberInfo;
     private BaseReceiver attentionReceiver;
-    private ViewPagerAdapter mAdapter;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -67,8 +66,8 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
         fragments.clear();
         fragments.add(FragmentUtils.getCardMemberDiscoverFragment(otherUserId));
         fragments.add(FragmentUtils.getCardMemberVideoFragment(otherUserId));
-        mAdapter = new ViewPagerAdapter(activity, fragments);
-        mBinding.viewPage.setAdapter(mAdapter);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(activity, fragments);
+        mBinding.viewPage.setAdapter(adapter);
         initTabLayout(new String[]{"动态", "小视频"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, 0);
     }
 

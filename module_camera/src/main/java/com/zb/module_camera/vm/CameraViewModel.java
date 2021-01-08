@@ -147,7 +147,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
     @Override
     public void upload(View view) {
         if (isMore) {
-            new Thread(() -> {
+            Runnable ra = () -> {
                 List<Map.Entry<String, Integer>> list = new ArrayList<>(MineApp.selectMap.entrySet());
                 //升序排序
                 Collections.sort(list, (o1, o2) -> o1.getValue() - o2.getValue());
@@ -157,20 +157,23 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                     imageList.add(mapping.getKey());
                 }
 
-                if (MineApp.toPublish && !MineApp.toContinue) {
-                    MineApp.cameraType = 0;
-                    MineApp.isMore = true;
-                    MineApp.filePath = TextUtils.join(",", imageList);
-                    ActivityUtils.getHomePublishImage();
-                } else {
-                    Intent data = new Intent("lobster_camera");
-                    data.putExtra("cameraType", 0);
-                    data.putExtra("isMore", true);
-                    data.putExtra("filePath", TextUtils.join(",", imageList));
-                    activity.sendBroadcast(data);
-                }
-                activity.finish();
-            }).start();
+                activity.runOnUiThread(() -> {
+                    if (MineApp.toPublish && !MineApp.toContinue) {
+                        MineApp.cameraType = 0;
+                        MineApp.isMore = true;
+                        MineApp.filePath = TextUtils.join(",", imageList);
+                        ActivityUtils.getHomePublishImage();
+                    } else {
+                        Intent data = new Intent("lobster_camera");
+                        data.putExtra("cameraType", 0);
+                        data.putExtra("isMore", true);
+                        data.putExtra("filePath", TextUtils.join(",", imageList));
+                        activity.sendBroadcast(data);
+                    }
+                    activity.finish();
+                });
+            };
+            MineApp.getApp().getFixedThreadPool().execute(ra);
         } else {
             if (selectIndex == -1) {
                 SCToastUtil.showToast(activity, "请选择照片", true);

@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Build;
-import android.os.Handler;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
@@ -78,12 +78,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     private String downloadPath = "";
     private int videoWidth, videoHeight;
     private List<Review> reviewList = new ArrayList<>();
-    private Handler mHandler = new Handler();
-    private Runnable ra = () -> {
-        Intent intent = new Intent("lobster_attention");
-        intent.putExtra("isAttention", true);
-        activity.sendBroadcast(intent);
-    };
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -118,6 +112,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             if (!GoodDb.getInstance().hasGood(friendDynId)) {
                 mBinding.ivUnLike.setVisibility(View.GONE);
                 mBinding.ivLike.setVisibility(View.VISIBLE);
+                GoodDb.getInstance().saveGood(new CollectID(friendDynId));
                 dynDoLike();
             }
         });
@@ -150,10 +145,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
 
     public void onDestroy() {
         super.onDestroy();
-        if (mHandler != null) {
-            mHandler.removeCallbacks(ra);
-        }
-        mHandler = null;
         try {
             attentionReceiver.unregisterReceiver();
         } catch (Exception e) {
@@ -198,6 +189,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             mBinding.ivUnLike.setVisibility(View.GONE);
             mBinding.ivLike.setVisibility(View.VISIBLE);
             likeOrNot(mBinding.ivLike);
+            GoodDb.getInstance().saveGood(new CollectID(friendDynId));
             dynDoLike();
         }
     }
@@ -346,7 +338,14 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                 isAttention(mBinding.attentionLayout, mBinding.ivAttention);
                 AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
-                mHandler.postDelayed(ra, 1000);
+                MineApp.getApp().getFixedThreadPool().execute(() -> {
+                    SystemClock.sleep(1000);
+                    activity.runOnUiThread(() -> {
+                        Intent intent = new Intent("lobster_attention");
+                        intent.putExtra("isAttention", true);
+                        activity.sendBroadcast(intent);
+                    });
+                });
             }
 
             @Override
@@ -385,7 +384,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
         dynDoLikeApi api = new dynDoLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                GoodDb.getInstance().saveGood(new CollectID(friendDynId));
                 int goodNum = discoverInfo.getGoodNum() + 1;
                 discoverInfo.setGoodNum(goodNum);
                 mBinding.setDiscoverInfo(discoverInfo);
@@ -403,7 +401,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
                     if (TextUtils.equals(e.getMessage(), "已经赞过了")) {
-                        GoodDb.getInstance().saveGood(new CollectID(friendDynId));
                         Intent data = new Intent("lobster_doGood");
                         data.putExtra("goodNum", discoverInfo.getGoodNum());
                         data.putExtra("friendDynId", friendDynId);
@@ -503,8 +500,8 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                 } else {
                     mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
                 }
-
-                seeReviews(pageNo + 1);
+                seeLikers(1);
+//                seeReviews(pageNo + 1);
             }
 
             @Override
@@ -536,7 +533,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                     mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
                 }
 
-                seeLikers(pageNo + 1);
+//                seeLikers(pageNo + 1);
             }
         }, activity).setFriendDynId(friendDynId).setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);

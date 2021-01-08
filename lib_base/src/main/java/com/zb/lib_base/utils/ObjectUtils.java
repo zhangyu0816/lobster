@@ -136,11 +136,11 @@ public class ObjectUtils {
     @SuppressLint("UseCompatLoadingForDrawables")
     public static Drawable getRanking(int position) {
         if (position == 0) {
-            return MineApp.getInstance().getResources().getDrawable(R.mipmap.reward_ranking_1);
+            return MineApp.getApp().getResources().getDrawable(R.mipmap.reward_ranking_1);
         } else if (position == 1) {
-            return MineApp.getInstance().getResources().getDrawable(R.mipmap.reward_ranking_2);
+            return MineApp.getApp().getResources().getDrawable(R.mipmap.reward_ranking_2);
         } else {
-            return MineApp.getInstance().getResources().getDrawable(R.mipmap.reward_ranking_3);
+            return MineApp.getApp().getResources().getDrawable(R.mipmap.reward_ranking_3);
         }
     }
 
@@ -164,45 +164,45 @@ public class ObjectUtils {
     @SuppressLint("UseCompatLoadingForDrawables")
     public static Drawable getConstellationBg(String constellation) {
         if (constellation.isEmpty())
-            return MineApp.getInstance().getResources().getDrawable(R.mipmap.empty_icon);
+            return MineApp.getApp().getResources().getDrawable(R.mipmap.empty_icon);
         else
-            return MineApp.getInstance().getResources().getDrawable(constellationMap.get(constellation));
+            return MineApp.getApp().getResources().getDrawable(constellationMap.get(constellation));
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     public static Drawable getRealCheck(int isChecked) {
         if (isChecked == -1) {
-            return MineApp.getInstance().getResources().getDrawable(R.mipmap.real_un_icon);
+            return MineApp.getApp().getResources().getDrawable(R.mipmap.real_un_icon);
         } else if (isChecked == 0) {
-            return MineApp.getInstance().getResources().getDrawable(R.mipmap.real_checking_icon);
+            return MineApp.getApp().getResources().getDrawable(R.mipmap.real_checking_icon);
         } else if (isChecked == 1) {
-            return MineApp.getInstance().getResources().getDrawable(R.mipmap.real_icon);
+            return MineApp.getApp().getResources().getDrawable(R.mipmap.real_icon);
         } else {
-            return MineApp.getInstance().getResources().getDrawable(R.mipmap.real_fail_icon);
+            return MineApp.getApp().getResources().getDrawable(R.mipmap.real_fail_icon);
         }
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     public static Drawable getNoData(int position) {
         if (position == 0) {
-            return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_anth_data);
+            return MineApp.getApp().getResources().getDrawable(R.mipmap.no_anth_data);
         } else if (position == 1) {
-            return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_fan_data);
+            return MineApp.getApp().getResources().getDrawable(R.mipmap.no_fan_data);
         } else if (position == 2) {
-            return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_belike_data);
+            return MineApp.getApp().getResources().getDrawable(R.mipmap.no_belike_data);
         } else {
-            return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_visitor_data);
+            return MineApp.getApp().getResources().getDrawable(R.mipmap.no_visitor_data);
         }
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     public static Drawable getNewsNoData(int reviewType) {
         if (reviewType == 1) {
-            return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_review_icon);
+            return MineApp.getApp().getResources().getDrawable(R.mipmap.no_review_icon);
         } else if (reviewType == 2) {
-            return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_good_icon);
+            return MineApp.getApp().getResources().getDrawable(R.mipmap.no_good_icon);
         } else {
-            return MineApp.getInstance().getResources().getDrawable(R.mipmap.no_gift_icon);
+            return MineApp.getApp().getResources().getDrawable(R.mipmap.no_gift_icon);
         }
     }
 
@@ -268,15 +268,15 @@ public class ObjectUtils {
     public static int textColor(long otherUserId, int position) {
         if (position == 2) {
             if (LikeDb.getInstance().hasLike(otherUserId)) {
-                return MineApp.getInstance().getResources().getColor(R.color.black_827);
+                return MineApp.getApp().getResources().getColor(R.color.black_827);
             } else {
-                return MineApp.getInstance().getResources().getColor(R.color.purple_7a4);
+                return MineApp.getApp().getResources().getColor(R.color.purple_7a4);
             }
         } else {
             if (AttentionDb.getInstance().isAttention(otherUserId)) {
-                return MineApp.getInstance().getResources().getColor(R.color.black_827);
+                return MineApp.getApp().getResources().getColor(R.color.black_827);
             } else {
-                return MineApp.getInstance().getResources().getColor(R.color.purple_7a4);
+                return MineApp.getApp().getResources().getColor(R.color.purple_7a4);
             }
         }
 
@@ -344,29 +344,29 @@ public class ObjectUtils {
     @SuppressLint("UseCompatLoadingForDrawables")
     public static Drawable getTag(int position) {
         if (position == 0) {
-            return MineApp.getInstance().getResources().getDrawable(R.drawable.btn_bg_red_ffe_radius40);
+            return MineApp.getApp().getResources().getDrawable(R.drawable.btn_bg_red_ffe_radius40);
         } else if (position == 1) {
-            return MineApp.getInstance().getResources().getDrawable(R.drawable.btn_bg_yellow_fff_radius40);
+            return MineApp.getApp().getResources().getDrawable(R.drawable.btn_bg_yellow_fff_radius40);
         } else if (position == 2) {
-            return MineApp.getInstance().getResources().getDrawable(R.drawable.btn_bg_blue_e4f_radius40);
+            return MineApp.getApp().getResources().getDrawable(R.drawable.btn_bg_blue_e4f_radius40);
         } else if (position == 3) {
-            return MineApp.getInstance().getResources().getDrawable(R.drawable.btn_bg_purple_e8d_radius40);
+            return MineApp.getApp().getResources().getDrawable(R.drawable.btn_bg_purple_e8d_radius40);
         } else {
-            return MineApp.getInstance().getResources().getDrawable(R.drawable.btn_bg_green_e1f_radius40);
+            return MineApp.getApp().getResources().getDrawable(R.drawable.btn_bg_green_e1f_radius40);
         }
     }
 
     public static int getTagColor(int position) {
         if (position == 0) {
-            return MineApp.getInstance().getResources().getColor(R.color.red_ff3);
+            return MineApp.getApp().getResources().getColor(R.color.red_ff3);
         } else if (position == 1) {
-            return MineApp.getInstance().getResources().getColor(R.color.yellow_e89);
+            return MineApp.getApp().getResources().getColor(R.color.yellow_e89);
         } else if (position == 2) {
-            return MineApp.getInstance().getResources().getColor(R.color.blue_37a);
+            return MineApp.getApp().getResources().getColor(R.color.blue_37a);
         } else if (position == 3) {
-            return MineApp.getInstance().getResources().getColor(R.color.purple_7a4);
+            return MineApp.getApp().getResources().getColor(R.color.purple_7a4);
         } else {
-            return MineApp.getInstance().getResources().getColor(R.color.green_34c);
+            return MineApp.getApp().getResources().getColor(R.color.green_34c);
         }
     }
 }

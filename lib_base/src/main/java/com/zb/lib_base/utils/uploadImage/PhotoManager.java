@@ -1,11 +1,11 @@
 package com.zb.lib_base.utils.uploadImage;
 
-import android.os.Handler;
-import android.os.Message;
+import android.os.SystemClock;
 import android.text.TextUtils;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.api.uploadImagesApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpChatUploadManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpUploadManager;
@@ -209,15 +209,17 @@ public class PhotoManager {
                     }
                     compressCount--;
                     isCompress = false;
-                    if (i == fileList.size() - 1)
-                        new Thread(() -> {
-                            try {
-                                Thread.sleep(100);
-                                handler.sendEmptyMessage(0);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }).start();
+                    if (i == fileList.size() - 1) {
+                        Runnable ra = () -> {
+                            SystemClock.sleep(100);
+                            context.runOnUiThread(() -> {
+                                if (compressOverBack != null) {
+                                    compressOverBack.success();
+                                }
+                            });
+                        };
+                        MineApp.getApp().getFixedThreadPool().execute(ra);
+                    }
                 }
             }
 
@@ -229,16 +231,6 @@ public class PhotoManager {
     }
 
     private CompressOver compressOverBack;
-
-    private Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            if (msg.what == 0) {
-                compressOverBack.success();
-            }
-            return false;
-        }
-    });
 
     public interface CompressOver {
         void success();

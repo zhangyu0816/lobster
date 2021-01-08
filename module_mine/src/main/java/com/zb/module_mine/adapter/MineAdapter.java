@@ -1,6 +1,6 @@
 package com.zb.module_mine.adapter;
 
-import android.os.Handler;
+import android.os.SystemClock;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.adapter.BindingItemAdapter;
@@ -8,6 +8,7 @@ import com.zb.lib_base.adapter.ItemTouchHelperAdapter;
 import com.zb.lib_base.adapter.RecyclerHolder;
 import com.zb.lib_base.api.contactNumApi;
 import com.zb.lib_base.api.otherInfoApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.ContactNum;
@@ -36,7 +37,6 @@ public class MineAdapter<T> extends BindingItemAdapter<T> implements ItemTouchHe
     private BasePopupWindow pw;
     private int selectIndex = -1;
     public List<Long> userIdList = new ArrayList<>();
-    private Handler mHandler;
 
     public MineAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
         super(activity, layoutId, list);
@@ -143,13 +143,10 @@ public class MineAdapter<T> extends BindingItemAdapter<T> implements ItemTouchHe
             if (viewModel instanceof EditMemberViewModel) {
                 ((EditMemberViewModel) viewModel).imageList = (List<String>) getList();
             }
-            if (mHandler == null) {
-                mHandler = new Handler();
-            }
-            mHandler.postDelayed(() -> {
-                notifyDataSetChanged();
-                mHandler = null;
-            }, 500);
+            MineApp.getApp().getFixedThreadPool().execute(() -> {
+                SystemClock.sleep(500);
+                mContext.runOnUiThread(this::notifyDataSetChanged);
+            });
         }
     }
 

@@ -23,7 +23,7 @@ public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
         mAdapter = adapter;
-        vibrator = (Vibrator) MineApp.getInstance().getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator = (Vibrator) MineApp.getApp().getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     public void setDragFlags(int dragFlags) {

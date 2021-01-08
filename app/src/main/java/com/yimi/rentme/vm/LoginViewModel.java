@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.CountDownTimer;
-import android.os.Handler;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
@@ -90,40 +90,11 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     private CheckUser mCheckUser;
     private BaseReceiver memberReceiver;
     private boolean needMoreInfo = false;
-    private Handler mHandler = new Handler();
-    private Runnable ra1 = () -> new RulePW(activity, mBinding.getRoot(), 1, new RulePW.CallBack() {
-        @Override
-        public void sureBack() {
-            PreferenceUtil.saveIntValue(activity, "ruleType1", 1);
-            registerCaptcha();
-        }
-
-        @Override
-        public void cancelBack() {
-
-        }
-    });
-
-    private Runnable ra2 = () -> {
-        mBinding.edPhone.setSelection(mBinding.edPhone.getText().length());
-        showImplicit(mBinding.edPhone);
-        mBinding.setCanNext(MineApp.registerInfo.getPhone().length() == 11);
-    };
-
-    private Runnable ra3 = () -> {
-        mBinding.edPass.setSelection(mBinding.edPass.getText().length());
-        showImplicit(mBinding.edPass);
-    };
-
-    private Runnable ra4 = () -> {
-        mBinding.edNick.setSelection(mBinding.edNick.getText().length());
-        showImplicit(mBinding.edNick);
-    };
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        MineApp.activityMap.put("LoginActivity", activity);
+        MineApp.getApp().getActivityMap().put("LoginActivity", activity);
         titleMap.put(0, "登录/注册 更精彩");
         contentMap.put(0, "输入手机号后，开始探索虾菇！未注册手机，\n将自动进入注册页面。");
 
@@ -161,7 +132,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             MineApp.registerInfo = new RegisterInfo();
             timer.cancel();
             passErrorCount = 0;
-            MineApp.removeActivity(MineApp.activityMap.get("LoginActivity"));
+            MineApp.getApp().removeActivity(MineApp.getApp().getActivityMap().get("LoginActivity"));
             activity.finish();
         });
 
@@ -252,13 +223,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     }
 
     public void onDestroy() {
-        if (mHandler != null) {
-            mHandler.removeCallbacks(ra1);
-            mHandler.removeCallbacks(ra2);
-            mHandler.removeCallbacks(ra3);
-            mHandler.removeCallbacks(ra4);
-        }
-        mHandler = null;
         try {
             cameraReceiver.unregisterReceiver();
             bindPhoneReceiver.unregisterReceiver();
@@ -296,7 +260,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 } else {
                     timer.cancel();
                     ImUtils.getInstance().loginOutIM();
-                    MineApp.exit();
+                    MineApp.getApp().exit();
                     System.exit(0);
                 }
                 break;
@@ -685,7 +649,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                     MineApp.registerInfo = new RegisterInfo();
                     timer.cancel();
                     passErrorCount = 0;
-                    MineApp.removeActivity(MineApp.activityMap.get("LoginActivity"));
+                    MineApp.getApp().removeActivity(MineApp.getApp().getActivityMap().get("LoginActivity"));
                     activity.finish();
                 } else {
                     ImUtils.getInstance().setChat(false, activity);
@@ -747,7 +711,21 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
 
     private void showRule() {
         if (PreferenceUtil.readIntValue(activity, "ruleType1") == 0) {
-            mHandler.postDelayed(ra1, 200);
+            MineApp.getApp().getFixedThreadPool().execute(() -> {
+                SystemClock.sleep(200);
+                activity.runOnUiThread(() -> new RulePW(activity, mBinding.getRoot(), 1, new RulePW.CallBack() {
+                    @Override
+                    public void sureBack() {
+                        PreferenceUtil.saveIntValue(activity, "ruleType1", 1);
+                        registerCaptcha();
+                    }
+
+                    @Override
+                    public void cancelBack() {
+
+                    }
+                }));
+            });
         } else {
             registerCaptcha();
         }
@@ -764,13 +742,26 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 mBinding.setRegisterInfo(MineApp.registerInfo);
                 mBinding.setIsThree(false);
                 mBinding.setBtnName("下一步");
-                mHandler.postDelayed(ra2, 200);
+                MineApp.getApp().getFixedThreadPool().execute(() -> {
+                    SystemClock.sleep(200);
+                    activity.runOnUiThread(() -> {
+                        mBinding.edPhone.setSelection(mBinding.edPhone.getText().length());
+                        showImplicit(mBinding.edPhone);
+                        mBinding.setCanNext(MineApp.registerInfo.getPhone().length() == 11);
+                    });
+                });
                 break;
             case 1: // 密码登录
                 mBinding.setCanNext(MineApp.registerInfo.getPass().length() >= 6);
                 mBinding.setRight("验证码登录");
                 mBinding.setBtnName("开启虾菇");
-                mHandler.postDelayed(ra3, 200);
+                MineApp.getApp().getFixedThreadPool().execute(() -> {
+                    SystemClock.sleep(200);
+                    activity.runOnUiThread(() -> {
+                        mBinding.edPass.setSelection(mBinding.edPass.getText().length());
+                        showImplicit(mBinding.edPass);
+                    });
+                });
                 break;
             case 2: // 验证码
                 mBinding.setCanNext(false);
@@ -787,7 +778,13 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             case 4: // 名字
                 mBinding.setCanNext(!MineApp.registerInfo.getName().isEmpty());
                 mBinding.setBtnName("下一步");
-                mHandler.postDelayed(ra4, 200);
+                MineApp.getApp().getFixedThreadPool().execute(() -> {
+                    SystemClock.sleep(200);
+                    activity.runOnUiThread(() -> {
+                        mBinding.edNick.setSelection(mBinding.edNick.getText().length());
+                        showImplicit(mBinding.edNick);
+                    });
+                });
                 break;
             case 5: // 生日
                 mBinding.setCanNext(!MineApp.registerInfo.getBirthday().isEmpty());

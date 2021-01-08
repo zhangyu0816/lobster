@@ -4,7 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Handler;
+import android.os.SystemClock;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
@@ -44,16 +44,6 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     private BaseReceiver attentionListReceiver;
     private List<Fragment> fragments = new ArrayList<>();
     private List<String> selectorList = new ArrayList<>();
-    private ViewPagerAdapter mAdapter;
-    private Handler mHandler;
-    private Runnable ra = new Runnable() {
-        @Override
-        public void run() {
-            int height = DisplayUtils.dip2px(30) - mBinding.topLinear.getHeight();
-            mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) ->
-                    mBinding.setShowBg(verticalOffset <= height));
-        }
-    };
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -119,10 +109,14 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         };
 
         initFragments();
-        if (mHandler == null) {
-            mHandler = new Handler();
-        }
-        mHandler.postDelayed(ra, 300);
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(300);
+            activity.runOnUiThread(() -> {
+                int height = DisplayUtils.dip2px(30) - mBinding.topLinear.getHeight();
+                mBinding.appbar.addOnOffsetChangedListener((appBarLayout, verticalOffset) ->
+                        mBinding.setShowBg(verticalOffset <= height));
+            });
+        });
     }
 
     public void onResume() {
@@ -137,10 +131,6 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             updateChatTypeReceiver.unregisterReceiver();
             visitorReceiver.unregisterReceiver();
             attentionListReceiver.unregisterReceiver();
-            if (mHandler != null) {
-                mHandler.removeCallbacks(ra);
-            }
-            mHandler = null;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -151,8 +141,8 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         fragments.add(FragmentUtils.getCardMemberDiscoverFragment(1));
         fragments.add(FragmentUtils.getCardMemberVideoFragment(1));
 
-        mAdapter = new ViewPagerAdapter(activity, fragments);
-        mBinding.viewPage.setAdapter(mAdapter);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(activity, fragments);
+        mBinding.viewPage.setAdapter(adapter);
         initTabLayout(new String[]{"动态", "小视频"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, 0);
     }
 

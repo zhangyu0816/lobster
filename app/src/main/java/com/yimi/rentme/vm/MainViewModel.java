@@ -5,16 +5,16 @@ import android.animation.PropertyValuesHolder;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Message;
+import android.os.SystemClock;
 import android.os.Vibrator;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.yimi.rentme.R;
 import com.yimi.rentme.databinding.AcMainBinding;
 import com.yimi.rentme.iv.MainVMInterface;
+import com.yimi.rentme.service.ForegroundLiveService;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.ViewPagerAdapter;
@@ -97,10 +97,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
     });
     private Vibrator vibrator;
 
-    private ViewPagerAdapter mAdapter;
-
-    private Handler mHandler = new Handler();
-
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
@@ -120,6 +116,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
 
         initFragments();
         openedMemberPriceList();
+
+        activity.startService(new Intent(activity, ForegroundLiveService.class));
 
         rechargeReceiver = new BaseReceiver(activity, "lobster_recharge") {
             @Override
@@ -306,8 +304,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         fragments.add(FragmentUtils.getChatFragment());
         fragments.add(FragmentUtils.getMineFragment());
 
-        mAdapter = new ViewPagerAdapter(activity, fragments);
-        mBinding.viewPage.setAdapter(mAdapter);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(activity, fragments);
+        mBinding.viewPage.setAdapter(adapter);
         mBinding.viewPage.setUserInputEnabled(false);
         mBinding.viewPage.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 
@@ -333,12 +331,11 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             }
         });
         selectPage(1);
-        mHandler.postDelayed(() -> {
-            if (PreferenceUtil.readIntValue(activity, "showGuidance") == 0) {
-                new GuidancePW(mBinding.getRoot());
-            }
-        }, 500);
-
+        if (PreferenceUtil.readIntValue(activity, "showGuidance") == 0)
+            MineApp.getApp().getFixedThreadPool().execute(() -> {
+                SystemClock.sleep(500);
+                activity.runOnUiThread(() -> new GuidancePW(mBinding.getRoot()));
+            });
     }
 
     private void bottleTileStatus(boolean isPlay) {
@@ -567,12 +564,14 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 ChatListDb.getInstance().saveChatList(chatList);
 
                 activity.sendBroadcast(new Intent("lobster_newsCount"));
-                mHandler.postDelayed(() -> {
+                MineApp.getApp().getFixedThreadPool().execute(() -> {
+                    SystemClock.sleep(800);
                     Intent data = new Intent("lobster_updateChatType");
                     data.putExtra("chatType", 1);
                     data.putExtra("isUpdate", isUpdate);
                     activity.sendBroadcast(data);
-                }, 800);
+                });
+
                 if (!isUpdate) {
                     noReadBottleNum(false);
                 }
@@ -613,12 +612,13 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         chatList.setMainUserId(BaseActivity.userId);
         ChatListDb.getInstance().saveChatList(chatList);
         activity.sendBroadcast(new Intent("lobster_newsCount"));
-        mHandler.postDelayed(() -> {
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(800);
             Intent data = new Intent("lobster_updateChatType");
             data.putExtra("chatType", 2);
             data.putExtra("isUpdate", isUpdate);
             activity.sendBroadcast(data);
-        }, 800);
+        });
     }
 
     private void initRemind(int beLikeCount, int count) {
@@ -634,26 +634,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             mBinding.remindRelative.setVisibility(View.VISIBLE);
             startAnimator();
         }
-    }
-
-    private void appSound() {
-        // 播放声音
-        MediaPlayer mPlayer = MediaPlayer.create(activity, R.raw.msn);
-        try {
-            if (mPlayer != null) {
-                mPlayer.stop();
-                mPlayer.prepare();
-                mPlayer.start();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        mHandler.postDelayed(() -> {
-            if (mPlayer != null) {
-                mPlayer.stop();
-                mPlayer.release();//释放资源
-            }
-        }, 500);
     }
 
     @Override
@@ -739,16 +719,24 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
         vibrator.vibrate(500);
         pvh_remind.setValues(pvhSX, pvhSY);
         pvh_remind.start();
-        mHandler.postDelayed(() -> {
-            vibrator.cancel();
-            pvh_remind.setValues(pvhTY);
-            pvh_remind.start();
-        }, 500);
-        mHandler.postDelayed(() -> {
-            pvh_remind.setValues(pvhSX_L, pvhSY_L);
-            pvh_remind.start();
-        }, 6000);
-        mHandler.postDelayed(this::stopAnimator, 6500);
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(500);
+            activity.runOnUiThread(() -> {
+                vibrator.cancel();
+                pvh_remind.setValues(pvhTY);
+                pvh_remind.start();
+            });
+
+            SystemClock.sleep(6000);
+            activity.runOnUiThread(() -> {
+                pvh_remind.setValues(pvhSX_L, pvhSY_L);
+                pvh_remind.start();
+            });
+
+            SystemClock.sleep(6500);
+            activity.runOnUiThread(this::stopAnimator);
+
+        });
     }
 
     public void stopAnimator() {

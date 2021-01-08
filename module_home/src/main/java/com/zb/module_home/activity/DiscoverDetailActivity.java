@@ -38,7 +38,7 @@ public class DiscoverDetailActivity extends BaseActivity {
 
     @Override
     public void initUI() {
-        MineApp.activityMap.put("DiscoverDetailActivity", activity);
+        MineApp.getApp().getActivityMap().put("DiscoverDetailActivity", activity);
         viewModel = new DiscoverDetailViewModel();
 
         Uri uri = getIntent().getData();

@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
-import android.os.Handler;
+import android.os.SystemClock;
 import android.text.Html;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -134,8 +134,6 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
     private BaseReceiver bottleChatReceiver;
     private BaseReceiver flashChatReceiver;
 
-    private Handler mHandler = new Handler();
-
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
@@ -179,7 +177,6 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
     }
 
     public void onDestroy() {
-        mHandler = null;
         try {
             cameraReceiver.unregisterReceiver();
             if (chatReceiver != null)
@@ -243,13 +240,19 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
 
         Collections.reverse(historyMsgList);
         updateTime();
-        adapter = new BaseAdapter<>(activity, R.layout.item_chat, historyMsgList, this);
-        mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
         mBinding.refresh.setEnableLoadMore(false);
-        for (int i = 1; i < EmojiHandler.maxEmojiCount; i++) {
-            emojiList.add(EmojiHandler.sCustomizeEmojisMap.get(i));
-        }
-        emojiAdapter = new BaseAdapter<>(activity, R.layout.item_emoji, emojiList, this);
+        adapter = new BaseAdapter<>(activity, R.layout.item_chat, historyMsgList, this);
+
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(500);
+            for (int i = 1; i < EmojiHandler.maxEmojiCount; i++) {
+                emojiList.add(EmojiHandler.sCustomizeEmojisMap.get(i));
+            }
+            activity.runOnUiThread(() -> {
+                mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
+                emojiAdapter = new BaseAdapter<>(activity, R.layout.item_emoji, emojiList, BaseChatViewModel.this);
+            });
+        });
         if (msgChannelType == 1) {
             mBinding.bottomLayout.setVisibility(otherUserId < 10010 ? View.GONE : View.VISIBLE);
             otherInfo();
@@ -430,28 +433,27 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                 ImUtils.getInstance().setChat(true, activity);
 
                 if (msgChannelType == 1 || msgChannelType == 3) {
-                    mHandler.postDelayed(() -> {
+                    if (isLockImage) {
+                        setMemberUI();
+                    }
+                    MineApp.getApp().getFixedThreadPool().execute(() -> {
                         RequestOptions cropOptions = new RequestOptions();
                         MultiTransformation<Bitmap> multiTransformation = new MultiTransformation<>(new BlurTransformation());
                         cropOptions.transform(multiTransformation);
-                        Glide.with(activity).asBitmap().load(memberInfo.getSingleImage()).apply(cropOptions).into(new SimpleTarget<Bitmap>() {
+                        activity.runOnUiThread(() -> Glide.with(activity).asBitmap().load(memberInfo.getSingleImage()).apply(cropOptions).into(new SimpleTarget<Bitmap>() {
                             @Override
                             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                                 mBinding.ivBg.setImageBitmap(resource);
                             }
-                        });
-                    }, 300);
-                    if (isLockImage) {
-                        setMemberUI();
-                    }
-                    new Thread(() -> {
-                        if (msgChannelType == 1)
-                            historyMsgList(1);
-                        else
-                            flashHistoryMsgList(1);
-                    }).start();
+                        }));
+                    });
+
+                    if (msgChannelType == 1)
+                        historyMsgList(1);
+                    else
+                        flashHistoryMsgList(1);
                 } else if (msgChannelType == 2) {
-                    new Thread(() -> bottleHistoryMsgList(1)).start();
+                    bottleHistoryMsgList(1);
                 }
             }
         }, activity).setOtherUserId(otherUserId);
@@ -785,13 +787,16 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         } else {
             mBinding.setIsVoice(false);
             hintKeyBoard();
-            mHandler.postDelayed(() -> {
-                mBinding.edContent.setFocusable(true);
-                mBinding.edContent.setFocusableInTouchMode(true);
-                mBinding.edContent.requestFocus();
-                mBinding.edContent.findFocus();
-                mBinding.setIsEmoji(true);
-            }, 300);
+            MineApp.getApp().getFixedThreadPool().execute(() -> {
+                SystemClock.sleep(300);
+                activity.runOnUiThread(() -> {
+                    mBinding.edContent.setFocusable(true);
+                    mBinding.edContent.setFocusableInTouchMode(true);
+                    mBinding.edContent.requestFocus();
+                    mBinding.edContent.findFocus();
+                    mBinding.setIsEmoji(true);
+                });
+            });
         }
     }
 
@@ -936,11 +941,12 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                             new ChatListDb.CallBack() {
                                 @Override
                                 public void success() {
-                                    mHandler.postDelayed(() -> {
+                                    MineApp.getApp().getFixedThreadPool().execute(() -> {
+                                        SystemClock.sleep(500);
                                         Intent data = new Intent("lobster_updateChat");
                                         data.putExtra("userId", otherUserId);
                                         activity.sendBroadcast(data);
-                                    }, 500);
+                                    });
                                 }
 
                                 @Override
@@ -999,12 +1005,12 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                             new BottleCacheDb.CallBack() {
                                 @Override
                                 public void success() {
-                                    mHandler.postDelayed(() -> {
-                                        // 更新会话列表
+                                    MineApp.getApp().getFixedThreadPool().execute(() -> {
+                                        SystemClock.sleep(500);
                                         Intent data = new Intent("lobster_singleBottleCache");
                                         data.putExtra("driftBottleId", body.getDriftBottleId());
                                         activity.sendBroadcast(data);
-                                    }, 500);
+                                    });
                                 }
 
                                 @Override
@@ -1033,11 +1039,12 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                     ChatListDb.getInstance().updateMemberForFlash(otherUserId, memberInfo == null ? "" : memberInfo.getImage(), memberInfo == null ? "" : memberInfo.getNick(), flashTalkId, myChatCount, otherChatCount, new ChatListDb.CallBack() {
                         @Override
                         public void success() {
-                            mHandler.postDelayed(() -> {
+                            MineApp.getApp().getFixedThreadPool().execute(() -> {
+                                SystemClock.sleep(500);
                                 Intent data = new Intent("lobster_updateChat");
                                 data.putExtra("userId", otherUserId);
                                 activity.sendBroadcast(data);
-                            }, 500);
+                            });
                         }
 
                         @Override
@@ -1107,7 +1114,8 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         ChatListDb.getInstance().saveChatList(chatList);
 
         // 更新会话列表
-        mHandler.postDelayed(() -> {
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(300);
             Intent data = new Intent("lobster_updateChat");
             data.putExtra("userId", otherUserId);
             data.putExtra("flashTalkId", flashTalkId);
@@ -1115,7 +1123,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
             activity.sendBroadcast(data);
 
             activity.sendBroadcast(new Intent("lobster_unReadCount"));
-        }, 500);
+        });
     }
 
     private void setBottleChatList(String creationDate, String stanza, int msgType) {

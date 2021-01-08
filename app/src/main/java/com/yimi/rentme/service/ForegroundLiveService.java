@@ -5,8 +5,8 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.yimi.rentme.R;
@@ -41,7 +41,7 @@ public class ForegroundLiveService extends Service {
             builder.setContentText(getString(R.string.app_name_running));
             builder.setWhen(System.currentTimeMillis()); //发送时间
             startForeground(NOTIFICATION_ID, builder.build());
-//            startService(new Intent(this, InnerService.class));
+            startService(new Intent(this, InnerService.class));
         }
     }
 
@@ -64,12 +64,13 @@ public class ForegroundLiveService extends Service {
             builder.setContentText(getString(R.string.app_name_running));
             builder.setWhen(System.currentTimeMillis()); //发送时间
             startForeground(NOTIFICATION_ID, builder.build());
-            new Handler().postDelayed(() -> {
+            MineApp.getApp().getFixedThreadPool().execute(() -> {
+                SystemClock.sleep(100);
                 stopForeground(true);
                 NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 manager.cancel(NOTIFICATION_ID);
                 stopSelf();
-            }, 100);
+            });
         }
     }
 }

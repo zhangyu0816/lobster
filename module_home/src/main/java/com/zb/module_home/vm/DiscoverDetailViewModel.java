@@ -3,8 +3,6 @@ package com.zb.module_home.vm;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -251,8 +249,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             public void onNext(DiscoverInfo o) {
                 discoverInfo = o;
                 mBinding.setViewModel(DiscoverDetailViewModel.this);
-
-                new Thread(() -> {
+                Runnable ra = () -> {
                     if (!discoverInfo.getImages().isEmpty()) {
                         String[] images = discoverInfo.getImages().split(",");
                         for (String image : images) {
@@ -267,8 +264,18 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                         ads.setSmallImage(discoverInfo.getImage());
                         adsList.add(ads);
                     }
-                    handler.sendEmptyMessage(0);
-                }).start();
+                    activity.runOnUiThread(() -> {
+                        int height = (int) (bannerHeight * 1.2f);
+                        AdapterBinding.viewSize(mBinding.banner, bannerWidth, height);
+                        XUtils.showBanner(mBinding.banner, adsList,1,
+                                (context, ads, image, position) ->
+                                        AdapterBinding.loadImage(image, ads.getSmallImage(), 0, R.drawable.empty_bg, bannerWidth, height, false,
+                                                false, 0, false, 0, false),
+                                (position, imageList) ->
+                                        MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, false, null),null);
+                    });
+                };
+                MineApp.getApp().getFixedThreadPool().execute(ra);
                 otherInfo();
                 seeGiftRewards();
                 seeReviews();
@@ -276,21 +283,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);
     }
-
-    private Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message message) {
-            int height = (int) (bannerHeight * 1.2f);
-            AdapterBinding.viewSize(mBinding.banner, bannerWidth, height);
-            XUtils.showBanner(mBinding.banner, adsList,1,
-                    (context, ads, image, position) ->
-                            AdapterBinding.loadImage(image, ads.getSmallImage(), 0, R.drawable.empty_bg, bannerWidth, height, false,
-                                    false, 0, false, 0, false),
-                    (position, imageList) ->
-                            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, false, null),null);
-            return false;
-        }
-    });
 
     public void seeGiftRewards() {
         seeGiftRewardsApi api = new seeGiftRewardsApi(new HttpOnNextListener<List<Reward>>() {

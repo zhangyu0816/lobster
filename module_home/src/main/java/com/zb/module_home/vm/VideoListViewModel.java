@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Build;
-import android.os.Handler;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
@@ -108,10 +108,6 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
 
     public void onDestroy() {
         super.onDestroy();
-        if (mHandler != null) {
-            mHandler.removeCallbacks(ra);
-        }
-        mHandler = null;
         try {
             attentionReceiver.unregisterReceiver();
         } catch (Exception e) {
@@ -161,7 +157,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
 
                 canUpdate = false;
                 playVideo(view);
-                if (!isOver && position == MineApp.discoverInfoList.size() - 4 && isUp) {
+                if (!isOver && position == MineApp.discoverInfoList.size() - 1 && isUp) {
                     pageNo++;
                     dynPiazzaList();
                 }
@@ -258,6 +254,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             ivUnLike.setVisibility(View.GONE);
             ivLike.setVisibility(View.VISIBLE);
             likeOrNot(ivLike);
+            GoodDb.getInstance().saveGood(new CollectID(discoverInfo.getFriendDynId()));
             dynDoLike(discoverInfo);
         }
     }
@@ -410,7 +407,6 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         dynDoLikeApi api = new dynDoLikeApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                GoodDb.getInstance().saveGood(new CollectID(discoverInfo.getFriendDynId()));
                 int goodNum = discoverInfo.getGoodNum() + 1;
                 discoverInfo.setGoodNum(goodNum);
                 tvGood.setText(discoverInfo.getGoodNumStr());
@@ -428,7 +424,6 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == 0) {
                     if (TextUtils.equals(e.getMessage(), "已经赞过了")) {
-                        GoodDb.getInstance().saveGood(new CollectID(discoverInfo.getFriendDynId()));
                         Intent data = new Intent("lobster_doGood");
                         data.putExtra("goodNum", discoverInfo.getGoodNum());
                         data.putExtra("friendDynId", discoverInfo.getFriendDynId());
@@ -487,12 +482,6 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     private List<Review> reviewList = new ArrayList<>();
     private VideoView lastVideoView;
     private RelativeLayout layout;
-    private Handler mHandler;
-    private Runnable ra = () -> {
-        ivPlay.setVisibility(View.GONE);
-        videoView.setVideoPath(discoverInfo.getVideoPath());
-        videoView.start();
-    };
 
     private void playVideo(View view) {
         if (lastVideoView != null) {
@@ -555,6 +544,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
 
         initGood(viewClick, ivGood, () -> videoPlay(discoverInfo), () -> {
             if (!GoodDb.getInstance().hasGood(discoverInfo.getFriendDynId())) {
+                GoodDb.getInstance().saveGood(new CollectID(discoverInfo.getFriendDynId()));
                 ivUnLike.setVisibility(View.GONE);
                 ivLike.setVisibility(View.VISIBLE);
                 dynDoLike(discoverInfo);
@@ -589,7 +579,8 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                     } else {
                         reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
                     }
-                    seeReviews(pageNo + 1);
+//                    seeReviews(pageNo + 1);
+                    seeLikers(1);
                 }
             }
 
@@ -621,7 +612,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                     } else {
                         reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
                     }
-                    seeLikers(pageNo + 1);
+//                    seeLikers(pageNo + 1);
                 }
             }
         }, activity).setFriendDynId(discoverInfo.getFriendDynId()).setPageNo(pageNo);
@@ -675,11 +666,14 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             }
             return false; //如果方法处理了信息，则为true；如果没有，则为false。返回false或根本没有OnInfoListener，将导致丢弃该信息。
         });
-        if (mHandler == null) {
-            mHandler = new Handler();
-        }
-        mHandler.postDelayed(ra, 200);
-
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(200);
+            activity.runOnUiThread(() -> {
+                ivPlay.setVisibility(View.GONE);
+                videoView.setVideoPath(discoverInfo.getVideoPath());
+                videoView.start();
+            });
+        });
     }
 
     /**

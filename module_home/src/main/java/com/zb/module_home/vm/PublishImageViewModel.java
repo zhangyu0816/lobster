@@ -230,7 +230,8 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     }
 
     private void compress(final String filePath) {
-        new Thread(() -> {
+
+        Runnable ra = () -> {
             try {  // 选择本地视频压缩
                 final LocalMediaConfig config = new LocalMediaConfig.Buidler()
                         .setVideoPath(filePath)
@@ -251,8 +252,8 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
             } catch (Exception e) {
                 handler.sendEmptyMessage(0);
             }
-
-        }).start();
+        };
+        MineApp.getApp().getFixedThreadPool().execute(ra);
     }
 
     private void saveBitmapFile(Bitmap bitmap) {

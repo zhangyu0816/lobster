@@ -36,7 +36,7 @@ public class MemberDetailActivity extends BaseActivity {
     @Override
     public void initUI() {
         fitComprehensiveScreen();
-        MineApp.activityMap.put("MemberDetailActivity", activity);
+        MineApp.getApp().getActivityMap().put("MemberDetailActivity", activity);
         viewModel = new MemberDetailViewModel();
         viewModel.otherUserId = userId;
         viewModel.showLike = showLike;

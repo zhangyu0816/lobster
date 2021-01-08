@@ -3,7 +3,7 @@ package com.zb.lib_base.windows;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Handler;
+import android.os.SystemClock;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -31,6 +31,7 @@ import com.zb.lib_base.utils.glide.BlurTransformation;
 import com.zb.lib_base.utils.glide.GlideRoundTransform;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -61,9 +62,7 @@ public class FlashChatPW extends BasePopupWindow {
         if (!mFlashInfo.getServiceTags().isEmpty()) {
             String tags = mFlashInfo.getServiceTags().substring(1, mFlashInfo.getServiceTags().length() - 1);
             String[] temp = tags.split("#");
-            for (int i = 0; i < Math.min(3, temp.length); i++) {
-                tagList.add(temp[i]);
-            }
+            tagList.addAll(Arrays.asList(temp).subList(0, Math.min(3, temp.length)));
         } else {
             otherRentInfo();
         }
@@ -72,25 +71,19 @@ public class FlashChatPW extends BasePopupWindow {
         mBinding.setVariable(BR.pw, this);
         mBinding.setVariable(BR.flashInfo, mFlashInfo);
         mBinding.setVariable(BR.adapter, mAdapter);
-
-        mHandler.postDelayed(ra, 300);
-    }
-
-    private Handler mHandler = new Handler();
-    private Runnable ra = new Runnable() {
-        @Override
-        public void run() {
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(300);
             cropOptions = new RequestOptions();
             multiTransformation = new MultiTransformation<>(new CenterCrop(), new BlurTransformation(), new GlideRoundTransform(12, 0));
             cropOptions.transform(multiTransformation);
-            Glide.with(activity).asBitmap().load(mFlashInfo.getSingleImage()).apply(cropOptions).into(new SimpleTarget<Bitmap>() {
+            activity.runOnUiThread(() -> Glide.with(activity).asBitmap().load(mFlashInfo.getSingleImage()).apply(cropOptions).into(new SimpleTarget<Bitmap>() {
                 @Override
                 public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                     binding.ivBg.setImageBitmap(resource);
                 }
-            });
-        }
-    };
+            }));
+        });
+    }
 
     private void otherRentInfo() {
         otherRentInfoApi api = new otherRentInfoApi(new HttpOnNextListener<RentInfo>() {
@@ -98,9 +91,7 @@ public class FlashChatPW extends BasePopupWindow {
             public void onNext(RentInfo o) {
                 String tags = o.getServiceTags().substring(1, o.getServiceTags().length() - 1);
                 String[] temp = tags.split("#");
-                for (int i = 0; i < Math.min(3, temp.length); i++) {
-                    tagList.add(temp[i]);
-                }
+                tagList.addAll(Arrays.asList(temp).subList(0, Math.min(3, temp.length)));
                 mAdapter.notifyDataSetChanged();
             }
         }, activity).setOtherUserId(mFlashInfo.getUserId());
@@ -110,7 +101,6 @@ public class FlashChatPW extends BasePopupWindow {
     @Override
     public void cancel(View view) {
         super.cancel(view);
-        mHandler.removeCallbacks(ra);
         dismiss();
     }
 
@@ -120,14 +110,12 @@ public class FlashChatPW extends BasePopupWindow {
             public void onNext(FlashUser o) {
                 activity.sendBroadcast(new Intent("lobster_updateFlash"));
                 ActivityUtils.getFlashChatActivity(o.getOtherUserId(), o.getFlashTalkId(), false);
-                mHandler.removeCallbacks(ra);
                 dismiss();
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
-                    mHandler.removeCallbacks(ra);
                     dismiss();
                     if (MineApp.mineInfo.getMemberType() == 1)
                         new VipAdPW(mBinding.getRoot(), 7, "");

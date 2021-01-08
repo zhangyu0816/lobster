@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -52,7 +53,7 @@ public class BaseViewModel implements BaseVMInterface {
 
     @Override
     public void back(View view) {
-        MineApp.removeActivity(activity);
+        MineApp.getApp().removeActivity(activity);
     }
 
     @Override
@@ -195,7 +196,6 @@ public class BaseViewModel implements BaseVMInterface {
 
     private PropertyValuesHolder pvhSY, pvhSX, pvhA, pvhR;
     private ObjectAnimator pvh;
-    private Handler mHandler = new Handler();
 
     public void playAnimator(View view) {
         pvhSY = PropertyValuesHolder.ofFloat("scaleY", 0.5f, 1);
@@ -219,11 +219,14 @@ public class BaseViewModel implements BaseVMInterface {
         pvhSX = PropertyValuesHolder.ofFloat("scaleX", 0, 1, 0.8f, 1);
         pvh = ObjectAnimator.ofPropertyValuesHolder(view, pvhSY, pvhSX).setDuration(500);
         pvh.start();
-        mHandler.postDelayed(() -> {
-            if (pvh != null)
-                pvh.cancel();
-            pvh = null;
-        }, 500);
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(500);
+            activity.runOnUiThread(() -> {
+                if (pvh != null)
+                    pvh.cancel();
+                pvh = null;
+            });
+        });
     }
 
     public void isAttention(RelativeLayout layout, ImageView iv) {
@@ -231,21 +234,23 @@ public class BaseViewModel implements BaseVMInterface {
         pvhA = PropertyValuesHolder.ofFloat("alpha", 1, 0);
         pvh = ObjectAnimator.ofPropertyValuesHolder(iv, pvhR, pvhA).setDuration(200);
         pvh.start();
-
-        mHandler.postDelayed(() -> {
-            iv.setBackgroundResource(R.drawable.attention_get_icon);
-            pvhR = PropertyValuesHolder.ofFloat("rotation", 90, 0);
-            pvh = ObjectAnimator.ofPropertyValuesHolder(iv, pvhR).setDuration(50);
-            pvh.start();
-        }, 200);
-
-        mHandler.postDelayed(() -> {
-            pvhA = PropertyValuesHolder.ofFloat("alpha", 0, 1);
-            pvh = ObjectAnimator.ofPropertyValuesHolder(iv, pvhA).setDuration(100);
-            pvh.start();
-        }, 250);
-
-        mHandler.postDelayed(() -> layout.setVisibility(View.INVISIBLE), 1000);
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(200);
+            activity.runOnUiThread(() -> {
+                iv.setBackgroundResource(R.drawable.attention_get_icon);
+                pvhR = PropertyValuesHolder.ofFloat("rotation", 90, 0);
+                pvh = ObjectAnimator.ofPropertyValuesHolder(iv, pvhR).setDuration(50);
+                pvh.start();
+            });
+            SystemClock.sleep(50);
+            activity.runOnUiThread(() -> {
+                pvhA = PropertyValuesHolder.ofFloat("alpha", 0, 1);
+                pvh = ObjectAnimator.ofPropertyValuesHolder(iv, pvhA).setDuration(100);
+                pvh.start();
+            });
+            SystemClock.sleep(750);
+            activity.runOnUiThread(() -> layout.setVisibility(View.INVISIBLE));
+        });
     }
 
     public void openBottle() {
@@ -260,17 +265,20 @@ public class BaseViewModel implements BaseVMInterface {
         } catch (IllegalStateException | IOException e) {
             e.printStackTrace();
         }
-        mHandler.postDelayed(() -> {
-            if (mPlayer != null) {
-                mPlayer.stop();
-                mPlayer.release();//释放资源
-            }
-        }, 500);
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(500);
+            activity.runOnUiThread(() -> {
+                if (mPlayer != null) {
+                    mPlayer.stop();
+                    mPlayer.release();//释放资源
+                }
+            });
+        });
     }
 
     private long exitTime = 0;
     private boolean isScroll = false;
-
+    private Handler mHandler = new Handler();
     public void setScroll(boolean scroll) {
         isScroll = scroll;
     }

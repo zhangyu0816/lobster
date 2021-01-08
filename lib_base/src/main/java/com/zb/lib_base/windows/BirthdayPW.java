@@ -191,10 +191,10 @@ public class BirthdayPW extends BasePopupWindow {
             TextView textView = view.findViewById(R.id.tempValue);
             if (selectIndex == index) {
                 textView.setTextSize(MAX_TEXT_SIZE);
-                textView.setTextColor(MineApp.getInstance().getResources().getColor(R.color.black));
+                textView.setTextColor(MineApp.getApp().getResources().getColor(R.color.black));
             } else {
                 textView.setTextSize(MIN_TEXT_SIZE);
-                textView.setTextColor(MineApp.getInstance().getResources().getColor(R.color.black_9));
+                textView.setTextColor(MineApp.getApp().getResources().getColor(R.color.black_9));
             }
             return view;
         }

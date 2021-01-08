@@ -5,12 +5,12 @@ import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.yimi.rentme.BR;
-import com.yimi.rentme.BuildConfig;
 import com.yimi.rentme.R;
 import com.yimi.rentme.vm.LoginVideoViewModel;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.imcore.ImUtils;
+import com.zb.lib_base.utils.RomUtils;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.StatusBarUtil;
@@ -22,7 +22,7 @@ public class LoginVideoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
-        if (BuildConfig.isHW) {
+        if (RomUtils.isHuawei()) {
             StatusBarUtil.setStatusBarColor(activity, R.color.black);
         } else {
             StatusBarUtil.statusBarLightMode(this);
@@ -36,7 +36,7 @@ public class LoginVideoActivity extends BaseActivity {
 
     @Override
     public void initUI() {
-        if (!BuildConfig.isHW) {
+        if (!RomUtils.isHuawei()) {
             fitComprehensiveScreen();
         }
         LoginVideoViewModel viewModel = new LoginVideoViewModel();
@@ -56,7 +56,7 @@ public class LoginVideoActivity extends BaseActivity {
                 exitTime = System.currentTimeMillis();
             } else {
                 ImUtils.getInstance().loginOutIM();
-                MineApp.exit();
+                MineApp.getApp().exit();
                 System.exit(0);
             }
             return true;

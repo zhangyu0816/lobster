@@ -299,7 +299,7 @@ public interface HttpService {
     // 查看评论
     @GET("api/Interactive_seeReviews")
     Observable<BaseResultEntity<List<Review>>> seeReviews(@Query("friendDynId") long friendDynId, @Query("timeSortType") int timeSortType,
-                                                          @Query("pageNo") int pageNo);
+                                                          @Query("pageNo") int pageNo, @Query("pageSize") int pageSize);
 
     // 删除动态
     @GET("api/Interactive_deleteDyn")
@@ -601,5 +601,5 @@ public interface HttpService {
     Observable<BaseResultEntity> clearHistoryMsg(@Query("messageId") long messageId);
 
     @GET("api/Interactive_seeLikers")
-    Observable<BaseResultEntity<List<Review>>> seeLikers(@Query("friendDynId") long friendDynId, @Query("pageNo") int pageNo);
+    Observable<BaseResultEntity<List<Review>>> seeLikers(@Query("friendDynId") long friendDynId, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize);
 }

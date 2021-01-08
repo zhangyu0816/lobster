@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Environment;
-import android.os.Handler;
+import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -40,8 +40,6 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
     private boolean isTakePhoto = false; // 拍照标记
     private boolean isFlashing = false; // 是否开启闪光灯
     private OverCameraView mOverCameraView; // 聚焦视图
-    private Handler mHandler = new Handler();
-    private Runnable mRunnable;
     private byte[] imageData; // 图片流暂存
     private int cameraPosition = 1;// 前后置摄像头
     private int _position = Camera.CameraInfo.CAMERA_FACING_BACK;
@@ -237,13 +235,14 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
                 if (mCamera != null && !isTakePhoto) {
                     mOverCameraView.setTouchFoucusRect(mCamera, autoFocusCallback, x, y);
                 }
-                mRunnable = () -> {
-                    isFoucing = false;
-                    mOverCameraView.setFoucuing(false);
-                    mOverCameraView.disDrawTouchFocusRect();
-                };
-                //设置聚焦超时
-                mHandler.postDelayed(mRunnable, 3000);
+                MineApp.getApp().getFixedThreadPool().execute(() -> {
+                    SystemClock.sleep(1000);
+                    activity.runOnUiThread(() -> {
+                        isFoucing = false;
+                        mOverCameraView.setFoucuing(false);
+                        mOverCameraView.disDrawTouchFocusRect();
+                    });
+                });
             }
         }
         return false;
@@ -256,8 +255,6 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
             isFoucing = false;
             mOverCameraView.setFoucuing(false);
             mOverCameraView.disDrawTouchFocusRect();
-            //停止聚焦超时回调
-            mHandler.removeCallbacks(mRunnable);
         }
     };
 

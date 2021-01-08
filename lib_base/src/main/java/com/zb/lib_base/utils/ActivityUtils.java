@@ -37,7 +37,7 @@ public class ActivityUtils {
 
     // 动态详情
     public static void getHomeDiscoverDetail(long friendDynId) {//253510
-        MineApp.removeActivity(MineApp.activityMap.get("DiscoverDetailActivity"));
+        MineApp.getApp().removeActivity(MineApp.getApp().getActivityMap().get("DiscoverDetailActivity"));
         ARouter.getInstance().build(RouteUtils.Home_Discover_Detail).withLong("friendDynId", friendDynId).navigation();
     }
 
@@ -53,7 +53,7 @@ public class ActivityUtils {
 
     // 礼物列表
     public static void getHomeDiscoverVideo(long friendDynId) {
-        MineApp.removeActivity(MineApp.activityMap.get("DiscoverVideoActivity"));
+        MineApp.getApp().removeActivity(MineApp.getApp().getActivityMap().get("DiscoverVideoActivity"));
         ARouter.getInstance().build(RouteUtils.Home_Discover_Video).withLong("friendDynId", friendDynId).navigation();
     }
 
@@ -70,13 +70,13 @@ public class ActivityUtils {
     /*********************** 卡片 **************************/
     // 用户详情
     public static void getCardMemberDetail(long userId, boolean showLike) {//2321942
-        MineApp.removeActivity(MineApp.activityMap.get("MemberDetailActivity"));
+        MineApp.getApp().removeActivity(MineApp.getApp().getActivityMap().get("MemberDetailActivity"));
         ARouter.getInstance().build(RouteUtils.Card_Member_Detail).withLong("userId", userId).withBoolean("showLike", showLike).navigation();
     }
 
     // 用户详情
     public static void getCardDiscoverList(long userId, boolean isAttention, MemberInfo memberInfo) {
-        MineApp.removeActivity(MineApp.activityMap.get("DiscoverListActivity"));
+        MineApp.getApp().removeActivity(MineApp.getApp().getActivityMap().get("DiscoverListActivity"));
         ARouter.getInstance().build(RouteUtils.Card_Discover_List).withLong("userId", userId).withBoolean("isAttention", isAttention).withParcelable("memberInfo", memberInfo).navigation();
     }
 

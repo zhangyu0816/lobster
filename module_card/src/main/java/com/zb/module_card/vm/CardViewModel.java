@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -83,13 +84,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     private CardItemTouchHelperCallback<PairInfo> cardCallback;
     private View currentView;
     private AMapLocation aMapLocation;
-    private Handler handler = new Handler(msg -> {
-        if (msg.what == 1) {
-            getPermissions(1);
-            adapter.notifyDataSetChanged();
-        }
-        return false;
-    });
     private BaseReceiver cardReceiver;
     private BaseReceiver locationReceiver;
     private BaseReceiver openVipReceiver;
@@ -102,7 +96,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     private int superLikeStatus = 0;
     private int likeCount = 50;
-
     private Handler mHandler = new Handler();
     private Runnable ra = new Runnable() {
         @Override
@@ -223,15 +216,19 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         setAdapter();
 
         int height = StatusBarUtil.getStatusBarHeight(activity);
-        mHandler.postDelayed(() -> {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBinding.tvCity.getLayoutParams();
-            params.setMargins(DisplayUtils.dip2px(15f), height + DisplayUtils.dip2px(15f), DisplayUtils.dip2px(15f), 0);
-            mBinding.tvCity.setLayoutParams(params);
 
-            RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) mBinding.expisureLayout.getLayoutParams();
-            params1.setMargins(DisplayUtils.dip2px(15f), height + DisplayUtils.dip2px(15f), DisplayUtils.dip2px(15f), 0);
-            mBinding.expisureLayout.setLayoutParams(params1);
-        }, 500);
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(500);
+            activity.runOnUiThread(() -> {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBinding.tvCity.getLayoutParams();
+                params.setMargins(DisplayUtils.dip2px(15f), height + DisplayUtils.dip2px(15f), DisplayUtils.dip2px(15f), 0);
+                mBinding.tvCity.setLayoutParams(params);
+
+                RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) mBinding.expisureLayout.getLayoutParams();
+                params1.setMargins(DisplayUtils.dip2px(15f), height + DisplayUtils.dip2px(15f), DisplayUtils.dip2px(15f), 0);
+                mBinding.expisureLayout.setLayoutParams(params1);
+            });
+        });
     }
 
     private void playExposure() {
@@ -255,6 +252,9 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     }
 
     public void onDestroy() {
+        if (mHandler != null) {
+            mHandler.removeCallbacks(ra);
+        }
         mHandler = null;
         try {
             cardReceiver.unregisterReceiver();
@@ -398,13 +398,16 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 }
                 adapter.notifyItemRangeChanged(start, pairInfoList.size());
 
-                mHandler.postDelayed(() -> {
-                    mBinding.setIsPlay(false);
-                    mBinding.cardRelative.setAlpha(0f);
-                    if (MineApp.mineInfo.getMemberType() == 1) {
-                        updateCount(likeCount);
-                    }
-                }, 500);
+                MineApp.getApp().getFixedThreadPool().execute(() -> {
+                    SystemClock.sleep(500);
+                    activity.runOnUiThread(() -> {
+                        mBinding.setIsPlay(false);
+                        mBinding.cardRelative.setAlpha(0f);
+                        if (MineApp.mineInfo.getMemberType() == 1) {
+                            updateCount(likeCount);
+                        }
+                    });
+                });
             }
 
             @Override
@@ -554,23 +557,20 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 0, ObjectUtils.getDefaultRes(), ObjectUtils.getViewSizeByWidth(0.94f),
                 -1, false, true, 10,
                 false, 0, false);
-        mHandler.removeCallbacks(uiRa);
         animatorUI = ObjectAnimator.ofFloat(view, "rotationY", 0, 1);
         animatorUI.setInterpolator(new CycleInterpolator(1));
         animatorUI.setRepeatCount(1);
         animatorUI.setDuration(100);
         animatorUI.start();
-        mHandler.postDelayed(uiRa, 500);
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(200);
+            activity.runOnUiThread(() -> {
+                if (animatorUI != null)
+                    animatorUI.cancel();
+                animatorUI = null;
+            });
+        });
     }
-
-    private Runnable uiRa = new Runnable() {
-        @Override
-        public void run() {
-            if (animatorUI != null)
-                animatorUI.cancel();
-            animatorUI = null;
-        }
-    };
 
     private ImageView ivLike, ivDislike;
 
@@ -655,19 +655,23 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         ObjectAnimator pvh_card = ObjectAnimator.ofPropertyValuesHolder(mBinding.cardRelative, pvhR, pvhTX, pvhA).setDuration(500);
         pvh_card.start();
 
-        mHandler.postDelayed(() -> {
-            canReturn = true;
-            pairInfoList.add(0, pairInfo);
-            adapter.notifyDataSetChanged();
-        }, 500);
-        mHandler.postDelayed(() -> mBinding.cardRelative.setAlpha(0f), 600);
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(500);
+            activity.runOnUiThread(() -> {
+                canReturn = true;
+                pairInfoList.add(0, pairInfo);
+                adapter.notifyDataSetChanged();
+            });
+            SystemClock.sleep(100);
+            mBinding.cardRelative.setAlpha(0f);
+        });
     }
 
     // 省市信息
     private void initArea() {
         if (!AreaDb.getInstance().hasProvince()) {
             String data = SimulateNetAPI.getOriginalFundData(activity, "cityData.json");
-            new Thread(() -> {
+            Runnable ra = () -> {
                 AreaDb areaDb = new AreaDb(Realm.getDefaultInstance());
                 try {
                     JSONArray array = new JSONArray(data);
@@ -707,10 +711,11 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                handler.sendEmptyMessage(1);
-            }).start();
+                activity.runOnUiThread(() -> getPermissions(1));
+            };
+            MineApp.getApp().getFixedThreadPool().execute(ra);
         } else {
-            handler.sendEmptyMessage(1);
+            getPermissions(1);
         }
     }
 

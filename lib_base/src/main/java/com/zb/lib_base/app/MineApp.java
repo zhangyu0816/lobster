@@ -1,6 +1,5 @@
 package com.zb.lib_base.app;
 
-import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
@@ -42,6 +41,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
@@ -52,7 +53,7 @@ public class MineApp extends MultiDexApplication {
     /**
      * 上下文
      */
-    private static MineApp instance;
+    public static MineApp instance;
     public static RegisterInfo registerInfo = new RegisterInfo();
     public static int W;
     public static int H;
@@ -98,6 +99,12 @@ public class MineApp extends MultiDexApplication {
     public static int noDataCount = 0;
     public static List<DiscoverInfo> discoverInfoList = new ArrayList<>();
 
+    public ExecutorService fixedThreadPool;
+
+    public ExecutorService getFixedThreadPool() {
+        return fixedThreadPool == null ? fixedThreadPool = Executors.newFixedThreadPool(3) : fixedThreadPool;
+    }
+
     static {
         //设置全局的Header构建器
         SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {
@@ -138,6 +145,8 @@ public class MineApp extends MultiDexApplication {
         }
         LogUtil.init();
 
+        fixedThreadPool = Executors.newFixedThreadPool(3);
+
         // 必须首先执行这部分代码, 如果在":TCMSSevice"进程中，无需进行云旺（OpenIM）和app业务的初始化，以节省内存;
         TCMSService.setEnableForeground(false);
         SysUtil.setApplication(this);
@@ -147,9 +156,10 @@ public class MineApp extends MultiDexApplication {
         if (SysUtil.isMainProcess()) {
             YWAPI.init(this, LoginSampleHelper.APP_KEY);
         }
+
     }
 
-    public static Context getInstance() {
+    public static MineApp getApp() {
         return instance;
     }
 
@@ -176,15 +186,23 @@ public class MineApp extends MultiDexApplication {
         Realm.setDefaultConfiguration(config);
     }
 
-    public static LinkedList<RxAppCompatActivity> mActivityList = new LinkedList<>();
-    public static Map<String, RxAppCompatActivity> activityMap = new HashMap<>();
+    public LinkedList<RxAppCompatActivity> mActivityList = new LinkedList<>();
+    public Map<String, RxAppCompatActivity> activityMap = new HashMap<>();
+
+    public LinkedList<RxAppCompatActivity> getActivityList() {
+        return mActivityList;
+    }
+
+    public Map<String, RxAppCompatActivity> getActivityMap() {
+        return activityMap;
+    }
 
     /**
      * Activity开启时添加Activity到集合
      *
      * @param activity
      */
-    public static void addActivity(RxAppCompatActivity activity) {
+    public void addActivity(RxAppCompatActivity activity) {
         mActivityList.addFirst(activity);
     }
 
@@ -193,7 +211,7 @@ public class MineApp extends MultiDexApplication {
      *
      * @param oneself 被移除的activity
      */
-    public static void removeActivity(RxAppCompatActivity oneself) {
+    public void removeActivity(RxAppCompatActivity oneself) {
         try {
             Iterator<RxAppCompatActivity> iterator = mActivityList.iterator();
             while (iterator.hasNext()) {
@@ -210,12 +228,18 @@ public class MineApp extends MultiDexApplication {
     /**
      * 退出应用时调用
      */
-    public static void exit() {
+    public void exit() {
         for (RxAppCompatActivity activity : mActivityList) {
             if (activity != null) {
                 activity.finish();
             }
         }
         mActivityList.clear();
+        if (fixedThreadPool != null) {
+            fixedThreadPool.shutdown();
+        }
+        fixedThreadPool = null;
     }
+
+
 }

@@ -8,7 +8,7 @@ import android.hardware.Camera;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Environment;
-import android.os.Handler;
+import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -43,8 +43,6 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
     private Camera mCamera;
     private CameraPreview preview;
     private OverCameraView mOverCameraView; // 聚焦视图
-    private Handler mHandler;
-    private Runnable mRunnable;
     private byte[] imageData; // 图片流暂存
     private boolean isFoucing = false;
     private boolean isTakePhoto = false;
@@ -153,15 +151,6 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mHandler != null) {
-            mHandler.removeCallbacks(mRunnable);
-        }
-        mHandler = null;
-    }
-
-    @Override
     public void toAuthentication(View view) {
         if (timer != null)
             timer.start();
@@ -242,15 +231,15 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
                 if (mCamera != null && !isTakePhoto) {
                     mOverCameraView.setTouchFoucusRect(mCamera, autoFocusCallback, x, y);
                 }
-                mRunnable = () -> {
-                    isFoucing = false;
-                    mOverCameraView.setFoucuing(false);
-                    mOverCameraView.disDrawTouchFocusRect();
-                };
-                //设置聚焦超时
-                if (mHandler == null)
-                    mHandler = new Handler();
-                mHandler.postDelayed(mRunnable, 3000);
+
+                MineApp.getApp().getFixedThreadPool().execute(() -> {
+                    SystemClock.sleep(1000);
+                    activity.runOnUiThread(() -> {
+                        isFoucing = false;
+                        mOverCameraView.setFoucuing(false);
+                        mOverCameraView.disDrawTouchFocusRect();
+                    });
+                });
             }
         }
         return false;
@@ -263,11 +252,6 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
             isFoucing = false;
             mOverCameraView.setFoucuing(false);
             mOverCameraView.disDrawTouchFocusRect();
-            //停止聚焦超时回调
-            if (mHandler != null) {
-                mHandler.removeCallbacks(mRunnable);
-            }
-            mHandler = null;
         }
     };
 }

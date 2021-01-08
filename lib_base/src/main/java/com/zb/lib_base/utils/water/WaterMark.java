@@ -42,7 +42,7 @@ public class WaterMark {
             case 1:
                 DataCleanManager.deleteFile(new File(downloadPath));
                 // 最后通知图库更新
-                MineApp.getInstance().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                MineApp.getApp().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                         Uri.parse("file://" + outPutUrl)));
                 SCToastUtil.showToast(activity, "下载成功", true);
                 CustomProgressDialog.stopLoading();

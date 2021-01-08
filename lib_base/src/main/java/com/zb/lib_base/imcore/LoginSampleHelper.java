@@ -10,7 +10,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Build;
-import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -154,7 +154,7 @@ public class LoginSampleHelper {
                         intent.putExtra("unreadCount", conversation.getUnreadCount());
                         intent.putExtra("customMessageBody", body);
                         intent.putExtra("msgId", ywMessage.getMsgId() + "");
-                        MineApp.getInstance().sendBroadcast(intent);
+                        MineApp.getApp().sendBroadcast(intent);
                     }
                 }
             } catch (JSONException e) {
@@ -342,7 +342,6 @@ public class LoginSampleHelper {
     }
 
     private MediaPlayer mPlayer;
-    private Handler mHandler;
 
     private void appSound() {
         // 播放声音
@@ -357,14 +356,14 @@ public class LoginSampleHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (mHandler == null) {
-            mHandler = new Handler();
-        }
-        mHandler.postDelayed(() -> {
-            if (mPlayer != null) {
-                mPlayer.stop();
-                mPlayer.release();//释放资源
-            }
-        }, 1000);
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(1000);
+            activity.runOnUiThread(() -> {
+                if (mPlayer != null) {
+                    mPlayer.stop();
+                    mPlayer.release();//释放资源
+                }
+            });
+        });
     }
 }

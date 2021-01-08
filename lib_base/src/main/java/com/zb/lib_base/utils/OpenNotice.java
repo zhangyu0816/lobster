@@ -3,11 +3,12 @@ package com.zb.lib_base.utils;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.view.View;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.windows.TextPW;
 
 import androidx.core.app.NotificationManagerCompat;
@@ -20,10 +21,13 @@ public class OpenNotice {
     public OpenNotice(RxAppCompatActivity activity, View view) {
         if (PreferenceUtil.readIntValue(activity, "isNotificationEnabled") == 0) {
             if (isNotNotification(activity)) {
-                new Handler().postDelayed(() -> {
-                    PreferenceUtil.saveIntValue(activity, "isNotificationEnabled", 1);
-                    new TextPW(view, "应用通知", "为了及时收到虾菇通知，请开启通知", "去开启", () -> gotoSet(activity));
-                }, 1000);
+                MineApp.getApp().getFixedThreadPool().execute(() -> {
+                    SystemClock.sleep(1000);
+                    activity.runOnUiThread(() -> {
+                        PreferenceUtil.saveIntValue(activity, "isNotificationEnabled", 1);
+                        new TextPW(view, "应用通知", "为了及时收到虾菇通知，请开启通知", "去开启", () -> gotoSet(activity));
+                    });
+                });
             }
         }
     }

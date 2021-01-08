@@ -23,7 +23,6 @@ public class ChatFragment extends BaseFragment {
     private ChatFragBinding binding;
     private List<Fragment> fragments = new ArrayList<>();
     private ChatFragViewModel viewModel;
-    private ViewPagerAdapter mAdapter;
 
     @Override
     public int getRes() {
@@ -43,8 +42,8 @@ public class ChatFragment extends BaseFragment {
         fragments.clear();
         fragments.add(FragmentUtils.getChatPairFragment());
         fragments.add(FragmentUtils.getChatListFragment());
-        mAdapter = new ViewPagerAdapter(activity, fragments);
-        binding.viewPage.setAdapter(mAdapter);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(activity, fragments);
+        binding.viewPage.setAdapter(adapter);
         String temp = "聊天-" + (ChatListDb.getInstance().getChatTabRed() > 0 ? "true" : "false");
         MineApp.chatSelectIndex = 0;
         viewModel.initTabLayout(new String[]{"所有匹配", temp}, binding.tabLayout, binding.viewPage, R.color.black_252, R.color.black_827, MineApp.chatSelectIndex);

@@ -62,7 +62,6 @@ public class AuthenticationActivity extends MineBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        viewModel.onDestroy();
     }
 
     @Override

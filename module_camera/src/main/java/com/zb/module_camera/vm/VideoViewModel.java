@@ -1,14 +1,18 @@
 package com.zb.module_camera.vm;
 
 import android.annotation.SuppressLint;
+import android.database.Cursor;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.os.Handler;
+import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.model.VideoInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -17,7 +21,6 @@ import com.zb.module_camera.BR;
 import com.zb.module_camera.databinding.CameraVideoBinding;
 import com.zb.module_camera.iv.VideoVMInterface;
 import com.zb.module_camera.utils.CameraPreview;
-import com.zb.module_camera.utils.GetVideo;
 import com.zb.module_camera.utils.OverCameraView;
 
 import java.io.File;
@@ -32,7 +35,6 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
     private boolean isFoucing = false; // 是否正在聚焦
     private OverCameraView mOverCameraView; // 聚焦视图
     private Handler mHandler = new Handler();
-    private Runnable mRunnable;
     private int cameraPosition = 1;// 前后置摄像头
     private int _position = Camera.CameraInfo.CAMERA_FACING_BACK;
     private float x = 16f, y = 9f;
@@ -65,12 +67,7 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
         initCamera();
         MineApp.videoInfoList.clear();
 
-        GetVideo.getAllLocalVideos(activity, new Handler(message -> {
-            if (message.what == 0) {
-                videoBinding.setVideoPath(MineApp.videoInfoList.get(0).getPath());
-            }
-            return false;
-        }));
+        getAllLocalVideos();
     }
 
     private void initCamera() {
@@ -98,6 +95,8 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (mHandler != null)
+            mHandler.removeCallbacks(runnable);
         mHandler = null;
     }
 
@@ -223,13 +222,14 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
                 if (mCamera != null && !videoBinding.getIsFinish()) {
                     mOverCameraView.setTouchFoucusRect(mCamera, autoFocusCallback, x, y);
                 }
-                mRunnable = () -> {
-                    isFoucing = false;
-                    mOverCameraView.setFoucuing(false);
-                    mOverCameraView.disDrawTouchFocusRect();
-                };
-                //设置聚焦超时
-                mHandler.postDelayed(mRunnable, 3000);
+                MineApp.getApp().getFixedThreadPool().execute(() -> {
+                    SystemClock.sleep(1000);
+                    activity.runOnUiThread(() -> {
+                        isFoucing = false;
+                        mOverCameraView.setFoucuing(false);
+                        mOverCameraView.disDrawTouchFocusRect();
+                    });
+                });
             }
         }
         return false;
@@ -242,8 +242,52 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
             isFoucing = false;
             mOverCameraView.setFoucuing(false);
             mOverCameraView.disDrawTouchFocusRect();
-            //停止聚焦超时回调
-            mHandler.removeCallbacks(mRunnable);
         }
     };
+
+    /**
+     * 获取本地所有的视频
+     *
+     * @return list
+     */
+    private void getAllLocalVideos() {
+        Runnable ra = () -> {
+            String[] projection = {
+                    MediaStore.Video.Media.DATA,
+                    MediaStore.Video.Media.DISPLAY_NAME,
+                    MediaStore.Video.Media.DURATION,
+                    MediaStore.Video.Media.SIZE
+            };
+            //全部图片
+            String where = MediaStore.Video.Media.MIME_TYPE + "=?";
+            String[] whereArgs = {"video/mp4"};
+            Cursor cursor = activity.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    projection, where, whereArgs, MediaStore.Video.Media.DATE_ADDED + " DESC ");
+            if (cursor == null) {
+                return;
+            }
+            try {
+                while (cursor.moveToNext()) {
+                    long size = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)); // 大小
+                    if (size < 20 * 1024 * 1024) {//<600M
+                        String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)); // 路径
+                        VideoInfo vi = new VideoInfo();
+                        vi.setName(cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME)));
+                        vi.setPath(path);
+                        MineApp.videoInfoList.add(vi);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                cursor.close();
+            }
+
+            activity.runOnUiThread(() -> {
+                if (MineApp.videoInfoList.size() > 0)
+                    videoBinding.setVideoPath(MineApp.videoInfoList.get(0).getPath());
+            });
+        };
+        MineApp.getApp().getFixedThreadPool().execute(ra);
+    }
 }

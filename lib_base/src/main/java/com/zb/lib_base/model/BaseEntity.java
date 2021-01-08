@@ -100,7 +100,7 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
                     "重新登录", false, new TextPW.CallBack() {
                 @Override
                 public void sure() {
-                    MineApp.exit();
+                    MineApp.getApp().exit();
                     ActivityUtils.getLoginVideoActivity();
                 }
 

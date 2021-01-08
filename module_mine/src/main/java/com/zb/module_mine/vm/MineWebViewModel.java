@@ -10,7 +10,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
+import android.os.SystemClock;
 import android.text.ClipboardManager;
 import android.text.TextUtils;
 import android.view.View;
@@ -307,7 +307,6 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
         codeLayout.setData(activity, mWebShare);
     }
 
-    private Handler mHandler;
 
     @Override
     public void myInfo() {
@@ -315,13 +314,12 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
             @Override
             public void onNext(MineInfo o) {
                 MineApp.mineInfo = o;
-                mHandler = null;
             }
         }, activity);
-        if (mHandler == null) {
-            mHandler = new Handler();
-        }
-        mHandler.postDelayed(() -> HttpManager.getInstance().doHttpDeal(api), 500);
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(500);
+            activity.runOnUiThread(() -> HttpManager.getInstance().doHttpDeal(api));
+        });
     }
 
     @Override

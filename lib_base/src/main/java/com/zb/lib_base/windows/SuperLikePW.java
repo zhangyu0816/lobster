@@ -175,7 +175,7 @@ public class SuperLikePW extends BasePopupWindow {
     int rightX2 = 400;
     int rightY1 = -500;
     int rightY2 = 600;
-    int time = 1500;
+    int time = 1000;
     private ObjectAnimator translationX, translationY;
     private AnimatorSet animatorStarSet1 = new AnimatorSet();
     private AnimatorSet animatorStarSet2 = new AnimatorSet();

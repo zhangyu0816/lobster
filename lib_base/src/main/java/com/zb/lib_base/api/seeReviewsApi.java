@@ -37,6 +37,6 @@ public class seeReviewsApi extends BaseEntity<List<Review>> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.seeReviews(friendDynId,timeSortType,pageNo);
+        return methods.seeReviews(friendDynId, timeSortType, pageNo, 20);
     }
 }

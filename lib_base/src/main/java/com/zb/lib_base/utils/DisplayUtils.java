@@ -196,7 +196,7 @@ public class DisplayUtils {
      * 根据手机的分辨率从 dp 的单位 转成为 px(像素)
      */
     public static int dip2px(float dpValue) {
-        final float scale = MineApp.getInstance().getResources().getDisplayMetrics().density;
+        final float scale = MineApp.getApp().getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
 
@@ -204,7 +204,7 @@ public class DisplayUtils {
      * 根据手机的分辨率从 px(像素) 的单位 转成为 dp
      */
     public static int px2dip(int pxValue) {
-        final float scale = MineApp.getInstance().getResources().getDisplayMetrics().density;
+        final float scale = MineApp.getApp().getResources().getDisplayMetrics().density;
         return (int) ((float) pxValue / scale + 0.5f);
     }
 }

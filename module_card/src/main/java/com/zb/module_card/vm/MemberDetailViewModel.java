@@ -5,8 +5,7 @@ import android.animation.PropertyValuesHolder;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
+import android.os.SystemClock;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
@@ -76,7 +75,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     private int bannerHeight = MineApp.W;
     private List<Ads> adsList = new ArrayList<>();
     private boolean isLike = false;
-    private Handler mHandler = new Handler();
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -145,7 +143,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     }
 
     public void onDestroy() {
-        mHandler = null;
         try {
             attentionReceiver.unregisterReceiver();
         } catch (Exception e) {
@@ -250,8 +247,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 String districtName = AreaDb.getInstance().getDistrictName(memberInfo.getDistrictId());
                 mBinding.setCityName(cityName);
                 mBinding.setDistrict(cityName + " " + districtName);
-
-                new Thread(() -> {
+                Runnable ra = () -> {
                     if (!memberInfo.getMoreImages().isEmpty()) {
                         String[] images = memberInfo.getMoreImages().split("#");
                         for (String image : images) {
@@ -269,8 +265,37 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                         imageList.add(ads.getSmallImage());
                     }
 
-                    handler.sendEmptyMessage(0);
-                }).start();
+                    activity.runOnUiThread(() -> {
+                        imageAdapter.notifyDataSetChanged();
+                        int height = (int) (bannerHeight * 1.2f);
+                        AdapterBinding.viewSize(mBinding.banner, bannerWidth, height);
+                        XUtils.showBanner(mBinding.banner, adsList, 5,
+                                (context, ads, image, position) -> {
+                                    AdapterBinding.loadImage(image, ads.getSmallImage(), 0, R.drawable.empty_bg, bannerWidth, height, false,
+                                            true, 10, false, 0, false);
+                                }
+                                ,
+                                (position, imageList) ->
+                                        MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, false, null),
+                                position -> {
+                                    if (position <= imageList.size()) {
+                                        position--;
+                                        if (preIndex != position) {
+                                            imageAdapter.setSelectImageIndex(position);
+                                            if (preIndex != -1) {
+                                                imageAdapter.notifyItemChanged(preIndex);
+                                            }
+                                            imageAdapter.notifyItemChanged(position);
+                                            preIndex = position;
+                                        }
+                                    }
+
+                                });
+                    });
+
+                };
+                MineApp.getApp().getFixedThreadPool().execute(ra);
+
                 attentionStatus();
                 personOtherDyn();
                 mBinding.setVariable(BR.viewModel, MemberDetailViewModel.this);
@@ -298,38 +323,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
     }
-
-    private Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message message) {
-            imageAdapter.notifyDataSetChanged();
-            int height = (int) (bannerHeight * 1.2f);
-            AdapterBinding.viewSize(mBinding.banner, bannerWidth, height);
-            XUtils.showBanner(mBinding.banner, adsList, 5,
-                    (context, ads, image, position) -> {
-                        AdapterBinding.loadImage(image, ads.getSmallImage(), 0, R.drawable.empty_bg, bannerWidth, height, false,
-                                true, 10, false, 0, false);
-                    }
-                    ,
-                    (position, imageList) ->
-                            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, false, null),
-                    position -> {
-                        if (position <= imageList.size()) {
-                            position--;
-                            if (preIndex != position) {
-                                imageAdapter.setSelectImageIndex(position);
-                                if (preIndex != -1) {
-                                    imageAdapter.notifyItemChanged(preIndex);
-                                }
-                                imageAdapter.notifyItemChanged(position);
-                                preIndex = position;
-                            }
-                        }
-
-                    });
-            return false;
-        }
-    });
 
     @Override
     public void personOtherDyn() {
@@ -506,21 +499,26 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         PropertyValuesHolder pvhSX = PropertyValuesHolder.ofFloat("scaleX", 1, 1.1f, 1, 1.2f, 1);
         pvh = ObjectAnimator.ofPropertyValuesHolder(view, pvhSY, pvhSX).setDuration(500);
         pvh.start();
-
-        mHandler.postDelayed(() -> {
-            if (pvh != null)
-                pvh.cancel();
-            pvh = null;
-        }, 500);
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(500);
+            activity.runOnUiThread(() -> {
+                if (pvh != null)
+                    pvh.cancel();
+                pvh = null;
+            });
+        });
     }
 
     private void closeBtn(View view) {
         translateY = ObjectAnimator.ofFloat(view, "translationY", 0, 1000).setDuration(500);
         translateY.start();
-        mHandler.postDelayed(() -> {
-            translateY = null;
-            mBinding.setLikeType(view == mBinding.ivSuperLike ? 2 : 1);
-        }, 500);
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(500);
+            activity.runOnUiThread(() -> {
+                translateY = null;
+                mBinding.setLikeType(view == mBinding.ivSuperLike ? 2 : 1);
+            });
+        });
     }
 
     @Override

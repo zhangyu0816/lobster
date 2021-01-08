@@ -37,7 +37,6 @@ android {
         ndk {
             abiFilters "armeabi", "armeabi-v7a", "x86"
         }
-        flavorDimensions "app"
     }
 
     signingConfigs {
@@ -46,16 +45,6 @@ android {
             keyPassword 'yimi2015yuwei'
             storeFile file('C:\\Users\\yu\\Documents\\rentme.keystore')
             storePassword 'yimi2015yuwei'
-        }
-    }
-    productFlavors {
-        mainReless {
-            dimension "app"
-            buildConfigField ("boolean", "isHW", "false")
-        }
-        huawei {
-            dimension "app"
-            buildConfigField ("boolean", "isHW", "true")
         }
     }
     buildTypes {

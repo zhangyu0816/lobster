@@ -5,7 +5,7 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.os.Handler;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
@@ -50,15 +50,8 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     private int throwIndex = 0;
 
     private long friendDynId = 0;
-    private long otherUserId = 0;
     private boolean canClose = true;
     private ObjectAnimator translateX, scaleX, scaleY, alpha;
-    private Handler mHandler = new Handler();
-    private Runnable ra1 = this::appSound;
-    private Runnable ra2 = () -> {
-        mBinding.firstLayout.setVisibility(View.GONE);
-        mBinding.bottleWhiteBack.bottleBg.startBg();
-    };
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -96,7 +89,10 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         };
 
         mPlayer = MediaPlayer.create(activity, R.raw.sea_wave);
-        mHandler.postDelayed(ra1, 200);
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(200);
+            activity.runOnUiThread(this::appSound);
+        });
 
         long time = 1500;
         translateX = ObjectAnimator.ofFloat(mBinding.ivStar, "translationX", 0, MineApp.W - ObjectUtils.getViewSizeByWidthFromMax(250)).setDuration(time);
@@ -108,16 +104,16 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
         animatorSet.setInterpolator(new LinearInterpolator());
         animatorSet.playTogether(scaleX, scaleY, translateX, alpha);//同时执行
         animatorSet.start();
-
-        mHandler.postDelayed(ra2, time);
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(time);
+            activity.runOnUiThread(() -> {
+                mBinding.firstLayout.setVisibility(View.GONE);
+                mBinding.bottleWhiteBack.bottleBg.startBg();
+            });
+        });
     }
 
     public void onDestroy() {
-        if (mHandler != null) {
-            mHandler.removeCallbacks(ra1);
-            mHandler.removeCallbacks(ra2);
-        }
-        mHandler = null;
         try {
             updateChatTypeReceiver.unregisterReceiver();
             closeSoundReceiver.unregisterReceiver();
@@ -137,7 +133,7 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     }
 
     public void onResume() {
-        if (MineApp.mActivityList.get(0) instanceof BottleThrowActivity) {
+        if (MineApp.getApp().getActivityList().get(0) instanceof BottleThrowActivity) {
             if (!mPlayer.isPlaying())
                 appSound();
             if (!isFirst) {
@@ -219,7 +215,6 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
                 public void onNext(BottleInfo o) {
                     canClose = true;
                     bottleInfo = o;
-                    otherUserId = o.getUserId();
                     mBinding.setBottleInfo(bottleInfo);
                     otherInfo(bottleInfo.getUserId());
                     mBinding.edContent.setText(bottleInfo.getText());
@@ -249,7 +244,6 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
             public void onNext(DiscoverInfo o) {
                 canClose = true;
                 friendDynId = o.getFriendDynId();
-                otherUserId = o.getUserId();
                 mBinding.setIsBottle(true);
                 mBinding.setShowBottleTop(true);
                 throwIndex = 2;

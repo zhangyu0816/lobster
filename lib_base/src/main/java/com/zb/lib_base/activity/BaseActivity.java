@@ -41,7 +41,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        MineApp.addActivity(this);
+        MineApp.getApp().addActivity(this);
         super.onCreate(savedInstanceState);
         activity = this;
         mBinding = DataBindingUtil.setContentView(this, getRes());
