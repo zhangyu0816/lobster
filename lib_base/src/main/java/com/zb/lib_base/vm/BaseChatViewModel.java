@@ -165,10 +165,9 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                     SCToastUtil.showToast(activity, "请输入回复内容", true);
                     return false;
                 }
-
+                closeImplicit(mBinding.edContent);
                 ImUtils.getInstance().sendChatMessage(activity, 1, mBinding.getContent(), "", 0, "【文字】", driftBottleId, flashTalkId, msgChannelType);
                 mBinding.setContent("");
-                closeImplicit(mBinding.edContent);
             }
             return true;
         });
@@ -191,8 +190,8 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
     }
 
     public void onResume() {
-        if (ImUtils.getInstance().getOtherUserId() > 0)
-            ImUtils.getInstance().setChat(true, activity);
+        ImUtils.getInstance().setOtherUserId(otherUserId);
+        ImUtils.getInstance().setChat(true, activity);
     }
 
     @Override
@@ -240,19 +239,20 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
 
         Collections.reverse(historyMsgList);
         updateTime();
-        mBinding.refresh.setEnableLoadMore(false);
-        adapter = new BaseAdapter<>(activity, R.layout.item_chat, historyMsgList, this);
 
+        adapter = new BaseAdapter<>(activity, R.layout.item_chat, historyMsgList, this);
+        mBinding.refresh.setEnableLoadMore(false);
         MineApp.getApp().getFixedThreadPool().execute(() -> {
             SystemClock.sleep(500);
-            for (int i = 1; i < EmojiHandler.maxEmojiCount; i++) {
-                emojiList.add(EmojiHandler.sCustomizeEmojisMap.get(i));
-            }
             activity.runOnUiThread(() -> {
                 mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
-                emojiAdapter = new BaseAdapter<>(activity, R.layout.item_emoji, emojiList, BaseChatViewModel.this);
             });
         });
+
+        for (int i = 1; i < EmojiHandler.maxEmojiCount; i++) {
+            emojiList.add(EmojiHandler.sCustomizeEmojisMap.get(i));
+        }
+        emojiAdapter = new BaseAdapter<>(activity, R.layout.item_emoji, emojiList, BaseChatViewModel.this);
         if (msgChannelType == 1) {
             mBinding.bottomLayout.setVisibility(otherUserId < 10010 ? View.GONE : View.VISIBLE);
             otherInfo();
@@ -429,8 +429,6 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
             public void onNext(MemberInfo o) {
                 memberInfo = o;
                 mBinding.setMemberInfo(memberInfo);
-                ImUtils.getInstance().setOtherUserId(otherUserId);
-                ImUtils.getInstance().setChat(true, activity);
 
                 if (msgChannelType == 1 || msgChannelType == 3) {
                     if (isLockImage) {
@@ -815,10 +813,10 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
             SCToastUtil.showToast(activity, "请输入回复内容", true);
             return;
         }
-
+        closeImplicit(mBinding.edContent);
         ImUtils.getInstance().sendChatMessage(activity, 1, mBinding.getContent(), "", 0, "【文字】", driftBottleId, flashTalkId, msgChannelType);
         mBinding.setContent("");
-        closeImplicit(mBinding.edContent);
+
     }
 
     @Override

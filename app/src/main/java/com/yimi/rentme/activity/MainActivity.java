@@ -125,7 +125,6 @@ public class MainActivity extends AppBaseActivity {
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "videos"));
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
         alarmUtils.startAlarm();
-        ImUtils.getInstance().loginOutIM();
     }
 
     @Override

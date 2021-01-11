@@ -63,6 +63,7 @@ public class HomeFragment extends BaseFragment {
         }, fragments);
         homeFragBinding.viewPage.setSaveEnabled(false);
         homeFragBinding.viewPage.setAdapter(adapter);
+        homeFragBinding.viewPage.setCurrentItem(1);
         viewModel.initTabLayout(new String[]{"关注", "推荐", "小视频"}, homeFragBinding.tabLayout, homeFragBinding.viewPage, R.color.black_252, R.color.black_827, 1,false);
     }
 
