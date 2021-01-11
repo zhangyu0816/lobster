@@ -86,7 +86,7 @@ dependencies {
     implementation files('libs/umeng-crash-v0.0.5.jar')
     api files('libs/wechat-sdk-android-with-mta-1.1.6.jar')
     implementation files('libs/umeng_social_net.jar')
-    implementation files('libs/umeng_social_api.jar')
+    api files('libs/umeng_social_api.jar')
     implementation files('libs/open_sdk_r5923_lite.jar')
     // 网路请求
     implementation files('libs/xUtils-2.6.14.jar')

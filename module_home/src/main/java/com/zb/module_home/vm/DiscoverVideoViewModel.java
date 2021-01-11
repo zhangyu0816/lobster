@@ -161,7 +161,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
         } else {
             if (discoverInfo == null) return;
             mBinding.setIsPlay(true);
-            mBinding.videoView.setVideoPath(discoverInfo.getVideoPath());
+//            mBinding.videoView.setVideoPath(discoverInfo.getVideoPath());
             mBinding.videoView.start();
             mBinding.reviewList.start();
         }

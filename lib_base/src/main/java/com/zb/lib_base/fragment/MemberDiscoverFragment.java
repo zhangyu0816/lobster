@@ -15,6 +15,7 @@ public class MemberDiscoverFragment extends BaseFragment {
     long userId;
 
     private MemberDiscoverViewModel viewModel;
+    private boolean createFragment = false;
 
     @Override
     public int getRes() {
@@ -34,5 +35,14 @@ public class MemberDiscoverFragment extends BaseFragment {
         super.onDestroy();
         if (viewModel != null)
             viewModel.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!createFragment){
+            createFragment = true;
+            viewModel.initData();
+        }
     }
 }

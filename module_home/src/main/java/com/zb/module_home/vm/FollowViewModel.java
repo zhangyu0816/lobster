@@ -56,7 +56,6 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
     @Override
     public void setAdapter() {
         adapter = new HomeAdapter<>(activity, R.layout.item_home_discover, discoverInfoList, this);
-        attentionDyn();
     }
 
     @Override

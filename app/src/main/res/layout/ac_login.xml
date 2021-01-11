@@ -417,7 +417,6 @@
                         android:background="@drawable/btn_bg_white_tran_radius60"
                         android:hint="输入你的昵称"
                         android:maxLength="10"
-                        android:textCursorDrawable="@drawable/cursor_color_white"
                         android:paddingStart="25dp"
                         android:paddingTop="13dp"
                         android:paddingEnd="25dp"
@@ -425,6 +424,7 @@
                         android:text="@={registerInfo.name}"
                         android:textColor="@color/white"
                         android:textColorHint="#CDB1FF"
+                        android:textCursorDrawable="@drawable/cursor_color_white"
                         android:textSize="14sp"
                         android:visibility="@{loginStep==4?View.VISIBLE:View.GONE}"
                         tools:text="adfa"
@@ -527,8 +527,8 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            onClickDelayed="@{viewModel::selectJog}"
                             android:id="@+id/tv_job"
+                            onClickDelayed="@{viewModel::selectJog}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
@@ -554,8 +554,8 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            onClickDelayed="@{viewModel::editSign}"
                             android:id="@+id/tv_personality_sign"
+                            onClickDelayed="@{viewModel::editSign}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="15dp"
@@ -648,32 +648,67 @@
             </LinearLayout>
 
             <LinearLayout
-                onClickDelayed="@{viewModel::toWX}"
                 android:layout_width="wrap_content"
-                android:layout_height="46dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/btn_bg_white_radius60"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingStart="33dp"
-                android:paddingEnd="33dp"
                 android:visibility="@{loginStep==0?View.VISIBLE:View.GONE}">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:background="@mipmap/login_by_wx_icon" />
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    onClickDelayed="@{viewModel::toWX}"
+                    android:layout_width="130dp"
                     android:layout_height="46dp"
+                    android:background="@drawable/btn_bg_white_radius60"
                     android:gravity="center"
-                    android:text="微信  登录"
-                    android:textColor="#333333"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    tools:visibility="visible" />
+                    android:layout_marginEnd="10dp"
+                    android:orientation="horizontal"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:background="@mipmap/login_by_wx_icon" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:gravity="center"
+                        android:text="微信  登录"
+                        android:textColor="#333333"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:visibility="visible" />
+                </LinearLayout>
+
+                <LinearLayout
+                    onClickDelayed="@{viewModel::toQQ}"
+                    android:layout_width="130dp"
+                    android:layout_height="46dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/btn_bg_white_radius60"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:background="@mipmap/login_by_wx_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="46dp"
+                        android:gravity="center"
+                        android:text="QQ  登录"
+                        android:textColor="#333333"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        tools:visibility="visible" />
+                </LinearLayout>
+
             </LinearLayout>
 
 

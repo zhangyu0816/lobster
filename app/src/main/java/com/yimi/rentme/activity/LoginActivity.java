@@ -7,6 +7,7 @@ import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.umeng.socialize.UMShareAPI;
 import com.yimi.rentme.BR;
 import com.yimi.rentme.R;
 import com.yimi.rentme.vm.LoginViewModel;
@@ -52,6 +53,7 @@ public class LoginActivity extends BaseActivity {
         } else if (requestCode == 1002 && resultCode == Activity.RESULT_OK) {
             viewModel.setInfo(data.getStringExtra("bindPhone"),data.getStringExtra("captcha"));
         }
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

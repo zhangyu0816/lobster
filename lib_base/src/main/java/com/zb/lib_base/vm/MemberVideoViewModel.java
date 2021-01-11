@@ -102,7 +102,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
     @Override
     public void setAdapter() {
         adapter = new BaseAdapter<>(activity, R.layout.item_card_video, discoverInfoList, this);
-        getData();
+        mBinding.refresh.autoRefresh();
     }
 
     @Override

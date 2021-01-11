@@ -132,7 +132,7 @@ public class MineApp extends MultiDexApplication {
 
         UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, null);
         PlatformConfig.setWeixin("wxb83427622a6740f6", "97f837c0ae8b11af734041828ba4a737");
-        PlatformConfig.setQQZone("1104574025", "ayk3uI7axNJlfGDk");
+        PlatformConfig.setQQZone("101928546", "a8d76c68d7590b71f5254aa87c4b24c8");
         UMShareAPI.get(this);
         // 页面统计
         MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.LEGACY_AUTO);

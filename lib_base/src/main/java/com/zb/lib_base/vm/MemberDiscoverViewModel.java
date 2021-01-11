@@ -3,6 +3,7 @@ package com.zb.lib_base.vm;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -56,6 +57,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     private long friendDynId = 0;
     private DiscoverInfo discoverInfo;
     private boolean isMore = true;
+    private List<Long> ids = new ArrayList<>();
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -106,6 +108,11 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     @Override
     public void setAdapter() {
         adapter = new BaseAdapter<>(activity, R.layout.item_card_discover, discoverInfoList, this);
+        Log.i("Discover", "111111111111");
+    }
+
+    public void initData() {
+        Log.i("Discover", "2222222222222");
         if (otherUserId == 0)
             getData();
         else {
@@ -116,7 +123,6 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
             }
         }
     }
-
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
@@ -146,23 +152,36 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
         dynPiazzaListApi api = new dynPiazzaListApi(new HttpOnNextListener<List<DiscoverInfo>>() {
             @Override
             public void onNext(List<DiscoverInfo> o) {
+                Log.i("Discover", "44444444444444");
                 mBinding.noNetLinear.setVisibility(View.GONE);
                 mBinding.refresh.setVisibility(View.VISIBLE);
-                for (DiscoverInfo item : o) {
-                    DownLoad.downImageFile(item.getImages().isEmpty() ? item.getImage() : item.getImages().split(",")[0], (filePath, bitmap) -> {
-                        if (bitmap != null) {
-                            item.setWidth(bitmap.getWidth());
-                            item.setHeight(bitmap.getHeight());
-                        }
-                        int start = 0;
-                        if (isMore) {
-                            start = discoverInfoList.size();
+
+                if (isMore) {
+                    for (DiscoverInfo item : o) {
+                        ids.add(item.getFriendDynId());
+                        DownLoad.downImageFile(item.getImages().isEmpty() ? item.getImage() : item.getImages().split(",")[0], (filePath, bitmap) -> {
+                            if (bitmap != null) {
+                                item.setWidth(bitmap.getWidth());
+                                item.setHeight(bitmap.getHeight());
+                            }
+                            int start = discoverInfoList.size();
                             discoverInfoList.add(item);
-                        } else {
-                            discoverInfoList.add(0, item);
-                        }
-                        adapter.notifyItemRangeChanged(start, discoverInfoList.size());
-                    });
+                            adapter.notifyItemRangeChanged(start, discoverInfoList.size());
+                        });
+                    }
+                } else {
+                    discoverInfoList.addAll(0, o);
+                    adapter.notifyItemRangeChanged(0, o.size());
+                    for (DiscoverInfo item : o) {
+                        ids.add(0, item.getFriendDynId());
+                        DownLoad.downImageFile(item.getImages().isEmpty() ? item.getImage() : item.getImages().split(",")[0], (filePath, bitmap) -> {
+                            if (bitmap != null) {
+                                item.setWidth(bitmap.getWidth());
+                                item.setHeight(bitmap.getHeight());
+                            }
+                            adapter.notifyItemChanged(ids.indexOf(item.getFriendDynId()));
+                        });
+                    }
                 }
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
@@ -187,6 +206,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 .setDynType(1)
                 .setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
+        Log.i("Discover", "333333333333333333");
     }
 
     @Override
@@ -275,6 +295,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
         mBinding.noNetLinear.setVisibility(View.GONE);
         mBinding.refresh.setEnableLoadMore(true);
         pageNo = 1;
+        ids.clear();
         discoverInfoList.clear();
         adapter.notifyDataSetChanged();
         getData();

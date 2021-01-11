@@ -10,6 +10,7 @@ import com.zb.module_home.vm.FollowViewModel;
 @Route(path = RouteUtils.Home_Follow_Fragment)
 public class FollowFragment extends BaseFragment {
     private FollowViewModel viewModel;
+    private boolean createFragment = false;
 
     @Override
     public int getRes() {
@@ -28,5 +29,14 @@ public class FollowFragment extends BaseFragment {
         super.onDestroy();
         if (viewModel != null)
             viewModel.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(!createFragment){
+            createFragment = true;
+            viewModel.attentionDyn();
+        }
     }
 }
