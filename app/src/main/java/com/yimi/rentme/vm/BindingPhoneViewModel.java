@@ -13,6 +13,7 @@ import com.zb.lib_base.api.banderCaptchaApi;
 import com.zb.lib_base.api.bindingPhoneApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.registerCaptchaApi;
+import com.zb.lib_base.api.verifyCaptchaApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -109,13 +110,23 @@ public class BindingPhoneViewModel extends BaseViewModel implements BindingPhone
             return;
         }
         if (isRegister) {
-            Intent data = new Intent();
-            data.putExtra("bindPhone", mBinding.getPhone());
-            data.putExtra("captcha", mBinding.getCode());
-            activity.setResult(Activity.RESULT_OK, data);
-            activity.finish();
+            verifyCaptcha();
         } else
             bindingPhone();
+    }
+
+    private void verifyCaptcha() {
+        verifyCaptchaApi api = new verifyCaptchaApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                Intent data = new Intent();
+                data.putExtra("bindPhone", mBinding.getPhone());
+                data.putExtra("captcha", mBinding.getCode());
+                activity.setResult(Activity.RESULT_OK, data);
+                activity.finish();
+            }
+        }, activity).setUserName(mBinding.getPhone()).setCaptcha(mBinding.getCode());
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override

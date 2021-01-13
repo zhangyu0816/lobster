@@ -359,9 +359,13 @@ public class LoginSampleHelper {
         MineApp.getApp().getFixedThreadPool().execute(() -> {
             SystemClock.sleep(1000);
             activity.runOnUiThread(() -> {
-                if (mPlayer != null) {
-                    mPlayer.stop();
-                    mPlayer.release();//释放资源
+                try {
+                    if (mPlayer != null) {
+                        mPlayer.stop();
+                        mPlayer.release();//释放资源
+                    }
+                }catch (Exception e){
+                    mPlayer = null;
                 }
             });
         });

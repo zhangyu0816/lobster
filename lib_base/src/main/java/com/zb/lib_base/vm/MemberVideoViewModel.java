@@ -41,7 +41,7 @@ import androidx.databinding.ViewDataBinding;
 public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVMInterface, OnRefreshListener, OnLoadMoreListener {
     public BaseAdapter adapter;
     public long otherUserId;
-    private int pageNo = 1;
+    private int pageNo = 0;
     private List<DiscoverInfo> discoverInfoList = new ArrayList<>();
     private CardMemberVideoBinding mBinding;
     private BaseReceiver publishReceiver;

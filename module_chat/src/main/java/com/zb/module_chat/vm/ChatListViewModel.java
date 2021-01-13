@@ -63,7 +63,6 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                     chatMsgList.addAll(ChatListDb.getInstance().getChatList(4));
                     Collections.sort(chatMsgList, new ChatComparator());
                     adapter.notifyDataSetChanged();
-                    activity.sendBroadcast(new Intent("lobster_updateRed"));
                 } else {
                     int position = -1;
                     if (chatMsgList.size() > 0) {
@@ -85,7 +84,9 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                         if (position != -1) {
                             chatMsgList.set(position, chatList);
                             adapter.notifyItemChanged(position);
-                            activity.sendBroadcast(new Intent("lobster_updateRed"));
+                        } else {
+                            chatMsgList.add(0, chatList);
+                            adapter.notifyDataSetChanged();
                         }
                     } else {
                         if (position != -1) {
@@ -95,9 +96,9 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                         }
                         chatMsgList.add(0, chatList);
                         adapter.notifyDataSetChanged();
-                        activity.sendBroadcast(new Intent("lobster_updateRed"));
                     }
                 }
+                activity.sendBroadcast(new Intent("lobster_updateRed"));
                 mBinding.refresh.finishRefresh();
             }
         };

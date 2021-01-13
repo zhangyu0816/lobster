@@ -2,6 +2,7 @@ package com.zb.module_chat.vm;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -156,7 +157,11 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         callback.setDragFlags(0);
         mBinding.refresh.setEnableLoadMore(false);
 
-        onRefresh(mBinding.refresh);
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(500);
+            activity.runOnUiThread(() -> onRefresh(mBinding.refresh));
+        });
+
     }
 
     @Override

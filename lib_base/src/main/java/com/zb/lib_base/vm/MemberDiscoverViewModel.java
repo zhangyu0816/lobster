@@ -3,7 +3,6 @@ package com.zb.lib_base.vm;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -22,6 +21,7 @@ import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.CardMemberDiscoverBinding;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.GoodDb;
+import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -92,6 +92,8 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
             }
         };
         mBinding.ivNoData.setBackgroundResource(otherUserId == 1 ? R.mipmap.my_no_discover_data : R.mipmap.other_no_discover_data);
+        if (otherUserId == 0)
+            CustomProgressDialog.showLoading(activity, "加载数据");
         setAdapter();
     }
 
@@ -108,11 +110,9 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     @Override
     public void setAdapter() {
         adapter = new BaseAdapter<>(activity, R.layout.item_card_discover, discoverInfoList, this);
-        Log.i("Discover", "111111111111");
     }
 
     public void initData() {
-        Log.i("Discover", "2222222222222");
         if (otherUserId == 0)
             getData();
         else {
@@ -152,7 +152,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
         dynPiazzaListApi api = new dynPiazzaListApi(new HttpOnNextListener<List<DiscoverInfo>>() {
             @Override
             public void onNext(List<DiscoverInfo> o) {
-                Log.i("Discover", "44444444444444");
+                CustomProgressDialog.stopLoading();
                 mBinding.noNetLinear.setVisibility(View.GONE);
                 mBinding.refresh.setVisibility(View.VISIBLE);
 
@@ -189,6 +189,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
 
             @Override
             public void onError(Throwable e) {
+                CustomProgressDialog.stopLoading();
                 if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
                     mBinding.noNetLinear.setVisibility(View.VISIBLE);
                     mBinding.refresh.setVisibility(View.GONE);
@@ -206,7 +207,6 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                 .setDynType(1)
                 .setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);
-        Log.i("Discover", "333333333333333333");
     }
 
     @Override
@@ -214,6 +214,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
         personOtherDynApi api = new personOtherDynApi(new HttpOnNextListener<List<DiscoverInfo>>() {
             @Override
             public void onNext(List<DiscoverInfo> o) {
+                CustomProgressDialog.stopLoading();
                 mBinding.noNetLinear.setVisibility(View.GONE);
                 mBinding.ivNoData.setVisibility(View.GONE);
                 for (DiscoverInfo item : o) {
@@ -224,19 +225,27 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                         item.setNick(memberInfo.getNick());
                         item.setImage(memberInfo.getImage());
                     }
+                    if (isMore) {
+                        ids.add(item.getFriendDynId());
+                        discoverInfoList.add(item);
+                    } else {
+                        ids.add(0, item.getFriendDynId());
+                        discoverInfoList.add(0, item);
+                    }
                     DownLoad.downImageFile(item.getImages().isEmpty() ? item.getImage() : item.getImages().split(",")[0], (filePath, bitmap) -> {
                         if (bitmap != null) {
                             item.setWidth(bitmap.getWidth());
                             item.setHeight(bitmap.getHeight());
                         }
-                        int start = 0;
-                        if (isMore) {
-                            start = discoverInfoList.size();
-                            discoverInfoList.add(item);
-                        } else {
-                            discoverInfoList.add(0, item);
-                        }
-                        adapter.notifyItemRangeChanged(start, discoverInfoList.size());
+                        adapter.notifyItemChanged(ids.indexOf(item.getFriendDynId()));
+//                        int start = 0;
+//                        if (isMore) {
+//                            start = discoverInfoList.size();
+//
+//                        } else {
+//
+//                        }
+//                        adapter.notifyItemRangeChanged(start, discoverInfoList.size());
                     });
                 }
                 mBinding.refresh.finishRefresh();
@@ -245,6 +254,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
 
             @Override
             public void onError(Throwable e) {
+                CustomProgressDialog.stopLoading();
                 if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
                     mBinding.noNetLinear.setVisibility(View.VISIBLE);
                     mBinding.refresh.setEnableLoadMore(false);

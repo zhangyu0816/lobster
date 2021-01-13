@@ -224,8 +224,6 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
 
     @Override
     public void setAdapter() {
-        realmResults = HistoryMsgDb.getInstance().getRealmResults(otherUserId, msgChannelType, driftBottleId, flashTalkId);
-        historyMsgList.addAll(HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize));
         if (msgChannelType == 1) {
             isLockImage = false;
         } else if (msgChannelType == 2) {
@@ -236,10 +234,12 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
             isLockImage = (myChatCount + otherChatCount) < 20;
         }
         mBinding.setIsLockImage(isLockImage);
-
-        Collections.reverse(historyMsgList);
-        updateTime();
-
+        if (otherUserId != 0) {
+            realmResults = HistoryMsgDb.getInstance().getRealmResults(otherUserId, msgChannelType, driftBottleId, flashTalkId);
+            historyMsgList.addAll(HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize));
+            Collections.reverse(historyMsgList);
+            updateTime();
+        }
         adapter = new BaseAdapter<>(activity, R.layout.item_chat, historyMsgList, this);
         mBinding.refresh.setEnableLoadMore(false);
         MineApp.getApp().getFixedThreadPool().execute(() -> {
@@ -392,9 +392,11 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
             @Override
             public void onNext(BottleInfo o) {
                 bottleInfo = o;
-
                 otherUserId = bottleInfo.getUserId() == BaseActivity.userId ? bottleInfo.getOtherUserId() : bottleInfo.getUserId();
-
+                ImUtils.getInstance().setOtherUserId(otherUserId);
+                realmResults = HistoryMsgDb.getInstance().getRealmResults(otherUserId, msgChannelType, driftBottleId, flashTalkId);
+                historyMsgList.addAll(HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize));
+                Collections.reverse(historyMsgList);
                 // 记录我们发出去的消息
                 HistoryMsg historyMsg = new HistoryMsg();
                 historyMsg.setThirdMessageId("1");
@@ -411,7 +413,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                 historyMsg.setMsgChannelType(2);
                 historyMsg.setDriftBottleId(driftBottleId);
                 HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
-                historyMsgList.add(historyMsg);
+                historyMsgList.add(0, historyMsg);
                 updateTime();
                 adapter.notifyDataSetChanged();
                 mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
@@ -1128,8 +1130,8 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         BottleCache bottleCache = new BottleCache();
         bottleCache.setDriftBottleId(driftBottleId);
         bottleCache.setUserId(otherUserId);
-        bottleCache.setNick(memberInfo.getNick());
-        bottleCache.setImage(memberInfo.getImage());
+        bottleCache.setNick(memberInfo == null ? "" : memberInfo.getNick());
+        bottleCache.setImage(memberInfo == null ? "" : memberInfo.getImage());
         bottleCache.setCreationDate(creationDate);
         bottleCache.setStanza(stanza);
         bottleCache.setMsgType(msgType);
