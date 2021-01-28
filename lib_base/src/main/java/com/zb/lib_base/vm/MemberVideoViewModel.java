@@ -20,6 +20,7 @@ import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.CardMemberVideoBinding;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.GoodDb;
+import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -102,7 +103,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
     @Override
     public void setAdapter() {
         adapter = new BaseAdapter<>(activity, R.layout.item_card_video, discoverInfoList, this);
-        mBinding.refresh.autoRefresh();
+        getData();
     }
 
     @Override
@@ -115,6 +116,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
 
     private void getData() {
         if (otherUserId == 0) {
+            CustomProgressDialog.showLoading(activity, "加载数据");
             dynPiazzaList();
         } else {
             personOtherDyn();
@@ -133,6 +135,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
         dynPiazzaListApi api = new dynPiazzaListApi(new HttpOnNextListener<List<DiscoverInfo>>() {
             @Override
             public void onNext(List<DiscoverInfo> o) {
+                CustomProgressDialog.stopLoading();
                 mBinding.noNetLinear.setVisibility(View.GONE);
                 if (isMore) {
                     int start = discoverInfoList.size();
@@ -149,6 +152,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
 
             @Override
             public void onError(Throwable e) {
+                CustomProgressDialog.stopLoading();
                 if (e instanceof UnknownHostException || e instanceof SocketTimeoutException || e instanceof ConnectException) {
                     mBinding.noNetLinear.setVisibility(View.VISIBLE);
                     mBinding.refresh.setEnableLoadMore(false);

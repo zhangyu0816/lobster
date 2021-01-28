@@ -244,9 +244,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         mBinding.refresh.setEnableLoadMore(false);
         MineApp.getApp().getFixedThreadPool().execute(() -> {
             SystemClock.sleep(500);
-            activity.runOnUiThread(() -> {
-                mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
-            });
+            activity.runOnUiThread(() -> mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1));
         });
 
         for (int i = 1; i < EmojiHandler.maxEmojiCount; i++) {

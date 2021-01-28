@@ -222,6 +222,10 @@ public interface HttpService {
     @GET("api/MemberOrder_submitOpenedMemberOrder")
     Observable<BaseResultEntity<OrderNumber>> submitOpenedMemberOrder(@Query("memberOfOpenedProductId") long memberOfOpenedProductId, @Query("productCount") int productCount);
 
+    // 首充
+    @GET("api/MemberOrder_firstOpenMemberPage")
+    Observable<BaseResultEntity<Integer>> firstOpenMemberPage();
+
     // 获取交易订单号
     @GET("api/MemberOrder_payOrderForTran")
     Observable<BaseResultEntity<OrderTran>> payOrderForTran(@Query("orderNumber") String orderNumber);

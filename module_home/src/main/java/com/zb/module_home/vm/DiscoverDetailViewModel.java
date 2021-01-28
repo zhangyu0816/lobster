@@ -270,7 +270,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                         XUtils.showBanner(mBinding.banner, adsList,1,
                                 (context, ads, image, position) ->
                                         AdapterBinding.loadImage(image, ads.getSmallImage(), 0, R.drawable.empty_bg, bannerWidth, height, false,
-                                                false, 0, false, 0, false),
+                                                true, 10, false, 0, false),
                                 (position, imageList) ->
                                         MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, false, null),null);
                     });

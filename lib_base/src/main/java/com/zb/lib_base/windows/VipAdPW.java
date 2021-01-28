@@ -44,15 +44,21 @@ public class VipAdPW extends BasePopupWindow {
         sex = MineApp.mineInfo.getSex();
         this.type = type;
         this.otherImage = otherImage;
-        if (type == 0) {
-            for (int i = 1; i < 8; i++) {
-                Ads ads = new Ads();
-                ads.setView(adView(i));
+        if (MineApp.isFirstOpen) {
+            Ads ads = new Ads();
+            ads.setView(adView(0));
+            adsList.add(ads);
+        } else {
+            if (type == 0) {
+                for (int i = 1; i < 8; i++) {
+                    Ads ads = new Ads();
+                    ads.setView(adView(i));
+                    adsList.add(ads);
+                }
+            } else {
+                Ads ads = new Ads(adView(type));
                 adsList.add(ads);
             }
-        } else {
-            Ads ads = new Ads(adView(type));
-            adsList.add(ads);
         }
 
         if (MineApp.vipInfoList.size() == 0)
@@ -65,48 +71,57 @@ public class VipAdPW extends BasePopupWindow {
         ItemAdBinding binding = DataBindingUtil.inflate(LayoutInflater.from(activity), R.layout.item_ad, null, false);
         binding.setType(type);
         binding.setSex(sex);
-        if (type == 1) {
-            binding.setTitle("超级曝光");
-            binding.setContent("增加10倍曝光度，让更多人先发现你");
-            binding.setMyHead(MineApp.mineInfo.getImage().replace("YM0000", "240X240"));
-            binding.setOtherHead("empty_icon");
-            binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
-        } else if (type == 2) {
-            binding.setTitle("划错反悔");
-            binding.setContent("手滑了？立即找回不要错过任何一个缘分！");
+        if (MineApp.isFirstOpen) {
+            binding.setTitle("");
+            binding.setContent("");
             binding.setMyHead("empty_icon");
             binding.setOtherHead("empty_icon");
-            binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_2_male : R.mipmap.vip_ad_2);
-        } else if (type == 3) {
-            binding.setTitle("超级喜欢");
-            binding.setContent("每天10个超级喜欢，开通专属私信通道");
-            binding.setMyHead(MineApp.mineInfo.getImage().replace("YM0000", "240X240"));
-            binding.setOtherHead(otherImage.isEmpty() ? (sex == 0 ? "vip_ad_3_logo_male" : "vip_ad_3_logo") : otherImage);
-            binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
-        } else if (type == 4) {
-            binding.setTitle("立即查看谁喜欢我？");
-            binding.setContent("第一时间查看喜欢你的人！立即匹配哦～");
-            binding.setMyHead(MineApp.mineInfo.getImage().replace("YM0000", "240X240"));
-            binding.setOtherHead("empty_icon");
-            binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_4_male : R.mipmap.vip_ad_4);
-        } else if (type == 5) {
-            binding.setTitle("位置漫游");
-            binding.setContent("让你随时随地认识全世界的朋友！");
-            binding.setMyHead(MineApp.mineInfo.getImage().replace("YM0000", "240X240"));
-            binding.setOtherHead("empty_icon");
-            binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_5_male : R.mipmap.vip_ad_5);
-        } else if (type == 6) {
-            binding.setTitle("无限次数喜欢");
-            binding.setContent("左滑喜欢不限次数，不要错过每个机会");
-            binding.setMyHead("empty_icon");
-            binding.setOtherHead("empty_icon");
-            binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_6_male : R.mipmap.vip_ad_6);
-        } else if (type == 7) {
-            binding.setTitle("立即匹配闪聊");
-            binding.setContent("随机匹配，无需互相喜欢，直接在线闪聊");
-            binding.setMyHead(MineApp.mineInfo.getImage().replace("YM0000", "240X240"));
-            binding.setOtherHead("empty_icon");
-            binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
+            binding.ivBigBg.setBackgroundResource(R.mipmap.icon_first_ad);
+            AdapterBinding.viewSize(binding.ivBigBg, ObjectUtils.getViewSizeByWidthFromMax(1000), ObjectUtils.getVipExposureHeight(1000));
+        } else {
+            if (type == 1) {
+                binding.setTitle("超级曝光");
+                binding.setContent("增加10倍曝光度，让更多人先发现你");
+                binding.setMyHead(MineApp.mineInfo.getImage().replace("YM0000", "240X240"));
+                binding.setOtherHead("empty_icon");
+                binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
+            } else if (type == 2) {
+                binding.setTitle("划错反悔");
+                binding.setContent("手滑了？立即找回不要错过任何一个缘分！");
+                binding.setMyHead("empty_icon");
+                binding.setOtherHead("empty_icon");
+                binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_2_male : R.mipmap.vip_ad_2);
+            } else if (type == 3) {
+                binding.setTitle("超级喜欢");
+                binding.setContent("每天10个超级喜欢，开通专属私信通道");
+                binding.setMyHead(MineApp.mineInfo.getImage().replace("YM0000", "240X240"));
+                binding.setOtherHead(otherImage.isEmpty() ? (sex == 0 ? "vip_ad_3_logo_male" : "vip_ad_3_logo") : otherImage);
+                binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
+            } else if (type == 4) {
+                binding.setTitle("立即查看谁喜欢我？");
+                binding.setContent("第一时间查看喜欢你的人！立即匹配哦～");
+                binding.setMyHead(MineApp.mineInfo.getImage().replace("YM0000", "240X240"));
+                binding.setOtherHead("empty_icon");
+                binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_4_male : R.mipmap.vip_ad_4);
+            } else if (type == 5) {
+                binding.setTitle("位置漫游");
+                binding.setContent("让你随时随地认识全世界的朋友！");
+                binding.setMyHead(MineApp.mineInfo.getImage().replace("YM0000", "240X240"));
+                binding.setOtherHead("empty_icon");
+                binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_5_male : R.mipmap.vip_ad_5);
+            } else if (type == 6) {
+                binding.setTitle("无限次数喜欢");
+                binding.setContent("左滑喜欢不限次数，不要错过每个机会");
+                binding.setMyHead("empty_icon");
+                binding.setOtherHead("empty_icon");
+                binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_6_male : R.mipmap.vip_ad_6);
+            } else if (type == 7) {
+                binding.setTitle("立即匹配闪聊");
+                binding.setContent("随机匹配，无需互相喜欢，直接在线闪聊");
+                binding.setMyHead(MineApp.mineInfo.getImage().replace("YM0000", "240X240"));
+                binding.setOtherHead("empty_icon");
+                binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
+            }
         }
         return binding.getRoot();
     }
@@ -162,7 +177,7 @@ public class VipAdPW extends BasePopupWindow {
                 .setUpIndicators(R.drawable.vip_circle_pressed, R.drawable.vip_circle_unpressed)
                 .isAutoPlay(false)
                 .setShowBg(true)
-                .setType(type)
+                .setType(MineApp.isFirstOpen ? 0 : type)
                 .start();
     }
 

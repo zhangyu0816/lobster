@@ -7,6 +7,8 @@
 
         <import type="com.zb.lib_base.utils.ObjectUtils" />
 
+        <import type="com.zb.lib_base.app.MineApp" />
+
         <variable
             name="pw"
             type="com.zb.lib_base.windows.BasePopupWindow" />
@@ -54,6 +56,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="-1dp"
                 android:background="@drawable/btn_bg_white_radius_bottom10"
                 android:orientation="vertical">
 
@@ -76,14 +79,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:layout_marginEnd="15dp"
-                    android:background="@mipmap/btn_bg_icon"
+                    android:background="@{MineApp.isFirstOpen?@drawable/btn_yellow_icon:@drawable/btn_bg_icon}"
                     android:gravity="center"
+                    android:paddingBottom="12dp"
                     android:text="@{mineInfo.memberType==2?@string/pay_btn:String.format(@string/open_btn,vipInfo.price)}"
                     android:textColor="@color/white"
                     android:textSize="18sp"
-                    android:paddingBottom="12dp"
                     android:textStyle="bold"
-                    tools:text="开通"/>
+                    tools:text="开通" />
             </LinearLayout>
 
             <ImageView

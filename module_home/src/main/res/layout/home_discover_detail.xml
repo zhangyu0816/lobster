@@ -43,39 +43,51 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!--        <ImageView-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:background="@mipmap/member_bg" />-->
+
         <RelativeLayout
             android:id="@+id/top_relative"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white">
+            android:background="#ECE2FE">
 
-            <ImageView
-                android:id="@+id/iv_back"
-                onClickDelayed="@{viewModel::back}"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:padding="15dp"
-                app:srcCompat="@mipmap/back_black_icon" />
+                android:layout_marginTop="34dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="动态"
-                android:textColor="@color/black_252"
-                android:textSize="18sp"
-                tools:text="杀杀杀" />
+                <ImageView
+                    android:id="@+id/iv_back"
+                    onClickDelayed="@{viewModel::back}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:padding="15dp"
+                    app:srcCompat="@mipmap/back_black_icon" />
 
-            <ImageView
-                android:id="@+id/iv_more"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:onClick="@{viewModel::more}"
-                android:padding="15dp"
-                app:srcCompat="@mipmap/back_more_icon" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="动态"
+                    android:textColor="@color/black_252"
+                    android:textSize="18sp"
+                    tools:text="杀杀杀" />
+
+                <ImageView
+                    android:id="@+id/iv_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:onClick="@{viewModel::more}"
+                    android:padding="15dp"
+                    app:srcCompat="@mipmap/back_more_icon" />
+            </RelativeLayout>
+
         </RelativeLayout>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -92,13 +104,11 @@
                 android:layout_height="wrap_content"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:elevation="0dp">
-                <!--                android:minHeight="82dp"-->
-                <!--                app:layout_scrollFlags="scroll|exitUntilCollapsed"-->
+
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/white"
                     app:contentInsetStart="0dp"
                     app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
@@ -107,12 +117,19 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <com.zb.lib_base.views.xbanner.XBanner
-                            android:id="@+id/banner"
+                        <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="300dp"
-                            android:layout_gravity="center_horizontal"
-                            android:background="@color/white" />
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/gradient_red_grey"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp">
+
+                            <com.zb.lib_base.views.xbanner.XBanner
+                                android:id="@+id/banner"
+                                android:layout_width="match_parent"
+                                android:layout_height="300dp"
+                                android:layout_centerHorizontal="true" />
+                        </RelativeLayout>
 
                         <RelativeLayout
                             android:layout_width="match_parent"

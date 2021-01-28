@@ -9,6 +9,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.RouteUtils;
+import com.zb.lib_base.utils.SoftHideKeyBoardUtil;
 import com.zb.lib_base.utils.StatusBarUtil;
 import com.zb.module_home.BR;
 import com.zb.module_home.R;
@@ -28,7 +29,7 @@ public class DiscoverDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.HomeTheme);
         super.onCreate(savedInstanceState);
-        StatusBarUtil.statusBarLightModeNotFull(this);
+        StatusBarUtil.statusBarLightMode(activity);
     }
 
     @Override
@@ -38,6 +39,8 @@ public class DiscoverDetailActivity extends BaseActivity {
 
     @Override
     public void initUI() {
+        fitComprehensiveScreen();
+
         MineApp.getApp().getActivityMap().put("DiscoverDetailActivity", activity);
         viewModel = new DiscoverDetailViewModel();
 
@@ -49,6 +52,7 @@ public class DiscoverDetailActivity extends BaseActivity {
         viewModel.friendDynId = friendDynId;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
+        SoftHideKeyBoardUtil.assistActivity(activity, true);
     }
 
     @Override

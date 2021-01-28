@@ -10,6 +10,8 @@ public interface MainVMInterface {
 
     void openedMemberPriceList();
 
+    void firstOpenMemberPage();
+
     void walletAndPop();
 
     void newDynMsgAllNum(boolean isUpdate);

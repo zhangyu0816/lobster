@@ -179,6 +179,8 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                             e.printStackTrace();
                         }
                     }
+                } else if (mUrl.contains("xgopenmember:")) {
+                    ActivityUtils.getMineOpenVip(false);
                 } else
                     view.loadUrl(mUrl);
                 return true;

@@ -96,9 +96,10 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
                     systemMsgList.clear();
                     adapter.notifyDataSetChanged();
                     systemMsgList.addAll(SystemMsgDb.getInstance().getSystemMsgList());
-                    if (systemMsgList.size() > 0)
+                    if (systemMsgList.size() > 0) {
+                        clearHistoryMsg(systemMsgList.get(0).getId());
                         updateTime();
-                    else
+                    } else
                         mBinding.setVariable(BR.noData, true);
                 }
             }
@@ -112,7 +113,8 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
         SystemMsgDb.getInstance().setShowTime(systemMsgList.get(0).getId(), true);
         time = systemMsgList.get(0).getCreationDate();
         for (int i = 1; i < systemMsgList.size(); i++) {
-            if (DateUtil.getDateCount(systemMsgList.get(i).getCreationDate(), time, DateUtil.yyyy_MM_dd_HH_mm_ss, 1000f * 60f) > 3) {
+            int data = DateUtil.getDateCount(time, systemMsgList.get(i).getCreationDate(), DateUtil.yyyy_MM_dd_HH_mm_ss, 1000f * 60f);
+            if (data > 3) {
                 time = systemMsgList.get(i).getCreationDate();
                 SystemMsgDb.getInstance().setShowTime(systemMsgList.get(i).getId(), true);
             } else {
@@ -120,7 +122,6 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
             }
         }
         adapter.notifyDataSetChanged();
-        mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
     }
 
     @Override

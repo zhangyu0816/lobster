@@ -207,12 +207,18 @@ public class BaseViewModel implements BaseVMInterface {
         pvh.start();
     }
 
-    public void goAnimator(View view) {
-        pvhSY = PropertyValuesHolder.ofFloat("scaleY", 0.7f, 1, 0.7f);
-        pvhSX = PropertyValuesHolder.ofFloat("scaleX", 0.7f, 1, 0.7f);
-        pvh = ObjectAnimator.ofPropertyValuesHolder(view, pvhSY, pvhSX).setDuration(600);
+    public void goAnimator(View view, float min, float max, long time) {
+        pvhSY = PropertyValuesHolder.ofFloat("scaleY", min, max, min);
+        pvhSX = PropertyValuesHolder.ofFloat("scaleX", min, max, min);
+        pvh = ObjectAnimator.ofPropertyValuesHolder(view, pvhSY, pvhSX).setDuration(time);
         pvh.setRepeatCount(Animation.INFINITE);
         pvh.start();
+    }
+
+    public void stopGo() {
+        if (pvh != null)
+            pvh.cancel();
+        pvh = null;
     }
 
     public void likeOrNot(View view) {

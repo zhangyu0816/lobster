@@ -20,6 +20,7 @@ import com.zb.lib_base.adapter.ViewPagerAdapter;
 import com.zb.lib_base.api.chatListApi;
 import com.zb.lib_base.api.contactNumApi;
 import com.zb.lib_base.api.driftBottleChatListApi;
+import com.zb.lib_base.api.firstOpenMemberPageApi;
 import com.zb.lib_base.api.flashChatListApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.newDynMsgAllNumApi;
@@ -414,7 +415,19 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 MineApp.vipInfoList.clear();
                 MineApp.vipInfoList.addAll(o);
                 walletAndPop();
+                firstOpenMemberPage();
                 newDynMsgAllNum(false);
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void firstOpenMemberPage() {
+        firstOpenMemberPageApi api = new firstOpenMemberPageApi(new HttpOnNextListener<Integer>() {
+            @Override
+            public void onNext(Integer o) {
+                MineApp.isFirstOpen = o == 1;
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

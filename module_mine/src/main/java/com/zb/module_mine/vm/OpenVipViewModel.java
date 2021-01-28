@@ -36,6 +36,8 @@ public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterfac
             }
         };
         myInfo();
+
+        goAnimator(vipBinding.tvOpen,0.85f,1.0f,1000L);
     }
 
     @Override
@@ -46,6 +48,7 @@ public class OpenVipViewModel extends BaseViewModel implements OpenVipVMInterfac
     @Override
     public void back(View view) {
         super.back(view);
+        stopGo();
         activity.finish();
     }
 

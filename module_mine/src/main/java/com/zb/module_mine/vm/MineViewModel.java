@@ -55,7 +55,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         super.setBinding(binding);
         mBinding = (MineFragBinding) binding;
         playAnimator(mBinding.circleView);
-        goAnimator(mBinding.ivGo);
+        goAnimator(mBinding.ivGo, 0.7f, 1.0f, 600L);
         selectorList.add("发布照片");
         selectorList.add("发布小视频");
         mBinding.setMineNewsCount(MineApp.mineNewsCount);
@@ -193,9 +193,13 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
 
     @Override
     public void openShare(View view) {
-        ActivityUtils.getMineWeb("邀请好友赚钱", HttpManager.BASE_URL + "mobile/Share_marketingInfo" +
-                "?userId=" + BaseActivity.userId + "&sessionId=" + BaseActivity.sessionId +
-                "&pfDevice=Android&pfAppType=203&pfAppVersion=" + MineApp.versionName);
+        if (MineApp.isFirstOpen) {
+
+        } else {
+            ActivityUtils.getMineWeb("邀请好友赚钱", HttpManager.BASE_URL + "mobile/Share_marketingInfo" +
+                    "?userId=" + BaseActivity.userId + "&sessionId=" + BaseActivity.sessionId +
+                    "&pfDevice=Android&pfAppType=203&pfAppVersion=" + MineApp.versionName);
+        }
     }
 
     @Override
@@ -223,6 +227,8 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                 return;
             }
             new VipAdPW(mBinding.getRoot(), 4, "");
+        } else if (position == 4) {
+            ActivityUtils.getMineNewsList(2);
         } else {
             if (position == 3) {
                 PreferenceUtil.saveIntValue(activity, "visitorCount" + BaseActivity.userId, MineApp.contactNum.getVisitorCount());

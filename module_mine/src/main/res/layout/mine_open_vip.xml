@@ -173,7 +173,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
-                android:background="@mipmap/btn_bg_icon"
+                android:background="@drawable/btn_bg_icon"
                 android:gravity="center"
                 android:paddingBottom="10dp"
                 android:text="@{mineInfo.memberType==2?@string/pay_btn:String.format(@string/open_btn,vipInfo.price)}"

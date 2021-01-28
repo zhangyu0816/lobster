@@ -9,6 +9,8 @@
 
         <import type="android.view.View" />
 
+        <import type="com.zb.lib_base.app.MineApp" />
+
         <variable
             name="viewModel"
             type="com.zb.module_mine.vm.MineViewModel" />
@@ -222,6 +224,33 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="5dp"
                                         android:text="关注"
+                                        android:textColor="@color/black_c3b"
+                                        android:textSize="12sp" />
+
+                                </LinearLayout>
+                                <LinearLayout
+                                    onClickDelayed="@{v->viewModel.contactNumDetail(4)}"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:singleLine="true"
+                                        android:text='@{String.format("%d",contactNum.praiseCount)}'
+                                        android:textColor="@color/black_252"
+                                        android:textSize="18sp"
+                                        android:textStyle="bold"
+                                        tools:text="35" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:text="点赞"
                                         android:textColor="@color/black_c3b"
                                         android:textSize="12sp" />
 
