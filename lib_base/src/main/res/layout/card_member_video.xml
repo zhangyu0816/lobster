@@ -3,16 +3,28 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.zb.lib_base.vm.MemberVideoViewModel" />
+
+        <variable
+            name="otherUserId"
+            type="Long" />
 
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black_efe">
+        android:background="#f5f5f5">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:background="@drawable/gradient_red_grey"
+            android:visibility="@{otherUserId==0?View.VISIBLE:View.GONE}" />
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/refresh"

@@ -14,6 +14,7 @@ public class seeGiftRewardsApi extends BaseEntity<List<Reward>> {
     long friendDynId;
     int rewardSortType; //排序 1.默认排序   2.打赏金额 由大到小
     int pageNo;
+    int row;
 
     public seeGiftRewardsApi setFriendDynId(long friendDynId) {
         this.friendDynId = friendDynId;
@@ -30,6 +31,11 @@ public class seeGiftRewardsApi extends BaseEntity<List<Reward>> {
         return this;
     }
 
+    public seeGiftRewardsApi setRow(int row) {
+        this.row = row;
+        return this;
+    }
+
     public seeGiftRewardsApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
         setShowProgress(false);
@@ -37,6 +43,6 @@ public class seeGiftRewardsApi extends BaseEntity<List<Reward>> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.seeGiftRewards(friendDynId, rewardSortType, pageNo);
+        return methods.seeGiftRewards(friendDynId, rewardSortType, pageNo,row);
     }
 }

@@ -32,6 +32,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/top_layout"
             onClickDelayed="@{v->viewModel.clickItem(position)}"
             viewHeightSize="@{-2}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.48f)}"
@@ -88,7 +89,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="-5dp">
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="5dp">
 
                     <ImageView
                         android:id="@+id/iv_logo"
@@ -106,7 +108,6 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="5dp"
-                        android:layout_toStartOf="@+id/good_layout"
                         android:layout_toEndOf="@+id/iv_logo"
                         android:ellipsize="end"
                         android:singleLine="true"
@@ -115,34 +116,40 @@
                         android:textSize="12sp"
                         tools:text="sf " />
 
-                    <LinearLayout
-                        android:id="@+id/good_layout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <com.zb.lib_base.views.GoodView
-                            android:id="@+id/good_view"
-                            isLike="@{GoodDb.getInstance().hasGood(item.friendDynId)}"
-                            onClickDelayed="@{v->viewModel.doLike(v,position)}"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_marginStart="5dp"
-                            android:gravity="center" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="-5dp"
-                            android:text='@{String.format("%d",item.goodNum)}'
-                            android:textColor="#cccccc"
-                            android:textSize="14sp"
-                            tools:text="7" />
-                    </LinearLayout>
                 </RelativeLayout>
             </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/good_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@+id/top_layout"
+            android:paddingTop="35dp"
+            android:paddingStart="35dp"
+            android:layout_marginEnd="15dp"
+            android:paddingEnd="1dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.zb.lib_base.views.GoodView
+                android:id="@+id/good_view"
+                isLike="@{GoodDb.getInstance().hasGood(item.friendDynId)}"
+                onClickDelayed="@{v->viewModel.doLike(v,position)}"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="5dp"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-5dp"
+                android:text='@{String.format("%d",item.goodNum)}'
+                android:textColor="#cccccc"
+                android:textSize="14sp"
+                tools:text="7" />
         </LinearLayout>
     </RelativeLayout>
 </layout>

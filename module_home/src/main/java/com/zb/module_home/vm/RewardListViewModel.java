@@ -78,7 +78,8 @@ public class RewardListViewModel extends BaseViewModel implements RewardListVMIn
             }
         }, activity).setFriendDynId(friendDynId)
                 .setRewardSortType(2)
-                .setPageNo(pageNo);
+                .setPageNo(pageNo)
+                .setRow(10);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

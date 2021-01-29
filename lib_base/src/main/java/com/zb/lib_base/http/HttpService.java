@@ -298,7 +298,7 @@ public interface HttpService {
     // 打赏列表
     @GET("api/Interactive_seeGiftRewards")
     Observable<BaseResultEntity<List<Reward>>> seeGiftRewards(@Query("friendDynId") long friendDynId, @Query("rewardSortType") int rewardSortType,
-                                                              @Query("pageNo") int pageNo);
+                                                              @Query("pageNo") int pageNo, @Query("row") int row);
 
     // 查看评论
     @GET("api/Interactive_seeReviews")

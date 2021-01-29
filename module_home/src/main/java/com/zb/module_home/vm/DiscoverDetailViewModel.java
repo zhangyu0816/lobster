@@ -3,6 +3,7 @@ package com.zb.module_home.vm;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -92,7 +93,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         mBinding = (HomeDiscoverDetailBinding) binding;
         mBinding.setContent("");
         mBinding.setName("");
-        mBinding.setListNum(10);
         mBinding.setIsAttention(false);
 
         setAdapter();
@@ -267,22 +267,26 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     activity.runOnUiThread(() -> {
                         int height = (int) (bannerHeight * 1.2f);
                         AdapterBinding.viewSize(mBinding.banner, bannerWidth, height);
-                        XUtils.showBanner(mBinding.banner, adsList,1,
+                        XUtils.showBanner(mBinding.banner, adsList, 1,
                                 (context, ads, image, position) ->
                                         AdapterBinding.loadImage(image, ads.getSmallImage(), 0, R.drawable.empty_bg, bannerWidth, height, false,
                                                 true, 10, false, 0, false),
                                 (position, imageList) ->
-                                        MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, false, null),null);
+                                        MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, false, null), null);
                     });
                 };
                 MineApp.getApp().getFixedThreadPool().execute(ra);
                 otherInfo();
                 seeGiftRewards();
-                seeReviews();
             }
         }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);
     }
+
+    String info = "";
+    String rewardInfo = "";
+    char[] temp;
+    int i = 0;
 
     public void seeGiftRewards() {
         seeGiftRewardsApi api = new seeGiftRewardsApi(new HttpOnNextListener<List<Reward>>() {
@@ -293,14 +297,50 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 rewardList.addAll(o);
                 rewardAdapter.notifyDataSetChanged();
                 mBinding.setRewardNum(rewardList.size());
-                int gridNum = rewardList.size() % 10;
-                mBinding.setListNum(gridNum == 0 ? 10 : gridNum);
+                if (discoverInfo.getUserId() != BaseActivity.userId) {
+                    if (mBinding.getRewardNum() == 1) {
+                        rewardInfo = "成为CP候选人";
+                    } else {
+                        rewardInfo = "快来打榜";
+                    }
+                    temp = rewardInfo.toCharArray();
+                    info = "";
+
+                    mHandler.postDelayed(ra, 50);
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    if (discoverInfo.getUserId() != BaseActivity.userId) {
+                        rewardInfo = "送多玫瑰，开始你们的故事";
+                        temp = rewardInfo.toCharArray();
+                        info = "";
+                        mHandler.postDelayed(ra, 50);
+                    }
+                }
             }
         }, activity).setFriendDynId(friendDynId)
                 .setRewardSortType(2)
-                .setPageNo(1);
+                .setPageNo(1)
+                .setRow(2);
         HttpManager.getInstance().doHttpDeal(api);
     }
+
+    private Handler mHandler = new Handler();
+    private Runnable ra = new Runnable() {
+        @Override
+        public void run() {
+            if (i < temp.length) {
+                info += temp[i];
+                mBinding.setRewardInfo(info);
+                i++;
+                mHandler.postDelayed(ra, 50);
+            }
+        }
+    };
 
     @Override
     public void seeReviews() {
@@ -308,6 +348,9 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(List<Review> o) {
                 int start = reviewList.size();
+                for (Review item : o) {
+                    item.setMainId(memberInfo.getUserId());
+                }
                 reviewList.addAll(o);
                 reviewAdapter.notifyItemRangeChanged(start, reviewList.size());
                 mBinding.refresh.finishRefresh();
@@ -354,8 +397,11 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(MemberInfo o) {
                 memberInfo = o;
+                mBinding.setMemberInfo(memberInfo);
                 mBinding.setViewModel(DiscoverDetailViewModel.this);
                 attentionStatus();
+                reviewList.add(new Review(memberInfo.getImage(), "说句打动人心的表白，成功率高达99%", memberInfo.getUserId()));
+                seeReviews();
             }
         }, activity).setOtherUserId(discoverInfo.getUserId());
         HttpManager.getInstance().doHttpDeal(api);
@@ -389,6 +435,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 mBinding.setContent("");
                 // 下拉刷新
                 onRefresh(mBinding.refresh);
+                closeAt(null);
             }
         }, activity).setFriendDynId(friendDynId).setText(mBinding.getContent()).setReviewId(reviewId);
         api.setDialogTitle("发布评论");
@@ -491,7 +538,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 
     @Override
     public void toReviewMemberDetail(Review review) {
-        if (review.getUserId() != BaseActivity.userId)
+        if (review.getUserId() != BaseActivity.userId && review.getUserId() != 0)
             ActivityUtils.getCardMemberDetail(review.getUserId(), false);
     }
 

@@ -19,6 +19,16 @@ public class Review extends BaseObservable {
     private String createTime = "";  // or  点赞
 
     private int type = 0;
+    private long mainId;
+
+    public Review() {
+    }
+
+    public Review(String image, String text, long mainId) {
+        this.image = image;
+        this.text = text;
+        this.mainId = mainId;
+    }
 
     @Bindable
     public long getReviewId() {
@@ -118,5 +128,15 @@ public class Review extends BaseObservable {
     public void setType(int type) {
         this.type = type;
         notifyPropertyChanged(BR.type);
+    }
+
+    @Bindable
+    public long getMainId() {
+        return mainId;
+    }
+
+    public void setMainId(long mainId) {
+        this.mainId = mainId;
+        notifyPropertyChanged(BR.mainId);
     }
 }

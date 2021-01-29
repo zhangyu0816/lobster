@@ -238,14 +238,6 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
                             item.setHeight(bitmap.getHeight());
                         }
                         adapter.notifyItemChanged(ids.indexOf(item.getFriendDynId()));
-//                        int start = 0;
-//                        if (isMore) {
-//                            start = discoverInfoList.size();
-//
-//                        } else {
-//
-//                        }
-//                        adapter.notifyItemRangeChanged(start, discoverInfoList.size());
                     });
                 }
                 mBinding.refresh.finishRefresh();

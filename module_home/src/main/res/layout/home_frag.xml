@@ -27,46 +27,47 @@
         android:layout_height="match_parent"
         android:background="@android:color/white">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@mipmap/mine_top_bg" />
-
         <RelativeLayout
             android:id="@+id/top_relative"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp">
+            android:background="#ECE2FE">
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tab_layout"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/i_search"
-                app:tabBackground="@android:color/transparent"
-                app:tabGravity="start"
-                app:tabIndicator="@drawable/indicator"
-                app:tabIndicatorColor="@color/purple_7a4"
-                app:tabIndicatorFullWidth="false"
-                app:tabIndicatorHeight="3dp"
-                app:tabMaxWidth="0dp"
-                app:tabMinWidth="0dp"
-                app:tabMode="scrollable"
-                app:tabPaddingBottom="-15dp"
-                app:tabRippleColor="@android:color/transparent"
-                app:tabSelectedTextColor="@color/black_252"
-                app:tabTextColor="@color/black_827" />
-
-            <ImageView
-                android:id="@+id/i_search"
-                onClickDelayed="@{viewModel::toSearch}"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:padding="15dp"
-                android:src="@mipmap/search_icon" />
+                android:layout_marginTop="22dp">
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tab_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/i_search"
+                    app:tabBackground="@android:color/transparent"
+                    app:tabGravity="start"
+                    app:tabIndicator="@drawable/indicator"
+                    app:tabIndicatorColor="@color/purple_7a4"
+                    app:tabIndicatorFullWidth="false"
+                    app:tabIndicatorHeight="3dp"
+                    app:tabMaxWidth="0dp"
+                    app:tabMinWidth="0dp"
+                    app:tabMode="scrollable"
+                    app:tabPaddingBottom="-15dp"
+                    app:tabRippleColor="@android:color/transparent"
+                    app:tabSelectedTextColor="@color/black_252"
+                    app:tabTextColor="@color/black_827" />
+
+                <ImageView
+                    android:id="@+id/i_search"
+                    onClickDelayed="@{viewModel::toSearch}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:padding="15dp"
+                    android:src="@mipmap/search_icon" />
+            </RelativeLayout>
         </RelativeLayout>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
