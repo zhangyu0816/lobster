@@ -113,6 +113,7 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/gradient_red_grey"
                     app:contentInsetStart="0dp"
                     app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
@@ -124,7 +125,6 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/gradient_red_grey"
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp">
 
@@ -226,7 +226,7 @@
                                         android:paddingStart="20dp"
                                         android:paddingEnd="20dp"
                                         android:text="@{isAttention?@string/attention_false:@string/attention_true}"
-                                        android:textColor="@color/white"
+                                        android:textColor="@{isAttention?@color/black_827:@color/white}"
                                         android:textSize="14sp"
                                         android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
 
@@ -426,6 +426,17 @@
                     android:background="@drawable/btn_bg_white_radius10" />
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <ImageView
+            android:id="@+id/iv_remind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/bottom_layout"
+            android:layout_marginEnd="7dp"
+            android:layout_marginBottom="8dp"
+            android:layout_alignParentEnd="true"
+            android:background="@mipmap/icon_remind"
+            android:visibility="@{(viewModel.discoverInfo.goodNum!=0||viewModel.discoverInfo.reviews!=0)?View.GONE:View.VISIBLE}"/>
 
         <LinearLayout
             android:id="@+id/bottom_layout"

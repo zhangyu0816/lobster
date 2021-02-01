@@ -99,7 +99,7 @@ public class MineApp extends MultiDexApplication {
     public static int noDataCount = 0;
     public static List<DiscoverInfo> discoverInfoList = new ArrayList<>();
 
-    public static boolean isFirstOpen = true;
+    public static boolean isFirstOpen = false;
 
     public ExecutorService fixedThreadPool;
 

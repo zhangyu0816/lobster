@@ -30,6 +30,8 @@ public interface MemberDetailVMInterface {
 
     void cancelAttention();
 
+    void contactNum();
+
     void makeEvaluate(int likeOtherStatus);
 
     void memberInfoConf();

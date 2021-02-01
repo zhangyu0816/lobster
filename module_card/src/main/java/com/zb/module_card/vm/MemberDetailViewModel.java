@@ -14,6 +14,7 @@ import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.attentionOtherApi;
 import com.zb.lib_base.api.attentionStatusApi;
 import com.zb.lib_base.api.cancelAttentionApi;
+import com.zb.lib_base.api.contactNumApi;
 import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.memberInfoConfApi;
 import com.zb.lib_base.api.otherInfoApi;
@@ -32,6 +33,7 @@ import com.zb.lib_base.iv.SuperLikeInterface;
 import com.zb.lib_base.model.Ads;
 import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.CollectID;
+import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.PairInfo;
@@ -246,7 +248,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 String cityName = AreaDb.getInstance().getCityName(memberInfo.getCityId()).replace("市", "");
                 String districtName = AreaDb.getInstance().getDistrictName(memberInfo.getDistrictId());
                 mBinding.setCityName(cityName);
-                mBinding.setDistrict(cityName + " " + districtName);
+                mBinding.setDistrict(cityName + (districtName.isEmpty() ? "" : " ") + districtName);
                 Runnable ra = () -> {
                     if (!memberInfo.getMoreImages().isEmpty()) {
                         String[] images = memberInfo.getMoreImages().split("#");
@@ -298,6 +300,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
 
                 attentionStatus();
                 personOtherDyn();
+                contactNum();
                 mBinding.setVariable(BR.viewModel, MemberDetailViewModel.this);
             }
 
@@ -401,6 +404,17 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 Intent intent = new Intent("lobster_attention");
                 intent.putExtra("isAttention", mBinding.getIsAttention());
                 activity.sendBroadcast(intent);
+            }
+        }, activity).setOtherUserId(otherUserId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void contactNum() {
+        contactNumApi api = new contactNumApi(new HttpOnNextListener<ContactNum>() {
+            @Override
+            public void onNext(ContactNum o) {
+                mBinding.setContactNum(o);
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);

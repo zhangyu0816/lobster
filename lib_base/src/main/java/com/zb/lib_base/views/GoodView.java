@@ -85,8 +85,9 @@ public class GoodView extends RelativeLayout {
     }
 
 
-    @BindingAdapter("isLike")
-    public static void likeStatus(GoodView view, boolean isLike) {
+    @BindingAdapter(value = {"isLike", "isGrey"}, requireAll = false)
+    public static void likeStatus(GoodView view, boolean isLike, boolean isGrey) {
+        view.findViewById(R.id.iv_unLike).setBackgroundResource(isGrey ? R.drawable.like_unselect_grey_icon : R.drawable.like_unselect_icon);
         if (isLike) {
             view.findViewById(R.id.iv_like).setVisibility(VISIBLE);
             view.findViewById(R.id.iv_unLike).setVisibility(GONE);

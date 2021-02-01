@@ -133,6 +133,7 @@
             <com.zb.lib_base.views.GoodView
                 android:id="@+id/good_view"
                 isLike="@{GoodDb.getInstance().hasGood(item.friendDynId)}"
+                isGrey="@{true}"
                 onClickDelayed="@{v->viewModel.doLike(v,position)}"
                 android:layout_width="40dp"
                 android:layout_height="40dp"

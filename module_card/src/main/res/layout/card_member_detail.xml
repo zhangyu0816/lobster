@@ -53,6 +53,9 @@
             name="mineInfo"
             type="com.zb.lib_base.model.MineInfo" />
 
+        <variable
+            name="contactNum"
+            type="com.zb.lib_base.model.ContactNum" />
     </data>
 
     <RelativeLayout
@@ -173,17 +176,42 @@
                     android:background="@drawable/btn_bg_white_radius10"
                     android:padding="12dp">
 
-                    <TextView
-                        android:id="@+id/tv_nick"
+                    <LinearLayout
+                        android:id="@+id/nick_linear"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="15dp"
-                        android:background="@{viewModel.memberInfo==null?@drawable/default_bg:@drawable/empty_bg}"
-                        android:text="@{viewModel.memberInfo.remark.isEmpty()?viewModel.memberInfo.nick:viewModel.memberInfo.remark}"
-                        android:textColor="@color/black_252"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        tools:text="默认仓库" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/iv_logo"
+                            defaultRes="@{ObjectUtils.getDefaultRes()}"
+                            imageUrl="@{viewModel.memberInfo.image}"
+                            isCircle="@{true}"
+                            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(100)}"
+                            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(100)}"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginEnd="8dp" />
+
+                        <TextView
+                            android:id="@+id/tv_nick"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:background="@{viewModel.memberInfo==null?@drawable/default_bg:@drawable/empty_bg}"
+                            android:text="@{viewModel.memberInfo.remark.isEmpty()?viewModel.memberInfo.nick:viewModel.memberInfo.remark}"
+                            android:textColor="#24242A"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            tools:text="默认仓库" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@{viewModel.memberInfo.sex==0?@drawable/icon_female:@drawable/icon_male}" />
+                    </LinearLayout>
+
 
                     <ImageView
                         android:id="@+id/imageView5"
@@ -191,9 +219,10 @@
                         viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(210)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/tv_nick"
+                        android:layout_below="@+id/nick_linear"
                         android:layout_marginTop="8dp"
-                        android:background="@{viewModel.memberInfo.faceAttest==1?@drawable/big_real_icon:@drawable/big_noreal_icon}" />
+                        android:background="@{viewModel.memberInfo.faceAttest==1?@drawable/big_real_icon:@drawable/big_noreal_icon}"
+                        tools:background="@drawable/big_real_icon" />
 
                     <ImageView
                         android:id="@+id/imageView4"
@@ -201,26 +230,164 @@
                         viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(162)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/tv_nick"
+                        android:layout_below="@+id/nick_linear"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
                         android:layout_toEndOf="@+id/imageView5"
-                        android:background="@{viewModel.memberInfo.memberType==2?@drawable/big_vip_icon:@drawable/big_novip_icon}" />
+                        android:background="@{viewModel.memberInfo.memberType==2?@drawable/big_vip_icon:@drawable/big_novip_icon}"
+                        tools:background="@drawable/big_vip_icon" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="29dp"
                         android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
                         android:background="@{isAttention?@drawable/btn_bg_black_c3b_radius60:@drawable/btn_bg_purple_7a4_radius60}"
                         android:gravity="center"
                         android:onClick="@{viewModel::follow}"
                         android:paddingStart="20dp"
                         android:paddingEnd="20dp"
                         android:text="@{isAttention?@string/attention_false:@string/attention_true}"
-                        android:textColor="@color/white"
+                        android:textColor="@{isAttention?@color/black_827:@color/white}"
                         android:textSize="14sp"
                         android:visibility="@{viewModel.otherUserId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
+
+                    <View
+                        android:id="@+id/line_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_below="@+id/imageView4"
+                        android:layout_marginTop="12dp"
+                        android:background="#E9E8EE" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/line_3"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{distant}"
+                                    android:textColor="#221F23"
+                                    android:textSize="25sp"
+                                    android:textStyle="bold"
+                                    tools:text="25.5" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:text="距离(KM)"
+                                    android:textColor="#999999"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="1px"
+                                android:layout_height="30dp"
+                                android:layout_gravity="center_vertical"
+                                android:background="#DEDEDE" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{String.format(@string/user_age,DateUtil.getAge(viewModel.memberInfo.birthday,viewModel.memberInfo.age))}"
+                                    android:textColor="#221F23"
+                                    android:textSize="25sp"
+                                    android:textStyle="bold"
+                                    tools:text="25.5" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:text="年龄"
+                                    android:textColor="#999999"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="1px"
+                                android:layout_height="30dp"
+                                android:layout_gravity="center_vertical"
+                                android:background="#DEDEDE" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@{cityName}"
+                                    android:textColor="#221F23"
+                                    android:textSize="25sp"
+                                    android:textStyle="bold"
+                                    tools:text="温州" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:text="地区"
+                                    android:textColor="#999999"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:background="@mipmap/fuhao_qian" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="18dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="18dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="@{viewModel.memberInfo==null?@drawable/default_bg:@drawable/empty_bg}"
+                            android:text="@{viewModel.memberInfo.personalitySign.trim().isEmpty()?@string/sign_content:viewModel.memberInfo.personalitySign}"
+                            android:textColor="#333333"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            tools:text="默认仓库" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:background="@mipmap/fuhao_hou" />
+                    </LinearLayout>
                 </RelativeLayout>
 
                 <ImageView
@@ -258,9 +425,9 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{distant}"
-                                android:textColor="#221F23"
-                                android:textSize="25sp"
+                                android:text='@{String.format("%d",contactNum.concernCount)}'
+                                android:textColor="@color/black_252"
+                                android:textSize="18sp"
                                 android:textStyle="bold"
                                 tools:text="25.5" />
 
@@ -268,17 +435,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:text="距离(KM)"
-                                android:textColor="#999999"
+                                android:text="@{viewModel.memberInfo.sex==0?@string/att_0:@string/att_1}"
+                                android:textColor="#C3BDCD"
                                 android:textSize="12sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
-
-                        <View
-                            android:layout_width="1px"
-                            android:layout_height="30dp"
-                            android:layout_gravity="center_vertical"
-                            android:background="#DEDEDE" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -290,9 +451,9 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{String.format(@string/user_age,DateUtil.getAge(viewModel.memberInfo.birthday,viewModel.memberInfo.age))}"
-                                android:textColor="#221F23"
-                                android:textSize="25sp"
+                                android:text='@{String.format("%d",contactNum.fansCount)}'
+                                android:textColor="@color/black_252"
+                                android:textSize="18sp"
                                 android:textStyle="bold"
                                 tools:text="25.5" />
 
@@ -300,17 +461,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:text="年龄"
-                                android:textColor="#999999"
+                                android:text="@{viewModel.memberInfo.sex==0?@string/fans_0:@string/fans_1}"
+                                android:textColor="#C3BDCD"
                                 android:textSize="12sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
-
-                        <View
-                            android:layout_width="1px"
-                            android:layout_height="30dp"
-                            android:layout_gravity="center_vertical"
-                            android:background="#DEDEDE" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -322,9 +477,9 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@{cityName}"
-                                android:textColor="#221F23"
-                                android:textSize="25sp"
+                                android:text='@{String.format("%d",contactNum.beLikeCount)}'
+                                android:textColor="@color/black_252"
+                                android:textSize="18sp"
                                 android:textStyle="bold"
                                 tools:text="温州" />
 
@@ -332,36 +487,38 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:text="地区"
-                                android:textColor="#999999"
+                                android:text="@{viewModel.memberInfo.sex==0?@string/like_0:@string/like_1}"
+                                android:textColor="#C3BDCD"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text='@{String.format("%d",contactNum.praiseCount)}'
+                                android:textColor="@color/black_252"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                tools:text="温州" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="获赞量"
+                                android:textColor="#C3BDCD"
                                 android:textSize="12sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:background="@mipmap/fuhao_qian" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@{viewModel.memberInfo==null?@drawable/default_bg:@drawable/empty_bg}"
-                        android:text="@{viewModel.memberInfo.personalitySign.trim().isEmpty()?@string/sign_content:viewModel.memberInfo.personalitySign}"
-                        android:textColor="#333333"
-                        android:textSize="18sp"
-                        tools:text="默认仓库" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:background="@mipmap/fuhao_hou" />
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -434,26 +591,54 @@
                         android:layout_marginTop="16dp"
                         android:orientation="horizontal">
 
-                        <TextView
+                        <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@{String.format(@string/user_id_2,viewModel.otherUserId)}"
-                            android:textColor="#666666"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            tools:text="虾菇 ID:216548" />
+                            android:layout_weight="2">
 
-                        <TextView
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="性别"
+                                android:textColor="#4D4B5E"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:text="@{viewModel.memberInfo.sex==0?@string/sex_0:@string/sex_1}"
+                                android:textColor="@color/black_252"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
+
+                        <View
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:singleLine="true"
-                            android:text="@{String.format(@string/user_job,job)}"
-                            android:textColor="#666666"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            tools:text="职业：设计师" />
+                            android:layout_weight="1" />
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="ID"
+                                android:textColor="#4D4B5E"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:text="@{String.format(@string/user_id_2,viewModel.otherUserId)}"
+                                android:textColor="@color/black_252"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
                     </LinearLayout>
 
                     <LinearLayout
@@ -462,38 +647,91 @@
                         android:layout_marginTop="16dp"
                         android:orientation="horizontal">
 
-                        <TextView
+                        <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@{String.format(@string/user_constellation,constellation)}"
-                            android:textColor="#666666"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            tools:text="星座：顶顶顶" />
+                            android:layout_weight="2">
 
-                        <TextView
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="星座"
+                                android:textColor="#4D4B5E"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:text="@{constellation}"
+                                android:textColor="@color/black_252"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
+
+                        <View
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@{String.format(@string/user_district,district)}"
-                            android:textColor="#666666"
-                            android:textSize="14sp"
-                            android:textStyle="bold"
-                            tools:text="地区：顶顶顶顶" />
+                            android:layout_weight="1" />
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="地区"
+                                android:textColor="#4D4B5E"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:text="@{district}"
+                                android:textColor="@color/black_252"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
                     </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="@{String.format(@string/user_sex,viewModel.memberInfo.sex==0?@string/sex_0:@string/sex_1)}"
-                        android:textColor="#666666"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        tools:text="性别：顶顶顶" />
-                </LinearLayout>
+                        android:orientation="horizontal">
 
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="职业"
+                                android:textColor="#4D4B5E"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:text="@{job}"
+                                android:textColor="@color/black_252"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+                        </RelativeLayout>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="3" />
+                    </LinearLayout>
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

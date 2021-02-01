@@ -223,7 +223,7 @@ public interface HttpService {
     Observable<BaseResultEntity<OrderNumber>> submitOpenedMemberOrder(@Query("memberOfOpenedProductId") long memberOfOpenedProductId, @Query("productCount") int productCount);
 
     // 首充
-    @GET("api/MemberOrder_firstOpenMemberPage")
+    @GET("api/MemberOrder_isFirstOpenMember")
     Observable<BaseResultEntity<Integer>> firstOpenMemberPage();
 
     // 获取交易订单号
@@ -303,7 +303,7 @@ public interface HttpService {
     // 查看评论
     @GET("api/Interactive_seeReviews")
     Observable<BaseResultEntity<List<Review>>> seeReviews(@Query("friendDynId") long friendDynId, @Query("timeSortType") int timeSortType,
-                                                          @Query("pageNo") int pageNo, @Query("pageSize") int pageSize);
+                                                          @Query("pageNo") int pageNo, @Query("row") int row);
 
     // 删除动态
     @GET("api/Interactive_deleteDyn")

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -130,6 +131,13 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 isFirst = true;
             }
             return false;
+        });
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(500);
+            if(mBinding.ivRemind.getVisibility()==View.VISIBLE){
+                SystemClock.sleep(2500);
+                activity.runOnUiThread(() -> mBinding.ivRemind.setVisibility(View.GONE));
+            }
         });
     }
 
@@ -365,7 +373,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     mBinding.refresh.finishLoadMore();
                 }
             }
-        }, activity).setFriendDynId(friendDynId).setTimeSortType(1).setPageNo(pageNo);
+        }, activity).setFriendDynId(friendDynId).setTimeSortType(1).setPageNo(pageNo).setRow(10);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

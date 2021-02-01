@@ -161,7 +161,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
         } else {
             if (discoverInfo == null) return;
             mBinding.setIsPlay(true);
-//            mBinding.videoView.setVideoPath(discoverInfo.getVideoPath());
             mBinding.videoView.start();
             mBinding.reviewList.start();
         }
@@ -175,7 +174,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             reviewList.clear();
             adapter.notifyDataSetChanged();
             seeReviews(1);
-        });
+        }).setMainId(memberInfo.getUserId());
     }
 
     @Override
@@ -501,7 +500,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                     mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
                 }
                 seeLikers(1);
-//                seeReviews(pageNo + 1);
             }
 
             @Override
@@ -510,7 +508,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                     seeLikers(1);
                 }
             }
-        }, activity).setFriendDynId(friendDynId).setTimeSortType(1).setPageNo(pageNo);
+        }, activity).setFriendDynId(friendDynId).setTimeSortType(1).setPageNo(pageNo).setRow(10);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -532,8 +530,6 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                 } else {
                     mBinding.reviewList.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
                 }
-
-//                seeLikers(pageNo + 1);
             }
         }, activity).setFriendDynId(friendDynId).setPageNo(pageNo);
         HttpManager.getInstance().doHttpDeal(api);

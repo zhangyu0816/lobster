@@ -239,7 +239,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             reviewList.clear();
             reviewAdapter.notifyDataSetChanged();
             seeReviews(1);
-        });
+        }).setMainId(discoverInfo.getUserId());
     }
 
     @Override
@@ -579,7 +579,6 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                     } else {
                         reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
                     }
-//                    seeReviews(pageNo + 1);
                     seeLikers(1);
                 }
             }
@@ -590,7 +589,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                     seeLikers(1);
                 }
             }
-        }, activity).setFriendDynId(discoverInfo.getFriendDynId()).setTimeSortType(1).setPageNo(pageNo);
+        }, activity).setFriendDynId(discoverInfo.getFriendDynId()).setTimeSortType(1).setPageNo(pageNo).setRow(10);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -612,7 +611,6 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                     } else {
                         reviewListView.setLayoutParams(new RelativeLayout.LayoutParams(-2, -2));
                     }
-//                    seeLikers(pageNo + 1);
                 }
             }
         }, activity).setFriendDynId(discoverInfo.getFriendDynId()).setPageNo(pageNo);

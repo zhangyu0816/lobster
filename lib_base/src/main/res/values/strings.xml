@@ -21,9 +21,9 @@
     <string name="sex_ta_1">他</string>
     <string name="sign_content">无个性不签名！</string>
     <string name="attention_true">立即关注</string>
-    <string name="attention_false">已关注</string>
+    <string name="attention_false">取消关注</string>
     <string name="user_id_1">虾菇号 %d</string>
-    <string name="user_id_2">虾菇 ID:%d</string>
+    <string name="user_id_2">%d</string>
     <string name="user_job">职业：%s</string>
     <string name="user_constellation">星座：%s</string>
     <string name="user_district">地区：%s</string>
@@ -68,8 +68,20 @@
     <string name="wait_chat">%s正在等你聊天......</string>
     <string name="open_xg">开启虾菇</string>
 
-    <string name="review_info"><Data><![CDATA[<font color="#252430">%s</font>  <font color="#9596A1">%s</font>  <font color="#2C2B31"><b>%s</b></font> <font color="#9596A1"><small>%s</small></font>]]></Data></string>
+    <string name="review_info"><Data><![CDATA[<font color="#9599A1">%s</font>  <font color="#2C2B31">%s</font>]]></Data></string>
+    <string name="review_info_1"><Data><![CDATA[<font color="#2C2B31"><b>%s</b></font> <font color="#9596A1"><small>%s</small></font>]]></Data></string>
     <string name="reward_num_0">快成为送礼第一人</string>
     <string name="reward_num"><Data><![CDATA[<font color="#827F9A"><small><b>已有</b></small></font> <font color="#333333"><b>%s</b></font> <font color="#827F9A"><small><b>人送礼物</b></small></font>]]></Data></string>
     <string name="reward_no">No.%d</string>
+
+    <string name="att_0">她的关注</string>
+    <string name="att_1">他的关注</string>
+    <string name="fans_0">她的粉丝</string>
+    <string name="fans_1">他的粉丝</string>
+    <string name="like_0">喜欢她</string>
+    <string name="like_1">喜欢他</string>
+    <string name="vip_share">分享送VIP</string>
+    <string name="vip_share_info">推广1人，各得3天vip</string>
+    <string name="vip_open">首充翻倍</string>
+    <string name="vip_open_info">充1月送1月 充1年送1年</string>
 </resources>

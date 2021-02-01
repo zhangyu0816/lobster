@@ -574,6 +574,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
                 MineApp.contactNum.setBeLikeCount(o.getBeLikeCount());
                 MineApp.contactNum.setLikeCount(o.getLikeCount());
                 MineApp.contactNum.setBeSuperLikeCount(o.getBeSuperLikeCount());
+                MineApp.contactNum.setPraiseCount(o.getPraiseCount());
                 int lastBeLikeCount = PreferenceUtil.readIntValue(activity, "nowBeLikeCount" + BaseActivity.userId);
                 int count = o.getBeLikeCount() - lastBeLikeCount;
                 ChatList chatList = new ChatList();

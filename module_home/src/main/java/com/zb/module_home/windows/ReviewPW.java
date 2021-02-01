@@ -35,6 +35,7 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
     private long reviewId;
     private CallBack callBack;
     private int reviews;
+    private long mainId;
 
     public ReviewPW(View parentView, long friendDynId, int reviews, CallBack callBack) {
         super(parentView, false);
@@ -42,6 +43,11 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
         this.callBack = callBack;
         this.reviews = reviews;
         initUI();
+    }
+
+    public ReviewPW setMainId(long mainId) {
+        this.mainId = mainId;
+        return this;
     }
 
     @Override
@@ -84,6 +90,9 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
                 int start = reviewList.size();
                 binding.tvNoData.setVisibility(View.GONE);
                 binding.refresh.setVisibility(View.VISIBLE);
+                for (Review item : o) {
+                    item.setMainId(mainId);
+                }
                 reviewList.addAll(o);
                 adapter.notifyItemRangeChanged(start, reviewList.size());
                 binding.refresh.finishLoadMore();
@@ -102,7 +111,7 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
                     }
                 }
             }
-        }, activity).setFriendDynId(friendDynId).setTimeSortType(1).setPageNo(pageNo);
+        }, activity).setFriendDynId(friendDynId).setTimeSortType(1).setPageNo(pageNo).setRow(10);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

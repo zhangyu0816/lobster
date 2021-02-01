@@ -24,8 +24,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:id="@+id/top_relative"
@@ -80,7 +79,6 @@
                 android:id="@+id/appbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:elevation="0dp">
 
@@ -88,7 +86,7 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/white"
+                    android:background="#ECE2FE"
                     android:visibility="@{showBottle?View.VISIBLE:View.GONE}"
                     app:contentInsetStart="0dp"
                     app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
@@ -108,6 +106,7 @@
                 android:id="@+id/view_page"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/gradient_red_grey"
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

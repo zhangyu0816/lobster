@@ -13,16 +13,14 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/black_efe">
+        android:layout_height="match_parent">
 
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/refresh"
             onLoadMoreListener="@{viewModel}"
             onRefreshListener="@{viewModel}"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/black_efe">
+            android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 adapter="@{viewModel.adapter}"

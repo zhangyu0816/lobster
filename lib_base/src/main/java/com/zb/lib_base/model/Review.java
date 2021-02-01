@@ -20,6 +20,7 @@ public class Review extends BaseObservable {
 
     private int type = 0;
     private long mainId;
+    private long forReviewId;
 
     public Review() {
     }
@@ -139,4 +140,5 @@ public class Review extends BaseObservable {
         this.mainId = mainId;
         notifyPropertyChanged(BR.mainId);
     }
+
 }

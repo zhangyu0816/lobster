@@ -228,6 +228,7 @@
                                         android:textSize="12sp" />
 
                                 </LinearLayout>
+
                                 <LinearLayout
                                     onClickDelayed="@{v->viewModel.contactNumDetail(4)}"
                                     android:layout_width="0dp"
@@ -408,7 +409,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginEnd="5dp"
                                         android:layout_weight="1"
-                                        android:background="@mipmap/mine_share_item_bg"
+                                        android:background="@{MineApp.isFirstOpen?@drawable/mine_vip_item_bg:@drawable/mine_share_item_bg}"
                                         android:gravity="center_vertical"
                                         android:orientation="vertical">
 
@@ -416,18 +417,22 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_marginStart="10dp"
-                                            android:text="分享送VIP"
+                                            android:text="@{MineApp.isFirstOpen?@string/vip_open:@string/vip_share}"
                                             android:textColor="@color/white"
-                                            android:textSize="14sp" />
+                                            android:textSize="14sp"
+                                            android:visibility="@{MineApp.isFirstOpen?View.GONE:View.VISIBLE}"
+                                            tools:visibility="gone" />
 
                                         <TextView
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_marginStart="10dp"
                                             android:layout_marginTop="5dp"
-                                            android:text="推广1人，各得3天vip"
+                                            android:text="@{MineApp.isFirstOpen?@string/vip_open_info:@string/vip_share_info}"
                                             android:textColor="@color/white"
-                                            android:textSize="11sp" />
+                                            android:textSize="11sp"
+                                            android:visibility="@{MineApp.isFirstOpen?View.GONE:View.VISIBLE}"
+                                            tools:visibility="gone" />
 
                                     </LinearLayout>
 
@@ -465,13 +470,13 @@
                                         </LinearLayout>
 
                                         <ImageView
-                                            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(194)}"
                                             viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(72)}"
+                                            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(194)}"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_centerVertical="true"
-                                            android:layout_toEndOf="@+id/like_layout"
                                             android:layout_marginStart="5dp"
+                                            android:layout_toEndOf="@+id/like_layout"
                                             android:background="@{mineInfo.sex==0?@drawable/be_like_male_icon:@drawable/be_like_female_icon}"
                                             tools:background="@drawable/be_like_male_icon" />
                                     </RelativeLayout>
