@@ -145,7 +145,8 @@
                         android:text="@{mineInfo.memberType==2?@string/tv_renew:@string/tv_open}"
                         android:textColor="@color/white"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:text="@string/tv_renew"/>
                 </RelativeLayout>
 
                 <ImageView

@@ -38,6 +38,7 @@ import com.zb.lib_base.api.flashHistoryMsgListApi;
 import com.zb.lib_base.api.flashReadOverHistoryMsgApi;
 import com.zb.lib_base.api.historyMsgListApi;
 import com.zb.lib_base.api.myBottleApi;
+import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.readOverDriftBottleHistoryMsgApi;
 import com.zb.lib_base.api.readOverHistoryMsgApi;
@@ -65,6 +66,7 @@ import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.PrivateMsg;
 import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.model.StanzaInfo;
@@ -82,6 +84,7 @@ import com.zb.lib_base.utils.glide.BlurTransformation;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.views.SoundView;
 import com.zb.lib_base.windows.BottleVipPW;
+import com.zb.lib_base.windows.VipAdPW;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -133,6 +136,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
     private BaseReceiver chatReceiver;
     private BaseReceiver bottleChatReceiver;
     private BaseReceiver flashChatReceiver;
+    private BaseReceiver openVipReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -184,6 +188,8 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                 bottleChatReceiver.unregisterReceiver();
             if (flashChatReceiver != null)
                 flashChatReceiver.unregisterReceiver();
+            if (openVipReceiver != null)
+                openVipReceiver.unregisterReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -272,7 +278,10 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                 ActivityUtils.getCardMemberDetail(otherUserId, false);
                 return;
             }
-            new BottleVipPW(mBinding.getRoot());
+            if (MineApp.isFirstOpen)
+                new VipAdPW(mBinding.getRoot(), 0, "");
+            else
+                new BottleVipPW(mBinding.getRoot());
         } else if (msgChannelType == 3) {
             if (!isLockImage)
                 ActivityUtils.getCardMemberDetail(otherUserId, false);
@@ -913,7 +922,25 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         });
     }
 
+    @Override
+    public void myInfo() {
+        myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
+            @Override
+            public void onNext(MineInfo o) {
+                MineApp.mineInfo = o;
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
     private void initReceiver() {
+        // 开通会员
+        openVipReceiver = new BaseReceiver(activity, "lobster_openVip") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                myInfo();
+            }
+        };
         cameraReceiver = new BaseReceiver(activity, "lobster_camera") {
             @Override
             public void onReceive(Context context, Intent intent) {

@@ -9,8 +9,6 @@
 
         <import type="android.view.View" />
 
-        <import type="com.zb.lib_base.app.MineApp" />
-
         <variable
             name="viewModel"
             type="com.zb.module_mine.vm.MineViewModel" />
@@ -38,6 +36,11 @@
         <variable
             name="showBg"
             type="boolean" />
+
+        <variable
+            name="isFirstOpen"
+            type="boolean" />
+
     </data>
 
     <RelativeLayout
@@ -404,34 +407,36 @@
                                     android:orientation="horizontal">
 
                                     <LinearLayout
-                                        onClickDelayed="@{viewModel::openShare}"
+                                        android:id="@+id/vip_linear"
+                                        onClickDelayed="@{v->viewModel.openShare(0)}"
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:layout_marginEnd="5dp"
                                         android:layout_weight="1"
-                                        android:background="@{MineApp.isFirstOpen?@drawable/mine_vip_item_bg:@drawable/mine_share_item_bg}"
                                         android:gravity="center_vertical"
                                         android:orientation="vertical">
 
                                         <TextView
+                                            android:id="@+id/vip_title"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_marginStart="10dp"
-                                            android:text="@{MineApp.isFirstOpen?@string/vip_open:@string/vip_share}"
+                                            android:text="@{isFirstOpen?@string/vip_open:@string/vip_share}"
                                             android:textColor="@color/white"
                                             android:textSize="14sp"
-                                            android:visibility="@{MineApp.isFirstOpen?View.GONE:View.VISIBLE}"
+                                            android:visibility="gone"
                                             tools:visibility="gone" />
 
                                         <TextView
+                                            android:id="@+id/vip_info"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_marginStart="10dp"
                                             android:layout_marginTop="5dp"
-                                            android:text="@{MineApp.isFirstOpen?@string/vip_open_info:@string/vip_share_info}"
+                                            android:text="@{isFirstOpen?@string/vip_open_info:@string/vip_share_info}"
                                             android:textColor="@color/white"
                                             android:textSize="11sp"
-                                            android:visibility="@{MineApp.isFirstOpen?View.GONE:View.VISIBLE}"
+                                            android:visibility="gone"
                                             tools:visibility="gone" />
 
                                     </LinearLayout>
@@ -483,7 +488,7 @@
                                 </LinearLayout>
 
                                 <RelativeLayout
-                                    onClickDelayed="@{viewModel::openShare}"
+                                    onClickDelayed="@{v->viewModel.openShare(1)}"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="10dp"

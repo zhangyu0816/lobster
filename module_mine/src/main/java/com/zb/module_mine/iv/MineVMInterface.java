@@ -8,7 +8,7 @@ public interface MineVMInterface {
 
     void openVip(View view);
 
-    void openShare(View view);
+    void openShare(int index);
 
     void toEditMember(View view);
 

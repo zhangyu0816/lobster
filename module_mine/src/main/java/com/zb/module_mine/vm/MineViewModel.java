@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.view.View;
 
@@ -46,6 +47,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     private BaseReceiver updateChatTypeReceiver;
     private BaseReceiver visitorReceiver;
     private BaseReceiver attentionListReceiver;
+    private BaseReceiver isFirstOpenReceiver;
     private List<Fragment> fragments = new ArrayList<>();
     private List<String> selectorList = new ArrayList<>();
     private boolean createFragment = false;
@@ -55,7 +57,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         super.setBinding(binding);
         mBinding = (MineFragBinding) binding;
         playAnimator(mBinding.circleView);
-        goAnimator(mBinding.ivGo, 0.7f, 1.0f, 600L);
+        goAnimator(mBinding.ivGo, 0.8f, 1.0f, 800L);
         selectorList.add("发布照片");
         selectorList.add("发布小视频");
         mBinding.setMineNewsCount(MineApp.mineNewsCount);
@@ -91,7 +93,6 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                 if (chatType == 1) {
                     mBinding.setContactNum(MineApp.contactNum);
                     mBinding.setHasNewBeLike(MineApp.contactNum.getBeLikeCount() > PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId));
-
                 }
             }
         };
@@ -112,6 +113,18 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                 mBinding.setContactNum(MineApp.contactNum);
             }
         };
+        isFirstOpenReceiver = new BaseReceiver(activity, "lobster_isFirstOpen") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                mBinding.setIsFirstOpen(MineApp.isFirstOpen);
+                if (!MineApp.isFirstOpen) {
+                    mBinding.vipTitle.setVisibility(View.VISIBLE);
+                    mBinding.vipInfo.setVisibility(View.VISIBLE);
+                    mBinding.vipLinear.setBackgroundResource(R.drawable.mine_share_item_bg);
+                } else
+                    mHandler.postDelayed(ra, 500);
+            }
+        };
 
         MineApp.getApp().getFixedThreadPool().execute(() -> {
             SystemClock.sleep(300);
@@ -121,7 +134,28 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                         mBinding.setShowBg(verticalOffset <= height));
             });
         });
+        mBinding.setIsFirstOpen(MineApp.isFirstOpen);
+        if (!MineApp.isFirstOpen) {
+            mBinding.vipTitle.setVisibility(View.VISIBLE);
+            mBinding.vipInfo.setVisibility(View.VISIBLE);
+            mBinding.vipLinear.setBackgroundResource(R.drawable.mine_share_item_bg);
+        } else
+            mHandler.postDelayed(ra, 500);
     }
+
+    private Handler mHandler = new Handler();
+    private Runnable ra = new Runnable() {
+        @Override
+        public void run() {
+            index++;
+            if (index % 2 == 0) {
+                mBinding.vipLinear.setBackgroundResource(R.drawable.mine_big_vip_item_bg);
+            } else
+                mBinding.vipLinear.setBackgroundResource(R.drawable.mine_vip_item_bg);
+            mHandler.postDelayed(ra, 500);
+        }
+    };
+    private int index = 1;
 
     public void onResume() {
         mBinding.setMineInfo(MineApp.mineInfo);
@@ -139,6 +173,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             updateChatTypeReceiver.unregisterReceiver();
             visitorReceiver.unregisterReceiver();
             attentionListReceiver.unregisterReceiver();
+            isFirstOpenReceiver.unregisterReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -192,13 +227,13 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     }
 
     @Override
-    public void openShare(View view) {
-        if (MineApp.isFirstOpen) {
-
-        } else {
+    public void openShare(int index) {
+        if (index == 1 || !MineApp.isFirstOpen) {
             ActivityUtils.getMineWeb("邀请好友赚钱", HttpManager.BASE_URL + "mobile/Share_marketingInfo" +
                     "?userId=" + BaseActivity.userId + "&sessionId=" + BaseActivity.sessionId +
                     "&pfDevice=Android&pfAppType=203&pfAppVersion=" + MineApp.versionName);
+        } else {
+            new VipAdPW(mBinding.getRoot(), 0, "");
         }
     }
 
@@ -245,6 +280,16 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             public void onNext(MineInfo o) {
                 MineApp.mineInfo = o;
                 mBinding.setMineInfo(MineApp.mineInfo);
+                if (MineApp.mineInfo.getMemberType() == 2) {
+                    MineApp.isFirstOpen = false;
+                    mBinding.setIsFirstOpen(MineApp.isFirstOpen);
+                    if (!MineApp.isFirstOpen) {
+                        mBinding.vipTitle.setVisibility(View.VISIBLE);
+                        mBinding.vipInfo.setVisibility(View.VISIBLE);
+                    }
+                    mHandler.removeCallbacks(ra);
+                    mBinding.vipLinear.setBackgroundResource(R.drawable.mine_share_item_bg);
+                }
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

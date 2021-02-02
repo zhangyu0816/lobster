@@ -5,8 +5,9 @@
     <string name="code_second_finish"><Data><![CDATA[<font color="#ffffff"><u>重新发送验证码</u></font>]]></Data></string>
     <string name="symbol_money">￥</string>
     <string name="symbol_money_">￥ </string>
-    <string name="price_moth">￥%.1f/月</string>
+    <string name="price_moth">￥%.2f元/天</string>
     <string name="price_save">省%.1f元</string>
+    <string name="price_more">聚划算</string>
     <string name="quotation">”</string>
     <string name="open_btn">￥%.2f 获取VIP特权</string>
     <string name="pay_btn">立即续费VIP特权</string>

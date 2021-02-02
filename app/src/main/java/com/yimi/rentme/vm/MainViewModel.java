@@ -428,6 +428,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface {
             @Override
             public void onNext(Integer o) {
                 MineApp.isFirstOpen = o == 1;
+                activity.sendBroadcast(new Intent("lobster_isFirstOpen"));
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

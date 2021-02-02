@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="15dp"
-                android:text="@{String.format(@string/price_moth, (item.price/(item.dayCount/30)))}"
+                android:text="@{String.format(@string/price_moth, (item.price/item.dayCount))}"
                 android:textColor="@{isSelect?@color/red_fe4:@color/black_827}"
                 android:textSize="9sp"
                 tools:text="￥28/月" />
