@@ -431,7 +431,16 @@ public class DateUtil {
         long hour = (between / (60 * 60 * 1000) - day * 24);
         long min = ((between / (60 * 1000)) - day * 24 * 60 - hour * 60);
         if (day > 0) {
-            return changeTime(strDate);
+            if (day < 7)
+                return day + "天前";
+            else if (day < 14)
+                return "1星期前";
+            else if (day < 21)
+                return "2星期前";
+            else if (day < 28)
+                return "3星期前";
+            else
+                return "1个月前";
         }
         if (hour > 0) {
             return hour + "小时前";
@@ -439,7 +448,7 @@ public class DateUtil {
         if (min > 0) {
             return min + "分钟前";
         } else {
-            return "1分钟前";
+            return "刚刚";
         }
     }
 

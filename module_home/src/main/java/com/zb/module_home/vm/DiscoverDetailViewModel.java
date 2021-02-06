@@ -134,7 +134,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         });
         MineApp.getApp().getFixedThreadPool().execute(() -> {
             SystemClock.sleep(500);
-            if(mBinding.ivRemind.getVisibility()==View.VISIBLE){
+            if (mBinding.ivRemind.getVisibility() == View.VISIBLE) {
                 SystemClock.sleep(2500);
                 activity.runOnUiThread(() -> mBinding.ivRemind.setVisibility(View.GONE));
             }
@@ -144,6 +144,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void setAdapter() {
         // 评论
+        reviewList.add(new Review(MineApp.mineInfo.getImage(), "说句打动人心的表白，成功率高达99%", BaseActivity.userId));
         reviewAdapter = new HomeAdapter<>(activity, R.layout.item_home_review, reviewList, this);
         // 打赏
         rewardAdapter = new HomeAdapter<>(activity, R.layout.item_home_reward, rewardList, this);
@@ -360,6 +361,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     item.setMainId(memberInfo.getUserId());
                 }
                 reviewList.addAll(o);
+                if (start > 0)
+                    start--;
                 reviewAdapter.notifyItemRangeChanged(start, reviewList.size());
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
@@ -408,7 +411,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 mBinding.setMemberInfo(memberInfo);
                 mBinding.setViewModel(DiscoverDetailViewModel.this);
                 attentionStatus();
-                reviewList.add(new Review(memberInfo.getImage(), "说句打动人心的表白，成功率高达99%", memberInfo.getUserId()));
                 seeReviews();
             }
         }, activity).setOtherUserId(discoverInfo.getUserId());

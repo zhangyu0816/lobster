@@ -208,10 +208,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
 
         GoodView goodView = (GoodView) view;
 
-        if (GoodDb.getInstance().hasGood(discoverInfo.getFriendDynId())) {
-            goodView.playUnlike();
-            dynCancelLike();
-        } else {
+        if (!GoodDb.getInstance().hasGood(discoverInfo.getFriendDynId())) {
             goodView.playLike();
             dynDoLike();
         }

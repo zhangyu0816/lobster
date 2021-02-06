@@ -250,8 +250,10 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
         GoodView goodView = (GoodView) view;
 
         if (GoodDb.getInstance().hasGood(discoverInfo.getFriendDynId())) {
-            goodView.playUnlike();
-            dynCancelLike();
+            if (otherUserId != 0) {
+                goodView.playUnlike();
+                dynCancelLike();
+            }
         } else {
             goodView.playLike();
             dynDoLike();

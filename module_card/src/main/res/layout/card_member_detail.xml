@@ -168,10 +168,20 @@
 
                 </RelativeLayout>
 
+                <ImageView
+                    onClickDelayed="@{viewModel::openVip}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@mipmap/member_open_vip"
+                    android:visibility="@{viewModel.memberInfo.memberType==2?View.VISIBLE:View.GONE}" />
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:background="@drawable/btn_bg_white_radius10"
                     android:padding="12dp">
@@ -390,16 +400,6 @@
                     </LinearLayout>
                 </RelativeLayout>
 
-                <ImageView
-                    onClickDelayed="@{viewModel::openVip}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:background="@mipmap/member_open_vip"
-                    android:visibility="@{viewModel.memberInfo.memberType==2?View.VISIBLE:View.GONE}" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -580,7 +580,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="个人信息"
+                        android:text="基本信息"
                         android:textColor="@color/black_252"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -709,6 +709,7 @@
                             android:layout_weight="2">
 
                             <TextView
+                                android:id="@+id/tv_job"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="职业"
@@ -719,10 +720,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
+                                android:layout_marginStart="10dp"
+                                android:layout_toEndOf="@+id/tv_job"
                                 android:text="@{job}"
                                 android:textColor="@color/black_252"
                                 android:textSize="14sp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                tools:text="乌克兰就发我立刻就发文旅局为" />
                         </RelativeLayout>
 
                         <View

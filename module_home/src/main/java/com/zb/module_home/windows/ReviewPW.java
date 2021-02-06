@@ -93,6 +93,8 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
                 for (Review item : o) {
                     item.setMainId(mainId);
                 }
+                if(start>0)
+                    start--;
                 reviewList.addAll(o);
                 adapter.notifyItemRangeChanged(start, reviewList.size());
                 binding.refresh.finishLoadMore();

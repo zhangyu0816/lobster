@@ -10,6 +10,8 @@
 
         <import type="android.text.Html" />
 
+        <import type="com.zb.lib_base.utils.DateUtil" />
+
         <variable
             name="item"
             type="com.zb.lib_base.model.Review" />
@@ -21,6 +23,10 @@
         <variable
             name="viewModel"
             type="com.zb.module_home.vm.DiscoverDetailViewModel" />
+
+        <variable
+            name="isLast"
+            type="boolean" />
 
     </data>
 
@@ -98,7 +104,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:text='@{Html.fromHtml(String.format(@string/review_info,(item.atUserId==0?"":"回复"),item.atUserNick+(item.atUserId==0?"":"：")))}'
+                        android:text='@{Html.fromHtml(String.format(@string/review_info,(item.atUserId==0?"":"回复"),item.atUserNick))}'
                         android:textSize="12sp"
                         tools:visibility="gone" />
                 </LinearLayout>
@@ -107,7 +113,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
-                    android:text='@{Html.fromHtml(String.format(@string/review_info_1,item.text,(item.createTime.empty?"":item.createTime.substring(10,16))))}'
+                    android:text='@{Html.fromHtml(String.format(@string/review_info_1,item.text,(item.createTime.empty?"":DateUtil.getTimeToToday(item.createTime))))}'
                     android:textSize="14sp"
                     tools:visibility="gone" />
             </LinearLayout>
@@ -120,6 +126,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="15dp"
             android:background="#EBEAF1"
-            android:visibility="@{position==0?View.GONE:View.VISIBLE}" />
+            android:visibility="@{(position==0||isLast)?View.GONE:View.VISIBLE}" />
     </LinearLayout>
 </layout>

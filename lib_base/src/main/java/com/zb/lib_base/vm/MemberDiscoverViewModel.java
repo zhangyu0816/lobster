@@ -321,8 +321,10 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
         GoodView goodView = (GoodView) view;
 
         if (GoodDb.getInstance().hasGood(discoverInfo.getFriendDynId())) {
-            goodView.playUnlike();
-            dynCancelLike();
+            if (otherUserId != 0) {
+                goodView.playUnlike();
+                dynCancelLike();
+            }
         } else {
             goodView.playLike();
             dynDoLike();
