@@ -20,11 +20,6 @@
         <variable
             name="vipInfo"
             type="com.zb.lib_base.model.VipInfo" />
-
-        <variable
-            name="mineInfo"
-            type="com.zb.lib_base.model.MineInfo" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -74,6 +69,7 @@
                     android:background="@color/black_efe" />
 
                 <TextView
+                    android:id="@+id/tv_btn"
                     onClickDelayed="@{pw::sure}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -82,7 +78,6 @@
                     android:background="@{MineApp.isFirstOpen?@drawable/btn_yellow_icon:@drawable/btn_bg_icon}"
                     android:gravity="center"
                     android:paddingBottom="12dp"
-                    android:text="@{mineInfo.memberType==2?@string/pay_btn:String.format(@string/open_btn,vipInfo.price)}"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="bold"

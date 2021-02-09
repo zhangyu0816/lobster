@@ -54,7 +54,6 @@ import com.zb.lib_base.windows.FunctionPW;
 import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.TextPW;
 import com.zb.lib_base.windows.VipAdPW;
-import com.zb.module_home.BR;
 import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
 import com.zb.module_home.databinding.HomeDiscoverDetailBinding;
@@ -132,19 +131,11 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             }
             return false;
         });
-        MineApp.getApp().getFixedThreadPool().execute(() -> {
-            SystemClock.sleep(500);
-            if (mBinding.ivRemind.getVisibility() == View.VISIBLE) {
-                SystemClock.sleep(2500);
-                activity.runOnUiThread(() -> mBinding.ivRemind.setVisibility(View.GONE));
-            }
-        });
     }
 
     @Override
     public void setAdapter() {
         // 评论
-        reviewList.add(new Review(MineApp.mineInfo.getImage(), "说句打动人心的表白，成功率高达99%", BaseActivity.userId));
         reviewAdapter = new HomeAdapter<>(activity, R.layout.item_home_review, reviewList, this);
         // 打赏
         rewardAdapter = new HomeAdapter<>(activity, R.layout.item_home_reward, rewardList, this);
@@ -237,8 +228,11 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void selectGift(View view) {
         hintKeyBoard();
-        new GiftPW(mBinding.getRoot(), giftInfo ->
-                new GiftPayPW(mBinding.getRoot(), giftInfo, friendDynId, this::seeGiftRewards));
+        if (discoverInfo.getUserId() == BaseActivity.userId) {
+            ActivityUtils.getHomeRewardList(friendDynId);
+        } else
+            new GiftPW(mBinding.getRoot(), giftInfo ->
+                    new GiftPayPW(mBinding.getRoot(), giftInfo, friendDynId, this::seeGiftRewards));
     }
 
     @Override
@@ -284,7 +278,18 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                                         MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, false, null), null);
                     });
                 };
+
                 MineApp.getApp().getFixedThreadPool().execute(ra);
+                if (discoverInfo.getGoodNum() == 0 || discoverInfo.getReviews() == 0) {
+                    mBinding.ivRemind.setVisibility(View.VISIBLE);
+                    MineApp.getApp().getFixedThreadPool().execute(() -> {
+                        SystemClock.sleep(500);
+                        if (mBinding.ivRemind.getVisibility() == View.VISIBLE) {
+                            SystemClock.sleep(2500);
+                            activity.runOnUiThread(() -> mBinding.ivRemind.setVisibility(View.GONE));
+                        }
+                    });
+                }
                 otherInfo();
                 seeGiftRewards();
             }
@@ -306,29 +311,25 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 rewardList.addAll(o);
                 rewardAdapter.notifyDataSetChanged();
                 mBinding.setRewardNum(rewardList.size());
-                if (discoverInfo.getUserId() != BaseActivity.userId) {
-                    if (mBinding.getRewardNum() == 1) {
-                        rewardInfo = "成为CP候选人";
-                    } else {
-                        rewardInfo = "快来打榜";
-                    }
-                    temp = rewardInfo.toCharArray();
-                    info = "";
-
-                    mHandler.postDelayed(ra, 50);
+                if (mBinding.getRewardNum() == 1) {
+                    rewardInfo = "成为CP候选人";
+                } else {
+                    rewardInfo = "快来打榜";
                 }
-
+                temp = rewardInfo.toCharArray();
+                info = "";
+                i = 0;
+                mBinding.setRewardInfo(info);
+                mHandler.postDelayed(ra, 50);
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    if (discoverInfo.getUserId() != BaseActivity.userId) {
-                        rewardInfo = "送多玫瑰，开始你们的故事";
-                        temp = rewardInfo.toCharArray();
-                        info = "";
-                        mHandler.postDelayed(ra, 50);
-                    }
+                    rewardInfo = "送多玫瑰，开始你们的故事";
+                    temp = rewardInfo.toCharArray();
+                    info = "";
+                    mHandler.postDelayed(ra, 50);
                 }
             }
         }, activity).setFriendDynId(friendDynId)
@@ -347,6 +348,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 mBinding.setRewardInfo(info);
                 i++;
                 mHandler.postDelayed(ra, 50);
+            }else{
+                mHandler.removeCallbacks(ra);
             }
         }
     };
@@ -357,6 +360,9 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(List<Review> o) {
                 int start = reviewList.size();
+                if (start == 0) {
+                    reviewList.add(new Review(MineApp.mineInfo.getImage(), "说句打动人心的表白，成功率高达99%", BaseActivity.userId));
+                }
                 for (Review item : o) {
                     item.setMainId(memberInfo.getUserId());
                 }
@@ -374,6 +380,10 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     mBinding.refresh.setEnableLoadMore(false);
                     mBinding.refresh.finishRefresh();
                     mBinding.refresh.finishLoadMore();
+                    if (reviewList.size() == 0) {
+                        reviewList.add(new Review(MineApp.mineInfo.getImage(), "说句打动人心的表白，成功率高达99%", BaseActivity.userId));
+                        reviewAdapter.notifyDataSetChanged();
+                    }
                 }
             }
         }, activity).setFriendDynId(friendDynId).setTimeSortType(1).setPageNo(pageNo).setRow(10);
@@ -532,13 +542,14 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     @Override
     public void selectReview(Review review) {
         reviewId = reviewId == review.getReviewId() ? 0 : review.getReviewId();
-        mBinding.setVariable(BR.name, reviewId == 0 ? "" : review.getNick());
+
+        mBinding.edContent.setHint(reviewId == 0 ? "表白一句，成功率超高～" : "评论 " + review.getNick());
     }
 
     @Override
     public void closeAt(View view) {
         reviewId = 0;
-        mBinding.setVariable(BR.name, "");
+        mBinding.edContent.setHint("表白一句，成功率超高～");
     }
 
     @Override
@@ -550,6 +561,12 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     public void toReviewMemberDetail(Review review) {
         if (review.getUserId() != BaseActivity.userId && review.getUserId() != 0)
             ActivityUtils.getCardMemberDetail(review.getUserId(), false);
+    }
+
+    @Override
+    public void editReview(View view) {
+        mBinding.edContent.setFocusable(true);
+        showImplicit(mBinding.edContent);
     }
 
     @Override

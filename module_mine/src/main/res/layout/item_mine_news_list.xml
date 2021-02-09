@@ -19,7 +19,6 @@
     </data>
 
     <RelativeLayout
-        onClickDelayed="@{v->viewModel.clickDyn(item)}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
@@ -30,12 +29,14 @@
             defaultRes="@{ObjectUtils.getDefaultRes()}"
             imageUrl="@{item.reviewUserImage}"
             isCircle="@{true}"
+            onClickDelayed="@{v->viewModel.toMember(item)}"
             viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(100)}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(100)}"
             android:layout_width="40dp"
             android:layout_height="40dp" />
 
         <LinearLayout
+            onClickDelayed="@{v->viewModel.clickDyn(item)}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
@@ -67,11 +68,10 @@
                     android:layout_centerVertical="true"
                     android:layout_marginTop="10dp"
                     android:text="@{item.createTime}"
-                    android:visibility="@{viewModel.reviewType==3?View.GONE:View.VISIBLE}"
                     android:textColor="@color/black_827"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:visibility="@{viewModel.reviewType==3?View.GONE:View.VISIBLE}" />
             </RelativeLayout>
-
 
             <TextView
                 android:layout_width="wrap_content"
@@ -87,9 +87,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@{item.createTime}"
-                android:visibility="@{viewModel.reviewType==3?View.VISIBLE:View.GONE}"
                 android:textColor="@color/black_827"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:visibility="@{viewModel.reviewType==3?View.VISIBLE:View.GONE}" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -128,6 +128,7 @@
             android:id="@+id/iv_gift"
             defaultRes="@{ObjectUtils.getDefaultRes()}"
             imageUrl="@{item.giftImage}"
+            onClickDelayed="@{v->viewModel.clickDyn(item)}"
             viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.14f)}"
             android:layout_width="40dp"

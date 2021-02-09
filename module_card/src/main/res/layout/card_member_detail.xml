@@ -186,11 +186,10 @@
                     android:background="@drawable/btn_bg_white_radius10"
                     android:padding="12dp">
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:id="@+id/nick_linear"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -202,25 +201,51 @@
                             viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(100)}"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
+                            android:layout_centerVertical="true"
                             android:layout_marginEnd="8dp" />
 
                         <TextView
                             android:id="@+id/tv_nick"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
                             android:layout_marginEnd="4dp"
+                            android:layout_toEndOf="@+id/iv_logo"
                             android:background="@{viewModel.memberInfo==null?@drawable/default_bg:@drawable/empty_bg}"
+                            android:ellipsize="end"
+                            android:singleLine="true"
+                            android:maxEms="7"
                             android:text="@{viewModel.memberInfo.remark.isEmpty()?viewModel.memberInfo.nick:viewModel.memberInfo.remark}"
                             android:textColor="#24242A"
                             android:textSize="20sp"
                             android:textStyle="bold"
-                            tools:text="默认仓库" />
+                            tools:text="无法可解文理科发误了飞机文旅局访问量发" />
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@{viewModel.memberInfo.sex==0?@drawable/icon_female:@drawable/icon_male}" />
-                    </LinearLayout>
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="5dp"
+                            android:layout_toEndOf="@+id/tv_nick"
+                            android:background="@{viewModel.memberInfo.sex==0?@drawable/icon_female:@drawable/icon_male}"
+                            tools:background="@drawable/icon_female" />
+
+                        <TextView
+                            android:id="@+id/tv_attention"
+                            android:layout_width="wrap_content"
+                            android:layout_height="29dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:background="@{isAttention?@drawable/btn_bg_black_c3b_radius60:@drawable/btn_bg_purple_7a4_radius60}"
+                            android:gravity="center"
+                            android:onClick="@{viewModel::follow}"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp"
+                            android:text="@{isAttention?@string/attention_false:@string/attention_true}"
+                            android:textColor="@{isAttention?@color/black_827:@color/white}"
+                            android:textSize="14sp"
+                            android:visibility="@{viewModel.otherUserId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
+                    </RelativeLayout>
 
 
                     <ImageView
@@ -246,20 +271,6 @@
                         android:layout_toEndOf="@+id/imageView5"
                         android:background="@{viewModel.memberInfo.memberType==2?@drawable/big_vip_icon:@drawable/big_novip_icon}"
                         tools:background="@drawable/big_vip_icon" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="29dp"
-                        android:layout_alignParentEnd="true"
-                        android:background="@{isAttention?@drawable/btn_bg_black_c3b_radius60:@drawable/btn_bg_purple_7a4_radius60}"
-                        android:gravity="center"
-                        android:onClick="@{viewModel::follow}"
-                        android:paddingStart="20dp"
-                        android:paddingEnd="20dp"
-                        android:text="@{isAttention?@string/attention_false:@string/attention_true}"
-                        android:textColor="@{isAttention?@color/black_827:@color/white}"
-                        android:textSize="14sp"
-                        android:visibility="@{viewModel.otherUserId==BaseActivity.userId?View.GONE:View.VISIBLE}" />
 
                     <View
                         android:id="@+id/line_3"

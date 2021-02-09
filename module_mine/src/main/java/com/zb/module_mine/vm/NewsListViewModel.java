@@ -87,6 +87,11 @@ public class NewsListViewModel extends BaseViewModel implements NewsListVMInterf
     }
 
     @Override
+    public void toMember(MineNews mineNews) {
+        ActivityUtils.getCardMemberDetail(mineNews.getReviewUserId(),false);
+    }
+
+    @Override
     public void readNewDynMsgAll() {
         readNewDynMsgAllApi api = new readNewDynMsgAllApi(new HttpOnNextListener() {
             @Override

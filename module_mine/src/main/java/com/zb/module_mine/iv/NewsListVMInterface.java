@@ -8,5 +8,7 @@ public interface NewsListVMInterface {
 
     void clickDyn(MineNews mineNews);
 
+    void toMember(MineNews mineNews);
+
     void readNewDynMsgAll();
 }

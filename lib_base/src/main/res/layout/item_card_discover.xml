@@ -88,8 +88,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="5dp">
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp">
 
                     <ImageView
                         android:id="@+id/iv_logo"
@@ -107,12 +107,41 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="5dp"
+                        android:layout_toStartOf="@+id/good_linear"
                         android:layout_toEndOf="@+id/iv_logo"
                         android:ellipsize="end"
                         android:singleLine="true"
                         android:text="@{item.nick}"
                         android:textColor="@color/black_827"
                         android:textSize="12sp" />
+
+                    <LinearLayout
+                        android:id="@+id/good_linear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:visibility="invisible">
+
+                        <ImageView
+                            android:id="@+id/iv_like"
+                            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(54)}"
+                            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(54)}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:background="@drawable/like_select_icon" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="-5dp"
+                            android:text='@{String.format("%d",item.goodNum)}'
+                            android:textColor="#cccccc"
+                            android:textSize="14sp"
+                            tools:text="7" />
+                    </LinearLayout>
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
@@ -121,19 +150,19 @@
             android:id="@+id/good_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:layout_alignBottom="@+id/top_layout"
-            android:paddingTop="35dp"
-            android:paddingStart="35dp"
+            android:layout_alignParentEnd="true"
             android:layout_marginEnd="15dp"
-            android:paddingEnd="1dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingStart="35dp"
+            android:paddingTop="35dp"
+            android:paddingEnd="1dp">
 
             <com.zb.lib_base.views.GoodView
                 android:id="@+id/good_view"
-                isLike="@{GoodDb.getInstance().hasGood(item.friendDynId)}"
                 isGrey="@{true}"
+                isLike="@{GoodDb.getInstance().hasGood(item.friendDynId)}"
                 onClickDelayed="@{v->viewModel.doLike(v,position)}"
                 android:layout_width="40dp"
                 android:layout_height="40dp"

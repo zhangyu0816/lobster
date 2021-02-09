@@ -139,7 +139,6 @@ public class VipAdPW extends BasePopupWindow {
         } else {
             preIndex = 1;
         }
-
         if (preIndex >= 0) {
             adapter.setSelectIndex(preIndex);
             adapter.notifyItemChanged(preIndex);
@@ -147,10 +146,10 @@ public class VipAdPW extends BasePopupWindow {
 
         mBinding.setVariable(BR.pw, this);
         mBinding.setVariable(BR.adapter, adapter);
-        mBinding.setVariable(BR.mineInfo, MineApp.mineInfo);
-        mBinding.setVariable(BR.vipInfo, MineApp.vipInfoList.get(preIndex));
 
         binding = (PwsVipAdBinding) mBinding;
+
+        setBtn();
 
         AdapterBinding.viewSize(binding.banner, ObjectUtils.getViewSizeByWidthFromMax(1000), ObjectUtils.getVipExposureHeight(1000));
 
@@ -191,7 +190,19 @@ public class VipAdPW extends BasePopupWindow {
             }
             adapter.notifyItemChanged(position);
             preIndex = position;
-            mBinding.setVariable(BR.vipInfo, MineApp.vipInfoList.get(preIndex));
+            setBtn();
+        }
+    }
+
+    private void setBtn() {
+        mBinding.setVariable(BR.vipInfo, MineApp.vipInfoList.get(preIndex));
+        VipInfo vipInfo = binding.getVipInfo();
+        if (MineApp.isFirstOpen) {
+            binding.tvBtn.setText(activity.getResources().getString(R.string.open_btn_month, (vipInfo.getDayCount() / 30) * 2, vipInfo.getPrice()));
+        } else if (MineApp.mineInfo.getMemberType() == 2) {
+            binding.tvBtn.setText("立即续费VIP特权");
+        } else {
+            binding.tvBtn.setText(activity.getResources().getString(R.string.open_btn, vipInfo.getPrice()));
         }
     }
 

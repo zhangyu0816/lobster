@@ -39,6 +39,8 @@ public interface DiscoverDetailVMInterface {
 
     void toReviewMemberDetail(Review review);
 
+    void editReview(View view);
+
     void attentionStatus();
 
     void attentionOther();

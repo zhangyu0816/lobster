@@ -11,6 +11,8 @@ public class Reward extends BaseObservable {
     private String image = "";// 头像
     private String nick = "";// 昵称
     private double payMoney = 0.0;
+    private int memberType;  //1免费用户   2 .会员
+    private int faceAttest;  //人脸 V  0未认证  1认证
 
     @Bindable
     public long getUserId() {
@@ -22,7 +24,8 @@ public class Reward extends BaseObservable {
         notifyPropertyChanged(BR.userId);
     }
 
-    @Bindable public String getImage() {
+    @Bindable
+    public String getImage() {
         return image;
     }
 
@@ -31,7 +34,8 @@ public class Reward extends BaseObservable {
         notifyPropertyChanged(BR.image);
     }
 
-    @Bindable public String getNick() {
+    @Bindable
+    public String getNick() {
         return nick;
     }
 
@@ -40,12 +44,33 @@ public class Reward extends BaseObservable {
         notifyPropertyChanged(BR.nick);
     }
 
-    @Bindable public double getPayMoney() {
+    @Bindable
+    public double getPayMoney() {
         return payMoney;
     }
 
     public void setPayMoney(double payMoney) {
         this.payMoney = payMoney;
         notifyPropertyChanged(BR.payMoney);
+    }
+
+    @Bindable
+    public int getMemberType() {
+        return memberType;
+    }
+
+    public void setMemberType(int memberType) {
+        this.memberType = memberType;
+        notifyPropertyChanged(BR.memberType);
+    }
+
+    @Bindable
+    public int getFaceAttest() {
+        return faceAttest;
+    }
+
+    public void setFaceAttest(int faceAttest) {
+        this.faceAttest = faceAttest;
+        notifyPropertyChanged(BR.faceAttest);
     }
 }

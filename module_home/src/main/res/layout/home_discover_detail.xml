@@ -171,18 +171,23 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:background="@{viewModel.discoverInfo==null?@drawable/default_bg:@drawable/empty_bg}"
-                                        android:minWidth="60dp"
                                         android:text="@{viewModel.discoverInfo.nick}"
                                         android:textColor="@color/black_252"
                                         android:textSize="16sp"
                                         android:textStyle="bold"
+                                        android:ellipsize="end"
+                                        android:maxEms="7"
+                                        android:singleLine="true"
                                         tools:text="默认仓库" />
 
                                     <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="8dp"
+                                        android:layout_marginEnd="8dp"
+                                        android:layout_marginTop="4dp"
                                         android:layout_toEndOf="@+id/tv_nick"
+                                        android:layout_toStartOf="@+id/tv_attention"
                                         android:orientation="horizontal">
 
                                         <ImageView
@@ -214,6 +219,7 @@
                                         tools:text="温州市" />
 
                                     <TextView
+                                        android:id="@+id/tv_attention"
                                         android:layout_width="wrap_content"
                                         android:layout_height="24dp"
                                         android:layout_alignParentEnd="true"
@@ -296,7 +302,6 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:background="@{rewardNum==0?@drawable/icon_meigui:@drawable/icon_qin}"
-                                    android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}"
                                     tools:background="@drawable/icon_meigui" />
 
                                 <TextView
@@ -312,7 +317,6 @@
                                     android:textColor="#eb2953"
                                     android:textSize="12sp"
                                     android:textStyle="bold"
-                                    android:visibility="@{viewModel.discoverInfo.userId==BaseActivity.userId?View.GONE:View.VISIBLE}"
                                     tools:text="" />
                             </LinearLayout>
 
@@ -436,7 +440,7 @@
             android:layout_marginBottom="8dp"
             android:layout_alignParentEnd="true"
             android:background="@mipmap/icon_remind"
-            android:visibility="@{(viewModel.discoverInfo.goodNum!=0||viewModel.discoverInfo.reviews!=0)?View.GONE:View.VISIBLE}"/>
+            android:visibility="gone"/>
 
         <LinearLayout
             android:id="@+id/bottom_layout"
@@ -479,16 +483,6 @@
                     android:background="@drawable/btn_bg_black_efe_radius40"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
-
-                    <TextView
-                        onClickDelayed="@{viewModel::closeAt}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
-                        android:text="@{String.format(@string/at_name,name)}"
-                        android:textColor="#37A0FF"
-                        android:textSize="15sp"
-                        android:visibility="@{name.isEmpty()?View.GONE:View.VISIBLE}" />
 
                     <EditText
                         android:id="@+id/ed_content"
@@ -534,7 +528,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="-5dp"
                         android:layout_marginEnd="15dp"
-                        android:text='@{String.format("%d",viewModel.discoverInfo.goodNum)}'
+                        android:text='@{viewModel.discoverInfo.goodNum==0?@string/discover_good:String.format("%d",viewModel.discoverInfo.goodNum)}'
                         android:textColor="#303846"
                         android:textSize="12sp"
                         android:textStyle="bold"
@@ -547,7 +541,7 @@
                         android:drawableStart="@mipmap/comment_icon"
                         android:drawablePadding="5dp"
                         android:gravity="center"
-                        android:text='@{String.format("%d",viewModel.discoverInfo.reviews)}'
+                        android:text='@{viewModel.discoverInfo.reviews==0?@string/discover_review:String.format("%d",viewModel.discoverInfo.reviews)}'
                         android:textColor="#303846"
                         android:textSize="12sp"
                         android:textStyle="bold"

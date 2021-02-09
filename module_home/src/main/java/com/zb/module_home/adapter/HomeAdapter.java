@@ -3,9 +3,15 @@ package com.zb.module_home.adapter;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.adapter.BindingItemAdapter;
 import com.zb.lib_base.adapter.RecyclerHolder;
+import com.zb.lib_base.api.otherInfoApi;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.model.Reward;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_home.BR;
+import com.zb.module_home.vm.RewardListViewModel;
 
 import java.util.List;
 
@@ -43,6 +49,18 @@ public class HomeAdapter<T> extends BindingItemAdapter<T> {
         }
         if (pw != null) {
             holder.binding.setVariable(BR.pw, pw);
+        }
+
+        if (viewModel instanceof RewardListViewModel && t instanceof Reward) {
+            otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
+                @Override
+                public void onNext(MemberInfo o) {
+                    ((Reward) t).setFaceAttest(o.getFaceAttest());
+                    ((Reward) t).setMemberType(o.getMemberType());
+                    notifyItemChanged(position);
+                }
+            }, mContext).setOtherUserId(((Reward) t).getUserId());
+            HttpManager.getInstance().doHttpDeal(api);
         }
         holder.binding.executePendingBindings();
     }

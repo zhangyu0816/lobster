@@ -89,7 +89,9 @@
                         android:layout_marginStart="10dp"
                         android:text='@{Html.fromHtml(String.format(@string/review_info,(item.atUserId==0?"":"回复"),item.atUserNick))}'
                         android:textSize="12sp"
-                        tools:visibility="gone" />
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        tools:text="a文旅局文件范围来看睫飞劳务纠纷微积分文件法律文件发为了房间里我f"/>
                 </LinearLayout>
 
 
