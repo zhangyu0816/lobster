@@ -260,29 +260,6 @@ public class BaseViewModel implements BaseVMInterface {
         });
     }
 
-    public void openBottle() {
-        // 播放声音
-        MediaPlayer mPlayer = MediaPlayer.create(activity, R.raw.open_bottle);
-        try {
-            if (mPlayer != null) {
-                mPlayer.stop();
-                mPlayer.prepare();
-                mPlayer.start();
-            }
-        } catch (IllegalStateException | IOException e) {
-            e.printStackTrace();
-        }
-        MineApp.getApp().getFixedThreadPool().execute(() -> {
-            SystemClock.sleep(500);
-            activity.runOnUiThread(() -> {
-                if (mPlayer != null) {
-                    mPlayer.stop();
-                    mPlayer.release();//释放资源
-                }
-            });
-        });
-    }
-
     private long exitTime = 0;
     private boolean isScroll = false;
     private Handler mHandler = new Handler();
@@ -337,36 +314,6 @@ public class BaseViewModel implements BaseVMInterface {
         view.requestFocus();
         imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(view, 0);
-    }
-
-    public static void setProhibitEmoji(EditText et) {
-        InputFilter[] filters = {getInputFilterProhibitEmoji()};
-        et.setFilters(filters);
-    }
-
-    public static InputFilter getInputFilterProhibitEmoji() {
-        return (source, start, end, dest, dstart, dend) -> {
-            StringBuffer buffer = new StringBuffer();
-            for (int i = start; i < end; i++) {
-                char codePoint = source.charAt(i);
-                if (!getIsEmoji(codePoint)) {
-                    buffer.append(codePoint);
-                } else {
-                    i++;
-                }
-            }
-            if (source instanceof Spanned) {
-                SpannableString sp = new SpannableString(buffer);
-                TextUtils.copySpansFrom((Spanned) source, start, end, null, sp, 0);
-                return sp;
-            } else {
-                return buffer;
-            }
-        };
-    }
-
-    public static boolean getIsEmoji(char codePoint) {
-        return codePoint != 0x0 && codePoint != 0x9 && codePoint != 0xA && codePoint != 0xD && (codePoint < 0x20 || codePoint > 0xD7FF) && (codePoint < 0xE000 || codePoint > 0xFFFD);
     }
 
     /**

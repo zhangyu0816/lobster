@@ -53,6 +53,7 @@ import com.zb.lib_base.db.BottleCacheDb;
 import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.emojj.EmojiHandler;
+import com.zb.lib_base.emojj.EmojiUtil;
 import com.zb.lib_base.http.HttpChatUploadManager;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -855,7 +856,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         ImUtils.getInstance().setCallBackForMsg(this::updateMySend);
 
         SoftHideKeyBoardUtil.assistActivity(activity, true);
-        setProhibitEmoji(mBinding.edContent);
+        EmojiUtil.setProhibitEmoji(mBinding.edContent);
         KeyboardStateObserver.getKeyboardStateObserver(activity).
                 setKeyboardVisibilityListener(height -> {
                     mBinding.setIsVoice(false);

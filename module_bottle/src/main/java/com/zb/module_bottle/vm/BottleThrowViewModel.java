@@ -35,6 +35,8 @@ import com.zb.module_bottle.activity.BottleThrowActivity;
 import com.zb.module_bottle.databinding.BottleThrowBinding;
 import com.zb.module_bottle.iv.BottleThrowVMInterface;
 
+import java.io.IOException;
+
 import androidx.databinding.ViewDataBinding;
 
 public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVMInterface {
@@ -236,6 +238,29 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
             HttpManager.getInstance().doHttpDeal(api);
         });
 
+    }
+
+    private void openBottle() {
+        // 播放声音
+        MediaPlayer mPlayer = MediaPlayer.create(activity, com.zb.lib_base.R.raw.open_bottle);
+        try {
+            if (mPlayer != null) {
+                mPlayer.stop();
+                mPlayer.prepare();
+                mPlayer.start();
+            }
+        } catch (IllegalStateException | IOException e) {
+            e.printStackTrace();
+        }
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(500);
+            activity.runOnUiThread(() -> {
+                if (mPlayer != null) {
+                    mPlayer.stop();
+                    mPlayer.release();//释放资源
+                }
+            });
+        });
     }
 
     private void randomNewDyn() {
