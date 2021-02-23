@@ -20,7 +20,6 @@ import com.umeng.socialize.UMShareAPI;
 import com.zb.lib_base.R;
 import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.iv.DemoPushService;
-import com.zb.lib_base.log.LogUtil;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.FlashInfo;
@@ -145,7 +144,6 @@ public class MineApp extends MultiDexApplication {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        LogUtil.init();
 
         fixedThreadPool = Executors.newFixedThreadPool(3);
 

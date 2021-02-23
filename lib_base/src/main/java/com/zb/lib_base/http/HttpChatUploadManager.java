@@ -33,6 +33,7 @@ public class HttpChatUploadManager {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         builder.addInterceptor(new CommonInterceptor());
+        builder.addInterceptor(new LoggingInterceptor());
         Retrofit retrofit = new Retrofit.Builder().client(builder.build()).addConverterFactory(GsonConverterFactory
                 .create()).addCallAdapterFactory(RxJavaCallAdapterFactory.create()).baseUrl(BASE_URL).build();
         httpService = retrofit.create(HttpService.class);

@@ -2,13 +2,11 @@ package com.zb.lib_base.http;
 
 
 import com.google.gson.Gson;
-import com.zb.lib_base.log.HttpLogger;
 import com.zb.lib_base.model.BaseEntity;
 
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -35,11 +33,12 @@ public class HttpManager {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         builder.addInterceptor(new CommonInterceptor());
+        builder.addInterceptor(new LoggingInterceptor());
 
-        // http log
-        HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor(new HttpLogger());
-        logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        builder.addNetworkInterceptor(logInterceptor);
+//        // http log
+//        HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor(new HttpLogger());
+//        logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+//        builder.addNetworkInterceptor(logInterceptor);
 
         Retrofit retrofit = new Retrofit.Builder().client(builder.build()).addConverterFactory(GsonConverterFactory
                 .create(new Gson())).addCallAdapterFactory(RxJavaCallAdapterFactory.create()).baseUrl(BASE_URL).build();
