@@ -111,9 +111,8 @@ public interface HttpService {
                                                            @Query("deviceHardwareInfo") String deviceHardwareInfo);
 
     // 快捷登录
-    @FormUrlEncoded
-    @POST("api/Union_loginByUnionV2")
-    Observable<BaseResultEntity<LoginInfo>> loginByUnion(@FieldMap Map<String, String> map);
+    @GET("api/Union_loginByUnionV2")
+    Observable<BaseResultEntity<LoginInfo>> loginByUnion(@QueryMap Map<String, String> map);
 
     @FormUrlEncoded
     @POST("api/Union_bindingPhone")

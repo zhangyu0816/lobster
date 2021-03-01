@@ -123,7 +123,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         mBinding.edPass.addTextChangedListener(this);
         mBinding.edNick.addTextChangedListener(this);
         mBinding.setSexIndex(2);
-        mBinding.setSexIndex(2);
 
         threeLogin = new ThreeLogin(activity, this::loginByUnion);
         ImUtils.getInstance().setCallBackForLogin(() -> {
@@ -246,55 +245,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         step(3);
     }
 
-    private long exitTime = 0;
-
-    @Override
-    public void back(View view) {
-        super.back(view);
-        hintKeyBoard();
-        switch (mBinding.getLoginStep()) {
-            case 0:
-                if ((System.currentTimeMillis() - exitTime) > 2000) {
-                    SCToastUtil.showToast(activity, "再按一次退出程序", true);
-                    exitTime = System.currentTimeMillis();
-                } else {
-                    timer.cancel();
-                    ImUtils.getInstance().loginOutIM();
-                    MineApp.getApp().exit();
-                    System.exit(0);
-                }
-                break;
-            case 1: // 账号登录返回
-                step(0);
-                break;
-            case 2: // 验证码登录返回
-                if (mCheckUser.getIsRegister() == 0)
-                    step(0);
-                else {
-                    step(1);
-                }
-                break;
-            case 3: // 性别页返回
-                if (mBinding.getIsThree()) {
-                    step(0);
-                } else {
-                    step(2);
-                }
-                break;
-            case 4: // 名字页返回
-                step(3);
-                break;
-            case 5: //
-                step(4);
-                break;
-            case 6:
-                step(5);
-                break;
-            case 7:
-                step(6);
-                break;
-        }
-    }
 
     @Override
     public void right(View view) {
@@ -728,6 +678,56 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             });
         } else {
             registerCaptcha();
+        }
+    }
+
+    private long exitTime = 0;
+
+    @Override
+    public void back(View view) {
+        super.back(view);
+        hintKeyBoard();
+        switch (mBinding.getLoginStep()) {
+            case 0:
+                if ((System.currentTimeMillis() - exitTime) > 2000) {
+                    SCToastUtil.showToast(activity, "再按一次退出程序", true);
+                    exitTime = System.currentTimeMillis();
+                } else {
+                    timer.cancel();
+                    ImUtils.getInstance().loginOutIM();
+                    MineApp.getApp().exit();
+                    System.exit(0);
+                }
+                break;
+            case 1: // 账号登录返回
+                step(0);
+                break;
+            case 2: // 验证码登录返回
+                if (mCheckUser.getIsRegister() == 0)
+                    step(0);
+                else {
+                    step(1);
+                }
+                break;
+            case 3: // 性别页返回
+                if (mBinding.getIsThree()) {
+                    step(0);
+                } else {
+                    step(2);
+                }
+                break;
+            case 4: // 名字页返回
+                step(3);
+                break;
+            case 5: //
+                step(4);
+                break;
+            case 6:
+                step(5);
+                break;
+            case 7:
+                step(6);
+                break;
         }
     }
 
