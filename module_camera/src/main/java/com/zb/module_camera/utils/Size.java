@@ -12,12 +12,6 @@ public class Size implements Comparable<Size> {
     private final int mWidth;
     private final int mHeight;
 
-    /**
-     * Create a new immutable Size instance.
-     *
-     * @param width  The width of the size, in pixels
-     * @param height The height of the size, in pixels
-     */
     public Size(int width, int height) {
         mWidth = width;
         mHeight = height;

@@ -113,7 +113,7 @@ public class PhotoManager {
         }
         final String srcFilePath = file.getAbsolutePath();
         compressCount++;
-        Luban.compress(context, file).putGear(Luban.THIRD_GEAR).launch(new OnCompressListener() {
+        Luban.compress(context, file).putGear(Luban.CUSTOM_GEAR).setMaxSize(10 * 1024).launch(new OnCompressListener() {
             @Override
             public void onStart() {
                 isCompress = true;
@@ -154,7 +154,7 @@ public class PhotoManager {
         }
         final String srcFilePath = file.getAbsolutePath();
         compressCount = 0;
-        Luban.compress(context, file).putGear(Luban.THIRD_GEAR).launch(new OnCompressListener() {
+        Luban.compress(context, file).putGear(Luban.CUSTOM_GEAR).setMaxSize(10 * 1024).launch(new OnCompressListener() {
             @Override
             public void onStart() {
                 isCompress = true;
@@ -192,7 +192,7 @@ public class PhotoManager {
         for (int i = 0; i < filePaths.size(); i++) {
             files.add(new File(filePaths.get(i)));
         }
-        Luban.compress(context, files).putGear(Luban.THIRD_GEAR).launch(new OnMultiCompressListener() {
+        Luban.compress(context, files).putGear(Luban.CUSTOM_GEAR).setMaxSize(10 * 1024).launch(new OnMultiCompressListener() {
             @Override
             public void onStart() {
                 isCompress = true;
@@ -248,7 +248,7 @@ public class PhotoManager {
         for (int i = 0; i < filePaths.size(); i++) {
             files.add(new File(filePaths.get(i)));
         }
-        Luban.compress(context, files).putGear(Luban.THIRD_GEAR).launch(new OnMultiCompressListener() {
+        Luban.compress(context, files).putGear(Luban.CUSTOM_GEAR).setMaxSize(10 * 1024).launch(new OnMultiCompressListener() {
             @Override
             public void onStart() {
                 isCompress = true;

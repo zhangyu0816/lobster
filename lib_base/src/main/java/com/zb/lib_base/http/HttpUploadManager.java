@@ -23,7 +23,7 @@ public class HttpUploadManager {
 //    public static final String SERVER_IMAGE = "http://test.yichengshi.cn:8090/";
 
     /*超时设置*/
-    private static final int DEFAULT_TIMEOUT = 6;
+    private static final int DEFAULT_TIMEOUT = 60;
     private HttpService httpService;
     private volatile static HttpUploadManager INSTANCE;
 

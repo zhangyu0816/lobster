@@ -95,7 +95,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     private boolean canReturn = false;
 
     private int superLikeStatus = 0;
-    private int likeCount = 50;
+    private int likeCount = 30;
     private Handler mHandler = new Handler();
     private Runnable ra = new Runnable() {
         @Override

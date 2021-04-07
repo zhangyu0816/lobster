@@ -476,9 +476,9 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                 for (PrivateMsg privateMsg : o) {
                     HistoryMsgDb.getInstance().saveHistoryMsg(HistoryMsg.createHistoryForPrivate(privateMsg, otherUserId, 1, 0));
                 }
+                historyMsgList(pageNo + 1);
                 if (historyMsgId == 0)
                     historyMsgId = o.get(0).getId();
-                historyMsgList(pageNo + 1);
             }
 
             @Override
@@ -1056,6 +1056,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                 public void onReceive(Context context, Intent intent) {
                     CustomMessageBody body = (CustomMessageBody) intent.getSerializableExtra("customMessageBody");
                     String msgId = intent.getStringExtra("msgId");
+
                     HistoryMsg historyMsg = HistoryMsg.createHistoryForFlash(msgId, body, otherUserId, msgChannelType, flashTalkId);
                     HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
                     otherChatCount++;

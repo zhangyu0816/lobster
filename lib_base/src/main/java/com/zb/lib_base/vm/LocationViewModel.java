@@ -225,15 +225,15 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
 
     @Override
     public void selectAddress(View view) {
-        if (prePosition == -1) {
-            SCToastUtil.showToast(activity, "请选择地址", true);
-            return;
-        }
-        LocationInfo info = locationInfoList.get(prePosition);
-        LatLonPoint latLonPoint = new LatLonPoint(info.getLatitude(), info.getLongitude());
-        RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 500f, GeocodeSearch.AMAP);
-        //异步查询
-        geocodeSearch.getFromLocationAsyn(query);
+            if (prePosition == -1) {
+                SCToastUtil.showToast(activity, "请选择地址", true);
+                return;
+            }
+            LocationInfo info = locationInfoList.get(prePosition);
+            LatLonPoint latLonPoint = new LatLonPoint(info.getLatitude(), info.getLongitude());
+            RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 500f, GeocodeSearch.AMAP);
+            //异步查询
+            geocodeSearch.getFromLocationAsyn(query);
     }
 
     @Override

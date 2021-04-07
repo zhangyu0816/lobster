@@ -538,14 +538,14 @@
                         onClickDelayed="@{viewModel::toReviewList}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableStart="@mipmap/comment_icon"
                         android:drawablePadding="5dp"
                         android:gravity="center"
                         android:text='@{viewModel.discoverInfo.reviews==0?@string/discover_review:String.format("%d",viewModel.discoverInfo.reviews)}'
                         android:textColor="#303846"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        tools:text="7" />
+                        tools:text="7"
+                        app:drawableStartCompat="@mipmap/comment_icon" />
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>

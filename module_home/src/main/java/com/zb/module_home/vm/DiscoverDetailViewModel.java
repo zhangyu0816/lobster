@@ -326,7 +326,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    rewardInfo = "送多玫瑰，开始你们的故事";
+                    rewardInfo = "送朵玫瑰，开始你们的故事";
                     temp = rewardInfo.toCharArray();
                     info = "";
                     mHandler.postDelayed(ra, 50);

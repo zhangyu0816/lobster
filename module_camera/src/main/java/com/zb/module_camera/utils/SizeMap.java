@@ -17,12 +17,6 @@ public class SizeMap {
 
     private final ArrayMap<AspectRatio, SortedSet<Size>> mRatios = new ArrayMap<>();
 
-    /**
-     * Add a new {@link Size} to this collection.
-     *
-     * @param size The size to add.
-     * @return {@code true} if it is added, {@code false} if it already exists and is not added.
-     */
     public boolean add(Size size) {
         for (AspectRatio ratio : mRatios.keySet()) {
             if (ratio.matches(size)) {

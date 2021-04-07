@@ -60,7 +60,6 @@ public class AutoPollRecyclerView extends RecyclerView {
     }
 
 
-    // RecyclerView
     @BindingAdapter("autoAdapter")
     public static void setAdapter(AutoPollRecyclerView view, BindingItemAdapter autoAdapter) {
         autoAdapter.setMax(true);

@@ -23,7 +23,7 @@ public class HttpManager {
     public static String BASE_URL = "https://xgapi.zuwo.la/";
     //            public static String BASE_URL = "http://192.168.1.88:8090/";//敏耀
     /*超时设置*/
-    private static final int DEFAULT_TIMEOUT = 6;
+    private static final int DEFAULT_TIMEOUT = 60;
     private HttpService httpService;
     public volatile static HttpManager INSTANCE;
 

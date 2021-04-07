@@ -27,7 +27,7 @@ public class HistoryMsg extends RealmObject {
     long driftBottleId = 0;    //所属漂流瓶
     long flashTalkId = 0;    //所属漂流瓶
     int imPlatformType; //
-    boolean showTime = false;
+        boolean showTime = false;
     String theChatUk = "";        //两个人的Id拼接起来，小的在前面  #12#101#
 
     public long getFromId() {
