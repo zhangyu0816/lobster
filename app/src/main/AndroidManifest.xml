@@ -106,8 +106,8 @@
         <!-- 友盟配置 end-->
 
         <meta-data
-            android:name="PUSH_APPID"
-            android:value="${GETUI_APP_ID}" />
+        android:name="PUSH_APPID"
+        android:value="${GETUI_APP_ID}" />
         <meta-data
             android:name="PUSH_APPKEY"
             android:value="${GETUI_APP_KEY}" />

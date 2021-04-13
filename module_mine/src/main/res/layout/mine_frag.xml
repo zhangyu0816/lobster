@@ -489,6 +489,8 @@
 
                                 <RelativeLayout
                                     onClickDelayed="@{v->viewModel.openShare(1)}"
+                                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(953)}"
+                                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(298)}"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="10dp"
@@ -498,6 +500,8 @@
 
                                     <ImageView
                                         android:id="@+id/iv_go"
+                                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(147)}"
+                                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(147)}"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_alignParentEnd="true"
