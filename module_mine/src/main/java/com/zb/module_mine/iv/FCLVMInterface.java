@@ -8,6 +8,10 @@ public interface FCLVMInterface {
 
     void myFans();
 
+    void otherConcerns();
+
+    void otherFans();
+
     void likeMeList();
 
     void visitorBySeeMeList();

@@ -183,11 +183,17 @@ public class ObjectUtils {
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    public static Drawable getNoData(int position) {
+    public static Drawable getNoData(int position, long otherUserId) {
         if (position == 0) {
-            return MineApp.getApp().getResources().getDrawable(R.mipmap.no_anth_data);
+            if (otherUserId == 0)
+                return MineApp.getApp().getResources().getDrawable(R.mipmap.no_anth_data);
+            else
+                return MineApp.getApp().getResources().getDrawable(R.mipmap.no_anth_data);
         } else if (position == 1) {
-            return MineApp.getApp().getResources().getDrawable(R.mipmap.no_fan_data);
+            if (otherUserId == 0)
+                return MineApp.getApp().getResources().getDrawable(R.mipmap.no_fan_data);
+            else
+                return MineApp.getApp().getResources().getDrawable(R.mipmap.no_fan_data);
         } else if (position == 2) {
             return MineApp.getApp().getResources().getDrawable(R.mipmap.no_belike_data);
         } else {
@@ -282,13 +288,13 @@ public class ObjectUtils {
 
     }
 
-    public static String textName(long otherUserId, int position) {
+    public static String textName(long userId, int position, long otherUserId) {
         if (position == 2) {
-            return LikeDb.getInstance().hasLike(otherUserId) ? "已喜欢" : "喜欢Ta";
+            return LikeDb.getInstance().hasLike(userId) ? "已喜欢" : "喜欢Ta";
         } else if (position == 1) {
-            return AttentionDb.getInstance().isAttention(otherUserId) ? "已关注" : "回粉";
+            return AttentionDb.getInstance().isAttention(userId) ? "已关注" : (otherUserId == 0 ? "回粉" : "关注TA");
         } else {
-            return AttentionDb.getInstance().isAttention(otherUserId) ? "已关注" : "关注TA";
+            return AttentionDb.getInstance().isAttention(userId) ? "已关注" : "关注TA";
         }
     }
 

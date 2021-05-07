@@ -131,7 +131,7 @@
             android:background="@{viewModel.position==2?(LikeDb.getInstance().hasLike(item.userId)?@drawable/btn_bg_black_efe_radius40: @drawable/btn_bg_purple_7a4_white_radius60):(AttentionDb.getInstance().isAttention(item.userId)?@drawable/btn_bg_black_efe_radius40: @drawable/btn_bg_purple_7a4_white_radius60)}"
             android:gravity="center"
             android:onClick="@{v->viewModel.clickMember(position)}"
-            android:text="@{ObjectUtils.textName(item.userId, viewModel.position)}"
+            android:text="@{ObjectUtils.textName(item.userId, viewModel.position,viewModel.otherUserId)}"
             android:textColor="@{ObjectUtils.textColor(item.userId, viewModel.position)}"
             android:textSize="12sp"
             android:textStyle="bold" />

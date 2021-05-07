@@ -21,7 +21,8 @@ import rx.schedulers.Schedulers;
 public class HttpManager {
     /* 平台服务器 */
     public static String BASE_URL = "https://xgapi.zuwo.la/";
-    //            public static String BASE_URL = "http://192.168.1.88:8090/";//敏耀
+//    public static String BASE_URL = "http://317598i1s1.eicp.vip/";//敏耀
+    //                public static String BASE_URL = "http://192.168.1.88:8090/";//敏耀
     /*超时设置*/
     private static final int DEFAULT_TIMEOUT = 60;
     private HttpService httpService;
@@ -34,11 +35,6 @@ public class HttpManager {
         builder.connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         builder.addInterceptor(new CommonInterceptor());
         builder.addInterceptor(new LoggingInterceptor());
-
-//        // http log
-//        HttpLoggingInterceptor logInterceptor = new HttpLoggingInterceptor(new HttpLogger());
-//        logInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-//        builder.addNetworkInterceptor(logInterceptor);
 
         Retrofit retrofit = new Retrofit.Builder().client(builder.build()).addConverterFactory(GsonConverterFactory
                 .create(new Gson())).addCallAdapterFactory(RxJavaCallAdapterFactory.create()).baseUrl(BASE_URL).build();

@@ -39,6 +39,7 @@ import com.zb.lib_base.api.flashReadOverHistoryMsgApi;
 import com.zb.lib_base.api.historyMsgListApi;
 import com.zb.lib_base.api.myBottleApi;
 import com.zb.lib_base.api.myInfoApi;
+import com.zb.lib_base.api.otherImAccountInfoApi;
 import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.readOverDriftBottleHistoryMsgApi;
 import com.zb.lib_base.api.readOverHistoryMsgApi;
@@ -58,14 +59,15 @@ import com.zb.lib_base.http.HttpChatUploadManager;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
-import com.zb.lib_base.imcore.CustomMessageBody;
-import com.zb.lib_base.imcore.ImUtils;
 import com.zb.lib_base.iv.BaseChatVMInterface;
+import com.zb.lib_base.mimc.CustomMessageBody;
+import com.zb.lib_base.mimc.UserManager;
 import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.HistoryMsg;
+import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.PrivateMsg;
@@ -139,6 +141,8 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
     private BaseReceiver flashChatReceiver;
     private BaseReceiver openVipReceiver;
 
+    private String miUserId = "";
+
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
@@ -171,7 +175,10 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                     return false;
                 }
                 closeImplicit(mBinding.edContent);
-                ImUtils.getInstance().sendChatMessage(activity, 1, mBinding.getContent(), "", 0, "【文字】", driftBottleId, flashTalkId, msgChannelType);
+                UserManager.getInstance().sendMsg(
+                        miUserId, UserManager.TEXT, 1, mBinding.getContent(), "",
+                        0, "【文字】", driftBottleId, flashTalkId, msgChannelType
+                );
                 mBinding.setContent("");
             }
             return true;
@@ -196,18 +203,12 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         }
     }
 
-    public void onResume() {
-        ImUtils.getInstance().setOtherUserId(otherUserId);
-        ImUtils.getInstance().setChat(true, activity);
-    }
-
     @Override
     public void back(View view) {
         super.back(view);
         hintKeyBoard();
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "videos"));
         DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
-        ImUtils.getInstance().markRead();
         activity.finish();
     }
 
@@ -401,7 +402,6 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
             public void onNext(BottleInfo o) {
                 bottleInfo = o;
                 otherUserId = bottleInfo.getUserId() == BaseActivity.userId ? bottleInfo.getOtherUserId() : bottleInfo.getUserId();
-                ImUtils.getInstance().setOtherUserId(otherUserId);
                 realmResults = HistoryMsgDb.getInstance().getRealmResults(otherUserId, msgChannelType, driftBottleId, flashTalkId);
                 historyMsgList.addAll(HistoryMsgDb.getInstance().getLimitList(realmResults, pagerNo * pageSize, pageSize));
                 Collections.reverse(historyMsgList);
@@ -439,7 +439,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
             public void onNext(MemberInfo o) {
                 memberInfo = o;
                 mBinding.setMemberInfo(memberInfo);
-
+                otherImAccountInfo();
                 if (msgChannelType == 1 || msgChannelType == 3) {
                     if (isLockImage) {
                         setMemberUI();
@@ -465,6 +465,17 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                 }
             }
         }, activity).setOtherUserId(otherUserId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void otherImAccountInfo() {
+        otherImAccountInfoApi api = new otherImAccountInfoApi(new HttpOnNextListener<ImAccount>() {
+            @Override
+            public void onNext(ImAccount o) {
+                miUserId = o.getImUserId();
+            }
+        }, activity);
+        api.setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -824,7 +835,10 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
             return;
         }
         closeImplicit(mBinding.edContent);
-        ImUtils.getInstance().sendChatMessage(activity, 1, mBinding.getContent(), "", 0, "【文字】", driftBottleId, flashTalkId, msgChannelType);
+        UserManager.getInstance().sendMsg(
+                miUserId, UserManager.TEXT, 1, mBinding.getContent(), "",
+                0, "【文字】", driftBottleId, flashTalkId, msgChannelType
+        );
         mBinding.setContent("");
 
     }
@@ -839,7 +853,10 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         uploadSoundApi api = new uploadSoundApi(new HttpOnNextListener<ResourceUrl>() {
             @Override
             public void onNext(ResourceUrl o) {
-                ImUtils.getInstance().sendChatMessage(activity, 3, "", o.getUrl(), resTime, "【语音】", driftBottleId, flashTalkId, msgChannelType);
+                UserManager.getInstance().sendMsg(
+                        miUserId, UserManager.PIC_FILE, 3, "", o.getUrl(),
+                        resTime, "【语音】", driftBottleId, flashTalkId, msgChannelType
+                );
                 soundView.setResTime(0);
             }
         }, activity).setFile(file);
@@ -853,7 +870,6 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
 
     @SuppressLint("ClickableViewAccessibility")
     private void initTool() {
-        ImUtils.getInstance().setCallBackForMsg(this::updateMySend);
 
         SoftHideKeyBoardUtil.assistActivity(activity, true);
         EmojiUtil.setProhibitEmoji(mBinding.edContent);
@@ -881,7 +897,10 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
             mBinding.noticeLayout.setVisibility(PreferenceUtil.readIntValue(activity, "chat_notice_" + BaseActivity.userId) == 1 ? View.GONE : View.VISIBLE);
 
         photoManager = new PhotoManager(activity, () -> {
-            ImUtils.getInstance().sendChatMessage(activity, 2, "", photoManager.jointWebUrl(","), 0, "【图片】", driftBottleId, flashTalkId, msgChannelType);
+            UserManager.getInstance().sendMsg(
+                    miUserId, UserManager.PIC_FILE, 2, "", photoManager.jointWebUrl(","),
+                    0, "【图片】", driftBottleId, flashTalkId, msgChannelType
+            );
             photoManager.deleteAllFile();
         });
         photoManager.setChat(true);
@@ -961,7 +980,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                     CustomMessageBody body = (CustomMessageBody) intent.getSerializableExtra("customMessageBody");
                     String msgId = intent.getStringExtra("msgId");
                     HistoryMsg historyMsg = HistoryMsg.createHistory(msgId, body, otherUserId, 1, 0);
-                    HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
+//                    HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
 
                     ChatListDb.getInstance().updateMember(otherUserId, memberInfo == null ? "" : memberInfo.getImage(), memberInfo == null ? "" : memberInfo.getNick(), otherUserId == BaseActivity.dynUserId ? 5 : 4,
                             new ChatListDb.CallBack() {
@@ -1009,7 +1028,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                     CustomMessageBody body = (CustomMessageBody) intent.getSerializableExtra("customMessageBody");
                     String msgId = intent.getStringExtra("msgId");
                     HistoryMsg historyMsg = HistoryMsg.createHistory(msgId, body, otherUserId, 2, driftBottleId);
-                    HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
+//                    HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
 
                     boolean hasId = false;
                     if (isNotice) {
@@ -1058,7 +1077,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                     String msgId = intent.getStringExtra("msgId");
 
                     HistoryMsg historyMsg = HistoryMsg.createHistoryForFlash(msgId, body, otherUserId, msgChannelType, flashTalkId);
-                    HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
+//                    HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
                     otherChatCount++;
                     isLockImage = (myChatCount + otherChatCount) < 20;
                     mBinding.setIsLockImage(isLockImage);
@@ -1188,7 +1207,10 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         uploadVideoApi api = new uploadVideoApi(new HttpOnNextListener<ResourceUrl>() {
             @Override
             public void onNext(ResourceUrl o) {
-                ImUtils.getInstance().sendChatMessage(activity, 4, "", o.getUrl(), (int) (time / 1000), "【视频】", driftBottleId, flashTalkId, msgChannelType);
+                UserManager.getInstance().sendMsg(
+                        miUserId, UserManager.PIC_FILE, 4, "", o.getUrl(),
+                        (int) (time / 1000), "【视频】", driftBottleId, flashTalkId, msgChannelType
+                );
             }
         }, activity).setFile(new File(fileName));
         HttpChatUploadManager.getInstance().doHttpDeal(api);
@@ -1240,40 +1262,6 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
             soundView.start();
             stopPlayer();
             stopVoiceDrawable();
-        }
-    }
-
-    private void updateMySend(String msgId, CustomMessageBody body) {
-        // 记录我们发出去的消息
-        body.setFromId(BaseActivity.userId);
-        body.setToId(otherUserId);
-        HistoryMsg historyMsg;
-        boolean updateAll = false;
-        if (msgChannelType == 3) {
-            historyMsg = HistoryMsg.createHistoryForFlash(msgId, body, otherUserId, msgChannelType, flashTalkId);
-            myChatCount++;
-            isLockImage = (myChatCount + otherChatCount) < 20;
-            updateAll = (myChatCount + otherChatCount) == 20;
-            mBinding.setIsLockImage(isLockImage);
-        } else {
-            historyMsg = HistoryMsg.createHistory(msgId, body, otherUserId, msgChannelType, driftBottleId);
-        }
-        HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
-        historyMsgList.add(historyMsg);
-        updateTime();
-        if (updateAll) {
-            adapter.notifyDataSetChanged();
-        } else {
-            adapter.notifyItemChanged(adapter.getItemCount() - 1);
-        }
-        mBinding.chatList.scrollToPosition(adapter.getItemCount() - 1);
-
-        if (msgChannelType == 1) {
-            setChatList(historyMsg, 4, false);
-        } else if (msgChannelType == 2) {
-            setBottleChatList(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType());
-        } else if (msgChannelType == 3) {
-            setChatList(historyMsg, 6, false);
         }
     }
 

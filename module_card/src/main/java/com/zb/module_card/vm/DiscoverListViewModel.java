@@ -144,6 +144,20 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
                 intent.putExtra("isAttention", mBinding.getIsAttention());
                 activity.sendBroadcast(intent);
             }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof HttpTimeException&&((HttpTimeException) e).getCode()==HttpTimeException.ERROR){
+                    if(e.getMessage().equals("你还没关注我啊")){
+                        mBinding.setIsAttention(false);
+                        AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, mBinding.getMemberInfo().getNick(), mBinding.getMemberInfo().getImage(), false, BaseActivity.userId));
+                        activity.sendBroadcast(new Intent("lobster_attentionList"));
+                        Intent intent = new Intent("lobster_attention");
+                        intent.putExtra("isAttention", mBinding.getIsAttention());
+                        activity.sendBroadcast(intent);
+                    }
+                }
+            }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
     }

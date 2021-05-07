@@ -21,6 +21,7 @@ import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.joinPairPoolApi;
 import com.zb.lib_base.api.makeEvaluateApi;
+import com.zb.lib_base.api.modifyMemberInfoApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.prePairListApi;
 import com.zb.lib_base.app.MineApp;
@@ -764,9 +765,13 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     private void setLocation(int type) {
         if (type == 1) {
-            aMapLocation.start(activity, (longitude, latitude, provinceName, cityName, districtName) ->
-                    joinPairPool(longitude, latitude, AreaDb.getInstance().getProvinceId(provinceName),
-                            AreaDb.getInstance().getCityId(cityName), AreaDb.getInstance().getDistrictId(districtName)));
+            aMapLocation.start(activity, (longitude, latitude, provinceName, cityName, districtName) -> {
+                        mBinding.setCityName(cityName);
+                        modifyMemberInfo();
+                        joinPairPool(longitude, latitude, AreaDb.getInstance().getProvinceId(provinceName),
+                                AreaDb.getInstance().getCityId(cityName), AreaDb.getInstance().getDistrictId(districtName));
+                    }
+            );
         } else {
             aMapLocation.start(activity, (longitude, latitude, provinceName, cityName, districtName) ->
                     ActivityUtils.getMineLocation(false));
@@ -781,11 +786,33 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         PreferenceUtil.saveStringValue(activity, "districtName", "鹿城区");
         PreferenceUtil.saveStringValue(activity, "address", "浙江省温州市鹿城区望江东路175号靠近温州银行(文化支行)");
         if (type == 1) {
+            mBinding.setCityName("温州市");
             joinPairPool("120.641956", "28.021994", AreaDb.getInstance().getProvinceId("浙江省"),
                     AreaDb.getInstance().getCityId("温州市"), AreaDb.getInstance().getDistrictId("鹿城区"));
+            modifyMemberInfo();
         } else {
             ActivityUtils.getMineLocation(false);
         }
+    }
 
+    private void modifyMemberInfo() {
+        modifyMemberInfoApi api = new modifyMemberInfoApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+            }
+        }, activity)
+                .setBirthday(MineApp.mineInfo.getBirthday())
+                .setImage(MineApp.mineInfo.getImage())
+                .setMoreImages(MineApp.mineInfo.getMoreImages())
+                .setNick(MineApp.mineInfo.getNick())
+                .setJob(MineApp.mineInfo.getJob().isEmpty() ? "设计师" : MineApp.mineInfo.getJob())
+                .setPersonalitySign(MineApp.mineInfo.getPersonalitySign().isEmpty() ? "有趣之人终相遇" : MineApp.mineInfo.getPersonalitySign())
+                .setSex(MineApp.mineInfo.getSex())
+                .setServiceTags(MineApp.mineInfo.getServiceTags())
+                .setProvinceId(AreaDb.getInstance().getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
+                .setCityId(AreaDb.getInstance().getCityId(MineApp.cityName))
+                .setDistrictId(AreaDb.getInstance().getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
+        api.setShowProgress(false);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 }

@@ -1,6 +1,7 @@
 package com.zb.lib_base.activity;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -17,9 +18,11 @@ import com.umeng.analytics.MobclickAgent;
 import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.PwsPerformBinding;
+import com.zb.lib_base.mimc.UserManager;
 import com.zb.lib_base.utils.PreferenceUtil;
 
 import java.io.File;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -76,12 +79,46 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     protected void onResume() {
         super.onResume();
         MobclickAgent.onResume(activity);
+        if (MineApp.sMIMCUser != null && isAppOnForeground() && !MineApp.isLogin) {
+            MineApp.sMIMCUser = UserManager.getInstance().newMIMCUser(MineApp.imUserId);
+            MineApp.sMIMCUser.login();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (!isAppOnForeground()) {
+            if (MineApp.sMIMCUser != null) {
+                MineApp.sMIMCUser.logout();
+                MineApp.sMIMCUser.destroy();
+            }
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(activity);
+    }
+
+    private boolean isAppOnForeground() {
+        ActivityManager am = (ActivityManager) activity.getSystemService(ACTIVITY_SERVICE);
+        String myPackageName = activity.getPackageName();
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = am.getRunningAppProcesses();
+        if (appProcesses.isEmpty()) {
+            return false;
+        }
+
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            String processName = appProcess.processName;
+            boolean isName = processName.equals(myPackageName);
+            boolean isImportance = appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;
+            if (isName && isImportance) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -104,6 +141,28 @@ public abstract class BaseActivity extends RxAppCompatActivity {
             videoPath.mkdirs();
         }
         return new File(videoPath, randomString(15) + ".mp4");
+    }
+
+    /**
+     * 小米聊天
+     */
+    public static String getLogCachePath() {
+        File file = new File(activity.getCacheDir(), "logCachePath");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return file.getPath();
+    }
+
+    /**
+     * 小米聊天
+     */
+    public static String getTokenCachePath() {
+        File file = new File(activity.getCacheDir(), "tokenCachePath");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return file.getPath();
     }
 
     /**

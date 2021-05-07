@@ -2,7 +2,7 @@ package com.yimi.rentme.iv;
 
 import android.view.View;
 
-import com.zb.lib_base.imcore.CustomMessageBody;
+import com.zb.lib_base.mimc.CustomMessageBody;
 
 public interface MainVMInterface {
 

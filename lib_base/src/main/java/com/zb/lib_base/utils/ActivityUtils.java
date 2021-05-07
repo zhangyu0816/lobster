@@ -183,8 +183,8 @@ public class ActivityUtils {
     }
 
     // 粉丝、关注、被喜欢列表
-    public static void getMineFCL(int position) {
-        ARouter.getInstance().build(RouteUtils.Mine_FCL).withInt("position", position).navigation();
+    public static void getMineFCL(int position, long otherUserId) {
+        ARouter.getInstance().build(RouteUtils.Mine_FCL).withInt("position", position).withLong("otherUserId", otherUserId).navigation();
     }
 
     // 收发礼物记录

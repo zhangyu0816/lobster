@@ -128,7 +128,7 @@ public class loginByUnionApi extends BaseEntity<LoginInfo> {
         map.put("channelId", PreferenceUtil.readStringValue(getRxAppCompatActivity(), "channelId"));
         map.put("usePl", "2");
         map.put("appVersion", MineApp.versionName);
-        map.put("deviceHardwareInfo", PreferenceUtil.readStringValue(getRxAppCompatActivity(), "deviceHardwareInfo"));
+//        map.put("deviceHardwareInfo", PreferenceUtil.readStringValue(getRxAppCompatActivity(), "deviceHardwareInfo"));
 
         if (!userName.isEmpty()) {
             map.put("userName", userName);

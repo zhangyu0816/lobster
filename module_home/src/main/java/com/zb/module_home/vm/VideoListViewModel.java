@@ -378,6 +378,18 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), false, BaseActivity.userId));
                 activity.sendBroadcast(new Intent("lobster_attentionList"));
             }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof HttpTimeException&&((HttpTimeException) e).getCode()==HttpTimeException.ERROR){
+                    if(e.getMessage().equals("你还没关注我啊")){
+                        layout.setVisibility(View.VISIBLE);
+                        ivAttention.setBackgroundResource(R.drawable.attention_icon);
+                        AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), false, BaseActivity.userId));
+                        activity.sendBroadcast(new Intent("lobster_attentionList"));
+                    }
+                }
+            }
         }, activity).setOtherUserId(discoverInfo.getUserId());
         HttpManager.getInstance().doHttpDeal(api);
     }

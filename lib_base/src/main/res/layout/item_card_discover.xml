@@ -31,7 +31,6 @@
 
         <LinearLayout
             android:id="@+id/top_layout"
-            onClickDelayed="@{v->viewModel.clickItem(position)}"
             viewHeightSize="@{-2}"
             viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.48f)}"
             android:layout_width="match_parent"
@@ -41,6 +40,7 @@
             android:orientation="vertical">
 
             <RelativeLayout
+                onClickDelayed="@{v->viewModel.clickItem(position)}"
                 viewHeightSize="@{-2}"
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.48f)}"
                 android:layout_width="match_parent"
@@ -76,6 +76,7 @@
                 android:paddingBottom="2dp">
 
                 <TextView
+                    onClickDelayed="@{v->viewModel.clickItem(position)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLines="2"
@@ -92,6 +93,7 @@
                     android:layout_marginBottom="10dp">
 
                     <ImageView
+                        onClickDelayed="@{v->viewModel.toMemberDetail(position)}"
                         android:id="@+id/iv_logo"
                         defaultRes="@{ObjectUtils.getDefaultRes()}"
                         imageUrl="@{item.image}"
@@ -103,6 +105,7 @@
                         android:layout_centerVertical="true" />
 
                     <TextView
+                        onClickDelayed="@{v->viewModel.toMemberDetail(position)}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"

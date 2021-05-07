@@ -9,7 +9,6 @@ import com.yimi.rentme.R;
 import com.yimi.rentme.vm.LoginVideoViewModel;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.imcore.ImUtils;
 import com.zb.lib_base.utils.RomUtils;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -55,7 +54,6 @@ public class LoginVideoActivity extends BaseActivity {
                 SCToastUtil.showToast(activity, "再按一次退出程序", true);
                 exitTime = System.currentTimeMillis();
             } else {
-                ImUtils.getInstance().loginOutIM();
                 MineApp.getApp().exit();
                 System.exit(0);
             }

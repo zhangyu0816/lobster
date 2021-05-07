@@ -13,6 +13,8 @@ import com.zb.module_mine.vm.FCLViewModel;
 public class FCLActivity extends MineBaseActivity {
     @Autowired(name = "position")
     int position;
+    @Autowired(name = "otherUserId")
+    long otherUserId;
 
     private FCLViewModel viewModel;
 
@@ -25,10 +27,12 @@ public class FCLActivity extends MineBaseActivity {
     public void initUI() {
         viewModel = new FCLViewModel();
         viewModel.position = position;
+        viewModel.otherUserId = otherUserId;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
+        mBinding.setVariable(BR.otherUserId, otherUserId);
         mBinding.setVariable(BR.position, position);
-        mBinding.setVariable(BR.title, position == 0 ? "我的关注" : (position == 1 ? "我的粉丝" : (position == 2 ? "谁喜欢我" : "谁看过我")));
+        mBinding.setVariable(BR.title, position == 0 ? (otherUserId == 0 ? "我的关注" : "Ta的关注") : (position == 1 ? (otherUserId == 0 ? "我的粉丝" : "TA的粉丝") : (position == 2 ? "谁喜欢我" : "谁看过我")));
         mBinding.setVariable(BR.noData, true);
     }
 

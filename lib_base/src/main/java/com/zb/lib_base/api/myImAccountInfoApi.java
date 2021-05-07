@@ -21,6 +21,6 @@ public class myImAccountInfoApi extends BaseEntity<ImAccount> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.myImAccountInfo(2);
+        return methods.myImAccountInfo(3);
     }
 }

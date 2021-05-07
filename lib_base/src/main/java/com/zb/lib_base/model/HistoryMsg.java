@@ -1,7 +1,7 @@
 package com.zb.lib_base.model;
 
 import com.zb.lib_base.activity.BaseActivity;
-import com.zb.lib_base.imcore.CustomMessageBody;
+import com.zb.lib_base.mimc.CustomMessageBody;
 import com.zb.lib_base.utils.DateUtil;
 
 import io.realm.RealmObject;

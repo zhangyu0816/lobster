@@ -18,6 +18,8 @@ public interface MemberDetailVMInterface {
 
     void openVip(View view);
 
+    void contactNumDetail(int position);
+
     void otherInfo();
 
     void otherRentInfo();

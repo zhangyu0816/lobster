@@ -12,7 +12,6 @@ import com.zb.lib_base.api.thirdReadChatApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.imcore.ImUtils;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.BR;
@@ -57,9 +56,6 @@ public class NewsManagerViewModel extends BaseViewModel implements NewsManagerVM
                 mBinding.setVariable(BR.mineNewsCount, MineApp.mineNewsCount);
                 activity.sendBroadcast(new Intent("lobster_newsCount"));
                 if (MineApp.mineNewsCount.getSystemNewsNum() > 0) {
-                    // 获取与某个聊天对象的会话记录
-                    ImUtils.getInstance().setOtherUserId(BaseActivity.systemUserId);
-                    ImUtils.getInstance().setDelete(true, activity);
                     clearAllHistoryMsg(BaseActivity.systemUserId);
                     thirdReadChat(BaseActivity.systemUserId);
                 }

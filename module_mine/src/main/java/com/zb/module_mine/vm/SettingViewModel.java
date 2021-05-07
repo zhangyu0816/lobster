@@ -10,6 +10,7 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.humanFaceStatusApi;
 import com.zb.lib_base.api.loginOutApi;
+import com.zb.lib_base.api.setSendMessageApi;
 import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
@@ -40,6 +41,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     private MineSettingBinding mBinding;
     private List<String> selectList = new ArrayList<>();
     private AMapLocation aMapLocation;
+    private int useType;
 
     @Override
     public void back(View view) {
@@ -92,6 +94,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
         });
 
         walletAndPop();
+        setSendMessageApi(-1);
     }
 
     public void onDestroy() {
@@ -191,6 +194,22 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     }
 
     @Override
+    public void closeUseType(View view) {
+        setSendMessageApi(mBinding.getUseType() == 0 ? 1 : 0);
+    }
+
+    private void setSendMessageApi(int type) {
+        setSendMessageApi api = new setSendMessageApi(new HttpOnNextListener<Integer>() {
+            @Override
+            public void onNext(Integer o) {
+                useType = o;
+                mBinding.setUseType(o);
+            }
+        }, activity).setUseType(type);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
     public void loginOut() {
         loginOutApi api = new loginOutApi(new HttpOnNextListener() {
             @Override
@@ -200,6 +219,8 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
                 PreferenceUtil.saveStringValue(activity, "loginPass", "");
                 BaseActivity.update();
                 ActivityUtils.getLoginVideoActivity();
+                MineApp.sMIMCUser.logout();
+                MineApp.sMIMCUser.destroy();
                 MineApp.getApp().exit();
             }
         }, activity);

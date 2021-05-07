@@ -43,6 +43,10 @@
             name="isThreeLogin"
             type="boolean" />
 
+        <variable
+            name="useType"
+            type="Integer" />
+
     </data>
 
     <LinearLayout
@@ -281,6 +285,36 @@
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:background="@drawable/arrow_small_right_icon" />
+                    </RelativeLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:background="@color/black_efe" />
+
+                    <RelativeLayout
+                        onClickDelayed="@{viewModel::toPass}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="显示个性化展示"
+                            android:textColor="@color/black_4d4"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:onClick="@{viewModel::closeUseType}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:background="@{useType==1?@drawable/show_wx_open:@drawable/show_wx_close}"
+                            tools:background="@drawable/show_wx_open" />
+
                     </RelativeLayout>
                 </LinearLayout>
 

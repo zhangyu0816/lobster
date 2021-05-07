@@ -19,7 +19,6 @@ import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
-import com.zb.lib_base.imcore.ImUtils;
 import com.zb.lib_base.model.BottleCache;
 import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.MineInfo;
@@ -241,8 +240,6 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 adapter.notifyItemRemoved(position);
                 bottleInfoList.remove(position);
                 adapter.notifyDataSetChanged();
-                ImUtils.getInstance().setOtherUserId(otherUserId);
-                ImUtils.getInstance().setDelete(true, activity);
 
                 clearAllHistoryMsg(otherUserId, bottleInfo.getDriftBottleId());
                 activity.sendBroadcast(new Intent("lobster_bottleNum"));

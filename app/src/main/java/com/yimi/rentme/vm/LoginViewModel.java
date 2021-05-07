@@ -34,11 +34,9 @@ import com.zb.lib_base.api.registerApi;
 import com.zb.lib_base.api.registerCaptchaApi;
 import com.zb.lib_base.api.verifyCaptchaApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
-import com.zb.lib_base.imcore.ImUtils;
 import com.zb.lib_base.model.CheckUser;
 import com.zb.lib_base.model.LoginInfo;
 import com.zb.lib_base.model.MineInfo;
@@ -125,15 +123,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         mBinding.setSexIndex(2);
 
         threeLogin = new ThreeLogin(activity, this::loginByUnion);
-        ImUtils.getInstance().setCallBackForLogin(() -> {
-            ImUtils.getInstance().setCallBackForLogin(null);
-            ActivityUtils.getMainActivity();
-            MineApp.registerInfo = new RegisterInfo();
-            timer.cancel();
-            passErrorCount = 0;
-            MineApp.getApp().removeActivity(MineApp.getApp().getActivityMap().get("LoginActivity"));
-            activity.finish();
-        });
 
         array[0] = mBinding.tvCode1;
         array[1] = mBinding.tvCode2;
@@ -437,9 +426,9 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 .setBirthday(MineApp.registerInfo.getBirthday())
                 .setMoreImages(MineApp.registerInfo.getMoreImages())
                 .setSex(MineApp.registerInfo.getSex())
-                .setProvinceId(AreaDb.getInstance().getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
-                .setCityId(AreaDb.getInstance().getCityId(MineApp.cityName))
-                .setDistrictId(AreaDb.getInstance().getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
+                .setProvinceId(0)
+                .setCityId(0)
+                .setDistrictId(0);
         api.setPosition(1);
         HttpManager.getInstance().doHttpDeal(api);
     }
@@ -479,9 +468,9 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 .setBirthday(MineApp.registerInfo.getBirthday())
                 .setMoreImages(MineApp.registerInfo.getMoreImages())
                 .setSex(MineApp.registerInfo.getSex())
-                .setProvinceId(AreaDb.getInstance().getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
-                .setCityId(AreaDb.getInstance().getCityId(MineApp.cityName))
-                .setDistrictId(AreaDb.getInstance().getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
+                .setProvinceId(0)
+                .setCityId(0)
+                .setDistrictId(0);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -501,9 +490,9 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 .setPersonalitySign(MineApp.registerInfo.getPersonalitySign().isEmpty() ? "有趣之人终相遇" : MineApp.registerInfo.getPersonalitySign())
                 .setSex(MineApp.registerInfo.getSex())
                 .setServiceTags(MineApp.registerInfo.getServiceTags())
-                .setProvinceId(AreaDb.getInstance().getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
-                .setCityId(AreaDb.getInstance().getCityId(MineApp.cityName))
-                .setDistrictId(AreaDb.getInstance().getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
+                .setProvinceId(0)
+                .setCityId(0)
+                .setDistrictId(0);
         api.setShowProgress(false);
         HttpManager.getInstance().doHttpDeal(api);
     }
@@ -594,16 +583,12 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             @Override
             public void onNext(MineInfo o) {
                 MineApp.mineInfo = o;
-                if (TextUtils.equals("http://192.168.1.88:8090/", HttpManager.BASE_URL)) {
-                    ActivityUtils.getMainActivity();
-                    MineApp.registerInfo = new RegisterInfo();
-                    timer.cancel();
-                    passErrorCount = 0;
-                    MineApp.getApp().removeActivity(MineApp.getApp().getActivityMap().get("LoginActivity"));
-                    activity.finish();
-                } else {
-                    ImUtils.getInstance().setChat(false, activity);
-                }
+                ActivityUtils.getMainActivity();
+                MineApp.registerInfo = new RegisterInfo();
+                timer.cancel();
+                passErrorCount = 0;
+                MineApp.getApp().removeActivity(MineApp.getApp().getActivityMap().get("LoginActivity"));
+                activity.finish();
             }
         }, activity);
         api.setPosition(1);
@@ -694,7 +679,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                     exitTime = System.currentTimeMillis();
                 } else {
                     timer.cancel();
-                    ImUtils.getInstance().loginOutIM();
                     MineApp.getApp().exit();
                     System.exit(0);
                 }
@@ -806,18 +790,28 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
      */
     private void getPermissions(int type) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission("虾菇需要访问定位权限及手机权限", new BaseActivity.PermissionCallback() {
-                        @Override
-                        public void hasPermission() {
-                            setPermissions(type);
-                        }
+            if (type == 0)
+                performCodeWithPermission("虾菇需要访问手机权限", new BaseActivity.PermissionCallback() {
+                    @Override
+                    public void hasPermission() {
+                        setPermissions(type);
+                    }
 
-                        @Override
-                        public void noPermission() {
-                        }
-                    }, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_PHONE_STATE);
+                    @Override
+                    public void noPermission() {
+                    }
+                }, Manifest.permission.READ_PHONE_STATE);
+            else
+                performCodeWithPermission("虾菇需要访问存储空间权限", new BaseActivity.PermissionCallback() {
+                    @Override
+                    public void hasPermission() {
+                        setPermissions(type);
+                    }
+
+                    @Override
+                    public void noPermission() {
+                    }
+                }, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
         } else {
             setPermissions(type);
         }
@@ -826,9 +820,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     private void setPermissions(int type) {
         if (type == 0) {
             initPhone();
-            if (MineApp.cityName.isEmpty()) {
-                aMapLocation.start(activity, null);
-            }
         } else {
             MineApp.toPublish = false;
             ActivityUtils.getCameraMain(activity, false, true, false);

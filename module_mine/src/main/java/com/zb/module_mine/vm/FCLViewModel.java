@@ -15,6 +15,8 @@ import com.zb.lib_base.api.likeMeListApi;
 import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.myConcernsApi;
 import com.zb.lib_base.api.myFansApi;
+import com.zb.lib_base.api.otherConcernsApi;
+import com.zb.lib_base.api.otherFansApi;
 import com.zb.lib_base.api.relievePairApi;
 import com.zb.lib_base.api.visitorBySeeMeListApi;
 import com.zb.lib_base.app.MineApp;
@@ -47,6 +49,7 @@ import androidx.databinding.ViewDataBinding;
 
 public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRefreshListener, OnLoadMoreListener {
     public int position;
+    public long otherUserId;
     public MineAdapter adapter;
     private List<MemberInfo> memberInfoList = new ArrayList<>();
     private int pageNo = 1;
@@ -123,9 +126,15 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
 
     private void getData() {
         if (position == 0) {
-            myConcerns();
+            if (otherUserId == 0)
+                myConcerns();
+            else
+                otherConcerns();
         } else if (position == 1) {
-            myFans();
+            if (otherUserId == 0)
+                myFans();
+            else
+                otherFans();
         } else if (position == 2) {
             likeMeList();
         } else {
@@ -192,6 +201,20 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 Intent data = new Intent("lobster_attentionList");
                 data.putExtra("isAdd", false);
                 activity.sendBroadcast(data);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
+                    if (e.getMessage().equals("你还没关注我啊")) {
+                        MemberInfo memberInfo = memberInfoList.get(_selectIndex);
+                        memberInfo.setFansQuantity(memberInfo.getFansQuantity() - 1);
+                        AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
+                        Intent data = new Intent("lobster_attentionList");
+                        data.putExtra("isAdd", false);
+                        activity.sendBroadcast(data);
+                    }
+                }
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
@@ -314,6 +337,62 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 }
             }
         }, activity).setPageNo(pageNo);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void otherConcerns() {
+        otherConcernsApi api = new otherConcernsApi(new HttpOnNextListener<List<MemberInfo>>() {
+            @Override
+            public void onNext(List<MemberInfo> o) {
+                int start = memberInfoList.size();
+                memberInfoList.addAll(o);
+                adapter.notifyItemRangeChanged(start, memberInfoList.size());
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
+                mBinding.setNoData(false);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    mBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
+                    if (memberInfoList.size() == 0) {
+                        mBinding.setNoData(true);
+                    }
+                }
+            }
+        }, activity).setPageNo(pageNo).setOtherUserId(otherUserId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void otherFans() {
+        otherFansApi api = new otherFansApi(new HttpOnNextListener<List<MemberInfo>>() {
+            @Override
+            public void onNext(List<MemberInfo> o) {
+                int start = memberInfoList.size();
+                memberInfoList.addAll(o);
+                adapter.notifyItemRangeChanged(start, memberInfoList.size());
+                mBinding.refresh.finishRefresh();
+                mBinding.refresh.finishLoadMore();
+                mBinding.setNoData(false);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    mBinding.refresh.setEnableLoadMore(false);
+                    mBinding.refresh.finishRefresh();
+                    mBinding.refresh.finishLoadMore();
+                    if (memberInfoList.size() == 0) {
+                        mBinding.setNoData(true);
+                    }
+                }
+            }
+        }, activity).setPageNo(pageNo).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

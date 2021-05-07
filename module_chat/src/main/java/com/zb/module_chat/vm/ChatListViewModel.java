@@ -15,7 +15,6 @@ import com.zb.lib_base.db.ChatListDb;
 import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.imcore.ImUtils;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.utils.ActivityUtils;
@@ -124,8 +123,6 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                         activity.sendBroadcast(new Intent("lobster_updateRed"));
                         HistoryMsgDb.getInstance().deleteHistoryMsg(otherUserId, chatList.getChatType() == 6 ? 3 : 1, 0, chatList.getFlashTalkId());
                         ChatListDb.getInstance().deleteChatMsg(otherUserId);
-                        ImUtils.getInstance().setOtherUserId(otherUserId);
-                        ImUtils.getInstance().setDelete(true, activity);
 
                         if (chatList.getFlashTalkId() == 0) {
                             clearAllHistoryMsg(otherUserId);

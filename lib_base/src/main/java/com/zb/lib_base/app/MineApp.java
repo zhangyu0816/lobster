@@ -5,9 +5,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.alibaba.mobileim.YWAPI;
-import com.alibaba.tcms.service.TCMSService;
-import com.alibaba.wxlib.util.SysUtil;
 import com.igexin.sdk.PushManager;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
@@ -17,8 +14,8 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
+import com.xiaomi.mimc.MIMCUser;
 import com.zb.lib_base.R;
-import com.zb.lib_base.imcore.LoginSampleHelper;
 import com.zb.lib_base.iv.DemoPushService;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
@@ -106,6 +103,10 @@ public class MineApp extends MultiDexApplication {
         return fixedThreadPool == null ? fixedThreadPool = Executors.newFixedThreadPool(3) : fixedThreadPool;
     }
 
+    public static MIMCUser sMIMCUser;
+    public static boolean isLogin = false;
+    public static String imUserId = "";
+
     static {
         //设置全局的Header构建器
         SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {
@@ -146,17 +147,6 @@ public class MineApp extends MultiDexApplication {
         }
 
         fixedThreadPool = Executors.newFixedThreadPool(3);
-
-        // 必须首先执行这部分代码, 如果在":TCMSSevice"进程中，无需进行云旺（OpenIM）和app业务的初始化，以节省内存;
-        TCMSService.setEnableForeground(false);
-        SysUtil.setApplication(this);
-        if (SysUtil.isTCMSServiceProcess(this)) {
-            return;
-        }
-        if (SysUtil.isMainProcess()) {
-            YWAPI.init(this, LoginSampleHelper.APP_KEY);
-        }
-
     }
 
     public static MineApp getApp() {

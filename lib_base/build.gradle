@@ -54,8 +54,8 @@ dependencies {
     implementation files('libs/AMap2DMap_6.0.0_AMapSearch_7.3.0_AMapLocation_4.9.0_20200331.jar')
     // 鲁班
     implementation 'me.shaohui.advancedluban:library:1.3.5'
-    // 聊天
-    implementation 'com.alibaba.mobileim:IMCore:2.0.1@aar'
+    // 小米聊天
+    api files('libs/mimc-java-sdk-2.0.8-SNAPSHOT.jar')
     // 阿里
     implementation files('libs/alipaySDK-20151014.jar')
     api 'androidx.appcompat:appcompat:1.2.0'

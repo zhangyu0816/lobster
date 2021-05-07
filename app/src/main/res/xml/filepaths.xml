@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
-    <cache-path name="imageFiles" path="images/"/>
-    <cache-path name="videoFiles" path="videos/"/>
-    <cache-path name="audioFiles" path="audios/"/>
-    <files-path name="ffmpeg" path="files/"/>
+    <cache-path
+        name="imageFiles"
+        path="images/" />
+    <cache-path
+        name="videoFiles"
+        path="videos/" />
+    <cache-path
+        name="audioFiles"
+        path="audios/" />
+    <cache-path
+        name="logCachePath"
+        path="mimc/" />
+    <cache-path
+        name="tokenCachePath"
+        path="mimc/" />
+    <files-path
+        name="ffmpeg"
+        path="files/" />
 </paths>

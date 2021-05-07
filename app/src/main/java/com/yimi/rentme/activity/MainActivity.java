@@ -4,17 +4,19 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.graphics.Color;
 import android.os.Build;
+import android.util.Log;
 import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.igexin.sdk.PushManager;
+import com.xiaomi.mimc.logger.Logger;
+import com.xiaomi.mimc.logger.MIMCLog;
 import com.yimi.rentme.BR;
 import com.yimi.rentme.R;
 import com.yimi.rentme.getui.DemoIntentService;
 import com.yimi.rentme.utils.AlarmUtils;
 import com.yimi.rentme.vm.MainViewModel;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.imcore.ImUtils;
 import com.zb.lib_base.iv.DemoPushService;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.RouteUtils;
@@ -46,7 +48,49 @@ public class MainActivity extends AppBaseActivity {
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         alarmUtils = new AlarmUtils(activity, MineApp.mineInfo);
+        MIMCLog.setLogger(new Logger() {
+            @Override
+            public void d(String tag, String msg) {
+                Log.d(tag, msg);
+            }
 
+            @Override
+            public void d(String tag, String msg, Throwable th) {
+                Log.d(tag, msg, th);
+            }
+
+            @Override
+            public void i(String tag, String msg) {
+                Log.i(tag, msg);
+            }
+
+            @Override
+            public void i(String tag, String msg, Throwable th) {
+                Log.i(tag, msg, th);
+            }
+
+            @Override
+            public void w(String tag, String msg) {
+                Log.w(tag, msg);
+            }
+
+            @Override
+            public void w(String tag, String msg, Throwable th) {
+                Log.w(tag, msg, th);
+            }
+
+            @Override
+            public void e(String tag, String msg) {
+                Log.e(tag, msg);
+            }
+
+            @Override
+            public void e(String tag, String msg, Throwable th) {
+                Log.e(tag, msg, th);
+            }
+        });
+        MIMCLog.setLogPrintLevel(MIMCLog.DEBUG);
+        MIMCLog.setLogSaveLevel(MIMCLog.DEBUG);
     }
 
     @Override
@@ -99,7 +143,8 @@ public class MainActivity extends AppBaseActivity {
                 DataCleanManager.deleteFile(new File(activity.getCacheDir(), "videos"));
                 DataCleanManager.deleteFile(new File(activity.getCacheDir(), "images"));
                 alarmUtils.startAlarm();
-                ImUtils.getInstance().loginOutIM();
+                MineApp.sMIMCUser.logout();
+                MineApp.sMIMCUser.destroy();
                 MineApp.getApp().exit();
                 System.exit(0);
             }
@@ -113,7 +158,6 @@ public class MainActivity extends AppBaseActivity {
         super.onResume();
         if (MineApp.getApp().getActivityList().get(0) instanceof MainActivity) {
             alarmUtils.cancelAlarm();
-            ImUtils.getInstance().setChat(false, activity);
             if (viewModel != null)
                 viewModel.onResume();
         }

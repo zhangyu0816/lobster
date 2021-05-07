@@ -1,4 +1,4 @@
-package com.zb.lib_base.imcore;
+package com.zb.lib_base.mimc;
 
 import java.io.Serializable;
 
@@ -37,6 +37,23 @@ public class CustomMessageBody implements Serializable {
         mDriftBottleId = driftBottleId;
         mFlashTalkId = flashTalkId;
         mMsgChannelType = msgChannelType;
+    }
+
+    public CustomMessageBody(long fromId, long toId, int msgType, String stanza, String resLink,
+                             int resTime, String summary, long driftBottleId, long flashTalkId,
+                             int msgChannelType, int status, String askMark) {
+        mFromId = fromId;
+        mToId = toId;
+        mMsgType = msgType;
+        mStanza = stanza;
+        mResLink = resLink;
+        mResTime = resTime;
+        mSummary = summary;
+        mDriftBottleId = driftBottleId;
+        mFlashTalkId = flashTalkId;
+        mMsgChannelType = msgChannelType;
+        this.status = status;
+        this.askMark = askMark;
     }
 
     public CustomMessageBody(long fromId, long toId, String summary,

@@ -23,6 +23,11 @@
             name="position"
             type="Integer" />
 
+        <variable
+            name="otherUserId"
+            type="long" />
+
+
     </data>
 
     <RelativeLayout
@@ -58,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@{ObjectUtils.getNoData(position)}"
+            android:background="@{ObjectUtils.getNoData(position,otherUserId)}"
             android:visibility="@{noData?View.VISIBLE:View.GONE}" />
     </RelativeLayout>
 </layout>

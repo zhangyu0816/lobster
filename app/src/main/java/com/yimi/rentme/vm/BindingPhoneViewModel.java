@@ -17,7 +17,6 @@ import com.zb.lib_base.api.verifyCaptchaApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.imcore.ImUtils;
 import com.zb.lib_base.model.ImageCaptcha;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
@@ -53,12 +52,6 @@ public class BindingPhoneViewModel extends BaseViewModel implements BindingPhone
                 timer.cancel();
             }
         };
-
-        ImUtils.getInstance().setCallBackForLogin(() -> {
-            ImUtils.getInstance().setCallBackForLogin(null);
-            ActivityUtils.getMainActivity();
-            activity.finish();
-        });
     }
 
     @Override
@@ -188,7 +181,8 @@ public class BindingPhoneViewModel extends BaseViewModel implements BindingPhone
             @Override
             public void onNext(MineInfo o) {
                 MineApp.mineInfo = o;
-                ImUtils.getInstance().setChat(false, activity);
+                ActivityUtils.getMainActivity();
+                activity.finish();
             }
         }, activity);
         api.setPosition(1);

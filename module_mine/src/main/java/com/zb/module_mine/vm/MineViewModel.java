@@ -258,7 +258,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             if (MineApp.mineInfo.getMemberType() == 2) {
                 PreferenceUtil.saveIntValue(activity, "beLikeCount" + BaseActivity.userId, MineApp.contactNum.getBeLikeCount());
                 mBinding.setVariable(BR.hasNewBeLike, false);
-                ActivityUtils.getMineFCL(2);
+                ActivityUtils.getMineFCL(2, 0);
                 return;
             }
             new VipAdPW(mBinding.getRoot(), 4, "");
@@ -269,7 +269,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                 PreferenceUtil.saveIntValue(activity, "visitorCount" + BaseActivity.userId, MineApp.contactNum.getVisitorCount());
                 mBinding.setVariable(BR.hasNewVisitor, false);
             }
-            ActivityUtils.getMineFCL(position);
+            ActivityUtils.getMineFCL(position, 0);
         }
     }
 

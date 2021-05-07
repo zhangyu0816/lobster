@@ -112,6 +112,7 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
                             && !TextUtils.equals(exception.getMessage(), "获取失败")
                             && !TextUtils.equals(exception.getMessage(), "已到闪聊上限")
                             && !TextUtils.equals(exception.getMessage(), "账号尚未注册")
+                            && !TextUtils.equals(exception.getMessage(), "你还没关注我啊")
                             && !TextUtils.equals(exception.getMessage(), "账号生成失败")) {
                         SCToastUtil.showToast(context, exception.getMessage(), position == 0);
                     }

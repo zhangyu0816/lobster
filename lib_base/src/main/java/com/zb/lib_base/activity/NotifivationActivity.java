@@ -80,7 +80,7 @@ public class NotifivationActivity extends RxAppCompatActivity {
                 } else if (TextUtils.equals(activity, "NewsListActivity")) {
                     ActivityUtils.getMineNewsList(reviewType);
                 } else if (TextUtils.equals(activity, "FCLActivity")) {
-                    ActivityUtils.getMineFCL(1);
+                    ActivityUtils.getMineFCL(1, 0);
                 } else if (TextUtils.equals(activity, "BottleChatActivity")) {
                     ActivityUtils.getBottleChat(driftBottleId, true);
                 }

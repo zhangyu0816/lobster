@@ -525,6 +525,14 @@ public interface HttpService {
     @GET("api/Collect_myFans")
     Observable<BaseResultEntity<List<MemberInfo>>> myFans(@Query("pageNo") int pageNo);
 
+    // 别人的关注
+    @GET("api/Collect_otherConcerns")
+    Observable<BaseResultEntity<List<MemberInfo>>> otherConcerns(@Query("pageNo") int pageNo, @Query("otherUserId") long otherUserId);
+
+    // 别人的粉丝
+    @GET("api/Collect_otherFans")
+    Observable<BaseResultEntity<List<MemberInfo>>> otherFans(@Query("pageNo") int pageNo, @Query("otherUserId") long otherUserId);
+
     // 喜欢我的人列表
     @GET("api/Pair_likeMeList")
     Observable<BaseResultEntity<List<LikeMe>>> likeMeList(@QueryMap Map<String, String> map);
@@ -604,4 +612,7 @@ public interface HttpService {
 
     @GET("api/Interactive_seeLikers")
     Observable<BaseResultEntity<List<Review>>> seeLikers(@Query("friendDynId") long friendDynId, @Query("pageNo") int pageNo, @Query("pageSize") int pageSize);
+
+    @GET("api/Share_setSendMessage")
+    Observable<BaseResultEntity<Integer>> setSendMessage(@QueryMap Map<String, String> map);
 }

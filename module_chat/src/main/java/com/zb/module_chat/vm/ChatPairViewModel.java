@@ -185,7 +185,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 PreferenceUtil.saveIntValue(activity, "beLikeCount" + BaseActivity.userId, MineApp.contactNum.getBeLikeCount());
                 ChatListDb.getInstance().setHasNewBeLike(false);
                 adapter.notifyItemChanged(1);
-                ActivityUtils.getMineFCL(2);
+                ActivityUtils.getMineFCL(2,0);
                 return;
             }
             new VipAdPW(mBinding.getRoot(), 4, "");

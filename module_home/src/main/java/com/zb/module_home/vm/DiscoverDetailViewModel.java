@@ -326,7 +326,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    rewardInfo = "送朵玫瑰，开始你们的故事";
+                    rewardInfo = "送朵玫瑰花，开始我们的邂逅";
                     temp = rewardInfo.toCharArray();
                     info = "";
                     mHandler.postDelayed(ra, 50);
@@ -631,6 +631,21 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 Intent intent = new Intent("lobster_attention");
                 intent.putExtra("isAttention", false);
                 activity.sendBroadcast(intent);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if(e instanceof HttpTimeException&&((HttpTimeException) e).getCode()==HttpTimeException.ERROR){
+                    if(e.getMessage().equals("你还没关注我啊")){
+                        mBinding.setIsAttention(false);
+                        if (memberInfo != null)
+                            AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
+                        activity.sendBroadcast(new Intent("lobster_attentionList"));
+                        Intent intent = new Intent("lobster_attention");
+                        intent.putExtra("isAttention", false);
+                        activity.sendBroadcast(intent);
+                    }
+                }
             }
         }, activity).setOtherUserId(discoverInfo.getUserId());
         HttpManager.getInstance().doHttpDeal(api);

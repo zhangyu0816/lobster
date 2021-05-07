@@ -18,7 +18,6 @@ import com.zb.lib_base.db.SystemMsgDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
-import com.zb.lib_base.imcore.ImUtils;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.StanzaInfo;
 import com.zb.lib_base.model.SystemMsg;
@@ -56,14 +55,11 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
         mBinding = (MineSystemMsgBinding) binding;
         setAdapter();
         soundView = new SoundView(activity, view -> stopVoiceDrawable());
-        ImUtils.getInstance().setOtherUserId(BaseActivity.systemUserId);
-        ImUtils.getInstance().setChat(true, activity);
     }
 
     @Override
     public void back(View view) {
         super.back(view);
-        ImUtils.getInstance().markRead();
         activity.finish();
     }
 

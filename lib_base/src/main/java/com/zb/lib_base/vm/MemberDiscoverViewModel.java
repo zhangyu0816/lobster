@@ -313,6 +313,12 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     }
 
     @Override
+    public void toMemberDetail(int position) {
+        DiscoverInfo discoverInfo = discoverInfoList.get(position);
+        ActivityUtils.getCardMemberDetail(discoverInfo.getUserId(),false);
+    }
+
+    @Override
     public void doLike(View view, int position) {
         prePosition = position;
         discoverInfo = discoverInfoList.get(position);

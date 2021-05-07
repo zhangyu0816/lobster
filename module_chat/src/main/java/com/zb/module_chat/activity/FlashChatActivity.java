@@ -52,13 +52,6 @@ public class FlashChatActivity extends ChatBaseActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        if (viewModel != null)
-            viewModel.onResume();
-    }
-
-    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (viewModel != null)

@@ -14,6 +14,8 @@ public interface MemberDiscoverVMInterface {
 
     void clickItem(int position);
 
+    void toMemberDetail(int position);
+
     void doLike(View view, int position);
 
     void dynDoLike();
