@@ -12,8 +12,12 @@ import com.zb.lib_base.model.ChatList;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ObjectUtils {
 
@@ -270,6 +274,19 @@ public class ObjectUtils {
         int otherCount = Math.min(chatList.getOtherChatCount(), 10);
         return (myCount + otherCount) * 5 + "%";
     }
+
+    public static List<String> judgeString(String str) {
+        Matcher m = Pattern.compile(
+                "(((https|http)?://)?([a-z0-9]+[.])|(www.))"
+                        + "\\w+[.|\\/]([a-z0-9]{0,})?[[.]([a-z0-9]{0,})]+((/[\\S&&[^,;\u4E00-\u9FA5]]+)+)?([.][a-z0-9]{0,}+|/?)"
+        ).matcher(str);
+        List<String> url = new ArrayList<>();
+        while (m.find()) {
+            url.add(m.group());
+        }
+        return url;
+    }
+
 
     public static int textColor(long otherUserId, int position) {
         if (position == 2) {

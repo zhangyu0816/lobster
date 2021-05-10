@@ -79,6 +79,7 @@ import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.utils.KeyboardStateObserver;
 import com.zb.lib_base.utils.MNImage;
+import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.OpenNotice;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -87,6 +88,7 @@ import com.zb.lib_base.utils.glide.BlurTransformation;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.views.SoundView;
 import com.zb.lib_base.windows.BottleVipPW;
+import com.zb.lib_base.windows.SelectorPW;
 import com.zb.lib_base.windows.VipAdPW;
 
 import java.io.File;
@@ -1214,6 +1216,27 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
             }
         }, activity).setFile(new File(fileName));
         HttpChatUploadManager.getInstance().doHttpDeal(api);
+    }
+
+    public void toUrl(String text) {
+        List<String> url = ObjectUtils.judgeString(text);
+        if (url.size() > 0) {
+            if (url.size() == 1) {
+                String url0 = url.get(0);
+                if (!url0.contains("http")) {
+                    url0 = "https://" + url0;
+                }
+                ActivityUtils.getMineWeb("", url0);
+            } else {
+                new SelectorPW(mBinding.getRoot(), url, position1 -> {
+                    String urlTemp = url.get(position1);
+                    if (!urlTemp.contains("http")) {
+                        urlTemp = "https://" + urlTemp;
+                    }
+                    ActivityUtils.getMineWeb("", urlTemp);
+                });
+            }
+        }
     }
 
     private void updateTime() {

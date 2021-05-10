@@ -76,6 +76,7 @@
                 android:layout_height="40dp" />
 
             <com.zb.lib_base.emojj.EmojiTextView
+                android:onClick="@{v->viewModel.toUrl(item.stanza)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
@@ -363,6 +364,7 @@
             android:visibility="@{item.fromId==BaseActivity.userId?View.VISIBLE:View.GONE}">
 
             <com.zb.lib_base.emojj.EmojiTextView
+                android:onClick="@{v->viewModel.toUrl(item.stanza)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"

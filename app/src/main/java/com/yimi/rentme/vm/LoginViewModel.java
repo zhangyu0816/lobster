@@ -41,7 +41,6 @@ import com.zb.lib_base.model.CheckUser;
 import com.zb.lib_base.model.LoginInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.RegisterInfo;
-import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.Mac;
@@ -82,7 +81,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     private BaseReceiver cameraReceiver;
     private BaseReceiver bindPhoneReceiver;
     private PhotoManager photoManager;
-    private AMapLocation aMapLocation;
     private ThreeLogin threeLogin;
     private int passErrorCount = 0;
     private CheckUser mCheckUser;
@@ -179,7 +177,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             }
         };
 
-        aMapLocation = new AMapLocation(activity);
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
         getPermissions(0);
 
