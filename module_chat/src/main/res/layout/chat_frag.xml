@@ -65,7 +65,7 @@
                             android:layout_gravity="center"
                             android:layout_marginTop="22dp"
                             android:paddingTop="15dp"
-                            android:text="对话"
+                            android:text="我的消息"
                             android:textColor="@color/black_252"
                             android:textSize="18sp"
                             android:textStyle="bold"

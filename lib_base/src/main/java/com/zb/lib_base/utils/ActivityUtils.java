@@ -42,8 +42,8 @@ public class ActivityUtils {
     }
 
     // 礼物列表
-    public static void getHomeRewardList(long friendDynId) {
-        ARouter.getInstance().build(RouteUtils.Home_Reward_List).withLong("friendDynId", friendDynId).navigation();
+    public static void getHomeRewardList(long friendDynId, long otherUserId) {
+        ARouter.getInstance().build(RouteUtils.Home_Reward_List).withLong("friendDynId", friendDynId).withLong("otherUserId", otherUserId).navigation();
     }
 
     // 礼物列表

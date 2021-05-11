@@ -27,12 +27,16 @@
             name="otherUserId"
             type="long" />
 
+        <variable
+            name="isVip"
+            type="boolean" />
 
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/black_efe">
 
         <include
             android:id="@+id/layout"
@@ -47,8 +51,8 @@
             onRefreshListener="@{viewModel}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/layout"
-            android:background="@color/black_efe">
+            android:layout_above="@+id/bottom_layout"
+            android:layout_below="@+id/layout">
 
             <androidx.recyclerview.widget.RecyclerView
                 adapter="@{viewModel.adapter}"
@@ -58,6 +62,56 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+        <LinearLayout
+            android:id="@+id/bottom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical"
+            android:visibility="@{(position==3&amp;&amp;!isVip&amp;&amp;!noData)?View.VISIBLE:View.GONE}">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="1px"
+                    android:background="@color/black_827" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:text="非会员显示最新8位网友"
+                    android:textColor="@color/black_827"
+                    android:textSize="12sp" />
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="1px"
+                    android:background="@color/black_827" />
+            </LinearLayout>
+
+            <TextView
+                onClickDelayed="@{viewModel::openVip}"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="20dp"
+                android:background="@drawable/gradient_purple_6d5_ae7"
+                android:gravity="center"
+                android:text="查看所有看过我的人"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <ImageView
             android:layout_width="wrap_content"

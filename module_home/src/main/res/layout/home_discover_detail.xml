@@ -43,6 +43,13 @@
             name="rewardInfo"
             type="String" />
 
+        <variable
+            name="likeType"
+            type="Integer" />
+
+        <variable
+            name="isPlay"
+            type="boolean" />
 
     </data>
 
@@ -171,23 +178,23 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:background="@{viewModel.discoverInfo==null?@drawable/default_bg:@drawable/empty_bg}"
+                                        android:ellipsize="end"
+                                        android:maxEms="7"
+                                        android:singleLine="true"
                                         android:text="@{viewModel.discoverInfo.nick}"
                                         android:textColor="@color/black_252"
                                         android:textSize="16sp"
                                         android:textStyle="bold"
-                                        android:ellipsize="end"
-                                        android:maxEms="7"
-                                        android:singleLine="true"
                                         tools:text="默认仓库" />
 
                                     <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="8dp"
-                                        android:layout_marginEnd="8dp"
                                         android:layout_marginTop="4dp"
-                                        android:layout_toEndOf="@+id/tv_nick"
+                                        android:layout_marginEnd="8dp"
                                         android:layout_toStartOf="@+id/tv_attention"
+                                        android:layout_toEndOf="@+id/tv_nick"
                                         android:orientation="horizontal">
 
                                         <ImageView
@@ -311,8 +318,8 @@
                                     android:layout_marginStart="8dp"
                                     android:background="@drawable/btn_bg_red_ffe_radius60"
                                     android:gravity="center"
-                                    android:paddingStart="15dp"
-                                    android:paddingEnd="15dp"
+                                    android:paddingStart="10dp"
+                                    android:paddingEnd="10dp"
                                     android:text="@{rewardInfo}"
                                     android:textColor="#eb2953"
                                     android:textSize="12sp"
@@ -413,6 +420,7 @@
                 onLoadMoreListener="@{viewModel}"
                 onRefreshListener="@{viewModel}"
                 android:layout_width="match_parent"
+                android:paddingBottom="100dp"
                 android:layout_height="match_parent"
                 android:layout_marginTop="-13dp"
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
@@ -436,11 +444,43 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/bottom_layout"
+            android:layout_alignParentEnd="true"
             android:layout_marginEnd="7dp"
             android:layout_marginBottom="8dp"
-            android:layout_alignParentEnd="true"
             android:background="@mipmap/icon_remind"
-            android:visibility="gone"/>
+            android:visibility="gone" />
+
+        <com.zb.lib_base.views.SuperLikeBigView
+            android:id="@+id/iv_super_like"
+            bigSuperLikeInterface="@{viewModel}"
+            isPlay="@{isPlay}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/bottom_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="15dp"
+            android:visibility="@{likeType==2?View.GONE:View.VISIBLE}" />
+
+        <ImageView
+            android:id="@+id/iv_dislike"
+            onClickDelayed="@{viewModel::dislike}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/bottom_layout"
+            android:layout_margin="15dp"
+            android:visibility="@{likeType==0?View.VISIBLE:View.GONE}"
+            app:srcCompat="@mipmap/dislike_icon" />
+
+        <ImageView
+            android:id="@+id/iv_like"
+            onClickDelayed="@{viewModel::like}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/bottom_layout"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="15dp"
+            android:visibility="@{likeType==0?View.VISIBLE:View.GONE}"
+            app:srcCompat="@mipmap/like_icon" />
 
         <LinearLayout
             android:id="@+id/bottom_layout"
@@ -544,8 +584,8 @@
                         android:textColor="#303846"
                         android:textSize="12sp"
                         android:textStyle="bold"
-                        tools:text="7"
-                        app:drawableStartCompat="@mipmap/comment_icon" />
+                        app:drawableStartCompat="@mipmap/comment_icon"
+                        tools:text="7" />
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>

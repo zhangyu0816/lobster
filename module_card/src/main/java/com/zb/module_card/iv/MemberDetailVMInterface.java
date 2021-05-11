@@ -18,6 +18,10 @@ public interface MemberDetailVMInterface {
 
     void openVip(View view);
 
+    void selectGift(View view);
+
+    void toRewardList(View view);
+
     void contactNumDetail(int position);
 
     void otherInfo();

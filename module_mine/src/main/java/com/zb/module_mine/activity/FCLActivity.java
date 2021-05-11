@@ -4,6 +4,7 @@ import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.R;
@@ -34,6 +35,7 @@ public class FCLActivity extends MineBaseActivity {
         mBinding.setVariable(BR.position, position);
         mBinding.setVariable(BR.title, position == 0 ? (otherUserId == 0 ? "我的关注" : "Ta的关注") : (position == 1 ? (otherUserId == 0 ? "我的粉丝" : "TA的粉丝") : (position == 2 ? "谁喜欢我" : "谁看过我")));
         mBinding.setVariable(BR.noData, true);
+        mBinding.setVariable(BR.isVip, MineApp.mineInfo.getMemberType() == 2);
     }
 
     @Override

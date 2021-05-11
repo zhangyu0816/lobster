@@ -41,6 +41,10 @@
             name="isFirstOpen"
             type="boolean" />
 
+        <variable
+            name="showSubmit"
+            type="boolean" />
+
     </data>
 
     <RelativeLayout
@@ -93,22 +97,17 @@
                                 android:visibility="gone"
                                 app:srcCompat="@mipmap/news_icon" />
 
-                            <!--            <TextView-->
-                            <!--                android:layout_width="16dp"-->
-                            <!--                android:layout_height="16dp"-->
-                            <!--                android:layout_alignEnd="@+id/iv_news"-->
-                            <!--                android:layout_marginTop="13dp"-->
-                            <!--                android:layout_marginEnd="13dp"-->
-                            <!--                android:background="@drawable/circle_white_red"-->
-                            <!--                android:gravity="center"-->
-                            <!--                android:text="@{ObjectUtils.count(mineNewsCount.friendDynamicGoodNum+mineNewsCount.friendDynamicReviewNum+mineNewsCount.friendDynamicGiftNum+mineNewsCount.systemNewsNum)}"-->
-                            <!--                android:textColor="@android:color/white"-->
-                            <!--                android:textSize="10sp"-->
-                            <!--                android:visibility="@{(mineNewsCount.friendDynamicGoodNum+mineNewsCount.friendDynamicReviewNum+mineNewsCount.friendDynamicGiftNum+mineNewsCount.systemNewsNum)==0?View.GONE:View.VISIBLE}"-->
-                            <!--                tools:text="···" />-->
-
+                            <ImageView
+                                onClickDelayed="@{viewModel::toReward}"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_toStartOf="@+id/iv_set"
+                                android:padding="15dp"
+                                app:srcCompat="@mipmap/reward_ranking" />
 
                             <ImageView
+                                android:id="@+id/iv_set"
                                 onClickDelayed="@{viewModel::toSetting}"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -320,7 +319,6 @@
                                                 android:layout_width="5dp"
                                                 android:layout_height="5dp"
                                                 android:layout_alignEnd="@+id/tv_beLike"
-                                                android:layout_marginTop="5dp"
                                                 android:background="@drawable/circle_red"
                                                 android:visibility="@{hasNewBeLike?View.VISIBLE:View.GONE}" />
                                         </RelativeLayout>
@@ -368,7 +366,6 @@
                                                 android:layout_width="5dp"
                                                 android:layout_height="5dp"
                                                 android:layout_alignEnd="@+id/tv_beLook"
-                                                android:layout_marginTop="5dp"
                                                 android:background="@drawable/circle_red"
                                                 android:visibility="@{hasNewVisitor?View.VISIBLE:View.GONE}" />
                                         </RelativeLayout>
@@ -489,8 +486,6 @@
 
                                 <RelativeLayout
                                     onClickDelayed="@{v->viewModel.openShare(1)}"
-                                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(953)}"
-                                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(298)}"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="10dp"
@@ -500,8 +495,6 @@
 
                                     <ImageView
                                         android:id="@+id/iv_go"
-                                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(147)}"
-                                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(147)}"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_alignParentEnd="true"
@@ -535,63 +528,6 @@
                         app:tabRippleColor="@android:color/transparent"
                         app:tabSelectedTextColor="@color/black_252"
                         app:tabTextColor="@color/black_827" />
-
-                    <LinearLayout
-                        onClickDelayed="@{v->viewModel.contactNumDetail(2)}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginEnd="15dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:visibility="gone">
-                        <!--                        android:visibility="@{contactNum.beLikeCount==0?View.GONE:View.VISIBLE}"-->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="已有"
-                            android:textColor="@color/black_252"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text='@{String.format("%d",contactNum.beLikeCount)}'
-                            android:textColor="@color/red_ff3"
-                            android:textSize="12sp"
-                            android:textStyle="bold"
-                            tools:text="65484" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="人喜欢你"
-                            android:textColor="@color/black_252"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <ImageView
-                                android:id="@+id/iv_be_like"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@{mineInfo.sex==0?@drawable/be_like_male_icon:@drawable/be_like_female_icon}"
-                                tools:background="@drawable/be_like_male_icon" />
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignEnd="@+id/iv_be_like"
-                                android:background="@mipmap/be_like_count_icon" />
-                        </RelativeLayout>
-
-                    </LinearLayout>
                 </RelativeLayout>
             </com.google.android.material.appbar.AppBarLayout>
 
@@ -599,8 +535,41 @@
                 android:id="@+id/view_page"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:visibility="@{showSubmit?View.VISIBLE:View.GONE}"
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
+            <RelativeLayout
+                android:id="@+id/no_data_relative"
+                onClickDelayed="@{viewModel::publishDiscover}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="15dp"
+                android:visibility="@{showSubmit?View.GONE:View.VISIBLE}"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+                <ImageView
+                    android:id="@+id/iv_fabu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:background="@mipmap/icon_fabu" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="15dp"
+                    android:layout_toEndOf="@+id/iv_fabu"
+                    android:background="@mipmap/icon_fabu_remark" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@mipmap/arrow_right_icon" />
+            </RelativeLayout>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <RelativeLayout
@@ -612,7 +581,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="15dp">
+            android:layout_marginBottom="15dp"
+            android:visibility="@{showSubmit?View.VISIBLE:View.GONE}">
 
             <View
                 android:id="@+id/circle_view"

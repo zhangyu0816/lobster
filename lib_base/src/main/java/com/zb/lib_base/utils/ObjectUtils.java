@@ -68,7 +68,7 @@ public class ObjectUtils {
     }
 
     public static int getVipIntroHeight() {
-        return (int) (MineApp.W * 2850 / 1125f);
+        return (int) (MineApp.W * 3737f / 1125f);
     }
 
     public static int getVipIntroBgHeight(float scale) {

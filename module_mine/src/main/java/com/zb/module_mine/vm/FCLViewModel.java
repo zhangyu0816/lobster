@@ -15,6 +15,7 @@ import com.zb.lib_base.api.likeMeListApi;
 import com.zb.lib_base.api.makeEvaluateApi;
 import com.zb.lib_base.api.myConcernsApi;
 import com.zb.lib_base.api.myFansApi;
+import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.otherConcernsApi;
 import com.zb.lib_base.api.otherFansApi;
 import com.zb.lib_base.api.relievePairApi;
@@ -30,12 +31,14 @@ import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.TextPW;
 import com.zb.lib_base.windows.VipAdPW;
+import com.zb.module_mine.BR;
 import com.zb.module_mine.R;
 import com.zb.module_mine.adapter.MineAdapter;
 import com.zb.module_mine.databinding.MineFclBinding;
@@ -57,6 +60,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
     private int _selectIndex = -1;
     private BaseReceiver attentionListReceiver;
     private BaseReceiver updateFCLReceiver;
+    private BaseReceiver openVipReceiver;
 
     @Override
     public void back(View view) {
@@ -82,12 +86,20 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                     adapter.notifyItemChanged(_selectIndex);
             }
         };
+        // 开通会员
+        openVipReceiver = new BaseReceiver(activity, "lobster_openVip") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                myInfo();
+            }
+        };
     }
 
     public void onDestroy() {
         try {
             attentionListReceiver.unregisterReceiver();
             updateFCLReceiver.unregisterReceiver();
+            openVipReceiver.unregisterReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -102,6 +114,10 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         // 上拉加载更多
+        if (position == 3 && MineApp.mineInfo.getMemberType() == 1) {
+            mBinding.refresh.finishLoadMore();
+            return;
+        }
         pageNo++;
         getData();
     }
@@ -162,6 +178,23 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 attentionOther(otherUserId);
             }
         }
+    }
+
+    @Override
+    public void openVip(View view) {
+        new VipAdPW(mBinding.getRoot(), 0, "");
+    }
+
+    @Override
+    public void myInfo() {
+        myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
+            @Override
+            public void onNext(MineInfo o) {
+                MineApp.mineInfo = o;
+                mBinding.setVariable(BR.isVip, MineApp.mineInfo.getMemberType() == 2);
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     private void attentionOther(long otherUserId) {

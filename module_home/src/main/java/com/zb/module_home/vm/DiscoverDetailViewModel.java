@@ -1,5 +1,7 @@
 package com.zb.module_home.vm;
 
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -33,24 +35,31 @@ import com.zb.lib_base.api.seeReviewsApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AttentionDb;
 import com.zb.lib_base.db.GoodDb;
+import com.zb.lib_base.db.LikeDb;
 import com.zb.lib_base.db.LikeTypeDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
+import com.zb.lib_base.iv.SuperLikeInterface;
 import com.zb.lib_base.model.Ads;
 import com.zb.lib_base.model.AttentionInfo;
 import com.zb.lib_base.model.CollectID;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
+import com.zb.lib_base.model.PairInfo;
 import com.zb.lib_base.model.Review;
 import com.zb.lib_base.model.Reward;
 import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.MNImage;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.views.xbanner.XUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.FunctionPW;
+import com.zb.lib_base.windows.GiftPW;
+import com.zb.lib_base.windows.GiftPayPW;
 import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.TextPW;
 import com.zb.lib_base.windows.VipAdPW;
@@ -58,8 +67,6 @@ import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
 import com.zb.module_home.databinding.HomeDiscoverDetailBinding;
 import com.zb.module_home.iv.DiscoverDetailVMInterface;
-import com.zb.module_home.windows.GiftPW;
-import com.zb.module_home.windows.GiftPayPW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +74,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
 
-public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDetailVMInterface, OnRefreshListener, OnLoadMoreListener {
+public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDetailVMInterface, OnRefreshListener, OnLoadMoreListener, SuperLikeInterface {
     private HomeDiscoverDetailBinding mBinding;
     public long friendDynId = 0;
     public DiscoverInfo discoverInfo;
@@ -94,7 +101,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         mBinding.setContent("");
         mBinding.setName("");
         mBinding.setIsAttention(false);
-
+        mBinding.setIsPlay(true);
         setAdapter();
         dynDetail();
         // 发送
@@ -183,7 +190,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                         discoverInfo.getUserId() == BaseActivity.userId, false, true, false, new FunctionPW.CallBack() {
                     @Override
                     public void gift() {
-                        ActivityUtils.getHomeRewardList(friendDynId);
+                        ActivityUtils.getHomeRewardList(friendDynId,0);
                     }
 
                     @Override
@@ -204,7 +211,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     @Override
                     public void like() {
                         if (MineApp.mineInfo.getMemberType() == 2) {
-                            makeEvaluate();
+                            makeEvaluate(2);
                         } else {
                             new VipAdPW(mBinding.getRoot(), 3, discoverInfo.getImage());
                         }
@@ -229,15 +236,15 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     public void selectGift(View view) {
         hintKeyBoard();
         if (discoverInfo.getUserId() == BaseActivity.userId) {
-            ActivityUtils.getHomeRewardList(friendDynId);
+            ActivityUtils.getHomeRewardList(friendDynId,0);
         } else
             new GiftPW(mBinding.getRoot(), giftInfo ->
-                    new GiftPayPW(mBinding.getRoot(), giftInfo, friendDynId, this::seeGiftRewards));
+                    new GiftPayPW(mBinding.getRoot(), giftInfo, friendDynId,0, this::seeGiftRewards));
     }
 
     @Override
     public void toRewardList(View view) {
-        ActivityUtils.getHomeRewardList(friendDynId);
+        ActivityUtils.getHomeRewardList(friendDynId,0);
     }
 
     @Override
@@ -251,6 +258,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
             @Override
             public void onNext(DiscoverInfo o) {
                 discoverInfo = o;
+                mBinding.setLikeType(LikeTypeDb.getInstance().getType(discoverInfo.getUserId()));
                 mBinding.setViewModel(DiscoverDetailViewModel.this);
                 Runnable ra = () -> {
                     if (!discoverInfo.getImages().isEmpty()) {
@@ -297,10 +305,10 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    String info = "";
-    String rewardInfo = "";
-    char[] temp;
-    int i = 0;
+    private String info = "";
+    private String rewardInfo = "";
+    private char[] temp;
+    private int i = 0;
 
     public void seeGiftRewards() {
         seeGiftRewardsApi api = new seeGiftRewardsApi(new HttpOnNextListener<List<Reward>>() {
@@ -348,7 +356,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 mBinding.setRewardInfo(info);
                 i++;
                 mHandler.postDelayed(ra, 50);
-            }else{
+            } else {
                 mHandler.removeCallbacks(ra);
             }
         }
@@ -391,25 +399,112 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     }
 
     @Override
-    public void makeEvaluate() {
+    public void makeEvaluate(int likeOtherStatus) {
+        //  likeOtherStatus  0 不喜欢  1 喜欢  2.超级喜欢 （非会员提示开通会员）
         makeEvaluateApi api = new makeEvaluateApi(new HttpOnNextListener<Integer>() {
             @Override
             public void onNext(Integer o) {
-                // 1喜欢成功 2匹配成功 3喜欢次数用尽
                 String myHead = MineApp.mineInfo.getImage();
                 String otherHead = memberInfo.getImage();
+                // 1喜欢成功 2匹配成功 3喜欢次数用尽
                 if (o == 1) {
+                    // 不喜欢成功  喜欢成功  超级喜欢成功
+                    if (likeOtherStatus == 0) {
+                        activity.finish();
+                    } else if (likeOtherStatus == 1) {
+                        LikeDb.getInstance().saveLike(new CollectID(discoverInfo.getUserId()));
+                        activity.sendBroadcast(new Intent("lobster_isLike"));
+                        activity.sendBroadcast(new Intent("lobster_updateFCL"));
+                        LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 1);
+                        closeBtn(mBinding.ivLike);
+                        closeBtn(mBinding.ivDislike);
+                        isLike = true;
+                        SCToastUtil.showToast(activity, "已喜欢成功", true);
+                    } else if (likeOtherStatus == 2) {
+                        if (!isLike) {
+                            closeBtn(mBinding.ivLike);
+                            closeBtn(mBinding.ivDislike);
+                        }
+                        LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 2);
+                        closeBtn(mBinding.ivSuperLike);
+                        activity.sendBroadcast(new Intent("lobster_updateFCL"));
+                        new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex());
+                    }
+                } else if (o == 2) {
+                    // 匹配成功
+                    LikeDb.getInstance().saveLike(new CollectID(discoverInfo.getUserId()));
+                    new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex(), memberInfo.getNick(),
+                            () -> ActivityUtils.getChatActivity(discoverInfo.getUserId(), false));
+                    activity.sendBroadcast(new Intent("lobster_pairList"));
+                    activity.sendBroadcast(new Intent("lobster_isLike"));
+                    activity.sendBroadcast(new Intent("lobster_updateFCL"));
+                    if (LikeTypeDb.getInstance().getType(discoverInfo.getUserId()) != 1) {
+                        closeBtn(mBinding.ivLike);
+                        closeBtn(mBinding.ivDislike);
+                    }
+                    closeBtn(mBinding.ivSuperLike);
                     LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 2);
-                    new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex());
+                } else if (o == 3) {
+                    // 喜欢次数用尽
+                    new VipAdPW(mBinding.getRoot(), 6, "");
+                    SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
                 } else if (o == 4) {
-                    SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
+                    // 超级喜欢时，非会员或超级喜欢次数用尽
+                    if (MineApp.mineInfo.getMemberType() == 2) {
+                        SCToastUtil.showToast(activity, "今日超级喜欢次数已用完", true);
+                    } else {
+                        new VipAdPW(mBinding.getRoot(), 3, otherHead);
+                    }
                 } else {
-                    LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 2);
-                    SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
+                    if (likeOtherStatus == 0) {
+                        activity.finish();
+                    } else if (likeOtherStatus == 1) {
+                        LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 1);
+                        closeBtn(mBinding.ivLike);
+                        closeBtn(mBinding.ivDislike);
+                        isLike = true;
+                        SCToastUtil.showToast(activity, "已喜欢成功", true);
+                    } else if (likeOtherStatus == 2) {
+                        LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 2);
+                        closeBtn(mBinding.ivLike);
+                        closeBtn(mBinding.ivDislike);
+                        closeBtn(mBinding.ivSuperLike);
+                        SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
+                    }
                 }
             }
-        }, activity).setOtherUserId(discoverInfo.getUserId()).setLikeOtherStatus(2);
+        }, activity).setOtherUserId(discoverInfo.getUserId()).setLikeOtherStatus(likeOtherStatus);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private boolean isLike = false;
+    private ObjectAnimator pvh, translateY;
+
+    private void isLike(View view) {
+        PropertyValuesHolder pvhSY = PropertyValuesHolder.ofFloat("scaleY", 1, 1.1f, 1, 1.2f, 1);
+        PropertyValuesHolder pvhSX = PropertyValuesHolder.ofFloat("scaleX", 1, 1.1f, 1, 1.2f, 1);
+        pvh = ObjectAnimator.ofPropertyValuesHolder(view, pvhSY, pvhSX).setDuration(500);
+        pvh.start();
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(500);
+            activity.runOnUiThread(() -> {
+                if (pvh != null)
+                    pvh.cancel();
+                pvh = null;
+            });
+        });
+    }
+
+    private void closeBtn(View view) {
+        translateY = ObjectAnimator.ofFloat(view, "translationY", 0, 1000).setDuration(500);
+        translateY.start();
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            SystemClock.sleep(500);
+            activity.runOnUiThread(() -> {
+                translateY = null;
+                mBinding.setLikeType(view == mBinding.ivSuperLike ? 2 : 1);
+            });
+        });
     }
 
     @Override
@@ -538,6 +633,26 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    @Override
+    public void dislike(View view) {
+        activity.finish();
+    }
+
+    @Override
+    public void like(View view) {
+        if (memberInfo == null) {
+            SCToastUtil.showToast(activity, "网络异常，请检查网络是否链接", true);
+            return;
+        }
+        isLike(mBinding.ivLike);
+        if (PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1) == 0 && MineApp.mineInfo.getMemberType() == 1) {
+            new VipAdPW(mBinding.getRoot(), 6, "");
+            SCToastUtil.showToast(activity, "今日喜欢次数已用完", true);
+            return;
+        }
+        makeEvaluate(1);
+    }
+
 
     @Override
     public void selectReview(Review review) {
@@ -635,8 +750,8 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
 
             @Override
             public void onError(Throwable e) {
-                if(e instanceof HttpTimeException&&((HttpTimeException) e).getCode()==HttpTimeException.ERROR){
-                    if(e.getMessage().equals("你还没关注我啊")){
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
+                    if (e.getMessage().equals("你还没关注我啊")) {
                         mBinding.setIsAttention(false);
                         if (memberInfo != null)
                             AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
@@ -666,5 +781,20 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         reviewList.clear();
         reviewAdapter.notifyDataSetChanged();
         seeReviews();
+    }
+
+    @Override
+    public void superLike(View view, PairInfo pairInfo) {
+        if (MineApp.mineInfo.getMemberType() == 2) {
+            makeEvaluate(2);
+        } else {
+            if (memberInfo != null)
+                new VipAdPW(mBinding.getRoot(), 3, memberInfo.getImage());
+        }
+    }
+
+    @Override
+    public void returnBack() {
+
     }
 }

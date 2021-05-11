@@ -1,11 +1,10 @@
-package com.zb.module_home.windows;
+package com.zb.lib_base.windows;
 
 import android.view.View;
 
+import com.zb.lib_base.BR;
+import com.zb.lib_base.R;
 import com.zb.lib_base.model.GiftInfo;
-import com.zb.lib_base.windows.BasePopupWindow;
-import com.zb.module_home.BR;
-import com.zb.module_home.R;
 
 public class GiveSuccessPW extends BasePopupWindow {
 

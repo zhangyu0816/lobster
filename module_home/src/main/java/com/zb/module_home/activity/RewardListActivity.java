@@ -11,6 +11,8 @@ import com.zb.module_home.vm.RewardListViewModel;
 public class RewardListActivity extends HomeBaseActivity {
     @Autowired(name = "friendDynId")
     long friendDynId;
+    @Autowired(name = "otherUserId")
+    long otherUserId;
 
     @Override
     public int getRes() {
@@ -21,6 +23,7 @@ public class RewardListActivity extends HomeBaseActivity {
     public void initUI() {
         RewardListViewModel viewModel = new RewardListViewModel();
         viewModel.friendDynId = friendDynId;
+        viewModel.otherUserId = otherUserId;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.noData, true);

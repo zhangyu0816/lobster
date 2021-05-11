@@ -5,6 +5,7 @@ import android.animation.PropertyValuesHolder;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.view.View;
 
@@ -21,6 +22,7 @@ import com.zb.lib_base.api.otherInfoApi;
 import com.zb.lib_base.api.otherRentInfoApi;
 import com.zb.lib_base.api.otherUserInfoVisitApi;
 import com.zb.lib_base.api.personOtherDynApi;
+import com.zb.lib_base.api.seeUserGiftRewardsApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
 import com.zb.lib_base.db.AttentionDb;
@@ -38,6 +40,7 @@ import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.PairInfo;
 import com.zb.lib_base.model.RentInfo;
+import com.zb.lib_base.model.Reward;
 import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
@@ -47,6 +50,8 @@ import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.views.xbanner.XUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.FunctionPW;
+import com.zb.lib_base.windows.GiftPW;
+import com.zb.lib_base.windows.GiftPayPW;
 import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_card.BR;
@@ -77,6 +82,9 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     private int bannerHeight = MineApp.W;
     private List<Ads> adsList = new ArrayList<>();
     private boolean isLike = false;
+
+    public CardAdapter rewardAdapter;
+    private List<Reward> rewardList = new ArrayList<>();
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -131,7 +139,12 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         discoverAdapter = new CardAdapter<>(activity, R.layout.item_card_discover_image, discoverInfoList, this);
 
         imageAdapter = new CardAdapter<>(activity, R.layout.item_member_image, imageList, this);
+
+        // 打赏
+        rewardAdapter = new CardAdapter<>(activity, R.layout.item_card_reward, rewardList, this);
+
         otherUserInfoVisit();
+        giveOrReceiveForUserList();
     }
 
     private void otherUserInfoVisit() {
@@ -152,6 +165,64 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         }
         mBinding.banner.releaseBanner();
     }
+
+    private String info = "";
+    private String rewardInfo = "";
+    private char[] temp;
+    private int i = 0;
+
+    private void giveOrReceiveForUserList() {
+        seeUserGiftRewardsApi api = new seeUserGiftRewardsApi(new HttpOnNextListener<List<Reward>>() {
+            @Override
+            public void onNext(List<Reward> o) {
+                rewardList.clear();
+                rewardAdapter.notifyDataSetChanged();
+                rewardList.addAll(o);
+                rewardAdapter.notifyDataSetChanged();
+                mBinding.setRewardNum(rewardList.size());
+                if (mBinding.getRewardNum() == 1) {
+                    rewardInfo = "成为CP候选人";
+                } else {
+                    rewardInfo = "快来打榜";
+                }
+                temp = rewardInfo.toCharArray();
+                info = "";
+                i = 0;
+                mBinding.setRewardInfo(info);
+                mHandler.postDelayed(ra, 50);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    rewardInfo = "送朵玫瑰花，开始我们的邂逅";
+                    temp = rewardInfo.toCharArray();
+                    info = "";
+                    mHandler.postDelayed(ra, 50);
+                }
+            }
+        }, activity).setOtherUserId(otherUserId)
+                .setRewardSortType(2)
+                .setPageNo(1)
+                .setRow(10);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private Handler mHandler = new Handler();
+    private Runnable ra = new Runnable() {
+        @Override
+        public void run() {
+            if (i < temp.length) {
+                info += temp[i];
+                mBinding.setRewardInfo(info);
+                i++;
+                mHandler.postDelayed(ra, 50);
+            } else {
+                mHandler.removeCallbacks(ra);
+            }
+        }
+    };
+
 
     @Override
     public void dislike(View view) {
@@ -221,6 +292,21 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     @Override
     public void openVip(View view) {
         ActivityUtils.getMineOpenVip(true);
+    }
+
+    @Override
+    public void selectGift(View view) {
+        hintKeyBoard();
+        if (otherUserId == BaseActivity.userId) {
+            ActivityUtils.getHomeRewardList(0, otherUserId);
+        } else
+            new GiftPW(mBinding.getRoot(), giftInfo ->
+                    new GiftPayPW(mBinding.getRoot(), giftInfo, 0, otherUserId, this::giveOrReceiveForUserList));
+    }
+
+    @Override
+    public void toRewardList(View view) {
+        ActivityUtils.getHomeRewardList(0, otherUserId);
     }
 
     @Override
@@ -413,8 +499,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
 
             @Override
             public void onError(Throwable e) {
-                if(e instanceof HttpTimeException&&((HttpTimeException) e).getCode()==HttpTimeException.ERROR){
-                    if(e.getMessage().equals("你还没关注我啊")){
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
+                    if (e.getMessage().equals("你还没关注我啊")) {
                         mBinding.setIsAttention(false);
                         AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
                         activity.sendBroadcast(new Intent("lobster_attentionList"));

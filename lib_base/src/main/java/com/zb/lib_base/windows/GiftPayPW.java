@@ -1,31 +1,33 @@
-package com.zb.module_home.windows;
+package com.zb.lib_base.windows;
 
 import android.content.Intent;
 import android.view.View;
 
+import com.zb.lib_base.BR;
+import com.zb.lib_base.R;
 import com.zb.lib_base.api.submitOrderApi;
+import com.zb.lib_base.api.submitUserOrderApi;
 import com.zb.lib_base.api.walletPayTranApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.databinding.PwsGiftPayBinding;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.OrderNumber;
 import com.zb.lib_base.utils.SCToastUtil;
-import com.zb.lib_base.windows.BasePopupWindow;
-import com.zb.module_home.BR;
-import com.zb.module_home.R;
-import com.zb.module_home.databinding.PwsGiftPayBinding;
 
 public class GiftPayPW extends BasePopupWindow {
     private GiftInfo giftInfo;
     private long friendDynId;
+    private long otherUserId;
     private PwsGiftPayBinding binding;
     private CallBack callBack;
 
-    public GiftPayPW(View parentView, GiftInfo giftInfo, long friendDynId, CallBack callBack) {
+    public GiftPayPW(View parentView, GiftInfo giftInfo, long friendDynId, long otherUserId, CallBack callBack) {
         super(parentView, true);
         this.giftInfo = giftInfo;
         this.friendDynId = friendDynId;
+        this.otherUserId = otherUserId;
         this.callBack = callBack;
         initUI();
     }
@@ -54,7 +56,10 @@ public class GiftPayPW extends BasePopupWindow {
             SCToastUtil.showToast(activity, "钱包余额不足，请先充值", true);
             return;
         }
-        submitOrder();
+        if (friendDynId != 0)
+            submitOrder();
+        else
+            submitUserOrder();
     }
 
     private void submitOrder() {
@@ -71,6 +76,23 @@ public class GiftPayPW extends BasePopupWindow {
                 }
             }
         }, activity).setFriendDynId(friendDynId).setGiftId(giftInfo.getGiftId()).setGiftNum(Integer.parseInt(binding.getContent()));
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void submitUserOrder() {
+        submitUserOrderApi api = new submitUserOrderApi(new HttpOnNextListener<OrderNumber>() {
+            @Override
+            public void onNext(OrderNumber o) {
+                if (o.getIsPayed() == 0)
+                    walletPayTran(o.getNumber());
+                else {
+                    activity.sendBroadcast(new Intent("lobster_recharge"));
+                    callBack.paySuccess();
+                    dismiss();
+                    new GiveSuccessPW(mBinding.getRoot(), giftInfo, Integer.parseInt(binding.getContent()));
+                }
+            }
+        }, activity).setOtherUserId(otherUserId).setGiftId(giftInfo.getGiftId()).setGiftNum(Integer.parseInt(binding.getContent()));
         HttpManager.getInstance().doHttpDeal(api);
     }
 

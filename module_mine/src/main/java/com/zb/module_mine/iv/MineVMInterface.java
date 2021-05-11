@@ -16,5 +16,7 @@ public interface MineVMInterface {
 
     void toSetting(View view);
 
+    void toReward(View view);
+
     void contactNumDetail(int position);
 }

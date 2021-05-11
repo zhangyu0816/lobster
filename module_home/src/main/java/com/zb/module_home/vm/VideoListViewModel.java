@@ -55,14 +55,14 @@ import com.zb.lib_base.utils.water.WaterMark;
 import com.zb.lib_base.views.AutoPollRecyclerView;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.FunctionPW;
+import com.zb.lib_base.windows.GiftPW;
+import com.zb.lib_base.windows.GiftPayPW;
 import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
 import com.zb.module_home.databinding.HomeVideoListBinding;
 import com.zb.module_home.iv.VideoListVMInterface;
-import com.zb.module_home.windows.GiftPW;
-import com.zb.module_home.windows.GiftPayPW;
 import com.zb.module_home.windows.ReviewPW;
 
 import java.util.ArrayList;
@@ -262,7 +262,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     @Override
     public void doReward(DiscoverInfo discoverInfo) {
         new GiftPW(mBinding.getRoot(), giftInfo ->
-                new GiftPayPW(mBinding.getRoot(), giftInfo, discoverInfo.getFriendDynId(), () -> {
+                new GiftPayPW(mBinding.getRoot(), giftInfo, discoverInfo.getFriendDynId(),0, () -> {
                 }));
     }
 
@@ -290,7 +290,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                         // 查看礼物
                         videoView.pause();
                         reviewListView.stop();
-                        ActivityUtils.getHomeRewardList(discoverInfo.getFriendDynId());
+                        ActivityUtils.getHomeRewardList(discoverInfo.getFriendDynId(),0);
                     }
 
                     @Override

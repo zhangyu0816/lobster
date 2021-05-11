@@ -13,6 +13,8 @@
 
         <import type="com.zb.lib_base.utils.DateUtil" />
 
+        <import type="android.text.Html" />
+
         <variable
             name="viewModel"
             type="com.zb.module_card.vm.MemberDetailViewModel" />
@@ -56,6 +58,14 @@
         <variable
             name="contactNum"
             type="com.zb.lib_base.model.ContactNum" />
+
+        <variable
+            name="rewardNum"
+            type="Integer" />
+
+        <variable
+            name="rewardInfo"
+            type="String" />
     </data>
 
     <RelativeLayout
@@ -213,8 +223,8 @@
                             android:layout_toEndOf="@+id/iv_logo"
                             android:background="@{viewModel.memberInfo==null?@drawable/default_bg:@drawable/empty_bg}"
                             android:ellipsize="end"
-                            android:singleLine="true"
                             android:maxEms="7"
+                            android:singleLine="true"
                             android:text="@{viewModel.memberInfo.remark.isEmpty()?viewModel.memberInfo.nick:viewModel.memberInfo.remark}"
                             android:textColor="#24242A"
                             android:textSize="20sp"
@@ -409,6 +419,103 @@
                             android:layout_gravity="end"
                             android:background="@mipmap/fuhao_hou" />
                     </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/btn_bg_white_radius10"
+                    android:padding="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toStartOf="@+id/reward_layout"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            adapter="@{viewModel.rewardAdapter}"
+                            gridNum="@{rewardNum&lt;2?1:2}"
+                            recyclerType="@{2}"
+                            size="@{2}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:visibility="@{rewardNum==0?View.GONE:View.VISIBLE}" />
+
+                        <ImageView
+                            onClickDelayed="@{viewModel::selectGift}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@{rewardNum==0?@drawable/icon_meigui:@drawable/icon_qin}"
+                            tools:background="@drawable/icon_meigui" />
+
+                        <TextView
+                            onClickDelayed="@{viewModel::selectGift}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/btn_bg_red_ffe_radius60"
+                            android:gravity="center"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:text="@{rewardInfo}"
+                            android:textColor="#eb2953"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            tools:text="" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/reward_layout"
+                        onClickDelayed="@{viewModel::toRewardList}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:layout_toStartOf="@+id/iv_arrow"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="查看礼物榜单"
+                            android:textColor="#3F4153"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:text='@{Html.fromHtml(String.format(@string/reward_num,rewardNum&lt;10?"0"+rewardNum:""+rewardNum))}'
+                            android:textSize="15sp"
+                            android:visibility="@{rewardNum==0?View.GONE:View.VISIBLE}" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:text="@string/reward_num_0"
+                            android:textColor="#827F9A"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:visibility="@{rewardNum==0?View.VISIBLE:View.GONE}" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/iv_arrow"
+                        onClickDelayed="@{viewModel::toRewardList}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/arrow_small_right_icon" />
                 </RelativeLayout>
 
                 <LinearLayout

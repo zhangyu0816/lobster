@@ -17,7 +17,7 @@ public interface DiscoverDetailVMInterface {
 
     void seeReviews();
 
-    void makeEvaluate();
+    void makeEvaluate(int likeOtherStatus);
 
     void otherInfo();
 
@@ -30,6 +30,10 @@ public interface DiscoverDetailVMInterface {
     void dynDoLike();
 
     void dynCancelLike();
+
+    void dislike(View view);
+
+    void like(View view);
 
     void selectReview(Review review);
 

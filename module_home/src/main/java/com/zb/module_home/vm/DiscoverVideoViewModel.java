@@ -50,6 +50,8 @@ import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.water.WaterMark;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.FunctionPW;
+import com.zb.lib_base.windows.GiftPW;
+import com.zb.lib_base.windows.GiftPayPW;
 import com.zb.lib_base.windows.SuperLikePW;
 import com.zb.lib_base.windows.TextPW;
 import com.zb.lib_base.windows.VipAdPW;
@@ -57,8 +59,6 @@ import com.zb.module_home.R;
 import com.zb.module_home.adapter.HomeAdapter;
 import com.zb.module_home.databinding.HomeVideoBinding;
 import com.zb.module_home.iv.DiscoverVideoVMInterface;
-import com.zb.module_home.windows.GiftPW;
-import com.zb.module_home.windows.GiftPayPW;
 import com.zb.module_home.windows.ReviewPW;
 
 import java.util.ArrayList;
@@ -208,7 +208,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                     public void gift() {
                         mBinding.videoView.pause();
                         mBinding.reviewList.stop();
-                        ActivityUtils.getHomeRewardList(friendDynId);
+                        ActivityUtils.getHomeRewardList(friendDynId,0);
                     }
 
                     @Override
@@ -259,7 +259,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     @Override
     public void doReward(View view) {
         new GiftPW(mBinding.getRoot(), giftInfo ->
-                new GiftPayPW(mBinding.getRoot(), giftInfo, discoverInfo.getFriendDynId(), () -> {
+                new GiftPayPW(mBinding.getRoot(), giftInfo, discoverInfo.getFriendDynId(),0, () -> {
                 }));
     }
 

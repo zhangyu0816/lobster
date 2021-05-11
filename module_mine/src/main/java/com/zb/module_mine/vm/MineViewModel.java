@@ -12,9 +12,12 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.ViewPagerAdapter;
 import com.zb.lib_base.api.myInfoApi;
+import com.zb.lib_base.api.personOtherDynApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.http.HttpTimeException;
+import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DisplayUtils;
@@ -48,6 +51,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     private BaseReceiver visitorReceiver;
     private BaseReceiver attentionListReceiver;
     private BaseReceiver isFirstOpenReceiver;
+    private BaseReceiver publishReceiver;
     private List<Fragment> fragments = new ArrayList<>();
     private List<String> selectorList = new ArrayList<>();
     private boolean createFragment = false;
@@ -125,7 +129,12 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                     mHandler.postDelayed(ra, 500);
             }
         };
-
+        publishReceiver = new BaseReceiver(activity, "lobster_publish") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                personOtherDyn();
+            }
+        };
         MineApp.getApp().getFixedThreadPool().execute(() -> {
             SystemClock.sleep(300);
             activity.runOnUiThread(() -> {
@@ -174,6 +183,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             visitorReceiver.unregisterReceiver();
             attentionListReceiver.unregisterReceiver();
             isFirstOpenReceiver.unregisterReceiver();
+            publishReceiver.unregisterReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -213,6 +223,27 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         mBinding.viewPage.setSaveEnabled(false);
         mBinding.viewPage.setAdapter(adapter);
         initTabLayout(new String[]{"动态", "小视频"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, 0, false);
+        personOtherDyn();
+    }
+
+    private void personOtherDyn() {
+        personOtherDynApi api = new personOtherDynApi(new HttpOnNextListener<List<DiscoverInfo>>() {
+            @Override
+            public void onNext(List<DiscoverInfo> o) {
+                mBinding.setShowSubmit(true);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    mBinding.setShowSubmit(false);
+                }
+            }
+        }, activity)
+                .setDynType(0)
+                .setOtherUserId(BaseActivity.userId)
+                .setPageNo(1);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override
@@ -250,6 +281,11 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     @Override
     public void toSetting(View view) {
         ActivityUtils.getMineSetting();
+    }
+
+    @Override
+    public void toReward(View view) {
+        ActivityUtils.getHomeRewardList(0, BaseActivity.userId);
     }
 
     @Override

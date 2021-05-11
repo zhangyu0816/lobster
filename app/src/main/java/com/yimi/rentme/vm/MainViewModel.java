@@ -79,7 +79,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
 
     private BaseReceiver rechargeReceiver;
     private BaseReceiver chatListReceiver;
-    //    private BaseReceiver newMsgReceiver;
     private BaseReceiver bottleNumReceiver;
     private BaseReceiver newsCountReceiver;
     private BaseReceiver unReadCountReceiver;
@@ -134,100 +133,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
                 driftBottleChatList();
             }
         };
-
-//        newMsgReceiver = new BaseReceiver(activity, "lobster_newMsg") {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                CustomMessageBody body = (CustomMessageBody) intent.getSerializableExtra("customMessageBody");
-//                String msgId = intent.getStringExtra("msgId");
-//                long otherUserId = body.getFromId() == BaseActivity.userId ? body.getToId() : body.getFromId();
-//
-//                if (body.getDriftBottleId() != 0) {
-//                    HistoryMsgDb.getInstance().saveHistoryMsg(HistoryMsg.createHistory(msgId, body, otherUserId, 2, body.getDriftBottleId()));
-//
-//                    BottleCache dbData = BottleCacheDb.getInstance().getBottleCache(body.getDriftBottleId());
-//                    BottleCache bottleCache = new BottleCache();
-//                    bottleCache.setDriftBottleId(body.getDriftBottleId());
-//                    bottleCache.setUserId(otherUserId);
-//                    bottleCache.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
-//                    bottleCache.setStanza(body.getStanza());
-//                    bottleCache.setMsgType(body.getMsgType());
-//                    bottleCache.setNoReadNum(dbData == null ? 1 : dbData.getNoReadNum() + 1);
-//                    bottleCache.setMainUserId(BaseActivity.userId);
-//                    BottleCacheDb.getInstance().saveBottleCache(bottleCache);
-//
-//                    // 更新会话列表
-//                    Intent data = new Intent("lobster_singleBottleCache");
-//                    data.putExtra("driftBottleId", body.getDriftBottleId());
-//                    activity.sendBroadcast(data);
-//
-//                    // 更新对话页面
-//                    Intent upMessage = new Intent("lobster_upMessage/driftBottleId=" + body.getDriftBottleId());
-//                    upMessage.putExtra("customMessageBody", body);
-//                    upMessage.putExtra("msgId", msgId);
-//                    activity.sendBroadcast(upMessage);
-//
-//                    noReadBottleNum(true);
-//
-//                } else if (body.getFlashTalkId() != 0) {
-//                    int otherChatCount = Math.min(HistoryMsgDb.getInstance().getOtherChatCount(otherUserId, body.getFlashTalkId()), 10);
-//                    ChatListDb.getInstance().updateChatMsg(otherUserId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType(), otherChatCount, new ChatListDb.CallBack() {
-//                        @Override
-//                        public void success() {
-//                            // 更新会话列表
-//                            mBinding.setUnReadCount(ChatListDb.getInstance().getAllUnReadNum());
-//                            Intent data = new Intent("lobster_updateChat");
-//                            data.putExtra("userId", otherUserId);
-//                            data.putExtra("flashTalkId", body.getFlashTalkId());
-//                            activity.sendBroadcast(data);
-//
-//                            // 更新对话页面
-//                            Intent upMessage = new Intent("lobster_upMessage/flashTalkId=" + body.getFlashTalkId());
-//                            upMessage.putExtra("customMessageBody", body);
-//                            upMessage.putExtra("msgId", msgId);
-//                            activity.sendBroadcast(upMessage);
-//                        }
-//
-//                        @Override
-//                        public void fail() {
-//                            otherInfo(otherUserId, body, msgId);
-//                        }
-//                    });
-//                } else {
-//                    if (otherUserId == BaseActivity.systemUserId) {
-//                        MineApp.mineNewsCount.setSystemNewsNum(MineApp.mineNewsCount.getSystemNewsNum() + 1);
-//                        activity.sendBroadcast(new Intent("lobster_newsCount"));
-//                    } else {
-//                        HistoryMsgDb.getInstance().saveHistoryMsg(HistoryMsg.createHistory(msgId, body, otherUserId, 1, 0));
-//
-//                        ChatListDb.getInstance().updateChatMsg(otherUserId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType(), 0, new ChatListDb.CallBack() {
-//                            @Override
-//                            public void success() {
-//                                // 更新会话列表
-//                                mBinding.setUnReadCount(ChatListDb.getInstance().getAllUnReadNum());
-//                                Intent data = new Intent("lobster_updateChat");
-//                                data.putExtra("userId", otherUserId);
-//                                activity.sendBroadcast(data);
-//
-//                                // 更新对话页面
-//                                Intent upMessage = new Intent("lobster_upMessage/friend=" + otherUserId);
-//                                upMessage.putExtra("customMessageBody", body);
-//                                upMessage.putExtra("msgId", msgId);
-//                                activity.sendBroadcast(upMessage);
-//                            }
-//
-//                            @Override
-//                            public void fail() {
-//                                otherInfo(otherUserId, body, msgId);
-//                            }
-//                        });
-//                        if (body.getMsgType() == 112) {
-//                            newDynMsgAllNum(true);
-//                        }
-//                    }
-//                }
-//            }
-//        };
 
         newDynMsgAllNumReceiver = new BaseReceiver(activity, "lobster_newDynMsgAllNum") {
             @Override
@@ -299,7 +204,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
         activity.runOnUiThread(() -> {
             long otherUserId = body.getFromId() == BaseActivity.userId ? body.getToId() : body.getFromId();
             if (body.getDriftBottleId() != 0) {
-//                HistoryMsgDb.getInstance().saveHistoryMsg(HistoryMsg.createHistory(msgId, body, otherUserId, 2, body.getDriftBottleId()));
 
                 BottleCache dbData = BottleCacheDb.getInstance().getBottleCache(body.getDriftBottleId());
                 BottleCache bottleCache = new BottleCache();
@@ -354,8 +258,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
                     MineApp.mineNewsCount.setSystemNewsNum(MineApp.mineNewsCount.getSystemNewsNum() + 1);
                     activity.sendBroadcast(new Intent("lobster_newsCount"));
                 } else {
-//                    HistoryMsgDb.getInstance().saveHistoryMsg(HistoryMsg.createHistory(msgId, body, otherUserId, 1, 0));
-
                     ChatListDb.getInstance().updateChatMsg(otherUserId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType(), 0, new ChatListDb.CallBack() {
                         @Override
                         public void success() {
@@ -389,7 +291,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
         try {
             rechargeReceiver.unregisterReceiver();
             chatListReceiver.unregisterReceiver();
-//            newMsgReceiver.unregisterReceiver();
             bottleNumReceiver.unregisterReceiver();
             newsCountReceiver.unregisterReceiver();
             unReadCountReceiver.unregisterReceiver();

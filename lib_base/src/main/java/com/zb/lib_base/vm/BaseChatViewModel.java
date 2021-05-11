@@ -982,7 +982,6 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                     CustomMessageBody body = (CustomMessageBody) intent.getSerializableExtra("customMessageBody");
                     String msgId = intent.getStringExtra("msgId");
                     HistoryMsg historyMsg = HistoryMsg.createHistory(msgId, body, otherUserId, 1, 0);
-//                    HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
 
                     ChatListDb.getInstance().updateMember(otherUserId, memberInfo == null ? "" : memberInfo.getImage(), memberInfo == null ? "" : memberInfo.getNick(), otherUserId == BaseActivity.dynUserId ? 5 : 4,
                             new ChatListDb.CallBack() {
@@ -1030,7 +1029,6 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                     CustomMessageBody body = (CustomMessageBody) intent.getSerializableExtra("customMessageBody");
                     String msgId = intent.getStringExtra("msgId");
                     HistoryMsg historyMsg = HistoryMsg.createHistory(msgId, body, otherUserId, 2, driftBottleId);
-//                    HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
 
                     boolean hasId = false;
                     if (isNotice) {
@@ -1079,7 +1077,6 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                     String msgId = intent.getStringExtra("msgId");
 
                     HistoryMsg historyMsg = HistoryMsg.createHistoryForFlash(msgId, body, otherUserId, msgChannelType, flashTalkId);
-//                    HistoryMsgDb.getInstance().saveHistoryMsg(historyMsg);
                     otherChatCount++;
                     isLockImage = (myChatCount + otherChatCount) < 20;
                     mBinding.setIsLockImage(isLockImage);
