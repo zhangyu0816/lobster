@@ -7,7 +7,7 @@
 
         <import type="com.zb.lib_base.utils.ObjectUtils" />
 
-        <import type="com.zb.lib_base.app.MineApp" />
+        <import type="android.view.View" />
 
         <variable
             name="pw"
@@ -20,6 +20,12 @@
         <variable
             name="vipInfo"
             type="com.zb.lib_base.model.VipInfo" />
+
+        <variable
+            name="isFirstOpen"
+            type="boolean" />
+
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -52,7 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="-1dp"
-                android:background="@drawable/btn_bg_white_radius_bottom10"
+                android:background="@{isFirstOpen?@drawable/btn_bg_red_f3b_radius_bottom10:@drawable/btn_bg_white_radius_bottom10}"
                 android:orientation="vertical">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -66,7 +72,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_marginTop="7dp"
-                    android:background="@color/black_efe" />
+                    android:background="@color/black_efe"
+                    android:visibility="@{isFirstOpen?View.GONE:View.VISIBLE}" />
 
                 <TextView
                     android:id="@+id/tv_btn"
@@ -75,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:layout_marginEnd="15dp"
-                    android:background="@{MineApp.isFirstOpen?@drawable/btn_yellow_icon:@drawable/btn_bg_icon}"
+                    android:background="@drawable/btn_bg_icon"
                     android:gravity="center"
                     android:paddingBottom="12dp"
                     android:textColor="@color/white"

@@ -1,7 +1,9 @@
 package com.zb.module_chat.vm;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.SystemClock;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -10,6 +12,7 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.likeMeListApi;
 import com.zb.lib_base.api.pairListApi;
+import com.zb.lib_base.api.personOtherDynApi;
 import com.zb.lib_base.api.relievePairApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.ChatListDb;
@@ -20,12 +23,14 @@ import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.CollectID;
+import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SimpleItemTouchHelperCallback;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.SelectorPW;
 import com.zb.lib_base.windows.TextPW;
 import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_chat.R;
@@ -51,13 +56,22 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
     private BaseReceiver updateChatTypeReceiver;
     private BaseReceiver relieveReceiver;
     private BaseReceiver updateChatReceiver;
+    private BaseReceiver publishReceiver;
     private List<ChatList> chatType4List = new ArrayList<>();
-
+    private List<String> selectorList = new ArrayList<>();
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (ChatPairFragmentBinding) binding;
+        selectorList.add("发布照片");
+        selectorList.add("发布小视频");
         pairListReceiver = new BaseReceiver(activity, "lobster_pairList") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                onRefresh(mBinding.refresh);
+            }
+        };
+        publishReceiver = new BaseReceiver(activity, "lobster_publish") {
             @Override
             public void onReceive(Context context, Intent intent) {
                 onRefresh(mBinding.refresh);
@@ -74,17 +88,6 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                         if (chatMsgList.size() != 0) {
                             chatMsgList.set(chatType == 1 ? 1 : 0, ChatListDb.getInstance().getChatList(chatType).get(0));
                             adapter.notifyItemChanged(chatType == 1 ? 1 : 0);
-                        }
-                    } else {
-                        if (chatType == 1) {
-                            chatType4List.clear();
-                            chatMsgList.clear();
-                            adapter.notifyDataSetChanged();
-                        }
-                        chatMsgList.addAll(0, ChatListDb.getInstance().getChatList(chatType));
-                        adapter.notifyItemChanged(0);
-                        if (chatType == 2) {
-                            beSuperLikeList();
                         }
                     }
                 } catch (Exception ignored) {
@@ -140,6 +143,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
             updateChatTypeReceiver.unregisterReceiver();
             relieveReceiver.unregisterReceiver();
             updateChatReceiver.unregisterReceiver();
+            publishReceiver.unregisterReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -172,8 +176,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         adapter.notifyDataSetChanged();
         chatMsgList.addAll(ChatListDb.getInstance().getChatList(2));
         chatMsgList.addAll(ChatListDb.getInstance().getChatList(1));
-        MineApp.pairList.clear();
-        beSuperLikeList();
+        personOtherDyn();
     }
 
     @Override
@@ -185,7 +188,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 PreferenceUtil.saveIntValue(activity, "beLikeCount" + BaseActivity.userId, MineApp.contactNum.getBeLikeCount());
                 ChatListDb.getInstance().setHasNewBeLike(false);
                 adapter.notifyItemChanged(1);
-                ActivityUtils.getMineFCL(2,0);
+                ActivityUtils.getMineFCL(2, 0);
                 return;
             }
             new VipAdPW(mBinding.getRoot(), 4, "");
@@ -198,6 +201,8 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         } else if (chatList.getChatType() == 4) {
             // 匹配-聊天
             ActivityUtils.getChatActivity(chatList.getUserId(), false);
+        } else if (chatList.getChatType() == 10) {
+            getPermissions();
         }
     }
 
@@ -219,6 +224,88 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         } else {
             adapter.notifyItemChanged(position);
         }
+    }
+
+    private void personOtherDyn() {
+        personOtherDynApi api = new personOtherDynApi(new HttpOnNextListener<List<DiscoverInfo>>() {
+            @Override
+            public void onNext(List<DiscoverInfo> o) {
+                int a =DateUtil.getDateCount(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), o.get(0).getCreateTime(), DateUtil.yyyy_MM_dd_HH_mm_ss, 1000f * 3600f * 24f);
+                if (DateUtil.getDateCount(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), o.get(0).getCreateTime(), DateUtil.yyyy_MM_dd_HH_mm_ss, 1000f * 3600f * 24f) >= 2) {
+                    int start = chatMsgList.size();
+                    ChatList chatList = new ChatList();
+                    chatList.setUserId(BaseActivity.systemUserId);
+                    chatList.setImage("ic_chat_xiagu");
+                    chatList.setNick("虾菇");
+                    chatList.setMsgType(1);
+                    chatList.setStanza("好久没发布了，期待着你更新照片和视频哦！");
+                    chatList.setNoReadNum(0);
+                    chatList.setChatType(10);
+                    chatList.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
+                    chatMsgList.add(chatList);
+                    adapter.notifyItemRangeChanged(start, chatMsgList.size());
+                }
+                MineApp.pairList.clear();
+                beSuperLikeList();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    int start = chatMsgList.size();
+                    ChatList chatList = new ChatList();
+                    chatList.setUserId(BaseActivity.systemUserId);
+                    chatList.setImage("ic_chat_xiagu");
+                    chatList.setNick("虾菇");
+                    chatList.setMsgType(1);
+                    chatList.setStanza("好久没发布了，期待着你更新照片和视频哦！");
+                    chatList.setNoReadNum(0);
+                    chatList.setChatType(10);
+                    chatList.setCreationDate(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss));
+                    chatMsgList.add(chatList);
+                    adapter.notifyItemRangeChanged(start, chatMsgList.size());
+                    MineApp.pairList.clear();
+                    beSuperLikeList();
+                }
+            }
+        }, activity)
+                .setDynType(0)
+                .setOtherUserId(BaseActivity.userId)
+                .setPageNo(1);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 权限
+     */
+    private void getPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            performCodeWithPermission("虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
+                        @Override
+                        public void hasPermission() {
+                            setPermissions();
+                        }
+
+                        @Override
+                        public void noPermission() {
+                        }
+                    }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO);
+        } else {
+            setPermissions();
+        }
+    }
+
+    private void setPermissions() {
+        MineApp.toPublish = true;
+        MineApp.toContinue = false;
+        new SelectorPW(mBinding.getRoot(), selectorList, position1 -> {
+            if (position1 == 0) {
+                ActivityUtils.getCameraMain(activity, true, true, false);
+            } else {
+                ActivityUtils.getCameraVideo(false);
+            }
+        });
     }
 
     @Override

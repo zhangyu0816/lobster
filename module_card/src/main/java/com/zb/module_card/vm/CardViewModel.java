@@ -206,10 +206,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 }
             }
         };
-        if (MineApp.mineInfo.getMemberType() == 2) {
-            mBinding.ivExposured.setVisibility(View.VISIBLE);
-            mBinding.ivExposure.setVisibility(View.GONE);
-        }
         playExposure();
         startAnim();
         mHandler.postDelayed(ra, 5000);
@@ -225,21 +221,19 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 params.setMargins(DisplayUtils.dip2px(15f), height + DisplayUtils.dip2px(15f), DisplayUtils.dip2px(15f), 0);
                 mBinding.tvCity.setLayoutParams(params);
 
-                RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) mBinding.expisureLayout.getLayoutParams();
+                RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) mBinding.ivExposure.getLayoutParams();
                 params1.setMargins(DisplayUtils.dip2px(15f), height + DisplayUtils.dip2px(15f), DisplayUtils.dip2px(15f), 0);
-                mBinding.expisureLayout.setLayoutParams(params1);
+                mBinding.ivExposure.setLayoutParams(params1);
             });
         });
     }
 
     private void playExposure() {
-        if (MineApp.mineInfo.getMemberType() == 2) {
-            animator = ObjectAnimator.ofFloat(mBinding.ivExposured, "rotation", -15, 15).setDuration(800);
-        } else {
+        if (MineApp.mineInfo.getMemberType() == 1) {
             animator = ObjectAnimator.ofFloat(mBinding.tvCity, "rotation", 0, -5, 0, 5).setDuration(400);
+            animator.setRepeatMode(ValueAnimator.REVERSE);
+            animator.setRepeatCount(3);
         }
-        animator.setRepeatMode(ValueAnimator.REVERSE);
-        animator.setRepeatCount(3);
     }
 
     private void startAnim() {

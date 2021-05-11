@@ -79,32 +79,15 @@
             android:textSize="14sp"
             android:textStyle="bold" />
 
-        <RelativeLayout
-            android:id="@+id/expisure_layout"
+        <ImageView
             onClickDelayed="@{viewModel::exposure}"
+            android:id="@+id/iv_exposure"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(72)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(250)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true">
-
-            <ImageView
-                android:id="@+id/iv_exposured"
-                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(76)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(76)}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:background="@mipmap/exposured_icon"
-                android:visibility="gone" />
-
-            <ImageView
-                android:id="@+id/iv_exposure"
-                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(76)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(76)}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:background="@mipmap/exposure_icon" />
-        </RelativeLayout>
+            android:layout_alignParentEnd="true"
+            android:background="@mipmap/exposure_icon" />
 
         <View
             viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(40)}"

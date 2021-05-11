@@ -87,4 +87,10 @@
     <string name="vip_open_info">充1月送1月 充1年送1年</string>
     <string name="discover_good">点赞</string>
     <string name="discover_review">评论</string>
+    <string name="vip_month">买%d月送%d月</string>
+    <string name="vip_year">买1年送1年</string>
+    <string name="vip_original_price">  原价 ¥%d  </string>
+    <string name="vip_price">%d</string>
+    <string name="vip_price_month">/%d月</string>
+    <string name="vip_price_year">/2年</string>
 </resources>

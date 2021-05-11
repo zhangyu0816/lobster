@@ -30,7 +30,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
             android:background="@mipmap/chat_bottle_bg"
             android:visibility="@{item.chatType==2?View.VISIBLE:View.GONE}">
 
@@ -142,10 +143,10 @@
                 android:id="@+id/tv_nick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="20dp"
                 android:layout_toEndOf="@+id/image_relative"
                 android:text="@{item.nick}"
-                android:textColor="@color/black_252"
+                android:textColor="@{ObjectUtils.getNickColor(item.nick)}"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 tools:text="漂流瓶1" />

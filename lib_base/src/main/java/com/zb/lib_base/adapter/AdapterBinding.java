@@ -234,6 +234,8 @@ public class AdapterBinding {
                         builder.load(R.drawable.vip_ad_3_logo).into(view);
                     } else if (imageUrl != null && imageUrl.equals("vip_ad_3_logo_male")) {
                         builder.load(R.drawable.vip_ad_3_logo_male).into(view);
+                    } else if (imageUrl != null && imageUrl.equals("ic_chat_xiagu")) {
+                        builder.load(R.mipmap.ic_chat_xiagu).into(view);
                     } else {
                         if (imageUrl != null && imageUrl.contains(".mp3"))
                             imageUrl = "";

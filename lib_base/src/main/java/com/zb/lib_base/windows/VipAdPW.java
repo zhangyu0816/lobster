@@ -133,7 +133,7 @@ public class VipAdPW extends BasePopupWindow {
 
     @Override
     public void initUI() {
-        adapter = new BaseAdapter<>(activity, R.layout.item_vip_ad, MineApp.vipInfoList, this);
+        adapter = new BaseAdapter<>(activity,MineApp.isFirstOpen? R.layout.item_first_vip_ad: R.layout.item_vip_ad, MineApp.vipInfoList, this);
         if (MineApp.vipInfoList.size() < 2) {
             preIndex = MineApp.vipInfoList.size() - 1;
         } else {
@@ -146,6 +146,7 @@ public class VipAdPW extends BasePopupWindow {
 
         mBinding.setVariable(BR.pw, this);
         mBinding.setVariable(BR.adapter, adapter);
+        mBinding.setVariable(BR.isFirstOpen,MineApp.isFirstOpen);
 
         binding = (PwsVipAdBinding) mBinding;
 

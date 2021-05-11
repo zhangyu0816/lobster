@@ -70,8 +70,8 @@
 
                 <ImageView
                     android:id="@+id/iv_exposure"
-                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(76)}"
-                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(76)}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(72)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(250)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"

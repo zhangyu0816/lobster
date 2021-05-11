@@ -392,4 +392,11 @@ public class ObjectUtils {
             return MineApp.getApp().getResources().getColor(R.color.green_34c);
         }
     }
+    public static int getNickColor(String nick) {
+        if (nick.equals("虾菇")) {
+            return MineApp.getApp().getResources().getColor(R.color.purple_7a4);
+        } else {
+            return MineApp.getApp().getResources().getColor(R.color.black_252);
+        }
+    }
 }

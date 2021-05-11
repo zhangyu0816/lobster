@@ -26,7 +26,12 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradient_red_white">
+        android:background="#f5f5f5">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="@drawable/gradient_red_f5f5f5" />
 
         <RelativeLayout
             android:id="@+id/top_relative"
