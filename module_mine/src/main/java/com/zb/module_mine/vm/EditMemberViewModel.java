@@ -6,6 +6,7 @@ import android.os.Build;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.api.checkFaceApi;
 import com.zb.lib_base.api.modifyMemberInfoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.AreaDb;
@@ -70,7 +71,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
                 int i = imageList.indexOf(photoFile.getSrcFilePath());
                 imageList.set(i, photoFile.getWebUrl());
             }
-
+            photoManager.deleteAllFile();
             modifyMemberInfo();
         });
     }
@@ -143,7 +144,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
 
     @Override
     public void toSelectBirthday(View view) {
-        new BirthdayPW( mBinding.getRoot(), MineApp.mineInfo.getBirthday(), birthday -> {
+        new BirthdayPW(mBinding.getRoot(), MineApp.mineInfo.getBirthday(), birthday -> {
             updateContent(birthday, 5);
             mineEditMemberBinding.setMineInfo(MineApp.mineInfo);
         });
@@ -164,36 +165,55 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
         ActivityUtils.getMineSelectTag(MineApp.mineInfo.getServiceTags());
     }
 
+    private int index = 0;
+
+    private void checkFace() {
+        if (index < imageList.size()) {
+            if (imageList.get(index).isEmpty()) {
+                index++;
+                checkFace();
+                return;
+            }
+            checkFaceApi api = new checkFaceApi(new HttpOnNextListener() {
+                @Override
+                public void onNext(Object o) {
+                    images += "#" + imageList.get(index);
+                    index++;
+                    checkFace();
+                }
+            }, activity).setFaceImage(imageList.get(index));
+            HttpManager.getInstance().doHttpDeal(api);
+        } else {
+            images = images.substring(1);
+            modifyMemberInfoApi api = new modifyMemberInfoApi(new HttpOnNextListener() {
+                @Override
+                public void onNext(Object o) {
+                    SCToastUtil.showToast(activity, "个人信息提交成功", true);
+                    updateImages(images);
+                    activity.sendBroadcast(new Intent("lobster_updateMineInfo"));
+                    activity.finish();
+                }
+            }, activity)
+                    .setBirthday(MineApp.mineInfo.getBirthday())
+                    .setImage(imageList.get(0))
+                    .setMoreImages(images)
+                    .setNick(MineApp.mineInfo.getNick())
+                    .setJob(MineApp.mineInfo.getJob())
+                    .setPersonalitySign(MineApp.mineInfo.getPersonalitySign())
+                    .setSex(MineApp.mineInfo.getSex())
+                    .setServiceTags(MineApp.mineInfo.getServiceTags())
+                    .setProvinceId(AreaDb.getInstance().getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
+                    .setCityId(AreaDb.getInstance().getCityId(MineApp.cityName))
+                    .setDistrictId(AreaDb.getInstance().getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
+            HttpManager.getInstance().doHttpDeal(api);
+        }
+    }
+
     @Override
     public void modifyMemberInfo() {
         images = "";
-        for (String image : imageList) {
-            if (!image.isEmpty()) {
-                images += "#" + image;
-            }
-        }
-        images = images.substring(1);
-        modifyMemberInfoApi api = new modifyMemberInfoApi(new HttpOnNextListener() {
-            @Override
-            public void onNext(Object o) {
-                SCToastUtil.showToast(activity, "个人信息提交成功", true);
-                updateImages(images);
-                activity.sendBroadcast(new Intent("lobster_updateMineInfo"));
-                activity.finish();
-            }
-        }, activity)
-                .setBirthday(MineApp.mineInfo.getBirthday())
-                .setImage(imageList.get(0))
-                .setMoreImages(images)
-                .setNick(MineApp.mineInfo.getNick())
-                .setJob(MineApp.mineInfo.getJob())
-                .setPersonalitySign(MineApp.mineInfo.getPersonalitySign())
-                .setSex(MineApp.mineInfo.getSex())
-                .setServiceTags(MineApp.mineInfo.getServiceTags())
-                .setProvinceId(AreaDb.getInstance().getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
-                .setCityId(AreaDb.getInstance().getCityId(MineApp.cityName))
-                .setDistrictId(AreaDb.getInstance().getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
-        HttpManager.getInstance().doHttpDeal(api);
+        index = 0;
+        checkFace();
     }
 
     private void updateImages(String images) {

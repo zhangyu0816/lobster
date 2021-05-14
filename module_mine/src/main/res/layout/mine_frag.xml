@@ -538,38 +538,46 @@
                 android:visibility="@{showSubmit?View.VISIBLE:View.GONE}"
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
-            <RelativeLayout
+            <androidx.core.widget.NestedScrollView
                 android:id="@+id/no_data_relative"
-                onClickDelayed="@{viewModel::publishDiscover}"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:padding="15dp"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                android:scrollbars="none"
                 android:visibility="@{showSubmit?View.GONE:View.VISIBLE}"
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-                <ImageView
-                    android:id="@+id/iv_fabu"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    onClickDelayed="@{viewModel::publishDiscover}"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:background="@mipmap/icon_fabu" />
+                    android:background="@color/white"
+                    android:padding="15dp">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="15dp"
-                    android:layout_toEndOf="@+id/iv_fabu"
-                    android:background="@mipmap/icon_fabu_remark" />
+                    <ImageView
+                        android:id="@+id/iv_fabu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:background="@mipmap/icon_fabu" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:background="@mipmap/arrow_right_icon" />
-            </RelativeLayout>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="15dp"
+                        android:layout_toEndOf="@+id/iv_fabu"
+                        android:background="@mipmap/icon_fabu_remark" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:background="@mipmap/arrow_right_icon" />
+                </RelativeLayout>
+            </androidx.core.widget.NestedScrollView>
+
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <RelativeLayout

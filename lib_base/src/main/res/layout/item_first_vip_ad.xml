@@ -98,16 +98,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text='@{String.format(@string/vip_original_price, (int)item.originalPrice)}'
+                    android:text='@{String.format(@string/vip_original_price, (int)item.originalPrice*2)}'
                     android:textColor="@color/black_252"
                     android:textSize="14sp"
                     tools:text="原价 ¥16" />
 
                 <View
-                    android:layout_width="wrap_content"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(170)}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(4)}"
+                    android:layout_width="100dp"
                     android:layout_height="1dp"
-                    android:layout_toStartOf="@+id/tv_original"
-                    android:layout_toEndOf="@+id/tv_original"
                     android:layout_centerVertical="true"
                     android:background="@color/red_fe4" />
             </RelativeLayout>

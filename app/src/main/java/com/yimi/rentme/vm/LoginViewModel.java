@@ -23,6 +23,7 @@ import com.yimi.rentme.databinding.AcLoginBinding;
 import com.yimi.rentme.iv.LoginVMInterface;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.api.checkFaceApi;
 import com.zb.lib_base.api.checkUserNameApi;
 import com.zb.lib_base.api.loginByCaptchaApi;
 import com.zb.lib_base.api.loginByPassApi;
@@ -188,8 +189,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             mBinding.setImageUrl(imageUrl);
             photoManager.deleteAllFile();
             needMoreInfo = true;
-
-
         });
         step(0);
         setAdapter();
@@ -317,7 +316,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                     step(6);
                     break;
                 case 6:
-                    step(7);
+                    checkFace(mBinding.getImageUrl());
                     break;
                 case 7:
                     if (MineApp.registerInfo.getOpenId().isEmpty())
@@ -328,6 +327,16 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                     }
                     break;
             }
+    }
+
+    private void checkFace(String faceImage) {
+        checkFaceApi api = new checkFaceApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                step(7);
+            }
+        }, activity).setFaceImage(faceImage);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     @Override
@@ -799,7 +808,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                     }
                 }, Manifest.permission.READ_PHONE_STATE);
             else
-                performCodeWithPermission("虾菇需要访问存储空间权限", new BaseActivity.PermissionCallback() {
+                performCodeWithPermission("虾菇需要访问相机权限及存储空间权限", new BaseActivity.PermissionCallback() {
                     @Override
                     public void hasPermission() {
                         setPermissions(type);
@@ -808,7 +817,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                     @Override
                     public void noPermission() {
                     }
-                }, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
+                }, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
         } else {
             setPermissions(type);
         }

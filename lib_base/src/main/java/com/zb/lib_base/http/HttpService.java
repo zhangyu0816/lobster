@@ -625,4 +625,7 @@ public interface HttpService {
 
     @GET("api/Share_setSendMessage")
     Observable<BaseResultEntity<Integer>> setSendMessage(@QueryMap Map<String, String> map);
+
+    @GET("api/Verify_checkFace")
+    Observable<BaseResultEntity> checkFace(@Query("faceImage") String faceImage);
 }
