@@ -1,8 +1,10 @@
 package com.maning.imagebrowserlibrary.model;
 
+import com.maning.imagebrowserlibrary.Discover;
 import com.maning.imagebrowserlibrary.ImageEngine;
 import com.maning.imagebrowserlibrary.listeners.OnClickListener;
 import com.maning.imagebrowserlibrary.listeners.OnDeleteImageListener;
+import com.maning.imagebrowserlibrary.listeners.OnDiscoverListener;
 import com.maning.imagebrowserlibrary.listeners.OnLongClickListener;
 
 import java.util.ArrayList;
@@ -44,7 +46,14 @@ public class ImageBrowserConfig {
     private OnClickListener onClickListener;
     private OnLongClickListener onLongClickListener;
     private OnDeleteImageListener onDeleteImageListener;
+    private OnDiscoverListener mOnDiscoverListener;
     private boolean showDelete = false;
+
+    private boolean isAttention = false;
+    private Discover mDiscover;
+    private boolean isGood = false;
+
+    private long otherUserId;
 
     public IndicatorType getIndicatorType() {
         return indicatorType;
@@ -116,5 +125,45 @@ public class ImageBrowserConfig {
 
     public void setShowDelete(boolean showDelete) {
         this.showDelete = showDelete;
+    }
+
+    public boolean isAttention() {
+        return isAttention;
+    }
+
+    public void setAttention(boolean attention) {
+        isAttention = attention;
+    }
+
+    public OnDiscoverListener getOnDiscoverListener() {
+        return mOnDiscoverListener;
+    }
+
+    public void setOnDiscoverListener(OnDiscoverListener onDiscoverListener) {
+        mOnDiscoverListener = onDiscoverListener;
+    }
+
+    public Discover getDiscover() {
+        return mDiscover;
+    }
+
+    public void setDiscover(Discover discover) {
+        mDiscover = discover;
+    }
+
+    public boolean isGood() {
+        return isGood;
+    }
+
+    public void setGood(boolean good) {
+        isGood = good;
+    }
+
+    public long getOtherUserId() {
+        return otherUserId;
+    }
+
+    public void setOtherUserId(long otherUserId) {
+        this.otherUserId = otherUserId;
     }
 }

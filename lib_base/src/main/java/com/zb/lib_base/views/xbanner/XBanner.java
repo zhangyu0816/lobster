@@ -483,8 +483,10 @@ public class XBanner extends RelativeLayout {
             colors = new int[]{Color.argb(255, 198, 255, 176), Color.argb(255, 255, 255, 255)};
         } else if (position == 5) {
             colors = new int[]{Color.argb(255, 255, 203, 176), Color.argb(255, 255, 255, 255)};
-        } else {
+        } else if (position == 6) {
             colors = new int[]{Color.argb(255, 176, 188, 255), Color.argb(255, 255, 255, 255)};
+        } else {
+            colors = new int[]{Color.argb(255, 255, 184, 197), Color.argb(255, 255, 255, 255)};
         }
         gradientDrawable.setColors(colors);
         binding.viewpager.setBackground(gradientDrawable);
@@ -554,12 +556,16 @@ public class XBanner extends RelativeLayout {
             int green = (int) ((203 - 188) * positionOffset);
             int blue = (int) ((255 - 176) * positionOffset);
             colors = new int[]{Color.argb(255, 255 - red, 203 - green, 176 + blue), Color.argb(255, 255, 255, 255)};
+        } else if (position == 7) {
+            int red = (int) ((255 - 176) * positionOffset);
+            int green = (int) ((188 - 184) * positionOffset);
+            int blue = (int) ((255 - 197) * positionOffset);
+            colors = new int[]{Color.argb(255, 176 + red, 188 - green, 255 - blue), Color.argb(255, 255, 255, 255)};
         } else {
             // 最后一位和第一位左右滑动
-            int red = (int) ((255 - 176) * positionOffset);
-            int green = (int) ((211 - 188) * positionOffset);
-            int blue = (int) ((255 - 176) * positionOffset);
-            colors = new int[]{Color.argb(255, 176 + red, 188 + green, 255 - blue), Color.argb(255, 255, 255, 255)};
+            int green = (int) ((211 - 184) * positionOffset);
+            int blue = (int) ((197 - 176) * positionOffset);
+            colors = new int[]{Color.argb(255, 255, 184 + green, 197 - blue), Color.argb(255, 255, 255, 255)};
         }
 //        if (position == -1) {
 //            colors = new int[]{Color.argb(0, 0, 0, 0), Color.argb(0, 0, 0, 0)};
@@ -573,10 +579,12 @@ public class XBanner extends RelativeLayout {
 //            colors = new int[]{Color.argb(255, 194, 176, 255), Color.argb(255, 255, 255, 255)};
 //        } else if (position == 4) {
 //            colors = new int[]{Color.argb(255, 198, 255, 176), Color.argb(255, 255, 255, 255)};
-//         } else if (position == 5) {
+//        } else if (position == 5) {
 //            colors = new int[]{Color.argb(255, 255, 203, 176), Color.argb(255, 255, 255, 255)};
-//        } else {
+//        } else if (position == 6) {
 //            colors = new int[]{Color.argb(255, 176, 188, 255), Color.argb(255, 255, 255, 255)};
+//        } else {
+//            colors = new int[]{Color.argb(255, 255, 184, 197), Color.argb(255, 255, 255, 255)};
 //        }
         gradientDrawable.setColors(colors);
         binding.viewpager.setBackground(gradientDrawable);

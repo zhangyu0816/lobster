@@ -84,5 +84,10 @@
             android:configChanges="orientation|keyboardHidden|navigation"
             android:exported="false"
             android:screenOrientation="behind" />
+
+        <activity
+            android:name=".activity.MNImageBrowserActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/BlackTheme" />
     </application>
 </manifest>

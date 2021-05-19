@@ -192,12 +192,12 @@ public class ObjectUtils {
             if (otherUserId == 0)
                 return MineApp.getApp().getResources().getDrawable(R.mipmap.no_anth_data);
             else
-                return MineApp.getApp().getResources().getDrawable(R.mipmap.no_anth_data);
+                return MineApp.getApp().getResources().getDrawable(R.mipmap.no_other_anth_data);
         } else if (position == 1) {
             if (otherUserId == 0)
                 return MineApp.getApp().getResources().getDrawable(R.mipmap.no_fan_data);
             else
-                return MineApp.getApp().getResources().getDrawable(R.mipmap.no_fan_data);
+                return MineApp.getApp().getResources().getDrawable(R.mipmap.no_other_fan_data);
         } else if (position == 2) {
             return MineApp.getApp().getResources().getDrawable(R.mipmap.no_belike_data);
         } else {
@@ -379,6 +379,17 @@ public class ObjectUtils {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public static Drawable getReward(int position) {
+        if (position == 0) {
+            return MineApp.getApp().getResources().getDrawable(R.drawable.gradient_reward_1_radius20);
+        } else if (position == 1) {
+            return MineApp.getApp().getResources().getDrawable(R.drawable.gradient_reward_2_radius20);
+        } else {
+            return MineApp.getApp().getResources().getDrawable(R.drawable.gradient_reward_3_radius20);
+        }
+    }
+
     public static int getTagColor(int position) {
         if (position == 0) {
             return MineApp.getApp().getResources().getColor(R.color.red_ff3);
@@ -392,6 +403,7 @@ public class ObjectUtils {
             return MineApp.getApp().getResources().getColor(R.color.green_34c);
         }
     }
+
     public static int getNickColor(String nick) {
         if (nick.equals("虾菇")) {
             return MineApp.getApp().getResources().getColor(R.color.purple_7a4);

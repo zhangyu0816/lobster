@@ -190,7 +190,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                         discoverInfo.getUserId() == BaseActivity.userId, false, true, false, new FunctionPW.CallBack() {
                     @Override
                     public void gift() {
-                        ActivityUtils.getHomeRewardList(friendDynId,0);
+                        ActivityUtils.getHomeRewardList(friendDynId, 0);
                     }
 
                     @Override
@@ -236,15 +236,19 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     public void selectGift(View view) {
         hintKeyBoard();
         if (discoverInfo.getUserId() == BaseActivity.userId) {
-            ActivityUtils.getHomeRewardList(friendDynId,0);
+            ActivityUtils.getHomeRewardList(friendDynId, 0);
         } else
             new GiftPW(mBinding.getRoot(), giftInfo ->
-                    new GiftPayPW(mBinding.getRoot(), giftInfo, friendDynId,0, this::seeGiftRewards));
+                    new GiftPayPW(mBinding.getRoot(), giftInfo, friendDynId, 0, () -> {
+                        rewardList.clear();
+                        rewardAdapter.notifyDataSetChanged();
+                        seeGiftRewards(1);
+                    }));
     }
 
     @Override
     public void toRewardList(View view) {
-        ActivityUtils.getHomeRewardList(friendDynId,0);
+        ActivityUtils.getHomeRewardList(friendDynId, 0);
     }
 
     @Override
@@ -283,7 +287,30 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                                         AdapterBinding.loadImage(image, ads.getSmallImage(), 0, R.drawable.empty_bg, bannerWidth, height, false,
                                                 true, 10, false, 0, false),
                                 (position, imageList) ->
-                                        MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, false, null), null);
+                                        MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, discoverInfo,
+                                                mBinding.getIsAttention(), GoodDb.getInstance().hasGood(friendDynId),
+                                                new MNImage.OnDiscoverListener() {
+                                                    @Override
+                                                    public void attention() {
+                                                        follow(null);
+                                                    }
+
+                                                    @Override
+                                                    public void good() {
+                                                        dynLike(null);
+                                                    }
+
+                                                    @Override
+                                                    public void review() {
+                                                        mBinding.edContent.setFocusable(true);
+                                                        showImplicit(mBinding.edContent);
+                                                    }
+
+                                                    @Override
+                                                    public void share() {
+                                                        memberInfoConf();
+                                                    }
+                                                }), null);
                     });
                 };
 
@@ -299,7 +326,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     });
                 }
                 otherInfo();
-                seeGiftRewards();
+                seeGiftRewards(1);
             }
         }, activity).setFriendDynId(friendDynId);
         HttpManager.getInstance().doHttpDeal(api);
@@ -309,41 +336,48 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
     private String rewardInfo = "";
     private char[] temp;
     private int i = 0;
+    private int rewardNum = 0;
 
-    public void seeGiftRewards() {
+    private void seeGiftRewards(int pageNo) {
+        if (pageNo == 1) {
+            rewardNum = 0;
+        }
         seeGiftRewardsApi api = new seeGiftRewardsApi(new HttpOnNextListener<List<Reward>>() {
             @Override
             public void onNext(List<Reward> o) {
-                rewardList.clear();
-                rewardAdapter.notifyDataSetChanged();
-                rewardList.addAll(o);
-                rewardAdapter.notifyDataSetChanged();
-                mBinding.setRewardNum(rewardList.size());
-                if (mBinding.getRewardNum() == 1) {
-                    rewardInfo = "成为CP候选人";
-                } else {
-                    rewardInfo = "快来打榜";
-                }
-                temp = rewardInfo.toCharArray();
-                info = "";
-                i = 0;
-                mBinding.setRewardInfo(info);
-                mHandler.postDelayed(ra, 50);
+                rewardNum += o.size();
+                if (rewardList.size() == 0)
+                    for (int i = 0; i < Math.min(3, o.size()); i++) {
+                        rewardList.add(o.get(i));
+                    }
+                seeGiftRewards(pageNo + 1);
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    rewardInfo = "送朵玫瑰花，开始我们的邂逅";
+                    mBinding.setRewardNum(rewardNum);
+                    if (mBinding.getRewardNum() == 0) {
+                        rewardInfo = "送朵玫瑰花，开始我们的邂逅";
+                    } else {
+                        if (mBinding.getRewardNum() == 1) {
+                            rewardInfo = "成为CP候选人";
+                        } else {
+                            rewardInfo = "快来打榜";
+                        }
+                        rewardAdapter.notifyDataSetChanged();
+                    }
                     temp = rewardInfo.toCharArray();
                     info = "";
+                    i = 0;
+                    mBinding.setRewardInfo(info);
                     mHandler.postDelayed(ra, 50);
                 }
             }
         }, activity).setFriendDynId(friendDynId)
                 .setRewardSortType(2)
-                .setPageNo(1)
-                .setRow(2);
+                .setPageNo(pageNo)
+                .setRow(10);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -416,17 +450,11 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                         activity.sendBroadcast(new Intent("lobster_isLike"));
                         activity.sendBroadcast(new Intent("lobster_updateFCL"));
                         LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 1);
-                        closeBtn(mBinding.ivLike);
-                        closeBtn(mBinding.ivDislike);
-                        isLike = true;
+                        closeBtn(mBinding.likeLayout);
                         SCToastUtil.showToast(activity, "已喜欢成功", true);
                     } else if (likeOtherStatus == 2) {
-                        if (!isLike) {
-                            closeBtn(mBinding.ivLike);
-                            closeBtn(mBinding.ivDislike);
-                        }
+                        closeBtn(mBinding.likeLayout);
                         LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 2);
-                        closeBtn(mBinding.ivSuperLike);
                         activity.sendBroadcast(new Intent("lobster_updateFCL"));
                         new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex());
                     }
@@ -438,11 +466,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                     activity.sendBroadcast(new Intent("lobster_isLike"));
                     activity.sendBroadcast(new Intent("lobster_updateFCL"));
-                    if (LikeTypeDb.getInstance().getType(discoverInfo.getUserId()) != 1) {
-                        closeBtn(mBinding.ivLike);
-                        closeBtn(mBinding.ivDislike);
-                    }
-                    closeBtn(mBinding.ivSuperLike);
+                    closeBtn(mBinding.likeLayout);
                     LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 2);
                 } else if (o == 3) {
                     // 喜欢次数用尽
@@ -460,15 +484,11 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                         activity.finish();
                     } else if (likeOtherStatus == 1) {
                         LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 1);
-                        closeBtn(mBinding.ivLike);
-                        closeBtn(mBinding.ivDislike);
-                        isLike = true;
+                        closeBtn(mBinding.likeLayout);
                         SCToastUtil.showToast(activity, "已喜欢成功", true);
                     } else if (likeOtherStatus == 2) {
                         LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 2);
-                        closeBtn(mBinding.ivLike);
-                        closeBtn(mBinding.ivDislike);
-                        closeBtn(mBinding.ivSuperLike);
+                        closeBtn(mBinding.likeLayout);
                         SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
                     }
                 }
@@ -477,7 +497,6 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    private boolean isLike = false;
     private ObjectAnimator pvh, translateY;
 
     private void isLike(View view) {

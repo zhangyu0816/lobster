@@ -138,7 +138,7 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
         if (systemMsg.getMsgType() == 2) {
             ArrayList<String> imageList = new ArrayList<>();
             imageList.add(systemMsg.getResLink());
-            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, 0, false, null);
+            MNImage.imageBrowser(activity, mBinding.getRoot(),0, imageList, 0, false, null);
         } else {
             ImageView ivPlay = view.findViewById(R.id.iv_play);
             ImageView ivProgress = view.findViewById(R.id.iv_progress);

@@ -1,5 +1,7 @@
 package com.zb.module_card.iv;
 
+import android.view.View;
+
 public interface DiscoverListVMInterface {
 
     void attentionOther();
@@ -11,4 +13,8 @@ public interface DiscoverListVMInterface {
     void memberInfoConf();
 
     void makeEvaluate();
+
+    void contactNumDetail(int position);
+
+    void update(View view);
 }

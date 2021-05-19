@@ -13,8 +13,6 @@ public interface DiscoverDetailVMInterface {
 
     void dynDetail();
 
-    void seeGiftRewards();
-
     void seeReviews();
 
     void makeEvaluate(int likeOtherStatus);

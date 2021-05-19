@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:visibility="@{MineApp.isFirstOpen?View.VISIBLE:View.GONE}"/>
+            android:visibility="@{(MineApp.isFirstOpen&amp;&amp;type==100)?View.VISIBLE:View.GONE}" />
 
         <LinearLayout
             viewHeightSize="@{ObjectUtils.getVipExposureHeight(1000)}"
@@ -53,7 +53,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:visibility="@{MineApp.isFirstOpen?View.GONE:View.VISIBLE}">
+            android:visibility="@{(MineApp.isFirstOpen&amp;&amp;type==100)?View.GONE:View.VISIBLE}">
 
             <TextView
                 android:layout_width="match_parent"
@@ -210,13 +210,48 @@
                         android:background="@mipmap/vip_ad_red_logo_bg" />
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:id="@+id/vip_8_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="@{type==8?View.VISIBLE:View.GONE}">
+
+                    <ImageView
+                        imageUrl="@{myHead}"
+                        isCircle="@{true}"
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(246)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(246)}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+
+                    <ImageView
+                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(300)}"
+                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(300)}"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:background="@mipmap/vip_ad_yellow_logo_bg" />
+                </RelativeLayout>
+
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/vip_4_layout"
                     android:layout_centerHorizontal="true"
-                    android:background="@mipmap/vip_ad_4_star"
+                    android:layout_marginTop="-25dp"
+                    android:background="@drawable/vip_ad_4_star"
                     android:visibility="@{type==4?View.VISIBLE:View.GONE}" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/vip_8_layout"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="-35dp"
+                    android:background="@drawable/vip_ad_8_logo"
+                    android:visibility="@{type==8?View.VISIBLE:View.GONE}" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"

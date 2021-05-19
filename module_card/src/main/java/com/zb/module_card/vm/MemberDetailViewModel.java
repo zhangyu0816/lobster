@@ -81,7 +81,6 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     private int bannerWidth = MineApp.W;
     private int bannerHeight = MineApp.W;
     private List<Ads> adsList = new ArrayList<>();
-    private boolean isLike = false;
 
     public CardAdapter rewardAdapter;
     private List<Reward> rewardList = new ArrayList<>();
@@ -94,7 +93,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         mBinding.setDistrict("-");
         mBinding.setCityName("-");
         mBinding.setDistant("0.0");
-        mBinding.setJob("-");
+        mBinding.setJob("保密");
+        mBinding.setHeight("保密");
         mBinding.setIsAttention(false);
         mBinding.setLikeType(LikeTypeDb.getInstance().getType(otherUserId));
         mBinding.setIsPlay(true);
@@ -144,7 +144,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         rewardAdapter = new CardAdapter<>(activity, R.layout.item_card_reward, rewardList, this);
 
         otherUserInfoVisit();
-        giveOrReceiveForUserList();
+        giveOrReceiveForUserList(1);
     }
 
     private void otherUserInfoVisit() {
@@ -170,40 +170,47 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     private String rewardInfo = "";
     private char[] temp;
     private int i = 0;
+    private int rewardNum = 0;
 
-    private void giveOrReceiveForUserList() {
+    private void giveOrReceiveForUserList(int pageNo) {
+        if (pageNo == 1) {
+            rewardNum = 0;
+        }
         seeUserGiftRewardsApi api = new seeUserGiftRewardsApi(new HttpOnNextListener<List<Reward>>() {
             @Override
             public void onNext(List<Reward> o) {
-                rewardList.clear();
-                rewardAdapter.notifyDataSetChanged();
-                rewardList.addAll(o);
-                rewardAdapter.notifyDataSetChanged();
-                mBinding.setRewardNum(rewardList.size());
-                if (mBinding.getRewardNum() == 1) {
-                    rewardInfo = "成为CP候选人";
-                } else {
-                    rewardInfo = "快来打榜";
-                }
-                temp = rewardInfo.toCharArray();
-                info = "";
-                i = 0;
-                mBinding.setRewardInfo(info);
-                mHandler.postDelayed(ra, 50);
+                rewardNum += o.size();
+                if (rewardList.size() == 0)
+                    for (int i = 0; i < Math.min(3, o.size()); i++) {
+                        rewardList.add(o.get(i));
+                    }
+                giveOrReceiveForUserList(pageNo + 1);
             }
 
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    rewardInfo = "送朵玫瑰花，开始我们的邂逅";
+                    mBinding.setRewardNum(rewardNum);
+                    if (mBinding.getRewardNum() == 0) {
+                        rewardInfo = "送朵玫瑰花，开始我们的邂逅";
+                    } else {
+                        if (mBinding.getRewardNum() == 1) {
+                            rewardInfo = "成为CP候选人";
+                        } else {
+                            rewardInfo = "快来打榜";
+                        }
+                        rewardAdapter.notifyDataSetChanged();
+                    }
                     temp = rewardInfo.toCharArray();
                     info = "";
+                    i = 0;
+                    mBinding.setRewardInfo(info);
                     mHandler.postDelayed(ra, 50);
                 }
             }
         }, activity).setOtherUserId(otherUserId)
                 .setRewardSortType(2)
-                .setPageNo(1)
+                .setPageNo(pageNo)
                 .setRow(10);
         HttpManager.getInstance().doHttpDeal(api);
     }
@@ -301,7 +308,14 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             ActivityUtils.getHomeRewardList(0, otherUserId);
         } else
             new GiftPW(mBinding.getRoot(), giftInfo ->
-                    new GiftPayPW(mBinding.getRoot(), giftInfo, 0, otherUserId, this::giveOrReceiveForUserList));
+                    new GiftPayPW(mBinding.getRoot(), giftInfo, 0, otherUserId, new GiftPayPW.CallBack() {
+                        @Override
+                        public void paySuccess() {
+                            rewardList.clear();
+                            rewardAdapter.notifyDataSetChanged();
+                            giveOrReceiveForUserList(1);
+                        }
+                    }));
     }
 
     @Override
@@ -335,59 +349,55 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     distant = String.format("%.1f", Float.parseFloat(memberInfo.getDistance()) / 1000f);
                 }
                 mBinding.setJob(memberInfo.getJob().isEmpty() ? "-" : memberInfo.getJob());
+                if (memberInfo.getHeight() > 0) {
+                    mBinding.setHeight(memberInfo.getHeight() + "");
+                }
                 mBinding.setDistant(distant);
                 String cityName = AreaDb.getInstance().getCityName(memberInfo.getCityId()).replace("市", "");
                 String districtName = AreaDb.getInstance().getDistrictName(memberInfo.getDistrictId());
                 mBinding.setCityName(cityName);
                 mBinding.setDistrict(cityName + (districtName.isEmpty() ? "" : " ") + districtName);
-                Runnable ra = () -> {
-                    if (!memberInfo.getMoreImages().isEmpty()) {
-                        String[] images = memberInfo.getMoreImages().split("#");
-                        for (String image : images) {
-                            if (!image.isEmpty()) {
-                                Ads ads = new Ads();
-                                ads.setSmallImage(image);
-                                adsList.add(ads);
-                                imageList.add(ads.getSmallImage());
-                            }
+                if (!memberInfo.getMoreImages().isEmpty()) {
+                    String[] images = memberInfo.getMoreImages().split("#");
+                    for (String image : images) {
+                        if (!image.isEmpty()) {
+                            Ads ads = new Ads();
+                            ads.setSmallImage(image);
+                            adsList.add(ads);
+                            imageList.add(ads.getSmallImage());
                         }
-                    } else {
-                        Ads ads = new Ads();
-                        ads.setSmallImage(memberInfo.getSingleImage().isEmpty() ? memberInfo.getImage() : memberInfo.getSingleImage());
-                        adsList.add(ads);
-                        imageList.add(ads.getSmallImage());
                     }
-
-                    activity.runOnUiThread(() -> {
-                        imageAdapter.notifyDataSetChanged();
-                        int height = (int) (bannerHeight * 1.2f);
-                        AdapterBinding.viewSize(mBinding.banner, bannerWidth, height);
-                        XUtils.showBanner(mBinding.banner, adsList, 5,
-                                (context, ads, image, position) -> {
-                                    AdapterBinding.loadImage(image, ads.getSmallImage(), 0, R.drawable.empty_bg, bannerWidth, height, false,
-                                            true, 10, false, 0, false);
-                                }
-                                ,
-                                (position, imageList) ->
-                                        MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, false, null),
-                                position -> {
-                                    if (position <= imageList.size()) {
-                                        position--;
-                                        if (preIndex != position) {
-                                            imageAdapter.setSelectImageIndex(position);
-                                            if (preIndex != -1) {
-                                                imageAdapter.notifyItemChanged(preIndex);
-                                            }
-                                            imageAdapter.notifyItemChanged(position);
-                                            preIndex = position;
-                                        }
+                } else {
+                    Ads ads = new Ads();
+                    ads.setSmallImage(memberInfo.getSingleImage().isEmpty() ? memberInfo.getImage() : memberInfo.getSingleImage());
+                    adsList.add(ads);
+                    imageList.add(ads.getSmallImage());
+                }
+                imageAdapter.notifyDataSetChanged();
+                int height = (int) (bannerHeight * 1.2f);
+                AdapterBinding.viewSize(mBinding.banner, bannerWidth, height);
+                XUtils.showBanner(mBinding.banner, adsList, 5,
+                        (context, ads, image, position) -> {
+                            AdapterBinding.loadImage(image, ads.getSmallImage(), 0, R.drawable.empty_bg, bannerWidth, height, false,
+                                    true, 10, false, 0, false);
+                        }
+                        ,
+                        (position, imageList) ->
+                                MNImage.imageBrowser(activity, mBinding.getRoot(), otherUserId, imageList, position, false, null),
+                        position -> {
+                            if (position <= imageList.size()) {
+                                position--;
+                                if (preIndex != position) {
+                                    imageAdapter.setSelectImageIndex(position);
+                                    if (preIndex != -1) {
+                                        imageAdapter.notifyItemChanged(preIndex);
                                     }
+                                    imageAdapter.notifyItemChanged(position);
+                                    preIndex = position;
+                                }
+                            }
 
-                                });
-                    });
-
-                };
-                MineApp.getApp().getFixedThreadPool().execute(ra);
+                        });
 
                 attentionStatus();
                 personOtherDyn();
@@ -543,9 +553,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                         activity.sendBroadcast(new Intent("lobster_isLike"));
                         activity.sendBroadcast(new Intent("lobster_updateFCL"));
                         LikeTypeDb.getInstance().setType(otherUserId, 1);
-                        closeBtn(mBinding.ivLike);
-                        closeBtn(mBinding.ivDislike);
-                        isLike = true;
+                        closeBtn(mBinding.likeLayout);
                         SCToastUtil.showToast(activity, "已喜欢成功", true);
                     } else if (likeOtherStatus == 2) {
                         if (showLike) {
@@ -554,12 +562,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                             data.putExtra("direction", 2);
                             activity.sendBroadcast(data);
                         } else {
-                            if (!isLike) {
-                                closeBtn(mBinding.ivLike);
-                                closeBtn(mBinding.ivDislike);
-                            }
                             LikeTypeDb.getInstance().setType(otherUserId, 2);
-                            closeBtn(mBinding.ivSuperLike);
+                            closeBtn(mBinding.likeLayout);
                             activity.sendBroadcast(new Intent("lobster_updateFCL"));
                             new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex());
                         }
@@ -572,11 +576,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     activity.sendBroadcast(new Intent("lobster_pairList"));
                     activity.sendBroadcast(new Intent("lobster_isLike"));
                     activity.sendBroadcast(new Intent("lobster_updateFCL"));
-                    if (LikeTypeDb.getInstance().getType(otherUserId) != 1) {
-                        closeBtn(mBinding.ivLike);
-                        closeBtn(mBinding.ivDislike);
-                    }
-                    closeBtn(mBinding.ivSuperLike);
+                    closeBtn(mBinding.likeLayout);
                     LikeTypeDb.getInstance().setType(otherUserId, 2);
                 } else if (o == 3) {
                     // 喜欢次数用尽
@@ -594,15 +594,11 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                         activity.finish();
                     } else if (likeOtherStatus == 1) {
                         LikeTypeDb.getInstance().setType(otherUserId, 1);
-                        closeBtn(mBinding.ivLike);
-                        closeBtn(mBinding.ivDislike);
-                        isLike = true;
+                        closeBtn(mBinding.likeLayout);
                         SCToastUtil.showToast(activity, "已喜欢成功", true);
                     } else if (likeOtherStatus == 2) {
                         LikeTypeDb.getInstance().setType(otherUserId, 2);
-                        closeBtn(mBinding.ivLike);
-                        closeBtn(mBinding.ivDislike);
-                        closeBtn(mBinding.ivSuperLike);
+                        closeBtn(mBinding.likeLayout);
                         SCToastUtil.showToast(activity, "你已超级喜欢过对方", true);
                     }
                 }

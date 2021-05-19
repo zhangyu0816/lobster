@@ -31,6 +31,10 @@
             name="isVip"
             type="boolean" />
 
+        <variable
+            name="dataSize"
+            type="Integer" />
+
     </data>
 
     <RelativeLayout
@@ -70,7 +74,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginTop="15dp"
             android:orientation="vertical"
-            android:visibility="@{(position==3&amp;&amp;!isVip&amp;&amp;!noData)?View.VISIBLE:View.GONE}">
+            android:visibility="@{(position==3&amp;&amp;!isVip&amp;&amp;!noData&amp;&amp;dataSize>7)?View.VISIBLE:View.GONE}">
 
             <LinearLayout
                 android:layout_width="wrap_content"

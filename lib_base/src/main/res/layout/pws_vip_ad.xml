@@ -25,7 +25,9 @@
             name="isFirstOpen"
             type="boolean" />
 
-
+        <variable
+            name="type"
+            type="Integer" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -54,33 +56,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="-1dp"
-                android:background="@{isFirstOpen?@drawable/btn_bg_red_f3b_radius_bottom10:@drawable/btn_bg_white_radius_bottom10}"
-                android:orientation="vertical">
+                android:background="@{(isFirstOpen&amp;&amp;type==100)?@drawable/btn_bg_red_f3b_radius_bottom10:@drawable/btn_bg_white_radius_bottom10}">
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/list"
                     adapter="@{adapter}"
                     recyclerType="@{1}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="15dp" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_marginTop="7dp"
-                    android:background="@color/black_efe"
-                    android:visibility="@{isFirstOpen?View.GONE:View.VISIBLE}" />
-
                 <TextView
                     android:id="@+id/tv_btn"
                     onClickDelayed="@{pw::sure}"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/list"
                     android:layout_marginStart="15dp"
+                    android:layout_marginTop="7dp"
                     android:layout_marginEnd="15dp"
                     android:background="@drawable/btn_bg_icon"
                     android:gravity="center"
@@ -88,8 +85,17 @@
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    tools:text="开通" />
-            </LinearLayout>
+                    tools:text="开通开通开通开通开通开通开通开通" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/tv_btn"
+                    android:layout_marginTop="-30dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@mipmap/img_xianshitehui"
+                    android:visibility="@{isFirstOpen?View.VISIBLE:View.GONE}" />
+            </RelativeLayout>
 
             <ImageView
                 onClickDelayed="@{pw::cancel}"

@@ -69,7 +69,7 @@ public class AddFeedbackViewModel extends BaseViewModel implements AddFeedbackVM
             for (int i = 0; i < images.size() - 1; i++) {
                 imageList.add(images.get(i));
             }
-            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, true, position12 -> {
+            MNImage.imageBrowser(activity, mBinding.getRoot(), 0, imageList, position, true, position12 -> {
                 try {
                     int count = MineApp.selectMap.remove(images.get(position12));
                     for (Map.Entry<String, Integer> entry : MineApp.selectMap.entrySet()) {

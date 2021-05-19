@@ -44,13 +44,13 @@ public class VipAdPW extends BasePopupWindow {
         sex = MineApp.mineInfo.getSex();
         this.type = type;
         this.otherImage = otherImage;
-        if (MineApp.isFirstOpen) {
+        if (MineApp.isFirstOpen && type == 100) {
             Ads ads = new Ads();
-            ads.setView(adView(0));
+            ads.setView(adView(type));
             adsList.add(ads);
         } else {
             if (type == 0) {
-                for (int i = 1; i < 8; i++) {
+                for (int i = 1; i < 9; i++) {
                     Ads ads = new Ads();
                     ads.setView(adView(i));
                     adsList.add(ads);
@@ -71,7 +71,7 @@ public class VipAdPW extends BasePopupWindow {
         ItemAdBinding binding = DataBindingUtil.inflate(LayoutInflater.from(activity), R.layout.item_ad, null, false);
         binding.setType(type);
         binding.setSex(sex);
-        if (MineApp.isFirstOpen) {
+        if (MineApp.isFirstOpen && type == 100) {
             binding.setTitle("");
             binding.setContent("");
             binding.setMyHead("empty_icon");
@@ -121,6 +121,12 @@ public class VipAdPW extends BasePopupWindow {
                 binding.setMyHead(MineApp.mineInfo.getImage().replace("YM0000", "240X240"));
                 binding.setOtherHead("empty_icon");
                 binding.ivVipBg.setBackgroundResource(R.drawable.empty_bg);
+            } else if (type == 8) {
+                binding.setTitle("查看所有看过我的人");
+                binding.setContent("让偷偷关注着你的ta，无处可藏！");
+                binding.setMyHead(MineApp.mineInfo.getImage().replace("YM0000", "240X240"));
+                binding.setOtherHead("empty_icon");
+                binding.ivVipBg.setBackgroundResource(sex == 0 ? R.mipmap.vip_ad_4_male : R.mipmap.vip_ad_4);
             }
         }
         return binding.getRoot();
@@ -133,7 +139,7 @@ public class VipAdPW extends BasePopupWindow {
 
     @Override
     public void initUI() {
-        adapter = new BaseAdapter<>(activity,MineApp.isFirstOpen? R.layout.item_first_vip_ad: R.layout.item_vip_ad, MineApp.vipInfoList, this);
+        adapter = new BaseAdapter<>(activity, MineApp.isFirstOpen ? (type == 100 ? R.layout.item_first_vip_ad : R.layout.item_first_0_vip_ad) : R.layout.item_vip_ad, MineApp.vipInfoList, this);
         if (MineApp.vipInfoList.size() < 2) {
             preIndex = MineApp.vipInfoList.size() - 1;
         } else {
@@ -146,7 +152,8 @@ public class VipAdPW extends BasePopupWindow {
 
         mBinding.setVariable(BR.pw, this);
         mBinding.setVariable(BR.adapter, adapter);
-        mBinding.setVariable(BR.isFirstOpen,MineApp.isFirstOpen);
+        mBinding.setVariable(BR.isFirstOpen, MineApp.isFirstOpen);
+        mBinding.setVariable(BR.type, type);
 
         binding = (PwsVipAdBinding) mBinding;
 
@@ -177,7 +184,7 @@ public class VipAdPW extends BasePopupWindow {
                 .setUpIndicators(R.drawable.vip_circle_pressed, R.drawable.vip_circle_unpressed)
                 .isAutoPlay(false)
                 .setShowBg(true)
-                .setType(MineApp.isFirstOpen ? 0 : type)
+                .setType((MineApp.isFirstOpen && type == 100) ? 0 : type)
                 .start();
     }
 

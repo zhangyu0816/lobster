@@ -128,7 +128,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
                     images.add(s);
                 }
             }
-            MNImage.imageBrowser(activity, mBinding.getRoot(), images, position, true, position12 -> {
+            MNImage.imageBrowser(activity, mBinding.getRoot(),0, images, position, true, position12 -> {
                 adapter.notifyItemRemoved(position12);
                 imageList.remove(position12);
                 imageList.add("");

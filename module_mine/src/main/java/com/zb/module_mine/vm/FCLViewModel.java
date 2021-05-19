@@ -182,7 +182,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
 
     @Override
     public void openVip(View view) {
-        new VipAdPW(mBinding.getRoot(), 0, "");
+        new VipAdPW(mBinding.getRoot(), 8, "");
     }
 
     @Override
@@ -474,6 +474,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 mBinding.refresh.finishRefresh();
                 mBinding.refresh.finishLoadMore();
                 mBinding.setNoData(false);
+                mBinding.setDataSize(memberInfoList.size());
             }
 
             @Override

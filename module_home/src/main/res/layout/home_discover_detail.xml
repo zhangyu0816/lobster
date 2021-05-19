@@ -296,7 +296,7 @@
 
                                 <androidx.recyclerview.widget.RecyclerView
                                     adapter="@{viewModel.rewardAdapter}"
-                                    gridNum="@{rewardNum&lt;2?1:2}"
+                                    gridNum="@{(rewardNum>3||rewardNum==0)?3:rewardNum}"
                                     recyclerType="@{2}"
                                     size="@{2}"
                                     android:layout_width="wrap_content"
@@ -309,19 +309,20 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:background="@{rewardNum==0?@drawable/icon_meigui:@drawable/icon_qin}"
-                                    tools:background="@drawable/icon_meigui" />
+                                    tools:background="@drawable/icon_meigui"
+                                    android:visibility="@{rewardNum>2?View.GONE:View.VISIBLE}"/>
 
                                 <TextView
                                     onClickDelayed="@{viewModel::selectGift}"
                                     android:layout_width="wrap_content"
                                     android:layout_height="30dp"
                                     android:layout_marginStart="8dp"
-                                    android:background="@drawable/btn_bg_red_ffe_radius60"
+                                    android:background="@{rewardNum>2?@drawable/btn_bg_black_252_white_radius60:@drawable/btn_bg_red_ffe_radius60}"
                                     android:gravity="center"
                                     android:paddingStart="10dp"
                                     android:paddingEnd="10dp"
                                     android:text="@{rewardInfo}"
-                                    android:textColor="#eb2953"
+                                    android:textColor="@{rewardNum>2?@color/black_252:@color/red_eb2}"
                                     android:textSize="12sp"
                                     android:textStyle="bold"
                                     tools:text="" />
@@ -449,38 +450,42 @@
             android:layout_marginBottom="8dp"
             android:background="@mipmap/icon_remind"
             android:visibility="gone" />
-
-        <com.zb.lib_base.views.SuperLikeBigView
-            android:id="@+id/iv_super_like"
-            bigSuperLikeInterface="@{viewModel}"
-            isPlay="@{isPlay}"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/like_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/bottom_layout"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="15dp"
-            android:visibility="@{likeType==2?View.GONE:View.VISIBLE}" />
+            android:visibility="@{likeType==0?View.VISIBLE:View.GONE}">
 
-        <ImageView
-            android:id="@+id/iv_dislike"
-            onClickDelayed="@{viewModel::dislike}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/bottom_layout"
-            android:layout_margin="15dp"
-            android:visibility="@{likeType==0?View.VISIBLE:View.GONE}"
-            app:srcCompat="@mipmap/dislike_icon" />
+            <com.zb.lib_base.views.SuperLikeBigView
+                android:id="@+id/iv_super_like"
+                bigSuperLikeInterface="@{viewModel}"
+                isPlay="@{isPlay}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="15dp" />
 
-        <ImageView
-            android:id="@+id/iv_like"
-            onClickDelayed="@{viewModel::like}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/bottom_layout"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="15dp"
-            android:visibility="@{likeType==0?View.VISIBLE:View.GONE}"
-            app:srcCompat="@mipmap/like_icon" />
+            <ImageView
+                android:id="@+id/iv_dislike"
+                onClickDelayed="@{viewModel::dislike}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="15dp"
+                app:srcCompat="@mipmap/dislike_icon" />
+
+            <ImageView
+                android:id="@+id/iv_like"
+                onClickDelayed="@{viewModel::like}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="15dp"
+                app:srcCompat="@mipmap/like_icon" />
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/bottom_layout"

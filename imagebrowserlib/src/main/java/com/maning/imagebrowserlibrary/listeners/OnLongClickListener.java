@@ -1,9 +1,5 @@
 package com.maning.imagebrowserlibrary.listeners;
 
-import android.widget.ImageView;
-
-import androidx.fragment.app.FragmentActivity;
-
 /**
  * <pre>
  *     author : maning
@@ -15,6 +11,6 @@ import androidx.fragment.app.FragmentActivity;
  */
 public interface OnLongClickListener {
 
-    void onLongClick(FragmentActivity activity, ImageView view, int position, String url);
+    void onLongClick(String url);
 
 }

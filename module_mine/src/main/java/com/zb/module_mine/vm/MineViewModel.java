@@ -264,7 +264,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                     "?userId=" + BaseActivity.userId + "&sessionId=" + BaseActivity.sessionId +
                     "&pfDevice=Android&pfAppType=203&pfAppVersion=" + MineApp.versionName);
         } else {
-            new VipAdPW(mBinding.getRoot(), 0, "");
+            new VipAdPW(mBinding.getRoot(), 100, "");
         }
     }
 

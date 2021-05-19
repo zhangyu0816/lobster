@@ -2,7 +2,9 @@ package com.zb.lib_base.utils.water;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
@@ -12,6 +14,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
@@ -24,6 +30,9 @@ import com.zb.lib_base.utils.SCToastUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class WaterMark {
     public volatile static WaterMark INSTANCE;
@@ -89,7 +98,7 @@ public class WaterMark {
         }
         outPutUrl = file.getAbsolutePath() + "/Camera/xg_" + BaseActivity.randomString(15) + ".mp4";
         imageUrl = BaseActivity.getImageFile().getAbsolutePath();
-        Bitmap bitmap = textToBitmap("我的虾菇号：" + otherUserId);
+        Bitmap bitmap = textToBitmap("我的虾菇号：" + otherUserId, null);
         getImage(bitmap);
 
         String[] common = addWaterMark(imageUrl, downloadPath, outPutUrl);
@@ -118,19 +127,63 @@ public class WaterMark {
         });
     }
 
+    public void saveImage(RxAppCompatActivity activity, long otherUserId, String downloadPath) {
+        this.activity = activity;
+        this.downloadPath = downloadPath;
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        outPutUrl = file.getAbsolutePath() + "/Camera/my_" + BaseActivity.randomString(15) + ".jpg";
+
+        Glide.with(activity).asBitmap().load(downloadPath).apply(new RequestOptions().centerCrop()).into(new SimpleTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                videoWidth = resource.getWidth();
+                videoHeight = resource.getHeight();
+                activity.runOnUiThread(() -> saveFile(textToBitmap("我的虾菇号：" + otherUserId, resource)));
+            }
+        });
+
+    }
+
+    private void saveFile(Bitmap bitmap) {
+        File file = new File(outPutUrl);
+        try {
+            FileOutputStream os = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        CustomProgressDialog.stopLoading();
+        SCToastUtil.showToast(activity, "保存成功", true);
+        // 最后通知图库更新
+        activity.sendBroadcast(
+                new Intent(
+                        Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                        Uri.parse("file://" + file.getAbsolutePath())
+                )
+        );
+    }
+
     /**
      * 文本转成Bitmap
      *
      * @param text 文本内容
      * @return 图片的bitmap
      */
-    private Bitmap textToBitmap(String text) {
+    private Bitmap textToBitmap(String text, Bitmap resource) {
 
         LinearLayout layout = new LinearLayout(activity);
         layout.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(videoWidth, videoHeight);
         layout.setLayoutParams(layoutParams);
-        layout.setBackgroundColor(Color.TRANSPARENT);
+        if (resource == null)
+            layout.setBackgroundColor(Color.TRANSPARENT);
+        else
+            layout.setBackgroundDrawable(new BitmapDrawable(resource));
 
         ImageView iv = new ImageView(activity);
         float ra;
@@ -159,10 +212,18 @@ public class WaterMark {
 
         layout.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        layout.layout(0, 0, layout.getMeasuredWidth(), layout.getMeasuredHeight());
-        layout.buildDrawingCache();
-        Bitmap bitmap = layout.getDrawingCache();
-        return Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), false);
+        if (resource == null) {
+            layout.layout(0, 0, layout.getMeasuredWidth(), layout.getMeasuredHeight());
+            layout.buildDrawingCache();
+            Bitmap bitmap = layout.getDrawingCache();
+            return Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), false);
+        } else {
+            layout.layout(0, 0, videoWidth, videoHeight);
+            Bitmap bitmap = Bitmap.createBitmap(videoWidth, videoHeight, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            layout.draw(canvas);
+            return bitmap;
+        }
     }
 
     private void getImage(Bitmap bitmap) {

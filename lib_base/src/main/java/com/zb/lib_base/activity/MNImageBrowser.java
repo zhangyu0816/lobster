@@ -1,11 +1,14 @@
-package com.maning.imagebrowserlibrary;
+package com.zb.lib_base.activity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
+import com.maning.imagebrowserlibrary.Discover;
+import com.maning.imagebrowserlibrary.ImageEngine;
 import com.maning.imagebrowserlibrary.listeners.OnClickListener;
 import com.maning.imagebrowserlibrary.listeners.OnDeleteImageListener;
+import com.maning.imagebrowserlibrary.listeners.OnDiscoverListener;
 import com.maning.imagebrowserlibrary.listeners.OnLongClickListener;
 import com.maning.imagebrowserlibrary.model.ImageBrowserConfig;
 
@@ -73,6 +76,31 @@ public class MNImageBrowser {
 
     public MNImageBrowser setShowDelete(boolean showDelete) {
         imageBrowserConfig.setShowDelete(showDelete);
+        return this;
+    }
+
+    public MNImageBrowser setDiscover(Discover discover) {
+        imageBrowserConfig.setDiscover(discover);
+        return this;
+    }
+
+    public MNImageBrowser isAttention(boolean isAttention) {
+        imageBrowserConfig.setAttention(isAttention);
+        return this;
+    }
+
+    public MNImageBrowser isGood(boolean isGood) {
+        imageBrowserConfig.setGood(isGood);
+        return this;
+    }
+
+    public MNImageBrowser setOnDiscoverListener(OnDiscoverListener onDiscoverListener) {
+        imageBrowserConfig.setOnDiscoverListener(onDiscoverListener);
+        return this;
+    }
+
+    public MNImageBrowser setOtherUserId(long otherUserId) {
+        imageBrowserConfig.setOtherUserId(otherUserId);
         return this;
     }
 

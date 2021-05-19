@@ -30,10 +30,9 @@
 
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:id="@+id/top_relative"
@@ -55,22 +54,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:layout_marginEnd="5dp"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@{memberInfo.nick}"
-                android:layout_marginEnd="5dp"
                 android:textColor="@color/black_252"
                 android:textSize="18sp"
-                tools:text="哈哈哈"/>
+                tools:text="哈哈哈" />
 
             <ImageView
                 viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax(105)}"
                 viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(183)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/tv_nick"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="3dp"
+                android:layout_toEndOf="@+id/tv_nick"
                 android:background="@mipmap/vip_icon"
                 android:visibility="@{memberInfo.memberType==2?View.VISIBLE:View.GONE}" />
 
@@ -88,6 +87,7 @@
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@+id/top_relative"
             android:splitMotionEvents="false">
 
             <com.google.android.material.appbar.AppBarLayout
@@ -155,6 +155,7 @@
                                 android:orientation="vertical">
 
                                 <LinearLayout
+                                    onClickDelayed="@{v->viewModel.contactNumDetail(0)}"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
@@ -182,6 +183,7 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                onClickDelayed="@{v->viewModel.contactNumDetail(1)}"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -311,5 +313,28 @@
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
-    </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@mipmap/white_bg">
+
+            <TextView
+                onClickDelayed="@{viewModel::update}"
+                android:layout_width="wrap_content"
+                android:layout_height="56dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/gradient_purple_6d5_ae7"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:paddingStart="40dp"
+                android:paddingEnd="40dp"
+                android:text="求更新"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:drawableStartCompat="@mipmap/icon_maimeng" />
+        </RelativeLayout>
+    </RelativeLayout>
 </layout>

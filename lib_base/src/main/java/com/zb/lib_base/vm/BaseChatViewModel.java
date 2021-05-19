@@ -283,7 +283,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                 return;
             }
             if (MineApp.isFirstOpen)
-                new VipAdPW(mBinding.getRoot(), 0, "");
+                new VipAdPW(mBinding.getRoot(), 100, "");
             else
                 new BottleVipPW(mBinding.getRoot());
         } else if (msgChannelType == 3) {
@@ -299,7 +299,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         if (historyMsg.getMsgType() == 2) {
             ArrayList<String> imageList = new ArrayList<>();
             imageList.add(historyMsg.getResLink());
-            MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, 0, false, null);
+            MNImage.imageBrowser(activity, mBinding.getRoot(), historyMsg.getOtherUserId(), imageList, 0, false, null);
         } else {
             if (direction == 0) {
                 ivPlay = view.findViewById(R.id.iv_play);

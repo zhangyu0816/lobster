@@ -51,7 +51,7 @@
             android:layout_height="13dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:background="@{position==0?@drawable/gradient_reward_1_radius20:@drawable/gradient_reward_2_radius20}"
+            android:background="@{ObjectUtils.getReward(position)}"
             android:gravity="center"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"

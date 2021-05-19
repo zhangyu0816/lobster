@@ -75,7 +75,7 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
         adapter = new ViewPagerAdapter(activity, fragments);
         mBinding.viewPage.setSaveEnabled(false);
         mBinding.viewPage.setAdapter(adapter);
-        initTabLayout(new String[]{"动态", "小视频"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, 0,false);
+        initTabLayout(new String[]{"动态", "小视频"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, 0, false);
     }
 
     @Override
@@ -147,8 +147,8 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
 
             @Override
             public void onError(Throwable e) {
-                if(e instanceof HttpTimeException&&((HttpTimeException) e).getCode()==HttpTimeException.ERROR){
-                    if(e.getMessage().equals("你还没关注我啊")){
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
+                    if (e.getMessage().equals("你还没关注我啊")) {
                         mBinding.setIsAttention(false);
                         AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, mBinding.getMemberInfo().getNick(), mBinding.getMemberInfo().getImage(), false, BaseActivity.userId));
                         activity.sendBroadcast(new Intent("lobster_attentionList"));
@@ -259,5 +259,15 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
             }
         }, activity).setOtherUserId(otherUserId).setLikeOtherStatus(2);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void contactNumDetail(int position) {
+        ActivityUtils.getMineFCL(position, otherUserId);
+    }
+
+    @Override
+    public void update(View view) {
+        SCToastUtil.showToast(activity, "已发送您的求更请求", true);
     }
 }

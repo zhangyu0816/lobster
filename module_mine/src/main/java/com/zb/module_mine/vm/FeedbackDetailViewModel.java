@@ -49,6 +49,6 @@ public class FeedbackDetailViewModel extends BaseViewModel implements FeedbackDe
         for (int i = 0; i < (feedbackInfo.getId() == 0 ? (images.size() - 1) : images.size()); i++) {
             imageList.add(images.get(i));
         }
-        MNImage.imageBrowser(activity, mBinding.getRoot(), imageList, position, false, null);
+        MNImage.imageBrowser(activity, mBinding.getRoot(), 0, imageList, position, false, null);
     }
 }
