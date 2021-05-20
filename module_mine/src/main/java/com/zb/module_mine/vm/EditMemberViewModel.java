@@ -128,7 +128,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
                     images.add(s);
                 }
             }
-            MNImage.imageBrowser(activity, mBinding.getRoot(),0, images, position, true, position12 -> {
+            MNImage.imageBrowser(activity, mBinding.getRoot(), 0, images, position, true, position12 -> {
                 adapter.notifyItemRemoved(position12);
                 imageList.remove(position12);
                 imageList.add("");
@@ -163,6 +163,11 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
     @Override
     public void toSelectTag(View view) {
         ActivityUtils.getMineSelectTag(MineApp.mineInfo.getServiceTags());
+    }
+
+    @Override
+    public void toEditHeight(View view) {
+        ActivityUtils.getMineEditContent(6, 1, "编辑身高", MineApp.mineInfo.getHeight() + "", "输入你的身高，单位cm");
     }
 
     private int index = 0;
@@ -202,6 +207,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
                     .setPersonalitySign(MineApp.mineInfo.getPersonalitySign())
                     .setSex(MineApp.mineInfo.getSex())
                     .setServiceTags(MineApp.mineInfo.getServiceTags())
+                    .setHeight(MineApp.mineInfo.getHeight())
                     .setProvinceId(AreaDb.getInstance().getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
                     .setCityId(AreaDb.getInstance().getCityId(MineApp.cityName))
                     .setDistrictId(AreaDb.getInstance().getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
@@ -233,6 +239,8 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
             MineApp.mineInfo.setServiceTags(content);
         else if (type == 5)
             MineApp.mineInfo.setBirthday(content);
+        else if (type == 6)
+            MineApp.mineInfo.setHeight(Integer.parseInt(content));
     }
 
     /**

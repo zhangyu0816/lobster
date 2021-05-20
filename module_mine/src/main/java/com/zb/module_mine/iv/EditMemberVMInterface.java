@@ -17,5 +17,7 @@ public interface EditMemberVMInterface {
 
     void toSelectTag(View view);
 
+    void toEditHeight(View view);
+
     void modifyMemberInfo();
 }

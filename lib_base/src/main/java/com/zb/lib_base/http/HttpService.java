@@ -512,7 +512,7 @@ public interface HttpService {
                                                   @Query("age") int age, @Query("sex") int sex, @Query("constellation") int constellation,
                                                   @Query("job") String job, @Query("provinceId") long provinceId, @Query("cityId") long cityId,
                                                   @Query("districtId") long districtId, @Query("singleImage") String singleImage,
-                                                  @Query("serviceTags") String serviceTags);
+                                                  @Query("serviceTags") String serviceTags, @Query("height") int height);
 
     // 修改密码
     @GET("api/Member_modifyPass")

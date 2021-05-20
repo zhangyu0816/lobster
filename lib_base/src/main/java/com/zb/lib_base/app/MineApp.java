@@ -55,6 +55,7 @@ public class MineApp extends MultiDexApplication {
     public static int H;
     public static String PHONE_NUMBER_REG = "^[0-9]{11}$";
     public static String EMAIL_REG = "^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+    public static String HEIGHT_REG = "^[1-2][0-9]{2}$";
     public static MineInfo mineInfo = new MineInfo();
     public static FlashInfo sFlashInfo = new FlashInfo();
 
