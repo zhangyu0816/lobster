@@ -51,7 +51,8 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
             };
             mCountDownTimer.start();
         } else {
-            myInfo();
+            ActivityUtils.getCameraPhotoStudio();
+//            myInfo();
         }
     }
 

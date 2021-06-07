@@ -249,6 +249,10 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Camera_Video_Play).withString("filePath", filePath).withBoolean("isUpload", isUpload).withBoolean("isDelete", isDelete).navigation();
     }
 
+    public static void getCameraPhotoStudio() {
+        ARouter.getInstance().build(RouteUtils.Camera_Photo_Studio).navigation();
+    }
+
     /*********************** 漂流瓶 **************************/
 
     // 漂流瓶主页

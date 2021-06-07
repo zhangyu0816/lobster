@@ -10,6 +10,7 @@
         <activity android:name=".activity.PhotoActivity" />
         <activity android:name=".activity.VideosActivity" />
         <activity android:name=".activity.VideoPlayActivity" />
+        <activity android:name=".activity.PhotoStudioActivity" />
     </application>
 
 </manifest>

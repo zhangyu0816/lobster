@@ -107,6 +107,8 @@ public class RouteUtils {
     public static final String Camera_Videos = "/camera/VideosActivity";
     // 视频播放
     public static final String Camera_Video_Play = "/camera/VideoPlayActivity";
+    // 视频播放
+    public static final String Camera_Photo_Studio = "/camera/PhotoStudioActivity";
 
     /*********************** 漂流瓶 **************************/
     // 漂流操作页
