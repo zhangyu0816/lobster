@@ -26,6 +26,7 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.utils.DataCleanManager;
+import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 
 import java.io.File;
@@ -98,7 +99,7 @@ public class WaterMark {
         }
         outPutUrl = file.getAbsolutePath() + "/Camera/xg_" + BaseActivity.randomString(15) + ".mp4";
         imageUrl = BaseActivity.getImageFile().getAbsolutePath();
-        Bitmap bitmap = textToBitmap("我的虾菇号：" + otherUserId, null);
+        Bitmap bitmap = textToBitmap("虾菇号：" + otherUserId, null);
         getImage(bitmap);
 
         String[] common = addWaterMark(imageUrl, downloadPath, outPutUrl);
@@ -134,14 +135,14 @@ public class WaterMark {
         if (!file.exists()) {
             file.mkdirs();
         }
-        outPutUrl = file.getAbsolutePath() + "/Camera/my_" + BaseActivity.randomString(15) + ".jpg";
+        outPutUrl = file.getAbsolutePath() + "/Camera/xg_" + BaseActivity.randomString(15) + ".jpg";
 
         Glide.with(activity).asBitmap().load(downloadPath).apply(new RequestOptions().centerCrop()).into(new SimpleTarget<Bitmap>() {
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                 videoWidth = resource.getWidth();
                 videoHeight = resource.getHeight();
-                activity.runOnUiThread(() -> saveFile(textToBitmap("我的虾菇号：" + otherUserId, resource)));
+                activity.runOnUiThread(() -> saveFile(textToBitmap("虾菇号：" + otherUserId, resource)));
             }
         });
 
@@ -175,17 +176,6 @@ public class WaterMark {
      * @return 图片的bitmap
      */
     private Bitmap textToBitmap(String text, Bitmap resource) {
-
-        LinearLayout layout = new LinearLayout(activity);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(videoWidth, videoHeight);
-        layout.setLayoutParams(layoutParams);
-        if (resource == null)
-            layout.setBackgroundColor(Color.TRANSPARENT);
-        else
-            layout.setBackgroundDrawable(new BitmapDrawable(resource));
-
-        ImageView iv = new ImageView(activity);
         float ra;
         if (videoHeight > videoWidth)
             ra = (float) videoWidth / (float) MineApp.W;
@@ -194,6 +184,19 @@ public class WaterMark {
         int w = (int) (87f * 1.8f * ra);
         int h = (int) (39f * 1.8f * ra);
         int size = (int) (7f * 2 * ra);
+
+        LinearLayout layout = new LinearLayout(activity);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(videoWidth, videoHeight);
+
+        layout.setLayoutParams(layoutParams);
+        if (resource == null)
+            layout.setBackgroundColor(Color.TRANSPARENT);
+        else {
+            layout.setBackgroundDrawable(new BitmapDrawable(resource));
+        }
+
+        ImageView iv = new ImageView(activity);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(w, h);
         params.leftMargin = 0;
         params.rightMargin = MineApp.W;
@@ -209,6 +212,12 @@ public class WaterMark {
         tv.setShadowLayer(1, 2f, 2f, R.color.black);
         tv.setBackgroundColor(Color.TRANSPARENT);
         layout.addView(tv);
+
+        if (resource != null) {
+            int width = videoWidth - DisplayUtils.dip2px(size) * text.length();
+            int height = videoHeight - 2 * h;
+            layout.setPadding(width, height, 0, 0);
+        }
 
         layout.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
