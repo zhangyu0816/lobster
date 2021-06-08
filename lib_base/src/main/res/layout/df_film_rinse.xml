@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <variable
+            name="dialog"
+            type="com.zb.lib_base.windows.FilmRinseDF" />
+
+        <variable
+            name="film"
+            type="com.zb.lib_base.model.Film" />
+
+        <variable
+            name="hasFilm"
+            type="boolean" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            cornerType="@{6}"
+            imageRes="@{ObjectUtils.getPhotoRes(film.camerafilmType)}"
+            isRound="@{true}"
+            roundSize="@{15}"
+            viewWidthSize="@{ObjectUtils.getPhotoWidth(0.8f)}"
+            viewHeightSize="@{ObjectUtils.getPhotoHeight(0.8f)}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            viewWidthSize="@{ObjectUtils.getPhotoWidth(0.8f)}"
+            viewHeightSize="@{-2}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_bg_white_radius_bottom15"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{hasFilm?@string/film_0:@string/film_1}"
+                android:textColor="@color/black_252"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="@string/film_1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@{String.format(hasFilm?@string/film_content_0:@string/film_content_1,film.title)}"
+                android:textColor="@color/black_827"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="@string/film_content_1" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    onClickDelayed="@{dialog::cancel}"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_bg_black_de_tran_radius60"
+                    android:gravity="center"
+                    android:text="取消"
+                    android:textColor="@color/black_9"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    onClickDelayed="@{dialog::wash}"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/gradient_purple_6d5_ae7"
+                    android:gravity="center"
+                    android:text="冲洗"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

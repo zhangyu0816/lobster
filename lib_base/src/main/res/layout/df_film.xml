@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="dialog"
+            type="com.zb.lib_base.windows.FilmDF" />
+
+        <variable
+            name="filmType"
+            type="Integer" />
+
+        <variable
+            name="isSet"
+            type="boolean" />
+
+        <variable
+            name="filmName"
+            type="String" />
+
+        <variable
+            name="authority"
+            type="Integer" />
+
+        <variable
+            name="filmTypeName1"
+            type="String" />
+
+        <variable
+            name="filmTypeName2"
+            type="String" />
+
+        <variable
+            name="filmTypeName3"
+            type="String" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_252"
+        android:orientation="vertical">
+
+        <ImageView
+            onClickDelayed="@{dialog::cancel}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="15dp"
+            android:paddingTop="50dp"
+            android:paddingBottom="8dp"
+            android:src="@mipmap/close_white_icon" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@{ObjectUtils.getBigFilm(filmType)}"
+            tools:background="@drawable/icon_film_1_selected_big" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="23dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:visibility="@{isSet?View.VISIBLE:View.GONE}"
+                tools:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="11dp"
+                    android:gravity="center"
+                    android:onClick="@{v->dialog.selectFilm(1)}"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="8dp"
+                        android:visibility="@{filmType==1?View.GONE:View.VISIBLE}"
+                        tools:visibility="gone" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/icon_film_1_small" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="8dp"
+                        android:visibility="@{filmType==1?View.VISIBLE:View.GONE}" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/film_arrow"
+                        android:visibility="@{filmType==1?View.VISIBLE:View.GONE}" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="11dp"
+                    android:gravity="center"
+                    android:onClick="@{v->dialog.selectFilm(2)}"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="8dp"
+                        android:visibility="@{filmType==2?View.GONE:View.VISIBLE}" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/icon_film_2_small" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="8dp"
+                        android:visibility="@{filmType==2?View.VISIBLE:View.GONE}" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/film_arrow"
+                        android:visibility="@{filmType==2?View.VISIBLE:View.GONE}"
+                        tools:visibility="gone" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="11dp"
+                    android:gravity="center"
+                    android:onClick="@{v->dialog.selectFilm(3)}"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="8dp"
+                        android:visibility="@{filmType==3?View.GONE:View.VISIBLE}" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/icon_film_3_small" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="8dp"
+                        android:visibility="@{filmType==3?View.VISIBLE:View.GONE}" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/film_arrow"
+                        android:visibility="@{filmType==3?View.VISIBLE:View.GONE}"
+                        tools:visibility="gone" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="11dp"
+                    android:gravity="center"
+                    android:onClick="@{v->dialog.selectFilm(4)}"
+                    android:orientation="vertical">
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="8dp"
+                        android:visibility="@{filmType==4?View.GONE:View.VISIBLE}" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/icon_film_4_small" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="8dp"
+                        android:visibility="@{filmType==4?View.VISIBLE:View.GONE}" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/film_arrow"
+                        android:visibility="@{filmType==4?View.VISIBLE:View.GONE}"
+                        tools:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/btn_bg_white_radius_top20"
+                android:padding="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/tv_use"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="胶卷名称"
+                        android:textColor="@color/black_252"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:background="@null"
+                        android:singleLine="true"
+                        android:text="@={filmName}"
+                        android:hint="胶卷名称"
+                        android:textColor="@color/black_827"
+                        android:textColorHint="@color/black_827"
+                        android:textCursorDrawable="@drawable/cursor_color_black_827"
+                        android:textSize="16sp"
+                        tools:text="hello world!" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_marginTop="15dp"
+                        android:background="#e9e8ee" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="22dp"
+                        android:text="分享类型"
+                        android:textColor="@color/black_252"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="32dp"
+                            android:layout_marginEnd="7dp"
+                            android:layout_weight="1"
+                            android:background="@{authority==3?@drawable/gradient_purple_6d5_ae7:@drawable/btn_bg_black_ddd_radius60}"
+                            android:gravity="center"
+                            android:onClick="@{v->dialog.selectAuthority(3)}"
+                            android:text="私人查看"
+                            android:textColor="@{authority==3?@color/white:@color/black_827}"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            tools:background="@drawable/gradient_purple_6d5_ae7"
+                            tools:textColor="@color/white" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="32dp"
+                            android:layout_marginStart="7dp"
+                            android:layout_weight="1"
+                            android:background="@{authority==1?@drawable/gradient_purple_6d5_ae7:@drawable/btn_bg_black_ddd_radius60}"
+                            android:gravity="center"
+                            android:onClick="@{v->dialog.selectAuthority(1)}"
+                            android:text="公开可见"
+                            android:textColor="@{authority==1?@color/white:@color/black_827}"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            tools:background="@drawable/btn_bg_black_ddd_radius60"
+                            tools:textColor="@color/black_827" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="22dp"
+                        android:text="成片风格"
+                        android:textColor="@color/black_252"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="24dp"
+                            android:layout_marginEnd="6dp"
+                            android:background="@drawable/btn_bg_black_e_radius40"
+                            android:gravity="center"
+                            android:paddingHorizontal="14dp"
+                            android:text="@{filmTypeName1}"
+                            android:textColor="@color/black_9"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            tools:text="#日系" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="24dp"
+                            android:layout_marginEnd="6dp"
+                            android:background="@drawable/btn_bg_black_e_radius40"
+                            android:gravity="center"
+                            android:paddingHorizontal="14dp"
+                            android:text="@{filmTypeName2}"
+                            android:textColor="@color/black_9"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            tools:text="#日系" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="24dp"
+                            android:background="@drawable/btn_bg_black_e_radius40"
+                            android:gravity="center"
+                            android:paddingHorizontal="14dp"
+                            android:text="@{filmTypeName3}"
+                            android:textColor="@color/black_9"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            tools:text="#日系" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        adapter="@{dialog.adapter}"
+                        recyclerType="@{1}"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_use"
+                    onClickDelayed="@{dialog::useFilm}"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/gradient_purple_6d5_ae7"
+                    android:gravity="center"
+                    android:text="立即使用"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

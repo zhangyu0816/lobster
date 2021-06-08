@@ -16,4 +16,8 @@
         <!-- 是否模糊 -->
         <item name="android:backgroundDimEnabled">false</item>
     </style>
+    <style name="Animation_Dialog">
+        <item name="android:windowEnterAnimation">@anim/up_in</item>
+        <item name="android:windowExitAnimation">@anim/down_out</item>
+    </style>
 </resources>

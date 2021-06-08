@@ -46,6 +46,16 @@ public class ObjectUtils {
         return (int) (MineApp.W * width / 750f);
     }
 
+    // 根据屏幕宽获取尺寸
+    public static int getPhotoWidth(float scale) {
+        return (int) (MineApp.W * scale);
+    }
+
+    // 根据屏幕宽获取尺寸
+    public static int getPhotoHeight(float scale) {
+        return (int) (MineApp.W * scale * 773f / 1160f);
+    }
+
     public static int getCodeWidth() {
         return (int) ((MineApp.W - DisplayUtils.dip2px(106)) / 4);
     }
@@ -183,6 +193,19 @@ public class ObjectUtils {
             return MineApp.getApp().getResources().getDrawable(R.mipmap.real_icon);
         } else {
             return MineApp.getApp().getResources().getDrawable(R.mipmap.real_fail_icon);
+        }
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public static Drawable getBigFilm(int filmType) {
+        if (filmType == 1) {
+            return MineApp.getApp().getResources().getDrawable(R.drawable.icon_film_1_selected_big);
+        } else if (filmType == 2) {
+            return MineApp.getApp().getResources().getDrawable(R.drawable.icon_film_2_selected_big);
+        } else if (filmType == 3) {
+            return MineApp.getApp().getResources().getDrawable(R.drawable.icon_film_3_selected_big);
+        } else {
+            return MineApp.getApp().getResources().getDrawable(R.drawable.icon_film_4_selected_big);
         }
     }
 
@@ -409,6 +432,21 @@ public class ObjectUtils {
             return MineApp.getApp().getResources().getColor(R.color.purple_7a4);
         } else {
             return MineApp.getApp().getResources().getColor(R.color.black_252);
+        }
+    }
+
+    public static int getPhotoRes(int filmType) {
+        switch (filmType) {
+            case 1:
+                return R.mipmap.contrast_1;
+            case 2:
+                return R.mipmap.contrast_1;
+            case 3:
+                return R.mipmap.contrast_1;
+            case 4:
+                return R.mipmap.contrast_1;
+            default:
+                return R.mipmap.contrast_1;
         }
     }
 }

@@ -155,18 +155,41 @@ public class AdapterBinding {
             }
             if (isRound) {
                 // 圆角图
-                MultiTransformation<Bitmap> multiTransformation;
-                if (cornerType == 0) {
-                    multiTransformation = new MultiTransformation<>(new CenterCrop(), new GlideRoundTransform(roundSize, 0));
-                    cropOptions.transform(multiTransformation);
-                    defaultOptions.transform(multiTransformation);
-                } else {
-                    if (cornerType == 6) {
+                switch (cornerType) {
+                    case 0:
+                        cornerType = GlideRoundTransform.CORNER_ALL;
+                        break;
+                    case 1:
+                        cornerType = GlideRoundTransform.CORNER_NONE;
+                        break;
+                    case 2:
+                        cornerType = GlideRoundTransform.CORNER_TOP_LEFT;
+                        break;
+                    case 3:
+                        cornerType = GlideRoundTransform.CORNER_TOP_RIGHT;
+                        break;
+                    case 4:
+                        cornerType = GlideRoundTransform.CORNER_BOTTOM_LEFT;
+                        break;
+                    case 5:
+                        cornerType = GlideRoundTransform.CORNER_BOTTOM_RIGHT;
+                        break;
+                    case 6:
                         cornerType = GlideRoundTransform.CORNER_TOP;
-                    }
-                    cropOptions.transform(new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
-                    defaultOptions.transform(new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
+                        break;
+                    case 7:
+                        cornerType = GlideRoundTransform.CORNER_BOTTOM;
+                        break;
+                    case 8:
+                        cornerType = GlideRoundTransform.CORNER_LEFT;
+                        break;
+                    case 9:
+                        cornerType = GlideRoundTransform.CORNER_RIGHT;
+                        break;
                 }
+                MultiTransformation<Bitmap> multiTransformation = new MultiTransformation<>(new CenterCrop(), new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
+                cropOptions.transform(multiTransformation);
+                defaultOptions.transform(multiTransformation);
             }
 
             if (isBlur) {

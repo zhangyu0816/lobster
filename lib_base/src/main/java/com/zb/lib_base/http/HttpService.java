@@ -14,6 +14,7 @@ import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.FaceStatus;
 import com.zb.lib_base.model.FeedbackInfo;
+import com.zb.lib_base.model.Film;
 import com.zb.lib_base.model.FlashInfo;
 import com.zb.lib_base.model.FlashUser;
 import com.zb.lib_base.model.GiftInfo;
@@ -628,4 +629,16 @@ public interface HttpService {
 
     @GET("api/Verify_checkFace")
     Observable<BaseResultEntity> checkFace(@Query("faceImage") String faceImage);
+
+    @GET("api/Camera_findCameraFilms")
+    Observable<BaseResultEntity<List<Film>>> findCameraFilms(@Query("isEnable") int isEnable);
+
+    @GET("api/Camera_saveCameraFilm")
+    Observable<BaseResultEntity> saveCameraFilm(@QueryMap Map<String, Object> map);
+
+    @GET("api/Camera_saveCameraFilmResource")
+    Observable<BaseResultEntity> saveCameraFilmResource(@Query("cameraFilmId") long cameraFilmId, @Query("image") String image);
+
+    @GET("api/Camera_washResource")
+    Observable<BaseResultEntity> washResource(@Query("cameraFilmId") long cameraFilmId);
 }

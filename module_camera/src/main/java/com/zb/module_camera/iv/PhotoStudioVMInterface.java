@@ -13,6 +13,15 @@ public interface PhotoStudioVMInterface {
 
     void selectFilm(int index);
 
+    void setFilm(View view);
+
+    void wash(View view);
+
     void tackPhoto(View view);
 
+    void findCameraFilms();
+
+    void saveCameraFilmResource(String image);
+
+    void washResource();
 }

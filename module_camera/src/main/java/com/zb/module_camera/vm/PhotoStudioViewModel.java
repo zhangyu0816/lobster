@@ -6,11 +6,27 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.api.findCameraFilmsApi;
+import com.zb.lib_base.api.saveCameraFilmResourceApi;
+import com.zb.lib_base.api.washResourceApi;
+import com.zb.lib_base.http.HttpManager;
+import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.model.Film;
 import com.zb.lib_base.utils.SCToastUtil;
+import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.FilmDF;
+import com.zb.lib_base.windows.FilmRinseDF;
 import com.zb.module_camera.databinding.AcPhotoStudioBinding;
 import com.zb.module_camera.iv.PhotoStudioVMInterface;
 import com.zb.module_camera.utils.CameraPreview;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
 
@@ -21,8 +37,12 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
     private int cameraPosition = Camera.CameraInfo.CAMERA_FACING_BACK;
     private boolean isFlashing = false; // 是否开启闪光灯
     private byte[] imageData; // 图片流暂存
-
+    private List<Film> mFilmList = new ArrayList<>();
+    private int camerafilmType = 0;//胶卷类型
     private GestureDetector gesturedetector = null;
+    private int filmMaxSize = 1;
+    private Film mFilm;
+    private PhotoManager mPhotoManager;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -31,6 +51,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
         mBinding = (AcPhotoStudioBinding) binding;
         mBinding.cameraLayout.setOnTouchListener(this);
         mBinding.setFilmIndex(0);
+        mBinding.setHasFilm(false);
         initCamera();
 
         gesturedetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
@@ -48,7 +69,14 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
             gesturedetector.onTouchEvent(event);
             return true;
         });
+        findCameraFilms();
 
+        mPhotoManager = new PhotoManager(activity, () -> {
+            saveCameraFilmResource(mPhotoManager.jointWebUrl(","));
+            mCamera.startPreview();
+            mPhotoManager.deleteAllFile();
+        });
+        mPhotoManager.setNeedProgress(false);
     }
 
     @Override
@@ -152,23 +180,112 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
 
     @Override
     public void selectFilm(int index) {
-        mBinding.setFilmIndex(index);
+        new FilmDF(activity).setFilms(mFilmList).setFilmType(index).setSet(false)
+                .setFilmCallBack(filmType -> {
+                    camerafilmType = filmType;
+                    findCameraFilms();
+                    mBinding.setFilmIndex(filmType);
+                }).show(activity.getSupportFragmentManager());
+    }
+
+    @Override
+    public void setFilm(View view) {
+        new FilmDF(activity).setFilms(mFilmList).setFilmType(1).setSet(true).
+                setFilmCallBack(filmType -> {
+                    camerafilmType = filmType;
+                    findCameraFilms();
+                    mBinding.setFilmIndex(filmType);
+                }).show(activity.getSupportFragmentManager());
+    }
+
+    @Override
+    public void wash(View view) {
+        if (mFilm == null) {
+            SCToastUtil.showToast(activity, "请选择胶卷", true);
+            return;
+        }
+        if (mFilm.getImageSize() == 0) {
+            SCToastUtil.showToast(activity, "该胶卷尚未使用", true);
+            return;
+        }
+        new FilmRinseDF(activity).setFilm(mFilm).setFilmRinseCallBack(this::washResource).show(activity.getSupportFragmentManager());
     }
 
     @Override
     public void tackPhoto(View view) {
+        if (mFilm == null) {
+            SCToastUtil.showToast(activity, "请选择胶卷", true);
+            return;
+        }
+        if (!mBinding.getHasFilm()) {
+            new FilmRinseDF(activity).setFilm(mFilm).setFilmRinseCallBack(this::washResource).show(activity.getSupportFragmentManager());
+            return;
+        }
         //调用相机拍照
         try {
             mCamera.takePicture(null, null, null, (data, camera1) -> {
                 imageData = data;
                 //停止预览
                 mCamera.stopPreview();
-
-//                File imageFile = BaseActivity.getImageFile();
-
+                File imageFile = BaseActivity.getImageFile();
+                FileOutputStream fos = null;
+                try {
+                    fos = new FileOutputStream(imageFile);
+                    fos.write(imageData);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (fos != null) {
+                        try {
+                            fos.close();
+                            mPhotoManager.addFileUpload(-1, imageFile);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             });
         } catch (Exception ignored) {
 
         }
+    }
+
+    @Override
+    public void findCameraFilms() {
+        findCameraFilmsApi api = new findCameraFilmsApi(new HttpOnNextListener<List<Film>>() {
+            @Override
+            public void onNext(List<Film> o) {
+                mFilmList = o;
+                if (camerafilmType > 0) {
+                    mFilm = mFilmList.get(camerafilmType - 1);
+                    mBinding.setHasFilm(mFilm.getImageSize() < filmMaxSize);
+                }
+            }
+        }, activity).setIsEnable(0);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void saveCameraFilmResource(String image) {
+        saveCameraFilmResourceApi api = new saveCameraFilmResourceApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                int size = mFilm.getImageSize() + 1;
+                mFilm.setImageSize(size);
+                mBinding.setHasFilm(size < filmMaxSize);
+            }
+        }, activity).setCameraFilmId(mFilm.getId()).setImage(image);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void washResource() {
+        washResourceApi api = new washResourceApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+
+            }
+        },activity).setCameraFilmId(mFilm.getId());
+        HttpManager.getInstance().doHttpDeal(api);
     }
 }
