@@ -32,6 +32,10 @@ public interface SettingVMInterface {
 
     void toIdCard(View view);
 
+    void toBindingPhone(View view);
+
+    void toPermission(View view);
+
     void loginOut();
 
     void humanFaceStatus();

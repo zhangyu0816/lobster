@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.view.View;
 
@@ -214,6 +215,20 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
                 ActivityUtils.getMineAuthentication(mAuthentication);
             }
         }
+    }
+
+    @Override
+    public void toBindingPhone(View view) {
+        ActivityUtils.getBindingPhoneActivity(activity, false, true);
+    }
+
+    @Override
+    public void toPermission(View view) {
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+        intent.setData(Uri.fromParts("package", activity.getPackageName(), null));
+        activity.startActivity(intent);
     }
 
     public void realNameVerify() {

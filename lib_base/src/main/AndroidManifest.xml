@@ -99,5 +99,7 @@
             android:name=".activity.MNImageBrowserActivity"
             android:launchMode="singleTop"
             android:theme="@style/BlackTheme" />
+
+        <activity android:name=".activity.NotifivationActivity" />
     </application>
 </manifest>

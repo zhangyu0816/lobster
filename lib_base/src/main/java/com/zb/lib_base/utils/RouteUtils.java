@@ -4,7 +4,6 @@ public class RouteUtils {
     /*********************** app **************************/
     public static final String Main_MainActivity = "/main/MainActivity";
     public static final String Main_Login = "/main/LoginActivity";
-    public static final String Main_Binding_Phone = "/main/BindingPhoneActivity";
     public static final String Main_Login_Video = "/main/LoginVideoActivity";
 
     /*********************** 首页 **************************/
@@ -95,6 +94,8 @@ public class RouteUtils {
     public static final String Mine_Withdraw = "/mine/WithdrawActivity";
     // 实名认证
     public static final String Mine_Authentication = "/mine/AuthenticationActivity";
+
+    public static final String Mine_Binding_Phone = "/mine/BindingPhoneActivity";
 
     /*********************** 相册 **************************/
     // 相册主页

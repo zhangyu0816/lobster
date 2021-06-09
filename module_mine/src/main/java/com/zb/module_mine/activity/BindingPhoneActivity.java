@@ -1,16 +1,18 @@
-package com.yimi.rentme.activity;
+package com.zb.module_mine.activity;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.yimi.rentme.BR;
-import com.yimi.rentme.R;
-import com.yimi.rentme.vm.BindingPhoneViewModel;
 import com.zb.lib_base.utils.RouteUtils;
+import com.zb.module_mine.BR;
+import com.zb.module_mine.R;
+import com.zb.module_mine.vm.BindingPhoneViewModel;
 
-@Route(path = RouteUtils.Main_Binding_Phone)
-public class BindingPhoneActivity extends AppBaseActivity {
+@Route(path = RouteUtils.Mine_Binding_Phone)
+public class BindingPhoneActivity extends MineBaseActivity {
     @Autowired(name = "isRegister")
     boolean isRegister;
+    @Autowired(name = "isFinish")
+    boolean isFinish;
 
     @Override
     public int getRes() {
@@ -21,6 +23,7 @@ public class BindingPhoneActivity extends AppBaseActivity {
     public void initUI() {
         BindingPhoneViewModel viewModel = new BindingPhoneViewModel();
         viewModel.isRegister = isRegister;
+        viewModel.isFinish = isFinish;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.title, "绑定手机号");

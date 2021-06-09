@@ -19,11 +19,6 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Main_Login).withInt("loginStep", loginStep).navigation();
     }
 
-    // 绑定手机号
-    public static void getBindingPhoneActivity(RxAppCompatActivity activity, boolean isRegister) {
-        ARouter.getInstance().build(RouteUtils.Main_Binding_Phone).withBoolean("isRegister", isRegister).navigation(activity, 1002);
-    }
-
     // 登录视频
     public static void getLoginVideoActivity() {
         ARouter.getInstance().build(RouteUtils.Main_Login_Video).navigation();
@@ -223,6 +218,11 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Mine_Authentication).withParcelable("authentication", authentication).navigation();
     }
 
+    // 绑定手机号
+    public static void getBindingPhoneActivity(RxAppCompatActivity activity, boolean isRegister, boolean isFinish) {
+        ARouter.getInstance().build(RouteUtils.Mine_Binding_Phone).withBoolean("isRegister", isRegister).withBoolean("isFinish", isFinish).navigation(activity, 1002);
+    }
+
     // 相册主页
     public static void getCameraMain(RxAppCompatActivity activity, boolean isMore, boolean showBottom, boolean showVideo) {
         ARouter.getInstance().build(RouteUtils.Camera_Main).withBoolean("isMore", isMore).withBoolean("showBottom", showBottom).withBoolean("showVideo", showVideo).navigation(activity, 1001);
@@ -252,6 +252,7 @@ public class ActivityUtils {
     public static void getCameraPhotoStudio() {
         ARouter.getInstance().build(RouteUtils.Camera_Photo_Studio).navigation();
     }
+
 
     /*********************** 漂流瓶 **************************/
 

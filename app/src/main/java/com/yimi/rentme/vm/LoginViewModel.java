@@ -150,7 +150,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             @Override
             public void onReceive(Context context, Intent intent) {
                 MineApp.registerInfo.setImage(MineApp.registerInfo.getUnionImage());
-                ActivityUtils.getBindingPhoneActivity(activity, true);
+                ActivityUtils.getBindingPhoneActivity(activity, true, false);
             }
         };
 
@@ -451,7 +451,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 PreferenceUtil.saveStringValue(activity, "userName", "");
                 PreferenceUtil.saveStringValue(activity, "loginPass", "");
                 if (o.getPhoneNum().isEmpty()) {
-                    ActivityUtils.getBindingPhoneActivity(activity, false);
+                    ActivityUtils.getBindingPhoneActivity(activity, false, false);
                 } else {
                     SCToastUtil.showToast(activity, "登录成功", true);
                     if (needMoreInfo) {

@@ -29,6 +29,7 @@
         <activity android:name=".activity.WithdrawActivity" />
         <activity android:name=".activity.AuthenticationActivity" />
         <activity android:name=".activity.AddFeedbackActivity" />
+        <activity android:name=".activity.BindingPhoneActivity" />
     </application>
 
 </manifest>

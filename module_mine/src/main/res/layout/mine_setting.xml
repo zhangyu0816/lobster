@@ -253,11 +253,11 @@
                             android:id="@+id/tv_card"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="未审核"
                             android:layout_centerVertical="true"
                             android:layout_toEndOf="@+id/tv_id_card"
+                            android:text="未审核"
                             android:textColor="@color/black_9"
-                            android:textSize="12sp"/>
+                            android:textSize="12sp" />
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -336,6 +336,62 @@
                         android:background="@color/black_efe" />
 
                     <RelativeLayout
+                        onClickDelayed="@{viewModel::toBindingPhone}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="绑定手机号"
+                            android:textColor="@color/black_4d4"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/arrow_small_right_icon" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:background="@color/black_efe" />
+
+                    <RelativeLayout
+                        onClickDelayed="@{viewModel::toPermission}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="权限管理"
+                            android:textColor="@color/black_4d4"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/arrow_small_right_icon" />
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:background="@color/black_efe" />
+
+                    <RelativeLayout
                         onClickDelayed="@{viewModel::closeUseType}"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -344,8 +400,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="显示个性化展示"
                             android:layout_centerVertical="true"
+                            android:text="显示个性化展示"
                             android:textColor="@color/black_4d4"
                             android:textSize="14sp" />
 

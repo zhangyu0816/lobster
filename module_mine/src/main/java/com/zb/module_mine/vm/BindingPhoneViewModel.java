@@ -1,4 +1,4 @@
-package com.yimi.rentme.vm;
+package com.zb.module_mine.vm;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,9 +6,9 @@ import android.os.CountDownTimer;
 import android.text.Html;
 import android.view.View;
 
-import com.yimi.rentme.R;
-import com.yimi.rentme.databinding.AcBindingPhoneBinding;
-import com.yimi.rentme.iv.BindingPhoneVMInterface;
+import com.zb.module_mine.R;
+import com.zb.module_mine.databinding.AcBindingPhoneBinding;
+import com.zb.module_mine.iv.BindingPhoneVMInterface;
 import com.zb.lib_base.api.banderCaptchaApi;
 import com.zb.lib_base.api.bindingPhoneApi;
 import com.zb.lib_base.api.myInfoApi;
@@ -28,6 +28,7 @@ import androidx.databinding.ViewDataBinding;
 
 public class BindingPhoneViewModel extends BaseViewModel implements BindingPhoneVMInterface {
     public boolean isRegister;
+    public boolean isFinish;
     private AcBindingPhoneBinding mBinding;
     private int second = 120;
     private CountDownTimer timer;
@@ -181,7 +182,8 @@ public class BindingPhoneViewModel extends BaseViewModel implements BindingPhone
             @Override
             public void onNext(MineInfo o) {
                 MineApp.mineInfo = o;
-                ActivityUtils.getMainActivity();
+                if (!isFinish)
+                    ActivityUtils.getMainActivity();
                 activity.finish();
             }
         }, activity);

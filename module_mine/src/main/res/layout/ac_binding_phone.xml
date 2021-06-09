@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.yimi.rentme.vm.BindingPhoneViewModel" />
+            type="com.zb.module_mine.vm.BindingPhoneViewModel" />
 
         <variable
             name="title"
@@ -31,8 +31,9 @@
         android:orientation="vertical">
 
         <include
-            layout="@layout/main_back_black_layout"
+            layout="@layout/back_black_layout"
             title="@{title}"
+            showRight="@{false}"
             viewModel="@{viewModel}" />
 
         <RelativeLayout
