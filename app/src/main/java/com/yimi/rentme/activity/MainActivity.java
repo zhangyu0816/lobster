@@ -8,16 +8,13 @@ import android.util.Log;
 import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.igexin.sdk.PushManager;
 import com.xiaomi.mimc.logger.Logger;
 import com.xiaomi.mimc.logger.MIMCLog;
 import com.yimi.rentme.BR;
 import com.yimi.rentme.R;
-import com.yimi.rentme.getui.DemoIntentService;
 import com.yimi.rentme.utils.AlarmUtils;
 import com.yimi.rentme.vm.MainViewModel;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.iv.DemoPushService;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -38,8 +35,6 @@ public class MainActivity extends AppBaseActivity {
     public void initUI() {
         // 个推注册
         MineApp.getApp().getFixedThreadPool().execute(() -> {
-            PushManager.getInstance().initialize(this.getApplicationContext(), DemoPushService.class);
-            PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), DemoIntentService.class);
             setNotificationChannel();
         });
 

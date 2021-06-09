@@ -5,18 +5,12 @@ import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.igexin.sdk.PushManager;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import com.umeng.analytics.MobclickAgent;
-import com.umeng.commonsdk.UMConfigure;
-import com.umeng.socialize.PlatformConfig;
-import com.umeng.socialize.UMShareAPI;
 import com.xiaomi.mimc.MIMCUser;
 import com.zb.lib_base.R;
-import com.zb.lib_base.iv.DemoPushService;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.FlashInfo;
@@ -122,7 +116,6 @@ public class MineApp extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         instance = this;
-        PushManager.getInstance().initialize(getApplicationContext(), DemoPushService.class);
         W = getApplicationContext().getResources().getDisplayMetrics().widthPixels;
         H = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
         type = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/semibold.ttf");
@@ -132,13 +125,6 @@ public class MineApp extends MultiDexApplication {
         initRealm();
         DisplayUtils.init(this);
         MultiDex.install(this);
-
-        UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, null);
-        PlatformConfig.setWeixin("wxb83427622a6740f6", "97f837c0ae8b11af734041828ba4a737");
-        PlatformConfig.setQQZone("101928546", "a8d76c68d7590b71f5254aa87c4b24c8");
-        UMShareAPI.get(this);
-        // 页面统计
-        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.LEGACY_AUTO);
 
         try {
             PackageInfo packageInfo = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0);

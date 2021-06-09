@@ -30,6 +30,8 @@ public interface SettingVMInterface {
 
     void closeUseType(View view);
 
+    void toIdCard(View view);
+
     void loginOut();
 
     void humanFaceStatus();

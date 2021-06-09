@@ -49,6 +49,7 @@ public class SettingActivity extends MineBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        viewModel.realNameVerify();
         viewModel.humanFaceStatus();
     }
 }

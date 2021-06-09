@@ -25,7 +25,6 @@ android {
             //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
             abiFilters "armeabi", "armeabi-v7a"
         }
-
     }
 
     buildTypes {
@@ -51,7 +50,7 @@ dependencies {
     // 按钮防抖
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
     // 高德地图
-    implementation files('libs/AMap2DMap_6.0.0_AMapSearch_7.3.0_AMapLocation_4.9.0_20200331.jar')
+    implementation files('libs/AMap2DMap_6.0.0_AMapSearch_7.9.0_AMapLocation_5.3.1_20210331')
     // 鲁班
     implementation 'me.shaohui.advancedluban:library:1.3.5'
     // 小米聊天
@@ -77,18 +76,20 @@ dependencies {
     api 'com.github.1002326270xc:LayoutManager-FlowLayout:v1.6'
     // 多class
     api 'com.android.support:multidex:1.0.3'
-    // 友盟
-    implementation files('libs/umeng-analytics-9.1.6.jar')
-    implementation files('libs/umeng-asms-v1.1.3.jar')
-    implementation files('libs/umeng-crash-v0.0.5.jar')
-    api files('libs/wechat-sdk-android-with-mta-1.1.6.jar')
-    implementation files('libs/umeng_social_net.jar')
-    api files('libs/umeng_social_api.jar')
-    implementation files('libs/open_sdk_r5923_lite.jar')
+    // 友盟统计
+    api 'com.umeng.umsdk:common:9.3.8'// 必选
+    api 'com.umeng.umsdk:asms:1.2.2'// 必选
+    api 'com.umeng.umsdk:apm:1.2.0' // 错误分析
+    api 'com.umeng.umsdk:share-core:7.1.4'//分享核心库，必选
+    api 'com.umeng.umsdk:share-qq:7.1.4'
+    api 'com.tencent.tauth:qqopensdk:3.51.2'//QQ官方SDK依赖库
+    api 'com.umeng.umsdk:share-wx:7.1.4'
+    api 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.6.5'//微信官方SDK依赖库
     // 网路请求
     implementation files('libs/xUtils-2.6.14.jar')
-    //个推
-    api 'com.getui:sdk:2.13.2.0'
+    // 个推
+    api 'com.getui:gtsdk:3.1.4.0'  //个推SDK
+    api 'com.getui:gtc:3.1.0.0'  //个推核心组件
     // viewpager
     api "androidx.viewpager2:viewpager2:1.0.0"
 

@@ -508,12 +508,11 @@ public interface HttpService {
 
     // 修改个人信息
     @GET("api/Member_modifyMemberInfo")
-    Observable<BaseResultEntity> modifyMemberInfo(@Query("nick") String nick, @Query("image") String image, @Query("moreImages") String moreImages,
-                                                  @Query("personalitySign") String personalitySign, @Query("birthday") String birthday,
-                                                  @Query("age") int age, @Query("sex") int sex, @Query("constellation") int constellation,
-                                                  @Query("job") String job, @Query("provinceId") long provinceId, @Query("cityId") long cityId,
-                                                  @Query("districtId") long districtId, @Query("singleImage") String singleImage,
-                                                  @Query("serviceTags") String serviceTags, @Query("height") int height);
+    Observable<BaseResultEntity> modifyMemberInfo(@QueryMap Map<String, Object> map);
+
+    // 修改个人信息--不审核
+    @GET("api/Member_modifyMemberInfoForNoVerify")
+    Observable<BaseResultEntity> modifyMemberInfoForNoVerify(@QueryMap Map<String, Object> map);
 
     // 修改密码
     @GET("api/Member_modifyPass")

@@ -51,7 +51,6 @@ import com.zb.lib_base.utils.ThreeLogin;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BirthdayPW;
-import com.zb.lib_base.windows.RulePW;
 import com.zb.lib_base.windows.TextPW;
 
 import org.json.JSONException;
@@ -574,7 +573,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 // 1.已注册 0.未注册
                 mCheckUser = o;
                 if (mCheckUser.getIsRegister() == 0) {
-                    showRule();// 显示协议
+                    registerCaptcha();
                 } else {
                     step(1);
                 }
@@ -647,28 +646,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             }
         } else if (mBinding.getLoginStep() == 4) {
             mBinding.setCanNext(!content.isEmpty());
-        }
-    }
-
-    private void showRule() {
-        if (PreferenceUtil.readIntValue(activity, "ruleType1") == 0) {
-            MineApp.getApp().getFixedThreadPool().execute(() -> {
-                SystemClock.sleep(200);
-                activity.runOnUiThread(() -> new RulePW(activity, mBinding.getRoot(), 1, new RulePW.CallBack() {
-                    @Override
-                    public void sureBack() {
-                        PreferenceUtil.saveIntValue(activity, "ruleType1", 1);
-                        registerCaptcha();
-                    }
-
-                    @Override
-                    public void cancelBack() {
-
-                    }
-                }));
-            });
-        } else {
-            registerCaptcha();
         }
     }
 

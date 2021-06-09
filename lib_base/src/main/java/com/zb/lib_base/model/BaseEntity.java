@@ -9,6 +9,7 @@ import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.windows.TextPW;
 
 import rx.Observable;
@@ -95,23 +96,27 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
         //未登录
         if (httpResult.getCode() == HttpTimeException.NOT_LOGIN) {
             getRxAppCompatActivity().sendBroadcast(new Intent("lobster_closeSound"));
-            new TextPW(getRxAppCompatActivity(), getRxAppCompatActivity().getWindow().getDecorView(),
-                    "安全提示", "您的账号已在另一个设备上登录，若不是本人操作，请重新登录且请往设置中修改密码！",
-                    "重新登录", false, new TextPW.CallBack() {
-                @Override
-                public void sure() {
-                    MineApp.getApp().exit();
-                    ActivityUtils.getLoginVideoActivity();
-                }
-
-                @Override
-                public void cancel() {
-                    getRxAppCompatActivity().sendBroadcast(new Intent("lobster_resumeSound"));
-                    if (TextUtils.equals(dialogTitle, "loadingNotLogin")) {
-                        getRxAppCompatActivity().finish();
+            if (PreferenceUtil.readStringValue(getRxAppCompatActivity(), "sessionId").isEmpty()) {
+                MineApp.getApp().exit();
+                ActivityUtils.getLoginActivity(0);
+            } else
+                new TextPW(getRxAppCompatActivity(), getRxAppCompatActivity().getWindow().getDecorView(),
+                        "安全提示", "您的账号已在另一个设备上登录，若不是本人操作，请重新登录且请往设置中修改密码！",
+                        "重新登录", false, new TextPW.CallBack() {
+                    @Override
+                    public void sure() {
+                        MineApp.getApp().exit();
+                        ActivityUtils.getLoginActivity(0);
                     }
-                }
-            });
+
+                    @Override
+                    public void cancel() {
+                        getRxAppCompatActivity().sendBroadcast(new Intent("lobster_resumeSound"));
+                        if (TextUtils.equals(dialogTitle, "loadingNotLogin")) {
+                            getRxAppCompatActivity().finish();
+                        }
+                    }
+                });
             throw new HttpTimeException(httpResult.getCode());
         }
 

@@ -3,6 +3,7 @@ package com.zb.module_mine.vm;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.view.View;
 
@@ -10,12 +11,14 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.humanFaceStatusApi;
 import com.zb.lib_base.api.loginOutApi;
+import com.zb.lib_base.api.realNameVerifyApi;
 import com.zb.lib_base.api.setSendMessageApi;
 import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
+import com.zb.lib_base.model.Authentication;
 import com.zb.lib_base.model.FaceStatus;
 import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.AMapLocation;
@@ -41,7 +44,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     private MineSettingBinding mBinding;
     private List<String> selectList = new ArrayList<>();
     private AMapLocation aMapLocation;
-    private int useType;
+    private Authentication mAuthentication;
 
     @Override
     public void back(View view) {
@@ -198,11 +201,51 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
         setSendMessageApi(mBinding.getUseType() == 0 ? 1 : 0);
     }
 
+    @Override
+    public void toIdCard(View view) {
+        if (mAuthentication == null) {
+            ActivityUtils.getMineAuthentication(new Authentication());
+        } else if (mAuthentication.getIsChecked() == 1) {
+            SCToastUtil.showToast(activity, "实名认证已通过，无需再次审核", true);
+        } else {
+            if (mAuthentication.getIsChecked() == 0 || mAuthentication.getIsChecked() == 100) {
+                new TextPW(mBinding.getRoot(), "实名认证", "实名认证还在审核中，请稍后再试！");
+            } else {
+                ActivityUtils.getMineAuthentication(mAuthentication);
+            }
+        }
+    }
+
+    public void realNameVerify() {
+        realNameVerifyApi api = new realNameVerifyApi(new HttpOnNextListener<Authentication>() {
+            @Override
+            public void onNext(Authentication o) {
+                mAuthentication = o;
+                if (mAuthentication.getIsChecked() == 1) {
+                    mBinding.tvCard.setText("认证通过");
+                    mBinding.tvCard.setTextColor(Color.parseColor("#37A0FF"));
+                } else {
+                    if (mAuthentication.getIsChecked() == 0 || mAuthentication.getIsChecked() == 100) {
+                        mBinding.tvCard.setText("审核中");
+                        mBinding.tvCard.setTextColor(Color.parseColor("#999999"));
+                    } else {
+                        mBinding.tvCard.setText("审核失败");
+                        mBinding.tvCard.setTextColor(Color.parseColor("#FF3158"));
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
     private void setSendMessageApi(int type) {
         setSendMessageApi api = new setSendMessageApi(new HttpOnNextListener<Integer>() {
             @Override
             public void onNext(Integer o) {
-                useType = o;
                 mBinding.setUseType(o);
             }
         }, activity).setUseType(type);

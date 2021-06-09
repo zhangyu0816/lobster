@@ -2,7 +2,6 @@ package com.zb.module_mine.vm;
 
 import android.Manifest;
 import android.os.Build;
-import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -14,12 +13,10 @@ import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.Authentication;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
-import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.uploadImage.PhotoFile;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
-import com.zb.lib_base.windows.RulePW;
 import com.zb.module_mine.R;
 import com.zb.module_mine.adapter.MineAdapter;
 import com.zb.module_mine.iv.AuthenticationVMInterface;
@@ -51,7 +48,6 @@ public class AuthenticationViewModel extends BaseViewModel implements Authentica
             authentication.setPersonalImage(imageList.get(2));
             upRealNameInfo();
         });
-        showRule();
     }
 
     @Override
@@ -68,25 +64,6 @@ public class AuthenticationViewModel extends BaseViewModel implements Authentica
         imageList.add(authentication.getPersonalImage().isEmpty() ? "add_image_icon" : authentication.getPersonalImage());
 
         adapter = new MineAdapter<>(activity, R.layout.item_authentication_image, imageList, this);
-    }
-
-    private void showRule() {
-        if (PreferenceUtil.readIntValue(activity, "ruleType3") == 0) {
-            MineApp.getApp().getFixedThreadPool().execute(() -> {
-                SystemClock.sleep(200);
-                activity.runOnUiThread(() -> new RulePW(activity, mBinding.getRoot(), 3, new RulePW.CallBack() {
-                    @Override
-                    public void sureBack() {
-                        PreferenceUtil.saveIntValue(activity, "ruleType3", 1);
-                    }
-
-                    @Override
-                    public void cancelBack() {
-                        back(null);
-                    }
-                }));
-            });
-        }
     }
 
     @Override

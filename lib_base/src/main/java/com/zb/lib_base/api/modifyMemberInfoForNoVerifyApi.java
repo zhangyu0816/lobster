@@ -12,7 +12,7 @@ import java.util.Map;
 
 import rx.Observable;
 
-public class modifyMemberInfoApi extends BaseEntity<BaseResultEntity> {
+public class modifyMemberInfoForNoVerifyApi extends BaseEntity<BaseResultEntity> {
     String nick = "";          //昵称
     String image = "";    //头像
     String moreImages = "";    //多图 【虾菇】
@@ -26,69 +26,69 @@ public class modifyMemberInfoApi extends BaseEntity<BaseResultEntity> {
     String serviceTags = "";
     int height;
 
-    public modifyMemberInfoApi setNick(String nick) {
+    public modifyMemberInfoForNoVerifyApi setNick(String nick) {
         this.nick = nick;
         return this;
     }
 
-    public modifyMemberInfoApi setImage(String image) {
+    public modifyMemberInfoForNoVerifyApi setImage(String image) {
         this.image = image;
         return this;
     }
 
-    public modifyMemberInfoApi setMoreImages(String moreImages) {
+    public modifyMemberInfoForNoVerifyApi setMoreImages(String moreImages) {
         this.moreImages = moreImages;
         return this;
     }
 
-    public modifyMemberInfoApi setPersonalitySign(String personalitySign) {
+    public modifyMemberInfoForNoVerifyApi setPersonalitySign(String personalitySign) {
         this.personalitySign = personalitySign;
         return this;
     }
 
-    public modifyMemberInfoApi setBirthday(String birthday) {
+    public modifyMemberInfoForNoVerifyApi setBirthday(String birthday) {
         this.birthday = birthday;
         return this;
     }
 
-    public modifyMemberInfoApi setSex(int sex) {
+    public modifyMemberInfoForNoVerifyApi setSex(int sex) {
         this.sex = sex;
         return this;
     }
 
-    public modifyMemberInfoApi setJob(String job) {
+    public modifyMemberInfoForNoVerifyApi setJob(String job) {
         this.job = job;
         return this;
     }
 
-    public modifyMemberInfoApi setProvinceId(long provinceId) {
+    public modifyMemberInfoForNoVerifyApi setProvinceId(long provinceId) {
         this.provinceId = provinceId;
         return this;
     }
 
-    public modifyMemberInfoApi setCityId(long cityId) {
+    public modifyMemberInfoForNoVerifyApi setCityId(long cityId) {
         this.cityId = cityId;
         return this;
     }
 
-    public modifyMemberInfoApi setDistrictId(long districtId) {
+    public modifyMemberInfoForNoVerifyApi setDistrictId(long districtId) {
         this.districtId = districtId;
         return this;
     }
 
-    public modifyMemberInfoApi setServiceTags(String serviceTags) {
+    public modifyMemberInfoForNoVerifyApi setServiceTags(String serviceTags) {
         this.serviceTags = serviceTags;
         return this;
     }
 
-    public modifyMemberInfoApi setHeight(int height) {
+    public modifyMemberInfoForNoVerifyApi setHeight(int height) {
         this.height = height;
         return this;
     }
 
-    public modifyMemberInfoApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
+    public modifyMemberInfoForNoVerifyApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
-        setDialogTitle("上传个人信息");
+        setShowProgress(false);
     }
 
     @Override
@@ -123,6 +123,6 @@ public class modifyMemberInfoApi extends BaseEntity<BaseResultEntity> {
             map.put("height", height);
         map.put("singleImage", "");
 
-        return methods.modifyMemberInfo(map);
+        return methods.modifyMemberInfoForNoVerify(map);
     }
 }

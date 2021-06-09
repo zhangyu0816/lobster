@@ -21,7 +21,7 @@ import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.api.joinPairPoolApi;
 import com.zb.lib_base.api.makeEvaluateApi;
-import com.zb.lib_base.api.modifyMemberInfoApi;
+import com.zb.lib_base.api.modifyMemberInfoForNoVerifyApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.prePairListApi;
 import com.zb.lib_base.app.MineApp;
@@ -790,19 +790,11 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     }
 
     private void modifyMemberInfo() {
-        modifyMemberInfoApi api = new modifyMemberInfoApi(new HttpOnNextListener() {
+        modifyMemberInfoForNoVerifyApi api = new modifyMemberInfoForNoVerifyApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
             }
         }, activity)
-                .setBirthday(MineApp.mineInfo.getBirthday())
-                .setImage(MineApp.mineInfo.getImage())
-                .setMoreImages(MineApp.mineInfo.getMoreImages())
-                .setNick(MineApp.mineInfo.getNick())
-                .setJob(MineApp.mineInfo.getJob().isEmpty() ? "设计师" : MineApp.mineInfo.getJob())
-                .setPersonalitySign(MineApp.mineInfo.getPersonalitySign().isEmpty() ? "有趣之人终相遇" : MineApp.mineInfo.getPersonalitySign())
-                .setSex(MineApp.mineInfo.getSex())
-                .setServiceTags(MineApp.mineInfo.getServiceTags())
                 .setProvinceId(AreaDb.getInstance().getProvinceId(PreferenceUtil.readStringValue(activity, "provinceName")))
                 .setCityId(AreaDb.getInstance().getCityId(MineApp.cityName))
                 .setDistrictId(AreaDb.getInstance().getDistrictId(PreferenceUtil.readStringValue(activity, "districtName")));
