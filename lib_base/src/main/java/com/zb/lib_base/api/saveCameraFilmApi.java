@@ -4,14 +4,14 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.model.BaseEntity;
-import com.zb.lib_base.model.BaseResultEntity;
+import com.zb.lib_base.model.Film;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import rx.Observable;
 
-public class saveCameraFilmApi extends BaseEntity<BaseResultEntity> {
+public class saveCameraFilmApi extends BaseEntity<Film> {
     String title; //胶卷标题
     int camerafilmType;  //胶卷类型  你们自定义传上来
     int authority;  //权限设置 1 公开 2 仅好友可见 3.私密

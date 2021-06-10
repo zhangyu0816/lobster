@@ -14,6 +14,8 @@ import androidx.databinding.library.baseAdapters.BR;
 @Route(path = RouteUtils.Camera_Photo_Studio)
 public class PhotoStudioActivity extends CameraBaseActivity {
 
+    private PhotoStudioViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,8 +36,20 @@ public class PhotoStudioActivity extends CameraBaseActivity {
         if (!RomUtils.isHuawei()) {
             fitComprehensiveScreen();
         }
-        PhotoStudioViewModel viewModel = new PhotoStudioViewModel();
+        viewModel = new PhotoStudioViewModel();
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewModel.openCamera();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 }

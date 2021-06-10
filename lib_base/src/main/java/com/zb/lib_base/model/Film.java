@@ -20,6 +20,7 @@ public class Film extends BaseObservable {
     int shareNum;//分享数量
     int authority;//权限设置 1 公开 2 仅好友可见 3.私密
     int isEnable; //是否可用   1.可用  0.不可用
+    int washType;// 0:未冲洗  1：冲洗中  2：冲洗完
 
     @Bindable
     public long getId() {
@@ -159,5 +160,15 @@ public class Film extends BaseObservable {
     public void setIsEnable(int isEnable) {
         this.isEnable = isEnable;
         notifyPropertyChanged(BR.isEnable);
+    }
+
+    @Bindable
+    public int getWashType() {
+        return washType;
+    }
+
+    public void setWashType(int washType) {
+        this.washType = washType;
+        notifyPropertyChanged(BR.washType);
     }
 }

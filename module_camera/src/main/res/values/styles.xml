@@ -8,4 +8,12 @@
         <item name="android:windowBackground">@color/black_252</item>
         <item name="colorPrimaryDark">@color/black_252</item>
     </style>
+    <!-- Base application theme. -->
+    <style name="WhiteCameraTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowEnableSplitTouch">false</item>
+        <item name="android:splitMotionEvents">false</item>
+        <item name="android:windowBackground">@color/black_252</item>
+        <item name="colorPrimaryDark">@color/white</item>
+    </style>
 </resources>

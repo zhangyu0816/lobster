@@ -67,7 +67,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
 
         win = getDialog().getWindow();
         // 一定要设置Background，如果不设置，window属性设置无效
-        win.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        win.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         DisplayMetrics dm = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
 

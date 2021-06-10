@@ -19,6 +19,8 @@ public interface PhotoStudioVMInterface {
 
     void tackPhoto(View view);
 
+    void toPhotoWall(View view);
+
     void findCameraFilms();
 
     void saveCameraFilmResource(String image);

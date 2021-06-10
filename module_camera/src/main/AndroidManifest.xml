@@ -11,6 +11,7 @@
         <activity android:name=".activity.VideosActivity" />
         <activity android:name=".activity.VideoPlayActivity" />
         <activity android:name=".activity.PhotoStudioActivity" />
+        <activity android:name=".activity.PhotoWallActivity" />
     </application>
 
 </manifest>

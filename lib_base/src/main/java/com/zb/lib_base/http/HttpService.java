@@ -633,10 +633,13 @@ public interface HttpService {
     Observable<BaseResultEntity<List<Film>>> findCameraFilms(@Query("isEnable") int isEnable);
 
     @GET("api/Camera_saveCameraFilm")
-    Observable<BaseResultEntity> saveCameraFilm(@QueryMap Map<String, Object> map);
+    Observable<BaseResultEntity<Film>> saveCameraFilm(@QueryMap Map<String, Object> map);
 
     @GET("api/Camera_saveCameraFilmResource")
     Observable<BaseResultEntity> saveCameraFilmResource(@Query("cameraFilmId") long cameraFilmId, @Query("image") String image);
+
+    @GET("api/Camera_saveCameraFilmResourceForImages")
+    Observable<BaseResultEntity> saveCameraFilmResourceForImages(@Query("cameraFilmId") long cameraFilmId, @Query("images") String images);
 
     @GET("api/Camera_washResource")
     Observable<BaseResultEntity> washResource(@Query("cameraFilmId") long cameraFilmId);

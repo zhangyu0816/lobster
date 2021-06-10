@@ -12,7 +12,9 @@ import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.Film;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.FragmentManager;
@@ -26,6 +28,8 @@ public class FilmDF extends BaseDialogFragment {
     private FilmCallBack mFilmCallBack;
     public BaseAdapter adapter;
     private String[][] filmTypeName = {{"#怀旧", "#室内", "#人像"}, {"#复古", "#室外", "#感情"}, {"#胶片", "#人像", "#风景"}, {"#灰调", "#情绪", "#室外"}};
+    private Map<Integer, List<Integer>> filmImageMap = new HashMap<>();
+    private List<Integer> dataList = new ArrayList<>();
 
     public FilmDF(RxAppCompatActivity activity) {
         super(activity, false, false);
@@ -73,6 +77,28 @@ public class FilmDF extends BaseDialogFragment {
 
     @Override
     public void initUI() {
+        List<Integer> list1 = new ArrayList<>();
+        list1.add(R.mipmap.monochrome1);
+        list1.add(R.mipmap.monochrome2);
+        list1.add(R.mipmap.monochrome3);
+        List<Integer> list2 = new ArrayList<>();
+        list2.add(R.mipmap.color_balance1);
+        list2.add(R.mipmap.color_balance2);
+        list2.add(R.mipmap.color_balance3);
+        List<Integer> list3 = new ArrayList<>();
+        list3.add(R.mipmap.contrast1);
+        list3.add(R.mipmap.contrast2);
+        list3.add(R.mipmap.contrast3);
+        List<Integer> list4 = new ArrayList<>();
+        list4.add(R.mipmap.saturation1);
+        list4.add(R.mipmap.saturation2);
+        list4.add(R.mipmap.saturation3);
+        filmImageMap.put(1, list1);
+        filmImageMap.put(2, list2);
+        filmImageMap.put(3, list3);
+        filmImageMap.put(4, list4);
+
+        adapter = new BaseAdapter(activity, R.layout.item_film_image, dataList, this);
         mBinding.setDialog(this);
         mBinding.setFilmType(filmType);
         mBinding.setIsSet(isSet);
@@ -80,6 +106,7 @@ public class FilmDF extends BaseDialogFragment {
     }
 
     private void setFilm() {
+        mFilm = null;
         for (Film film : mFilms) {
             if (film.getCamerafilmType() == filmType) {
                 mFilm = film;
@@ -91,7 +118,10 @@ public class FilmDF extends BaseDialogFragment {
             mFilm.setCamerafilmType(filmType);
             mFilm.setAuthority(3);
         }
-
+        dataList.clear();
+        adapter.notifyDataSetChanged();
+        dataList.addAll(filmImageMap.get(filmType));
+        adapter.notifyDataSetChanged();
         mBinding.setAuthority(mFilm.getAuthority());
         mBinding.setFilmName(mFilm.getTitle());
         mBinding.setFilmTypeName1(filmTypeName[filmType - 1][0]);
@@ -115,13 +145,13 @@ public class FilmDF extends BaseDialogFragment {
     }
 
     public void useFilm(View view) {
-        saveCameraFilmApi api = new saveCameraFilmApi(new HttpOnNextListener() {
+        saveCameraFilmApi api = new saveCameraFilmApi(new HttpOnNextListener<Film>() {
             @Override
-            public void onNext(Object o) {
-                mFilmCallBack.selectFilm(filmType);
+            public void onNext(Film o) {
+                mFilmCallBack.selectFilm(filmType, o);
                 dismiss();
             }
-        },activity)
+        }, activity)
                 .setAuthority(mFilm.getAuthority())
                 .setTitle(mBinding.getFilmName())
                 .setCamerafilmType(filmType)
@@ -130,6 +160,6 @@ public class FilmDF extends BaseDialogFragment {
     }
 
     public interface FilmCallBack {
-        void selectFilm(int filmType);
+        void selectFilm(int filmType, Film film);
     }
 }

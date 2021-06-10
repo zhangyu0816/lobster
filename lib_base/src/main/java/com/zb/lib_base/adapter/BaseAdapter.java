@@ -6,6 +6,7 @@ import com.zb.lib_base.model.HistoryMsg;
 import com.zb.lib_base.model.StanzaInfo;
 import com.zb.lib_base.vm.BaseChatViewModel;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.BaseDialogFragment;
 import com.zb.lib_base.windows.BasePopupWindow;
 
 import org.json.JSONException;
@@ -18,6 +19,7 @@ import androidx.databinding.ViewDataBinding;
 public class BaseAdapter<T> extends BindingItemAdapter<T> {
     private BasePopupWindow pw;
     private BaseViewModel viewModel;
+    private BaseDialogFragment df;
     private int selectIndex = -1;
 
     public BaseAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BaseViewModel viewModel) {
@@ -28,6 +30,10 @@ public class BaseAdapter<T> extends BindingItemAdapter<T> {
     public BaseAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BasePopupWindow pw) {
         super(activity, layoutId, list);
         this.pw = pw;
+    }
+    public BaseAdapter(RxAppCompatActivity activity, int layoutId, List<T> list, BaseDialogFragment df) {
+        super(activity, layoutId, list);
+        this.df = df;
     }
 
     public void setSelectIndex(int selectIndex) {
@@ -44,6 +50,9 @@ public class BaseAdapter<T> extends BindingItemAdapter<T> {
         }
         if (viewModel != null) {
             holder.binding.setVariable(BR.viewModel, viewModel);
+        }
+        if (df != null) {
+            holder.binding.setVariable(BR.df, df);
         }
         if (viewModel instanceof BaseChatViewModel && t instanceof HistoryMsg) {
             HistoryMsg item = (HistoryMsg) t;

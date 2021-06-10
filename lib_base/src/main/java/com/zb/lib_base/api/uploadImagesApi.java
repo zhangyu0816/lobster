@@ -35,7 +35,7 @@ public class uploadImagesApi extends BaseEntity<ResourceUrl> {
 
     public uploadImagesApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
-        setDialogTitle("正在上传图片....");
+        setDialogTitle("正在处理图片...");
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.zb.lib_base.windows;
 
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;

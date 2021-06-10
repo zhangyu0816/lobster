@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
+
+        <import type="com.zb.lib_base.app.MineApp" />
+
+        <variable
+            name="item"
+            type="String" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="isSelect"
+            type="boolean" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_camera.vm.PhotoWallViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="@{v->viewModel.selectImage(position,item)}">
+
+        <ImageView
+            android:id="@+id/iv_image"
+            defaultRes="@{ObjectUtils.getDefaultRes()}"
+            imageUrl="@{item}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.245f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.245f)}"
+            android:layout_width="100dp"
+            android:layout_height="100dp" />
+
+        <ImageView
+            onClickDelayed="@{v->viewModel.enlarge(position,item)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/iv_image"
+            android:padding="10dp"
+            android:src="@mipmap/icon_enlarge" />
+
+        <View
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.245f)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.245f)}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#4a33323b"
+            android:visibility="@{viewModel.selectImages.contains(item)?View.VISIBLE:View.GONE}" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@mipmap/icon_sel"
+            android:visibility="@{viewModel.selectImages.contains(item)?View.VISIBLE:View.GONE}" />
+
+
+    </RelativeLayout>
+</layout>

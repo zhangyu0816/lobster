@@ -6,9 +6,6 @@ import android.os.CountDownTimer;
 import android.text.Html;
 import android.view.View;
 
-import com.zb.module_mine.R;
-import com.zb.module_mine.databinding.AcBindingPhoneBinding;
-import com.zb.module_mine.iv.BindingPhoneVMInterface;
 import com.zb.lib_base.api.banderCaptchaApi;
 import com.zb.lib_base.api.bindingPhoneApi;
 import com.zb.lib_base.api.myInfoApi;
@@ -23,6 +20,9 @@ import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.ImageCaptchaPW;
+import com.zb.module_mine.R;
+import com.zb.module_mine.databinding.AcBindingPhoneBinding;
+import com.zb.module_mine.iv.BindingPhoneVMInterface;
 
 import androidx.databinding.ViewDataBinding;
 

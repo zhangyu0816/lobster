@@ -438,15 +438,15 @@ public class ObjectUtils {
     public static int getPhotoRes(int filmType) {
         switch (filmType) {
             case 1:
-                return R.mipmap.contrast_1;
+                return R.mipmap.monochrome1;
             case 2:
-                return R.mipmap.contrast_1;
+                return R.mipmap.color_balance1;
             case 3:
-                return R.mipmap.contrast_1;
+                return R.mipmap.contrast1;
             case 4:
-                return R.mipmap.contrast_1;
+                return R.mipmap.saturation1;
             default:
-                return R.mipmap.contrast_1;
+                return R.mipmap.monochrome1;
         }
     }
 }

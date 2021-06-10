@@ -66,8 +66,10 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
      * 隐藏
      */
     private void dismissProgressDialog() {
-        CustomProgressDialog.stopLoading();
-        onCancelProgress();
+        if (showProgressAndCancel) {
+            CustomProgressDialog.stopLoading();
+            onCancelProgress();
+        }
     }
 
     /**
@@ -76,7 +78,8 @@ public class ProgressSubscriber<T> extends Subscriber<T> {
      */
     @Override
     public void onStart() {
-        CustomProgressDialog.showLoading(mActivity.get(), dialogTitle, showProgressAndCancel);
+        if (showProgressAndCancel)
+            CustomProgressDialog.showLoading(mActivity.get(), dialogTitle, showProgressAndCancel);
     }
 
     /**

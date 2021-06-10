@@ -253,6 +253,10 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Camera_Photo_Studio).navigation();
     }
 
+    public static void getCameraPhotoWall(long cameraFilmId, int surplusCount) {
+        ARouter.getInstance().build(RouteUtils.Camera_Photo_Wall).withLong("cameraFilmId", cameraFilmId).withInt("surplusCount", surplusCount).navigation();
+    }
+
 
     /*********************** 漂流瓶 **************************/
 
