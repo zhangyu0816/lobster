@@ -2,6 +2,7 @@ package com.zb.module_camera.activity;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.zb.lib_base.model.Film;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_camera.BR;
 import com.zb.module_camera.R;
@@ -11,8 +12,8 @@ import com.zb.module_camera.vm.PhotoWallViewModel;
 public class PhotoWallActivity extends WhiteCameraBaseActivity {
     @Autowired(name = "surplusCount")
     int surplusCount;
-    @Autowired(name = "cameraFilmId")
-    long cameraFilmId;
+    @Autowired(name = "film")
+    Film film;
 
     @Override
     public int getRes() {
@@ -23,7 +24,7 @@ public class PhotoWallActivity extends WhiteCameraBaseActivity {
     public void initUI() {
         PhotoWallViewModel viewModel = new PhotoWallViewModel();
         viewModel.surplusCount = surplusCount;
-        viewModel.cameraFilmId = cameraFilmId;
+        viewModel.mFilm = film;
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
     }

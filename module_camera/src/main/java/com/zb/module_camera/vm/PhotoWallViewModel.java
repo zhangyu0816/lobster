@@ -6,16 +6,19 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.zb.lib_base.api.saveCameraFilmApi;
 import com.zb.lib_base.api.saveCameraFilmResourceForImagesApi;
 import com.zb.lib_base.api.washResourceApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.model.Film;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BigPhotoDF;
+import com.zb.lib_base.windows.FilmRinseDF;
 import com.zb.module_camera.R;
 import com.zb.module_camera.adapter.CameraAdapter;
 import com.zb.module_camera.databinding.AcPhotoWallBinding;
@@ -32,7 +35,7 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
 
     private AcPhotoWallBinding mBinding;
     public int surplusCount;
-    public long cameraFilmId;
+    public Film mFilm;
     private List<String> images = new ArrayList<>();
     public List<String> selectImages = new ArrayList<>();
     public CameraAdapter adapter;
@@ -148,8 +151,10 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
 
     @Override
     public void wash(View view) {
-        CustomProgressDialog.showLoading(activity, "图片处理中");
-        mPhotoManager.addFiles(selectImages, () -> mPhotoManager.reUploadByUnSuccess());
+        new FilmRinseDF(activity).setFilm(mFilm).setFilmRinseCallBack(() -> {
+            CustomProgressDialog.showLoading(activity, "图片处理中");
+            mPhotoManager.addFiles(selectImages, () -> mPhotoManager.reUploadByUnSuccess());
+        }).show(activity.getSupportFragmentManager());
     }
 
     @Override
@@ -158,9 +163,35 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
             @Override
             public void onNext(Object o) {
                 CustomProgressDialog.stopLoading();
+                String[] temps = images.split("#");
+                if (temps.length < 6) {
+                    saveCameraFilm(images);
+                } else {
+                    StringBuilder temp = new StringBuilder();
+                    for (int i = 0; i < 5; i++) {
+                        temp.append("#").append(temps[i]);
+                    }
+                    temp = new StringBuilder(temp.substring(1));
+                    saveCameraFilm(temp.toString());
+                }
+            }
+        }, activity).setCameraFilmId(mFilm.getId()).setImages(images);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void saveCameraFilm(String images) {
+        saveCameraFilmApi api = new saveCameraFilmApi(new HttpOnNextListener<Film>() {
+            @Override
+            public void onNext(Film o) {
                 washResource();
             }
-        }, activity).setCameraFilmId(cameraFilmId).setImages(images);
+        }, activity)
+                .setAuthority(mFilm.getAuthority())
+                .setTitle(mFilm.getTitle())
+                .setCamerafilmType(mFilm.getCamerafilmType())
+                .setCameraFilmId(mFilm.getId())
+                .setImages(images);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
@@ -173,7 +204,7 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
                 activity.sendBroadcast(new Intent("lobster_washSuccess"));
                 activity.finish();
             }
-        }, activity).setCameraFilmId(cameraFilmId);
+        }, activity).setCameraFilmId(mFilm.getId());
         HttpManager.getInstance().doHttpDeal(api);
     }
 

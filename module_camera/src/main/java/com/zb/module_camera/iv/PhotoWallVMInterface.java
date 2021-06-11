@@ -14,5 +14,7 @@ public interface PhotoWallVMInterface {
 
     void saveCameraFilmResourceForImages(String images);
 
+    void saveCameraFilm(String images);
+
     void washResource();
 }

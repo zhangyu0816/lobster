@@ -11,12 +11,16 @@ import android.view.View;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.findCameraFilmsApi;
-import com.zb.lib_base.api.saveCameraFilmResourceApi;
+import com.zb.lib_base.api.saveCameraFilmApi;
+import com.zb.lib_base.api.saveCameraFilmResourceForImagesApi;
 import com.zb.lib_base.api.washResourceApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.FilmResourceDb;
+import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.Film;
+import com.zb.lib_base.model.FilmResource;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
@@ -31,6 +35,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
@@ -46,6 +51,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
     private int camerafilmType = 0;//胶卷类型
     private GestureDetector gesturedetector = null;
     private Film mFilm;
+    private FilmResource mFilmResource;
     private PhotoManager mPhotoManager;
     private BaseReceiver washSuccessReceiver;
 
@@ -76,8 +82,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
         findCameraFilms();
 
         mPhotoManager = new PhotoManager(activity, () -> {
-            saveCameraFilmResource(mPhotoManager.jointWebUrl(","));
-            mCamera.startPreview();
+            saveCameraFilmResourceForImages(mPhotoManager.jointWebUrl("#"));
             mPhotoManager.deleteAllFile();
         });
         mPhotoManager.setNeedProgress(false);
@@ -85,6 +90,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
         washSuccessReceiver = new BaseReceiver(activity, "lobster_washSuccess") {
             @Override
             public void onReceive(Context context, Intent intent) {
+                FilmResourceDb.getInstance().deleteFilm(mFilm.getId());
                 findCameraFilms();
                 mFilm = null;
                 camerafilmType = 0;
@@ -223,8 +229,13 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
     }
 
     private void updateFilm() {
+        mFilmResource = FilmResourceDb.getInstance().getCameraFilm(mFilm.getId());
+        if (mFilmResource == null) {
+            mFilmResource = new FilmResource(mFilm.getId(), "");
+            FilmResourceDb.getInstance().saveData(mFilmResource);
+        }
         mBinding.setFilmIndex(camerafilmType);
-        mBinding.setHasFilm(mFilm.getImageSize() < MineApp.filmMaxSize);
+        mBinding.setHasFilm(FilmResourceDb.getInstance().getImageSize(mFilm.getId()) < MineApp.filmMaxSize);
         boolean has = false;
         for (int i = 0; i < mFilmList.size(); i++) {
             if (mFilmList.get(i).getId() == mFilm.getId()) {
@@ -243,11 +254,11 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
             SCToastUtil.showToast(activity, "请选择胶卷", true);
             return;
         }
-        if (mFilm.getImageSize() == 0) {
+        if (FilmResourceDb.getInstance().getImageSize(mFilm.getId()) == 0) {
             SCToastUtil.showToast(activity, "该胶卷尚未使用", true);
             return;
         }
-        new FilmRinseDF(activity).setFilm(mFilm).setFilmRinseCallBack(this::washResource).show(activity.getSupportFragmentManager());
+        new FilmRinseDF(activity).setFilm(mFilm).setFilmRinseCallBack(this::hanlderImage).show(activity.getSupportFragmentManager());
     }
 
     @Override
@@ -257,7 +268,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
             return;
         }
         if (!mBinding.getHasFilm()) {
-            new FilmRinseDF(activity).setFilm(mFilm).setFilmRinseCallBack(this::washResource).show(activity.getSupportFragmentManager());
+            new FilmRinseDF(activity).setFilm(mFilm).setFilmRinseCallBack(this::hanlderImage).show(activity.getSupportFragmentManager());
             return;
         }
         //调用相机拍照
@@ -277,7 +288,9 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
                     if (fos != null) {
                         try {
                             fos.close();
-                            mPhotoManager.addFileUpload(-1, imageFile);
+                            FilmResourceDb.getInstance().updateImages(mFilm.getId(), imageFile.getAbsolutePath());
+                            mBinding.setHasFilm(FilmResourceDb.getInstance().getImageSize(mFilm.getId()) < MineApp.filmMaxSize);
+                            mCamera.startPreview();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -295,7 +308,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
             SCToastUtil.showToast(activity, "请选择胶卷", true);
             return;
         }
-        ActivityUtils.getCameraPhotoWall(mFilm.getId(), MineApp.filmMaxSize - mFilm.getImageSize());
+        ActivityUtils.getCameraPhotoWall(mFilm, MineApp.filmMaxSize - FilmResourceDb.getInstance().getImageSize(mFilm.getId()));
     }
 
     @Override
@@ -310,16 +323,47 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
     }
 
     @Override
-    public void saveCameraFilmResource(String image) {
-        saveCameraFilmResourceApi api = new saveCameraFilmResourceApi(new HttpOnNextListener() {
+    public void saveCameraFilmResourceForImages(String images) {
+        saveCameraFilmResourceForImagesApi api = new saveCameraFilmResourceForImagesApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                int size = mFilm.getImageSize() + 1;
-                mFilm.setImageSize(size);
-                mBinding.setHasFilm(size < MineApp.filmMaxSize);
+                CustomProgressDialog.stopLoading();
+                String[] temps = images.split("#");
+                if (temps.length < 6) {
+                    saveCameraFilm(images);
+                } else {
+                    StringBuilder temp = new StringBuilder();
+                    for (int i = 0; i < 5; i++) {
+                        temp.append("#").append(temps[i]);
+                    }
+                    temp = new StringBuilder(temp.substring(1));
+                    saveCameraFilm(temp.toString());
+                }
             }
-        }, activity).setCameraFilmId(mFilm.getId()).setImage(image);
+        }, activity).setCameraFilmId(mFilm.getId()).setImages(images);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void saveCameraFilm(String images) {
+        saveCameraFilmApi api = new saveCameraFilmApi(new HttpOnNextListener<Film>() {
+            @Override
+            public void onNext(Film o) {
+                washResource();
+            }
+        }, activity)
+                .setAuthority(mFilm.getAuthority())
+                .setTitle(mFilm.getTitle())
+                .setCamerafilmType(mFilm.getCamerafilmType())
+                .setCameraFilmId(mFilm.getId())
+                .setImages(images);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void hanlderImage() {
+        mFilmResource = FilmResourceDb.getInstance().getCameraFilm(mFilm.getId());
+        CustomProgressDialog.showLoading(activity, "图片处理中");
+        mPhotoManager.addFiles(Arrays.asList(mFilmResource.getImages().split("#")), () -> mPhotoManager.reUploadByUnSuccess());
     }
 
     @Override
@@ -328,6 +372,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "冲洗成功", true);
+                FilmResourceDb.getInstance().deleteFilm(mFilm.getId());
                 findCameraFilms();
                 mFilm = null;
                 camerafilmType = 0;

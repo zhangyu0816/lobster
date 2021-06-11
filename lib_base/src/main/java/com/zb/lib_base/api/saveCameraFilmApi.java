@@ -16,6 +16,7 @@ public class saveCameraFilmApi extends BaseEntity<Film> {
     int camerafilmType;  //胶卷类型  你们自定义传上来
     int authority;  //权限设置 1 公开 2 仅好友可见 3.私密
     long cameraFilmId; //胶卷id
+    String images = "";
 
     public saveCameraFilmApi setTitle(String title) {
         this.title = title;
@@ -37,6 +38,11 @@ public class saveCameraFilmApi extends BaseEntity<Film> {
         return this;
     }
 
+    public saveCameraFilmApi setImages(String images) {
+        this.images = images;
+        return this;
+    }
+
     public saveCameraFilmApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
         setShowProgress(false);
@@ -50,6 +56,8 @@ public class saveCameraFilmApi extends BaseEntity<Film> {
         map.put("title", title);
         map.put("camerafilmType", camerafilmType);
         map.put("authority", authority);
+        if (!images.isEmpty())
+            map.put("images", images);
         return methods.saveCameraFilm(map);
     }
 }

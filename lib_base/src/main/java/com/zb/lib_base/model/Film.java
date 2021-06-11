@@ -1,11 +1,14 @@
 package com.zb.lib_base.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.zb.lib_base.BR;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
-public class Film extends BaseObservable {
+public class Film extends BaseObservable implements Parcelable {
     long id;//胶卷id
     long userId;
     String title = "";
@@ -21,6 +24,39 @@ public class Film extends BaseObservable {
     int authority;//权限设置 1 公开 2 仅好友可见 3.私密
     int isEnable; //是否可用   1.可用  0.不可用
     int washType;// 0:未冲洗  1：冲洗中  2：冲洗完
+
+    public Film() {
+    }
+
+    protected Film(Parcel in) {
+        id = in.readLong();
+        userId = in.readLong();
+        title = in.readString();
+        text = in.readString();
+        images = in.readString();
+        imageSize = in.readInt();
+        camerafilmType = in.readInt();
+        washTime = in.readString();
+        washSetHourTime = in.readInt();
+        goodNum = in.readInt();
+        reviews = in.readInt();
+        shareNum = in.readInt();
+        authority = in.readInt();
+        isEnable = in.readInt();
+        washType = in.readInt();
+    }
+
+    public static final Creator<Film> CREATOR = new Creator<Film>() {
+        @Override
+        public Film createFromParcel(Parcel in) {
+            return new Film(in);
+        }
+
+        @Override
+        public Film[] newArray(int size) {
+            return new Film[size];
+        }
+    };
 
     @Bindable
     public long getId() {
@@ -170,5 +206,29 @@ public class Film extends BaseObservable {
     public void setWashType(int washType) {
         this.washType = washType;
         notifyPropertyChanged(BR.washType);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(id);
+        parcel.writeLong(userId);
+        parcel.writeString(title);
+        parcel.writeString(text);
+        parcel.writeString(images);
+        parcel.writeInt(imageSize);
+        parcel.writeInt(camerafilmType);
+        parcel.writeString(washTime);
+        parcel.writeInt(washSetHourTime);
+        parcel.writeInt(goodNum);
+        parcel.writeInt(reviews);
+        parcel.writeInt(shareNum);
+        parcel.writeInt(authority);
+        parcel.writeInt(isEnable);
+        parcel.writeInt(washType);
     }
 }

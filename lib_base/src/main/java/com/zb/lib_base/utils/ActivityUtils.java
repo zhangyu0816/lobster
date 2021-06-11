@@ -5,6 +5,7 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.model.Authentication;
 import com.zb.lib_base.model.FeedbackInfo;
+import com.zb.lib_base.model.Film;
 import com.zb.lib_base.model.MemberInfo;
 
 public class ActivityUtils {
@@ -253,8 +254,8 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Camera_Photo_Studio).navigation();
     }
 
-    public static void getCameraPhotoWall(long cameraFilmId, int surplusCount) {
-        ARouter.getInstance().build(RouteUtils.Camera_Photo_Wall).withLong("cameraFilmId", cameraFilmId).withInt("surplusCount", surplusCount).navigation();
+    public static void getCameraPhotoWall(Film film, int surplusCount) {
+        ARouter.getInstance().build(RouteUtils.Camera_Photo_Wall).withParcelable("film", film).withInt("surplusCount", surplusCount).navigation();
     }
 
 

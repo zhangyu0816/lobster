@@ -6,6 +6,7 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.DfFilmRinseBinding;
+import com.zb.lib_base.db.FilmResourceDb;
 import com.zb.lib_base.model.Film;
 
 import androidx.databinding.ViewDataBinding;
@@ -55,7 +56,7 @@ public class FilmRinseDF extends BaseDialogFragment {
     public void initUI() {
         mBinding.setDialog(this);
         mBinding.setFilm(mFilm);
-        mBinding.setHasFilm(mFilm.getImageSize() < MineApp.filmMaxSize);
+        mBinding.setHasFilm(FilmResourceDb.getInstance().getImageSize(mFilm.getId()) < MineApp.filmMaxSize);
     }
 
     public void cancel(View view) {
