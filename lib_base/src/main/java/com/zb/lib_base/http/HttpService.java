@@ -15,6 +15,7 @@ import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.FaceStatus;
 import com.zb.lib_base.model.FeedbackInfo;
 import com.zb.lib_base.model.Film;
+import com.zb.lib_base.model.FilmInfo;
 import com.zb.lib_base.model.FlashInfo;
 import com.zb.lib_base.model.FlashUser;
 import com.zb.lib_base.model.GiftInfo;
@@ -630,7 +631,10 @@ public interface HttpService {
     Observable<BaseResultEntity> checkFace(@Query("faceImage") String faceImage);
 
     @GET("api/Camera_findCameraFilms")
-    Observable<BaseResultEntity<List<Film>>> findCameraFilms(@Query("isEnable") int isEnable);
+    Observable<BaseResultEntity<List<Film>>> findCameraFilms(@Query("isEnable") int isEnable,@Query("pageNo") int pageNo);
+
+    @GET("api/Camera_findCameraFilmsForAll")
+    Observable<BaseResultEntity<List<Film>>> findCameraFilmsForAll(@Query("authority") int authority,@Query("washType") int washType,@Query("pageNo") int pageNo);
 
     @GET("api/Camera_saveCameraFilm")
     Observable<BaseResultEntity<Film>> saveCameraFilm(@QueryMap Map<String, Object> map);
@@ -643,4 +647,7 @@ public interface HttpService {
 
     @GET("api/Camera_washResource")
     Observable<BaseResultEntity> washResource(@Query("cameraFilmId") long cameraFilmId);
+
+    @GET("api/Camera_findCameraFilmsResourceList")
+    Observable<BaseResultEntity<List<FilmInfo>>> findCameraFilmsResourceList(@Query("cameraFilmId") long cameraFilmId);
 }

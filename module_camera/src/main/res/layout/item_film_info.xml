@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <variable
+            name="item"
+            type="com.zb.lib_base.model.FilmInfo" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_camera.vm.FilmDetailViewModel" />
+
+    </data>
+
+    <RelativeLayout
+        viewHeightSize="@{-2}"
+        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </RelativeLayout>
+</layout>

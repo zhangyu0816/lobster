@@ -10,27 +10,33 @@ import java.util.List;
 
 import rx.Observable;
 
-public class findCameraFilmsApi extends BaseEntity<List<Film>> {
-    int isEnable; //是否可用   1.可用  0.不可用
+public class findCameraFilmsForAllApi extends BaseEntity<List<Film>> {
+    int authority;
+    int washType;
     int pageNo;
 
-    public findCameraFilmsApi setIsEnable(int isEnable) {
-        this.isEnable = isEnable;
+    public findCameraFilmsForAllApi setAuthority(int authority) {
+        this.authority = authority;
         return this;
     }
 
-    public findCameraFilmsApi setPageNo(int pageNo) {
+    public findCameraFilmsForAllApi setWashType(int washType) {
+        this.washType = washType;
+        return this;
+    }
+
+    public findCameraFilmsForAllApi setPageNo(int pageNo) {
         this.pageNo = pageNo;
         return this;
     }
 
-    public findCameraFilmsApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
+    public findCameraFilmsForAllApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
         setShowProgress(false);
     }
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.findCameraFilms(isEnable, pageNo);
+        return methods.findCameraFilmsForAll(authority, washType, pageNo);
     }
 }

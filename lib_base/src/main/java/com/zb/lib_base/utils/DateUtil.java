@@ -98,6 +98,23 @@ public class DateUtil {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
         return sdf.format(date);
     }
+    /**
+     * 将字符型转化成字符型
+     *
+     * @param userTime
+     * @return
+     */
+    public static String strToStr2(String userTime) {
+        Date date;
+        try {
+            SimpleDateFormat fmt = new SimpleDateFormat(yyyy_MM_dd_HH_mm_ss, Locale.CHINA);
+            date = fmt.parse(userTime);
+        } catch (Exception e) {
+            return "";
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(CN_MM_dd);
+        return sdf.format(date);
+    }
 
     /**
      * 将字符串型(英文格式)转成日期型 如: "Tue Dec 26 14:45:20 CST 2000"

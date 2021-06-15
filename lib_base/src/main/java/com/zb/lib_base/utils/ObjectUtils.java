@@ -449,4 +449,20 @@ public class ObjectUtils {
                 return R.mipmap.monochrome1;
         }
     }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public static Drawable getFilmRes(int filmType) {
+        switch (filmType) {
+            case 1:
+                return MineApp.getApp().getResources().getDrawable(R.drawable.icon_film_1_small);
+            case 2:
+                return MineApp.getApp().getResources().getDrawable(R.drawable.icon_film_2_small);
+            case 3:
+                return MineApp.getApp().getResources().getDrawable(R.drawable.icon_film_3_small);
+            case 4:
+                return MineApp.getApp().getResources().getDrawable(R.drawable.icon_film_4_small);
+            default:
+                return MineApp.getApp().getResources().getDrawable(R.drawable.icon_film_1_small);
+        }
+    }
 }

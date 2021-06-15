@@ -312,13 +312,18 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
     }
 
     @Override
+    public void toPhotoGroup(View view) {
+        ActivityUtils.getCameraPhotoGroup();
+    }
+
+    @Override
     public void findCameraFilms() {
         findCameraFilmsApi api = new findCameraFilmsApi(new HttpOnNextListener<List<Film>>() {
             @Override
             public void onNext(List<Film> o) {
                 mFilmList = o;
             }
-        }, activity).setIsEnable(0);
+        }, activity).setIsEnable(0).setPageNo(1);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

@@ -10,10 +10,12 @@ import com.zb.lib_base.api.saveCameraFilmApi;
 import com.zb.lib_base.api.saveCameraFilmResourceForImagesApi;
 import com.zb.lib_base.api.washResourceApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.db.FilmResourceDb;
 import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.Film;
+import com.zb.lib_base.model.FilmResource;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -25,6 +27,7 @@ import com.zb.module_camera.databinding.AcPhotoWallBinding;
 import com.zb.module_camera.iv.PhotoWallVMInterface;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -153,7 +156,12 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
     public void wash(View view) {
         new FilmRinseDF(activity).setFilm(mFilm).setFilmRinseCallBack(() -> {
             CustomProgressDialog.showLoading(activity, "图片处理中");
-            mPhotoManager.addFiles(selectImages, () -> mPhotoManager.reUploadByUnSuccess());
+
+            FilmResource filmResource = FilmResourceDb.getInstance().getCameraFilm(mFilm.getId());
+            List<String> tempImageList = new ArrayList<>();
+            tempImageList.addAll(Arrays.asList(filmResource.getImages().split("#")));
+            tempImageList.addAll(selectImages);
+            mPhotoManager.addFiles(tempImageList, () -> mPhotoManager.reUploadByUnSuccess());
         }).show(activity.getSupportFragmentManager());
     }
 

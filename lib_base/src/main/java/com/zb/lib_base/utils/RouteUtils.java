@@ -111,6 +111,8 @@ public class RouteUtils {
     // 视频播放
     public static final String Camera_Photo_Studio = "/camera/PhotoStudioActivity";
     public static final String Camera_Photo_Wall = "/camera/PhotoWallActivity";
+    public static final String Camera_Photo_Group = "/camera/PhotoGroupActivity";
+    public static final String Camera_Film_Detail = "/camera/FilmDetailActivity";
 
     /*********************** 漂流瓶 **************************/
     // 漂流操作页

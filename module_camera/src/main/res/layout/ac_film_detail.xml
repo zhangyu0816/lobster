@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="title"
+            type="String" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_camera.vm.FilmDetailViewModel" />
+
+        <variable
+            name="film"
+            type="com.zb.lib_base.model.Film" />
+
+        <variable
+            name="otherUserInfo"
+            type="com.zb.lib_base.model.MemberInfo" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/top_layout"
+            filmType="@{film.camerafilmType}"
+            layout="@layout/camera_back_black_layout"
+            title="@{title}"
+            viewModel="@{viewModel}" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="10dp"
+            android:orientation="horizontal"
+            android:visibility="@{film.images.empty?View.GONE:View.VISIBLE}">
+
+            <RelativeLayout
+                android:id="@+id/image5_relative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-20dp"
+                android:layout_toEndOf="@+id/image4_relative"
+                android:visibility="@{film.image5.empty?View.GONE:View.VISIBLE}">
+
+                <ImageView
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(240)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(240)}"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/btn_bg_white_radius10" />
+
+                <ImageView
+                    imageUrl="@{film.image5}"
+                    isRound="@{true}"
+                    roundSize="@{10}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(234)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(234)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/image4_relative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-20dp"
+                android:layout_toEndOf="@+id/image3_relative"
+                android:visibility="@{film.image4.empty?View.GONE:View.VISIBLE}">
+
+                <ImageView
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(240)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(240)}"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/btn_bg_white_radius10" />
+
+                <ImageView
+                    imageUrl="@{film.image4}"
+                    isRound="@{true}"
+                    roundSize="@{10}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(234)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(234)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/image3_relative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-20dp"
+                android:layout_toEndOf="@+id/image2_relative"
+                android:visibility="@{film.image3.empty?View.GONE:View.VISIBLE}">
+
+                <ImageView
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(240)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(240)}"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/btn_bg_white_radius10" />
+
+                <ImageView
+                    imageUrl="@{film.image3}"
+                    isRound="@{true}"
+                    roundSize="@{10}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(234)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(234)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/image2_relative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-20dp"
+                android:layout_toEndOf="@+id/image1_relative"
+                android:visibility="@{film.image2.empty?View.GONE:View.VISIBLE}">
+
+                <ImageView
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(240)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(240)}"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/btn_bg_white_radius10" />
+
+                <ImageView
+                    imageUrl="@{film.image2}"
+                    isRound="@{true}"
+                    roundSize="@{10}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(234)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(234)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/image1_relative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(240)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(240)}"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@drawable/btn_bg_white_radius10" />
+
+                <ImageView
+                    imageUrl="@{film.image1}"
+                    isRound="@{true}"
+                    roundSize="@{10}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(234)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(234)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    imageUrl="@{otherUserInfo.image}"
+                    isCircle="@{true}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(200)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(200)}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@{otherUserInfo.nick}"
+                    android:textColor="@color/black_827"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="5月5日" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_good"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="12dp"
+                android:layout_toStartOf="@+id/tv_reviews"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:text='@{String.format("%d",film.goodNum)}'
+                android:textColor="@color/black_9"
+                android:textSize="14sp"
+                app:drawableStartCompat="@mipmap/icon_like_gray"
+                tools:text="99" />
+
+            <TextView
+                android:id="@+id/tv_reviews"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:text='@{String.format("%d",film.reviews)}'
+                android:textColor="@color/black_9"
+                android:textSize="14sp"
+                app:drawableStartCompat="@mipmap/icon_comment_gray"
+                tools:text="99" />
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            adapter="@{viewModel.adapter}"
+            recyclerType="@{4}"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp" />
+    </LinearLayout>
+</layout>

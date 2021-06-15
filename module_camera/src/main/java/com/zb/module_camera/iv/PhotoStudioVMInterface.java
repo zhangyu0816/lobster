@@ -21,6 +21,8 @@ public interface PhotoStudioVMInterface {
 
     void toPhotoWall(View view);
 
+    void toPhotoGroup(View view);
+
     void findCameraFilms();
 
     void saveCameraFilmResourceForImages(String images);

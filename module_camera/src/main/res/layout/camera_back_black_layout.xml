@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <import type="android.view.View" />
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
 
         <variable
             name="viewModel"
@@ -12,6 +15,10 @@
         <variable
             name="title"
             type="String" />
+
+        <variable
+            name="filmType"
+            type="Integer" />
 
     </data>
 
@@ -42,6 +49,16 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
+            <ImageView
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(83)}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(90)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="15dp"
+                android:visibility="@{filmType==0?View.GONE:View.VISIBLE}"
+                tools:background="@{ObjectUtils.getFilmRes(filmType)}" />
         </RelativeLayout>
     </RelativeLayout>
 </layout>

@@ -102,7 +102,7 @@ public class MineApp extends MultiDexApplication {
     public static boolean isLogin = false;
     public static String imUserId = "";
 
-    public static int filmMaxSize = 2;
+    public static int filmMaxSize = 24;
 
     static {
         //设置全局的Header构建器

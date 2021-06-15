@@ -12,6 +12,8 @@
         <activity android:name=".activity.VideoPlayActivity" />
         <activity android:name=".activity.PhotoStudioActivity" />
         <activity android:name=".activity.PhotoWallActivity" />
+        <activity android:name=".activity.PhotoGroupActivity" />
+        <activity android:name=".activity.FilmDetailActivity" />
     </application>
 
 </manifest>

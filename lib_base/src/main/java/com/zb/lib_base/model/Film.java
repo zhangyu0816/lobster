@@ -25,8 +25,15 @@ public class Film extends BaseObservable implements Parcelable {
     int isEnable; //是否可用   1.可用  0.不可用
     int washType;// 0:未冲洗  1：冲洗中  2：冲洗完
 
+    String image1 = "";
+    String image2 = "";
+    String image3 = "";
+    String image4 = "";
+    String image5 = "";
+
     public Film() {
     }
+
 
     protected Film(Parcel in) {
         id = in.readLong();
@@ -44,6 +51,11 @@ public class Film extends BaseObservable implements Parcelable {
         authority = in.readInt();
         isEnable = in.readInt();
         washType = in.readInt();
+        image1 = in.readString();
+        image2 = in.readString();
+        image3 = in.readString();
+        image4 = in.readString();
+        image5 = in.readString();
     }
 
     public static final Creator<Film> CREATOR = new Creator<Film>() {
@@ -208,6 +220,56 @@ public class Film extends BaseObservable implements Parcelable {
         notifyPropertyChanged(BR.washType);
     }
 
+    @Bindable
+    public String getImage1() {
+        return image1;
+    }
+
+    public void setImage1(String image1) {
+        this.image1 = image1;
+        notifyPropertyChanged(BR.image1);
+    }
+
+    @Bindable
+    public String getImage2() {
+        return image2;
+    }
+
+    public void setImage2(String image2) {
+        this.image2 = image2;
+        notifyPropertyChanged(BR.image2);
+    }
+
+    @Bindable
+    public String getImage3() {
+        return image3;
+    }
+
+    public void setImage3(String image3) {
+        this.image3 = image3;
+        notifyPropertyChanged(BR.image3);
+    }
+
+    @Bindable
+    public String getImage4() {
+        return image4;
+    }
+
+    public void setImage4(String image4) {
+        this.image4 = image4;
+        notifyPropertyChanged(BR.image4);
+    }
+
+    @Bindable
+    public String getImage5() {
+        return image5;
+    }
+
+    public void setImage5(String image5) {
+        this.image5 = image5;
+        notifyPropertyChanged(BR.image5);
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -230,5 +292,10 @@ public class Film extends BaseObservable implements Parcelable {
         parcel.writeInt(authority);
         parcel.writeInt(isEnable);
         parcel.writeInt(washType);
+        parcel.writeString(image1);
+        parcel.writeString(image2);
+        parcel.writeString(image3);
+        parcel.writeString(image4);
+        parcel.writeString(image5);
     }
 }
