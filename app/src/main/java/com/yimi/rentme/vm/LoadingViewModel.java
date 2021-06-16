@@ -42,9 +42,9 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
             };
             mCountDownTimer.start();
         } else {
-//            ActivityUtils.getLoginVideoActivity();
-//            activity.finish();
-            ActivityUtils.getCameraPhotoStudio();
+            ActivityUtils.getLoginVideoActivity();
+            activity.finish();
+//            ActivityUtils.getCameraPhotoStudio();
         }
     }
 

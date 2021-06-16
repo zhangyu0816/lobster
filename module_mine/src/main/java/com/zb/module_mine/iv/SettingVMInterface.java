@@ -38,6 +38,8 @@ public interface SettingVMInterface {
 
     void loginOut();
 
+    void deleteUser(View view);
+
     void humanFaceStatus();
 
     void walletAndPop();

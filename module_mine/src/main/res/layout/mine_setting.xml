@@ -55,11 +55,29 @@
         android:background="#EFEEF1"
         android:orientation="vertical">
 
-        <include
-            layout="@layout/back_black_layout"
-            showRight="@{false}"
-            title="@{title}"
-            viewModel="@{viewModel}" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/top_layout"
+                layout="@layout/back_black_layout"
+                showRight="@{false}"
+                title="@{title}"
+                viewModel="@{viewModel}" />
+
+            <TextView
+                onClickDelayed="@{viewModel::deleteUser}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="注销"
+                android:padding="15dp"
+                android:textSize="16sp"
+                android:textColor="@color/black_252"
+                android:layout_alignParentEnd="true"
+                android:layout_alignBottom="@+id/top_layout"/>
+        </RelativeLayout>
+
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"

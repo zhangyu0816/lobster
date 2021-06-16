@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.view.View;
 
 import com.igexin.sdk.PushManager;
-import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
@@ -50,7 +49,6 @@ public class LoginVideoViewModel extends BaseViewModel {
                 UMConfigure.DEVICE_TYPE_PHONE,
                 ""
         );
-        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
 
         PlatformConfig.setWeixin("wxb83427622a6740f6", "97f837c0ae8b11af734041828ba4a737");
         PlatformConfig.setQQZone("101928546", "a8d76c68d7590b71f5254aa87c4b24c8");

@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.api.deleteUserApi;
 import com.zb.lib_base.api.humanFaceStatusApi;
 import com.zb.lib_base.api.loginOutApi;
 import com.zb.lib_base.api.realNameVerifyApi;
@@ -276,13 +277,37 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
                 PreferenceUtil.saveLongValue(activity, "userId", 0L);
                 PreferenceUtil.saveStringValue(activity, "loginPass", "");
                 BaseActivity.update();
-                ActivityUtils.getLoginVideoActivity();
                 MineApp.sMIMCUser.logout();
                 MineApp.sMIMCUser.destroy();
+                ActivityUtils.getLoginVideoActivity();
                 MineApp.getApp().exit();
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void deleteUser(View view) {
+        new TextPW(activity, mBinding.getRoot(), "注销账号", "注销后，将清除账号一切信息，不再出现在应用内！", "注销", true, new TextPW.CallBack() {
+            @Override
+            public void sure() {
+                deleteUserApi api = new deleteUserApi(new HttpOnNextListener<String>() {
+                    @Override
+                    public void onNext(String o) {
+                        PreferenceUtil.saveStringValue(activity, "sessionId", "");
+                        PreferenceUtil.saveLongValue(activity, "userId", 0L);
+                        PreferenceUtil.saveStringValue(activity, "loginPass", "");
+                        BaseActivity.update();
+                        MineApp.sMIMCUser.logout();
+                        MineApp.sMIMCUser.destroy();
+                        ActivityUtils.getLoginVideoActivity();
+                        MineApp.getApp().exit();
+                        activity.finish();
+                    }
+                }, activity);
+                HttpManager.getInstance().doHttpDeal(api);
+            }
+        });
     }
 
     @Override

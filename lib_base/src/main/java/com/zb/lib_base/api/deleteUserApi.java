@@ -4,19 +4,18 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.model.BaseEntity;
-import com.zb.lib_base.model.MineInfo;
 
 import rx.Observable;
 
-public class myInfoApi extends BaseEntity<MineInfo> {
+public class deleteUserApi extends BaseEntity<String> {
 
-    public myInfoApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
+    public deleteUserApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
-        setDialogTitle("获取用户信息...");
+        setDialogTitle("注销账号");
     }
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.myInfo();
+        return methods.deleteUser();
     }
 }

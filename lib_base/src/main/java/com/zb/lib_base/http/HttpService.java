@@ -135,6 +135,10 @@ public interface HttpService {
     @GET("api/Login_loginOut")
     Observable<BaseResultEntity> loginOut();
 
+    // 退出登录
+    @GET("api/Login_deleteUser")
+    Observable<BaseResultEntity<String>> deleteUser();
+
     // 验证 手机号是否注册
     @GET("api/Login_checkUserName")
     Observable<BaseResultEntity<CheckUser>> checkUserName(@Query("userName") String userName);

@@ -14,7 +14,6 @@ import android.view.WindowManager;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import com.umeng.analytics.MobclickAgent;
 import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.PwsPerformBinding;
@@ -78,7 +77,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MobclickAgent.onResume(activity);
         if (MineApp.sMIMCUser != null && isAppOnForeground() && !MineApp.isLogin) {
             MineApp.sMIMCUser = UserManager.getInstance().newMIMCUser(MineApp.imUserId);
             MineApp.sMIMCUser.login();
@@ -94,12 +92,6 @@ public abstract class BaseActivity extends RxAppCompatActivity {
                 MineApp.sMIMCUser.destroy();
             }
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(activity);
     }
 
     private boolean isAppOnForeground() {
