@@ -250,10 +250,6 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
                     }
                 }
             }
-
-            @Override
-            public void onError(Throwable e) {
-            }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
