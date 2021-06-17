@@ -20,5 +20,17 @@
         android:layout_toEndOf="@+id/tab_item_textview"
         android:background="@drawable/circle_red"
         android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_red_num"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_toEndOf="@+id/tab_item_textview"
+        android:background="@drawable/circle_red"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:visibility="gone"/>
 </RelativeLayout>
 

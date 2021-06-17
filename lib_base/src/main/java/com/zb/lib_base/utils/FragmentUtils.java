@@ -49,4 +49,12 @@ public class FragmentUtils {
     public static Fragment getMineFragment() {
         return (Fragment) ARouter.getInstance().build(RouteUtils.Mine_Fragment).navigation();
     }
+
+    public static Fragment getFilmFragment() {
+        return (Fragment) ARouter.getInstance().build(RouteUtils.Camera_Film_Fragment).navigation();
+    }
+
+    public static Fragment getFilmNewsFragment() {
+        return (Fragment) ARouter.getInstance().build(RouteUtils.Camera_Film_News_Fragment).navigation();
+    }
 }

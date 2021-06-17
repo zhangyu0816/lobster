@@ -318,6 +318,11 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
     }
 
     @Override
+    public void toMyFilm(View view) {
+        ActivityUtils.getCameraPhotoMyFilm();
+    }
+
+    @Override
     public void findCameraFilms() {
         findCameraFilmsApi api = new findCameraFilmsApi(new HttpOnNextListener<List<Film>>() {
             @Override

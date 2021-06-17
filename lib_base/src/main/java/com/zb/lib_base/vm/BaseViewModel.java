@@ -93,9 +93,12 @@ public class BaseViewModel implements BaseVMInterface {
         TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             if (tabNames[position].contains("-")) {
                 String[] temp = tabNames[position].split("-");
-                tab.setCustomView(getTabView(temp[0], Boolean.parseBoolean(temp[1])));
+                if (temp.length == 3)
+                    tab.setCustomView(getTabView(temp[0], Boolean.parseBoolean(temp[1]), temp[2]));
+                else
+                    tab.setCustomView(getTabView(temp[0], Boolean.parseBoolean(temp[1]), ""));
             } else {
-                tab.setCustomView(getTabView(tabNames[position], false));
+                tab.setCustomView(getTabView(tabNames[position], false, ""));
             }
         });
         tabLayoutMediator.attach();
@@ -148,13 +151,19 @@ public class BaseViewModel implements BaseVMInterface {
     /**
      * 自定义Tab的View * @param currentPosition * @return
      */
-    private View getTabView(String name, boolean showRed) {
+    private View getTabView(String name, boolean showRed, String num) {
         @SuppressLint("InflateParams")
         View view = LayoutInflater.from(activity).inflate(R.layout.layout_tab, null);
         TextView textView = view.findViewById(R.id.tab_item_textview);
         TextView tvRed = view.findViewById(R.id.tv_red);
+        TextView tvRedNum = view.findViewById(R.id.tv_red_num);
         textView.setText(name);
-        tvRed.setVisibility(showRed ? View.VISIBLE : View.GONE);
+        if (num.isEmpty())
+            tvRed.setVisibility(showRed ? View.VISIBLE : View.GONE);
+        else {
+            tvRedNum.setText(num);
+            tvRedNum.setVisibility(showRed ? View.VISIBLE : View.GONE);
+        }
         return view;
     }
 

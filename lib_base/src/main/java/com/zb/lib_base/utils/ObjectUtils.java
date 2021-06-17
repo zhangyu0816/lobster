@@ -73,6 +73,10 @@ public class ObjectUtils {
         return (int) (getViewSizeByWidth(scale) * 510f / 345f);
     }
 
+    public static int getFilmBgHeight() {
+        return (int) (MineApp.W * 666f / 1125f);
+    }
+
     public static int getImageHeight(float scale, int width, int height) {
         return (int) (getViewSizeByWidth(scale) * (float) height / (float) width);
     }

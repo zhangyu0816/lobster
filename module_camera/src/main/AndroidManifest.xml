@@ -14,6 +14,7 @@
         <activity android:name=".activity.PhotoWallActivity" />
         <activity android:name=".activity.PhotoGroupActivity" />
         <activity android:name=".activity.FilmDetailActivity" />
+        <activity android:name=".activity.PhotoMyFilmActivity" />
     </application>
 
 </manifest>

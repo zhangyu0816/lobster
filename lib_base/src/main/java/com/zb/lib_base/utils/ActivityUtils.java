@@ -266,6 +266,10 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Camera_Film_Detail).withParcelable("film", film).navigation();
     }
 
+    public static void getCameraPhotoMyFilm() {
+        ARouter.getInstance().build(RouteUtils.Camera_Photo_My_Film).navigation();
+    }
+
 
     /*********************** 漂流瓶 **************************/
 

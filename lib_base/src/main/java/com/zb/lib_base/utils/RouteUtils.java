@@ -113,6 +113,9 @@ public class RouteUtils {
     public static final String Camera_Photo_Wall = "/camera/PhotoWallActivity";
     public static final String Camera_Photo_Group = "/camera/PhotoGroupActivity";
     public static final String Camera_Film_Detail = "/camera/FilmDetailActivity";
+    public static final String Camera_Photo_My_Film = "/camera/PhotoMyFilmActivity";
+    public static final String Camera_Film_Fragment = "/camera/FilmFrag";
+    public static final String Camera_Film_News_Fragment = "/camera/FilmNewsFrag";
 
     /*********************** 漂流瓶 **************************/
     // 漂流操作页

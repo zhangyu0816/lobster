@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_camera.vm.PhotoMyFilmViewModel" />
+
+        <variable
+            name="mineInfo"
+            type="com.zb.lib_base.model.MineInfo" />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            viewWidthSize="@{-1}"
+            viewHeightSize="@{ObjectUtils.getFilmBgHeight()}"
+            android:id="@+id/iv_bg"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@mipmap/film_bg" />
+
+        <RelativeLayout
+            android:id="@+id/top_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp">
+
+            <ImageView
+                onClickDelayed="@{viewModel::back}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:src="@mipmap/back_black_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@{mineInfo.nick}"
+                android:textColor="@color/black_252"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/film_relative"
+            android:layout_below="@+id/top_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-40dp">
+
+            <ImageView
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(166)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(166)}"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/circle_white" />
+
+            <ImageView
+                imageUrl="@{mineInfo.image}"
+                isCircle="@{true}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(160)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(160)}"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/circle_white" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/film_relative"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/iv_bg"
+            android:layout_marginTop="-20dp"
+            android:background="@drawable/btn_bg_white_radius_top20"
+            android:orientation="vertical">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tab_layout"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                app:tabBackground="@android:color/transparent"
+                app:tabGravity="start"
+                app:tabIndicator="@drawable/indicator"
+                app:tabIndicatorColor="@color/purple_7a4"
+                app:tabIndicatorFullWidth="false"
+                app:tabIndicatorHeight="3dp"
+                app:tabMaxWidth="0dp"
+                app:tabMinWidth="0dp"
+                app:tabMode="scrollable"
+                app:tabPaddingBottom="-15dp"
+                app:tabRippleColor="@android:color/transparent"
+                app:tabSelectedTextColor="@color/black_252"
+                app:tabTextColor="@color/black_827" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/view_page"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</layout>
