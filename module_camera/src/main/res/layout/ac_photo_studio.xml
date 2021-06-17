@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/iv_bg"
@@ -202,14 +202,15 @@
                 android:layout_height="wrap_content"
                 android:background="@mipmap/icon_film_bg" />
 
+
             <ImageView
-                onClickDelayed="@{viewModel::wash}"
-                android:id="@+id/iv_out"
+                android:id="@+id/iv_set"
+                onClickDelayed="@{viewModel::setFilm}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="5dp"
-                android:background="@mipmap/icon_film_out" />
+                android:background="@mipmap/icon_film_set" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -217,8 +218,8 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="15dp"
-                android:layout_toStartOf="@+id/iv_set"
-                android:layout_toEndOf="@+id/iv_out"
+                android:layout_toStartOf="@+id/iv_out"
+                android:layout_toEndOf="@+id/iv_set"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -288,14 +289,14 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/iv_set"
-                onClickDelayed="@{viewModel::setFilm}"
+                android:id="@+id/iv_out"
+                onClickDelayed="@{viewModel::wash}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/iv_film_bg"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="5dp"
-                android:background="@mipmap/icon_film_set" />
+                android:background="@mipmap/icon_film_out" />
         </RelativeLayout>
 
         <LinearLayout

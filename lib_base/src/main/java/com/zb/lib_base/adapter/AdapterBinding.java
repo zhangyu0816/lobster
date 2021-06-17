@@ -2,6 +2,7 @@ package com.zb.lib_base.adapter;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -266,6 +267,64 @@ public class AdapterBinding {
                     }
                 }
             }
+        } catch (Exception ignored) {
+
+        }
+    }
+
+    // 加载图片
+    @SuppressLint("CheckResult")
+    @BindingAdapter(value = {"roundImageUrl", "radius", "cornerType", "scale"}, requireAll = false)
+    public static void roundImage(ImageView view, String roundImageUrl, int radius, int cornerType, float scale) {
+        try {
+            RequestOptions cropOptions = new RequestOptions().centerCrop();
+            RequestOptions roundOptions = new RequestOptions().centerCrop();
+            // 圆角图
+            switch (cornerType) {
+                case 0:
+                    cornerType = GlideRoundTransform.CORNER_ALL;
+                    break;
+                case 1:
+                    cornerType = GlideRoundTransform.CORNER_NONE;
+                    break;
+                case 2:
+                    cornerType = GlideRoundTransform.CORNER_TOP_LEFT;
+                    break;
+                case 3:
+                    cornerType = GlideRoundTransform.CORNER_TOP_RIGHT;
+                    break;
+                case 4:
+                    cornerType = GlideRoundTransform.CORNER_BOTTOM_LEFT;
+                    break;
+                case 5:
+                    cornerType = GlideRoundTransform.CORNER_BOTTOM_RIGHT;
+                    break;
+                case 6:
+                    cornerType = GlideRoundTransform.CORNER_TOP;
+                    break;
+                case 7:
+                    cornerType = GlideRoundTransform.CORNER_BOTTOM;
+                    break;
+                case 8:
+                    cornerType = GlideRoundTransform.CORNER_LEFT;
+                    break;
+                case 9:
+                    cornerType = GlideRoundTransform.CORNER_RIGHT;
+                    break;
+            }
+            MultiTransformation<Bitmap> multiTransformation = new MultiTransformation<>(new GlideRoundTransform(radius, 0, cornerType, GlideRoundTransform.FIT_CENTER));
+            roundOptions.transform(multiTransformation);
+
+            Glide.with(view.getContext()).asBitmap().load(roundImageUrl).apply(cropOptions).into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                    float width = (float) resource.getWidth();
+                    float height = (float) resource.getHeight();
+                    Log.e("resource", width + "," + height);
+                    viewSize(view, (int) (MineApp.W * scale), (int) (MineApp.W * scale * height / width));
+                    Glide.with(view.getContext()).load(resource).apply(roundOptions).into(view);
+                }
+            });
         } catch (Exception ignored) {
 
         }

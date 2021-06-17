@@ -80,6 +80,7 @@ public class LoginVideoViewModel extends BaseViewModel {
             }
         }, activity);
         api.setDialogTitle("loadingNotLogin");
+        api.setShowProgress(false);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

@@ -25,7 +25,7 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
 
                 @Override
                 public void onFinish() {
-                    new RulePW(activity, mBinding.getRoot(),  new RulePW.CallBack() {
+                    new RulePW(activity, mBinding.getRoot(), new RulePW.CallBack() {
                         @Override
                         public void sureBack() {
                             PreferenceUtil.saveIntValue(activity, "ruleType1", 1);
@@ -42,9 +42,9 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
             };
             mCountDownTimer.start();
         } else {
-            ActivityUtils.getLoginVideoActivity();
-            activity.finish();
-//            ActivityUtils.getCameraPhotoStudio();
+//            ActivityUtils.getLoginVideoActivity();
+//            activity.finish();
+            ActivityUtils.getCameraPhotoStudio();
         }
     }
 

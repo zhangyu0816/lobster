@@ -19,6 +19,7 @@ import com.zb.lib_base.db.FilmResourceDb;
 import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.Film;
 import com.zb.lib_base.model.FilmResource;
 import com.zb.lib_base.utils.ActivityUtils;
@@ -321,7 +322,15 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
         findCameraFilmsApi api = new findCameraFilmsApi(new HttpOnNextListener<List<Film>>() {
             @Override
             public void onNext(List<Film> o) {
-                mFilmList = o;
+                mFilmList.clear();
+                mFilmList.addAll(o);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    mFilmList.clear();
+                }
             }
         }, activity).setIsEnable(0).setPageNo(1);
         HttpManager.getInstance().doHttpDeal(api);

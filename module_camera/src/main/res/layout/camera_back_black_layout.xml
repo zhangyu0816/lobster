@@ -50,8 +50,8 @@
                 android:textStyle="bold" />
 
             <ImageView
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(83)}"
-                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(90)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(67)}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(72)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"

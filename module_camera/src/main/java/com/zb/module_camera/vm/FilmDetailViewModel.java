@@ -58,7 +58,7 @@ public class FilmDetailViewModel extends BaseViewModel implements FilmDetailVMIn
 
     @Override
     public void setAdapter() {
-        adapter = new CameraAdapter<>(activity, R.layout.item_film_info,mFilmInfoList,this);
+        adapter = new CameraAdapter<>(activity, R.layout.item_film_info, mFilmInfoList, this);
         findCameraFilmsResourceList();
         otherInfo();
     }
@@ -68,7 +68,8 @@ public class FilmDetailViewModel extends BaseViewModel implements FilmDetailVMIn
         findCameraFilmsResourceListApi api = new findCameraFilmsResourceListApi(new HttpOnNextListener<List<FilmInfo>>() {
             @Override
             public void onNext(List<FilmInfo> o) {
-                mFilmInfoList = o;
+                mFilmInfoList.addAll(o);
+                adapter.notifyDataSetChanged();
             }
         }, activity).setCameraFilmId(mFilm.getId());
         HttpManager.getInstance().doHttpDeal(api);
@@ -81,7 +82,7 @@ public class FilmDetailViewModel extends BaseViewModel implements FilmDetailVMIn
             public void onNext(MemberInfo o) {
                 mBinding.setOtherUserInfo(o);
             }
-        },activity).setOtherUserId(mFilm.getUserId());
+        }, activity).setOtherUserId(mFilm.getUserId());
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

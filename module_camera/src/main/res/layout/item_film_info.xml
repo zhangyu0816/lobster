@@ -17,9 +17,18 @@
 
     <RelativeLayout
         viewHeightSize="@{-2}"
-        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.5f)}"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.47f)}"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
 
+        <ImageView
+            roundImageUrl="@{item.image}"
+            radius="@{10}"
+            scale="@{0.44f}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
     </RelativeLayout>
+
 </layout>

@@ -191,8 +191,8 @@
                 <ImageView
                     imageUrl="@{otherUserInfo.image}"
                     isCircle="@{true}"
-                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(200)}"
-                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(200)}"
+                    viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(100)}"
+                    viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(100)}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -242,6 +242,6 @@
             recyclerType="@{4}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="15dp" />
+            android:layout_margin="10dp" />
     </LinearLayout>
 </layout>
