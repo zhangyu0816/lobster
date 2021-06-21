@@ -1,10 +1,13 @@
 package com.zb.module_camera.vm;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.findCameraFilmsForAllApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -28,6 +31,7 @@ public class PhotoGroupViewModel extends BaseViewModel implements PhotoGroupVMIn
     public CameraAdapter adapter;
     private List<Film> mFilmList = new ArrayList<>();
     private int pageNo = 1;
+    private BaseReceiver updateFilmReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -35,12 +39,38 @@ public class PhotoGroupViewModel extends BaseViewModel implements PhotoGroupVMIn
         mBinding = (AcPhotoGroupBinding) binding;
         mBinding.setTitle("广场");
         setAdapter();
+        updateFilmReceiver = new BaseReceiver(activity, "lobster_updateFilm") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                long cameraFilmId = intent.getLongExtra("cameraFilmId", 0);
+                int goodNum = intent.getIntExtra("goodNum", 0);
+                int reviews = intent.getIntExtra("reviews", 0);
+                for (int i = 0; i < mFilmList.size(); i++) {
+                    if (cameraFilmId == mFilmList.get(i).getId()) {
+                        mFilmList.get(i).setReviews(reviews);
+                        mFilmList.get(i).setGoodNum(goodNum);
+                        adapter.notifyItemChanged(i);
+                        break;
+                    }
+                }
+            }
+        };
     }
 
     @Override
     public void back(View view) {
         super.back(view);
         activity.finish();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            updateFilmReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

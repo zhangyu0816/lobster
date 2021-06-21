@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
+import com.zb.lib_base.api.cameraFilmMsCountApi;
 import com.zb.lib_base.api.findCameraFilmsApi;
 import com.zb.lib_base.api.saveCameraFilmApi;
 import com.zb.lib_base.api.saveCameraFilmResourceForImagesApi;
@@ -55,6 +56,8 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
     private FilmResource mFilmResource;
     private PhotoManager mPhotoManager;
     private BaseReceiver washSuccessReceiver;
+    private BaseReceiver readFilmMsgReceiver;
+    private int filmMsgCount = 0;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -99,6 +102,14 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
                 mBinding.setHasFilm(false);
             }
         };
+        readFilmMsgReceiver = new BaseReceiver(activity, "lobster_readFilmMsg") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                filmMsgCount--;
+                mBinding.setNewsCount(Math.max(0, filmMsgCount));
+            }
+        };
+        cameraFilmMsCount();
     }
 
     @Override
@@ -120,6 +131,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
     public void onDestroy() {
         try {
             washSuccessReceiver.unregisterReceiver();
+            readFilmMsgReceiver.unregisterReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -319,7 +331,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
 
     @Override
     public void toMyFilm(View view) {
-        ActivityUtils.getCameraPhotoMyFilm();
+        ActivityUtils.getCameraPhotoMyFilm(filmMsgCount);
     }
 
     @Override
@@ -399,6 +411,18 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
                 mBinding.setHasFilm(false);
             }
         }, activity).setCameraFilmId(mFilm.getId());
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    @Override
+    public void cameraFilmMsCount() {
+        cameraFilmMsCountApi api = new cameraFilmMsCountApi(new HttpOnNextListener<Integer>() {
+            @Override
+            public void onNext(Integer o) {
+                filmMsgCount = o;
+                mBinding.setNewsCount(o);
+            }
+        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 }

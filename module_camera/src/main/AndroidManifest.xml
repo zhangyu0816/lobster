@@ -15,6 +15,7 @@
         <activity android:name=".activity.PhotoGroupActivity" />
         <activity android:name=".activity.FilmDetailActivity" />
         <activity android:name=".activity.PhotoMyFilmActivity" />
+        <activity android:name=".activity.FilmResourceDetailActivity" />
     </application>
 
 </manifest>

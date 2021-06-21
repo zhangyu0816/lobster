@@ -1,8 +1,12 @@
 package com.zb.module_camera.vm;
 
+import android.content.Context;
+import android.content.Intent;
+
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.findCameraFilmsApi;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -26,12 +30,39 @@ public class FilmFragViewModel extends BaseViewModel implements FilmFragVMInterf
     private List<Film> mFilmList = new ArrayList<>();
     private int pageNo = 1;
     public CameraAdapter adapter;
+    private BaseReceiver updateFilmReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (FragFilmBinding) binding;
         setAdapter();
+        updateFilmReceiver = new BaseReceiver(activity, "lobster_updateFilm") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                long cameraFilmId = intent.getLongExtra("cameraFilmId", 0);
+                int goodNum = intent.getIntExtra("goodNum", 0);
+                int reviews = intent.getIntExtra("reviews", 0);
+                for (int i = 0; i < mFilmList.size(); i++) {
+                    if (cameraFilmId == mFilmList.get(i).getId()) {
+                        mFilmList.get(i).setReviews(reviews);
+                        mFilmList.get(i).setGoodNum(goodNum);
+                        adapter.notifyItemChanged(i);
+                        break;
+                    }
+                }
+            }
+        };
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            updateFilmReceiver.unregisterReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -16,6 +16,7 @@
     </data>
 
     <RelativeLayout
+        onClickDelayed="@{v->viewModel.toResourceDetail(item.id)}"
         viewHeightSize="@{-2}"
         viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.47f)}"
         android:layout_width="wrap_content"

@@ -9,6 +9,8 @@ import com.zb.module_camera.vm.FilmFragViewModel;
 
 @Route(path = RouteUtils.Camera_Film_Fragment)
 public class FilmFrag extends BaseFragment {
+    private FilmFragViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.frag_film;
@@ -16,8 +18,14 @@ public class FilmFrag extends BaseFragment {
 
     @Override
     public void initUI() {
-        FilmFragViewModel viewModel = new FilmFragViewModel();
+        viewModel = new FilmFragViewModel();
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 }

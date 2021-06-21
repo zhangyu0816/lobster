@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <variable
+            name="item"
+            type="com.zb.lib_base.model.FilmComment" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_camera.vm.FilmResourceDetailViewModel" />
+
+    </data>
+
+    <RelativeLayout
+        onClickDelayed="@{v->viewModel.toUserDetail(item.userId)}"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            imageUrl="@{item.image}"
+            isCircle="@{true}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(120)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(120)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+</layout>

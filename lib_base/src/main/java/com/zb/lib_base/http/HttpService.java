@@ -15,7 +15,9 @@ import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.FaceStatus;
 import com.zb.lib_base.model.FeedbackInfo;
 import com.zb.lib_base.model.Film;
+import com.zb.lib_base.model.FilmComment;
 import com.zb.lib_base.model.FilmInfo;
+import com.zb.lib_base.model.FilmMsg;
 import com.zb.lib_base.model.FlashInfo;
 import com.zb.lib_base.model.FlashUser;
 import com.zb.lib_base.model.GiftInfo;
@@ -635,10 +637,10 @@ public interface HttpService {
     Observable<BaseResultEntity> checkFace(@Query("faceImage") String faceImage);
 
     @GET("api/Camera_findCameraFilms")
-    Observable<BaseResultEntity<List<Film>>> findCameraFilms(@Query("isEnable") int isEnable,@Query("pageNo") int pageNo);
+    Observable<BaseResultEntity<List<Film>>> findCameraFilms(@Query("isEnable") int isEnable, @Query("pageNo") int pageNo);
 
     @GET("api/Camera_findCameraFilmsForAll")
-    Observable<BaseResultEntity<List<Film>>> findCameraFilmsForAll(@Query("authority") int authority,@Query("washType") int washType,@Query("pageNo") int pageNo);
+    Observable<BaseResultEntity<List<Film>>> findCameraFilmsForAll(@Query("authority") int authority, @Query("washType") int washType, @Query("pageNo") int pageNo);
 
     @GET("api/Camera_saveCameraFilm")
     Observable<BaseResultEntity<Film>> saveCameraFilm(@QueryMap Map<String, Object> map);
@@ -654,4 +656,34 @@ public interface HttpService {
 
     @GET("api/Camera_findCameraFilmsResourceList")
     Observable<BaseResultEntity<List<FilmInfo>>> findCameraFilmsResourceList(@Query("cameraFilmId") long cameraFilmId);
+
+    @GET("api/Camera_cameraFilmMsCount")
+    Observable<BaseResultEntity<Integer>> cameraFilmMsCount(@Query("isRead") int isRead);
+
+    @GET("api/Camera_cameraFilmMsgList")
+    Observable<BaseResultEntity<List<FilmMsg>>> cameraFilmMsgList(@Query("pageNo") int pageNo, @Query("row") int row);
+
+    @GET("api/Camera_findCameraFilmsResource")
+    Observable<BaseResultEntity<FilmInfo>> findCameraFilmsResource(@Query("cameraFilmResourceId") long cameraFilmResourceId);
+
+    @GET("api/Camera_seeLikers")
+    Observable<BaseResultEntity<List<FilmComment>>> cameraSeeLikers(@Query("cameraFilmResourceId") long cameraFilmResourceId, @Query("pageNo") int pageNo);
+
+    @GET("api/Camera_seeReviews")
+    Observable<BaseResultEntity<List<FilmComment>>> cameraSeeReviews(@Query("cameraFilmResourceId") long cameraFilmResourceId, @Query("timeSortType") int timeSortType, @Query("pageNo") int pageNo, @Query("row") int row);
+
+    @GET("api/Camera_review")
+    Observable<BaseResultEntity> cameraReview(@QueryMap Map<String,Object> map);
+
+    @GET("api/Camera_doLike")
+    Observable<BaseResultEntity> cameraDoLike(@Query("cameraFilmResourceId") long cameraFilmResourceId);
+
+    @GET("api/Camera_cancelLike")
+    Observable<BaseResultEntity> cameraCancelLike(@Query("cameraFilmResourceId") long cameraFilmResourceId);
+
+    @GET("api/Camera_findCameraFilmsInfo")
+    Observable<BaseResultEntity<Film>> findCameraFilmsInfo(@Query("cameraFilmId") long cameraFilmId);
+
+    @GET("api/Camera_readCameraFilmMsg")
+    Observable<BaseResultEntity> readCameraFilmMsg(@Query("cameraFilmResourceReviewMsgId") long cameraFilmResourceReviewMsgId);
 }

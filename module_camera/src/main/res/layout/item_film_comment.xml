@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.text.Html" />
+
+        <import type="com.zb.lib_base.utils.DateUtil" />
+
+        <variable
+            name="item"
+            type="com.zb.lib_base.model.FilmComment" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_camera.vm.FilmResourceDetailViewModel" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp">
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            imageUrl="@{item.image}"
+            isCircle="@{true}"
+            onClickDelayed="@{v->viewModel.toUserDetail(item.userId)}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(120)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(120)}"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:id="@+id/tv_nick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/iv_logo"
+            android:layout_marginTop="5dp"
+            android:onClick="@{v->viewModel.toReview(item)}"
+            android:text="@{item.nick}"
+            android:textColor="@color/black_827"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            tools:text="的空间为框架" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:text="@{DateUtil.strToStr2(item.createTime,DateUtil.CN_MM_dd_HH_mm)}"
+            android:textColor="@color/black_9"
+            android:textSize="13sp"
+            tools:text="5月30日 14:31" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_nick"
+            android:layout_marginStart="10dp"
+            android:paddingTop="5dp"
+            android:layout_toEndOf="@+id/iv_logo"
+            android:onClick="@{v->viewModel.toReview(item)}"
+            android:text="@{item.atUserNick.empty?item.text:Html.fromHtml(String.format(@string/camera_review_info,item.atUserNick,item.text))}"
+            android:textColor="@color/black_252"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+</layout>

@@ -266,8 +266,12 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Camera_Film_Detail).withParcelable("film", film).navigation();
     }
 
-    public static void getCameraPhotoMyFilm() {
-        ARouter.getInstance().build(RouteUtils.Camera_Photo_My_Film).navigation();
+    public static void getCameraPhotoMyFilm(int filmMsgCount) {
+        ARouter.getInstance().build(RouteUtils.Camera_Photo_My_Film).withInt("filmMsgCount", filmMsgCount).navigation();
+    }
+
+    public static void getCameraFilmResourceDetail(long cameraFilmResourceId, String filmName) {
+        ARouter.getInstance().build(RouteUtils.Camera_Film_Resource_Detail).withLong("cameraFilmResourceId", cameraFilmResourceId).withString("filmName", filmName).navigation();
     }
 
 

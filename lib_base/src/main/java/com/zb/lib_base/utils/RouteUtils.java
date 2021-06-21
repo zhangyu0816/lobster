@@ -116,6 +116,7 @@ public class RouteUtils {
     public static final String Camera_Photo_My_Film = "/camera/PhotoMyFilmActivity";
     public static final String Camera_Film_Fragment = "/camera/FilmFrag";
     public static final String Camera_Film_News_Fragment = "/camera/FilmNewsFrag";
+    public static final String Camera_Film_Resource_Detail = "/camera/FilmResourceDetailActivity";
 
     /*********************** 漂流瓶 **************************/
     // 漂流操作页

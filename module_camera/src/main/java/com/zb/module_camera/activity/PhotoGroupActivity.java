@@ -9,6 +9,7 @@ import com.zb.module_camera.vm.PhotoGroupViewModel;
 @Route(path = RouteUtils.Camera_Photo_Group)
 public class PhotoGroupActivity extends WhiteCameraBaseActivity {
 
+    private  PhotoGroupViewModel viewModel;
     @Override
     public int getRes() {
         return R.layout.ac_photo_group;
@@ -16,8 +17,14 @@ public class PhotoGroupActivity extends WhiteCameraBaseActivity {
 
     @Override
     public void initUI() {
-        PhotoGroupViewModel viewModel = new PhotoGroupViewModel();
+         viewModel = new PhotoGroupViewModel();
         mBinding.setVariable(BR.viewModel,viewModel);
         viewModel.setBinding(mBinding);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 }

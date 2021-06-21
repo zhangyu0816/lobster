@@ -469,4 +469,16 @@ public class ObjectUtils {
                 return MineApp.getApp().getResources().getDrawable(R.drawable.icon_film_1_small);
         }
     }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public static Drawable getFilmMsgRes(int reviewType) {
+        switch (reviewType) {
+            case 1:// 评论
+                return MineApp.getApp().getResources().getDrawable(R.mipmap.icon_comment_gray);
+            case 2:// 点赞
+                return MineApp.getApp().getResources().getDrawable(R.mipmap.icon_like_gray);
+            default:
+                return MineApp.getApp().getResources().getDrawable(R.mipmap.icon_comment_gray);
+        }
+    }
 }

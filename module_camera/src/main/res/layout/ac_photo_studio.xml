@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -19,7 +20,13 @@
             name="imageUrl"
             type="String" />
 
+        <variable
+            name="newsCount"
+            type="Integer" />
+
         <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="android.view.View" />
 
     </data>
 
@@ -323,13 +330,33 @@
                 android:paddingVertical="10dp"
                 android:src="@mipmap/icon_grounp" />
 
-            <ImageView
-                onClickDelayed="@{viewModel::toMyFilm}"
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp"
-                android:src="@mipmap/icon_news" />
+                android:paddingVertical="10dp">
+
+                <ImageView
+                    android:id="@+id/iv_my"
+                    onClickDelayed="@{viewModel::toMyFilm}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/icon_news" />
+
+                <TextView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignEnd="@+id/iv_my"
+                    android:background="@drawable/circle_red"
+                    android:gravity="center"
+                    android:text='@{String.format("%d",newsCount)}'
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:visibility="@{newsCount==0?View.GONE:View.VISIBLE}"
+                    tools:text="20" />
+            </RelativeLayout>
+
         </LinearLayout>
     </RelativeLayout>
 </layout>

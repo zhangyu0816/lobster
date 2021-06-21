@@ -32,4 +32,6 @@ public interface PhotoStudioVMInterface {
     void saveCameraFilm(String images);
 
     void washResource();
+
+    void cameraFilmMsCount();
 }

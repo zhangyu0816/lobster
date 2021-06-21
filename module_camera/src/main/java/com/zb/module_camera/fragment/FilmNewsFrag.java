@@ -5,7 +5,6 @@ import com.zb.lib_base.activity.BaseFragment;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.module_camera.BR;
 import com.zb.module_camera.R;
-import com.zb.module_camera.vm.FilmFragViewModel;
 import com.zb.module_camera.vm.FilmNewsFragViewModel;
 
 @Route(path = RouteUtils.Camera_Film_News_Fragment)

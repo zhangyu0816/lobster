@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <import type="com.zb.lib_base.utils.DateUtil" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="item"
+            type="com.zb.lib_base.model.FilmMsg" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_camera.vm.FilmNewsFragViewModel" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+    </data>
+
+    <RelativeLayout
+        onClickDelayed="@{v->viewModel.toFilmResourceDetail(item,position)}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/btn_bg_black_f5_radius8"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="15dp">
+
+        <ImageView
+            android:id="@+id/iv_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:background="@{ObjectUtils.getFilmMsgRes(item.reviewType)}" />
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            imageUrl="@{item.reviewUserHeadImage}"
+            isCircle="@{true}"
+            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(90)}"
+            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(90)}"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@+id/iv_tag" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/iv_logo"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{item.reviewUserNick}"
+                android:textColor="@color/black_827"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="adfwehj " />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@{item.text}"
+                android:textColor="@{item.reviewType==1?@color/black_252:@color/black_73}"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="adfwehj " />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="@{DateUtil.strToStr2(item.createTime,DateUtil.CN_MM_dd_HH_mm)}"
+            android:textColor="@color/black_9"
+            android:textSize="13sp"
+            tools:text="5月5日 12:12" />
+
+        <View
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_below="@+id/tv_time"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/circle_red"
+            android:visibility="@{item.isRead==0?View.VISIBLE:View.GONE}" />
+    </RelativeLayout>
+</layout>
