@@ -25,6 +25,7 @@ import com.zb.module_camera.R;
 import com.zb.module_camera.adapter.CameraAdapter;
 import com.zb.module_camera.databinding.AcPhotoWallBinding;
 import com.zb.module_camera.iv.PhotoWallVMInterface;
+import com.zb.module_camera.utils.GPUImageUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,6 +48,7 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
 
     public CameraAdapter selectAdapter;
     private PhotoManager mPhotoManager;
+    private GPUImageUtils mGPUImageUtils;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -159,9 +161,13 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
 
             FilmResource filmResource = FilmResourceDb.getInstance().getCameraFilm(mFilm.getId());
             List<String> tempImageList = new ArrayList<>();
-            tempImageList.addAll(Arrays.asList(filmResource.getImages().split("#")));
+            if (!filmResource.getImages().isEmpty())
+                tempImageList.addAll(Arrays.asList(filmResource.getImages().split("#")));
             tempImageList.addAll(selectImages);
-            mPhotoManager.addFiles(tempImageList, () -> mPhotoManager.reUploadByUnSuccess());
+
+            mGPUImageUtils = new GPUImageUtils(activity, tempImageList, mFilm.getCamerafilmType(),
+                    handleImageList -> mPhotoManager.addFiles(handleImageList, () -> mPhotoManager.reUploadByUnSuccess()));
+            mGPUImageUtils.getGPUImage();
         }).show(activity.getSupportFragmentManager());
     }
 

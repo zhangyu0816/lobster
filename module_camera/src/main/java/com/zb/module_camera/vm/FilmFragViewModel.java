@@ -129,6 +129,7 @@ public class FilmFragViewModel extends BaseViewModel implements FilmFragVMInterf
 
     @Override
     public void toDetail(Film film) {
-        ActivityUtils.getCameraFilmDetail(film);
+        if (film.getWashType() == 2)
+            ActivityUtils.getCameraFilmDetail(film);
     }
 }

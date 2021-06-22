@@ -2,10 +2,12 @@ package com.zb.lib_base.adapter;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
@@ -140,6 +142,13 @@ public class AdapterBinding {
         para.width = widthSize;
         para.height = heightSize;
         view.setLayoutParams(para);
+    }
+
+    // 计算view大小
+    @BindingAdapter("textViewIsBold")
+    public static void textView(TextView view, boolean textViewIsBold) {
+        TextPaint tp = view.getPaint();
+        tp.setFakeBoldText(textViewIsBold);
     }
 
     // 加载图片
@@ -325,6 +334,63 @@ public class AdapterBinding {
                     Glide.with(view.getContext()).load(resource).apply(roundOptions).into(view);
                 }
             });
+        } catch (Exception ignored) {
+
+        }
+    }
+
+
+    // 加载图片
+    @SuppressLint("CheckResult")
+    @BindingAdapter(value = {"blurRoundImageUrl", "viewWidthSize", "viewHeightSize", "roundSize", "cornerType", "isBlur"}, requireAll = false)
+    public static void loadBlurRoundImage(ImageView view, String blurRoundImageUrl, int widthSize, int heightSize, int roundSize, int cornerType, boolean isBlur) {
+        try {
+            RequestOptions cropOptions = new RequestOptions().centerCrop();
+            RequestOptions defaultOptions = new RequestOptions().centerCrop();
+            // 圆角图
+            switch (cornerType) {
+                case 0:
+                    cornerType = GlideRoundTransform.CORNER_ALL;
+                    break;
+                case 1:
+                    cornerType = GlideRoundTransform.CORNER_NONE;
+                    break;
+                case 2:
+                    cornerType = GlideRoundTransform.CORNER_TOP_LEFT;
+                    break;
+                case 3:
+                    cornerType = GlideRoundTransform.CORNER_TOP_RIGHT;
+                    break;
+                case 4:
+                    cornerType = GlideRoundTransform.CORNER_BOTTOM_LEFT;
+                    break;
+                case 5:
+                    cornerType = GlideRoundTransform.CORNER_BOTTOM_RIGHT;
+                    break;
+                case 6:
+                    cornerType = GlideRoundTransform.CORNER_TOP;
+                    break;
+                case 7:
+                    cornerType = GlideRoundTransform.CORNER_BOTTOM;
+                    break;
+                case 8:
+                    cornerType = GlideRoundTransform.CORNER_LEFT;
+                    break;
+                case 9:
+                    cornerType = GlideRoundTransform.CORNER_RIGHT;
+                    break;
+            }
+            MultiTransformation<Bitmap> multiTransformation = null;
+            if (isBlur)
+                multiTransformation = new MultiTransformation<>(new CenterCrop(), new BlurTransformation(), new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
+            else
+                multiTransformation = new MultiTransformation<>(new CenterCrop(), new GlideRoundTransform(roundSize, 0, cornerType, GlideRoundTransform.FIT_CENTER));
+            cropOptions.transform(multiTransformation);
+            defaultOptions.transform(multiTransformation);
+            viewSize(view, widthSize, heightSize);
+            RequestBuilder<android.graphics.drawable.Drawable> builder = Glide.with(view.getContext()).asDrawable().apply(cropOptions);
+
+            builder.load(blurRoundImageUrl).into(view);
         } catch (Exception ignored) {
 
         }

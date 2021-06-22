@@ -115,6 +115,10 @@ public class BaseViewModel implements BaseVMInterface {
                     Intent data = new Intent("lobster_homeBottle");
                     data.putExtra("index", tab.getPosition());
                     activity.sendBroadcast(data);
+                } else if (tabNames[0].equals("胶卷")) {
+                    Intent data = new Intent("lobster_myFilmPosition");
+                    data.putExtra("index", tab.getPosition());
+                    activity.sendBroadcast(data);
                 }
             }
 

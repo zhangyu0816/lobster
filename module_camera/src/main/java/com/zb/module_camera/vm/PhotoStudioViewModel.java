@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Camera;
+import android.os.SystemClock;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,6 +33,7 @@ import com.zb.lib_base.windows.FilmRinseDF;
 import com.zb.module_camera.databinding.AcPhotoStudioBinding;
 import com.zb.module_camera.iv.PhotoStudioVMInterface;
 import com.zb.module_camera.utils.CameraPreview;
+import com.zb.module_camera.utils.GPUImageUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -58,6 +60,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
     private BaseReceiver washSuccessReceiver;
     private BaseReceiver readFilmMsgReceiver;
     private int filmMsgCount = 0;
+    private GPUImageUtils mGPUImageUtils;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -105,7 +108,10 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
         readFilmMsgReceiver = new BaseReceiver(activity, "lobster_readFilmMsg") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                filmMsgCount--;
+                if (intent.getBooleanExtra("cleanAll", false))
+                    filmMsgCount = 0;
+                else
+                    filmMsgCount--;
                 mBinding.setNewsCount(Math.max(0, filmMsgCount));
             }
         };
@@ -303,7 +309,11 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
                             fos.close();
                             FilmResourceDb.getInstance().updateImages(mFilm.getId(), imageFile.getAbsolutePath());
                             mBinding.setHasFilm(FilmResourceDb.getInstance().getImageSize(mFilm.getId()) < MineApp.filmMaxSize);
-                            mCamera.startPreview();
+                            MineApp.getApp().getFixedThreadPool().execute(() -> {
+                                SystemClock.sleep(1000);
+                                activity.runOnUiThread(() -> mCamera.startPreview());
+                            });
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -394,7 +404,10 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
     private void hanlderImage() {
         mFilmResource = FilmResourceDb.getInstance().getCameraFilm(mFilm.getId());
         CustomProgressDialog.showLoading(activity, "图片处理中");
-        mPhotoManager.addFiles(Arrays.asList(mFilmResource.getImages().split("#")), () -> mPhotoManager.reUploadByUnSuccess());
+        mGPUImageUtils = new GPUImageUtils(activity, Arrays.asList(mFilmResource.getImages().split("#")), mFilm.getCamerafilmType(),
+                handleImageList -> mPhotoManager.addFiles(handleImageList, () -> mPhotoManager.reUploadByUnSuccess()));
+        mGPUImageUtils.getGPUImage();
+
     }
 
     @Override

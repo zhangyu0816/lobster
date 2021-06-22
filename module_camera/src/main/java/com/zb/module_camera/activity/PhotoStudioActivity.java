@@ -1,6 +1,7 @@
 package com.zb.module_camera.activity;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.zb.lib_base.utils.RomUtils;
@@ -51,5 +52,15 @@ public class PhotoStudioActivity extends CameraBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         viewModel.onDestroy();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (viewModel != null)
+                viewModel.back(null);
+            return true;
+        }
+        return false;
     }
 }

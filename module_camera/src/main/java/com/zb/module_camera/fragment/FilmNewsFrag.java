@@ -9,6 +9,8 @@ import com.zb.module_camera.vm.FilmNewsFragViewModel;
 
 @Route(path = RouteUtils.Camera_Film_News_Fragment)
 public class FilmNewsFrag extends BaseFragment {
+    private FilmNewsFragViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.frag_film_news;
@@ -16,8 +18,14 @@ public class FilmNewsFrag extends BaseFragment {
 
     @Override
     public void initUI() {
-        FilmNewsFragViewModel viewModel = new FilmNewsFragViewModel();
+        viewModel = new FilmNewsFragViewModel();
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 }

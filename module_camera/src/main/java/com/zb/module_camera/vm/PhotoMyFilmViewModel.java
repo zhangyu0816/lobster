@@ -7,6 +7,7 @@ import android.view.View;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.ViewPagerAdapter;
 import com.zb.lib_base.api.myInfoApi;
+import com.zb.lib_base.api.readCameraFilmMsgForAllReadApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -32,6 +33,7 @@ public class PhotoMyFilmViewModel extends BaseViewModel implements PhotoMyFilmVM
     private List<Fragment> fragments = new ArrayList<>();
     private ViewPagerAdapter adapter;
     private BaseReceiver readFilmMsgReceiver;
+    private BaseReceiver myFilmPositionReceiver;
     public int filmMsgCount = 0;
 
     @Override
@@ -42,11 +44,22 @@ public class PhotoMyFilmViewModel extends BaseViewModel implements PhotoMyFilmVM
         readFilmMsgReceiver = new BaseReceiver(activity, "lobster_readFilmMsg") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                filmMsgCount--;
+                if (intent.getBooleanExtra("cleanAll", false))
+                    filmMsgCount = 0;
+                else
+                    filmMsgCount--;
                 if (filmMsgCount > 0)
                     initTabLayout(new String[]{"胶卷", "消息-true-" + filmMsgCount}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, 1, false);
                 else
                     initTabLayout(new String[]{"胶卷", "消息"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, 1, false);
+            }
+        };
+
+        myFilmPositionReceiver = new BaseReceiver(activity, "lobster_myFilmPosition") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                int index = intent.getIntExtra("index", 0);
+                mBinding.tvClean.setVisibility(index == 0 ? View.GONE : View.VISIBLE);
             }
         };
         initFragments();
@@ -67,6 +80,7 @@ public class PhotoMyFilmViewModel extends BaseViewModel implements PhotoMyFilmVM
         super.onDestroy();
         try {
             readFilmMsgReceiver.unregisterReceiver();
+            myFilmPositionReceiver.unregisterReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,5 +123,20 @@ public class PhotoMyFilmViewModel extends BaseViewModel implements PhotoMyFilmVM
         mBinding.viewPage.setAdapter(adapter);
         mBinding.viewPage.setCurrentItem(0);
 
+    }
+
+    @Override
+    public void cleanMsgCount(View view) {
+        readCameraFilmMsgForAllReadApi api = new readCameraFilmMsgForAllReadApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                Intent intent = new Intent("lobster_readFilmMsg");
+                intent.putExtra("cleanAll", true);
+                activity.sendBroadcast(intent);
+
+                activity.sendBroadcast(new Intent("lobster_updateFilmMsg"));
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 }

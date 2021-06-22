@@ -70,13 +70,13 @@
                 tools:text="adfwehj " />
 
             <TextView
+                textViewIsBold="@{item.reviewType==1}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="@{item.text}"
+                android:text="@{item.reviewType==1?item.text:@string/film_good}"
                 android:textColor="@{item.reviewType==1?@color/black_252:@color/black_73}"
                 android:textSize="13sp"
-                android:textStyle="bold"
                 tools:text="adfwehj " />
         </LinearLayout>
 

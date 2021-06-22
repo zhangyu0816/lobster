@@ -686,4 +686,10 @@ public interface HttpService {
 
     @GET("api/Camera_readCameraFilmMsg")
     Observable<BaseResultEntity> readCameraFilmMsg(@Query("cameraFilmResourceReviewMsgId") long cameraFilmResourceReviewMsgId);
+
+    @GET("api/Camera_deleteCameraFilmMsg")
+    Observable<BaseResultEntity> deleteCameraFilmMsg(@Query("cameraFilmResourceReviewMsgId") long cameraFilmResourceReviewMsgId);
+
+    @GET("api/Camera_readCameraFilmMsgForAllRead")
+    Observable<BaseResultEntity> readCameraFilmMsgForAllRead();
 }

@@ -421,8 +421,7 @@
                                             android:text="@{isFirstOpen?@string/vip_open:@string/vip_share}"
                                             android:textColor="@color/white"
                                             android:textSize="14sp"
-                                            android:visibility="gone"
-                                            tools:visibility="gone" />
+                                            android:visibility="gone" />
 
                                         <TextView
                                             android:id="@+id/vip_info"
@@ -433,8 +432,7 @@
                                             android:text="@{isFirstOpen?@string/vip_open_info:@string/vip_share_info}"
                                             android:textColor="@color/white"
                                             android:textSize="11sp"
-                                            android:visibility="gone"
-                                            tools:visibility="gone" />
+                                            android:visibility="gone" />
 
                                     </LinearLayout>
 
@@ -504,6 +502,58 @@
                                 </RelativeLayout>
                             </LinearLayout>
                         </RelativeLayout>
+
+                        <RelativeLayout
+                            onClickDelayed="@{viewModel::toPhotoStudio}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="15dp">
+
+                            <ImageView
+                                android:id="@+id/iv_zhao"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:background="@mipmap/icon_zhaoxiangguan" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginStart="15dp"
+                                android:layout_toEndOf="@+id/iv_zhao"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="照相馆"
+                                    android:textColor="@color/black_252"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="12dp"
+                                    android:text="找回照相最初的美好"
+                                    android:textColor="@color/black_827"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:background="@mipmap/arrow_right_short_icon" />
+                        </RelativeLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1px"
+                            android:layout_marginHorizontal="15dp"
+                            android:background="#eeeeee" />
                     </LinearLayout>
                 </androidx.appcompat.widget.Toolbar>
 

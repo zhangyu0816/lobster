@@ -121,6 +121,8 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             @Override
             public void onReceive(Context context, Intent intent) {
                 mBinding.setIsFirstOpen(MineApp.isFirstOpen);
+                mBinding.vipTitle.setVisibility(View.GONE);
+                mBinding.vipInfo.setVisibility(View.GONE);
                 if (!MineApp.isFirstOpen) {
                     mBinding.vipTitle.setVisibility(View.VISIBLE);
                     mBinding.vipInfo.setVisibility(View.VISIBLE);
@@ -144,6 +146,8 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             });
         });
         mBinding.setIsFirstOpen(MineApp.isFirstOpen);
+        mBinding.vipTitle.setVisibility(View.GONE);
+        mBinding.vipInfo.setVisibility(View.GONE);
         if (!MineApp.isFirstOpen) {
             mBinding.vipTitle.setVisibility(View.VISIBLE);
             mBinding.vipInfo.setVisibility(View.VISIBLE);
@@ -289,6 +293,11 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     }
 
     @Override
+    public void toPhotoStudio(View view) {
+        ActivityUtils.getCameraPhotoStudio();
+    }
+
+    @Override
     public void contactNumDetail(int position) {
         if (position == 2) {
             if (MineApp.mineInfo.getMemberType() == 2) {
@@ -316,6 +325,8 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             public void onNext(MineInfo o) {
                 MineApp.mineInfo = o;
                 mBinding.setMineInfo(MineApp.mineInfo);
+                mBinding.vipTitle.setVisibility(View.GONE);
+                mBinding.vipInfo.setVisibility(View.GONE);
                 if (MineApp.mineInfo.getMemberType() == 2) {
                     MineApp.isFirstOpen = false;
                     mBinding.setIsFirstOpen(MineApp.isFirstOpen);
