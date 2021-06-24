@@ -60,7 +60,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
     private void initCamera() {
         photoBinding.cameraLayout.removeAllViews();
         mCamera = Camera.open(_position);
-        preview = new CameraPreview(activity, mCamera, (int) x, (int) y);
+        preview = new CameraPreview(activity, mCamera, (int) x, (int) y, _position);
         mOverCameraView = new OverCameraView(activity);
         photoBinding.cameraLayout.addView(preview);
         photoBinding.cameraLayout.addView(mOverCameraView);

@@ -25,6 +25,8 @@ public interface PhotoStudioVMInterface {
 
     void toMyFilm(View view);
 
+    void setBottom(View view);
+
     void findCameraFilms();
 
     void saveCameraFilmResourceForImages(String images);

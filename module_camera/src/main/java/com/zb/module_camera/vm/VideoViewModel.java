@@ -74,7 +74,7 @@ public class VideoViewModel extends BaseViewModel implements VideoVMInterface, V
         videoBinding.cameraLayout.removeAllViews();
         mCamera = Camera.open(_position);
         mRecorder = new MediaRecorder();
-        preview = new CameraPreview(activity, mCamera, mRecorder, (int) x, (int) y);
+        preview = new CameraPreview(activity, mCamera, mRecorder, (int) x, (int) y, _position);
         mOverCameraView = new OverCameraView(activity);
         videoBinding.cameraLayout.addView(preview);
         videoBinding.cameraLayout.addView(mOverCameraView);

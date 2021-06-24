@@ -100,6 +100,11 @@ public class FilmDetailViewModel extends BaseViewModel implements FilmDetailVMIn
     }
 
     @Override
+    public void toUserDetail(View view) {
+        ActivityUtils.getCardMemberDetail(mFilm.getUserId(), false);
+    }
+
+    @Override
     public void findCameraFilmsInfo() {
         findCameraFilmsInfoApi api = new findCameraFilmsInfoApi(new HttpOnNextListener<Film>() {
             @Override

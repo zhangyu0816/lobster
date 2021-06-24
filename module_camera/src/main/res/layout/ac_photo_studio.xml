@@ -28,6 +28,10 @@
             name="isFlashing"
             type="boolean" />
 
+        <variable
+            name="showBottom"
+            type="boolean" />
+
         <import type="com.zb.lib_base.utils.ObjectUtils" />
 
         <import type="android.view.View" />
@@ -66,8 +70,8 @@
 
             <ImageView
                 android:id="@+id/iv_bg"
-                viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(1094,1436)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(1094)}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(729,957)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(729)}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -119,6 +123,16 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:background="@mipmap/icon_ps_mid_bg" />
+
+            <View
+                android:id="@+id/view_shadow"
+                viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(168,289)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(168)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/black_252"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
 
             <ImageView
                 viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(168,289)}"
@@ -199,168 +213,190 @@
             android:layout_marginTop="-30dp"
             android:background="@mipmap/icon_photo" />
 
-        <RelativeLayout
-            android:id="@+id/film_relative"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/bottom_layout"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp">
-
-            <ImageView
-                android:id="@+id/iv_film_bg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@mipmap/icon_film_bg" />
-
-
-            <ImageView
-                android:id="@+id/iv_set"
-                onClickDelayed="@{viewModel::setFilm}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="5dp"
-                android:background="@mipmap/icon_film_set" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
-                android:layout_toStartOf="@+id/iv_out"
-                android:layout_toEndOf="@+id/iv_set"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:onClick="@{v->viewModel.selectFilm(1)}"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax750(filmIndex==1?120:109)}"
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(filmIndex==1?120:109)}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@{filmIndex==1?@drawable/icon_film_1_selected:@drawable/icon_film_1}" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:onClick="@{v->viewModel.selectFilm(2)}"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax750(filmIndex==2?120:109)}"
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(filmIndex==2?120:109)}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@{filmIndex==2?@drawable/icon_film_2_selected:@drawable/icon_film_2}" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:onClick="@{v->viewModel.selectFilm(3)}"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax750(filmIndex==3?120:109)}"
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(filmIndex==3?120:109)}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@{filmIndex==3?@drawable/icon_film_3_selected:@drawable/icon_film_3}" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:onClick="@{v->viewModel.selectFilm(4)}"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax750(filmIndex==4?120:109)}"
-                        viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(filmIndex==4?120:109)}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@{filmIndex==4?@drawable/icon_film_4_selected:@drawable/icon_film_4}" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/iv_out"
-                onClickDelayed="@{viewModel::wash}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/iv_film_bg"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="5dp"
-                android:background="@mipmap/icon_film_out" />
-        </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="@{viewModel::setBottom}"
+            android:visibility="@{showBottom?View.VISIBLE:View.GONE}" />
 
         <LinearLayout
             android:id="@+id/bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_marginStart="-15dp"
+            android:layout_marginEnd="-15dp"
+            android:layout_marginBottom="-180dp"
+            android:background="@mipmap/icon_ps_bg"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <ImageView
-                onClickDelayed="@{viewModel::toPhotoWall}"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="20dp"
+                android:onClick="@{viewModel::setBottom}"
                 android:paddingVertical="10dp"
-                android:src="@mipmap/icon_picture" />
-
-            <ImageView
-                onClickDelayed="@{viewModel::toPhotoGroup}"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp"
-                android:src="@mipmap/icon_grounp" />
+                android:src="@{showBottom?@drawable/icon_out:@drawable/icon_hide}"
+                tools:src="@drawable/icon_hide" />
 
             <RelativeLayout
+                android:id="@+id/film_relative"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp">
+                android:layout_marginHorizontal="10dp">
 
                 <ImageView
-                    android:id="@+id/iv_my"
+                    android:id="@+id/iv_film_bg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/icon_film_bg" />
+
+                <ImageView
+                    android:id="@+id/iv_set"
+                    onClickDelayed="@{viewModel::setFilm}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="5dp"
+                    android:background="@mipmap/icon_film_set" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_toStartOf="@+id/iv_out"
+                    android:layout_toEndOf="@+id/iv_set"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:onClick="@{v->viewModel.selectFilm(1)}"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax750(filmIndex==1?120:109)}"
+                            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(filmIndex==1?120:109)}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@{filmIndex==1?@drawable/icon_film_1_selected:@drawable/icon_film_1}" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:onClick="@{v->viewModel.selectFilm(2)}"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax750(filmIndex==2?120:109)}"
+                            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(filmIndex==2?120:109)}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@{filmIndex==2?@drawable/icon_film_2_selected:@drawable/icon_film_2}" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:onClick="@{v->viewModel.selectFilm(3)}"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax750(filmIndex==3?120:109)}"
+                            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(filmIndex==3?120:109)}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@{filmIndex==3?@drawable/icon_film_3_selected:@drawable/icon_film_3}" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:onClick="@{v->viewModel.selectFilm(4)}"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax750(filmIndex==4?120:109)}"
+                            viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(filmIndex==4?120:109)}"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@{filmIndex==4?@drawable/icon_film_4_selected:@drawable/icon_film_4}" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/iv_out"
+                    onClickDelayed="@{viewModel::wash}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@+id/iv_film_bg"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="5dp"
+                    android:background="@mipmap/icon_film_out" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    onClickDelayed="@{viewModel::toPhotoWall}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="15dp"
+                    android:src="@mipmap/icon_picture" />
+
+                <ImageView
+                    onClickDelayed="@{viewModel::toPhotoGroup}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="15dp"
+                    android:src="@mipmap/icon_grounp" />
+
+                <RelativeLayout
                     onClickDelayed="@{viewModel::toMyFilm}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/icon_news" />
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="15dp">
 
-                <TextView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignEnd="@+id/iv_my"
-                    android:background="@drawable/circle_red"
-                    android:gravity="center"
-                    android:text='@{String.format("%d",newsCount)}'
-                    android:textColor="@color/white"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:visibility="@{newsCount==0?View.GONE:View.VISIBLE}"
-                    tools:text="20" />
-            </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/iv_my"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/icon_news" />
 
+                    <TextView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignEnd="@+id/iv_my"
+                        android:background="@drawable/circle_red"
+                        android:gravity="center"
+                        android:text='@{String.format("%d",newsCount)}'
+                        android:textColor="@color/white"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:visibility="@{newsCount==0?View.GONE:View.VISIBLE}"
+                        tools:text="20" />
+                </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
+
     </RelativeLayout>
 </layout>

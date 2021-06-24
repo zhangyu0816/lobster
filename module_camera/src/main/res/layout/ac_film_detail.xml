@@ -182,6 +182,7 @@
             android:layout_marginHorizontal="20dp">
 
             <LinearLayout
+                onClickDelayed="@{viewModel::toUserDetail}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -216,7 +217,7 @@
                 android:layout_toStartOf="@+id/tv_reviews"
                 android:drawablePadding="5dp"
                 android:gravity="center"
-                android:text='@{String.format("%d",film.goodNum)}'
+                android:text='@{film.goodNum==0?@string/discover_good:String.format("%d",film.goodNum)}'
                 android:textColor="@color/black_9"
                 android:textSize="14sp"
                 app:drawableStartCompat="@mipmap/icon_like_gray"
@@ -230,7 +231,7 @@
                 android:layout_centerVertical="true"
                 android:drawablePadding="5dp"
                 android:gravity="center"
-                android:text='@{String.format("%d",film.reviews)}'
+                android:text='@{film.reviews==0?@string/discover_review:String.format("%d",film.reviews)}'
                 android:textColor="@color/black_9"
                 android:textSize="14sp"
                 app:drawableStartCompat="@mipmap/icon_comment_gray"

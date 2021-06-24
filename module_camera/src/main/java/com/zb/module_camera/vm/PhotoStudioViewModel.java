@@ -1,5 +1,7 @@
 package com.zb.module_camera.vm;
 
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +27,7 @@ import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.Film;
 import com.zb.lib_base.model.FilmResource;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -61,6 +64,8 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
     private BaseReceiver readFilmMsgReceiver;
     private int filmMsgCount = 0;
     private GPUImageUtils mGPUImageUtils;
+    private PropertyValuesHolder pvhTY;
+    private ObjectAnimator pvh_bottom;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -70,7 +75,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
         mBinding.cameraLayout.setOnTouchListener(this);
         mBinding.setFilmIndex(0);
         mBinding.setHasFilm(false);
-
+        mBinding.setShowBottom(false);
         gesturedetector = new GestureDetector(new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
@@ -130,6 +135,10 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
             }
         } catch (Exception ignored) {
         }
+        if (pvh_bottom != null) {
+            pvh_bottom.cancel();
+            pvh_bottom = null;
+        }
         if (preview != null)
             preview.releaseCamera();
         activity.finish();
@@ -158,7 +167,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
     private void initCamera() {
         mBinding.cameraLayout.removeAllViews();
         mCamera = Camera.open(cameraPosition);
-        preview = new CameraPreview(activity, mCamera, 16, 9);
+        preview = new CameraPreview(activity, mCamera, 16, 9,cameraPosition);
         mBinding.cameraLayout.addView(preview);
     }
 
@@ -309,11 +318,15 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
                     if (fos != null) {
                         try {
                             fos.close();
+                            mBinding.viewShadow.setVisibility(View.VISIBLE);
                             FilmResourceDb.getInstance().updateImages(mFilm.getId(), imageFile.getAbsolutePath());
                             mBinding.setHasFilm(FilmResourceDb.getInstance().getImageSize(mFilm.getId()) < MineApp.filmMaxSize);
                             MineApp.getApp().getFixedThreadPool().execute(() -> {
-                                SystemClock.sleep(1000);
-                                activity.runOnUiThread(() -> mCamera.startPreview());
+                                SystemClock.sleep(200);
+                                activity.runOnUiThread(() -> {
+                                    mBinding.viewShadow.setVisibility(View.GONE);
+                                    mCamera.startPreview();
+                                });
                             });
 
                         } catch (IOException e) {
@@ -344,6 +357,19 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
     @Override
     public void toMyFilm(View view) {
         ActivityUtils.getCameraPhotoMyFilm(filmMsgCount);
+    }
+
+    @Override
+    public void setBottom(View view) {
+        mBinding.setShowBottom(!mBinding.getShowBottom());
+        if (mBinding.getShowBottom()) {
+            // 弹出
+            pvhTY = PropertyValuesHolder.ofFloat("translationY", 0, -DisplayUtils.dip2px(160));
+        } else {
+            pvhTY = PropertyValuesHolder.ofFloat("translationY", -DisplayUtils.dip2px(160), 0);
+        }
+        pvh_bottom = ObjectAnimator.ofPropertyValuesHolder(mBinding.bottomLayout, pvhTY).setDuration(200);
+        pvh_bottom.start();
     }
 
     @Override

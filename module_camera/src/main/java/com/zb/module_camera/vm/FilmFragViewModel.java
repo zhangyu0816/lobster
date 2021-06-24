@@ -13,6 +13,7 @@ import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.Film;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_camera.R;
 import com.zb.module_camera.adapter.CameraAdapter;
@@ -131,5 +132,7 @@ public class FilmFragViewModel extends BaseViewModel implements FilmFragVMInterf
     public void toDetail(Film film) {
         if (film.getWashType() == 2)
             ActivityUtils.getCameraFilmDetail(film);
+        else
+            SCToastUtil.showToast(activity,"正在冲洗中",true);
     }
 }

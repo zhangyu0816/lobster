@@ -114,8 +114,10 @@ public class FilmResourceDetailViewModel extends BaseViewModel implements FilmRe
     @Override
     public void doLike(View view) {
         if (FilmResourceLikeDb.getInstance().hasDate(cameraFilmResourceId)) {
+            mBinding.goodView.playUnlike();
             cameraCancelLike();
         } else {
+            mBinding.goodView.playLike();
             cameraDoLike();
         }
     }

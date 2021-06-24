@@ -25,6 +25,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private RxAppCompatActivity context;
     private Camera mCamera;
     private SurfaceHolder mHolder;
+    private int cameraPosition;
     /**
      * 预览尺寸集合
      */
@@ -47,20 +48,22 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private MediaRecorder mRecorder;//音视频录制类
     public String videoPath = "";
 
-    public CameraPreview(RxAppCompatActivity context, Camera mCamera, int x, int y) {
+    public CameraPreview(RxAppCompatActivity context, Camera mCamera, int x, int y, int cameraPosition) {
         super(context);
         this.context = context;
         this.mCamera = mCamera;
+        this.cameraPosition = cameraPosition;
         this.mHolder = getHolder();
         this.mHolder.addCallback(this);
         mAspectRatio = AspectRatio.of(x, y);
         init();
     }
 
-    public CameraPreview(RxAppCompatActivity context, Camera mCamera, MediaRecorder mRecorder, int x, int y) {
+    public CameraPreview(RxAppCompatActivity context, Camera mCamera, MediaRecorder mRecorder, int x, int y, int cameraPosition) {
         super(context);
         this.context = context;
         this.mCamera = mCamera;
+        this.cameraPosition = cameraPosition;
         this.mRecorder = mRecorder;
         this.mHolder = getHolder();
         this.mHolder.addCallback(this);
@@ -98,7 +101,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         try {
-
             //获取所有支持的图片尺寸
             mPictureSizes.clear();
             for (Camera.Size size : parameters.getSupportedPictureSizes()) {
@@ -109,14 +111,12 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             //设置相机参数
             parameters.setPictureSize(pictureSize.getWidth(), pictureSize.getHeight());
             parameters.setPictureFormat(ImageFormat.JPEG);
-            parameters.setRotation(90);
+            parameters.setRotation(cameraPosition == Camera.CameraInfo.CAMERA_FACING_BACK ? 90 : 270);
             mCamera.setParameters(parameters);
             //把这个预览效果展示在SurfaceView上面
             mCamera.setPreviewDisplay(holder);
             //开启预览效果
             mCamera.startPreview();
-
-
         } catch (IOException e) {
             releaseCamera();
             releaseMediaRecorder();

@@ -99,7 +99,7 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
     private void initCamera() {
         mBinding.cameraLayout.removeAllViews();
         mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
-        preview = new CameraPreview(activity, mCamera, 4, 3);
+        preview = new CameraPreview(activity, mCamera, 4, 3, Camera.CameraInfo.CAMERA_FACING_FRONT);
         mOverCameraView = new OverCameraView(activity);
         mBinding.cameraLayout.addView(preview);
         mBinding.cameraLayout.addView(mOverCameraView);
