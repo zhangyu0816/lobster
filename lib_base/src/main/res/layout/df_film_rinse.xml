@@ -28,11 +28,11 @@
 
         <ImageView
             cornerType="@{6}"
-            imageRes="@{ObjectUtils.getPhotoRes(film.camerafilmType)}"
+            imageRes="@{ObjectUtils.getPhotoRes()}"
             isRound="@{true}"
             roundSize="@{15}"
             viewWidthSize="@{ObjectUtils.getPhotoWidth(0.8f)}"
-            viewHeightSize="@{ObjectUtils.getPhotoHeight(0.8f)}"
+            viewHeightSize="@{ObjectUtils.getPhotoHeight825(0.8f)}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

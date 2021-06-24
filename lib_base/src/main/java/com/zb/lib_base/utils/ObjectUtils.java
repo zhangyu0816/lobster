@@ -56,6 +56,11 @@ public class ObjectUtils {
         return (int) (MineApp.W * scale * 773f / 1160f);
     }
 
+    // 根据屏幕宽获取尺寸
+    public static int getPhotoHeight825(float scale) {
+        return (int) (MineApp.W * scale * 600f / 825f);
+    }
+
     public static int getCodeWidth() {
         return (int) ((MineApp.W - DisplayUtils.dip2px(106)) / 4);
     }
@@ -439,19 +444,8 @@ public class ObjectUtils {
         }
     }
 
-    public static int getPhotoRes(int filmType) {
-        switch (filmType) {
-            case 1:
-                return R.mipmap.monochrome1;
-            case 2:
-                return R.mipmap.color_balance1;
-            case 3:
-                return R.mipmap.contrast1;
-            case 4:
-                return R.mipmap.saturation1;
-            default:
-                return R.mipmap.monochrome1;
-        }
+    public static int getPhotoRes() {
+        return R.mipmap.pic_yongwan;
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")

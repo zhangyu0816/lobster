@@ -111,31 +111,18 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
 
     @Override
     public void enlarge(int position, String image) {
-        if (selectImages.contains(image)) {
-            Iterator<String> iterator = selectImages.iterator();
-            while (iterator.hasNext()) {
-                String s = iterator.next();
-                if (TextUtils.equals(image, s)) {
-                    iterator.remove();
-                    adapter.notifyItemChanged(position);
-                    selectAdapter.notifyDataSetChanged();
-                    mBinding.setSelectCount(selectImages.size());
-                    mBinding.setSurplusCount((MineApp.filmMaxSize - surplusCount + selectImages.size()) + "/" + MineApp.filmMaxSize);
-                    break;
-                }
+        new BigPhotoDF(activity).setImageUrl(image).setBigPhotoCallBack(() -> {
+            if (selectImages.contains(image)) return;
+            if (selectImages.size() >= surplusCount) {
+                SCToastUtil.showToast(activity, "已超过剩余底片数量，选取失败", true);
+                return;
             }
-        } else
-            new BigPhotoDF(activity).setImageUrl(image).setBigPhotoCallBack(() -> {
-                if (selectImages.size() >= surplusCount) {
-                    SCToastUtil.showToast(activity, "已超过剩余底片数量，选取失败", true);
-                    return;
-                }
-                selectImages.add(image);
-                adapter.notifyItemChanged(position);
-                selectAdapter.notifyDataSetChanged();
-                mBinding.setSelectCount(selectImages.size());
-                mBinding.setSurplusCount((MineApp.filmMaxSize - surplusCount + selectImages.size()) + "/" + MineApp.filmMaxSize);
-            }).show(activity.getSupportFragmentManager());
+            selectImages.add(image);
+            adapter.notifyItemChanged(position);
+            selectAdapter.notifyDataSetChanged();
+            mBinding.setSelectCount(selectImages.size());
+            mBinding.setSurplusCount((MineApp.filmMaxSize - surplusCount + selectImages.size()) + "/" + MineApp.filmMaxSize);
+        }).show(activity.getSupportFragmentManager());
     }
 
     @Override
@@ -214,7 +201,6 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
         washResourceApi api = new washResourceApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToast(activity, "冲洗中", true);
                 activity.sendBroadcast(new Intent("lobster_washSuccess"));
                 activity.finish();
             }

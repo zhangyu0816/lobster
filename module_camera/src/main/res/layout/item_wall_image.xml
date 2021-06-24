@@ -28,41 +28,47 @@
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="@{v->viewModel.selectImage(position,item)}">
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/iv_image"
-            defaultRes="@{ObjectUtils.getDefaultRes()}"
-            imageUrl="@{item}"
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.245f)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.245f)}"
-            android:layout_width="100dp"
-            android:layout_height="100dp" />
+        <RelativeLayout
+            android:id="@+id/image_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_image"
+                defaultRes="@{ObjectUtils.getDefaultRes()}"
+                imageUrl="@{item}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.245f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.245f)}"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:onClick="@{v->viewModel.selectImage(position,item)}" />
+
+            <View
+                viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.245f)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.245f)}"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#4a33323b"
+                android:onClick="@{v->viewModel.selectImage(position,item)}"
+                android:visibility="@{viewModel.selectImages.contains(item)?View.VISIBLE:View.GONE}" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@mipmap/icon_sel"
+                android:visibility="@{viewModel.selectImages.contains(item)?View.VISIBLE:View.GONE}" />
+        </RelativeLayout>
 
         <ImageView
             onClickDelayed="@{v->viewModel.enlarge(position,item)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/iv_image"
+            android:layout_alignEnd="@+id/image_layout"
             android:padding="10dp"
             android:src="@mipmap/icon_enlarge" />
-
-        <View
-            viewHeightSize="@{ObjectUtils.getViewSizeByWidth(0.245f)}"
-            viewWidthSize="@{ObjectUtils.getViewSizeByWidth(0.245f)}"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#4a33323b"
-            android:visibility="@{viewModel.selectImages.contains(item)?View.VISIBLE:View.GONE}" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@mipmap/icon_sel"
-            android:visibility="@{viewModel.selectImages.contains(item)?View.VISIBLE:View.GONE}" />
-
 
     </RelativeLayout>
 </layout>

@@ -10,6 +10,7 @@ import com.zb.lib_base.databinding.DfFilmBinding;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.Film;
+import com.zb.lib_base.utils.SCToastUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class FilmDF extends BaseDialogFragment {
     private Film mFilm;
     private FilmCallBack mFilmCallBack;
     public BaseAdapter adapter;
-    private String[][] filmTypeName = {{"#怀旧", "#室内", "#人像"}, {"#复古", "#室外", "#感情"}, {"#胶片", "#人像", "#风景"}, {"#灰调", "#情绪", "#室外"}};
+    private String[][] filmTypeName = {{"#怀旧", "#室内", "#人像"}, {"#复古", "#室外", "#情感"}, {"#胶片", "#人像", "#风景"}, {"#灰调", "#情绪", "#室外"}};
     private Map<Integer, List<Integer>> filmImageMap = new HashMap<>();
     private List<Integer> dataList = new ArrayList<>();
 
@@ -116,7 +117,7 @@ public class FilmDF extends BaseDialogFragment {
         if (mFilm == null) {
             mFilm = new Film();
             mFilm.setCamerafilmType(filmType);
-            mFilm.setAuthority(3);
+            mFilm.setAuthority(1);
         }
         dataList.clear();
         adapter.notifyDataSetChanged();
@@ -145,6 +146,10 @@ public class FilmDF extends BaseDialogFragment {
     }
 
     public void useFilm(View view) {
+        if (mBinding.getFilmName().trim().isEmpty()) {
+            SCToastUtil.showToast(activity, "请设置胶卷名称", true);
+            return;
+        }
         saveCameraFilmApi api = new saveCameraFilmApi(new HttpOnNextListener<Film>() {
             @Override
             public void onNext(Film o) {

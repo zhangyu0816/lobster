@@ -126,6 +126,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
                 Camera.Parameters parameters = mCamera.getParameters();
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                 mCamera.setParameters(parameters);
+                mBinding.setIsFlashing(false);
             }
         } catch (Exception ignored) {
         }
@@ -173,6 +174,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
             }
             mCamera.setParameters(parameters);
+            mBinding.setIsFlashing(isFlashing);
         } catch (Exception e) {
             SCToastUtil.showToast(activity, "该设备不支持闪光灯", true);
         }
@@ -415,7 +417,6 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
         washResourceApi api = new washResourceApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                SCToastUtil.showToast(activity, "冲洗成功", true);
                 FilmResourceDb.getInstance().deleteFilm(mFilm.getId());
                 findCameraFilms();
                 mFilm = null;

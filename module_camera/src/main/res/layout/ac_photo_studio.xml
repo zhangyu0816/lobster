@@ -24,6 +24,10 @@
             name="newsCount"
             type="Integer" />
 
+        <variable
+            name="isFlashing"
+            type="boolean" />
+
         <import type="com.zb.lib_base.utils.ObjectUtils" />
 
         <import type="android.view.View" />
@@ -62,10 +66,10 @@
 
             <ImageView
                 android:id="@+id/iv_bg"
-                viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(729,900)}"
-                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(729)}"
+                viewHeightSize="@{ObjectUtils.getViewSizeByHeightFromMax1334(1094,1436)}"
+                viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax750(1094)}"
                 android:layout_width="wrap_content"
-                android:layout_height="900px"
+                android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:background="@mipmap/icon_photo_studio_bg2" />
 
@@ -87,14 +91,14 @@
 
             <ImageView
                 android:id="@+id/iv_baoguang"
-                onClickDelayed="@{viewModel::changeLightIndex}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="22dp"
                 android:layout_toStartOf="@+id/iv_change"
-                android:paddingStart="1dp"
-                android:paddingTop="2dp"
-                android:paddingEnd="22dp"
-                android:src="@mipmap/icon_ps_baoguang" />
+                android:background="@{isFlashing?@drawable/icon_ps_light_baoguang:@drawable/icon_ps_baoguang}"
+                android:onClick="@{viewModel::changeLightIndex}"
+                android:paddingStart="1dp" />
 
             <ImageView
                 android:id="@+id/iv_change"
@@ -192,7 +196,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/top_relative"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="-35dp"
+            android:layout_marginTop="-30dp"
             android:background="@mipmap/icon_photo" />
 
         <RelativeLayout

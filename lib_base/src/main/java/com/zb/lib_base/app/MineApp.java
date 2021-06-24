@@ -9,6 +9,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.umeng.commonsdk.UMConfigure;
 import com.xiaomi.mimc.MIMCUser;
 import com.zb.lib_base.R;
 import com.zb.lib_base.model.ContactNum;
@@ -127,7 +128,7 @@ public class MineApp extends MultiDexApplication {
         initRealm();
         DisplayUtils.init(this);
         MultiDex.install(this);
-
+        UMConfigure.preInit(MineApp.instance, "55cac14467e58e8bd7000359", null);
         try {
             PackageInfo packageInfo = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0);
             versionName = packageInfo.versionName;
