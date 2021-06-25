@@ -12,7 +12,7 @@ import java.util.Map;
 import rx.Observable;
 
 public class saveCameraFilmApi extends BaseEntity<Film> {
-    String title; //胶卷标题
+    String title = ""; //胶卷标题
     int camerafilmType;  //胶卷类型  你们自定义传上来
     int authority;  //权限设置 1 公开 2 仅好友可见 3.私密
     long cameraFilmId; //胶卷id
@@ -53,9 +53,12 @@ public class saveCameraFilmApi extends BaseEntity<Film> {
         Map<String, Object> map = new HashMap<>();
         if (cameraFilmId != 0)
             map.put("cameraFilmId", cameraFilmId);
-        map.put("title", title);
-        map.put("camerafilmType", camerafilmType);
-        map.put("authority", authority);
+        if (!title.isEmpty())
+            map.put("title", title);
+        if (camerafilmType != 0)
+            map.put("camerafilmType", camerafilmType);
+        if (authority != 0)
+            map.put("authority", authority);
         if (!images.isEmpty())
             map.put("images", images);
         return methods.saveCameraFilm(map);

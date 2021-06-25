@@ -6,14 +6,16 @@ import io.realm.annotations.PrimaryKey;
 public class FilmResource extends RealmObject {
     @PrimaryKey
     long cameraFilmId;
-    String images = "";
+    int cameraFilmType;//胶卷类型
+    String images = "";// 胶卷本地图片地址集合
 
     public FilmResource() {
     }
 
-    public FilmResource(long cameraFilmId, String images) {
+    public FilmResource(long cameraFilmId, String images, int cameraFilmType) {
         this.cameraFilmId = cameraFilmId;
         this.images = images;
+        this.cameraFilmType = cameraFilmType;
     }
 
     public long getCameraFilmId() {
@@ -31,4 +33,13 @@ public class FilmResource extends RealmObject {
     public void setImages(String images) {
         this.images = images;
     }
+
+    public int getCameraFilmType() {
+        return cameraFilmType;
+    }
+
+    public void setCameraFilmType(int cameraFilmType) {
+        this.cameraFilmType = cameraFilmType;
+    }
+
 }

@@ -29,10 +29,6 @@ public interface PhotoStudioVMInterface {
 
     void findCameraFilms();
 
-    void saveCameraFilmResourceForImages(String images);
-
-    void saveCameraFilm(String images);
-
     void washResource();
 
     void cameraFilmMsCount();

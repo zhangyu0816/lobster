@@ -6,18 +6,9 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.zb.lib_base.api.saveCameraFilmApi;
-import com.zb.lib_base.api.saveCameraFilmResourceForImagesApi;
-import com.zb.lib_base.api.washResourceApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.db.FilmResourceDb;
-import com.zb.lib_base.http.CustomProgressDialog;
-import com.zb.lib_base.http.HttpManager;
-import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.Film;
-import com.zb.lib_base.model.FilmResource;
 import com.zb.lib_base.utils.SCToastUtil;
-import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BigPhotoDF;
 import com.zb.lib_base.windows.FilmRinseDF;
@@ -25,10 +16,8 @@ import com.zb.module_camera.R;
 import com.zb.module_camera.adapter.CameraAdapter;
 import com.zb.module_camera.databinding.AcPhotoWallBinding;
 import com.zb.module_camera.iv.PhotoWallVMInterface;
-import com.zb.module_camera.utils.GPUImageUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -47,8 +36,7 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
     private Cursor cur;
 
     public CameraAdapter selectAdapter;
-    private PhotoManager mPhotoManager;
-    private GPUImageUtils mGPUImageUtils;
+
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -59,12 +47,6 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
                 null);
         setAdapter();
         buildImagesBucketList();
-
-        mPhotoManager = new PhotoManager(activity, () -> {
-            saveCameraFilmResourceForImages(mPhotoManager.jointWebUrl("#"));
-            mPhotoManager.deleteAllFile();
-        });
-        mPhotoManager.setNeedProgress(false);
     }
 
     @Override
@@ -144,68 +126,10 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
     @Override
     public void wash(View view) {
         new FilmRinseDF(activity).setFilm(mFilm).setFilmRinseCallBack(() -> {
-            CustomProgressDialog.showLoading(activity, "图片处理中");
-
-            FilmResource filmResource = FilmResourceDb.getInstance().getCameraFilm(mFilm.getId());
-            List<String> tempImageList = new ArrayList<>();
-            if (!filmResource.getImages().isEmpty())
-                tempImageList.addAll(Arrays.asList(filmResource.getImages().split("#")));
-            tempImageList.addAll(selectImages);
-
-            mGPUImageUtils = new GPUImageUtils(activity, tempImageList, mFilm.getCamerafilmType(),
-                    handleImageList -> mPhotoManager.addFiles(handleImageList, () -> mPhotoManager.reUploadByUnSuccess()));
-            mGPUImageUtils.getGPUImage();
+           MineApp.sFilmResourceDb.updateImages(mFilm.getId(), TextUtils.join("#", selectImages), true);
+            activity.sendBroadcast(new Intent("lobster_washSuccess"));
+            activity.finish();
         }).show(activity.getSupportFragmentManager());
-    }
-
-    @Override
-    public void saveCameraFilmResourceForImages(String images) {
-        saveCameraFilmResourceForImagesApi api = new saveCameraFilmResourceForImagesApi(new HttpOnNextListener() {
-            @Override
-            public void onNext(Object o) {
-                CustomProgressDialog.stopLoading();
-                String[] temps = images.split("#");
-                if (temps.length < 6) {
-                    saveCameraFilm(images);
-                } else {
-                    StringBuilder temp = new StringBuilder();
-                    for (int i = 0; i < 5; i++) {
-                        temp.append("#").append(temps[i]);
-                    }
-                    temp = new StringBuilder(temp.substring(1));
-                    saveCameraFilm(temp.toString());
-                }
-            }
-        }, activity).setCameraFilmId(mFilm.getId()).setImages(images);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
-    public void saveCameraFilm(String images) {
-        saveCameraFilmApi api = new saveCameraFilmApi(new HttpOnNextListener<Film>() {
-            @Override
-            public void onNext(Film o) {
-                washResource();
-            }
-        }, activity)
-                .setAuthority(mFilm.getAuthority())
-                .setTitle(mFilm.getTitle())
-                .setCamerafilmType(mFilm.getCamerafilmType())
-                .setCameraFilmId(mFilm.getId())
-                .setImages(images);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
-    public void washResource() {
-        washResourceApi api = new washResourceApi(new HttpOnNextListener() {
-            @Override
-            public void onNext(Object o) {
-                activity.sendBroadcast(new Intent("lobster_washSuccess"));
-                activity.finish();
-            }
-        }, activity).setCameraFilmId(mFilm.getId());
-        HttpManager.getInstance().doHttpDeal(api);
     }
 
     /**

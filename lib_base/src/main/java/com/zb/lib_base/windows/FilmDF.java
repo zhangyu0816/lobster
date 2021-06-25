@@ -99,7 +99,7 @@ public class FilmDF extends BaseDialogFragment {
         filmImageMap.put(3, list3);
         filmImageMap.put(4, list4);
 
-        adapter = new BaseAdapter(activity, R.layout.item_film_image, dataList, this);
+        adapter = new BaseAdapter<>(activity, R.layout.item_film_image, dataList, this);
         mBinding.setDialog(this);
         mBinding.setFilmType(filmType);
         mBinding.setIsSet(isSet);

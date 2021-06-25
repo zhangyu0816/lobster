@@ -252,7 +252,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
 
     @Override
     public void publishDiscover(View view) {
-        getPermissions();
+        getPermissions(1);
     }
 
     @Override
@@ -294,7 +294,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
 
     @Override
     public void toPhotoStudio(View view) {
-        ActivityUtils.getCameraPhotoStudio();
+        getPermissions(2);
     }
 
     @Override
@@ -345,12 +345,12 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     /**
      * 权限
      */
-    private void getPermissions() {
+    private void getPermissions(int type) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             performCodeWithPermission("虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
                         @Override
                         public void hasPermission() {
-                            setPermissions();
+                            setPermissions(type);
                         }
 
                         @Override
@@ -359,19 +359,23 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                     }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO);
         } else {
-            setPermissions();
+            setPermissions(type);
         }
     }
 
-    private void setPermissions() {
-        MineApp.toPublish = true;
-        MineApp.toContinue = false;
-        new SelectorPW(mBinding.getRoot(), selectorList, position1 -> {
-            if (position1 == 0) {
-                ActivityUtils.getCameraMain(activity, true, true, false);
-            } else {
-                ActivityUtils.getCameraVideo(false);
-            }
-        });
+    private void setPermissions(int type) {
+        if (type == 1) {
+            MineApp.toPublish = true;
+            MineApp.toContinue = false;
+            new SelectorPW(mBinding.getRoot(), selectorList, position1 -> {
+                if (position1 == 0) {
+                    ActivityUtils.getCameraMain(activity, true, true, false);
+                } else {
+                    ActivityUtils.getCameraVideo(false);
+                }
+            });
+        } else {
+            ActivityUtils.getCameraPhotoStudio();
+        }
     }
 }

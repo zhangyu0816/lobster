@@ -213,7 +213,6 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         setAdapter();
 
         int height = StatusBarUtil.getStatusBarHeight(activity);
-
         MineApp.getApp().getFixedThreadPool().execute(() -> {
             SystemClock.sleep(500);
             activity.runOnUiThread(() -> {

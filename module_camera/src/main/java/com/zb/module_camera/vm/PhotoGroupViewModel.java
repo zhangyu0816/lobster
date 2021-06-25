@@ -108,7 +108,7 @@ public class PhotoGroupViewModel extends BaseViewModel implements PhotoGroupVMIn
                 for (Film film : o) {
                     if (!film.getImages().isEmpty()) {
                         String[] temp = film.getImages().split("#");
-                        for (int i = 0; i < temp.length; i++) {
+                        for (int i = 0; i < Math.min(temp.length, 5); i++) {
                             if (i == 0)
                                 film.setImage1(temp[0]);
                             else if (i == 1)

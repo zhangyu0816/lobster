@@ -34,6 +34,7 @@ import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.BottleCacheDb;
 import com.zb.lib_base.db.ChatListDb;
+import com.zb.lib_base.db.FilmResourceDb;
 import com.zb.lib_base.db.HistoryMsgDb;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
@@ -54,6 +55,7 @@ import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.FragmentUtils;
+import com.zb.lib_base.utils.GPUImageUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.OpenNotice;
 import com.zb.lib_base.utils.PreferenceUtil;
@@ -68,6 +70,7 @@ import java.util.List;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
+import io.realm.Realm;
 
 public class MainViewModel extends BaseViewModel implements MainVMInterface, UserManager.OnHandleMIMCMsgListener {
     private ArrayList<Fragment> fragments = new ArrayList<>();
@@ -116,6 +119,10 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
         MineApp.sex = PreferenceUtil.readIntValue(activity, "mySex", -2) == -2 ? (MineApp.mineInfo.getSex() == 0 ? 1 : 0) : PreferenceUtil.readIntValue(activity, "mySex", -2);
         MineApp.minAge = PreferenceUtil.readIntValue(activity, "myMinAge", 18);
         MineApp.maxAge = PreferenceUtil.readIntValue(activity, "myMaxAge", 70);
+
+        MineApp.mGPUImageUtils = new GPUImageUtils(activity);
+        MineApp.mGPUImageUtils.start();
+        MineApp.sFilmResourceDb = new FilmResourceDb(Realm.getDefaultInstance());
 
         rechargeReceiver = new BaseReceiver(activity, "lobster_recharge") {
             @Override

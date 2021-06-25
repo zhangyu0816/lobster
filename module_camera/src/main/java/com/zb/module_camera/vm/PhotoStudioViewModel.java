@@ -15,12 +15,8 @@ import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.cameraFilmMsCountApi;
 import com.zb.lib_base.api.findCameraFilmsApi;
-import com.zb.lib_base.api.saveCameraFilmApi;
-import com.zb.lib_base.api.saveCameraFilmResourceForImagesApi;
 import com.zb.lib_base.api.washResourceApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.db.FilmResourceDb;
-import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -29,20 +25,17 @@ import com.zb.lib_base.model.FilmResource;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.SCToastUtil;
-import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.FilmDF;
 import com.zb.lib_base.windows.FilmRinseDF;
 import com.zb.module_camera.databinding.AcPhotoStudioBinding;
 import com.zb.module_camera.iv.PhotoStudioVMInterface;
 import com.zb.module_camera.utils.CameraPreview;
-import com.zb.module_camera.utils.GPUImageUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
@@ -59,11 +52,9 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
     private GestureDetector gesturedetector = null;
     private Film mFilm;
     private FilmResource mFilmResource;
-    private PhotoManager mPhotoManager;
     private BaseReceiver washSuccessReceiver;
     private BaseReceiver readFilmMsgReceiver;
     private int filmMsgCount = 0;
-    private GPUImageUtils mGPUImageUtils;
     private PropertyValuesHolder pvhTY;
     private ObjectAnimator pvh_bottom;
 
@@ -93,21 +84,10 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
         });
         findCameraFilms();
 
-        mPhotoManager = new PhotoManager(activity, () -> {
-            saveCameraFilmResourceForImages(mPhotoManager.jointWebUrl("#"));
-            mPhotoManager.deleteAllFile();
-        });
-        mPhotoManager.setNeedProgress(false);
-
         washSuccessReceiver = new BaseReceiver(activity, "lobster_washSuccess") {
             @Override
             public void onReceive(Context context, Intent intent) {
-                FilmResourceDb.getInstance().deleteFilm(mFilm.getId());
-                findCameraFilms();
-                mFilm = null;
-                camerafilmType = 0;
-                mBinding.setFilmIndex(camerafilmType);
-                mBinding.setHasFilm(false);
+                washResource();
             }
         };
         readFilmMsgReceiver = new BaseReceiver(activity, "lobster_readFilmMsg") {
@@ -167,7 +147,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
     private void initCamera() {
         mBinding.cameraLayout.removeAllViews();
         mCamera = Camera.open(cameraPosition);
-        preview = new CameraPreview(activity, mCamera, 16, 9,cameraPosition);
+        preview = new CameraPreview(activity, mCamera, 16, 9, cameraPosition);
         mBinding.cameraLayout.addView(preview);
     }
 
@@ -244,7 +224,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
                 .setFilmCallBack((filmType, film) -> {
                     camerafilmType = filmType;
                     mFilm = film;
-                    updateFilm();
+                    activity.runOnUiThread(this::updateFilm);
                 }).show(activity.getSupportFragmentManager());
     }
 
@@ -254,18 +234,19 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
                 setFilmCallBack((filmType, film) -> {
                     camerafilmType = filmType;
                     mFilm = film;
-                    updateFilm();
+                    activity.runOnUiThread(this::updateFilm);
+
                 }).show(activity.getSupportFragmentManager());
     }
 
     private void updateFilm() {
-        mFilmResource = FilmResourceDb.getInstance().getCameraFilm(mFilm.getId());
+        mFilmResource = MineApp.sFilmResourceDb.getCameraFilm(mFilm.getId());
         if (mFilmResource == null) {
-            mFilmResource = new FilmResource(mFilm.getId(), "");
-            FilmResourceDb.getInstance().saveData(mFilmResource);
+            mFilmResource = new FilmResource(mFilm.getId(), "", mFilm.getCamerafilmType());
+            MineApp.sFilmResourceDb.saveData(mFilmResource);
         }
         mBinding.setFilmIndex(camerafilmType);
-        mBinding.setHasFilm(FilmResourceDb.getInstance().getImageSize(mFilm.getId()) < MineApp.filmMaxSize);
+        mBinding.setHasFilm(MineApp.sFilmResourceDb.getImageSize(mFilm.getId()) < MineApp.filmMaxSize);
         boolean has = false;
         for (int i = 0; i < mFilmList.size(); i++) {
             if (mFilmList.get(i).getId() == mFilm.getId()) {
@@ -284,21 +265,22 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
             SCToastUtil.showToast(activity, "请选择胶卷", true);
             return;
         }
-        if (FilmResourceDb.getInstance().getImageSize(mFilm.getId()) == 0) {
+        if (MineApp.sFilmResourceDb.getImageSize(mFilm.getId()) == 0) {
             SCToastUtil.showToast(activity, "该胶卷尚未使用", true);
             return;
         }
-        new FilmRinseDF(activity).setFilm(mFilm).setFilmRinseCallBack(this::hanlderImage).show(activity.getSupportFragmentManager());
+        new FilmRinseDF(activity).setFilm(mFilm).setFilmRinseCallBack(this::washResource).show(activity.getSupportFragmentManager());
     }
 
     @Override
     public void tackPhoto(View view) {
         if (mFilm == null) {
             SCToastUtil.showToast(activity, "请选择胶卷", true);
+            setBottom(view);
             return;
         }
         if (!mBinding.getHasFilm()) {
-            new FilmRinseDF(activity).setFilm(mFilm).setFilmRinseCallBack(this::hanlderImage).show(activity.getSupportFragmentManager());
+            new FilmRinseDF(activity).setFilm(mFilm).setFilmRinseCallBack(this::washResource).show(activity.getSupportFragmentManager());
             return;
         }
         //调用相机拍照
@@ -319,8 +301,8 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
                         try {
                             fos.close();
                             mBinding.viewShadow.setVisibility(View.VISIBLE);
-                            FilmResourceDb.getInstance().updateImages(mFilm.getId(), imageFile.getAbsolutePath());
-                            mBinding.setHasFilm(FilmResourceDb.getInstance().getImageSize(mFilm.getId()) < MineApp.filmMaxSize);
+                            MineApp.sFilmResourceDb.updateImages(mFilm.getId(), imageFile.getAbsolutePath(), true);
+                            mBinding.setHasFilm(MineApp.sFilmResourceDb.getImageSize(mFilm.getId()) < MineApp.filmMaxSize);
                             MineApp.getApp().getFixedThreadPool().execute(() -> {
                                 SystemClock.sleep(200);
                                 activity.runOnUiThread(() -> {
@@ -344,9 +326,10 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
     public void toPhotoWall(View view) {
         if (mFilm == null) {
             SCToastUtil.showToast(activity, "请选择胶卷", true);
+            setBottom(view);
             return;
         }
-        ActivityUtils.getCameraPhotoWall(mFilm, MineApp.filmMaxSize - FilmResourceDb.getInstance().getImageSize(mFilm.getId()));
+        ActivityUtils.getCameraPhotoWall(mFilm, MineApp.filmMaxSize - MineApp.sFilmResourceDb.getImageSize(mFilm.getId()));
     }
 
     @Override
@@ -392,58 +375,11 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
     }
 
     @Override
-    public void saveCameraFilmResourceForImages(String images) {
-        saveCameraFilmResourceForImagesApi api = new saveCameraFilmResourceForImagesApi(new HttpOnNextListener() {
-            @Override
-            public void onNext(Object o) {
-                CustomProgressDialog.stopLoading();
-                String[] temps = images.split("#");
-                if (temps.length < 6) {
-                    saveCameraFilm(images);
-                } else {
-                    StringBuilder temp = new StringBuilder();
-                    for (int i = 0; i < 5; i++) {
-                        temp.append("#").append(temps[i]);
-                    }
-                    temp = new StringBuilder(temp.substring(1));
-                    saveCameraFilm(temp.toString());
-                }
-            }
-        }, activity).setCameraFilmId(mFilm.getId()).setImages(images);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    @Override
-    public void saveCameraFilm(String images) {
-        saveCameraFilmApi api = new saveCameraFilmApi(new HttpOnNextListener<Film>() {
-            @Override
-            public void onNext(Film o) {
-                washResource();
-            }
-        }, activity)
-                .setAuthority(mFilm.getAuthority())
-                .setTitle(mFilm.getTitle())
-                .setCamerafilmType(mFilm.getCamerafilmType())
-                .setCameraFilmId(mFilm.getId())
-                .setImages(images);
-        HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    private void hanlderImage() {
-        mFilmResource = FilmResourceDb.getInstance().getCameraFilm(mFilm.getId());
-        CustomProgressDialog.showLoading(activity, "图片处理中");
-        mGPUImageUtils = new GPUImageUtils(activity, Arrays.asList(mFilmResource.getImages().split("#")), mFilm.getCamerafilmType(),
-                handleImageList -> mPhotoManager.addFiles(handleImageList, () -> mPhotoManager.reUploadByUnSuccess()));
-        mGPUImageUtils.getGPUImage();
-
-    }
-
-    @Override
     public void washResource() {
         washResourceApi api = new washResourceApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                FilmResourceDb.getInstance().deleteFilm(mFilm.getId());
+                MineApp.mGPUImageUtils.start();
                 findCameraFilms();
                 mFilm = null;
                 camerafilmType = 0;

@@ -11,10 +11,4 @@ public interface PhotoWallVMInterface {
     void deleteImage(int position, String image);
 
     void wash(View view);
-
-    void saveCameraFilmResourceForImages(String images);
-
-    void saveCameraFilm(String images);
-
-    void washResource();
 }

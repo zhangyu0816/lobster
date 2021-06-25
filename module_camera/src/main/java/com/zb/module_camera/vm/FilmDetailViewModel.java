@@ -40,7 +40,7 @@ public class FilmDetailViewModel extends BaseViewModel implements FilmDetailVMIn
         mBinding.setTitle(mFilm.getTitle());
         if (!mFilm.getImages().isEmpty()) {
             String[] temp = mFilm.getImages().split("#");
-            for (int i = 0; i < temp.length; i++) {
+            for (int i = 0; i < Math.min(temp.length, 5); i++) {
                 if (i == 0)
                     mFilm.setImage1(temp[0]);
                 else if (i == 1)

@@ -41,5 +41,4 @@ dependencies {
     // 需要重新在子模块中再引用一次，否则报错
     annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
     implementation project(':lib_base')
-    implementation'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
 }

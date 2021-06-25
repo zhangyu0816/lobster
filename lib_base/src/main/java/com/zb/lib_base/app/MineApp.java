@@ -1,5 +1,6 @@
 package com.zb.lib_base.app;
 
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
@@ -12,6 +13,7 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.umeng.commonsdk.UMConfigure;
 import com.xiaomi.mimc.MIMCUser;
 import com.zb.lib_base.R;
+import com.zb.lib_base.db.FilmResourceDb;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.FlashInfo;
@@ -24,6 +26,7 @@ import com.zb.lib_base.model.VideoInfo;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.DisplayUtils;
+import com.zb.lib_base.utils.GPUImageUtils;
 import com.zb.lib_base.utils.UIUtils;
 
 import java.util.ArrayList;
@@ -44,6 +47,7 @@ public class MineApp extends MultiDexApplication {
     /**
      * 上下文
      */
+    public static Context sContext;
     public static MineApp instance;
     public static RegisterInfo registerInfo = new RegisterInfo();
     public static int W;
@@ -105,6 +109,9 @@ public class MineApp extends MultiDexApplication {
 
     public static int filmMaxSize = 24;
 
+    public static GPUImageUtils mGPUImageUtils;
+    public static FilmResourceDb sFilmResourceDb;
+
     static {
         //设置全局的Header构建器
         SmartRefreshLayout.setDefaultRefreshHeaderCreator((context, layout) -> {
@@ -118,6 +125,7 @@ public class MineApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        sContext = this;
         instance = this;
         W = getApplicationContext().getResources().getDisplayMetrics().widthPixels;
         H = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
