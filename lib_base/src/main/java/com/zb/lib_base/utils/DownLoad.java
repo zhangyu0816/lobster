@@ -58,7 +58,6 @@ public class DownLoad {
                 callBack.onLoading(total, current);
             }
         };
-
         DownLoadRetrofitHelper.httpClient.download(fileUrl, filePath, back);
     }
 

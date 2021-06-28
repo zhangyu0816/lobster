@@ -20,11 +20,11 @@ import rx.schedulers.Schedulers;
  */
 public class HttpManager {
     /* 平台服务器 */
-//    public static String BASE_URL = "https://xgapi.zuwo.la/";
-    public static String BASE_URL = "http://317598i1s1.eicp.vip/";//敏耀
+    public static String BASE_URL = "https://xgapi.zuwo.la/";
+    //    public static String BASE_URL = "http://317598i1s1.eicp.vip/";//敏耀
 //    public static String BASE_URL = "http://192.168.1.88:8090/";//敏耀
     /*超时设置*/
-    private static final int DEFAULT_TIMEOUT = 60;
+    private static final long DEFAULT_TIMEOUT = 60L;
     private HttpService httpService;
     public volatile static HttpManager INSTANCE;
 
@@ -32,6 +32,8 @@ public class HttpManager {
     private HttpManager() {
         //手动创建一个OkHttpClient并设置超时时间
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
+        builder.writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         builder.connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         builder.addInterceptor(new CommonInterceptor());
         builder.addInterceptor(new LoggingInterceptor());

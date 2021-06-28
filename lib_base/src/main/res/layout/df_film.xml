@@ -253,6 +253,7 @@
                             android:singleLine="true"
                             android:text="@={filmName}"
                             android:textColor="@color/black_827"
+                            android:maxLength="10"
                             android:textColorHint="@color/black_827"
                             android:textCursorDrawable="@drawable/cursor_color_black_827"
                             android:textSize="16sp"

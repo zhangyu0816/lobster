@@ -23,7 +23,7 @@ public class HttpUploadManager {
 //    public static final String SERVER_IMAGE = "http://test.yichengshi.cn:8090/";
 
     /*超时设置*/
-    private static final int DEFAULT_TIMEOUT = 60;
+    private static final long DEFAULT_TIMEOUT = 60L;
     private HttpService httpService;
     private volatile static HttpUploadManager INSTANCE;
 
@@ -31,6 +31,8 @@ public class HttpUploadManager {
     private HttpUploadManager() {
         //手动创建一个OkHttpClient并设置超时时间
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
+        builder.writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         builder.connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
         builder.addInterceptor(new CommonInterceptor());
         builder.addInterceptor(new LoggingInterceptor());

@@ -26,7 +26,6 @@ import com.zb.lib_base.model.VideoInfo;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.DisplayUtils;
-import com.zb.lib_base.utils.GPUImageUtils;
 import com.zb.lib_base.utils.UIUtils;
 
 import java.util.ArrayList;
@@ -49,6 +48,7 @@ public class MineApp extends MultiDexApplication {
      */
     public static Context sContext;
     public static MineApp instance;
+    public static RxAppCompatActivity activity;
     public static RegisterInfo registerInfo = new RegisterInfo();
     public static int W;
     public static int H;
@@ -109,7 +109,6 @@ public class MineApp extends MultiDexApplication {
 
     public static int filmMaxSize = 24;
 
-    public static GPUImageUtils mGPUImageUtils;
     public static FilmResourceDb sFilmResourceDb;
 
     static {

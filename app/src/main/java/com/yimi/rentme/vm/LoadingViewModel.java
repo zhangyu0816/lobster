@@ -3,6 +3,7 @@ package com.yimi.rentme.vm;
 import android.os.CountDownTimer;
 
 import com.yimi.rentme.iv.LoadingVMInterface;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -16,6 +17,7 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
+        MineApp.activity = activity;
         if (PreferenceUtil.readIntValue(activity, "ruleType1") == 0) {
             mCountDownTimer = new CountDownTimer(1000, 1000) {
                 @Override
@@ -30,12 +32,12 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
                         public void sureBack() {
                             PreferenceUtil.saveIntValue(activity, "ruleType1", 1);
                             ActivityUtils.getLoginVideoActivity();
-                            activity.finish();
+//                            activity.finish();
                         }
 
                         @Override
                         public void cancelBack() {
-                            activity.finish();
+//                            activity.finish();
                         }
                     });
                 }
@@ -43,7 +45,7 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
             mCountDownTimer.start();
         } else {
             ActivityUtils.getLoginVideoActivity();
-            activity.finish();
+//            activity.finish();
         }
     }
 

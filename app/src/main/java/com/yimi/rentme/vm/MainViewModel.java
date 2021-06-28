@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 
 import com.yimi.rentme.databinding.AcMainBinding;
 import com.yimi.rentme.iv.MainVMInterface;
+import com.yimi.rentme.service.ForegroundLiveService;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.ViewPagerAdapter;
@@ -55,7 +56,6 @@ import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.FragmentUtils;
-import com.zb.lib_base.utils.GPUImageUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.OpenNotice;
 import com.zb.lib_base.utils.PreferenceUtil;
@@ -100,10 +100,12 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
         }
     });
     private Vibrator vibrator;
+    private Intent mIntent;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
+
         mBinding = (AcMainBinding) binding;
         mBinding.tvTitle.setTypeface(MineApp.simplifiedType);
         mBinding.tvContent.setTypeface(MineApp.simplifiedType);
@@ -120,9 +122,9 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
         MineApp.minAge = PreferenceUtil.readIntValue(activity, "myMinAge", 18);
         MineApp.maxAge = PreferenceUtil.readIntValue(activity, "myMaxAge", 70);
 
-        MineApp.mGPUImageUtils = new GPUImageUtils(activity);
-        MineApp.mGPUImageUtils.start();
         MineApp.sFilmResourceDb = new FilmResourceDb(Realm.getDefaultInstance());
+        mIntent = new Intent(activity, ForegroundLiveService.class);
+        activity.startService(mIntent);
 
         rechargeReceiver = new BaseReceiver(activity, "lobster_recharge") {
             @Override
@@ -184,6 +186,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
                 new FlashChatPW(mBinding.getRoot());
             }
         };
+
 
         handler.sendEmptyMessageDelayed(0, time);
         createAnimator();
@@ -304,6 +307,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
             newDynMsgAllNumReceiver.unregisterReceiver();
             contactNumReceiver.unregisterReceiver();
             flashChatReceiver.unregisterReceiver();
+//            activity.stopService(mIntent);
         } catch (Exception ignored) {
         }
     }
@@ -786,6 +790,4 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
         if (pvh_remind != null && pvh_remind.isRunning())
             pvh_remind.cancel();
     }
-
-
 }

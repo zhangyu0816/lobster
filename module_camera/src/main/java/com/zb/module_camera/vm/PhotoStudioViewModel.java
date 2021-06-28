@@ -326,7 +326,6 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
     public void toPhotoWall(View view) {
         if (mFilm == null) {
             SCToastUtil.showToast(activity, "请选择胶卷", true);
-            setBottom(view);
             return;
         }
         ActivityUtils.getCameraPhotoWall(mFilm, MineApp.filmMaxSize - MineApp.sFilmResourceDb.getImageSize(mFilm.getId()));
@@ -379,7 +378,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
         washResourceApi api = new washResourceApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                MineApp.mGPUImageUtils.start();
+                activity.sendBroadcast(new Intent("lobster_startGPU"));
                 findCameraFilms();
                 mFilm = null;
                 camerafilmType = 0;

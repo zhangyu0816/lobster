@@ -2,6 +2,7 @@ package com.zb.lib_base.utils.uploadImage;
 
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.api.uploadImagesApi;
@@ -9,17 +10,29 @@ import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpChatUploadManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpUploadManager;
+import com.zb.lib_base.http.UploadImageHelper;
 import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.utils.SCToastUtil;
 
+import org.json.JSONObject;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import androidx.annotation.NonNull;
 import me.shaohui.advancedluban.Luban;
 import me.shaohui.advancedluban.OnCompressListener;
 import me.shaohui.advancedluban.OnMultiCompressListener;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class PhotoManager {
 
@@ -467,6 +480,7 @@ public class PhotoManager {
     }
 
     private boolean isChat = false;
+    private boolean isGPU = false;
 
     public void setChat(boolean isChat) {
         this.isChat = isChat;
@@ -476,37 +490,88 @@ public class PhotoManager {
         this.needProgress = needProgress;
     }
 
+    public void setGPU(boolean GPU) {
+        isGPU = GPU;
+    }
+
     public void uploadImage(final PhotoFile photoFile) {
         photoFile.setUploadStatus(2);
-        uploadImagesApi api = new uploadImagesApi(new HttpOnNextListener<ResourceUrl>() {
-            @Override
-            public void onNext(ResourceUrl resourceUrl) {
-                photoFile.setWebUrl(resourceUrl.getUrl());
-                photoFile.setUploadStatus(3);
-                photoFile.getPhotoeFile().deleteOnExit();
-                statisticsUploadStatus();
-                if (getPhotoUploadStatus(3) == photos.size() && listener != null) {
-                    listener.onSuccess();
-                }
+        if (isGPU) {
+            MultipartBody.Builder requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM);
+            if (photoFile.getPhotoeFile() != null) {
+                // MediaType.parse() 里面是上传的文件类型。
+                RequestBody body = RequestBody.create(MediaType.parse("image/jpeg"), photoFile.getPhotoeFile());
+                String filename = photoFile.getPhotoeFile().getName();
+                // 参数分别为， 请求key ，文件名称 ， RequestBody
+                requestBody.addFormDataPart("file", filename, body)
+                        .addFormDataPart("fileContentType", "image/jpeg")
+                        .addFormDataPart("isCutImage", "1")
+                        .addFormDataPart("isCompre", "2");
             }
+            Request request = new Request.Builder()
+                    .url("https://img.zuwo.la/YmUpload_image")
+                    .post(requestBody.build()).build();
 
-            @Override
-            public void onError(Throwable e) {
-                photoFile.setUploadStatus(4);
-                statisticsUploadStatus();
-                if (reUploadCount <= maxReUpload) reUploadByFail();
-                else if (listener != null) listener.onError(photoFile);
-                else super.onError(e);
-            }
-        }, context)
-                .setFile(photoFile.getPhotoeFile())
-                .setIsCompre(2)
-                .setIsCutImage(1);
-        api.setShowProgress(needProgress);
-        if (isChat)
-            HttpChatUploadManager.getInstance().doHttpDeal(api);
-        else
-            HttpUploadManager.getInstance().doHttpDeal(api);
+            UploadImageHelper.getInstance().builder.build().newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    Log.e("onError", e.toString());
+                    photoFile.setUploadStatus(4);
+                    statisticsUploadStatus();
+                    if (reUploadCount <= maxReUpload) reUploadByFail();
+                    else if (listener != null) listener.onError(photoFile);
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) {
+                    try {
+                        String json = response.body().string();
+                        JSONObject object = new JSONObject(json);
+                        JSONObject data = new JSONObject(object.optString("data"));
+                        photoFile.setWebUrl(data.optString("url"));
+                        photoFile.setUploadStatus(3);
+                        photoFile.getPhotoeFile().deleteOnExit();
+                        statisticsUploadStatus();
+                        if (getPhotoUploadStatus(3) == photos.size() && listener != null) {
+                            listener.onSuccess();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } else {
+            uploadImagesApi api = new uploadImagesApi(new HttpOnNextListener<ResourceUrl>() {
+                @Override
+                public void onNext(ResourceUrl resourceUrl) {
+                    photoFile.setWebUrl(resourceUrl.getUrl());
+                    photoFile.setUploadStatus(3);
+                    photoFile.getPhotoeFile().deleteOnExit();
+                    statisticsUploadStatus();
+                    if (getPhotoUploadStatus(3) == photos.size() && listener != null) {
+                        listener.onSuccess();
+                    }
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Log.e("onError", e.toString());
+                    photoFile.setUploadStatus(4);
+                    statisticsUploadStatus();
+                    if (reUploadCount <= maxReUpload) reUploadByFail();
+                    else if (listener != null) listener.onError(photoFile);
+                    else super.onError(e);
+                }
+            }, context)
+                    .setFile(photoFile.getPhotoeFile())
+                    .setIsCompre(2)
+                    .setIsCutImage(1);
+            api.setShowProgress(needProgress);
+            if (isChat)
+                HttpChatUploadManager.getInstance().doHttpDeal(api);
+            else
+                HttpUploadManager.getInstance().doHttpDeal(api);
+        }
     }
 
     @FunctionalInterface

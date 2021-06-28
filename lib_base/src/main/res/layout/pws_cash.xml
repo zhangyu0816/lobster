@@ -89,7 +89,7 @@
                     android:drawableEnd="@mipmap/arrow_right_icon"
                     android:drawablePadding="5dp"
                     android:gravity="center"
-                    android:onClick="@{pw.selectBank}"
+                    android:onClick="@{pw::selectBank}"
                     android:text="@{mineBank.bankInfo}"
                     android:textColor="@color/black_252"
                     android:textSize="14sp"
