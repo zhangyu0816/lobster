@@ -43,7 +43,7 @@
             android:value="portrait" />
 
         <service android:name=".service.ForegroundLiveService" />
-        <service android:name=".service.ForegroundLiveService$InnerService" />
+<!--        <service android:name=".service.ForegroundLiveService$InnerService" />-->
 
         <receiver
             android:name=".utils.AlarmUtils$alarmReceiver"

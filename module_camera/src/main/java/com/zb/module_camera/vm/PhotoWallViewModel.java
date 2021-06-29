@@ -46,7 +46,6 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
         cur = activity.getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, null, null,
                 null);
         setAdapter();
-        buildImagesBucketList();
     }
 
     @Override
@@ -58,8 +57,8 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
     @Override
     public void setAdapter() {
         adapter = new CameraAdapter<>(activity, R.layout.item_wall_image, images, this);
-
         selectAdapter = new CameraAdapter<>(activity, R.layout.item_select_image, selectImages, this);
+        buildImagesBucketList();
     }
 
     @Override
@@ -126,7 +125,8 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
     @Override
     public void wash(View view) {
         new FilmRinseDF(activity).setFilm(mFilm).setFilmRinseCallBack(() -> {
-           MineApp.sFilmResourceDb.updateImages(mFilm.getId(), TextUtils.join("#", selectImages), true);
+
+            MineApp.sFilmResourceDb.updateImages(mFilm.getId(), TextUtils.join("#", selectImages), true);
             activity.sendBroadcast(new Intent("lobster_washSuccess"));
             activity.finish();
         }).show(activity.getSupportFragmentManager());
@@ -136,15 +136,17 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
      * 获取本地图片
      */
     private void buildImagesBucketList() {
-        if (cur.moveToFirst()) {
-            int photoPathIndex = cur.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            do {
-                String path = cur.getString(photoPathIndex);
-                images.add(path);
-            } while (cur.moveToNext());
-        }
-        cur.close();
-        Collections.reverse(images);
-        adapter.notifyDataSetChanged();
+        MineApp.getApp().getFixedThreadPool().execute(() -> {
+            if (cur.moveToFirst()) {
+                int photoPathIndex = cur.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                do {
+                    String path = cur.getString(photoPathIndex);
+                    images.add(path);
+                } while (cur.moveToNext());
+            }
+            cur.close();
+            Collections.reverse(images);
+            activity.runOnUiThread(() -> adapter.notifyDataSetChanged());
+        });
     }
 }

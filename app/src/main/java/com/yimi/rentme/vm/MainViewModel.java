@@ -100,7 +100,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
         }
     });
     private Vibrator vibrator;
-    private Intent mIntent;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -123,8 +122,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
         MineApp.maxAge = PreferenceUtil.readIntValue(activity, "myMaxAge", 70);
 
         MineApp.sFilmResourceDb = new FilmResourceDb(Realm.getDefaultInstance());
-        mIntent = new Intent(activity, ForegroundLiveService.class);
-        activity.startService(mIntent);
 
         rechargeReceiver = new BaseReceiver(activity, "lobster_recharge") {
             @Override

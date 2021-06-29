@@ -53,7 +53,7 @@ public class FilmResourceDb extends BaseDao {
             } else {
                 String[] temps = filmResource.getImages().split("#");
                 List<String> tempList = new ArrayList<>();
-                for(String s:temps){
+                for (String s : temps) {
                     tempList.add(s);
                 }
                 Iterator<String> iterator = tempList.iterator();
@@ -69,6 +69,15 @@ public class FilmResourceDb extends BaseDao {
                 else
                     filmResource.setImages(TextUtils.join("#", tempList));
             }
+        }
+        commitTransaction();
+    }
+
+    public void changeImages(long cameraFilmId, String images, String newUrl) {
+        beginTransaction();
+        FilmResource filmResource = realm.where(FilmResource.class).equalTo("cameraFilmId", cameraFilmId).findFirst();
+        if (filmResource != null) {
+            filmResource.setImages(filmResource.getImages().replace(images, newUrl));
         }
         commitTransaction();
     }

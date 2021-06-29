@@ -37,7 +37,6 @@ import okhttp3.Response;
 public class PhotoManager {
 
 
-    private RxAppCompatActivity context;
     private OnUpLoadImageListener listener;
     private boolean needProgress = true;
 
@@ -46,7 +45,6 @@ public class PhotoManager {
     }
 
     public PhotoManager(RxAppCompatActivity context, OnUpLoadImageListener listener) {
-        this.context = context;
         this.instantUpload = false;
         this.listener = listener;
     }
@@ -126,7 +124,7 @@ public class PhotoManager {
         }
         final String srcFilePath = file.getAbsolutePath();
         compressCount++;
-        Luban.compress(context, file).putGear(Luban.CUSTOM_GEAR).setMaxSize(8 * 1024).launch(new OnCompressListener() {
+        Luban.compress(MineApp.sContext, file).putGear(Luban.CUSTOM_GEAR).setMaxSize(8 * 1024).launch(new OnCompressListener() {
             @Override
             public void onStart() {
                 isCompress = true;
@@ -150,7 +148,7 @@ public class PhotoManager {
 
             @Override
             public void onError(Throwable e) {
-                SCToastUtil.showToast(context, "压缩异常", true);
+                SCToastUtil.showToast(MineApp.activity, "压缩异常", true);
             }
         });
     }
@@ -167,7 +165,7 @@ public class PhotoManager {
         }
         final String srcFilePath = file.getAbsolutePath();
         compressCount = 0;
-        Luban.compress(context, file).putGear(Luban.CUSTOM_GEAR).setMaxSize(8 * 1024).launch(new OnCompressListener() {
+        Luban.compress(MineApp.sContext, file).putGear(Luban.CUSTOM_GEAR).setMaxSize(8 * 1024).launch(new OnCompressListener() {
             @Override
             public void onStart() {
                 isCompress = true;
@@ -205,7 +203,7 @@ public class PhotoManager {
         for (int i = 0; i < filePaths.size(); i++) {
             files.add(new File(filePaths.get(i)));
         }
-        Luban.compress(context, files).putGear(Luban.CUSTOM_GEAR).setMaxSize(8 * 1024).launch(new OnMultiCompressListener() {
+        Luban.compress(MineApp.sContext, files).putGear(Luban.CUSTOM_GEAR).setMaxSize(8 * 1024).launch(new OnMultiCompressListener() {
             @Override
             public void onStart() {
                 isCompress = true;
@@ -225,7 +223,7 @@ public class PhotoManager {
                     if (i == fileList.size() - 1) {
                         Runnable ra = () -> {
                             SystemClock.sleep(100);
-                            context.runOnUiThread(() -> {
+                            MineApp.activity.runOnUiThread(() -> {
                                 if (compressOverBack != null) {
                                     compressOverBack.success();
                                 }
@@ -238,7 +236,7 @@ public class PhotoManager {
 
             @Override
             public void onError(Throwable e) {
-                SCToastUtil.showToast(context, "压缩异常", true);
+                SCToastUtil.showToast(MineApp.activity, "压缩异常", true);
             }
         });
     }
@@ -261,7 +259,7 @@ public class PhotoManager {
         for (int i = 0; i < filePaths.size(); i++) {
             files.add(new File(filePaths.get(i)));
         }
-        Luban.compress(context, files).putGear(Luban.CUSTOM_GEAR).setMaxSize(8 * 1024).launch(new OnMultiCompressListener() {
+        Luban.compress(MineApp.sContext, files).putGear(Luban.CUSTOM_GEAR).setMaxSize(8 * 1024).launch(new OnMultiCompressListener() {
             @Override
             public void onStart() {
                 isCompress = true;
@@ -283,7 +281,7 @@ public class PhotoManager {
 
             @Override
             public void onError(Throwable e) {
-                SCToastUtil.showToast(context, "压缩异常", true);
+                SCToastUtil.showToast(MineApp.activity, "压缩异常", true);
             }
         });
     }
@@ -465,7 +463,7 @@ public class PhotoManager {
      */
     public void reUploadByUnSuccess() {
         if (isCompress) {
-            SCToastUtil.showToast(context, "图片正在压缩...", true);
+            SCToastUtil.showToast(MineApp.activity, "图片正在压缩...", true);
             return;
         }
         for (int i = 0; i < photos.size(); i++) {
@@ -562,7 +560,7 @@ public class PhotoManager {
                     else if (listener != null) listener.onError(photoFile);
                     else super.onError(e);
                 }
-            }, context)
+            }, MineApp.activity)
                     .setFile(photoFile.getPhotoeFile())
                     .setIsCompre(2)
                     .setIsCutImage(1);

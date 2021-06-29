@@ -1,8 +1,10 @@
 package com.yimi.rentme.vm;
 
+import android.content.Intent;
 import android.os.CountDownTimer;
 
 import com.yimi.rentme.iv.LoadingVMInterface;
+import com.yimi.rentme.service.ForegroundLiveService;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
@@ -30,6 +32,7 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
                     new RulePW(activity, mBinding.getRoot(), new RulePW.CallBack() {
                         @Override
                         public void sureBack() {
+                            activity.startService(new Intent(activity, ForegroundLiveService.class));
                             PreferenceUtil.saveIntValue(activity, "ruleType1", 1);
                             ActivityUtils.getLoginVideoActivity();
 //                            activity.finish();
@@ -44,6 +47,7 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
             };
             mCountDownTimer.start();
         } else {
+            activity.startService(new Intent(activity, ForegroundLiveService.class));
             ActivityUtils.getLoginVideoActivity();
 //            activity.finish();
         }
