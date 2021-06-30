@@ -20,8 +20,4 @@ public abstract class BaseContextReceiver extends BroadcastReceiver {
     public void unregisterReceiver() {
         activity.unregisterReceiver(this);
     }
-
-    public interface CallBack {
-        void success(Intent intent);
-    }
 }

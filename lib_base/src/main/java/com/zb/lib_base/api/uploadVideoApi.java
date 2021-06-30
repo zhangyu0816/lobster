@@ -1,7 +1,6 @@
 package com.zb.lib_base.api;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import com.zb.lib_base.http.FileRequestBody;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.model.BaseEntity;
@@ -30,8 +29,7 @@ public class uploadVideoApi extends BaseEntity<ResourceUrl> {
     @Override
     public Observable getObservable(HttpService methods) {
         RequestBody requestFile = RequestBody.create(MediaType.parse("video/mp4"), file);
-        FileRequestBody fileRequest = new FileRequestBody(requestFile, getListener());
-        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), fileRequest);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
         return methods.uploadVideo(RequestBody.create(MediaType.parse("multipart/form-data"), file.getName()), body);
     }
 }
