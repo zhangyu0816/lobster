@@ -190,6 +190,43 @@ public class PhotoManager {
         });
     }
 
+    /**
+     * 添加文件 并立即上传
+     *
+     * @param index
+     * @param file
+     */
+    public void addFileUploadForFilm(final int index, File file, long cameraFilmId, int cameraFilmType) {
+        if (null == file) {
+            return;
+        }
+        final String srcFilePath = file.getAbsolutePath();
+        compressCount = 0;
+        Luban.compress(MineApp.sContext, file).putGear(Luban.CUSTOM_GEAR).setMaxSize(8 * 1024).launch(new OnCompressListener() {
+            @Override
+            public void onStart() {
+                isCompress = true;
+            }
+
+            @Override
+            public void onSuccess(File file) {
+                PhotoFile photoFile = new PhotoFile(srcFilePath, file, cameraFilmId, cameraFilmType);
+                if (index >= 0) {
+                    photos.add(index, photoFile);
+                } else {
+                    photos.add(photoFile);
+                }
+                isCompress = false;
+                uploadImage(photoFile);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+        });
+    }
+
     public void addFiles(List<String> filePaths, final CompressOver compressOver) {
         if (null == filePaths || filePaths.size() == 0) {
             return;
@@ -523,16 +560,14 @@ public class PhotoManager {
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) {
                     try {
+                        Log.e("ForegroundLiveService", "uploadUrlSuccess");
                         String json = response.body().string();
                         JSONObject object = new JSONObject(json);
                         JSONObject data = new JSONObject(object.optString("data"));
                         photoFile.setWebUrl(data.optString("url"));
                         photoFile.setUploadStatus(3);
                         photoFile.getPhotoeFile().deleteOnExit();
-                        statisticsUploadStatus();
-                        if (getPhotoUploadStatus(3) == photos.size() && listener != null) {
-                            listener.onSuccess();
-                        }
+                        listener.onSuccess(photoFile);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -575,6 +610,9 @@ public class PhotoManager {
     @FunctionalInterface
     public interface OnUpLoadImageListener {
         void onSuccess();
+
+        default void onSuccess(PhotoFile file) {
+        }
 
         default void onError(PhotoFile file) {
         }

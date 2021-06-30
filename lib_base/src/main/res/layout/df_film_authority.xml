@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="dialog"
+            type="com.zb.lib_base.windows.FilmAuthorityDF" />
+
+        <variable
+            name="filmName"
+            type="String" />
+
+        <variable
+            name="authority"
+            type="Integer" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_bg_white_radius_top10"
+        android:orientation="vertical"
+        android:paddingHorizontal="30dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="38dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="胶卷名称"
+            android:textColor="@color/black_252"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="@{filmName}"
+            android:textColor="@color/black_827"
+            android:textSize="16sp"
+            tools:text="hello world!" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="15dp"
+            android:background="#e9e8ee" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:text="分享类型"
+            android:textColor="@color/black_252"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="7dp"
+                android:layout_weight="1"
+                android:background="@{authority==3?@drawable/gradient_purple_6d5_ae7:@drawable/btn_bg_black_ddd_radius60}"
+                android:gravity="center"
+                android:onClick="@{v->dialog.selectAuthority(3)}"
+                android:text="私密"
+                android:textColor="@{authority==3?@color/white:@color/black_827}"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:background="@drawable/gradient_purple_6d5_ae7"
+                tools:textColor="@color/white" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="7dp"
+                android:layout_weight="1"
+                android:background="@{authority==1?@drawable/gradient_purple_6d5_ae7:@drawable/btn_bg_black_ddd_radius60}"
+                android:gravity="center"
+                android:onClick="@{v->dialog.selectAuthority(1)}"
+                android:text="公开"
+                android:textColor="@{authority==1?@color/white:@color/black_827}"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:background="@drawable/btn_bg_black_ddd_radius60"
+                tools:textColor="@color/black_827" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="15dp"
+            android:background="#e9e8ee" />
+
+        <TextView
+            android:id="@+id/tv_use"
+            onClickDelayed="@{dialog::useFilm}"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/gradient_purple_6d5_ae7"
+            android:gravity="center"
+            android:text="立即使用"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</layout>

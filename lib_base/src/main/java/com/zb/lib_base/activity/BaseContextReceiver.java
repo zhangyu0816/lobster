@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-
 public abstract class BaseContextReceiver extends BroadcastReceiver {
 
     public Context activity;

@@ -83,6 +83,11 @@ public class BaseViewModel implements BaseVMInterface {
     public void question(View view) {
     }
 
+    @Override
+    public void setFilmType(View view) {
+
+    }
+
     public void onDestroy() {
 
     }

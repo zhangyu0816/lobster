@@ -35,6 +35,9 @@ public interface BaseVMInterface {
     default void selectPosition(int position) {
     }
 
+    default void setFilmType(View view) {
+    }
+
     default void visitMember(long userId) {
         ActivityUtils.getCardMemberDetail(userId, false);
     }

@@ -12,13 +12,26 @@ public class PhotoFile {
 
     private int uploadStatus;//上传状态  1 未上传  2.正在上传  3.上传成功  4.上传失败
     private String webUrl; //网络url
-
+    long cameraFilmId;
+    int cameraFilmType;//胶卷类型
 
     public PhotoFile() {
         super();
     }
 
     public PhotoFile(String srcFilePath, File file) {
+        this.srcFilePath = srcFilePath;
+        this.fileSize = file.length();
+        this.fileHashCode = "" + file.hashCode();
+        this.filePath = file.getAbsolutePath();
+        this.photoeFile = file;
+        this.uploadStatus = 1;
+        this.webUrl = "";
+    }
+
+    public PhotoFile(String srcFilePath, File file, long cameraFilmId, int cameraFilmType) {
+        this.cameraFilmId = cameraFilmId;
+        this.cameraFilmType = cameraFilmType;
         this.srcFilePath = srcFilePath;
         this.fileSize = file.length();
         this.fileHashCode = "" + file.hashCode();
@@ -94,5 +107,21 @@ public class PhotoFile {
 
     public void setSrcFilePath(String srcFilePath) {
         this.srcFilePath = srcFilePath;
+    }
+
+    public long getCameraFilmId() {
+        return cameraFilmId;
+    }
+
+    public void setCameraFilmId(long cameraFilmId) {
+        this.cameraFilmId = cameraFilmId;
+    }
+
+    public int getCameraFilmType() {
+        return cameraFilmType;
+    }
+
+    public void setCameraFilmType(int cameraFilmType) {
+        this.cameraFilmType = cameraFilmType;
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.findCameraFilmsInfoApi;
 import com.zb.lib_base.api.findCameraFilmsResourceListApi;
@@ -15,6 +16,7 @@ import com.zb.lib_base.model.FilmInfo;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.FilmAuthorityDF;
 import com.zb.module_camera.R;
 import com.zb.module_camera.adapter.CameraAdapter;
 import com.zb.module_camera.databinding.AcFilmDetailBinding;
@@ -75,6 +77,17 @@ public class FilmDetailViewModel extends BaseViewModel implements FilmDetailVMIn
             activity.sendBroadcast(intent);
         }
         activity.finish();
+    }
+
+    @Override
+    public void setFilmType(View view) {
+        super.setFilmType(view);
+        if (mFilm.getUserId() == BaseActivity.userId) {
+            new FilmAuthorityDF(activity).setFilm(mFilm).setFilmCallBack(film -> {
+                mFilm = film;
+                activity.sendBroadcast(new Intent("lobster_updateGroup"));
+            }).show(activity.getSupportFragmentManager());
+        }
     }
 
     @Override

@@ -32,6 +32,7 @@ public class PhotoGroupViewModel extends BaseViewModel implements PhotoGroupVMIn
     private List<Film> mFilmList = new ArrayList<>();
     private int pageNo = 1;
     private BaseReceiver updateFilmReceiver;
+    private BaseReceiver updateGroupReceiver;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -55,6 +56,12 @@ public class PhotoGroupViewModel extends BaseViewModel implements PhotoGroupVMIn
                 }
             }
         };
+        updateGroupReceiver = new BaseReceiver(activity, "lobster_updateGroup") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                onRefresh(mBinding.refresh);
+            }
+        };
     }
 
     @Override
@@ -68,6 +75,7 @@ public class PhotoGroupViewModel extends BaseViewModel implements PhotoGroupVMIn
         super.onDestroy();
         try {
             updateFilmReceiver.unregisterReceiver();
+            updateGroupReceiver.unregisterReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }

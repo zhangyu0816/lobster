@@ -125,6 +125,17 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     }
 
     /**
+     * 图片地址
+     */
+    public static File getFilmImageFile() {
+        File imagePath = new File(MineApp.activity.getCacheDir(), "filmImages");
+        if (!imagePath.exists()) {
+            imagePath.mkdirs();
+        }
+        return new File(imagePath, randomString(15) + ".jpg");
+    }
+
+    /**
      * 视频文件
      */
     public static File getVideoFile() {

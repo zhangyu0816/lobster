@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 
 import com.yimi.rentme.databinding.AcMainBinding;
 import com.yimi.rentme.iv.MainVMInterface;
-import com.yimi.rentme.service.ForegroundLiveService;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.ViewPagerAdapter;

@@ -12,9 +12,22 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class FilmResourceDb extends BaseDao {
+    public volatile static FilmResourceDb INSTANCE;
 
     public FilmResourceDb(Realm realm) {
         super(realm);
+    }
+
+    //获取单例
+    public static FilmResourceDb getInstance() {
+        if (INSTANCE == null) {
+            synchronized (FilmResourceDb.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new FilmResourceDb(Realm.getDefaultInstance());
+                }
+            }
+        }
+        return INSTANCE;
     }
 
     public void saveData(FilmResource filmResource) {
