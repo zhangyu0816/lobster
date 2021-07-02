@@ -124,7 +124,7 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
 
     @Override
     public void wash(View view) {
-        new FilmRinseDF(activity).setFilm(mFilm).setFilmRinseCallBack(() -> {
+        new FilmRinseDF(activity).setFilm(mFilm).setSelectCount(selectImages.size()).setFilmRinseCallBack(() -> {
 
             MineApp.sFilmResourceDb.updateImages(mFilm.getId(), TextUtils.join("#", selectImages), true);
             activity.sendBroadcast(new Intent("lobster_washSuccess"));

@@ -56,13 +56,17 @@ public class AMapLocation {
                     PreferenceUtil.saveStringValue(activity, "districtName", districtName);
                     PreferenceUtil.saveStringValue(activity, "address", address);
                     if (callBack != null)
-                        callBack.success(longitude, latitude, provinceName, MineApp.cityName, districtName);
-                    mLocationClient.stopLocation();
-                    mLocationClient.onDestroy();
+                        callBack.success();
                 } else {
-                    SCToastUtil.showToast(activity, location.getLocationDetail(), true);
+                    if (PreferenceUtil.readStringValue(activity, "longitude").isEmpty()) {
+                        SCToastUtil.showToast(activity, "定位失败，请检查定位是否开启或连接WIFI重新尝试", true);
+                    } else {
+                        if (callBack != null)
+                            callBack.success();
+                    }
                 }
-
+                mLocationClient.stopLocation();
+                mLocationClient.onDestroy();
             }
         });
         //启动定位
@@ -70,6 +74,6 @@ public class AMapLocation {
     }
 
     public interface CallBack {
-        void success(String longitude, String latitude, String provinceName, String cityName, String districtName);
+        void success();
     }
 }

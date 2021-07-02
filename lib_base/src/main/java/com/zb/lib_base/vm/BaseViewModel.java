@@ -114,6 +114,7 @@ public class BaseViewModel implements BaseVMInterface {
             public void onTabSelected(TabLayout.Tab tab) {
                 if (isChatSelectIndex)
                     MineApp.chatSelectIndex = tab.getPosition();
+                MineApp.filmSelectIndex = tab.getPosition();
                 viewPager.setCurrentItem(tab.getPosition());
                 changeTab(tab, 16, selectColor);
                 if (tabNames[0].equals("关注")) {

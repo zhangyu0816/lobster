@@ -76,6 +76,7 @@ public class MineApp extends MultiDexApplication {
     public static List<FlashInfo> sFlashInfoList = new ArrayList<>();
     public static int noReadBottleNum = 0;
     public static int chatSelectIndex = 0;
+    public static int filmSelectIndex = 0;
     public static String NOTIFICATION_CHANNEL_ID = "com.yimi.rentme_notice";
 
     public static boolean isChat = false;

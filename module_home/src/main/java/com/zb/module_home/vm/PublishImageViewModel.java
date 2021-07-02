@@ -364,7 +364,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
                 ActivityUtils.getCameraMain(activity, true, true, true);
             }
         } else {
-            aMapLocation.start(activity, (longitude, latitude, provinceName, cityName, districtName) ->
+            aMapLocation.start(activity, () ->
                     ActivityUtils.getMineLocation(true));
         }
     }

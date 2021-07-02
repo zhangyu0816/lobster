@@ -758,15 +758,18 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     private void setLocation(int type) {
         if (type == 1) {
-            aMapLocation.start(activity, (longitude, latitude, provinceName, cityName, districtName) -> {
-                        mBinding.setCityName(cityName);
+            aMapLocation.start(activity, () -> {
+                        mBinding.setCityName(PreferenceUtil.readStringValue(activity,"cityName"));
                         modifyMemberInfo();
-                        joinPairPool(longitude, latitude, AreaDb.getInstance().getProvinceId(provinceName),
-                                AreaDb.getInstance().getCityId(cityName), AreaDb.getInstance().getDistrictId(districtName));
+                        joinPairPool(PreferenceUtil.readStringValue(activity,"longitude"),
+                                PreferenceUtil.readStringValue(activity,"latitude"),
+                                AreaDb.getInstance().getProvinceId(PreferenceUtil.readStringValue(activity,"provinceName")),
+                                AreaDb.getInstance().getCityId(PreferenceUtil.readStringValue(activity,"cityName")),
+                                AreaDb.getInstance().getDistrictId(PreferenceUtil.readStringValue(activity,"districtName")));
                     }
             );
         } else {
-            aMapLocation.start(activity, (longitude, latitude, provinceName, cityName, districtName) ->
+            aMapLocation.start(activity, () ->
                     ActivityUtils.getMineLocation(false));
         }
     }

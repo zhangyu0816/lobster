@@ -91,10 +91,11 @@ public class ForegroundLiveService extends Service {
             List<FilmResource> filmResourceList = filmResourceDb.getAllCameraFilm();
             if (filmResourceList.size() > 0) {
                 for (FilmResource filmResource : filmResourceList) {
-                    List<String> resourceImageList = Arrays.asList(filmResource.getImages().split("#"));
-                    if (resourceImageList.size() == 0) {
+                    if (filmResource.getImages().isEmpty()) {
+                        Log.e("ForegroundLiveService","deleteFilm");
                         filmResourceDb.deleteFilm(filmResource.getCameraFilmId());
                     } else {
+                        List<String> resourceImageList = Arrays.asList(filmResource.getImages().split("#"));
                         long cameraFilmId = filmResource.getCameraFilmId();
                         int cameraFilmType = filmResource.getCameraFilmType();
                         for (String image : resourceImageList) {

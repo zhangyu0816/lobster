@@ -34,6 +34,7 @@ public class PhotoMyFilmViewModel extends BaseViewModel implements PhotoMyFilmVM
     private ViewPagerAdapter adapter;
     private BaseReceiver readFilmMsgReceiver;
     private BaseReceiver myFilmPositionReceiver;
+    private BaseReceiver addFilmMsgCountReceiver;
     public int filmMsgCount = 0;
 
     @Override
@@ -62,6 +63,17 @@ public class PhotoMyFilmViewModel extends BaseViewModel implements PhotoMyFilmVM
                 mBinding.tvClean.setVisibility(index == 0 ? View.GONE : View.VISIBLE);
             }
         };
+        addFilmMsgCountReceiver = new BaseReceiver(activity, "lobster_addFilmMsgCount") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                filmMsgCount++;
+                if (filmMsgCount > 0)
+                    initTabLayout(new String[]{"胶卷", "消息-true-" + filmMsgCount}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, MineApp.filmSelectIndex, false);
+                else
+                    initTabLayout(new String[]{"胶卷", "消息"}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, MineApp.filmSelectIndex, false);
+            }
+        };
+
         initFragments();
         if (filmMsgCount > 0)
             initTabLayout(new String[]{"胶卷", "消息-true-" + filmMsgCount}, mBinding.tabLayout, mBinding.viewPage, R.color.black_252, R.color.black_827, 0, false);
@@ -81,6 +93,7 @@ public class PhotoMyFilmViewModel extends BaseViewModel implements PhotoMyFilmVM
         try {
             readFilmMsgReceiver.unregisterReceiver();
             myFilmPositionReceiver.unregisterReceiver();
+            addFilmMsgCountReceiver.unregisterReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }

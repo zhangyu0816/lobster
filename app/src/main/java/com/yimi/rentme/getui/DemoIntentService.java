@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -138,7 +139,10 @@ public class DemoIntentService extends GTIntentService {
                     if (userId != PreferenceUtil.readLongValue(context, "userId")) {
                         return;
                     }
-
+                    String activity = activityContent.optString("ActivityName");
+                    if(TextUtils.equals(activity,"FilmResourceDetailActivity")){
+                        context.sendBroadcast(new Intent("lobster_addFilmMsgCount"));
+                    }
                     if (isAppRunning) {
                         Log.i("isAppRunning", "isAppRunning == true");
                         Intent intent1 = new Intent(context, NotifivationActivity.class);

@@ -18,6 +18,7 @@ public class NotifivationActivity extends RxAppCompatActivity {
     private long discoverId = 0;
     private long driftBottleId = 0;
     private long flashTalkId = 0;
+    private long cameraFilmResourceId = 0;
     private int dynType = 0;
     private int reviewType = 0;
 
@@ -49,6 +50,8 @@ public class NotifivationActivity extends RxAppCompatActivity {
                                 driftBottleId = Long.parseLong(value);
                             } else if (TextUtils.equals(finalKey[0], "flashTalkId")) {
                                 flashTalkId = Long.parseLong(value);
+                            } else if (TextUtils.equals(finalKey[0], "cameraFilmResourceId")) {
+                                cameraFilmResourceId = Long.parseLong(value);
                             }
                         }
                         if ("Integer".equals(finalKey[1])) {
@@ -83,6 +86,8 @@ public class NotifivationActivity extends RxAppCompatActivity {
                     ActivityUtils.getMineFCL(1, 0);
                 } else if (TextUtils.equals(activity, "BottleChatActivity")) {
                     ActivityUtils.getBottleChat(driftBottleId, true);
+                } else if (TextUtils.equals(activity, "FilmResourceDetailActivity")) {
+                    ActivityUtils.getCameraFilmResourceDetail(cameraFilmResourceId, "");
                 }
                 finish();
             } catch (JSONException e) {

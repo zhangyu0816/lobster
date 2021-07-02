@@ -54,6 +54,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
     private FilmResource mFilmResource;
     private BaseReceiver washSuccessReceiver;
     private BaseReceiver readFilmMsgReceiver;
+    private BaseReceiver addFilmMsgCountReceiver;
     private int filmMsgCount = 0;
     private PropertyValuesHolder pvhTY;
     private ObjectAnimator pvh_bottom;
@@ -100,6 +101,13 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
                 mBinding.setNewsCount(Math.max(0, filmMsgCount));
             }
         };
+        addFilmMsgCountReceiver = new BaseReceiver(activity, "lobster_addFilmMsgCount") {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                filmMsgCount++;
+                mBinding.setNewsCount(Math.max(0, filmMsgCount));
+            }
+        };
         cameraFilmMsCount();
     }
 
@@ -128,6 +136,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
         try {
             washSuccessReceiver.unregisterReceiver();
             readFilmMsgReceiver.unregisterReceiver();
+            addFilmMsgCountReceiver.unregisterReceiver();
         } catch (Exception e) {
             e.printStackTrace();
         }

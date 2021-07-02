@@ -94,6 +94,7 @@ public class FilmResourceDetailViewModel extends BaseViewModel implements FilmRe
         findCameraFilmsResource();
         cameraSeeLikers(1);
         cameraSeeReviews();
+
     }
 
     @Override

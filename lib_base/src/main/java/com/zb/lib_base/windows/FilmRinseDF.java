@@ -15,6 +15,7 @@ public class FilmRinseDF extends BaseDialogFragment {
 
     private DfFilmRinseBinding mBinding;
     private Film mFilm;
+    private int selectCount = 0;
     private FilmRinseCallBack mFilmRinseCallBack;
 
     public FilmRinseDF(RxAppCompatActivity activity) {
@@ -27,6 +28,11 @@ public class FilmRinseDF extends BaseDialogFragment {
 
     public FilmRinseDF setFilm(Film film) {
         mFilm = film;
+        return this;
+    }
+
+    public FilmRinseDF setSelectCount(int selectCount) {
+        this.selectCount = selectCount;
         return this;
     }
 
@@ -55,7 +61,7 @@ public class FilmRinseDF extends BaseDialogFragment {
     public void initUI() {
         mBinding.setDialog(this);
         mBinding.setFilm(mFilm);
-        mBinding.setHasFilm(MineApp.sFilmResourceDb.getImageSize(mFilm.getId()) < MineApp.filmMaxSize);
+        mBinding.setHasFilm((MineApp.sFilmResourceDb.getImageSize(mFilm.getId()) + selectCount) < MineApp.filmMaxSize);
     }
 
     public void cancel(View view) {

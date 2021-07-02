@@ -236,7 +236,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="@{viewModel::setBottom}"
                 android:paddingVertical="10dp"
-                android:src="@{showBottom?@drawable/icon_out:@drawable/icon_hide}"
+                android:src="@{showBottom?@drawable/icon_hide:@drawable/icon_out}"
                 tools:src="@drawable/icon_hide" />
 
             <RelativeLayout

@@ -136,14 +136,24 @@
                     android:background="@drawable/btn_bg_white_radius10" />
 
                 <ImageView
+                    android:id="@+id/iv_image5"
                     blurRoundImageUrl="@{item.image5}"
                     isBlur="@{item.washType==1}"
                     roundSize="@{10}"
                     viewHeightSize="@{ObjectUtils.getViewSizeByWidthFromMax(234)}"
                     viewWidthSize="@{ObjectUtils.getViewSizeByWidthFromMax(234)}"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_centerInParent="true" />
+
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true" />
+                    android:layout_alignEnd="@+id/iv_image5"
+                    android:layout_alignBottom="@+id/iv_image5"
+                    android:layout_margin="8dp"
+                    android:background="@mipmap/icon_private"
+                    android:visibility="@{(item.imageSize>=5&amp;&amp;item.authority==3)?View.VISIBLE:View.GONE}" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -162,6 +172,7 @@
                     android:background="@drawable/btn_bg_white_radius10" />
 
                 <ImageView
+                    android:id="@+id/iv_image4"
                     blurRoundImageUrl="@{item.image4}"
                     isBlur="@{item.washType==1}"
                     roundSize="@{10}"
@@ -170,6 +181,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@+id/iv_image4"
+                    android:layout_alignBottom="@+id/iv_image4"
+                    android:layout_margin="8dp"
+                    android:background="@mipmap/icon_private"
+                    android:visibility="@{(item.imageSize==4&amp;&amp;item.authority==3)?View.VISIBLE:View.GONE}" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -188,6 +208,7 @@
                     android:background="@drawable/btn_bg_white_radius10" />
 
                 <ImageView
+                    android:id="@+id/iv_image3"
                     blurRoundImageUrl="@{item.image3}"
                     isBlur="@{item.washType==1}"
                     roundSize="@{10}"
@@ -196,6 +217,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@+id/iv_image3"
+                    android:layout_alignBottom="@+id/iv_image3"
+                    android:layout_margin="8dp"
+                    android:background="@mipmap/icon_private"
+                    android:visibility="@{(item.imageSize==3&amp;&amp;item.authority==3)?View.VISIBLE:View.GONE}" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -214,6 +244,7 @@
                     android:background="@drawable/btn_bg_white_radius10" />
 
                 <ImageView
+                    android:id="@+id/iv_image2"
                     blurRoundImageUrl="@{item.image2}"
                     isBlur="@{item.washType==1}"
                     roundSize="@{10}"
@@ -222,6 +253,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@+id/iv_image2"
+                    android:layout_alignBottom="@+id/iv_image2"
+                    android:layout_margin="8dp"
+                    android:background="@mipmap/icon_private"
+                    android:visibility="@{(item.imageSize==2&amp;&amp;item.authority==3)?View.VISIBLE:View.GONE}" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -237,6 +277,7 @@
                     android:background="@drawable/btn_bg_white_radius10" />
 
                 <ImageView
+                    android:id="@+id/iv_image1"
                     blurRoundImageUrl="@{item.image1}"
                     isBlur="@{item.washType==1}"
                     roundSize="@{10}"
@@ -245,6 +286,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@+id/iv_image1"
+                    android:layout_alignBottom="@+id/iv_image1"
+                    android:layout_margin="8dp"
+                    android:background="@mipmap/icon_private"
+                    android:visibility="@{(item.imageSize==1&amp;&amp;item.authority==3)?View.VISIBLE:View.GONE}" />
             </RelativeLayout>
 
         </RelativeLayout>

@@ -359,7 +359,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     }
 
     private void setLocation() {
-        aMapLocation.start(activity, (longitude, latitude, provinceName, cityName, districtName) ->
+        aMapLocation.start(activity, () ->
                 ActivityUtils.getMineLocation(false));
     }
 
