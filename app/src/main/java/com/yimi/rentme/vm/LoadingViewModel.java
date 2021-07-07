@@ -35,12 +35,11 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
                             activity.startService(new Intent(activity, ForegroundLiveService.class));
                             PreferenceUtil.saveIntValue(activity, "ruleType1", 1);
                             ActivityUtils.getLoginVideoActivity();
-//                            activity.finish();
                         }
 
                         @Override
                         public void cancelBack() {
-//                            activity.finish();
+                            activity.finish();
                         }
                     });
                 }
@@ -49,7 +48,6 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
         } else {
             activity.startService(new Intent(activity, ForegroundLiveService.class));
             ActivityUtils.getLoginVideoActivity();
-//            activity.finish();
         }
     }
 

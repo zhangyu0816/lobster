@@ -113,7 +113,7 @@ public class DemoIntentService extends GTIntentService {
                     Intent[] intents = new Intent[2];
                     intents[0] = Intent.makeRestartActivityTask(new ComponentName(context, LoadingActivity.class));
                     intents[1] = new Intent(Intent.ACTION_VIEW, Uri.parse(object.optString("url")));
-                    intents[1].addCategory("android.intent.category.BROWSABLE");
+                    intents[1].addCategory(Intent.CATEGORY_BROWSABLE);
                     intents[1].setComponent(null);
                     intents[1].setSelector(null);
                     PendingIntent contentIntent = PendingIntent.getActivities(context, 1, intents,

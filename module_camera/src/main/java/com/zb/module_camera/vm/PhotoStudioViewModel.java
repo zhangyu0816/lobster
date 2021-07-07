@@ -388,6 +388,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
             @Override
             public void onNext(Object o) {
                 activity.sendBroadcast(new Intent("lobster_startGPU"));
+                SCToastUtil.showToast(activity,"已提交冲洗",true);
                 findCameraFilms();
                 mFilm = null;
                 camerafilmType = 0;

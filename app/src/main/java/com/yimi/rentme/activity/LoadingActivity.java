@@ -22,8 +22,6 @@ public class LoadingActivity extends RxAppCompatActivity {
         MineApp.getApp().addActivity(this);
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.ac_loading);
-
-        ARouter.getInstance().inject(this);
         try {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         } catch (Exception e) {
