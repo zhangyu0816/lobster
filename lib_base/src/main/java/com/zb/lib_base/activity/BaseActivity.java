@@ -3,7 +3,9 @@ package com.zb.lib_base.activity;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -18,6 +20,7 @@ import com.zb.lib_base.R;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.PwsPerformBinding;
 import com.zb.lib_base.mimc.UserManager;
+import com.zb.lib_base.utils.DebuggerUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 
 import java.io.File;
@@ -45,6 +48,8 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         MineApp.getApp().addActivity(this);
         super.onCreate(savedInstanceState);
+        if (!DebuggerUtils.isDebuggable(MineApp.sContext))
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         activity = this;
         mBinding = DataBindingUtil.setContentView(this, getRes());
 

@@ -16,6 +16,7 @@ android {
         versionName "1.0"
         ndk {
             abiFilters "armeabi","armeabi-v7a","x86"
+            cFlags "-Wall -O2 -U_FORTIFY_SOURCE -fstack-protector-all"
         }
     }
 

@@ -1,17 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.zb.module_home">
 
-    <application android:theme="@style/HomeTheme">
+    <application
+        android:allowBackup="false"
+        android:debuggable="false"
+        android:theme="@style/HomeTheme"
+        tools:ignore="HardcodedDebugMode">
         <activity
             android:name=".activity.PublishImageActivity"
+            android:exported="false"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity android:name=".activity.DiscoverDetailActivity" />
-        <activity android:name=".activity.RewardListActivity" />
-        <activity android:name=".activity.ReportActivity" />
-        <activity android:name=".activity.SearchActivity" />
-        <activity android:name=".activity.VideoListActivity" />
-        <activity android:name=".activity.DiscoverVideoActivity" />
+        <activity
+            android:name=".activity.DiscoverDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.RewardListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ReportActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.VideoListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.DiscoverVideoActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

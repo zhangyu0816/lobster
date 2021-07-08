@@ -1,21 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.zb.module_camera">
 
     <application
+        android:allowBackup="false"
+        android:debuggable="false"
         android:hardwareAccelerated="true"
-        android:theme="@style/CameraTheme">
-        <activity android:name=".activity.CameraActivity" />
-        <activity android:name=".activity.VideoActivity" />
-        <activity android:name=".activity.PhotoActivity" />
-        <activity android:name=".activity.VideosActivity" />
-        <activity android:name=".activity.VideoPlayActivity" />
-        <activity android:name=".activity.PhotoStudioActivity" />
-        <activity android:name=".activity.PhotoWallActivity" />
-        <activity android:name=".activity.PhotoGroupActivity" />
-        <activity android:name=".activity.FilmDetailActivity" />
-        <activity android:name=".activity.PhotoMyFilmActivity" />
-        <activity android:name=".activity.FilmResourceDetailActivity" />
+        android:theme="@style/CameraTheme"
+        tools:ignore="HardcodedDebugMode">
+        <activity
+            android:name=".activity.CameraActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.VideoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.PhotoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.VideosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.VideoPlayActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.PhotoStudioActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.PhotoWallActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.PhotoGroupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.FilmDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.PhotoMyFilmActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.FilmResourceDetailActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

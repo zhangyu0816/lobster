@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.zb.module_chat">
 
-    <application android:theme="@style/ChatTheme">
+    <application
+        android:allowBackup="false"
+        android:debuggable="false"
+        android:theme="@style/ChatTheme"
+        tools:ignore="HardcodedDebugMode">
 
         <activity
             android:name=".activity.ChatActivity"
+            android:exported="false"
             android:launchMode="singleTop" />
-        <activity android:name=".activity.FlashChatActivity" />
+        <activity
+            android:name=".activity.FlashChatActivity"
+            android:exported="false" />
 
     </application>
 

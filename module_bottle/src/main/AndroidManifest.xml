@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.zb.module_bottle">
 
-    <application android:theme="@style/BottleTheme">
-        <activity android:name=".activity.BottleThrowActivity" />
-        <activity android:name=".activity.BottleListActivity" />
+    <application
+        android:allowBackup="false"
+        android:debuggable="false"
+        android:theme="@style/BottleTheme"
+        tools:ignore="HardcodedDebugMode">
+        <activity
+            android:name=".activity.BottleThrowActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.BottleListActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.BottleChatActivity"
+            android:exported="false"
             android:launchMode="singleTop" />
     </application>
 

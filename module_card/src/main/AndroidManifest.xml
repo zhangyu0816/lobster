@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.zb.module_card">
 
-    <application android:theme="@style/CardTheme">
-        <activity android:name=".activity.MemberDetailActivity" />
-        <activity android:name=".activity.DiscoverListActivity" />
+    <application
+        android:allowBackup="false"
+        android:debuggable="false"
+        android:theme="@style/CardTheme"
+        tools:ignore="HardcodedDebugMode">
+        <activity
+            android:name=".activity.MemberDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.DiscoverListActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

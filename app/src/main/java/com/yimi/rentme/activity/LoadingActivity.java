@@ -2,10 +2,12 @@ package com.yimi.rentme.activity;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.WindowManager;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.yimi.rentme.BR;
+import com.yimi.rentme.BuildConfig;
 import com.yimi.rentme.R;
 import com.yimi.rentme.databinding.AcLoadingBinding;
 import com.yimi.rentme.vm.LoadingViewModel;
@@ -21,6 +23,7 @@ public class LoadingActivity extends RxAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         MineApp.getApp().addActivity(this);
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         mBinding = DataBindingUtil.setContentView(this, R.layout.ac_loading);
         try {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
