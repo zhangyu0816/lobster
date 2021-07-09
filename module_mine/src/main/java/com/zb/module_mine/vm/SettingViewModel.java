@@ -17,6 +17,7 @@ import com.zb.lib_base.api.realNameVerifyApi;
 import com.zb.lib_base.api.setSendMessageApi;
 import com.zb.lib_base.api.walletAndPopApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -124,9 +125,14 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     @Override
     public void toRealName(View view) {
         if (mBinding == null) return;
-        if (mBinding.getIsChecked() == -1 || mBinding.getIsChecked() == 2)
-            ActivityUtils.getMineRealName();
-        else if (mBinding.getIsChecked() == 0) {
+        if (mBinding.getIsChecked() == -1 || mBinding.getIsChecked() == 2) {
+            if (PreferenceUtil.readIntValue(activity, "realPermission") == 0) {
+                ActivityUtils.getMineRealName();
+            } else if (checkPermissionGranted(activity, Manifest.permission.CAMERA)) {
+                ActivityUtils.getMineRealName();
+            } else
+                SCToastUtil.showToast(activity, "你已拒绝申请相机权限，请前往设置--权限管理--权限进行设置", true);
+        } else if (mBinding.getIsChecked() == 0) {
             SCToastUtil.showToast(activity, "人脸信息正在审核中，请耐心等待", true);
         } else {
             SCToastUtil.showToast(activity, "人脸信息验证成功，无需再次提交", true);
@@ -142,18 +148,37 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     public void toLocation(View view) {
         if (MineApp.mineInfo.getMemberType() == 1) {
             if (MineApp.vipInfoList.size() > 0)
-                new TextPW(mBinding.getRoot(), "VIP特权", "位置漫游服务为VIP用户专享功能", "开通会员", new TextPW.CallBack() {
-                    @Override
-                    public void sure() {
-                        ActivityUtils.getMineOpenVip(false);
-                    }
-                });
+                new TextPW(mBinding.getRoot(), "VIP特权", "位置漫游服务为VIP用户专享功能", "开通会员", () -> ActivityUtils.getMineOpenVip(false));
             return;
         }
         if (PreferenceUtil.readStringValue(activity, "latitude").isEmpty()) {
-            new TextPW(mBinding.getRoot(), "定位失败", "定位失败，无法选取地址，请重新定位", "重新定位", this::getPermissions);
+            new TextPW(mBinding.getRoot(), "定位失败", "定位失败，无法选取地址，请重新定位", "重新定位", () -> {
+                CustomProgressDialog.showLoading(activity, "定位...");
+                getPermissions1(0);
+            });
         } else {
-            ActivityUtils.getMineLocation(false);
+            if (PreferenceUtil.readIntValue(activity, "locationPermission") == 0)
+                new TextPW(activity, mBinding.getRoot(), "权限说明",
+                        "我们会以申请权限的方式获取设备功能的使用：" +
+                                "\n 1、申请定位权限--获取定位服务，" +
+                                "\n 2、若你拒绝权限申请，仅无法使用定位服务，虾菇app其他功能不受影响，" +
+                                "\n 3、可通过app内 我的--设置--权限管理 进行权限操作。",
+                        "同意", false, true, new TextPW.CallBack() {
+                    @Override
+                    public void sure() {
+                        PreferenceUtil.saveIntValue(activity, "locationPermission", 1);
+                        getPermissions1(1);
+                    }
+
+                    @Override
+                    public void cancel() {
+                        PreferenceUtil.saveIntValue(activity, "locationPermission", 2);
+                    }
+                });
+            else if (checkPermissionGranted(activity, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION))
+                getPermissions1(1);
+            else
+                SCToastUtil.showToast(activity, "你已拒绝申请相机权限，请前往设置--权限管理--权限进行设置", true);
         }
     }
 
@@ -206,7 +231,15 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     @Override
     public void toIdCard(View view) {
         if (mAuthentication == null) {
-            ActivityUtils.getMineAuthentication(new Authentication());
+            if (PreferenceUtil.readIntValue(activity, "bindingIdCard") == 0) {
+                new TextPW(activity, mBinding.getRoot(), "实名认证", "您在使用提现服务时，为了保障您的账户和资金安全，我们必须获取和使用您的姓名、身份证号进行实名认证。如您选择不提供上述信息，您可能无法使用提现服务。",
+                        "同意", false, true, () -> {
+                    PreferenceUtil.saveIntValue(activity, "bindingIdCard", 1);
+                    ActivityUtils.getMineAuthentication(new Authentication());
+                });
+            } else {
+                ActivityUtils.getMineAuthentication(new Authentication());
+            }
         } else if (mAuthentication.getIsChecked() == 1) {
             SCToastUtil.showToast(activity, "实名认证已通过，无需再次审核", true);
         } else {
@@ -339,37 +372,35 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     /**
      * 权限
      */
-    private void getPermissions() {
+    private void getPermissions1(int type) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             performCodeWithPermission("虾菇需要访问定位权限", new BaseActivity.PermissionCallback() {
-                        @Override
-                        public void hasPermission() {
-                            setLocation();
-                        }
+                @Override
+                public void hasPermission() {
+                    setLocation(type);
+                }
 
-                        @Override
-                        public void noPermission() {
-                            baseLocation();
-                        }
-                    }, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
+                @Override
+                public void noPermission() {
+                    if (type == 1) {
+                        PreferenceUtil.saveIntValue(activity, "locationPermission", 2);
+                        SCToastUtil.showToast(activity, "你已拒绝申请相机权限，请前往设置--权限管理--权限进行设置", true);
+                    }
+                }
+            }, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION);
         } else {
-            setLocation();
+            setLocation(type);
         }
     }
 
-    private void setLocation() {
-        aMapLocation.start(activity, () ->
-                ActivityUtils.getMineLocation(false));
-    }
-
-    private void baseLocation() {
-        PreferenceUtil.saveStringValue(activity, "longitude", "120.641956");
-        PreferenceUtil.saveStringValue(activity, "latitude", "28.021994");
-        PreferenceUtil.saveStringValue(activity, "cityName", "温州市");
-        PreferenceUtil.saveStringValue(activity, "provinceName", "浙江省");
-        PreferenceUtil.saveStringValue(activity, "districtName", "鹿城区");
-        PreferenceUtil.saveStringValue(activity, "address", "浙江省温州市鹿城区望江东路175号靠近温州银行(文化支行)");
-        ActivityUtils.getMineLocation(false);
+    private void setLocation(int type) {
+        if (type == 0)
+            aMapLocation.start(activity, () -> {
+                        CustomProgressDialog.stopLoading();
+                        ActivityUtils.getMineLocation(false);
+                    }
+            );
+        else
+            ActivityUtils.getMineLocation(false);
     }
 }

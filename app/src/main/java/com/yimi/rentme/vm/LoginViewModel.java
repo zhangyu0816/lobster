@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
@@ -12,8 +13,14 @@ import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.TextView;
 
@@ -63,6 +70,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.ViewDataBinding;
 
@@ -119,6 +127,36 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         mBinding.edPass.addTextChangedListener(this);
         mBinding.edNick.addTextChangedListener(this);
         mBinding.setSexIndex(2);
+
+        SpannableString style = new SpannableString("请阅读《用户注册协议》和《隐私政策》并勾选");
+
+        style.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View view) {
+                ActivityUtils.getMineWeb("注册协议", HttpManager.BASE_URL + "mobile/xiagu_reg_protocol.html");
+            }
+
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                ds.setUnderlineText(false);
+            }
+        }, 3, 11, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        style.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View view) {
+                ActivityUtils.getMineWeb("隐私政策", HttpManager.BASE_URL + "mobile/xiagu_privacy_protocol.html");
+            }
+
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                ds.setUnderlineText(false);
+            }
+        }, 12, 18, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        style.setSpan(new ForegroundColorSpan(Color.parseColor("#0d88c1")), 3, 11, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        style.setSpan(new ForegroundColorSpan(Color.parseColor("#0d88c1")), 12, 18, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mBinding.tvClick.setText(style);
+        mBinding.tvClick.setMovementMethod(LinkMovementMethod.getInstance());
+        mBinding.setClickSelect(TextUtils.equals("1", PreferenceUtil.readStringValue(activity, "clickSelect")));
 
         threeLogin = new ThreeLogin(activity, this::loginByUnion);
 
@@ -178,7 +216,33 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         };
 
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
-        getPermissions(0);
+        if (PreferenceUtil.readIntValue(activity, "phonePermission") == 0)
+            MineApp.getApp().getFixedThreadPool().execute(() -> {
+                SystemClock.sleep(300);
+                activity.runOnUiThread(() -> new TextPW(activity, mBinding.getRoot(), "权限说明",
+                        "我们会申请系统权限收集硬件序列号、设备MAC地址、唯一设备识别码（IMEI/android ID/OPENUDID等）等在内的描述个人常用设备基本情况的信息。" +
+                                "\n 1、为了保障用户账号安全、平台安全、运营安全，便于辨别不同的设备，方便错误原因精准定位。" +
+                                "\n 2、如果您同意开启通知功能，即代表您同意将设备信息共享给每日互动股份有限公司，以便提供个推推送服务。" +
+                                "\n 3、如果您使用支付功能，即代表您同意将设备信息共享给支付宝和微信，以便提供app支付功能。" +
+                                "\n 4、为了保障及时了解软件使用情况及修复bug，我们将与友盟+共享设备信息，以便提供统计功能。" +
+                                "\n 5、如果您同意开启定位功能，即代表您同意将设备信息共享给高德地图，以便提供地图功能和精准定位功能。" +
+                                "\n 6、可通过app内 我的--设置--权限管理 进行权限操作",
+                        "同意", false, true, new TextPW.CallBack() {
+                    @Override
+                    public void sure() {
+                        PreferenceUtil.saveIntValue(activity, "phonePermission", 1);
+                        getPermissions1(0);
+                    }
+
+                    @Override
+                    public void cancel() {
+                        PreferenceUtil.saveIntValue(activity, "phonePermission", 2);
+                    }
+                }));
+            });
+        else if (checkPermissionGranted(activity, Manifest.permission.READ_PHONE_STATE))
+            getPermissions1(0);
+
 
         photoManager = new PhotoManager(activity, () -> {
             String imageUrl = photoManager.jointWebUrl("#");
@@ -276,7 +340,29 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
 
     @Override
     public void upload(View view) {
-        getPermissions(1);
+        if (PreferenceUtil.readIntValue(activity, "cameraPermission") == 0)
+            new TextPW(activity, mBinding.getRoot(), "权限说明",
+                    "我们会以申请权限的方式获取设备功能的使用：" +
+                            "\n 1、申请相机权限--获取照相功能，" +
+                            "\n 2、申请存储权限--获取照册功能，" +
+                            "\n 3、若你拒绝权限申请，将无法完成虾菇注册流程，" +
+                            "\n 4、可通过app内 我的--设置--权限管理 进行权限操作。",
+                    "同意", false, true, new TextPW.CallBack() {
+                @Override
+                public void sure() {
+                    PreferenceUtil.saveIntValue(activity, "cameraPermission", 1);
+                    getPermissions1(1);
+                }
+
+                @Override
+                public void cancel() {
+                    PreferenceUtil.saveIntValue(activity, "cameraPermission", 2);
+                }
+            });
+        else if (checkPermissionGranted(activity, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE))
+            getPermissions1(1);
+        else
+            SCToastUtil.showToast(activity, "你已拒绝申请相机及存储权限，请前往系统设置--应用--虾菇--权限进行设置", false);
     }
 
     @Override
@@ -296,6 +382,10 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             switch (mBinding.getLoginStep()) {
                 case 0: // 验证手机号
                     PreferenceUtil.saveStringValue(activity, "userName", MineApp.registerInfo.getPhone());
+                    if (!mBinding.getClickSelect()) {
+                        SCToastUtil.showToast(activity, "请仔细阅读底部协议，并勾选", false);
+                        return;
+                    }
                     checkUserName();
                     break;
                 case 1: // 账号登录
@@ -346,7 +436,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             changeTime = 0;
             HttpManager.BASE_URL = TextUtils.equals(HttpManager.BASE_URL, "http://192.168.1.88:8090/") ? "https://xgapi.zuwo.la/" : "http://192.168.1.88:8090/";
             HttpManager.INSTANCE = null;
-            SCToastUtil.showToast(activity, HttpManager.BASE_URL, true);
+            SCToastUtil.showToast(activity, HttpManager.BASE_URL, false);
         }
     }
 
@@ -375,6 +465,12 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     @Override
     public void editSign(View view) {
         ActivityUtils.getMineEditContent(3, 10, "编辑个性签名", MineApp.registerInfo.getPersonalitySign(), "编辑个性签名...");
+    }
+
+    @Override
+    public void clickSelect(View view) {
+        mBinding.setClickSelect(!mBinding.getClickSelect());
+        PreferenceUtil.saveStringValue(activity, "clickSelect", mBinding.getClickSelect() ? "1" : "0");
     }
 
     @Override
@@ -658,7 +754,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         switch (mBinding.getLoginStep()) {
             case 0:
                 if ((System.currentTimeMillis() - exitTime) > 2000) {
-                    SCToastUtil.showToast(activity, "再按一次退出程序", true);
+                    SCToastUtil.showToast(activity, "再按一次退出程序", false);
                     exitTime = System.currentTimeMillis();
                 } else {
                     timer.cancel();
@@ -713,7 +809,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                     SystemClock.sleep(200);
                     activity.runOnUiThread(() -> {
                         mBinding.edPhone.setSelection(mBinding.edPhone.getText().length());
-                        showImplicit(mBinding.edPhone);
+//                        showImplicit(mBinding.edPhone);
                         mBinding.setCanNext(MineApp.registerInfo.getPhone().length() == 11);
                     });
                 });
@@ -771,7 +867,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     /**
      * 权限
      */
-    private void getPermissions(int type) {
+    private void getPermissions1(int type) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (type == 0)
                 performCodeWithPermission("虾菇需要访问手机权限", new BaseActivity.PermissionCallback() {
@@ -782,6 +878,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
 
                     @Override
                     public void noPermission() {
+                        PreferenceUtil.saveIntValue(activity, "phonePermission", 2);
                     }
                 }, Manifest.permission.READ_PHONE_STATE);
             else
@@ -793,6 +890,8 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
 
                     @Override
                     public void noPermission() {
+                        PreferenceUtil.saveIntValue(activity, "cameraPermission", 2);
+                        SCToastUtil.showToast(activity, "你已拒绝申请相机及存储权限，请前往系统设置--应用--虾菇--权限进行设置", false);
                     }
                 }, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
         } else {

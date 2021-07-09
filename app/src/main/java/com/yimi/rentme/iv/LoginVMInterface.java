@@ -30,6 +30,8 @@ public interface LoginVMInterface {
 
     void editSign(View view);
 
+    void clickSelect(View view);
+
     void registerCaptcha();
 
     void loginCaptcha();

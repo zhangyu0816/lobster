@@ -13,10 +13,12 @@ import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.Authentication;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.uploadImage.PhotoFile;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.TextPW;
 import com.zb.module_mine.R;
 import com.zb.module_mine.adapter.MineAdapter;
 import com.zb.module_mine.iv.AuthenticationVMInterface;
@@ -69,7 +71,30 @@ public class AuthenticationViewModel extends BaseViewModel implements Authentica
     @Override
     public void selectImage(int position) {
         _position = position;
-        getPermissions();
+        if (PreferenceUtil.readIntValue(activity, "cameraPermission") == 0)
+            new TextPW(activity, mBinding.getRoot(), "权限说明",
+                    "我们会以申请权限的方式获取设备功能的使用：" +
+                            "\n 1、申请相机权限--获取照相功能，" +
+                            "\n 2、申请存储权限--获取照册功能，" +
+                            "\n 3、若你拒绝权限申请，仅无法使用发布动态功能，虾菇app其他功能不受影响，" +
+                            "\n 4、可通过app内 我的--设置--权限管理 进行权限操作。",
+                    "同意", false, true, new TextPW.CallBack() {
+                @Override
+                public void sure() {
+                    PreferenceUtil.saveIntValue(activity, "cameraPermission", 1);
+                    getPermissions1();
+                }
+
+                @Override
+                public void cancel() {
+                    PreferenceUtil.saveIntValue(activity, "cameraPermission", 2);
+                }
+            });
+        else if (checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            getPermissions1();
+        else
+            SCToastUtil.showToast(activity, "你已拒绝申请相机、存储权限，请前往我的--设置--权限管理--权限进行设置", true);
     }
 
     @Override
@@ -131,9 +156,9 @@ public class AuthenticationViewModel extends BaseViewModel implements Authentica
     /**
      * 权限
      */
-    private void getPermissions() {
+    private void getPermissions1() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission("虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
+            performCodeWithPermission("虾菇需要访问存储权限及相机权限", new BaseActivity.PermissionCallback() {
                         @Override
                         public void hasPermission() {
                             setPermissions();
@@ -141,9 +166,11 @@ public class AuthenticationViewModel extends BaseViewModel implements Authentica
 
                         @Override
                         public void noPermission() {
+                            PreferenceUtil.saveIntValue(activity, "cameraPermission", 2);
+                            SCToastUtil.showToast(activity, "你已拒绝申请相机、存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                         }
                     }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO);
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
         } else {
             setPermissions();
         }

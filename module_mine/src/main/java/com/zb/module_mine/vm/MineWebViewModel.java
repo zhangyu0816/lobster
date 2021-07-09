@@ -42,6 +42,7 @@ import com.zb.lib_base.model.OrderTran;
 import com.zb.lib_base.model.ShareProduct;
 import com.zb.lib_base.model.WebShare;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.ShareUtil;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -155,8 +156,18 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                     if (!money.isEmpty()) {
                         mMoney = Double.parseDouble(df.format(Double.parseDouble(money)));
                     }
-                    CustomProgressDialog.showLoading(activity, "提现处理中");
-                    realNameVerify();
+                    if (PreferenceUtil.readIntValue(activity, "webWithdraw") == 0) {
+                        new TextPW(activity, mBinding.getRoot(), "提现说明", "您在使用提现服务时，为了保障您的账户和资金安全，我们必须获取和使用您的姓名、身份证号、银行卡或支付宝账号。如您选择不提供上述信息，您可能无法使用提现服务。" +
+                                "\n先在卡包内绑定提现账户，提交提现申请后，我们将会在3个工作日内打款至提现账户。", "同意",
+                                false, true, () -> {
+                            PreferenceUtil.saveIntValue(activity, "webWithdraw", 1);
+                            CustomProgressDialog.showLoading(activity, "提现处理中");
+                            realNameVerify();
+                        });
+                    } else {
+                        CustomProgressDialog.showLoading(activity, "提现处理中");
+                        realNameVerify();
+                    }
                 } else if (mUrl.contains("qqshare:")) {
                     share(mUrl.replace("qqshare:", ""), "qqshare");
                 } else if (mUrl.contains("wxshare:")) {
@@ -269,7 +280,28 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                     mWebShare.setShareType(object.optInt("shareType"));
 
                 if (TextUtils.equals("shareimage", type)) {
-                    getPermissions();
+                    if (PreferenceUtil.readIntValue(activity, "writePermission") == 0)
+                        new TextPW(activity, mBinding.getRoot(), "权限说明",
+                                "我们会以申请权限的方式获取设备功能的使用：" +
+                                        "\n 1、申请存储权限--获取照册功能，" +
+                                        "\n 2、若你拒绝权限申请，仅无法使用保存图片功能，虾菇app其他功能不受影响，" +
+                                        "\n 3、可通过app内 我的--设置--权限管理 进行权限操作。",
+                                "同意", false, true, new TextPW.CallBack() {
+                            @Override
+                            public void sure() {
+                                PreferenceUtil.saveIntValue(activity, "writePermission", 1);
+                                getPermissions1();
+                            }
+
+                            @Override
+                            public void cancel() {
+                                PreferenceUtil.saveIntValue(activity, "writePermission", 2);
+                            }
+                        });
+                    else if (checkPermissionGranted(activity,  Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                        getPermissions1();
+                    else
+                        SCToastUtil.showToast(activity, "你已拒绝申请存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                 } else if (TextUtils.equals("openwx", type)) {
                     openWX();
                 } else if (TextUtils.equals("openqq", type)) {
@@ -287,9 +319,9 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
     /**
      * 权限
      */
-    private void getPermissions() {
+    private void getPermissions1() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission("虾菇需要访问读写外部存储权限", new BaseActivity.PermissionCallback() {
+            performCodeWithPermission("虾菇需要访问存储权限", new BaseActivity.PermissionCallback() {
                 @Override
                 public void hasPermission() {
                     setPermissions();
@@ -297,6 +329,8 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
 
                 @Override
                 public void noPermission() {
+                    SCToastUtil.showToast(activity, "你已拒绝申请存储权限，请前往我的--设置--权限管理--权限进行设置", true);
+                    PreferenceUtil.saveIntValue(activity, "writePermission", 2);
                 }
             }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         } else {

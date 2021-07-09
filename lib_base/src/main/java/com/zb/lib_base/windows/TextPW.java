@@ -12,6 +12,7 @@ public class TextPW extends BasePopupWindow {
     private String title;
     private CallBack mCallBack;
     private String btnName = "我知道了";
+    private boolean showCancel = false;
 
     public TextPW(View parentView, String title, String content) {
         super(parentView, true);
@@ -74,6 +75,17 @@ public class TextPW extends BasePopupWindow {
         initUI();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
+    public TextPW(RxAppCompatActivity activity, View parentView, String title, String content, String btnName, boolean canClick, boolean showCancel, CallBack callBack) {
+        super(activity, parentView, false);
+        this.title = title;
+        this.content = content;
+        this.btnName = btnName;
+        this.showCancel = showCancel;
+        mCallBack = callBack;
+        initUI();
+    }
+
     @Override
     public int getRes() {
         return R.layout.pws_text;
@@ -85,6 +97,15 @@ public class TextPW extends BasePopupWindow {
         mBinding.setVariable(BR.title, title);
         mBinding.setVariable(BR.content, content);
         mBinding.setVariable(BR.btnName, btnName);
+        mBinding.setVariable(BR.showCancel, showCancel);
+    }
+
+    @Override
+    public void cancel(View view) {
+        super.cancel(view);
+        dismiss();
+        if (mCallBack != null)
+            mCallBack.cancel();
     }
 
     @Override

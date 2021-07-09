@@ -5,6 +5,7 @@ import android.animation.PropertyValuesHolder;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -30,6 +31,7 @@ import com.zb.lib_base.utils.ObjectUtils;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.ViewDataBinding;
 import androidx.viewpager2.widget.ViewPager2;
@@ -90,6 +92,17 @@ public class BaseViewModel implements BaseVMInterface {
 
     public void onDestroy() {
 
+    }
+
+    public boolean checkPermissionGranted(RxAppCompatActivity activity, String... permissions) {
+        boolean flag = true;
+        for (String p : permissions) {
+            if (ActivityCompat.checkSelfPermission(activity, p) != PackageManager.PERMISSION_GRANTED) {
+                flag = false;
+                break;
+            }
+        }
+        return flag;
     }
 
     public void initTabLayout(String[] tabNames, TabLayout tabLayout, ViewPager2 viewPager, int selectColor, int color, int index, boolean isChatSelectIndex) {

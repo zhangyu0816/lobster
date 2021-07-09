@@ -4,10 +4,8 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.WindowManager;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.yimi.rentme.BR;
-import com.yimi.rentme.BuildConfig;
 import com.yimi.rentme.R;
 import com.yimi.rentme.databinding.AcLoadingBinding;
 import com.yimi.rentme.vm.LoadingViewModel;

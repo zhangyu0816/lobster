@@ -273,7 +273,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_toEndOf="@+id/tv_id_card"
-                            android:text="未审核"
+                            android:text="未提交"
                             android:textColor="@color/black_9"
                             android:textSize="12sp" />
 

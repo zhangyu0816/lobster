@@ -2,6 +2,7 @@ package com.zb.lib_base.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.util.Log;
@@ -31,9 +32,13 @@ import com.maning.imagebrowserlibrary.transforms.ZoomInTransformer;
 import com.maning.imagebrowserlibrary.transforms.ZoomOutSlideTransformer;
 import com.maning.imagebrowserlibrary.transforms.ZoomOutTransformer;
 import com.maning.imagebrowserlibrary.view.MNViewPager;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 import com.zb.lib_base.http.CustomProgressDialog;
+import com.zb.lib_base.utils.PreferenceUtil;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.water.WaterMark;
+import com.zb.lib_base.windows.TextPW;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -234,18 +240,51 @@ public class MNImageBrowserActivity extends BaseActivity {
         });
 
         tvSave.setOnClickListener(view -> {
-            getPermissions();
+            if (PreferenceUtil.readIntValue(activity, "writePermission") == 0)
+                new TextPW(activity, viewPagerBrowser, "权限说明",
+                        "我们会以申请权限的方式获取设备功能的使用：" +
+                                "\n 1、申请存储权限--获取照册功能，" +
+                                "\n 2、若你拒绝权限申请，仅无法使用保存图片功能，虾菇app其他功能不受影响，" +
+                                "\n 3、可通过app内 我的--设置--权限管理 进行权限操作。",
+                        "同意", false, true, new TextPW.CallBack() {
+                    @Override
+                    public void sure() {
+                        PreferenceUtil.saveIntValue(activity, "writePermission", 1);
+                        getPermissions1();
+                    }
+
+                    @Override
+                    public void cancel() {
+                        PreferenceUtil.saveIntValue(activity, "writePermission", 2);
+                    }
+                });
+            else if (checkPermissionGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                getPermissions1();
+            else
+                SCToastUtil.showToast(activity, "你已拒绝申请存储权限，请前往我的--设置--权限管理--权限进行设置", true);
+
             saveRelative.setVisibility(View.GONE);
         });
         tvClose.setOnClickListener(view -> saveRelative.setVisibility(View.GONE));
     }
 
+    private boolean checkPermissionGranted(RxAppCompatActivity activity, String... permissions) {
+        boolean flag = true;
+        for (String p : permissions) {
+            if (ActivityCompat.checkSelfPermission(activity, p) != PackageManager.PERMISSION_GRANTED) {
+                flag = false;
+                break;
+            }
+        }
+        return flag;
+    }
+
     /**
      * 权限
      */
-    private void getPermissions() {
+    private void getPermissions1() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission("虾菇需要访问读写外部存储权限", new BaseActivity.PermissionCallback() {
+            performCodeWithPermission("虾菇需要访问存储权限", new BaseActivity.PermissionCallback() {
                 @Override
                 public void hasPermission() {
                     setPermissions();
@@ -253,6 +292,8 @@ public class MNImageBrowserActivity extends BaseActivity {
 
                 @Override
                 public void noPermission() {
+                    PreferenceUtil.saveIntValue(activity, "writePermission", 2);
+                    SCToastUtil.showToast(activity, "你已拒绝申请存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                 }
             }, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         } else {
@@ -262,7 +303,7 @@ public class MNImageBrowserActivity extends BaseActivity {
 
 
     private void setPermissions() {
-        CustomProgressDialog.showLoading(activity,"保存照片");
+        CustomProgressDialog.showLoading(activity, "保存照片");
         WaterMark.getInstance().saveImage(activity, otherUserId, saveUrl);
     }
 

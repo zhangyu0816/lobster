@@ -138,19 +138,19 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     public void previewImage(int position) {
         if (cameraType == 1) {
             if (TextUtils.equals(images.get(0), "add_image_icon")) {
-                getPermissions(1);
+                toCamera();
             } else {
                 ActivityUtils.getCameraVideoPlay(images.get(0), false, true);
             }
         } else {
             if (position == images.size() - 1) {
-                getPermissions(1);
+                toCamera();
             } else {
                 ArrayList<String> imageList = new ArrayList<>();
                 for (int i = 0; i < images.size() - 1; i++) {
                     imageList.add(images.get(i));
                 }
-                MNImage.imageBrowser(activity, mBinding.getRoot(),0, imageList, position, true, position12 -> {
+                MNImage.imageBrowser(activity, mBinding.getRoot(), 0, imageList, position, true, position12 -> {
                     try {
                         int count = MineApp.selectMap.remove(images.get(position12));
                         for (Map.Entry<String, Integer> entry : MineApp.selectMap.entrySet()) {
@@ -172,9 +172,33 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
     @Override
     public void selectCity(View view) {
         if (PreferenceUtil.readStringValue(activity, "latitude").isEmpty()) {
-            new TextPW(mBinding.getRoot(), "定位失败", "定位失败，无法选取地址，请重新定位", "重新定位", () -> getPermissions(2));
+            new TextPW(mBinding.getRoot(), "定位失败", "定位失败，无法选取地址，请重新定位", "重新定位", () -> {
+                CustomProgressDialog.showLoading(activity, "定位...");
+                getPermissions1(0);
+            });
         } else {
-            ActivityUtils.getMineLocation(true);
+            if (PreferenceUtil.readIntValue(activity, "locationPermission") == 0)
+                new TextPW(activity, mBinding.getRoot(), "权限说明",
+                        "我们会以申请权限的方式获取设备功能的使用：" +
+                                "\n 1、申请定位权限--获取定位服务，" +
+                                "\n 2、若你拒绝权限申请，仅无法使用定位服务，虾菇app其他功能不受影响，" +
+                                "\n 3、可通过app内 我的--设置--权限管理 进行权限操作。",
+                        "同意", false, true, new TextPW.CallBack() {
+                    @Override
+                    public void sure() {
+                        PreferenceUtil.saveIntValue(activity, "locationPermission", 1);
+                        getPermissions1(1);
+                    }
+
+                    @Override
+                    public void cancel() {
+                        PreferenceUtil.saveIntValue(activity, "locationPermission", 2);
+                    }
+                });
+            else if (checkPermissionGranted(activity, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION))
+                getPermissions1(1);
+            else
+                SCToastUtil.showToast(activity, "你已拒绝申请相机权限，请前往我的--设置--权限管理--权限进行设置", true);
         }
     }
 
@@ -329,43 +353,51 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
         HttpUploadManager.getInstance().doHttpDeal(api);
     }
 
-    /**
-     * 权限
-     */
-    private void getPermissions(int type) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission("虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
-                        @Override
-                        public void hasPermission() {
-                            setPermissions(type);
-                        }
-
-                        @Override
-                        public void noPermission() {
-                        }
-                    }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO,
-                    Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION);
+    private void toCamera() {
+        if (MineApp.toPublish) {
+            MineApp.toContinue = true;
+            if (cameraType == 1) {
+                ActivityUtils.getCameraVideo(false);
+            } else {
+                ActivityUtils.getCameraMain(activity, true, true, false);
+            }
         } else {
-            setPermissions(type);
+            ActivityUtils.getCameraMain(activity, true, true, true);
         }
     }
 
-    private void setPermissions(int type) {
-        if (type == 1) {
-            if (MineApp.toPublish) {
-                MineApp.toContinue = true;
-                if (cameraType == 1) {
-                    ActivityUtils.getCameraVideo(false);
-                } else {
-                    ActivityUtils.getCameraMain(activity, true, true, false);
+    /**
+     * 权限
+     */
+    private void getPermissions1(int type) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            performCodeWithPermission("虾菇需要访问定位权限", new BaseActivity.PermissionCallback() {
+                @Override
+                public void hasPermission() {
+                    setLocation(type);
                 }
-            } else {
-                ActivityUtils.getCameraMain(activity, true, true, true);
-            }
+
+                @Override
+                public void noPermission() {
+                    if (type == 1) {
+                        PreferenceUtil.saveIntValue(activity, "locationPermission", 2);
+                        SCToastUtil.showToast(activity, "你已拒绝申请相机权限，请前往我的--设置--权限管理--权限进行设置", true);
+                    }
+                }
+            }, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION);
         } else {
-            aMapLocation.start(activity, () ->
-                    ActivityUtils.getMineLocation(true));
+            setLocation(type);
         }
+    }
+
+    private void setLocation(int type) {
+        if (type == 0)
+            aMapLocation.start(activity, () -> {
+                        CustomProgressDialog.stopLoading();
+                        ActivityUtils.getMineLocation(true);
+                    }
+            );
+        else
+            ActivityUtils.getMineLocation(true);
     }
 }

@@ -46,6 +46,7 @@ import com.zb.lib_base.model.ShareInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DownLoad;
 import com.zb.lib_base.utils.ObjectUtils;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.water.WaterMark;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -208,7 +209,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                     public void gift() {
                         mBinding.videoView.pause();
                         mBinding.reviewList.stop();
-                        ActivityUtils.getHomeRewardList(friendDynId,0);
+                        ActivityUtils.getHomeRewardList(friendDynId, 0);
                     }
 
                     @Override
@@ -228,7 +229,28 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                     public void download() {
                         DownLoad.downloadLocation(discoverInfo.getVideoUrl(), (filePath, bitmap) -> {
                             downloadPath = filePath;
-                            getPermissions();
+                            if (PreferenceUtil.readIntValue(activity, "writePermission") == 0)
+                                new TextPW(activity, mBinding.getRoot(), "权限说明",
+                                        "我们会以申请权限的方式获取设备功能的使用：" +
+                                                "\n 1、申请存储权限--获取照册功能，" +
+                                                "\n 2、若你拒绝权限申请，仅无法使用保存图片功能，虾菇app其他功能不受影响，" +
+                                                "\n 3、可通过app内 我的--设置--权限管理 进行权限操作。",
+                                        "同意", false, true, new TextPW.CallBack() {
+                                    @Override
+                                    public void sure() {
+                                        PreferenceUtil.saveIntValue(activity, "writePermission", 1);
+                                        getPermissions1();
+                                    }
+
+                                    @Override
+                                    public void cancel() {
+                                        PreferenceUtil.saveIntValue(activity, "writePermission", 2);
+                                    }
+                                });
+                            else if (checkPermissionGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                                getPermissions1();
+                            else
+                                SCToastUtil.showToast(activity, "你已拒绝申请存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                         });
                     }
 
@@ -259,7 +281,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     @Override
     public void doReward(View view) {
         new GiftPW(mBinding.getRoot(), giftInfo ->
-                new GiftPayPW(mBinding.getRoot(), giftInfo, discoverInfo.getFriendDynId(),0, () -> {
+                new GiftPayPW(mBinding.getRoot(), giftInfo, discoverInfo.getFriendDynId(), 0, () -> {
                 }));
     }
 
@@ -585,9 +607,9 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     /**
      * 权限
      */
-    private void getPermissions() {
+    private void getPermissions1() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission("虾菇需要访问读写外部存储权限", new BaseActivity.PermissionCallback() {
+            performCodeWithPermission("虾菇需要访问存储权限", new BaseActivity.PermissionCallback() {
                 @Override
                 public void hasPermission() {
                     setPermissions();
@@ -595,6 +617,8 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
 
                 @Override
                 public void noPermission() {
+                    PreferenceUtil.saveIntValue(activity, "writePermission", 2);
+                    SCToastUtil.showToast(activity, "你已拒绝申请存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                 }
             }, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         } else {

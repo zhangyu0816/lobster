@@ -23,9 +23,11 @@ import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.FaceStatus;
 import com.zb.lib_base.utils.DataCleanManager;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.TextPW;
 import com.zb.module_camera.utils.CameraPreview;
 import com.zb.module_camera.utils.OverCameraView;
 import com.zb.module_mine.BR;
@@ -58,7 +60,31 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
         mBinding = (MineRealNameBinding) binding;
         mBinding.cameraLayout.setOnTouchListener(this);
         AdapterBinding.viewSize(mBinding.cameraLayout, MineApp.W, (int) (MineApp.W * 4f / 3f));
-        getPermissions();
+
+        if (PreferenceUtil.readIntValue(activity, "realPermission") == 0)
+            MineApp.getApp().getFixedThreadPool().execute(() -> {
+                SystemClock.sleep(300);
+                activity.runOnUiThread(() -> new TextPW(activity, mBinding.getRoot(), "权限说明",
+                        "我们会以申请权限的方式获取设备功能的使用：" +
+                                "\n 1、申请相机权限--获取照相功能，" +
+                                "\n 2、若你拒绝权限申请，仅无法使用人脸认证功能，虾菇app其他功能不受影响，" +
+                                "\n 3、可通过app内 我的--设置--权限管理 进行权限操作。",
+                        "同意", false, true, new TextPW.CallBack() {
+                    @Override
+                    public void sure() {
+                        PreferenceUtil.saveIntValue(activity, "realPermission", 1);
+                        getPermissions1();
+                    }
+
+                    @Override
+                    public void cancel() {
+                        PreferenceUtil.saveIntValue(activity, "realPermission", 2);
+                        activity.finish();
+                    }
+                }));
+            });
+        else
+            getPermissions1();
         humanFaceStatus();
         photoManager = new PhotoManager(activity, () -> humanFace(photoManager.jointWebUrl(",")));
         String cameraPath = Environment.getExternalStorageDirectory().getPath() + File.separator + "DCIM" + File.separator + "Camera";
@@ -73,20 +99,21 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
     /**
      * 权限
      */
-    private void getPermissions() {
+    private void getPermissions1() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission("虾菇需要访问读写外部存储权限及相机权限", new BaseActivity.PermissionCallback() {
-                        @Override
-                        public void hasPermission() {
-                            setPermissions();
-                        }
+            performCodeWithPermission("虾菇需要访问相机权限", new BaseActivity.PermissionCallback() {
+                @Override
+                public void hasPermission() {
+                    setPermissions();
+                }
 
-                        @Override
-                        public void noPermission() {
-                            back(null);
-                        }
-                    }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO);
+                @Override
+                public void noPermission() {
+                    PreferenceUtil.saveIntValue(activity, "realPermission", 2);
+                    SCToastUtil.showToast(activity, "你已拒绝申请相机权限，请前往设置--权限管理--权限进行设置", true);
+                    back(null);
+                }
+            }, Manifest.permission.CAMERA);
         } else {
             setPermissions();
         }

@@ -1,8 +1,6 @@
 package com.zb.lib_base.vm;
 
-import android.Manifest;
 import android.content.Intent;
-import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -25,7 +23,6 @@ import com.amap.api.services.help.Tip;
 import com.amap.api.services.poisearch.PoiResult;
 import com.amap.api.services.poisearch.PoiSearch;
 import com.zb.lib_base.R;
-import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.adapter.AdapterBinding;
 import com.zb.lib_base.adapter.BaseAdapter;
 import com.zb.lib_base.api.updatePairPoolApi;
@@ -105,7 +102,7 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
             public void onCameraChangeFinish(CameraPosition cameraPosition) {
                 if (!isSearch) {
                     tagLl = cameraPosition.target;
-                    getPermissions();
+                    querySearch();
                 }
                 isSearch = false;
 
@@ -124,29 +121,7 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
         }
     }
 
-    /**
-     * 权限
-     */
-    private void getPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission("虾菇需要访问定位权限", new BaseActivity.PermissionCallback() {
-                        @Override
-                        public void hasPermission() {
-                            setPermissions();
-                        }
-
-                        @Override
-                        public void noPermission() {
-
-                        }
-                    }, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
-        } else {
-            setPermissions();
-        }
-    }
-
-    private void setPermissions() {
+    private void querySearch() {
         PoiSearch.Query query = new PoiSearch.Query("", "", "");
         query.setPageSize(10);
         PoiSearch search = new PoiSearch(activity, query);
@@ -225,15 +200,15 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
 
     @Override
     public void selectAddress(View view) {
-            if (prePosition == -1) {
-                SCToastUtil.showToast(activity, "请选择地址", true);
-                return;
-            }
-            LocationInfo info = locationInfoList.get(prePosition);
-            LatLonPoint latLonPoint = new LatLonPoint(info.getLatitude(), info.getLongitude());
-            RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 500f, GeocodeSearch.AMAP);
-            //异步查询
-            geocodeSearch.getFromLocationAsyn(query);
+        if (prePosition == -1) {
+            SCToastUtil.showToast(activity, "请选择地址", true);
+            return;
+        }
+        LocationInfo info = locationInfoList.get(prePosition);
+        LatLonPoint latLonPoint = new LatLonPoint(info.getLatitude(), info.getLongitude());
+        RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 500f, GeocodeSearch.AMAP);
+        //异步查询
+        geocodeSearch.getFromLocationAsyn(query);
     }
 
     @Override

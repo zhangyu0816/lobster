@@ -49,6 +49,10 @@
             name="sexIndex"
             type="Integer" />
 
+        <variable
+            name="clickSelect"
+            type="boolean" />
+
     </data>
 
     <RelativeLayout
@@ -659,9 +663,9 @@
                     onClickDelayed="@{viewModel::toWX}"
                     android:layout_width="130dp"
                     android:layout_height="46dp"
+                    android:layout_marginEnd="10dp"
                     android:background="@drawable/btn_bg_white_radius60"
                     android:gravity="center"
-                    android:layout_marginEnd="10dp"
                     android:orientation="horizontal"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp">
@@ -708,10 +712,32 @@
                         android:textStyle="bold"
                         tools:visibility="visible" />
                 </LinearLayout>
-
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:onClick="@{viewModel::clickSelect}"
+                android:orientation="horizontal"
+                android:visibility="@{loginStep==0?View.VISIBLE:View.GONE}">
 
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@{clickSelect?@drawable/icon_select_light:@drawable/icon_select_dark}"
+                    tools:background="@drawable/icon_select_light" />
+
+                <TextView
+                    android:id="@+id/tv_click"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    tools:text="隐私政策" />
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 </layout>
