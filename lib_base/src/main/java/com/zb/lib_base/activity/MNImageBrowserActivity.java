@@ -255,6 +255,7 @@ public class MNImageBrowserActivity extends BaseActivity {
 
                     @Override
                     public void cancel() {
+                        SCToastUtil.showToast(activity, "你已拒绝申请存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                         PreferenceUtil.saveIntValue(activity, "writePermission", 2);
                     }
                 });

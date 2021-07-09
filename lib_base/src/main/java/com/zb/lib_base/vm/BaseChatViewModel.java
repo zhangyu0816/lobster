@@ -779,7 +779,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                 new TextPW(activity, mBinding.getRoot(), "权限说明",
                         "我们会以申请权限的方式获取设备功能的使用：" +
                                 "\n 1、申请麦克风权限--获取录制视频功能，" +
-                                "\n 2、若你拒绝权限申请，仅无法使用发布动态功能，虾菇app其他功能不受影响，" +
+                                "\n 2、若你拒绝权限申请，仅无法使用语音聊天功能，虾菇app其他功能不受影响，" +
                                 "\n 3、可通过app内 我的--设置--权限管理 进行权限操作。",
                         "同意", false, true, new TextPW.CallBack() {
                     @Override
@@ -791,6 +791,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                     @Override
                     public void cancel() {
                         PreferenceUtil.saveIntValue(activity, "cameraPermission", 2);
+                        SCToastUtil.showToast(activity, "你已拒绝麦克风权限，请前往我的--设置--权限管理--权限进行设置", true);
                     }
                 });
             else if (checkPermissionGranted(activity, pre))
@@ -824,7 +825,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         hintKeyBoard();
         mBinding.setIsEmoji(false);
         pre = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.RECORD_AUDIO};
         if (PreferenceUtil.readIntValue(activity, "cameraPermission") == 0)
             new TextPW(activity, mBinding.getRoot(), "权限说明",
                     "我们会以申请权限的方式获取设备功能的使用：" +
@@ -842,13 +843,14 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
 
                 @Override
                 public void cancel() {
+                    SCToastUtil.showToast(activity, "你已拒绝申请相机、存储、麦克风权限，请前往我的--设置--权限管理--权限进行设置", true);
                     PreferenceUtil.saveIntValue(activity, "cameraPermission", 2);
                 }
             });
         else if (checkPermissionGranted(activity, pre))
             getPermissions1(1);
         else
-            SCToastUtil.showToast(activity, "你已拒绝申请相机、存储权限，请前往我的--设置--权限管理--权限进行设置", true);
+            SCToastUtil.showToast(activity, "你已拒绝申请相机、存储、麦克风权限，请前往我的--设置--权限管理--权限进行设置", true);
     }
 
     @Override
@@ -1319,7 +1321,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                 public void noPermission() {
                     PreferenceUtil.saveIntValue(activity, "cameraPermission", 2);
                     if (type == 1) {
-                        SCToastUtil.showToast(activity, "你已拒绝申请相机、存储权限，请前往我的--设置--权限管理--权限进行设置", true);
+                        SCToastUtil.showToast(activity, "你已拒绝申请相机、存储、麦克风权限，请前往我的--设置--权限管理--权限进行设置", true);
                     } else
                         SCToastUtil.showToast(activity, "你已拒绝麦克风权限，请前往我的--设置--权限管理--权限进行设置", true);
                 }

@@ -126,7 +126,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
                         "我们会以申请权限的方式获取设备功能的使用：" +
                                 "\n 1、申请相机权限--获取照相功能，" +
                                 "\n 2、申请存储权限--获取照册功能，" +
-                                "\n 3、若你拒绝权限申请，仅无法使用发布动态功能，虾菇app其他功能不受影响，" +
+                                "\n 3、若你拒绝权限申请，仅无法使用上传头像功能，虾菇app其他功能不受影响，" +
                                 "\n 4、可通过app内 我的--设置--权限管理 进行权限操作。",
                         "同意", false, true, new TextPW.CallBack() {
                     @Override
@@ -137,6 +137,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
 
                     @Override
                     public void cancel() {
+                        SCToastUtil.showToast(activity, "你已拒绝申请相机、存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                         PreferenceUtil.saveIntValue(activity, "cameraPermission", 2);
                     }
                 });

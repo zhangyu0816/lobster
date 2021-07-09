@@ -221,6 +221,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                     @Override
                     public void cancel() {
                         PreferenceUtil.saveIntValue(activity, "cameraPermission", 2);
+                        SCToastUtil.showToast(activity, "你已拒绝申请相机、存储、麦克风权限，请前往我的--设置--权限管理--权限进行设置", true);
                     }
                 });
             else if (checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,

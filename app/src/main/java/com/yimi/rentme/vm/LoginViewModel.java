@@ -157,7 +157,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         mBinding.tvClick.setText(style);
         mBinding.tvClick.setMovementMethod(LinkMovementMethod.getInstance());
         mBinding.setClickSelect(TextUtils.equals("1", PreferenceUtil.readStringValue(activity, "clickSelect")));
-
+        mBinding.setImageUrl("");
         threeLogin = new ThreeLogin(activity, this::loginByUnion);
 
         array[0] = mBinding.tvCode1;
@@ -226,7 +226,8 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                                 "\n 3、如果您使用支付功能，即代表您同意将设备信息共享给支付宝和微信，以便提供app支付功能。" +
                                 "\n 4、为了保障及时了解软件使用情况及修复bug，我们将与友盟+共享设备信息，以便提供统计功能。" +
                                 "\n 5、如果您同意开启定位功能，即代表您同意将设备信息共享给高德地图，以便提供地图功能和精准定位功能。" +
-                                "\n 6、可通过app内 我的--设置--权限管理 进行权限操作",
+                                "\n 6、若你拒绝权限申请，不影响虾菇使用。" +
+                                "\n 7、可通过系统设置--应用--虾菇--权限 进行权限操作",
                         "同意", false, true, new TextPW.CallBack() {
                     @Override
                     public void sure() {
@@ -345,7 +346,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                     "我们会以申请权限的方式获取设备功能的使用：" +
                             "\n 1、申请相机权限--获取照相功能，" +
                             "\n 2、申请存储权限--获取照册功能，" +
-                            "\n 3、若你拒绝权限申请，将无法完成虾菇注册流程，" +
+                            "\n 3、若你拒绝权限申请，仅无法上传头像，虾菇app其他功能不受影响" +
                             "\n 4、可通过app内 我的--设置--权限管理 进行权限操作。",
                     "同意", false, true, new TextPW.CallBack() {
                 @Override
@@ -357,12 +358,16 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 @Override
                 public void cancel() {
                     PreferenceUtil.saveIntValue(activity, "cameraPermission", 2);
+                    SCToastUtil.showToast(activity, "你已拒绝申请相机及存储权限，请前往系统设置--应用--虾菇--权限进行设置", false);
+                    step(7);
                 }
             });
         else if (checkPermissionGranted(activity, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE))
             getPermissions1(1);
-        else
+        else {
             SCToastUtil.showToast(activity, "你已拒绝申请相机及存储权限，请前往系统设置--应用--虾菇--权限进行设置", false);
+            step(7);
+        }
     }
 
     @Override
@@ -405,7 +410,18 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                     step(6);
                     break;
                 case 6:
-                    checkFace(mBinding.getImageUrl());
+                    if (mBinding.getImageUrl().isEmpty()) {
+                        if (PreferenceUtil.readIntValue(activity, "cameraPermission") == 0)
+                            upload(view);
+                        else if (checkPermissionGranted(activity, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE))
+                            getPermissions1(1);
+                        else {
+                            SCToastUtil.showToast(activity, "你已拒绝申请相机及存储权限，请前往系统设置--应用--虾菇--权限进行设置", false);
+                            step(7);
+                        }
+                    } else {
+                        checkFace(mBinding.getImageUrl());
+                    }
                     break;
                 case 7:
                     if (MineApp.registerInfo.getOpenId().isEmpty())
@@ -854,7 +870,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 mBinding.setBtnName("下一步");
                 break;
             case 6:
-                mBinding.setCanNext(mBinding.getImageUrl() != null);
+                mBinding.setCanNext(true);
                 mBinding.setBtnName("下一步");
                 break;
             case 7:
@@ -890,11 +906,13 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
 
                     @Override
                     public void noPermission() {
+                        step(7);
                         PreferenceUtil.saveIntValue(activity, "cameraPermission", 2);
                         SCToastUtil.showToast(activity, "你已拒绝申请相机及存储权限，请前往系统设置--应用--虾菇--权限进行设置", false);
                     }
                 }, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
         } else {
+            SCToastUtil.showToast(activity, "你已拒绝申请相机及存储权限，请前往系统设置--应用--虾菇--权限进行设置", false);
             setPermissions(type);
         }
     }

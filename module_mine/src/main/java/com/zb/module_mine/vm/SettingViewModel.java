@@ -173,6 +173,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
                     @Override
                     public void cancel() {
                         PreferenceUtil.saveIntValue(activity, "locationPermission", 2);
+                        SCToastUtil.showToast(activity, "你已拒绝申请相机权限，请前往设置--权限管理--权限进行设置", true);
                     }
                 });
             else if (checkPermissionGranted(activity, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION))

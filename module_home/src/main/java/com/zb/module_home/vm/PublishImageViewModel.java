@@ -192,6 +192,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
 
                     @Override
                     public void cancel() {
+                        SCToastUtil.showToast(activity, "你已拒绝申请相机权限，请前往我的--设置--权限管理--权限进行设置", true);
                         PreferenceUtil.saveIntValue(activity, "locationPermission", 2);
                     }
                 });

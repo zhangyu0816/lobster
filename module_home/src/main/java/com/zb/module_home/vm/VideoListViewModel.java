@@ -315,7 +315,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                                 new TextPW(activity, mBinding.getRoot(), "权限说明",
                                         "我们会以申请权限的方式获取设备功能的使用：" +
                                                 "\n 1、申请存储权限--获取照册功能，" +
-                                                "\n 2、若你拒绝权限申请，仅无法使用保存图片功能，虾菇app其他功能不受影响，" +
+                                                "\n 2、若你拒绝权限申请，仅无法使用下载视频功能，虾菇app其他功能不受影响，" +
                                                 "\n 3、可通过app内 我的--设置--权限管理 进行权限操作。",
                                         "同意", false, true, new TextPW.CallBack() {
                                     @Override
@@ -327,6 +327,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                                     @Override
                                     public void cancel() {
                                         PreferenceUtil.saveIntValue(activity, "writePermission", 2);
+                                        SCToastUtil.showToast(activity, "你已拒绝申请存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                                     }
                                 });
                             else if (checkPermissionGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE))

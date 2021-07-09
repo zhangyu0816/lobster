@@ -296,6 +296,7 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                             @Override
                             public void cancel() {
                                 PreferenceUtil.saveIntValue(activity, "writePermission", 2);
+                                SCToastUtil.showToast(activity, "你已拒绝申请存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                             }
                         });
                     else if (checkPermissionGranted(activity,  Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
