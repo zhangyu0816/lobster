@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
@@ -67,6 +68,7 @@ import com.zb.module_home.databinding.HomeVideoListBinding;
 import com.zb.module_home.iv.VideoListVMInterface;
 import com.zb.module_home.windows.ReviewPW;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,9 +86,9 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     private boolean isUp = false;
     private boolean isOver = false;
     private BaseReceiver attentionReceiver;
-    private String downloadPath = "";
     private int videoWidth, videoHeight;
     private boolean canUpdate = false;
+    private int duration;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -264,7 +266,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
     @Override
     public void doReward(DiscoverInfo discoverInfo) {
         new GiftPW(mBinding.getRoot(), giftInfo ->
-                new GiftPayPW(mBinding.getRoot(), giftInfo, discoverInfo.getFriendDynId(),0, () -> {
+                new GiftPayPW(mBinding.getRoot(), giftInfo, discoverInfo.getFriendDynId(), 0, () -> {
                 }));
     }
 
@@ -292,7 +294,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                         // 查看礼物
                         videoView.pause();
                         reviewListView.stop();
-                        ActivityUtils.getHomeRewardList(discoverInfo.getFriendDynId(),0);
+                        ActivityUtils.getHomeRewardList(discoverInfo.getFriendDynId(), 0);
                     }
 
                     @Override
@@ -309,32 +311,29 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
 
                     @Override
                     public void download() {
-                        DownLoad.downloadLocation(discoverInfo.getVideoUrl(), (filePath, bitmap) -> {
-                            downloadPath = filePath;
-                            if (PreferenceUtil.readIntValue(activity, "writePermission") == 0)
-                                new TextPW(activity, mBinding.getRoot(), "权限说明",
-                                        "我们会以申请权限的方式获取设备功能的使用：" +
-                                                "\n 1、申请存储权限--获取照册功能，" +
-                                                "\n 2、若你拒绝权限申请，仅无法使用下载视频功能，虾菇app其他功能不受影响，" +
-                                                "\n 3、可通过app内 我的--设置--权限管理 进行权限操作。",
-                                        "同意", false, true, new TextPW.CallBack() {
-                                    @Override
-                                    public void sure() {
-                                        PreferenceUtil.saveIntValue(activity, "writePermission", 1);
-                                        getPermissions1();
-                                    }
+                        if (PreferenceUtil.readIntValue(activity, "writePermission") == 0)
+                            new TextPW(activity, mBinding.getRoot(), "权限说明",
+                                    "我们会以申请权限的方式获取设备功能的使用：" +
+                                            "\n 1、申请存储权限--获取照册功能，" +
+                                            "\n 2、若你拒绝权限申请，仅无法使用下载视频功能，虾菇app其他功能不受影响，" +
+                                            "\n 3、可通过app内 我的--设置--权限管理 进行权限操作。",
+                                    "同意", false, true, new TextPW.CallBack() {
+                                @Override
+                                public void sure() {
+                                    PreferenceUtil.saveIntValue(activity, "writePermission", 1);
+                                    getPermissions1();
+                                }
 
-                                    @Override
-                                    public void cancel() {
-                                        PreferenceUtil.saveIntValue(activity, "writePermission", 2);
-                                        SCToastUtil.showToast(activity, "你已拒绝申请存储权限，请前往我的--设置--权限管理--权限进行设置", true);
-                                    }
-                                });
-                            else if (checkPermissionGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                                getPermissions1();
-                            else
-                                SCToastUtil.showToast(activity, "你已拒绝申请存储权限，请前往我的--设置--权限管理--权限进行设置", true);
-                        });
+                                @Override
+                                public void cancel() {
+                                    PreferenceUtil.saveIntValue(activity, "writePermission", 2);
+                                    SCToastUtil.showToast(activity, "你已拒绝申请存储权限，请前往我的--设置--权限管理--权限进行设置", true);
+                                }
+                            });
+                        else if (checkPermissionGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                            getPermissions1();
+                        else
+                            SCToastUtil.showToast(activity, "你已拒绝申请存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                     }
 
                     @Override
@@ -405,8 +404,8 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
 
             @Override
             public void onError(Throwable e) {
-                if(e instanceof HttpTimeException&&((HttpTimeException) e).getCode()==HttpTimeException.ERROR){
-                    if(e.getMessage().equals("你还没关注我啊")){
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.ERROR) {
+                    if (e.getMessage().equals("你还没关注我啊")) {
                         layout.setVisibility(View.VISIBLE);
                         ivAttention.setBackgroundResource(R.drawable.attention_icon);
                         AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), false, BaseActivity.userId));
@@ -690,6 +689,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 return true;
             } else if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
                 changeVideoSize(mp);
+                duration = mp.getDuration();
                 ivProgress.setVisibility(View.GONE);
                 ivImage.setVisibility(View.GONE);
                 videoView.setBackgroundColor(Color.TRANSPARENT);
@@ -748,6 +748,14 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
 
 
     private void setPermissions() {
-        WaterMark.getInstance().createWater(activity, downloadPath, discoverInfo.getUserId(), videoWidth, videoHeight);
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        String filePath = file.getAbsolutePath() + "/Camera/xg_" + BaseActivity.randomString(15) + ".mp4";
+        DownLoad.downloadVideoByLocation(discoverInfo.getVideoUrl(), filePath, (filePath1, bitmap) -> {
+            WaterMark.getInstance().createWater(activity, filePath1, discoverInfo.getUserId(), videoWidth, videoHeight, duration);
+        });
+
     }
 }

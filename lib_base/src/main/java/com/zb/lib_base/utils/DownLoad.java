@@ -61,6 +61,30 @@ public class DownLoad {
         DownLoadRetrofitHelper.httpClient.download(fileUrl, filePath, back);
     }
 
+    public static void downloadVideoByLocation(String fileUrl, String filePath, CallBack callBack) {
+        back = new RequestCallBack<File>() {
+
+            @Override
+            public void onSuccess(ResponseInfo<File> file) {
+                callBack.success(file.result.getAbsolutePath(), null);
+            }
+
+            @Override
+            public void onFailure(HttpException arg0, String arg1) {
+                // 下载失败则将本地的空文件删除
+                File file = new File(filePath);
+                file.deleteOnExit();
+            }
+
+            @Override
+            public void onLoading(long total, long current, boolean isUploading) {
+                super.onLoading(total, current, isUploading);
+                callBack.onLoading(total, current);
+            }
+        };
+        DownLoadRetrofitHelper.httpClient.download(fileUrl, filePath, back);
+    }
+
     public static void downloadLocation(String fileUrl, CallBack callBack) {
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath());
         if (!file.exists()) {

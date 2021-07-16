@@ -47,7 +47,6 @@ dependencies {
     implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
     implementation project(':xbanner')
     implementation project(':imagebrowserlib')
-    implementation project(path: ':FFmpegAndroid')
     // 按钮防抖
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
     // 高德地图

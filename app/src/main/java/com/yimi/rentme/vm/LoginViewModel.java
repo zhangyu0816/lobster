@@ -358,15 +358,13 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 @Override
                 public void cancel() {
                     PreferenceUtil.saveIntValue(activity, "cameraPermission", 2);
-                    SCToastUtil.showToast(activity, "你已拒绝申请相机及存储权限，请前往系统设置--应用--虾菇--权限进行设置", false);
-                    step(7);
+                    SCToastUtil.showToast(activity, "你已拒绝申请相机及存储权限，请前往系统设置--应用--虾菇--权限进行设置，如不传头像请点击下一步。", false);
                 }
             });
         else if (checkPermissionGranted(activity, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE))
             getPermissions1(1);
         else {
-            SCToastUtil.showToast(activity, "你已拒绝申请相机及存储权限，请前往系统设置--应用--虾菇--权限进行设置", false);
-            step(7);
+            SCToastUtil.showToast(activity, "你已拒绝申请相机及存储权限，请前往系统设置--应用--虾菇--权限进行设置，如不传头像请点击下一步。", false);
         }
     }
 
@@ -416,7 +414,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                         else if (checkPermissionGranted(activity, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE))
                             getPermissions1(1);
                         else {
-                            SCToastUtil.showToast(activity, "你已拒绝申请相机及存储权限，请前往系统设置--应用--虾菇--权限进行设置", false);
                             step(7);
                         }
                     } else {
@@ -906,9 +903,8 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
 
                     @Override
                     public void noPermission() {
-                        step(7);
                         PreferenceUtil.saveIntValue(activity, "cameraPermission", 2);
-                        SCToastUtil.showToast(activity, "你已拒绝申请相机及存储权限，请前往系统设置--应用--虾菇--权限进行设置", false);
+                        SCToastUtil.showToast(activity, "你已拒绝申请相机及存储权限，请前往系统设置--应用--虾菇--权限进行设置，如不传头像请点击下一步。", false);
                     }
                 }, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
         } else {

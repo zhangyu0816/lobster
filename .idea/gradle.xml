@@ -10,7 +10,6 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/FFmpegAndroid" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/imagebrowserlib" />
             <option value="$PROJECT_DIR$/lib_base" />

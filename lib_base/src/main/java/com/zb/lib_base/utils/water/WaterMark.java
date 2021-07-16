@@ -18,8 +18,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
-import com.github.hiteshsondhi88.libffmpeg.FFmpegExecuteResponseHandler;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 import com.zb.lib_base.activity.BaseActivity;
@@ -28,9 +26,11 @@ import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.utils.DataCleanManager;
 import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.SCToastUtil;
+import com.zb.lib_base.utils.water.helper.MagicFilterType;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,6 +43,8 @@ public class WaterMark {
     private String imageUrl = "";
     private int videoWidth = 0;
     private int videoHeight = 0;
+    public static Bitmap waterBitmap;
+
     private Handler handler = new Handler(msg -> {
         switch (msg.what) {
             case 0:
@@ -62,16 +64,6 @@ public class WaterMark {
     });
 
     public WaterMark() {
-        Compressor mCompressor = new Compressor(BaseActivity.activity);
-        mCompressor.loadBinary(new InitListener() {
-            @Override
-            public void onLoadSuccess() {
-            }
-
-            @Override
-            public void onLoadFail(String reason) {
-            }
-        });
     }
 
     //获取单例
@@ -86,7 +78,7 @@ public class WaterMark {
         return INSTANCE;
     }
 
-    public void createWater(RxAppCompatActivity activity, String downloadPath, long otherUserId, int videoWidth, int videoHeight) {
+    public void createWater(RxAppCompatActivity activity, String downloadPath, long otherUserId, int videoWidth, int videoHeight, int duration) {
         this.activity = activity;
         this.downloadPath = downloadPath;
         this.videoWidth = videoWidth;
@@ -99,33 +91,18 @@ public class WaterMark {
         }
         outPutUrl = file.getAbsolutePath() + "/Camera/xg_" + BaseActivity.randomString(15) + ".mp4";
         imageUrl = BaseActivity.getImageFile().getAbsolutePath();
-        Bitmap bitmap = textToBitmap("虾菇号：" + otherUserId, null);
-        getImage(bitmap);
+        waterBitmap = textToBitmap("虾菇号：" + otherUserId, null);
 
-        String[] common = addWaterMark(imageUrl, downloadPath, outPutUrl);
-        FFmpeg.getInstance(activity).execute(common, new FFmpegExecuteResponseHandler() {
-            @Override
-            public void onSuccess(String message) {
-                handler.sendEmptyMessage(1);
-            }
-
-            @Override
-            public void onProgress(String message) {
-            }
-
-            @Override
-            public void onFailure(String message) {
-                handler.sendEmptyMessage(0);
-            }
-
-            @Override
-            public void onStart() {
-            }
-
-            @Override
-            public void onFinish() {
-            }
-        });
+        VideoClipper clipper = new VideoClipper();
+        clipper.setInputVideoPath(downloadPath);
+        clipper.setFilterType(MagicFilterType.WARM);
+        clipper.setOutputVideoPath(outPutUrl);
+        clipper.setOnVideoCutFinishListener(() -> handler.sendEmptyMessage(1));
+        try {
+            clipper.clipVideo(0, duration * 1000);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void saveImage(RxAppCompatActivity activity, long otherUserId, String downloadPath) {
@@ -234,25 +211,4 @@ public class WaterMark {
             return bitmap;
         }
     }
-
-    private void getImage(Bitmap bitmap) {
-        try {
-            FileOutputStream os = new FileOutputStream(new File(imageUrl));
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
-            os.flush();
-            os.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String[] addWaterMark(String imageUrl, String videoUrl, String outputUrl) {
-        String content = "-i " + videoUrl +
-                " -i " + imageUrl + " -filter_complex overlay=10:10" +
-                " -y -strict -2 -vcodec libx264 -preset ultrafast -crf 10 -threads 2 -acodec aac -ar 44100 -ac 2 -b:a 32k " + outputUrl;
-        //-crf  用于指定输出视频的质量，取值范围是0-51，默认值为23，数字越小输出视频的质量越高。
-        // 这个选项会直接影响到输出视频的码率。一般来说，压制480p我会用20左右，压制720p我会用16-18
-        return content.split(" ");
-    }
-
 }

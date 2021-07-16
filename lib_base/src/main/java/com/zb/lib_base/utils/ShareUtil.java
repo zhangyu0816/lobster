@@ -12,7 +12,6 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 import com.zb.lib_base.R;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,12 +65,44 @@ public class ShareUtil {
                 .share();
     }
 
-    public static void share(RxAppCompatActivity activity, File file, String type) {
+    public static void share(RxAppCompatActivity activity, Bitmap bitmap, String sharedName, String sharedUrl, String type) {
         mActivity = activity;
         SHARE_MEDIA media;
-        UMImage umImage = new UMImage(activity, file);
-        umImage.setThumb(new UMImage(activity, R.drawable.thumb));
+        UMWeb web = new UMWeb(sharedUrl);
+        UMImage umImage = new UMImage(activity, bitmap);
+        umImage.compressStyle = UMImage.CompressStyle.SCALE;//大小压缩，默认为大小压缩，适合普通很大的图
+        umImage.compressFormat = Bitmap.CompressFormat.PNG;
+        web.setThumb(umImage);
 
+        if (TextUtils.equals("wxfriend", type)) {
+            media = SHARE_MEDIA.WEIXIN_CIRCLE;
+            web.setTitle(sharedName);//标题
+            web.setDescription(sharedName);//描述
+        } else {
+            if (TextUtils.equals("qqshare", type)) {
+                media = SHARE_MEDIA.QQ;
+            } else if (TextUtils.equals("wxshare", type)) {
+                media = SHARE_MEDIA.WEIXIN;
+            } else {
+                media = SHARE_MEDIA.QZONE;
+            }
+            if (!sharedName.isEmpty())
+                web.setTitle(sharedName);//标题
+        }
+
+        // 微信
+        new ShareAction(activity).setPlatform(media)
+                .withMedia(web)
+                .setCallback(umShareListener)
+                .share();
+    }
+
+    public static void share(RxAppCompatActivity activity, Bitmap bitmap, String type) {
+        mActivity = activity;
+        SHARE_MEDIA media;
+        UMImage umImage = new UMImage(activity, bitmap);
+        umImage.setThumb(new UMImage(activity, R.drawable.thumb));
+        umImage.compressStyle = UMImage.CompressStyle.SCALE;//大小压缩，默认为大小压缩，适合普通很大的图
         if (TextUtils.equals("wxfriend", type)) {
             media = SHARE_MEDIA.WEIXIN_CIRCLE;
         } else if (TextUtils.equals("qqshare", type)) {
@@ -81,11 +112,10 @@ public class ShareUtil {
         } else {
             media = SHARE_MEDIA.QZONE;
         }
-        new ShareAction(activity).setPlatform(media).withMedia(umImage)
+        new ShareAction(activity).withText("邀请好友").setPlatform(media).withMedia(umImage)
                 .setCallback(umShareListener)
                 .share();
     }
-
 
     private static UMShareListener umShareListener = new UMShareListener() {
         @Override

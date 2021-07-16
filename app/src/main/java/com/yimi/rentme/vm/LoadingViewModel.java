@@ -7,7 +7,6 @@ import com.yimi.rentme.iv.LoadingVMInterface;
 import com.yimi.rentme.service.ForegroundLiveService;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.ActivityUtils;
-import com.zb.lib_base.utils.DebuggerUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.RulePW;
@@ -21,7 +20,7 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         MineApp.activity = activity;
-        DebuggerUtils.checkDebuggableInNotDebugModel(MineApp.sContext);
+//        DebuggerUtils.checkDebuggableInNotDebugModel(MineApp.sContext);
         if (PreferenceUtil.readIntValue(activity, "ruleType1") == 0) {
             mCountDownTimer = new CountDownTimer(1000, 1000) {
                 @Override

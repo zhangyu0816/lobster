@@ -73,7 +73,7 @@ public class CodeLayout extends RelativeLayout {
                     mBinding.ivQrCode.draw(canvas);
                     try {
                         BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bos);
                         bos.flush();
                         bos.close();
                     } catch (Exception e) {
@@ -81,14 +81,6 @@ public class CodeLayout extends RelativeLayout {
                     }
                     saveFile(activity, myCaptureFile);
                 } else {
-                    try {
-                        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
-                        bos.flush();
-                        bos.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                     // 1.QQ邀请  2.微信邀请  3.朋友圈邀请  4.微信群邀请  5.海报分享
                     String type = "";
                     switch (webShare.getShareType()) {
@@ -103,7 +95,7 @@ public class CodeLayout extends RelativeLayout {
                             type = "wxfriend";
                             break;
                     }
-                    ShareUtil.share(activity, myCaptureFile, type);
+                    ShareUtil.share( activity,  bitmap,"邀请好友",webShare.getUrl(),  type);
                 }
             }
         });
