@@ -274,14 +274,23 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
 
                 @Override
                 public void cancel() {
-                    SCToastUtil.showToast(activity, "你已拒绝申请相机、存储、麦克风权限，请前往我的--设置--权限管理--权限进行设置", true);
+                    SCToastUtil.showToast(activity, "你未申请相机、存储、麦克风权限，请前往我的--设置--权限管理--权限进行设置", true);
                     PreferenceUtil.saveIntValue(activity, "cameraPermission", 2);
                 }
             });
-        else if (checkPermissionGranted(activity, per))
+        else {
+            if (!checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                SCToastUtil.showToast(activity, "你未申请存储权限，请前往我的--设置--权限管理--权限进行设置", true);
+                return;
+            } else if (!checkPermissionGranted(activity, Manifest.permission.CAMERA)) {
+                SCToastUtil.showToast(activity, "你未申请相机权限，请前往我的--设置--权限管理--权限进行设置", true);
+                return;
+            } else if (!checkPermissionGranted(activity, Manifest.permission.RECORD_AUDIO)) {
+                SCToastUtil.showToast(activity, "你未申请麦克风权限，请前往我的--设置--权限管理--权限进行设置", true);
+                return;
+            }
             getPermissions1(1);
-        else
-            SCToastUtil.showToast(activity, "你已拒绝申请相机、存储、麦克风权限，请前往我的--设置--权限管理--权限进行设置", true);
+        }
     }
 
     @Override
@@ -341,14 +350,20 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
 
                 @Override
                 public void cancel() {
-                    SCToastUtil.showToast(activity, "你已拒绝申请相机、存储权限，请前往我的--设置--权限管理--权限进行设置", true);
+                    SCToastUtil.showToast(activity, "你未申请相机、存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                     PreferenceUtil.saveIntValue(activity, "cameraPermission", 2);
                 }
             });
-        else if (checkPermissionGranted(activity, per))
+        else {
+            if (!checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                SCToastUtil.showToast(activity, "你未申请存储权限，请前往我的--设置--权限管理--权限进行设置", true);
+                return;
+            } else if (!checkPermissionGranted(activity, Manifest.permission.CAMERA)) {
+                SCToastUtil.showToast(activity, "你未申请相机权限，请前往我的--设置--权限管理--权限进行设置", true);
+                return;
+            }
             getPermissions1(2);
-        else
-            SCToastUtil.showToast(activity, "你已拒绝申请相机、存储权限，请前往我的--设置--权限管理--权限进行设置", true);
+        }
     }
 
     @Override
@@ -411,9 +426,9 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                 public void noPermission() {
                     PreferenceUtil.saveIntValue(activity, "cameraPermission", 2);
                     if (type == 1)
-                        SCToastUtil.showToast(activity, "你已拒绝申请相机、存储、麦克风权限，请前往我的--设置--权限管理--权限进行设置", true);
+                        SCToastUtil.showToast(activity, "你未申请相机、存储、麦克风权限，请前往我的--设置--权限管理--权限进行设置", true);
                     else
-                        SCToastUtil.showToast(activity, "你已拒绝申请相机、存储权限，请前往我的--设置--权限管理--权限进行设置", true);
+                        SCToastUtil.showToast(activity, "你未申请相机、存储权限，请前往我的--设置--权限管理--权限进行设置", true);
 
                 }
             }, per);

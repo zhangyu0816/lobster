@@ -5,13 +5,9 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import com.zb.lib_base.api.uploadImagesApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.http.HttpChatUploadManager;
-import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.http.HttpUploadManager;
+import com.zb.lib_base.http.CustomProgressDialog;
 import com.zb.lib_base.http.UploadImageHelper;
-import com.zb.lib_base.model.ResourceUrl;
 import com.zb.lib_base.utils.SCToastUtil;
 
 import org.json.JSONObject;
@@ -39,6 +35,7 @@ public class PhotoManager {
 
     private OnUpLoadImageListener listener;
     private boolean needProgress = true;
+    private RxAppCompatActivity activity;
 
     public PhotoManager() {
 
@@ -47,6 +44,7 @@ public class PhotoManager {
     public PhotoManager(RxAppCompatActivity context, OnUpLoadImageListener listener) {
         this.instantUpload = false;
         this.listener = listener;
+        activity = context;
     }
 
 
@@ -574,36 +572,58 @@ public class PhotoManager {
                 }
             });
         } else {
-            uploadImagesApi api = new uploadImagesApi(new HttpOnNextListener<ResourceUrl>() {
+            MultipartBody.Builder requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM);
+            if (photoFile.getPhotoeFile() != null) {
+                // MediaType.parse() 里面是上传的文件类型。
+                RequestBody body = RequestBody.create(MediaType.parse("image/jpeg"), photoFile.getPhotoeFile());
+                String filename = photoFile.getPhotoeFile().getName();
+                // 参数分别为， 请求key ，文件名称 ， RequestBody
+                requestBody.addFormDataPart("file", filename, body)
+                        .addFormDataPart("fileContentType", "image/jpeg")
+                        .addFormDataPart("isCutImage", "1")
+                        .addFormDataPart("isCompre", "2");
+            }
+            Request request = new Request.Builder()
+                    .url(isChat ? "http://cimg.zuwo.la/YmUpload_image" : "http://img.zuwo.la/YmUpload_image")
+                    .post(requestBody.build()).build();
+            CustomProgressDialog.showLoading(activity, "处理图片...");
+            UploadImageHelper.getInstance().builder.build().newCall(request).enqueue(new Callback() {
                 @Override
-                public void onNext(ResourceUrl resourceUrl) {
-                    photoFile.setWebUrl(resourceUrl.getUrl());
-                    photoFile.setUploadStatus(3);
-                    photoFile.getPhotoeFile().deleteOnExit();
-                    statisticsUploadStatus();
-                    if (getPhotoUploadStatus(3) == photos.size() && listener != null) {
-                        listener.onSuccess();
-                    }
-                }
-
-                @Override
-                public void onError(Throwable e) {
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
                     Log.e("onError", e.toString());
                     photoFile.setUploadStatus(4);
                     statisticsUploadStatus();
-                    if (reUploadCount <= maxReUpload) reUploadByFail();
-                    else if (listener != null) listener.onError(photoFile);
-                    else super.onError(e);
+                    activity.runOnUiThread(() -> {
+                        if (reUploadCount <= maxReUpload) reUploadByFail();
+                        else if (listener != null) listener.onError(photoFile);
+                        CustomProgressDialog.stopLoading();
+                    });
+
                 }
-            }, MineApp.activity)
-                    .setFile(photoFile.getPhotoeFile())
-                    .setIsCompre(2)
-                    .setIsCutImage(1);
-            api.setShowProgress(needProgress);
-            if (isChat)
-                HttpChatUploadManager.getInstance().doHttpDeal(api);
-            else
-                HttpUploadManager.getInstance().doHttpDeal(api);
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) {
+                    try {
+                        Log.e("ForegroundLiveService", "uploadUrlSuccess");
+                        String json = response.body().string();
+                        JSONObject object = new JSONObject(json);
+                        JSONObject data = new JSONObject(object.optString("data"));
+                        photoFile.setWebUrl(data.optString("url"));
+                        photoFile.setUploadStatus(3);
+                        photoFile.getPhotoeFile().deleteOnExit();
+                        statisticsUploadStatus();
+                        activity.runOnUiThread(() -> {
+                            if (getPhotoUploadStatus(3) == photos.size() && listener != null) {
+                                listener.onSuccess();
+                                CustomProgressDialog.stopLoading();
+                            }
+                        });
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
     }
 

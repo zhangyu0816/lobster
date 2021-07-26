@@ -110,7 +110,7 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
                 @Override
                 public void noPermission() {
                     PreferenceUtil.saveIntValue(activity, "realPermission", 2);
-                    SCToastUtil.showToast(activity, "你已拒绝申请相机权限，请前往设置--权限管理--权限进行设置", true);
+                    SCToastUtil.showToast(activity, "你未申请相机权限，请前往设置--权限管理--权限进行设置", true);
                     back(null);
                 }
             }, Manifest.permission.CAMERA);

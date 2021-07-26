@@ -131,7 +131,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
             } else if (checkPermissionGranted(activity, Manifest.permission.CAMERA)) {
                 ActivityUtils.getMineRealName();
             } else
-                SCToastUtil.showToast(activity, "你已拒绝申请相机权限，请前往设置--权限管理--权限进行设置", true);
+                SCToastUtil.showToast(activity, "你未申请相机权限，请前往设置--权限管理--权限进行设置", true);
         } else if (mBinding.getIsChecked() == 0) {
             SCToastUtil.showToast(activity, "人脸信息正在审核中，请耐心等待", true);
         } else {
@@ -173,13 +173,13 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
                     @Override
                     public void cancel() {
                         PreferenceUtil.saveIntValue(activity, "locationPermission", 2);
-                        SCToastUtil.showToast(activity, "你已拒绝申请相机权限，请前往设置--权限管理--权限进行设置", true);
+                        SCToastUtil.showToast(activity, "你未申请相机权限，请前往设置--权限管理--权限进行设置", true);
                     }
                 });
             else if (checkPermissionGranted(activity, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION))
                 getPermissions1(1);
             else
-                SCToastUtil.showToast(activity, "你已拒绝申请相机权限，请前往设置--权限管理--权限进行设置", true);
+                SCToastUtil.showToast(activity, "你未申请相机权限，请前往设置--权限管理--权限进行设置", true);
         }
     }
 
@@ -385,7 +385,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
                 public void noPermission() {
                     if (type == 1) {
                         PreferenceUtil.saveIntValue(activity, "locationPermission", 2);
-                        SCToastUtil.showToast(activity, "你已拒绝申请相机权限，请前往设置--权限管理--权限进行设置", true);
+                        SCToastUtil.showToast(activity, "你未申请相机权限，请前往设置--权限管理--权限进行设置", true);
                     }
                 }
             }, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION);

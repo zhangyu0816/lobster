@@ -81,15 +81,20 @@ public class AddFeedbackViewModel extends BaseViewModel implements AddFeedbackVM
 
                     @Override
                     public void cancel() {
-                        SCToastUtil.showToast(activity, "你已拒绝申请相机、存储权限，请前往我的--设置--权限管理--权限进行设置", true);
+                        SCToastUtil.showToast(activity, "你未申请相机、存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                         PreferenceUtil.saveIntValue(activity, "cameraPermission", 2);
                     }
                 });
-            else if (checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            else {
+                if (!checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    SCToastUtil.showToast(activity, "你未申请存储权限，请前往我的--设置--权限管理--权限进行设置", true);
+                    return;
+                } else if (!checkPermissionGranted(activity, Manifest.permission.CAMERA)) {
+                    SCToastUtil.showToast(activity, "你未申请相机权限，请前往我的--设置--权限管理--权限进行设置", true);
+                    return;
+                }
                 getPermissions1();
-            else
-                SCToastUtil.showToast(activity, "你已拒绝申请相机、存储权限，请前往我的--设置--权限管理--权限进行设置", true);
+            }
         } else {
             ArrayList<String> imageList = new ArrayList<>();
             for (int i = 0; i < images.size() - 1; i++) {
@@ -160,7 +165,7 @@ public class AddFeedbackViewModel extends BaseViewModel implements AddFeedbackVM
                         @Override
                         public void noPermission() {
                             PreferenceUtil.saveIntValue(activity, "cameraPermission", 2);
-                            SCToastUtil.showToast(activity, "你已拒绝申请相机、存储权限，请前往我的--设置--权限管理--权限进行设置", true);
+                            SCToastUtil.showToast(activity, "你未申请相机、存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                         }
                     }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);

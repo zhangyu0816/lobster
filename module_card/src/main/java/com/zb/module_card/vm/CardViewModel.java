@@ -375,14 +375,14 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
                     @Override
                     public void cancel() {
-                        SCToastUtil.showToast(activity, "你已拒绝申请相机权限，请前往设置--权限管理--权限进行设置", true);
+                        SCToastUtil.showToast(activity, "你未申请相机权限，请前往设置--权限管理--权限进行设置", true);
                         PreferenceUtil.saveIntValue(activity, "locationPermission", 2);
                     }
                 });
             else if (checkPermissionGranted(activity, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION))
                 getPermissions1(3);
             else
-                SCToastUtil.showToast(activity, "你已拒绝申请相机权限，请前往设置--权限管理--权限进行设置", true);
+                SCToastUtil.showToast(activity, "你未申请相机权限，请前往设置--权限管理--权限进行设置", true);
         }
     }
 
@@ -802,7 +802,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                 public void noPermission() {
                     if (type == 3) {
                         PreferenceUtil.saveIntValue(activity, "locationPermission", 2);
-                        SCToastUtil.showToast(activity, "你已拒绝申请相机权限，请前往设置--权限管理--权限进行设置", true);
+                        SCToastUtil.showToast(activity, "你未申请相机权限，请前往设置--权限管理--权限进行设置", true);
                     } else if (type == 1) {
                         baseLocation();
                     }
