@@ -12,6 +12,7 @@ import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.windows.TextPW;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import rx.Observable;
 import rx.functions.Func1;
 
@@ -95,7 +96,7 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
     public T call(BaseResultEntity<T> httpResult) {
         //未登录
         if (httpResult.getCode() == HttpTimeException.NOT_LOGIN) {
-            getRxAppCompatActivity().sendBroadcast(new Intent("lobster_closeSound"));
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_closeSound"));
             if (PreferenceUtil.readStringValue(getRxAppCompatActivity(), "sessionId").isEmpty()) {
                 MineApp.getApp().exit();
                 ActivityUtils.getLoginActivity(0);
@@ -111,7 +112,7 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
 
                     @Override
                     public void cancel() {
-                        getRxAppCompatActivity().sendBroadcast(new Intent("lobster_resumeSound"));
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_resumeSound"));
                         if (TextUtils.equals(dialogTitle, "loadingNotLogin")) {
                             getRxAppCompatActivity().finish();
                         }
@@ -122,7 +123,7 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
 
         //手机未绑定
         if (httpResult.getCode() == HttpTimeException.NOT_REGISTER) {
-            getRxAppCompatActivity().sendBroadcast(new Intent("lobster_bindPhone"));
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_bindPhone"));
             throw new HttpTimeException(httpResult.getCode());
         }
 

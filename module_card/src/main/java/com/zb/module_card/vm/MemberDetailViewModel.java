@@ -65,6 +65,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class MemberDetailViewModel extends BaseViewModel implements MemberDetailVMInterface, SuperLikeInterface {
     private CardMemberDetailBinding mBinding;
@@ -240,7 +241,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         if (showLike) {
             Intent data = new Intent("lobster_card");
             data.putExtra("direction", 0);
-            activity.sendBroadcast(data);
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
         }
         activity.finish();
     }
@@ -255,7 +256,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             activity.finish();
             Intent data = new Intent("lobster_card");
             data.putExtra("direction", 1);
-            activity.sendBroadcast(data);
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
         } else {
             isLike(mBinding.ivLike);
             if (PreferenceUtil.readIntValue(activity, "toLikeCount_" + BaseActivity.userId + "_" + DateUtil.getNow(DateUtil.yyyy_MM_dd), -1) == 0 && MineApp.mineInfo.getMemberType() == 1) {
@@ -474,10 +475,12 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             public void onNext(Object o) {
                 mBinding.setIsAttention(true);
                 AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
-                activity.sendBroadcast(new Intent("lobster_attentionList"));
+                Intent data = new Intent("lobster_attentionList");
+                data.putExtra("isAdd", true);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                 Intent intent = new Intent("lobster_attention");
                 intent.putExtra("isAttention", mBinding.getIsAttention());
-                activity.sendBroadcast(intent);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(intent);
             }
 
             @Override
@@ -486,7 +489,9 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     if (e.getMessage().equals("已经关注过")) {
                         mBinding.setIsAttention(true);
                         AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
-                        activity.sendBroadcast(new Intent("lobster_attentionList"));
+                        Intent data = new Intent("lobster_attentionList");
+                        data.putExtra("isAdd", true);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                     }
                 }
             }
@@ -501,10 +506,10 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             public void onNext(Object o) {
                 mBinding.setIsAttention(false);
                 AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
-                activity.sendBroadcast(new Intent("lobster_attentionList"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_attentionList"));
                 Intent intent = new Intent("lobster_attention");
                 intent.putExtra("isAttention", mBinding.getIsAttention());
-                activity.sendBroadcast(intent);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(intent);
             }
 
             @Override
@@ -513,10 +518,10 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     if (e.getMessage().equals("你还没关注我啊")) {
                         mBinding.setIsAttention(false);
                         AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
-                        activity.sendBroadcast(new Intent("lobster_attentionList"));
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_attentionList"));
                         Intent intent = new Intent("lobster_attention");
                         intent.putExtra("isAttention", mBinding.getIsAttention());
-                        activity.sendBroadcast(intent);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(intent);
                     }
                 }
             }
@@ -550,8 +555,8 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                         activity.finish();
                     } else if (likeOtherStatus == 1) {
                         LikeDb.getInstance().saveLike(new CollectID(otherUserId));
-                        activity.sendBroadcast(new Intent("lobster_isLike"));
-                        activity.sendBroadcast(new Intent("lobster_updateFCL"));
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_isLike"));
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_updateFCL"));
                         LikeTypeDb.getInstance().setType(otherUserId, 1);
                         closeBtn(mBinding.likeLayout);
                         SCToastUtil.showToast(activity, "已喜欢成功", true);
@@ -560,11 +565,11 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                             activity.finish();
                             Intent data = new Intent("lobster_card");
                             data.putExtra("direction", 2);
-                            activity.sendBroadcast(data);
+                            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                         } else {
                             LikeTypeDb.getInstance().setType(otherUserId, 2);
                             closeBtn(mBinding.likeLayout);
-                            activity.sendBroadcast(new Intent("lobster_updateFCL"));
+                            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_updateFCL"));
                             new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex());
                         }
                     }
@@ -573,9 +578,9 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                     LikeDb.getInstance().saveLike(new CollectID(otherUserId));
                     new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex(), memberInfo.getNick(),
                             () -> ActivityUtils.getChatActivity(otherUserId, false));
-                    activity.sendBroadcast(new Intent("lobster_pairList"));
-                    activity.sendBroadcast(new Intent("lobster_isLike"));
-                    activity.sendBroadcast(new Intent("lobster_updateFCL"));
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_pairList"));
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_isLike"));
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_updateFCL"));
                     closeBtn(mBinding.likeLayout);
                     LikeTypeDb.getInstance().setType(otherUserId, 2);
                 } else if (o == 3) {

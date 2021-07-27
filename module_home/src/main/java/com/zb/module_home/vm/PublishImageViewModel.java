@@ -51,6 +51,7 @@ import java.util.Objects;
 
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class PublishImageViewModel extends BaseViewModel implements PublishImageVMInterface {
     public HomeAdapter adapter;
@@ -317,7 +318,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
             @Override
             public void onNext(Object o) {
                 CustomProgressDialog.stopLoading();
-                activity.sendBroadcast(new Intent("lobster_publish"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_publish"));
                 SCToastUtil.showToast(activity, "发布成功", true);
                 back(null);
             }

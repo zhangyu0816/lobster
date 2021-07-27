@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.databinding.DataBindingUtil;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class VipAdPW extends BasePopupWindow {
     private List<Ads> adsList = new ArrayList<>();
@@ -230,7 +231,7 @@ public class VipAdPW extends BasePopupWindow {
         binding.banner.releaseBanner();
         dismiss();
         if (type == 7) {
-            activity.sendBroadcast(new Intent("lobster_flashChat"));
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_flashChat"));
         }
     }
 

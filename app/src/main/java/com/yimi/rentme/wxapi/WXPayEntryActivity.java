@@ -14,6 +14,8 @@ import com.yimi.rentme.R;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.SCToastUtil;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 public class WXPayEntryActivity extends RxAppCompatActivity implements IWXAPIEventHandler {
 
     private IWXAPI api;
@@ -46,7 +48,7 @@ public class WXPayEntryActivity extends RxAppCompatActivity implements IWXAPIEve
             switch (code) {
                 case 0:
                     msg = "支付成功！";
-                    sendBroadcast(new Intent("lobster_paySuccess"));
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_paySuccess"));
                     break;
                 case -2:
                     msg = "您取消了支付！";

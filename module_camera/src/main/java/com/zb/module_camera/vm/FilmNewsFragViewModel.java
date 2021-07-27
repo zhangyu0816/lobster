@@ -10,6 +10,7 @@ import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.cameraFilmMsgListApi;
 import com.zb.lib_base.api.deleteCameraFilmMsgApi;
 import com.zb.lib_base.api.readCameraFilmMsgApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpTimeException;
@@ -29,6 +30,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
 public class FilmNewsFragViewModel extends BaseViewModel implements FilmNewsFragVMInterface, OnRefreshListener, OnLoadMoreListener {
@@ -100,7 +102,7 @@ public class FilmNewsFragViewModel extends BaseViewModel implements FilmNewsFrag
             filmMsg.setIsRead(1);
             mFilmMsgList.set(position, filmMsg);
             adapter.notifyItemChanged(position);
-            activity.sendBroadcast(new Intent("lobster_readFilmMsg"));
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_readFilmMsg"));
         }
     }
 
@@ -116,7 +118,7 @@ public class FilmNewsFragViewModel extends BaseViewModel implements FilmNewsFrag
                     filmMsg.setIsRead(1);
                     mFilmMsgList.set(position, filmMsg);
                     adapter.notifyItemChanged(position);
-                    activity.sendBroadcast(new Intent("lobster_readFilmMsg"));
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_readFilmMsg"));
                 } else
                     deleteCameraFilmMsg(filmMsg.getId());
             }

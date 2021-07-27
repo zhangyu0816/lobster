@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.zb.lib_base.api.myBankCardsApi;
 import com.zb.lib_base.api.removeBankCardApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.MineBank;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class BankListViewModel extends BaseViewModel implements BankListVMInterface {
     public MineAdapter adapter;
@@ -61,7 +63,7 @@ public class BankListViewModel extends BaseViewModel implements BankListVMInterf
         if (isSelect) {
             Intent data = new Intent("lobster_selectBank");
             data.putExtra("mineBank", mineBankList.get(position));
-            activity.sendBroadcast(data);
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
             activity.finish();
         } else
             new SelectorPW(mBinding.getRoot(), selectorList, position1 -> removeBankCard(position));

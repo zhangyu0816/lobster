@@ -3,6 +3,7 @@ package com.zb.module_mine.vm;
 import android.content.Intent;
 import android.view.View;
 
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.TagDb;
 import com.zb.lib_base.model.Tag;
 import com.zb.lib_base.utils.SCToastUtil;
@@ -21,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class SelectTagViewModel extends BaseViewModel implements SelectTagVMInterface {
     public String serviceTags;
@@ -91,7 +93,7 @@ public class SelectTagViewModel extends BaseViewModel implements SelectTagVMInte
         Intent data = new Intent("lobster_member");
         data.putExtra("type", 4);
         data.putExtra("content", tags.toString());
-        activity.sendBroadcast(data);
+        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
         activity.finish();
     }
 

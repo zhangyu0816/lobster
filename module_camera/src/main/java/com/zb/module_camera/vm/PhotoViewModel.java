@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, View.OnTouchListener {
     public boolean isMore;
@@ -210,7 +211,7 @@ public class PhotoViewModel extends BaseViewModel implements PhotoVMInterface, V
                         Intent data = new Intent("lobster_camera");
                         data.putExtra("cameraType", 2);
                         data.putExtra("filePath", imagePath);
-                        activity.sendBroadcast(data);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

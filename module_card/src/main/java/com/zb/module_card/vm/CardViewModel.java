@@ -74,6 +74,7 @@ import java.util.List;
 import java.util.Objects;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import io.realm.Realm;
 
@@ -471,8 +472,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     } else if (likeOtherStatus == 2) {
                         Intent data = new Intent("lobster_card");
                         data.putExtra("direction", 2);
-                        activity.sendBroadcast(data);
-                        activity.sendBroadcast(new Intent("lobster_pairList"));
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_pairList"));
                         LikeTypeDb.getInstance().setType(pairInfo.getOtherUserId(), 2);
                         new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), pairInfo.getSex());
                     }
@@ -481,7 +482,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     LikeDb.getInstance().saveLike(new CollectID(pairInfo.getOtherUserId()));
                     new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), pairInfo.getSex(), pairInfo.getNick(),
                             () -> ActivityUtils.getChatActivity(pairInfo.getOtherUserId(), false));
-                    activity.sendBroadcast(new Intent("lobster_pairList"));
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_pairList"));
                     LikeTypeDb.getInstance().setType(pairInfo.getOtherUserId(), 1);
                 } else if (o == 3) {
                     // 喜欢次数用尽
@@ -501,8 +502,8 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     } else if (likeOtherStatus == 2) {
                         Intent data = new Intent("lobster_card");
                         data.putExtra("direction", 2);
-                        activity.sendBroadcast(data);
-                        activity.sendBroadcast(new Intent("lobster_pairList"));
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_pairList"));
                         LikeTypeDb.getInstance().setType(pairInfo.getOtherUserId(), 2);
                         new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), pairInfo.getSex());
                     }

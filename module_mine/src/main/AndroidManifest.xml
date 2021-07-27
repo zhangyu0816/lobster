@@ -8,87 +8,33 @@
         android:debuggable="false"
         android:theme="@style/MineTheme"
         tools:ignore="HardcodedDebugMode">
-        <activity
-            android:name=".activity.OpenVipActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.SettingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.NewsListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.NewsManagerActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.RealNameActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.WalletActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.LocationActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.ModifyPassActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.NoticeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.FeedbackActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.MineWebActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.GiftRecordActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.EditMemberActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.SelectJobActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.EditContentActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.SelectTagActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.FCLActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.GRGiftActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.TranRecordActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.BindingBankActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.BankListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.FeedbackDetailActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.SystemMsgActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.WithdrawActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.AuthenticationActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.AddFeedbackActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.BindingPhoneActivity"
-            android:exported="false" />
+        <activity android:name=".activity.OpenVipActivity" />
+        <activity android:name=".activity.SettingActivity" />
+        <activity android:name=".activity.NewsListActivity" />
+        <activity android:name=".activity.NewsManagerActivity" />
+        <activity android:name=".activity.RealNameActivity" />
+        <activity android:name=".activity.WalletActivity" />
+        <activity android:name=".activity.LocationActivity" />
+        <activity android:name=".activity.ModifyPassActivity" />
+        <activity android:name=".activity.NoticeActivity" />
+        <activity android:name=".activity.FeedbackActivity" />
+        <activity android:name=".activity.MineWebActivity" />
+        <activity android:name=".activity.GiftRecordActivity" />
+        <activity android:name=".activity.EditMemberActivity" />
+        <activity android:name=".activity.SelectJobActivity" />
+        <activity android:name=".activity.EditContentActivity" />
+        <activity android:name=".activity.SelectTagActivity" />
+        <activity android:name=".activity.FCLActivity" />
+        <activity android:name=".activity.GRGiftActivity" />
+        <activity android:name=".activity.TranRecordActivity" />
+        <activity android:name=".activity.BindingBankActivity" />
+        <activity android:name=".activity.BankListActivity" />
+        <activity android:name=".activity.FeedbackDetailActivity" />
+        <activity android:name=".activity.SystemMsgActivity" />
+        <activity android:name=".activity.WithdrawActivity" />
+        <activity android:name=".activity.AuthenticationActivity" />
+        <activity android:name=".activity.AddFeedbackActivity" />
+        <activity android:name=".activity.BindingPhoneActivity" />
     </application>
 
 </manifest>

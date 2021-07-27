@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class CameraViewModel extends BaseViewModel implements CameraVMInterface {
 
@@ -168,7 +169,7 @@ public class CameraViewModel extends BaseViewModel implements CameraVMInterface 
                         data.putExtra("cameraType", 0);
                         data.putExtra("isMore", true);
                         data.putExtra("filePath", TextUtils.join(",", imageList));
-                        activity.sendBroadcast(data);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                     }
                     activity.finish();
                 });

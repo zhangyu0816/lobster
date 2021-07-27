@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
 public class EditMemberViewModel extends BaseViewModel implements EditMemberVMInterface {
@@ -225,7 +226,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
                 public void onNext(Object o) {
                     SCToastUtil.showToast(activity, "个人信息提交成功", true);
                     updateImages(images);
-                    activity.sendBroadcast(new Intent("lobster_updateMineInfo"));
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_updateMineInfo"));
                     activity.finish();
                 }
             }, activity)

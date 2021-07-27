@@ -34,6 +34,7 @@ import java.io.IOException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class WaterMark {
     public volatile static WaterMark INSTANCE;
@@ -54,7 +55,7 @@ public class WaterMark {
             case 1:
                 DataCleanManager.deleteFile(new File(downloadPath));
                 // 最后通知图库更新
-                MineApp.getApp().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                         Uri.parse("file://" + outPutUrl)));
                 SCToastUtil.showToast(activity, "下载成功", true);
                 CustomProgressDialog.stopLoading();
@@ -138,7 +139,7 @@ public class WaterMark {
         CustomProgressDialog.stopLoading();
         SCToastUtil.showToast(activity, "保存成功", true);
         // 最后通知图库更新
-        activity.sendBroadcast(
+        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(
                 new Intent(
                         Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                         Uri.parse("file://" + file.getAbsolutePath())

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.db.JobInfoDb;
 import com.zb.lib_base.model.JobInfo;
 import com.zb.lib_base.utils.SimulateNetAPI;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class SelectJobViewModel extends BaseViewModel implements SelectJobVMInterface {
     public MineAdapter titleAdapter;
@@ -79,7 +81,7 @@ public class SelectJobViewModel extends BaseViewModel implements SelectJobVMInte
             Intent data = new Intent("lobster_member");
             data.putExtra("type", 1);
             data.putExtra("content", selectJob);
-            activity.sendBroadcast(data);
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
         }
         activity.finish();
     }

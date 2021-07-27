@@ -38,6 +38,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class FilmResourceDetailViewModel extends BaseViewModel implements FilmResourceDetailVMInterface {
     public long cameraFilmResourceId;
@@ -101,7 +102,7 @@ public class FilmResourceDetailViewModel extends BaseViewModel implements FilmRe
     public void back(View view) {
         super.back(view);
         if (isUpdate)
-            activity.sendBroadcast(new Intent("lobster_updateFilmResource"));
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_updateFilmResource"));
         activity.finish();
     }
 

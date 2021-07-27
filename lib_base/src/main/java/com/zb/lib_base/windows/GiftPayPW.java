@@ -16,6 +16,8 @@ import com.zb.lib_base.model.GiftInfo;
 import com.zb.lib_base.model.OrderNumber;
 import com.zb.lib_base.utils.SCToastUtil;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 public class GiftPayPW extends BasePopupWindow {
     private GiftInfo giftInfo;
     private long friendDynId;
@@ -69,7 +71,7 @@ public class GiftPayPW extends BasePopupWindow {
                 if (o.getIsPayed() == 0)
                     walletPayTran(o.getNumber());
                 else {
-                    activity.sendBroadcast(new Intent("lobster_recharge"));
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_recharge"));
                     callBack.paySuccess();
                     dismiss();
                     new GiveSuccessPW(mBinding.getRoot(), giftInfo, Integer.parseInt(binding.getContent()));
@@ -86,7 +88,7 @@ public class GiftPayPW extends BasePopupWindow {
                 if (o.getIsPayed() == 0)
                     walletPayTran(o.getNumber());
                 else {
-                    activity.sendBroadcast(new Intent("lobster_recharge"));
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_recharge"));
                     callBack.paySuccess();
                     dismiss();
                     new GiveSuccessPW(mBinding.getRoot(), giftInfo, Integer.parseInt(binding.getContent()));
@@ -105,7 +107,7 @@ public class GiftPayPW extends BasePopupWindow {
         walletPayTranApi api = new walletPayTranApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                activity.sendBroadcast(new Intent("lobster_recharge"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_recharge"));
                 callBack.paySuccess();
                 dismiss();
                 new GiveSuccessPW(mBinding.getRoot(), giftInfo, Integer.parseInt(binding.getContent()));

@@ -25,6 +25,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class NewsListViewModel extends BaseViewModel implements NewsListVMInterface, OnRefreshListener, OnLoadMoreListener {
     public MineAdapter adapter;
@@ -103,7 +104,7 @@ public class NewsListViewModel extends BaseViewModel implements NewsListVMInterf
                     MineApp.mineNewsCount.setFriendDynamicGoodNum(0);
                 else
                     MineApp.mineNewsCount.setFriendDynamicGiftNum(0);
-                activity.sendBroadcast(new Intent("lobster_newsCount"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_newsCount"));
             }
         }, activity).setReviewType(reviewType);
         HttpManager.getInstance().doHttpDeal(api);

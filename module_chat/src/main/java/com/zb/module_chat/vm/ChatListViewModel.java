@@ -34,6 +34,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
 public class ChatListViewModel extends BaseViewModel implements ChatListVMInterface, OnRefreshListener {
@@ -97,7 +98,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                         adapter.notifyDataSetChanged();
                     }
                 }
-                activity.sendBroadcast(new Intent("lobster_updateRed"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_updateRed"));
                 mBinding.refresh.finishRefresh();
             }
         };
@@ -120,7 +121,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                         adapter.notifyItemRemoved(position);
                         ChatList chatList = chatMsgList.remove(position);
                         adapter.notifyDataSetChanged();
-                        activity.sendBroadcast(new Intent("lobster_updateRed"));
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_updateRed"));
                         HistoryMsgDb.getInstance().deleteHistoryMsg(otherUserId, chatList.getChatType() == 6 ? 3 : 1, 0, chatList.getFlashTalkId());
                         ChatListDb.getInstance().deleteChatMsg(otherUserId);
 
@@ -165,7 +166,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
         }
         Collections.sort(chatMsgList, new ChatComparator());
         adapter = new ChatAdapter<>(activity, R.layout.item_chat_list, chatMsgList, this);
-        activity.sendBroadcast(new Intent("lobster_updateRed"));
+        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_updateRed"));
         SimpleItemTouchHelperCallback callback = new SimpleItemTouchHelperCallback(adapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
         touchHelper.attachToRecyclerView(mBinding.chatList);
@@ -178,7 +179,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        activity.sendBroadcast(new Intent("lobster_chatList"));
+        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_chatList"));
     }
 
     @Override
@@ -200,13 +201,13 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
                 Intent data = new Intent("lobster_relieve");
                 data.putExtra("otherUserId", otherUserId);
                 data.putExtra("isRelieve", false);
-                activity.sendBroadcast(data);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
             }
 
             @Override
             public void cancel() {
                 adapter.notifyItemChanged(position);
-                activity.sendBroadcast(new Intent("lobster_updateRed"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_updateRed"));
             }
         });
     }
@@ -215,7 +216,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
         clearAllHistoryMsgApi api = new clearAllHistoryMsgApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                activity.sendBroadcast(new Intent("lobster_unReadCount"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_unReadCount"));
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);
@@ -225,7 +226,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
         flashClearHistoryMsgApi api = new flashClearHistoryMsgApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                activity.sendBroadcast(new Intent("lobster_unReadCount"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_unReadCount"));
             }
         }, activity).setOtherUserId(otherUserId).setFlashTalkId(flashTalkId);
         HttpManager.getInstance().doHttpDeal(api);

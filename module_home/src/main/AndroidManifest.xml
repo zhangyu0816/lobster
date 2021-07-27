@@ -10,26 +10,13 @@
         tools:ignore="HardcodedDebugMode">
         <activity
             android:name=".activity.PublishImageActivity"
-            android:exported="false"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity
-            android:name=".activity.DiscoverDetailActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.RewardListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.ReportActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.SearchActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.VideoListActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.DiscoverVideoActivity"
-            android:exported="false" />
+        <activity android:name=".activity.DiscoverDetailActivity" />
+        <activity android:name=".activity.RewardListActivity" />
+        <activity android:name=".activity.ReportActivity" />
+        <activity android:name=".activity.SearchActivity" />
+        <activity android:name=".activity.VideoListActivity" />
+        <activity android:name=".activity.DiscoverVideoActivity" />
     </application>
 
 </manifest>

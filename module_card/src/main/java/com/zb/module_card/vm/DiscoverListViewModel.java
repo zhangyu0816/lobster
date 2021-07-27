@@ -38,6 +38,7 @@ import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class DiscoverListViewModel extends BaseViewModel implements DiscoverListVMInterface {
     public long otherUserId;
@@ -112,10 +113,13 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
             public void onNext(Object o) {
                 mBinding.setIsAttention(true);
                 AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, mBinding.getMemberInfo().getNick(), mBinding.getMemberInfo().getImage(), true, BaseActivity.userId));
-                activity.sendBroadcast(new Intent("lobster_attentionList"));
+                Intent data = new Intent("lobster_attentionList");
+                data.putExtra("isAdd", true);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
+
                 Intent intent = new Intent("lobster_attention");
                 intent.putExtra("isAttention", mBinding.getIsAttention());
-                activity.sendBroadcast(intent);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(intent);
             }
 
             @Override
@@ -124,7 +128,9 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
                     if (e.getMessage().equals("已经关注过")) {
                         mBinding.setIsAttention(true);
                         AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, mBinding.getMemberInfo().getNick(), mBinding.getMemberInfo().getImage(), true, BaseActivity.userId));
-                        activity.sendBroadcast(new Intent("lobster_attentionList"));
+                        Intent data = new Intent("lobster_attentionList");
+                        data.putExtra("isAdd", true);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                     }
                 }
             }
@@ -139,10 +145,10 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
             public void onNext(Object o) {
                 mBinding.setIsAttention(false);
                 AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, mBinding.getMemberInfo().getNick(), mBinding.getMemberInfo().getImage(), false, BaseActivity.userId));
-                activity.sendBroadcast(new Intent("lobster_attentionList"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_attentionList"));
                 Intent intent = new Intent("lobster_attention");
                 intent.putExtra("isAttention", mBinding.getIsAttention());
-                activity.sendBroadcast(intent);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(intent);
             }
 
             @Override
@@ -151,10 +157,10 @@ public class DiscoverListViewModel extends BaseViewModel implements DiscoverList
                     if (e.getMessage().equals("你还没关注我啊")) {
                         mBinding.setIsAttention(false);
                         AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, mBinding.getMemberInfo().getNick(), mBinding.getMemberInfo().getImage(), false, BaseActivity.userId));
-                        activity.sendBroadcast(new Intent("lobster_attentionList"));
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_attentionList"));
                         Intent intent = new Intent("lobster_attention");
                         intent.putExtra("isAttention", mBinding.getIsAttention());
-                        activity.sendBroadcast(intent);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(intent);
                     }
                 }
             }

@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterface {
     private ChatFragBinding mBinding;
@@ -187,7 +188,7 @@ public class ChatFragViewModel extends BaseViewModel implements ChatFragVMInterf
             @Override
             public void onNext(MineInfo o) {
                 MineApp.mineInfo = o;
-                activity.sendBroadcast(new Intent("lobster_flashChat"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_flashChat"));
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

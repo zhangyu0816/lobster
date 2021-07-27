@@ -36,6 +36,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class FlashChatPW extends BasePopupWindow {
     private FlashInfo mFlashInfo;
@@ -108,7 +109,7 @@ public class FlashChatPW extends BasePopupWindow {
         saveTalkApi api = new saveTalkApi(new HttpOnNextListener<FlashUser>() {
             @Override
             public void onNext(FlashUser o) {
-                activity.sendBroadcast(new Intent("lobster_updateFlash"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_updateFlash"));
                 ActivityUtils.getFlashChatActivity(o.getOtherUserId(), o.getFlashTalkId(), false);
                 dismiss();
             }

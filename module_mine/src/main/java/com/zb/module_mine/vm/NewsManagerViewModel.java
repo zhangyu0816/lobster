@@ -18,6 +18,7 @@ import com.zb.module_mine.BR;
 import com.zb.module_mine.iv.NewsManagerVMInterface;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class NewsManagerViewModel extends BaseViewModel implements NewsManagerVMInterface {
     private BaseReceiver newsCountReceiver;
@@ -54,7 +55,7 @@ public class NewsManagerViewModel extends BaseViewModel implements NewsManagerVM
                 MineApp.mineNewsCount.setFriendDynamicGoodNum(0);
                 MineApp.mineNewsCount.setFriendDynamicReviewNum(0);
                 mBinding.setVariable(BR.mineNewsCount, MineApp.mineNewsCount);
-                activity.sendBroadcast(new Intent("lobster_newsCount"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_newsCount"));
                 if (MineApp.mineNewsCount.getSystemNewsNum() > 0) {
                     clearAllHistoryMsg(BaseActivity.systemUserId);
                     thirdReadChat(BaseActivity.systemUserId);
@@ -92,7 +93,7 @@ public class NewsManagerViewModel extends BaseViewModel implements NewsManagerVM
                 MineApp.mineNewsCount.setSystemNewsNum(0);
                 MineApp.mineNewsCount.setMsgType(0);
                 mBinding.setVariable(BR.mineNewsCount, MineApp.mineNewsCount);
-                activity.sendBroadcast(new Intent("lobster_newsCount"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_newsCount"));
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);

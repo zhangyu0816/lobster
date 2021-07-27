@@ -11,11 +11,8 @@
 
         <activity
             android:name=".activity.ChatActivity"
-            android:exported="false"
             android:launchMode="singleTop" />
-        <activity
-            android:name=".activity.FlashChatActivity"
-            android:exported="false" />
+        <activity android:name=".activity.FlashChatActivity" />
 
     </application>
 

@@ -26,6 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class FlashChat extends LinearLayout {
     private ViewFlashChatBinding mBinding;
@@ -168,7 +169,7 @@ public class FlashChat extends LinearLayout {
             postDelayed(() -> {
                 PreferenceUtil.saveStringValue(activity, "flashChatTime" + BaseActivity.userId, DateUtil.getNow(DateUtil.yyyy_MM_dd));
                 MineApp.sFlashInfo = mBinding.getFlashInfo1();
-                activity.sendBroadcast(new Intent("lobster_flashChat"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_flashChat"));
             }, 3 * 60 * 1000);
         }
     }

@@ -16,6 +16,7 @@ import com.zb.module_camera.iv.VideoPlayVMInterface;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class VideoPlayViewModel extends BaseViewModel implements VideoPlayVMInterface {
     private CameraVideoPlayBinding mBinding;
@@ -61,11 +62,11 @@ public class VideoPlayViewModel extends BaseViewModel implements VideoPlayVMInte
                 data.putExtra("cameraType", 1);
                 data.putExtra("filePath", filePath);
                 data.putExtra("time", duration);
-                activity.sendBroadcast(data);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
             }
         }
         if (isDelete)
-            activity.sendBroadcast(new Intent("lobster_deleteVideo"));
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_deleteVideo"));
 
         mBinding.videoView.stopPlayback();//停止播放视频,并且释放
         mBinding.videoView.suspend();//在任何状态下释放媒体播放器

@@ -11,6 +11,7 @@ import com.zb.module_mine.databinding.MineEditContentBinding;
 import com.zb.module_mine.iv.EditContentVMInterface;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class EditContentViewModel extends BaseViewModel implements EditContentVMInterface {
     private MineEditContentBinding contentBinding;
@@ -48,7 +49,7 @@ public class EditContentViewModel extends BaseViewModel implements EditContentVM
         Intent data = new Intent("lobster_member");
         data.putExtra("type", type);
         data.putExtra("content", contentBinding.getContent());
-        activity.sendBroadcast(data);
+        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
         activity.finish();
     }
 

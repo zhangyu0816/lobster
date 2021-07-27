@@ -23,6 +23,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.activity.BaseActivity;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.model.WebShare;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.ShareUtil;
@@ -37,6 +38,7 @@ import java.util.Hashtable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class CodeLayout extends RelativeLayout {
     private MinePosterBinding mBinding;
@@ -116,7 +118,7 @@ public class CodeLayout extends RelativeLayout {
     private void saveFile(RxAppCompatActivity activity, File myCaptureFile) {
         SCToastUtil.showToast(activity, "保存成功", true);
         // 最后通知图库更新
-        activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                 Uri.parse("file://" + myCaptureFile.getAbsolutePath())));
     }
 

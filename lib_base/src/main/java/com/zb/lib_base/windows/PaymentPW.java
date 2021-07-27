@@ -23,6 +23,8 @@ import com.zb.lib_base.model.PayResult;
 import com.zb.lib_base.model.WXPay;
 import com.zb.lib_base.utils.SCToastUtil;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 public class PaymentPW extends BasePopupWindow {
     private OrderTran orderTran;
     private int payType; // 1 开通VIP  2 充值
@@ -66,11 +68,11 @@ public class PaymentPW extends BasePopupWindow {
 
     private void paySuccess() {
         if (payType == 1) {
-            activity.sendBroadcast(new Intent("lobster_openVip"));
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_openVip"));
         } else if (payType == 2) {
-            activity.sendBroadcast(new Intent("lobster_recharge"));
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_recharge"));
         } else if (payType == 3) {
-            activity.sendBroadcast(new Intent("lobster_openPartner"));
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_openPartner"));
         }
         try {
             paySuccessReceiver.unregisterReceiver();

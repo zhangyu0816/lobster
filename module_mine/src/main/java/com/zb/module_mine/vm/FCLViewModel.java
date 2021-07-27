@@ -49,6 +49,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRefreshListener, OnLoadMoreListener {
     public int position;
@@ -206,7 +207,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
                 Intent data = new Intent("lobster_attentionList");
                 data.putExtra("isAdd", true);
-                activity.sendBroadcast(data);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
             }
 
             @Override
@@ -216,7 +217,9 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                         MemberInfo memberInfo = memberInfoList.get(_selectIndex);
                         memberInfo.setFansQuantity(memberInfo.getFansQuantity() + 1);
                         AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
-                        activity.sendBroadcast(new Intent("lobster_attentionList"));
+                        Intent data = new Intent("lobster_attentionList");
+                        data.putExtra("isAdd", true);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                     }
                 }
             }
@@ -233,7 +236,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
                 Intent data = new Intent("lobster_attentionList");
                 data.putExtra("isAdd", false);
-                activity.sendBroadcast(data);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
             }
 
             @Override
@@ -245,7 +248,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                         AttentionDb.getInstance().saveAttention(new AttentionInfo(otherUserId, memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
                         Intent data = new Intent("lobster_attentionList");
                         data.putExtra("isAdd", false);
-                        activity.sendBroadcast(data);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                     }
                 }
             }
@@ -262,7 +265,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 String otherHead = memberInfoList.get(_selectIndex).getImage();
                 if (o == 1) {
                     LikeDb.getInstance().saveLike(new CollectID(otherUserId));
-                    activity.sendBroadcast(new Intent("lobster_isLike"));
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_isLike"));
                     LikeTypeDb.getInstance().setType(otherUserId, 1);
                     adapter.notifyItemChanged(_selectIndex);
                 } else if (o == 2) {
@@ -270,8 +273,8 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                             () -> ActivityUtils.getChatActivity(memberInfoList.get(_selectIndex).getUserId(), false));
                     LikeDb.getInstance().saveLike(new CollectID(otherUserId));
                     adapter.notifyItemChanged(_selectIndex);
-                    activity.sendBroadcast(new Intent("lobster_pairList"));
-                    activity.sendBroadcast(new Intent("lobster_isLike"));
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_pairList"));
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_isLike"));
                     LikeTypeDb.getInstance().setType(otherUserId, 1);
                 } else if (o == 3) {
                     new VipAdPW(mBinding.getRoot(), 6, "");
@@ -308,7 +311,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
                 Intent data = new Intent("lobster_relieve");
                 data.putExtra("otherUserId", otherUserId);
                 data.putExtra("isRelieve", true);
-                activity.sendBroadcast(data);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);

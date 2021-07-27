@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVMInterface, View.OnTouchListener {
     private AcPhotoStudioBinding mBinding;
@@ -387,7 +388,7 @@ public class PhotoStudioViewModel extends BaseViewModel implements PhotoStudioVM
         washResourceApi api = new washResourceApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                activity.sendBroadcast(new Intent("lobster_startGPU"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_startGPU"));
                 SCToastUtil.showToast(activity,"已提交冲洗",true);
                 findCameraFilms();
                 mFilm = null;

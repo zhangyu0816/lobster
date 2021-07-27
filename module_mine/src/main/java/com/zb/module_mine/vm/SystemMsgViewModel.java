@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInterface {
     public MineAdapter adapter;
@@ -127,7 +128,7 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
             public void onNext(Object o) {
                 MineApp.mineNewsCount.setMsgType(0);
                 MineApp.mineNewsCount.setSystemNewsNum(0);
-                activity.sendBroadcast(new Intent("lobster_newsCount"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_newsCount"));
             }
         }, activity).setMessageId(messageId);
         HttpManager.getInstance().doHttpDeal(api);

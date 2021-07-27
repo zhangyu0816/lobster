@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class BindingBankViewModel extends BaseViewModel implements BindingBankVMInterface {
     private MineBindingBankBinding mBinding;
@@ -111,7 +112,7 @@ public class BindingBankViewModel extends BaseViewModel implements BindingBankVM
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "添加成功", true);
-                activity.sendBroadcast(new Intent("lobster_addBank"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_addBank"));
                 activity.finish();
             }
         }, activity).setBankId(bankInfo.getId()).setAccountNo(mBinding.getBankAccount()).setOpenAccountLocation(mBinding.getBankAddress());

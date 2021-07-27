@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class SettingViewModel extends BaseViewModel implements SettingVMInterface {
     private BaseReceiver updateWalletReceiver;
@@ -85,7 +86,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
                 MineApp.maxAge = (int) maxPercentage;
                 mBinding.setAgeName(MineApp.minAge + "-" + MineApp.maxAge + "+");
                 MineApp.noDataCount = 0;
-                activity.sendBroadcast(new Intent("lobster_location"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_location"));
             }
 
             @Override
@@ -118,7 +119,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
             MineApp.sex = position == 2 ? -1 : position;
             PreferenceUtil.saveIntValue(activity, "mySex", MineApp.sex);
             MineApp.noDataCount = 0;
-            activity.sendBroadcast(new Intent("lobster_location"));
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_location"));
         });
     }
 

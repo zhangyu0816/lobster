@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class LocationViewModel extends BaseViewModel implements LocationVMInterface, GeocodeSearch.OnGeocodeSearchListener {
     public BaseAdapter adapter;
@@ -223,7 +224,7 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
         if (isDiscover) {
             Intent data = new Intent("lobster_location");
             data.putExtra("cityName", info.getCityName());
-            activity.sendBroadcast(data);
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
             activity.finish();
         } else {
             MineApp.cityName = info.getCityName();
@@ -241,7 +242,7 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
         updatePairPoolApi api = new updatePairPoolApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                activity.sendBroadcast(new Intent("lobster_location"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_location"));
                 activity.finish();
             }
         }, activity).setLatitude(latitude).setLongitude(longitude).setProvinceId(provinceId).setCityId(cityId).setDistrictId(districtId);

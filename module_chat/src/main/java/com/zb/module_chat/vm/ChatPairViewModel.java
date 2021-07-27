@@ -46,6 +46,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
 public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterface, OnRefreshListener {
@@ -104,13 +105,13 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 try {
                     if (isRelieve) {
                         LikeDb.getInstance().deleteLike(otherUserId);
-                        activity.sendBroadcast(new Intent("lobster_contactNum"));
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_contactNum"));
                     }
 
                     Intent data = new Intent("lobster_relieve_1");
                     data.putExtra("otherUserId", otherUserId);
                     data.putExtra("isRelieve", false);
-                    activity.sendBroadcast(data);
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -384,7 +385,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 Intent data = new Intent("lobster_relieve");
                 data.putExtra("otherUserId", otherUserId);
                 data.putExtra("isRelieve", true);
-                activity.sendBroadcast(data);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
             }
         }, activity).setOtherUserId(otherUserId);
         HttpManager.getInstance().doHttpDeal(api);

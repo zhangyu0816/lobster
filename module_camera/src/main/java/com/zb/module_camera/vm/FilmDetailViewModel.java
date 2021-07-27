@@ -9,6 +9,7 @@ import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.findCameraFilmsInfoApi;
 import com.zb.lib_base.api.findCameraFilmsResourceListApi;
 import com.zb.lib_base.api.otherInfoApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.Film;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class FilmDetailViewModel extends BaseViewModel implements FilmDetailVMInterface {
     private AcFilmDetailBinding mBinding;
@@ -74,7 +76,7 @@ public class FilmDetailViewModel extends BaseViewModel implements FilmDetailVMIn
             intent.putExtra("cameraFilmId", mFilm.getId());
             intent.putExtra("goodNum", mFilm.getGoodNum());
             intent.putExtra("reviews", mFilm.getReviews());
-            activity.sendBroadcast(intent);
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(intent);
         }
         activity.finish();
     }
@@ -85,7 +87,7 @@ public class FilmDetailViewModel extends BaseViewModel implements FilmDetailVMIn
         if (mFilm.getUserId() == BaseActivity.userId) {
             new FilmAuthorityDF(activity).setFilm(mFilm).setFilmCallBack(film -> {
                 mFilm = film;
-                activity.sendBroadcast(new Intent("lobster_updateGroup"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_updateGroup"));
             }).show(activity.getSupportFragmentManager());
         }
     }

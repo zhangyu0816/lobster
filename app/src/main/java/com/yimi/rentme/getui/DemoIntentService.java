@@ -34,6 +34,7 @@ import java.util.List;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class DemoIntentService extends GTIntentService {
     public static StringBuilder payloadData = new StringBuilder();
@@ -130,8 +131,8 @@ public class DemoIntentService extends GTIntentService {
                     builder.setContentIntent(contextIntent);
                     nmc.notify(null, 2, builder.build());
                     if (notificationBasicStyle == 7) {
-                        context.sendBroadcast(new Intent("lobster_updateChat"));
-                        context.sendBroadcast(new Intent("lobster_newDynMsgAllNum"));
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent("lobster_updateChat"));
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent("lobster_newDynMsgAllNum"));
                     }
                 } else {
                     long userId = object.optJSONObject("custom_content").optLong("userId");
@@ -141,7 +142,7 @@ public class DemoIntentService extends GTIntentService {
                     }
                     String activity = activityContent.optString("ActivityName");
                     if(TextUtils.equals(activity,"FilmResourceDetailActivity")){
-                        context.sendBroadcast(new Intent("lobster_addFilmMsgCount"));
+                        LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent("lobster_addFilmMsgCount"));
                     }
                     if (isAppRunning) {
                         Log.i("isAppRunning", "isAppRunning == true");

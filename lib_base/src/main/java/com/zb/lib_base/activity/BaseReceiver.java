@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.zb.lib_base.app.MineApp;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public abstract class BaseReceiver extends BroadcastReceiver {
 
@@ -13,13 +16,13 @@ public abstract class BaseReceiver extends BroadcastReceiver {
 
     public BaseReceiver(RxAppCompatActivity activity, String name) {
         this.activity = activity;
-        activity.registerReceiver(this, new IntentFilter(name));
+        LocalBroadcastManager.getInstance(MineApp.sContext).registerReceiver(this, new IntentFilter(name));
     }
 
     @Override
     public abstract void onReceive(Context context, Intent intent);
 
     public void unregisterReceiver() {
-        activity.unregisterReceiver(this);
+        LocalBroadcastManager.getInstance(MineApp.sContext).unregisterReceiver(this);
     }
 }

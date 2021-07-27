@@ -74,6 +74,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.OrientationHelper;
 
 public class VideoListViewModel extends BaseViewModel implements VideoListVMInterface {
@@ -374,7 +375,9 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
             public void onNext(Object o) {
                 isAttention(layout, ivAttention);
                 AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), true, BaseActivity.userId));
-                activity.sendBroadcast(new Intent("lobster_attentionList"));
+                Intent data = new Intent("lobster_attentionList");
+                data.putExtra("isAdd", true);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
             }
 
             @Override
@@ -383,7 +386,9 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                     if (e.getMessage().equals("已经关注过")) {
                         isAttention(layout, ivAttention);
                         AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), true, BaseActivity.userId));
-                        activity.sendBroadcast(new Intent("lobster_attentionList"));
+                        Intent data = new Intent("lobster_attentionList");
+                        data.putExtra("isAdd", true);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                     }
                 }
             }
@@ -399,7 +404,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 layout.setVisibility(View.VISIBLE);
                 ivAttention.setBackgroundResource(R.drawable.attention_icon);
                 AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), false, BaseActivity.userId));
-                activity.sendBroadcast(new Intent("lobster_attentionList"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_attentionList"));
             }
 
             @Override
@@ -409,7 +414,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                         layout.setVisibility(View.VISIBLE);
                         ivAttention.setBackgroundResource(R.drawable.attention_icon);
                         AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), discoverInfo.getNick(), discoverInfo.getImage(), false, BaseActivity.userId));
-                        activity.sendBroadcast(new Intent("lobster_attentionList"));
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_attentionList"));
                     }
                 }
             }
@@ -449,7 +454,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 Intent data = new Intent("lobster_doGood");
                 data.putExtra("goodNum", goodNum);
                 data.putExtra("friendDynId", discoverInfo.getFriendDynId());
-                activity.sendBroadcast(data);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                 reviewList.clear();
                 reviewAdapter.notifyDataSetChanged();
                 seeReviews(1);
@@ -462,7 +467,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                         Intent data = new Intent("lobster_doGood");
                         data.putExtra("goodNum", discoverInfo.getGoodNum());
                         data.putExtra("friendDynId", discoverInfo.getFriendDynId());
-                        activity.sendBroadcast(data);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                     }
                 }
             }
@@ -482,7 +487,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                 Intent data = new Intent("lobster_doGood");
                 data.putExtra("goodNum", goodNum);
                 data.putExtra("friendDynId", discoverInfo.getFriendDynId());
-                activity.sendBroadcast(data);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
             }
 
             @Override
@@ -493,7 +498,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
                         Intent data = new Intent("lobster_doGood");
                         data.putExtra("goodNum", discoverInfo.getGoodNum());
                         data.putExtra("friendDynId", discoverInfo.getFriendDynId());
-                        activity.sendBroadcast(data);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                     }
                 }
             }

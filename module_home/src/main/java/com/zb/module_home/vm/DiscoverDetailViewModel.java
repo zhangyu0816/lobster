@@ -73,6 +73,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDetailVMInterface, OnRefreshListener, OnLoadMoreListener, SuperLikeInterface {
     private HomeDiscoverDetailBinding mBinding;
@@ -447,15 +448,15 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                         activity.finish();
                     } else if (likeOtherStatus == 1) {
                         LikeDb.getInstance().saveLike(new CollectID(discoverInfo.getUserId()));
-                        activity.sendBroadcast(new Intent("lobster_isLike"));
-                        activity.sendBroadcast(new Intent("lobster_updateFCL"));
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_isLike"));
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_updateFCL"));
                         LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 1);
                         closeBtn(mBinding.likeLayout);
                         SCToastUtil.showToast(activity, "已喜欢成功", true);
                     } else if (likeOtherStatus == 2) {
                         closeBtn(mBinding.likeLayout);
                         LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 2);
-                        activity.sendBroadcast(new Intent("lobster_updateFCL"));
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_updateFCL"));
                         new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex());
                     }
                 } else if (o == 2) {
@@ -463,9 +464,9 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                     LikeDb.getInstance().saveLike(new CollectID(discoverInfo.getUserId()));
                     new SuperLikePW(mBinding.getRoot(), myHead, otherHead, MineApp.mineInfo.getSex(), memberInfo.getSex(), memberInfo.getNick(),
                             () -> ActivityUtils.getChatActivity(discoverInfo.getUserId(), false));
-                    activity.sendBroadcast(new Intent("lobster_pairList"));
-                    activity.sendBroadcast(new Intent("lobster_isLike"));
-                    activity.sendBroadcast(new Intent("lobster_updateFCL"));
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_pairList"));
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_isLike"));
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_updateFCL"));
                     closeBtn(mBinding.likeLayout);
                     LikeTypeDb.getInstance().setType(discoverInfo.getUserId(), 2);
                 } else if (o == 3) {
@@ -546,7 +547,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         deleteDynApi api = new deleteDynApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                activity.sendBroadcast(new Intent("lobster_publish"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_publish"));
                 SCToastUtil.showToast(activity, "删除成功", true);
                 activity.finish();
             }
@@ -600,7 +601,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 Intent data = new Intent("lobster_doGood");
                 data.putExtra("goodNum", goodNum);
                 data.putExtra("friendDynId", friendDynId);
-                activity.sendBroadcast(data);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
             }
 
             @Override
@@ -612,7 +613,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                         Intent data = new Intent("lobster_doGood");
                         data.putExtra("goodNum", discoverInfo.getGoodNum());
                         data.putExtra("friendDynId", friendDynId);
-                        activity.sendBroadcast(data);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                     }
                 }
             }
@@ -633,7 +634,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 Intent data = new Intent("lobster_doGood");
                 data.putExtra("goodNum", goodNum);
                 data.putExtra("friendDynId", friendDynId);
-                activity.sendBroadcast(data);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
             }
 
             @Override
@@ -644,7 +645,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                         Intent data = new Intent("lobster_doGood");
                         data.putExtra("goodNum", discoverInfo.getGoodNum());
                         data.putExtra("friendDynId", friendDynId);
-                        activity.sendBroadcast(data);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                     }
                 }
             }
@@ -728,10 +729,12 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 mBinding.setIsAttention(true);
                 if (memberInfo != null)
                     AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
-                activity.sendBroadcast(new Intent("lobster_attentionList"));
+                Intent data = new Intent("lobster_attentionList");
+                data.putExtra("isAdd", true);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                 Intent intent = new Intent("lobster_attention");
                 intent.putExtra("isAttention", true);
-                activity.sendBroadcast(intent);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(intent);
             }
 
             @Override
@@ -741,10 +744,12 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                         mBinding.setIsAttention(true);
                         if (memberInfo != null)
                             AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
-                        activity.sendBroadcast(new Intent("lobster_attentionList"));
+                        Intent data = new Intent("lobster_attentionList");
+                        data.putExtra("isAdd", true);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                         Intent intent = new Intent("lobster_attention");
                         intent.putExtra("isAttention", true);
-                        activity.sendBroadcast(intent);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(intent);
                     }
                 }
             }
@@ -761,10 +766,10 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 mBinding.setIsAttention(false);
                 if (memberInfo != null)
                     AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
-                activity.sendBroadcast(new Intent("lobster_attentionList"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_attentionList"));
                 Intent intent = new Intent("lobster_attention");
                 intent.putExtra("isAttention", false);
-                activity.sendBroadcast(intent);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(intent);
             }
 
             @Override
@@ -774,10 +779,10 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                         mBinding.setIsAttention(false);
                         if (memberInfo != null)
                             AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
-                        activity.sendBroadcast(new Intent("lobster_attentionList"));
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_attentionList"));
                         Intent intent = new Intent("lobster_attention");
                         intent.putExtra("isAttention", false);
-                        activity.sendBroadcast(intent);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(intent);
                     }
                 }
             }

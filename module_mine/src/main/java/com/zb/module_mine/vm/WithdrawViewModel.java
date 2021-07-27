@@ -24,6 +24,7 @@ import com.zb.module_mine.iv.WithdrawVMInterface;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class WithdrawViewModel extends BaseViewModel implements WithdrawVMInterface {
     private MineWithdrawBinding mBinding;
@@ -167,7 +168,7 @@ public class WithdrawViewModel extends BaseViewModel implements WithdrawVMInterf
             @Override
             public void onNext(Object o) {
                 SCToastUtil.showToast(activity, "已提交提现信息", true);
-                activity.sendBroadcast(new Intent("lobster_recharge"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_recharge"));
                 activity.finish();
             }
         }, activity).setMoney(mBinding.getMoney()).setBankAccountId(mineBank.getId());

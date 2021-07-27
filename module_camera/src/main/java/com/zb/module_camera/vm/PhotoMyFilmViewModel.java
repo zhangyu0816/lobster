@@ -26,6 +26,7 @@ import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class PhotoMyFilmViewModel extends BaseViewModel implements PhotoMyFilmVMInterface {
 
@@ -145,9 +146,9 @@ public class PhotoMyFilmViewModel extends BaseViewModel implements PhotoMyFilmVM
             public void onNext(Object o) {
                 Intent intent = new Intent("lobster_readFilmMsg");
                 intent.putExtra("cleanAll", true);
-                activity.sendBroadcast(intent);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(intent);
 
-                activity.sendBroadcast(new Intent("lobster_updateFilmMsg"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_updateFilmMsg"));
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

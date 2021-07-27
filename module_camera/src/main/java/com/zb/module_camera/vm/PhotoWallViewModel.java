@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInterface {
 
@@ -127,7 +128,7 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
         new FilmRinseDF(activity).setFilm(mFilm).setSelectCount(selectImages.size()).setFilmRinseCallBack(() -> {
 
             MineApp.sFilmResourceDb.updateImages(mFilm.getId(), TextUtils.join("#", selectImages), true);
-            activity.sendBroadcast(new Intent("lobster_washSuccess"));
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_washSuccess"));
             activity.finish();
         }).show(activity.getSupportFragmentManager());
     }

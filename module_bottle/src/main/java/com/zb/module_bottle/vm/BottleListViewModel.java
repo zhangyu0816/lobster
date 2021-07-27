@@ -41,6 +41,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
 public class BottleListViewModel extends BaseViewModel implements BottleListVMInterface, OnRefreshListener, OnLoadMoreListener {
@@ -184,7 +185,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                         BottleInfoComparator comparator = new BottleInfoComparator();
                         Collections.sort(bottleInfoList, comparator);
                         adapter.notifyDataSetChanged();
-                        activity.sendBroadcast(new Intent("lobster_bottleNum"));
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_bottleNum"));
                     }
                 }
             }
@@ -242,7 +243,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 adapter.notifyDataSetChanged();
 
                 clearAllHistoryMsg(otherUserId, bottleInfo.getDriftBottleId());
-                activity.sendBroadcast(new Intent("lobster_bottleNum"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_bottleNum"));
                 if (bottleInfoList.size() == 0) {
                     onRefresh(mBinding.refresh);
                 }

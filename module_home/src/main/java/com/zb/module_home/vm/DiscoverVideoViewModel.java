@@ -69,6 +69,7 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVideoVMInterface {
     public long friendDynId;
@@ -358,13 +359,15 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
             public void onNext(Object o) {
                 isAttention(mBinding.attentionLayout, mBinding.ivAttention);
                 AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
-                activity.sendBroadcast(new Intent("lobster_attentionList"));
+                Intent data = new Intent("lobster_attentionList");
+                data.putExtra("isAdd", true);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                 MineApp.getApp().getFixedThreadPool().execute(() -> {
                     SystemClock.sleep(1000);
                     activity.runOnUiThread(() -> {
                         Intent intent = new Intent("lobster_attention");
                         intent.putExtra("isAttention", true);
-                        activity.sendBroadcast(intent);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(intent);
                     });
                 });
             }
@@ -375,7 +378,9 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                     if (e.getMessage().equals("已经关注过")) {
                         isAttention(mBinding.attentionLayout, mBinding.ivAttention);
                         AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), true, BaseActivity.userId));
-                        activity.sendBroadcast(new Intent("lobster_attentionList"));
+                        Intent data = new Intent("lobster_attentionList");
+                        data.putExtra("isAdd", true);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                     }
                 }
             }
@@ -391,10 +396,10 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                 mBinding.attentionLayout.setVisibility(View.VISIBLE);
                 mBinding.ivAttention.setBackgroundResource(R.drawable.attention_icon);
                 AttentionDb.getInstance().saveAttention(new AttentionInfo(discoverInfo.getUserId(), memberInfo.getNick(), memberInfo.getImage(), false, BaseActivity.userId));
-                activity.sendBroadcast(new Intent("lobster_attentionList"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_attentionList"));
                 Intent intent = new Intent("lobster_attention");
                 intent.putExtra("isAttention", false);
-                activity.sendBroadcast(intent);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(intent);
             }
         }, activity).setOtherUserId(discoverInfo.getUserId());
         HttpManager.getInstance().doHttpDeal(api);
@@ -412,7 +417,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                 Intent data = new Intent("lobster_doGood");
                 data.putExtra("goodNum", goodNum);
                 data.putExtra("friendDynId", friendDynId);
-                activity.sendBroadcast(data);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                 reviewList.clear();
                 adapter.notifyDataSetChanged();
                 seeReviews(1);
@@ -425,7 +430,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                         Intent data = new Intent("lobster_doGood");
                         data.putExtra("goodNum", discoverInfo.getGoodNum());
                         data.putExtra("friendDynId", friendDynId);
-                        activity.sendBroadcast(data);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                     }
                 }
             }
@@ -447,7 +452,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                 Intent data = new Intent("lobster_doGood");
                 data.putExtra("goodNum", goodNum);
                 data.putExtra("friendDynId", friendDynId);
-                activity.sendBroadcast(data);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
 
             }
 
@@ -459,7 +464,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
                         Intent data = new Intent("lobster_doGood");
                         data.putExtra("goodNum", discoverInfo.getGoodNum());
                         data.putExtra("friendDynId", friendDynId);
-                        activity.sendBroadcast(data);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                     }
                 }
             }
@@ -472,7 +477,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
         deleteDynApi api = new deleteDynApi(new HttpOnNextListener() {
             @Override
             public void onNext(Object o) {
-                activity.sendBroadcast(new Intent("lobster_publish"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_publish"));
                 SCToastUtil.showToast(activity, "删除成功", true);
                 back(null);
             }

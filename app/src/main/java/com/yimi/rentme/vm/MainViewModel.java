@@ -68,6 +68,7 @@ import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager2.widget.ViewPager2;
 import io.realm.Realm;
 
@@ -225,13 +226,13 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
                 // 更新会话列表
                 Intent data = new Intent("lobster_singleBottleCache");
                 data.putExtra("driftBottleId", body.getDriftBottleId());
-                activity.sendBroadcast(data);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
 
                 // 更新对话页面
                 Intent upMessage = new Intent("lobster_upMessage/driftBottleId=" + body.getDriftBottleId());
                 upMessage.putExtra("customMessageBody", body);
                 upMessage.putExtra("msgId", msgId);
-                activity.sendBroadcast(upMessage);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(upMessage);
 
                 noReadBottleNum(true);
 
@@ -245,13 +246,13 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
                         Intent data = new Intent("lobster_updateChat");
                         data.putExtra("userId", otherUserId);
                         data.putExtra("flashTalkId", body.getFlashTalkId());
-                        activity.sendBroadcast(data);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
 
                         // 更新对话页面
                         Intent upMessage = new Intent("lobster_upMessage/flashTalkId=" + body.getFlashTalkId());
                         upMessage.putExtra("customMessageBody", body);
                         upMessage.putExtra("msgId", msgId);
-                        activity.sendBroadcast(upMessage);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(upMessage);
                     }
 
                     @Override
@@ -262,7 +263,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
             } else {
                 if (otherUserId == BaseActivity.systemUserId) {
                     MineApp.mineNewsCount.setSystemNewsNum(MineApp.mineNewsCount.getSystemNewsNum() + 1);
-                    activity.sendBroadcast(new Intent("lobster_newsCount"));
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_newsCount"));
                 } else {
                     ChatListDb.getInstance().updateChatMsg(otherUserId, DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), body.getStanza(), body.getMsgType(), 0, new ChatListDb.CallBack() {
                         @Override
@@ -271,13 +272,13 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
                             mBinding.setUnReadCount(ChatListDb.getInstance().getAllUnReadNum());
                             Intent data = new Intent("lobster_updateChat");
                             data.putExtra("userId", otherUserId);
-                            activity.sendBroadcast(data);
+                            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
 
                             // 更新对话页面
                             Intent upMessage = new Intent("lobster_upMessage/friend=" + otherUserId);
                             upMessage.putExtra("customMessageBody", body);
                             upMessage.putExtra("msgId", msgId);
-                            activity.sendBroadcast(upMessage);
+                            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(upMessage);
                         }
 
                         @Override
@@ -354,13 +355,13 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
     private void bottleTileStatus(boolean isPlay) {
         Intent data = new Intent("lobster_bottleTitle");
         data.putExtra("isPlay", isPlay);
-        activity.sendBroadcast(data);
+        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
     }
 
     private void animatorStatus(boolean isPlay) {
         Intent data = new Intent("lobster_animatorStatus");
         data.putExtra("isPlay", isPlay);
-        activity.sendBroadcast(data);
+        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
     }
 
     public void onResume() {
@@ -443,7 +444,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
             @Override
             public void onNext(Integer o) {
                 MineApp.isFirstOpen = o == 1;
-                activity.sendBroadcast(new Intent("lobster_isFirstOpen"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_isFirstOpen"));
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
@@ -455,7 +456,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
             @Override
             public void onNext(WalletInfo o) {
                 MineApp.walletInfo = o;
-                activity.sendBroadcast(new Intent("lobster_updateWallet"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_updateWallet"));
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
@@ -467,7 +468,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
             @Override
             public void onNext(MineNewsCount o) {
                 MineApp.mineNewsCount = o;
-                activity.sendBroadcast(new Intent("lobster_newsCount"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_newsCount"));
                 if (!isUpdate) {
                     pageNo = 1;
                     bottlePageNo = 1;
@@ -530,7 +531,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    activity.sendBroadcast(new Intent("lobster_updateChat"));
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_updateChat"));
                 }
             }
         }, activity).setPageNo(pageNo);
@@ -546,7 +547,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
                 MineApp.mineNewsCount.setCreateTime(o.getCreationDate());
                 MineApp.mineNewsCount.setMsgType(o.getMsgType());
                 MineApp.mineNewsCount.setSystemNewsNum(o.getNoReadNum());
-                activity.sendBroadcast(new Intent("lobster_newsCount"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_newsCount"));
                 contactNum(false);
                 visitorBySeeMeCount();
             }
@@ -554,7 +555,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    activity.sendBroadcast(new Intent("lobster_newsCount"));
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_newsCount"));
                     contactNum(false);
                     visitorBySeeMeCount();
                 }
@@ -605,13 +606,13 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
                 chatList.setHasNewBeLike(MineApp.contactNum.getBeLikeCount() > PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId));
                 ChatListDb.getInstance().saveChatList(chatList);
 
-                activity.sendBroadcast(new Intent("lobster_newsCount"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_newsCount"));
                 MineApp.getApp().getFixedThreadPool().execute(() -> {
                     SystemClock.sleep(800);
                     Intent data = new Intent("lobster_updateChatType");
                     data.putExtra("chatType", 1);
                     data.putExtra("isUpdate", isUpdate);
-                    activity.sendBroadcast(data);
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                 });
 
                 if (!isUpdate) {
@@ -634,7 +635,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
             @Override
             public void onNext(VisitorCount o) {
                 MineApp.contactNum.setVisitorCount(o.getTotalCount());
-                activity.sendBroadcast(new Intent("lobster_visitor"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_visitor"));
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
@@ -653,13 +654,13 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
         chatList.setChatType(2);
         chatList.setMainUserId(BaseActivity.userId);
         ChatListDb.getInstance().saveChatList(chatList);
-        activity.sendBroadcast(new Intent("lobster_newsCount"));
+        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_newsCount"));
         MineApp.getApp().getFixedThreadPool().execute(() -> {
             SystemClock.sleep(800);
             Intent data = new Intent("lobster_updateChatType");
             data.putExtra("chatType", 2);
             data.putExtra("isUpdate", isUpdate);
-            activity.sendBroadcast(data);
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
         });
     }
 
@@ -700,12 +701,12 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
                     chatList.setOtherChatCount(1);
                 chatList.setMainUserId(BaseActivity.userId);
                 ChatListDb.getInstance().saveChatList(chatList);
-                activity.sendBroadcast(new Intent("lobster_newsCount"));
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_newsCount"));
                 // 更新会话列表
                 Intent data = new Intent("lobster_updateChat");
                 data.putExtra("userId", otherUserId);
                 data.putExtra("flashTalkId", body.getFlashTalkId());
-                activity.sendBroadcast(data);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
 
                 // 更新对话页面
                 Intent upMessage;
@@ -716,7 +717,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
                 }
                 upMessage.putExtra("customMessageBody", body);
                 upMessage.putExtra("msgId", msgId);
-                activity.sendBroadcast(upMessage);
+                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(upMessage);
 
             }
         }, activity).setOtherUserId(otherUserId);

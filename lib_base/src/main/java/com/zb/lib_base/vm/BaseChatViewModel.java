@@ -100,6 +100,7 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import io.realm.RealmResults;
 
 public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterface, OnRefreshListener {
@@ -543,8 +544,8 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                                 Intent data = new Intent("lobster_updateChat");
                                 data.putExtra("userId", otherUserId);
                                 data.putExtra("updateImage", true);
-                                activity.sendBroadcast(data);
-                                activity.sendBroadcast(new Intent("lobster_unReadCount"));
+                                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
+                                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_unReadCount"));
                             }
 
                             @Override
@@ -605,9 +606,9 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                         // 更新会话列表
                         Intent data = new Intent("lobster_singleBottleCache");
                         data.putExtra("driftBottleId", driftBottleId);
-                        activity.sendBroadcast(data);
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
 
-                        activity.sendBroadcast(new Intent("lobster_bottleNum"));
+                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_bottleNum"));
                     } else {
                         BottleCacheDb.getInstance().updateBottleCache(driftBottleId, memberInfo.getImage(), memberInfo.getNick(), new BottleCacheDb.CallBack() {
                             @Override
@@ -615,7 +616,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                                 // 更新会话列表
                                 Intent data = new Intent("lobster_singleBottleCache");
                                 data.putExtra("driftBottleId", driftBottleId);
-                                activity.sendBroadcast(data);
+                                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                             }
 
                             @Override
@@ -637,9 +638,9 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                                 // 更新会话列表
                                 Intent data = new Intent("lobster_singleBottleCache");
                                 data.putExtra("driftBottleId", driftBottleId);
-                                activity.sendBroadcast(data);
+                                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
 
-                                activity.sendBroadcast(new Intent("lobster_bottleNum"));
+                                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_bottleNum"));
                             }
                         });
                     }
@@ -691,8 +692,8 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                                 data.putExtra("userId", otherUserId);
                                 data.putExtra("updateImage", true);
                                 data.putExtra("flashTalkId", flashTalkId);
-                                activity.sendBroadcast(data);
-                                activity.sendBroadcast(new Intent("lobster_unReadCount"));
+                                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
+                                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_unReadCount"));
                             }
 
                             @Override
@@ -1054,7 +1055,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                                         SystemClock.sleep(500);
                                         Intent data = new Intent("lobster_updateChat");
                                         data.putExtra("userId", otherUserId);
-                                        activity.sendBroadcast(data);
+                                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                                     });
                                 }
 
@@ -1117,7 +1118,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                                         SystemClock.sleep(500);
                                         Intent data = new Intent("lobster_singleBottleCache");
                                         data.putExtra("driftBottleId", body.getDriftBottleId());
-                                        activity.sendBroadcast(data);
+                                        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                                     });
                                 }
 
@@ -1151,7 +1152,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                                 SystemClock.sleep(500);
                                 Intent data = new Intent("lobster_updateChat");
                                 data.putExtra("userId", otherUserId);
-                                activity.sendBroadcast(data);
+                                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                             });
                         }
 
@@ -1228,9 +1229,9 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
             data.putExtra("userId", otherUserId);
             data.putExtra("flashTalkId", flashTalkId);
             data.putExtra("updateImage", updateImage);
-            activity.sendBroadcast(data);
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
 
-            activity.sendBroadcast(new Intent("lobster_unReadCount"));
+            LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_unReadCount"));
         });
     }
 
@@ -1253,7 +1254,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         // 更新会话列表
         Intent data = new Intent("lobster_singleBottleCache");
         data.putExtra("driftBottleId", driftBottleId);
-        activity.sendBroadcast(data);
+        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
     }
 
     /**

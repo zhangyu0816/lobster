@@ -34,6 +34,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.ViewDataBinding;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 public class BaseViewModel implements BaseVMInterface {
@@ -133,11 +134,11 @@ public class BaseViewModel implements BaseVMInterface {
                 if (tabNames[0].equals("关注")) {
                     Intent data = new Intent("lobster_homeBottle");
                     data.putExtra("index", tab.getPosition());
-                    activity.sendBroadcast(data);
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                 } else if (tabNames[0].equals("胶卷")) {
                     Intent data = new Intent("lobster_myFilmPosition");
                     data.putExtra("index", tab.getPosition());
-                    activity.sendBroadcast(data);
+                    LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(data);
                 }
             }
 

@@ -8,12 +8,8 @@
         android:debuggable="false"
         android:theme="@style/CardTheme"
         tools:ignore="HardcodedDebugMode">
-        <activity
-            android:name=".activity.MemberDetailActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.DiscoverListActivity"
-            android:exported="false" />
+        <activity android:name=".activity.MemberDetailActivity" />
+        <activity android:name=".activity.DiscoverListActivity" />
     </application>
 
 </manifest>
