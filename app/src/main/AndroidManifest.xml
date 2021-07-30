@@ -49,27 +49,35 @@
 
         <receiver
             android:name=".utils.AlarmUtils$alarmReceiver"
+            android:exported="false"
             android:protectionLevel="signature" />
         <receiver
             android:name=".utils.AlarmUtils$alarmReceiver1"
+            android:exported="false"
             android:protectionLevel="signature" />
         <receiver
             android:name=".utils.AlarmUtils$alarmReceiver2"
+            android:exported="false"
             android:protectionLevel="signature" />
         <receiver
             android:name=".utils.AlarmUtils$alarmShortReceiver"
+            android:exported="false"
             android:protectionLevel="signature" />
         <receiver
             android:name=".utils.AlarmUtils$alarmShortReceiver1"
+            android:exported="false"
             android:protectionLevel="signature" />
         <receiver
             android:name=".utils.AlarmUtils$alarmShortReceiver2"
+            android:exported="false"
             android:protectionLevel="signature" />
         <receiver
             android:name=".utils.AlarmUtils$alarmShortReceiver3"
+            android:exported="false"
             android:protectionLevel="signature" />
         <receiver
             android:name=".utils.AlarmUtils$alarmShortReceiver4"
+            android:exported="false"
             android:protectionLevel="signature" />
 
         <provider
@@ -86,9 +94,14 @@
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="false"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            tools:replace="android:exported" />
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="wxb83427622a6740f6" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".wxapi.WXPayEntryActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -139,8 +152,10 @@
         <activity
             android:name="com.tencent.connect.common.AssistActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             tools:replace="android:configChanges" />
+
         <activity
             android:name=".activity.LoadingActivity"
             android:exported="true"
@@ -149,14 +164,19 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-                <data android:scheme="com.yimi.rentme" />
+
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.MainActivity"
+            android:exported="false"
             android:launchMode="singleTask" />
-        <activity android:name=".activity.LoginActivity" />
-        <activity android:name=".activity.LoginVideoActivity" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.LoginVideoActivity"
+            android:exported="false" />
 
     </application>
 

@@ -64,15 +64,25 @@ public class AlarmUtils {
     public AlarmUtils(RxAppCompatActivity activity, MineInfo mineInfo) {
         AlarmUtils.mineInfo = mineInfo;
         this.activity = activity;
-        sender = PendingIntent.getBroadcast(activity, 0, new Intent(activity, alarmReceiver.class), 0);
-        sender1 = PendingIntent.getBroadcast(activity, 0, new Intent(activity, alarmReceiver1.class), 0);
-        sender2 = PendingIntent.getBroadcast(activity, 0, new Intent(activity, alarmReceiver2.class), 0);
+        Intent intent1 = new Intent(activity, alarmReceiver.class);
+        Intent intent2 = new Intent(activity, alarmReceiver1.class);
+        Intent intent3 = new Intent(activity, alarmReceiver2.class);
 
-        senderShort = PendingIntent.getBroadcast(activity, 0, new Intent(activity, alarmShortReceiver.class), 0);
-        senderShort1 = PendingIntent.getBroadcast(activity, 0, new Intent(activity, alarmShortReceiver1.class), 0);
-        senderShort2 = PendingIntent.getBroadcast(activity, 0, new Intent(activity, alarmShortReceiver2.class), 0);
-        senderShort3 = PendingIntent.getBroadcast(activity, 0, new Intent(activity, alarmShortReceiver3.class), 0);
-        senderShort4 = PendingIntent.getBroadcast(activity, 0, new Intent(activity, alarmShortReceiver4.class), 0);
+        sender = PendingIntent.getBroadcast(activity, 0, intent1, 0);
+        sender1 = PendingIntent.getBroadcast(activity, 0, intent2, 0);
+        sender2 = PendingIntent.getBroadcast(activity, 0, intent3, 0);
+
+        Intent intent4 = new Intent(activity, alarmShortReceiver.class);
+        Intent intent5 = new Intent(activity, alarmShortReceiver1.class);
+        Intent intent6 = new Intent(activity, alarmShortReceiver2.class);
+        Intent intent7 = new Intent(activity, alarmShortReceiver3.class);
+        Intent intent8 = new Intent(activity, alarmShortReceiver4.class);
+
+        senderShort = PendingIntent.getBroadcast(activity, 0, intent4, 0);
+        senderShort1 = PendingIntent.getBroadcast(activity, 0, intent5, 0);
+        senderShort2 = PendingIntent.getBroadcast(activity, 0, intent6, 0);
+        senderShort3 = PendingIntent.getBroadcast(activity, 0, intent7, 0);
+        senderShort4 = PendingIntent.getBroadcast(activity, 0, intent8, 0);
 
         am = (AlarmManager) activity.getSystemService(ALARM_SERVICE);
         am1 = (AlarmManager) activity.getSystemService(ALARM_SERVICE);

@@ -55,8 +55,12 @@ public class WaterMark {
             case 1:
                 DataCleanManager.deleteFile(new File(downloadPath));
                 // 最后通知图库更新
-                LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                        Uri.parse("file://" + outPutUrl)));
+                Intent intent = new Intent(
+                        Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                        Uri.parse("file://" + outPutUrl)
+                );
+                // 最后通知图库更新
+                activity.sendBroadcast(intent);
                 SCToastUtil.showToast(activity, "下载成功", true);
                 CustomProgressDialog.stopLoading();
                 break;
@@ -138,13 +142,12 @@ public class WaterMark {
         }
         CustomProgressDialog.stopLoading();
         SCToastUtil.showToast(activity, "保存成功", true);
-        // 最后通知图库更新
-        LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(
-                new Intent(
-                        Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                        Uri.parse("file://" + file.getAbsolutePath())
-                )
+        Intent intent = new Intent(
+                Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                Uri.parse("file://" + file.getAbsolutePath())
         );
+        // 最后通知图库更新
+        activity.sendBroadcast(intent);
     }
 
     /**

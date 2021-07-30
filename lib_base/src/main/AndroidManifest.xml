@@ -75,6 +75,7 @@
         <activity
             android:name="com.igexin.sdk.PushActivity"
             android:excludeFromRecents="true"
+            android:exported="false"
             android:process=":pushservice"
             android:taskAffinity="com.igexin.sdk.PushActivityTask"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
@@ -82,26 +83,33 @@
         <activity
             android:name="com.igexin.sdk.GActivity"
             android:excludeFromRecents="true"
+            android:exported="false"
             android:process=":pushservice"
             android:taskAffinity="com.igexin.sdk.PushActivityTask"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            tools:replace="android:exported" />
 
         <!-- 个推SDK配置结束 -->
         <!-- 支付宝快捷支付 -->
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
             android:screenOrientation="behind" />
         <activity
             android:name="com.alipay.sdk.auth.AuthActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
             android:screenOrientation="behind" />
 
         <activity
             android:name=".activity.MNImageBrowserActivity"
+            android:exported="false"
             android:launchMode="singleTop"
             android:theme="@style/BlackTheme" />
 
-        <activity android:name=".activity.NotifivationActivity" />
+        <activity
+            android:name=".activity.NotifivationActivity"
+            android:exported="false" />
     </application>
 </manifest>

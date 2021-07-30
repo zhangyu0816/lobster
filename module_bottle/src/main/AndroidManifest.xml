@@ -8,10 +8,15 @@
         android:debuggable="false"
         android:theme="@style/BottleTheme"
         tools:ignore="HardcodedDebugMode">
-        <activity android:name=".activity.BottleThrowActivity" />
-        <activity android:name=".activity.BottleListActivity" />
+        <activity
+            android:name=".activity.BottleThrowActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.BottleListActivity"
+            android:exported="false" />
         <activity
             android:name=".activity.BottleChatActivity"
+            android:exported="false"
             android:launchMode="singleTop" />
     </application>
 
