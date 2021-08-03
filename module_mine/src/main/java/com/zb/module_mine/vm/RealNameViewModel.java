@@ -61,30 +61,37 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
         mBinding.cameraLayout.setOnTouchListener(this);
         AdapterBinding.viewSize(mBinding.cameraLayout, MineApp.W, (int) (MineApp.W * 4f / 3f));
 
-        if (PreferenceUtil.readIntValue(activity, "realPermission") == 0)
-            MineApp.getApp().getFixedThreadPool().execute(() -> {
-                SystemClock.sleep(300);
-                activity.runOnUiThread(() -> new TextPW(activity, mBinding.getRoot(), "权限说明",
-                        "我们会以申请权限的方式获取设备功能的使用：" +
-                                "\n 1、申请相机权限--获取照相功能，" +
-                                "\n 2、若你拒绝权限申请，仅无法使用人脸认证功能，虾菇app其他功能不受影响，" +
-                                "\n 3、可通过app内 我的--设置--权限管理 进行权限操作。",
-                        "同意", false, true, new TextPW.CallBack() {
-                    @Override
-                    public void sure() {
-                        PreferenceUtil.saveIntValue(activity, "realPermission", 1);
-                        getPermissions1();
-                    }
+        if (checkPermissionGranted(activity, Manifest.permission.CAMERA)) {
+            setPermissions();
+        } else {
+            if (PreferenceUtil.readIntValue(activity, "realPermission") == 0)
+                MineApp.getApp().getFixedThreadPool().execute(() -> {
+                    SystemClock.sleep(300);
+                    activity.runOnUiThread(() -> new TextPW(activity, mBinding.getRoot(), "权限说明",
+                            "提交人脸认证信息时，我们将会申请相机权限：" +
+                                    "\n 1、申请相机权限--获取拍摄人脸照片功能，" +
+                                    "\n 4、若您点击“同意”按钮，我们方可正式申请上述权限，以便拍摄照片，" +
+                                    "\n 5、若您点击“拒绝”按钮，我们将不再主动弹出该提示，您也无法拍摄图片，不影响使用其他的虾姑功能/服务，" +
+                                    "\n 6、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭相机权限。",
+                            "同意", false, true, new TextPW.CallBack() {
+                        @Override
+                        public void sure() {
+                            PreferenceUtil.saveIntValue(activity, "realPermission", 1);
+                            getPermissions();
+                        }
 
-                    @Override
-                    public void cancel() {
-                        PreferenceUtil.saveIntValue(activity, "realPermission", 2);
-                        activity.finish();
-                    }
-                }));
-            });
-        else
-            getPermissions1();
+                        @Override
+                        public void cancel() {
+                            PreferenceUtil.saveIntValue(activity, "realPermission", 1);
+                            activity.finish();
+                        }
+                    }));
+                });
+            else {
+                SCToastUtil.showToast(activity, "你未开启相机权限，请前往我的--设置--权限管理--权限进行设置", true);
+            }
+        }
+
         humanFaceStatus();
         photoManager = new PhotoManager(activity, () -> humanFace(photoManager.jointWebUrl(",")));
         String cameraPath = Environment.getExternalStorageDirectory().getPath() + File.separator + "DCIM" + File.separator + "Camera";
@@ -99,7 +106,7 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
     /**
      * 权限
      */
-    private void getPermissions1() {
+    private void getPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             performCodeWithPermission("虾菇需要访问相机权限", new BaseActivity.PermissionCallback() {
                 @Override
@@ -109,8 +116,7 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
 
                 @Override
                 public void noPermission() {
-                    PreferenceUtil.saveIntValue(activity, "realPermission", 2);
-                    SCToastUtil.showToast(activity, "你未申请相机权限，请前往设置--权限管理--权限进行设置", true);
+                    PreferenceUtil.saveIntValue(activity, "realPermission", 1);
                     back(null);
                 }
             }, Manifest.permission.CAMERA);

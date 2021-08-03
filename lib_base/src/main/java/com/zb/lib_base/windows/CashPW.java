@@ -38,7 +38,7 @@ public class CashPW extends BasePopupWindow {
         adapter = new BaseAdapter<>(activity, R.layout.item_cash_bank, mMineBankList, this);
         binding.setPw(this);
         binding.setMineBank(mMineBank);
-        binding.setMoney("￥ " + mMoney);
+        binding.setMoney("¥ " + mMoney);
         binding.setShowList(false);
 
     }

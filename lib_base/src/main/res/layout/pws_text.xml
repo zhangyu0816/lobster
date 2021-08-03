@@ -62,11 +62,14 @@
                 tools:text="标题" />
 
             <TextView
+                android:id="@+id/tv_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginTop="13dp"
                 android:layout_marginEnd="30dp"
+                android:maxLines="13"
+                android:scrollbars="vertical"
                 android:text="@{content}"
                 android:textColor="@color/black_827"
                 android:textSize="14sp"
@@ -82,7 +85,7 @@
                 <TextView
                     onClickDelayed="@{pw::cancel}"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="42dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_weight="1"
                     android:background="@drawable/btn_bg_purple_7a4_white_radius60"
@@ -105,7 +108,7 @@
                 <TextView
                     onClickDelayed="@{pw::sure}"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="42dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_weight="1"
                     android:background="@drawable/gradient_purple_6d5_ae7"

@@ -3,14 +3,14 @@
     <string name="app_name_running">虾菇正在运行</string>
     <string name="code_second"><Data><![CDATA[再次发送<font color="#4EFB52"><b>%d</b></font>s]]></Data></string>
     <string name="code_second_finish"><Data><![CDATA[<font color="#ffffff"><u>重新发送验证码</u></font>]]></Data></string>
-    <string name="symbol_money">￥</string>
-    <string name="symbol_money_">￥ </string>
-    <string name="price_moth">￥%.2f元/天</string>
+    <string name="symbol_money">¥</string>
+    <string name="symbol_money_">¥ </string>
+    <string name="price_moth">¥%.2f元/天</string>
     <string name="price_save">省%.1f元</string>
     <string name="price_more">首充翻倍</string>
     <string name="quotation">”</string>
-    <string name="open_btn">￥%.2f 获取VIP特权</string>
-    <string name="open_btn_month">%d个月VIP ￥%.2f 立即获取特权</string>
+    <string name="open_btn">¥%.2f 获取VIP特权</string>
+    <string name="open_btn_month">%d个月VIP ¥%.2f 立即获取特权</string>
     <string name="pay_btn">立即续费VIP特权</string>
     <string name="we_like">你和%s已互相喜欢</string>
 

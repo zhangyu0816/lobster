@@ -1,11 +1,13 @@
 package com.zb.lib_base.windows;
 
 import android.annotation.SuppressLint;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.BR;
 import com.zb.lib_base.R;
+import com.zb.lib_base.databinding.PwsTextBinding;
 
 public class TextPW extends BasePopupWindow {
     private String content;
@@ -98,6 +100,9 @@ public class TextPW extends BasePopupWindow {
         mBinding.setVariable(BR.content, content);
         mBinding.setVariable(BR.btnName, btnName);
         mBinding.setVariable(BR.showCancel, showCancel);
+
+        PwsTextBinding binding = (PwsTextBinding) mBinding;
+        binding.tvContent.setMovementMethod(ScrollingMovementMethod.getInstance());
     }
 
     @Override

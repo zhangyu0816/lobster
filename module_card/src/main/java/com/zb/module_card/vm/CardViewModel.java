@@ -355,35 +355,20 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
             new VipAdPW(mBinding.getRoot(), 5, "");
             return;
         }
-        if (PreferenceUtil.readStringValue(activity, "latitude").isEmpty()) {
+        if (PreferenceUtil.readStringValue(activity, "latitude").equals("0")) {
             new TextPW(mBinding.getRoot(), "定位失败", "定位失败，无法选取地址，请重新定位", "重新定位", () -> {
-                CustomProgressDialog.showLoading(activity, "定位...");
-                getPermissions1(2);
+                if (checkPermissionGranted(activity, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                    CustomProgressDialog.showLoading(activity, "定位...");
+                    setLocation(2);
+                } else {
+                    SCToastUtil.showToast(activity, "你未申请定位权限，请前往设置--权限管理--权限进行设置", true);
+                }
             });
         } else {
-            if (PreferenceUtil.readIntValue(activity, "locationPermission") == 0)
-                new TextPW(activity, mBinding.getRoot(), "权限说明",
-                        "我们会以申请权限的方式获取设备功能的使用：" +
-                                "\n 1、申请定位权限--获取定位服务，" +
-                                "\n 2、若你拒绝权限申请，仅无法使用定位服务，虾菇app其他功能不受影响，" +
-                                "\n 3、可通过app内 我的--设置--权限管理 进行权限操作。",
-                        "同意", false, true, new TextPW.CallBack() {
-                    @Override
-                    public void sure() {
-                        PreferenceUtil.saveIntValue(activity, "locationPermission", 1);
-                        getPermissions1(3);
-                    }
-
-                    @Override
-                    public void cancel() {
-                        SCToastUtil.showToast(activity, "你未申请相机权限，请前往设置--权限管理--权限进行设置", true);
-                        PreferenceUtil.saveIntValue(activity, "locationPermission", 2);
-                    }
-                });
-            else if (checkPermissionGranted(activity, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION))
-                getPermissions1(3);
-            else
-                SCToastUtil.showToast(activity, "你未申请相机权限，请前往设置--权限管理--权限进行设置", true);
+            if (checkPermissionGranted(activity, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                setLocation(3);
+            } else
+                SCToastUtil.showToast(activity, "你未申请定位权限，请前往设置--权限管理--权限进行设置", true);
         }
     }
 
@@ -741,30 +726,30 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     }
 
     private void setLocation() {
-        if (PreferenceUtil.readIntValue(activity, "locationPermission") == 0)
-            new TextPW(activity, mBinding.getRoot(), "权限说明",
-                    "我们会以申请权限的方式获取设备功能的使用：" +
-                            "\n 1、申请定位权限--获取定位服务，" +
-                            "\n 2、若你拒绝权限申请，仅无法使用定位服务，虾菇app其他功能不受影响，" +
-                            "\n 3、可通过app内 我的--设置--权限管理 进行权限操作。",
-                    "同意", false, true, new TextPW.CallBack() {
-                @Override
-                public void sure() {
-                    PreferenceUtil.saveIntValue(activity, "locationPermission", 1);
-                    getPermissions1(1);
-                }
+        if (checkPermissionGranted(activity, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            setLocation(1);
+        } else {
+            if (PreferenceUtil.readIntValue(activity, "locationPermission") == 0)
+                new TextPW(activity, mBinding.getRoot(), "权限说明",
+                        "当您浏览查看广场动态、广场视频、滑动卡片展示时，我们将会申请定位权限：" +
+                                "\n 1、申请定位权限--设备所在位置相关信息（包括您授权的GPS位置以及WLAN接入点、蓝牙和基站等传感器信息），" +
+                                "\n 4、若您点击“同意”按钮，我们方可正式申请上述权限，以便通过高德地图API获取经纬度及城市信息，也可通过左上角地址按钮进入地图，自主选择定位，" +
+                                "\n 5、若您点击“拒绝”按钮，我们将不再主动弹出该提示，我们会获取全国范围内的动态、视频、卡片信息，不影响使用其他的虾姑功能/服务，" +
+                                "\n 6、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭相机、存储、麦克风权限。",
+                        "同意", false, true, new TextPW.CallBack() {
+                    @Override
+                    public void sure() {
+                        PreferenceUtil.saveIntValue(activity, "locationPermission", 1);
+                        getPermissions();
+                    }
 
-                @Override
-                public void cancel() {
-                    PreferenceUtil.saveIntValue(activity, "locationPermission", 2);
-                    baseLocation();
-                }
-            });
-        else if (checkPermissionGranted(activity, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION))
-            getPermissions1(1);
-        else
-            baseLocation();
-
+                    @Override
+                    public void cancel() {
+                        PreferenceUtil.saveIntValue(activity, "locationPermission", 1);
+                    }
+                });
+            else baseLocation();
+        }
     }
 
     @Override
@@ -791,27 +776,22 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
     /**
      * 权限
      */
-    private void getPermissions1(int type) {
+    private void getPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             performCodeWithPermission("虾菇需要访问定位权限", new BaseActivity.PermissionCallback() {
                 @Override
                 public void hasPermission() {
-                    setLocation(type);
+                    setLocation(1);
                 }
 
                 @Override
                 public void noPermission() {
-                    if (type == 3) {
-                        PreferenceUtil.saveIntValue(activity, "locationPermission", 2);
-                        SCToastUtil.showToast(activity, "你未申请相机权限，请前往设置--权限管理--权限进行设置", true);
-                    } else if (type == 1) {
-                        baseLocation();
-                    }
-
+                    PreferenceUtil.saveIntValue(activity, "locationPermission", 1);
+                    baseLocation();
                 }
             }, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION);
         } else {
-            setLocation(type);
+            setLocation(1);
         }
     }
 
@@ -828,23 +808,25 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     }
             );
         } else if (type == 2) {
-            aMapLocation.start(activity, () ->
-                    ActivityUtils.getMineLocation(false));
+            aMapLocation.start(activity, () -> {
+                        CustomProgressDialog.stopLoading();
+                        ActivityUtils.getMineLocation(false);
+                    }
+            );
         } else {
             ActivityUtils.getMineLocation(false);
         }
     }
 
     private void baseLocation() {
-        PreferenceUtil.saveStringValue(activity, "longitude", "120.641956");
-        PreferenceUtil.saveStringValue(activity, "latitude", "28.021994");
-        PreferenceUtil.saveStringValue(activity, "cityName", "温州市");
-        PreferenceUtil.saveStringValue(activity, "provinceName", "浙江省");
-        PreferenceUtil.saveStringValue(activity, "districtName", "鹿城区");
-        PreferenceUtil.saveStringValue(activity, "address", "浙江省温州市鹿城区望江东路175号靠近温州银行(文化支行)");
-        mBinding.setCityName("温州市");
-        joinPairPool("120.641956", "28.021994", AreaDb.getInstance().getProvinceId("浙江省"),
-                AreaDb.getInstance().getCityId("温州市"), AreaDb.getInstance().getDistrictId("鹿城区"));
+        PreferenceUtil.saveStringValue(activity, "longitude", "0");
+        PreferenceUtil.saveStringValue(activity, "latitude", "0");
+        PreferenceUtil.saveStringValue(activity, "cityName", "全国");
+        PreferenceUtil.saveStringValue(activity, "provinceName", "全国");
+        PreferenceUtil.saveStringValue(activity, "districtName", "全国");
+        PreferenceUtil.saveStringValue(activity, "address", "全国");
+        mBinding.setCityName("全国");
+        joinPairPool("0", "0", 0, 0, 0);
         modifyMemberInfo();
     }
 

@@ -34,7 +34,6 @@ import java.io.IOException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class WaterMark {
     public volatile static WaterMark INSTANCE;

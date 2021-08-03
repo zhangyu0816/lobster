@@ -97,7 +97,7 @@ public class CodeLayout extends RelativeLayout {
                             type = "wxfriend";
                             break;
                     }
-                    ShareUtil.share( activity,  bitmap,"邀请好友",webShare.getUrl(),  type);
+                    ShareUtil.share(activity, bitmap, "邀请好友", webShare.getUrl(), type);
                 }
             }
         });

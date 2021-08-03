@@ -75,6 +75,7 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
     private DecimalFormat df;
 
     private WebShare mWebShare;
+    private CodeLayout codeLayout;
 
     @Override
     public void setBinding(ViewDataBinding binding) {
@@ -150,7 +151,7 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                     ActivityUtils.getMineWeb("邀请好友赚钱", mUrl);
                 } else if (mUrl.contains("xg_openPartner")) {
                     new TextPW(mBinding.getRoot(), "开通合伙人", "成为虾菇合伙人享受以下特权：\n  1，送一年VIP会员特权。\n  2，邀请新用户使用虾菇可以享受佣金。\n  3，本活动最终解释权归虾菇所有。",
-                            "￥" + df.format(openMoney) + " 确认开通", () -> openMakePartner());
+                            "¥" + df.format(openMoney) + " 确认开通", () -> openMakePartner());
                 } else if (mUrl.contains("xg_changeCash_")) {
                     String money = mUrl.substring(mUrl.indexOf("xg_changeCash_")).replace("xg_changeCash_", "");
                     if (!money.isEmpty()) {
@@ -280,29 +281,36 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                     mWebShare.setShareType(object.optInt("shareType"));
 
                 if (TextUtils.equals("shareimage", type)) {
-                    if (PreferenceUtil.readIntValue(activity, "writePermission") == 0)
-                        new TextPW(activity, mBinding.getRoot(), "权限说明",
-                                "我们会以申请权限的方式获取设备功能的使用：" +
-                                        "\n 1、申请存储权限--获取照册功能，" +
-                                        "\n 2、若你拒绝权限申请，仅无法使用保存图片功能，虾菇app其他功能不受影响，" +
-                                        "\n 3、可通过app内 我的--设置--权限管理 进行权限操作。",
-                                "同意", false, true, new TextPW.CallBack() {
-                            @Override
-                            public void sure() {
-                                PreferenceUtil.saveIntValue(activity, "writePermission", 1);
-                                getPermissions1();
-                            }
+                    codeLayout = new CodeLayout(activity);
+                    if (mWebShare.getShareType() == 5) {
+                        if (checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                            setPermissions();
+                        } else {
+                            if (PreferenceUtil.readIntValue(activity, "writePermission") == 0)
+                                new TextPW(activity, mBinding.getRoot(), "权限说明",
+                                        "保存活动海报时，我们将会申请存储权限：" +
+                                                "\n 1、申请存储权限--获取保存图片功能，" +
+                                                "\n 4、若您点击“同意”按钮，我们方可正式申请上述权限，以便保存图片，" +
+                                                "\n 5、若您点击“拒绝”按钮，我们将不再主动弹出该提示，您也无法保存图片，不影响使用其他的虾姑功能/服务，" +
+                                                "\n 6、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭存储权限。",
+                                        "同意", false, true, new TextPW.CallBack() {
+                                    @Override
+                                    public void sure() {
+                                        PreferenceUtil.saveIntValue(activity, "writePermission", 1);
+                                        getPermissions();
+                                    }
 
-                            @Override
-                            public void cancel() {
-                                PreferenceUtil.saveIntValue(activity, "writePermission", 2);
-                                SCToastUtil.showToast(activity, "你未申请存储权限，请前往我的--设置--权限管理--权限进行设置", true);
+                                    @Override
+                                    public void cancel() {
+                                        PreferenceUtil.saveIntValue(activity, "writePermission", 1);
+                                    }
+                                });
+                            else {
+                                SCToastUtil.showToast(activity, "你未开启存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                             }
-                        });
-                    else if (checkPermissionGranted(activity,  Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
-                        getPermissions1();
-                    else
-                        SCToastUtil.showToast(activity, "你未申请存储权限，请前往我的--设置--权限管理--权限进行设置", true);
+                        }
+                    } else setPermissions();
+
                 } else if (TextUtils.equals("openwx", type)) {
                     openWX();
                 } else if (TextUtils.equals("openqq", type)) {
@@ -320,7 +328,7 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
     /**
      * 权限
      */
-    private void getPermissions1() {
+    private void getPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             performCodeWithPermission("虾菇需要访问存储权限", new BaseActivity.PermissionCallback() {
                 @Override
@@ -330,8 +338,7 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
 
                 @Override
                 public void noPermission() {
-                    SCToastUtil.showToast(activity, "你未申请存储权限，请前往我的--设置--权限管理--权限进行设置", true);
-                    PreferenceUtil.saveIntValue(activity, "writePermission", 2);
+                    PreferenceUtil.saveIntValue(activity, "writePermission", 1);
                 }
             }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         } else {
@@ -340,7 +347,6 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
     }
 
     private void setPermissions() {
-        CodeLayout codeLayout = new CodeLayout(activity);
         codeLayout.setData(activity, mWebShare);
     }
 

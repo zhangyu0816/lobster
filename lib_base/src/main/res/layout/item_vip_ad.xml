@@ -77,7 +77,7 @@
                 android:text='@{@string/symbol_money_ + String.format("%.1f",item.price)}'
                 android:textColor="@{isSelect?@color/red_fe4:@color/black_252}"
                 android:textSize="12sp"
-                tools:text="￥ 28" />
+                tools:text="¥ 28" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -87,7 +87,7 @@
                 android:text='@{String.format(@string/price_moth, item.price/(item.dayCount*(MineApp.isFirstOpen?2:1)))}'
                 android:textColor="@{isSelect?@color/red_fe4:@color/black_827}"
                 android:textSize="9sp"
-                tools:text="￥28/月" />
+                tools:text="¥28/月" />
         </LinearLayout>
 
         <TextView
