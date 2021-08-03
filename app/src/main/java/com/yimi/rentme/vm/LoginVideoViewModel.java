@@ -37,9 +37,6 @@ public class LoginVideoViewModel extends BaseViewModel {
     }
 
     public void toLogin(View view) {
-        // 个推注册
-        PushManager.getInstance().initialize(MineApp.instance);
-
         // 页面统计
         UMConfigure.init(
                 MineApp.instance,

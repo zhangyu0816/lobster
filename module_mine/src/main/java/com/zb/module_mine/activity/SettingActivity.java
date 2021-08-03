@@ -51,5 +51,6 @@ public class SettingActivity extends MineBaseActivity {
         super.onResume();
         viewModel.realNameVerify();
         viewModel.humanFaceStatus();
+        viewModel.onResume();
     }
 }

@@ -28,6 +28,8 @@ public interface SettingVMInterface {
 
     void exit(View view);
 
+    void toNoticeManager(View view);
+
     void closeUseType(View view);
 
     void toIdCard(View view);

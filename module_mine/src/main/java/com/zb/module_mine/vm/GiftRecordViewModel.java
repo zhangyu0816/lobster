@@ -59,7 +59,7 @@ public class GiftRecordViewModel extends BaseViewModel implements GiftRecordVMIn
     @Override
     public void toBindingZFB(View view) {
         if (PreferenceUtil.readIntValue(activity, "bindingZFB") == 0) {
-            new TextPW(activity, mBinding.getRoot(), "绑定银行卡说明", "您在使用提现服务时，为了保障您的账户和资金安全，我们必须获取和使用您的姓名、身份证号、银行卡或支付宝账号。如您选择不提供上述信息，您可能无法使用银行卡绑定服务。",
+            new TextPW(activity, mBinding.getRoot(), "绑定银行卡说明", "您在使用提现服务时，为了保障您的账户和资金安全，我们必须获取和使用您的姓名、身份证号、银行卡或支付宝账号。如您选择不提供上述信息，您可能无法使用提现服务。",
                     "同意", false, true, () -> {
                 PreferenceUtil.saveIntValue(activity, "bindingZFB", 1);
                 realNameVerify(2);

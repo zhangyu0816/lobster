@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.view.View;
 
+import com.igexin.sdk.PushManager;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.deleteUserApi;
@@ -26,6 +27,7 @@ import com.zb.lib_base.model.WalletInfo;
 import com.zb.lib_base.utils.AMapLocation;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
+import com.zb.lib_base.utils.OpenNotice;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
@@ -101,6 +103,15 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
 
         walletAndPop();
         setSendMessageApi(-1);
+    }
+
+    public void onResume(){
+        if (OpenNotice.isNotNotification(activity)) {
+            PushManager.getInstance().turnOffPush(MineApp.instance);
+        } else {
+            PushManager.getInstance().initialize(MineApp.instance);
+            PushManager.getInstance().turnOnPush(MineApp.instance);
+        }
     }
 
     public void onDestroy() {
@@ -208,6 +219,11 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     @Override
     public void exit(View view) {
         loginOut();
+    }
+
+    @Override
+    public void toNoticeManager(View view) {
+        OpenNotice.gotoSet(activity);
     }
 
     @Override

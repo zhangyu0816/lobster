@@ -746,6 +746,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
                     @Override
                     public void cancel() {
                         PreferenceUtil.saveIntValue(activity, "locationPermission", 1);
+                        baseLocation();
                     }
                 });
             else baseLocation();

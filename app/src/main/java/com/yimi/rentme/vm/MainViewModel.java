@@ -12,6 +12,7 @@ import android.os.Vibrator;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.igexin.sdk.PushManager;
 import com.yimi.rentme.databinding.AcMainBinding;
 import com.yimi.rentme.iv.MainVMInterface;
 import com.zb.lib_base.activity.BaseActivity;
@@ -365,6 +366,12 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
     }
 
     public void onResume() {
+        if (OpenNotice.isNotNotification(activity)) {
+            PushManager.getInstance().turnOffPush(MineApp.instance);
+        } else {
+            PushManager.getInstance().initialize(MineApp.instance);
+            PushManager.getInstance().turnOnPush(MineApp.instance);
+        }
         if (nowIndex == -1)
             return;
         if (nowIndex == 0 || nowIndex == 2) {

@@ -401,6 +401,33 @@
                             android:layout_centerVertical="true"
                             android:background="@drawable/arrow_small_right_icon" />
                     </RelativeLayout>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:background="@color/black_efe" />
+
+                    <RelativeLayout
+                        onClickDelayed="@{viewModel::toNoticeManager}"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="通知管理"
+                            android:textColor="@color/black_4d4"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/arrow_small_right_icon" />
+                    </RelativeLayout>
 
                     <View
                         android:layout_width="match_parent"
