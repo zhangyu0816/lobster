@@ -11,8 +11,8 @@ android {
         applicationId "com.yimi.rentme"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 1706
-        versionName "7.06"
+        versionCode 1710
+        versionName "7.10"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         dataBinding {
