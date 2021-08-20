@@ -3,7 +3,9 @@ package com.zb.lib_base.app;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.Typeface;
+import android.util.Log;
 
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -25,10 +27,17 @@ import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.model.VideoInfo;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WalletInfo;
+import com.zb.lib_base.utils.DebuggerUtils;
 import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.UIUtils;
 
+import java.io.ByteArrayInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -125,26 +134,30 @@ public class MineApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        sContext = this;
-        instance = this;
-        W = getApplicationContext().getResources().getDisplayMetrics().widthPixels;
-        H = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
-        type = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/semibold.ttf");
-        simplifiedType = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/simplified.ttf");
-        QingSongShouXieTiType = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/QingSongShouXieTi.ttf");
-        initRouter(this);
-        initRealm();
-        DisplayUtils.init(this);
-        MultiDex.install(this);
-        UMConfigure.preInit(MineApp.instance, "55cac14467e58e8bd7000359", null);
-        try {
-            PackageInfo packageInfo = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0);
-            versionName = packageInfo.versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        if ("fc9d5c29456f3ce2d074757a71ab5079".equals(getSignture())) {//your sign 是你的签名，我这里用这个取代下
+            DebuggerUtils.checkDebuggableInNotDebugModel(getApplicationContext());
+            sContext = this;
+            instance = this;
+            W = getApplicationContext().getResources().getDisplayMetrics().widthPixels;
+            H = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
+            type = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/semibold.ttf");
+            simplifiedType = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/simplified.ttf");
+            QingSongShouXieTiType = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/QingSongShouXieTi.ttf");
+            initRouter(this);
+            initRealm();
+            DisplayUtils.init(this);
+            MultiDex.install(this);
+            UMConfigure.preInit(MineApp.instance, "55cac14467e58e8bd7000359", null);
+            try {
+                PackageInfo packageInfo = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0);
+                versionName = packageInfo.versionName;
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+            fixedThreadPool = Executors.newFixedThreadPool(3);
+        } else {
+            System.exit(0);
         }
-
-        fixedThreadPool = Executors.newFixedThreadPool(3);
     }
 
     public static MineApp getApp() {
@@ -229,5 +242,36 @@ public class MineApp extends MultiDexApplication {
         fixedThreadPool = null;
     }
 
+    private String getSignture() {
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
+            String signValidString = getSignValidString(packageInfo.signatures[0].toByteArray());
+            return signValidString;
+        } catch (Exception e) {
+            return "";
+        }
+    }
 
+    private String getSignValidString(byte[] paramArrayOfByte) throws NoSuchAlgorithmException {
+        MessageDigest localMessageDigest = MessageDigest.getInstance("MD5");
+        localMessageDigest.update(paramArrayOfByte);
+        return toHexString(localMessageDigest.digest());
+    }
+
+    public String toHexString(byte[] paramArrayOfByte) {
+        if (paramArrayOfByte == null) {
+            return null;
+        }
+        StringBuilder localStringBuilder = new StringBuilder(2 * paramArrayOfByte.length);
+        for (int i = 0; ; i++) {
+            if (i >= paramArrayOfByte.length) {
+                return localStringBuilder.toString();
+            }
+            String str = Integer.toString(0xFF & paramArrayOfByte[i], 16);
+            if (str.length() == 1) {
+                str = "0" + str;
+            }
+            localStringBuilder.append(str);
+        }
+    }
 }
