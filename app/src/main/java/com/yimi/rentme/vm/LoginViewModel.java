@@ -816,6 +816,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     private void step(int step) {
         mBinding.setLoginStep(step);
         mBinding.setRight("");
+        mBinding.setVariable(R.id.tv_right,View.GONE);
         switch (step) {
             case 0: // 手机号
                 MineApp.registerInfo = new RegisterInfo();
@@ -836,6 +837,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 mBinding.setCanNext(MineApp.registerInfo.getPass().length() >= 6);
                 mBinding.setRight("验证码登录");
                 mBinding.setBtnName("开启虾菇");
+                mBinding.setVariable(R.id.tv_right,View.VISIBLE);
                 MineApp.getApp().getFixedThreadPool().execute(() -> {
                     SystemClock.sleep(200);
                     activity.runOnUiThread(() -> {

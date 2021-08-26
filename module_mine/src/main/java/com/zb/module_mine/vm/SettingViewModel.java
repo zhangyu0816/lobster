@@ -105,7 +105,7 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
         setSendMessageApi(-1);
     }
 
-    public void onResume(){
+    public void onResume() {
         if (OpenNotice.isNotNotification(activity)) {
             PushManager.getInstance().turnOffPush(MineApp.instance);
         } else {
@@ -235,7 +235,9 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     public void toIdCard(View view) {
         if (mAuthentication == null) {
             if (PreferenceUtil.readIntValue(activity, "bindingIdCard") == 0) {
-                new TextPW(activity, mBinding.getRoot(), "实名认证", "您在使用提现服务时，为了保障您的账户和资金安全，我们必须获取和使用您的姓名、身份证号进行实名认证。如您选择不提供上述信息，您可能无法使用提现服务。",
+                new TextPW(activity, mBinding.getRoot(), "实名认证",
+                        "当您选择真人实名认证服务时，为确认您所提供的身份信息为您本人信息且属实，需要您提供以下信息供我们收集：真实姓名、身份证号及身份证核验授权。" +
+                                "\n真实姓名、身份证号属于个人敏感信息，收集此类信息是为了满足国家法律法规的网络实名制要求，同时保证虾菇产品真实安全的社交氛围。若您不提供这类信息，您可能无法正常使用虾菇认证服务。",
                         "同意", false, true, () -> {
                     PreferenceUtil.saveIntValue(activity, "bindingIdCard", 1);
                     ActivityUtils.getMineAuthentication(new Authentication());

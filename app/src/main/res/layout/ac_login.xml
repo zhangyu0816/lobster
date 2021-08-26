@@ -100,7 +100,6 @@
                         android:text="@{right}"
                         android:textColor="@android:color/white"
                         android:textSize="16sp"
-                        android:visibility="@{right.empty?View.GONE:View.VISIBLE}"
                         tools:text="密码登录" />
                 </RelativeLayout>
 

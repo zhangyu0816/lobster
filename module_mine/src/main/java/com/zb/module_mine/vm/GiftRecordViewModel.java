@@ -32,7 +32,8 @@ public class GiftRecordViewModel extends BaseViewModel implements GiftRecordVMIn
     @Override
     public void withdraw(View view) {
         if (PreferenceUtil.readIntValue(activity, "withdraw") == 0) {
-            new TextPW(activity, mBinding.getRoot(), "提现说明", "您在使用提现服务时，为了保障您的账户和资金安全，我们必须获取和使用您的姓名、身份证号、银行卡或支付宝账号。如您选择不提供上述信息，您可能无法使用提现服务。" +
+            new TextPW(activity, mBinding.getRoot(), "提现说明", "您在使用提现服务时，为确认您所提供的身份信息、提现账号（银行卡信息或支付宝信息）为您本人信息且属实，需要您提供以下信息供我们收集：真实姓名、身份证号及身份证核验授权。" +
+                    "真实姓名、身份证号属于个人敏感信息，如您选择不提供上述信息，您可能无法使用提现服务，但不影响其他服务。" +
                     "\n先在卡包内绑定提现账户，单次提现金额不少于10元。提交提现申请后，我们将会在3个工作日内打款至提现账户。", "同意",
                     false, true, () -> {
                 PreferenceUtil.saveIntValue(activity, "withdraw", 1);
@@ -59,7 +60,9 @@ public class GiftRecordViewModel extends BaseViewModel implements GiftRecordVMIn
     @Override
     public void toBindingZFB(View view) {
         if (PreferenceUtil.readIntValue(activity, "bindingZFB") == 0) {
-            new TextPW(activity, mBinding.getRoot(), "绑定银行卡说明", "您在使用提现服务时，为了保障您的账户和资金安全，我们必须获取和使用您的姓名、身份证号、银行卡或支付宝账号。如您选择不提供上述信息，您可能无法使用提现服务。",
+            new TextPW(activity, mBinding.getRoot(), "绑定银行卡说明", "您在使用提现服务时，为确认您所提供的身份信息、提现账号（银行卡信息或支付宝信息）为您本人信息且属实，需要您提供以下信息供我们收集：真实姓名、身份证号及身份证核验授权。" +
+                    "真实姓名、身份证号属于个人敏感信息，如您选择不提供上述信息，您可能无法使用提现服务，但不影响其他服务。" +
+                    "\n先在卡包内绑定提现账户，单次提现金额不少于10元。提交提现申请后，我们将会在3个工作日内打款至提现账户。",
                     "同意", false, true, () -> {
                 PreferenceUtil.saveIntValue(activity, "bindingZFB", 1);
                 realNameVerify(2);
