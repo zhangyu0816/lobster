@@ -38,8 +38,6 @@ android {
 
 dependencies {
     // 路由包
-    api 'com.alibaba:arouter-api:1.3.1'
-    annotationProcessor "com.alibaba:arouter-compiler:1.1.4"
     implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
     implementation project(':xbanner')
     implementation project(':imagebrowserlib')
