@@ -3,6 +3,7 @@ package com.yimi.rentme.vm;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 
 import com.igexin.sdk.PushManager;
@@ -49,7 +50,6 @@ public class LoginVideoViewModel extends BaseViewModel {
         PlatformConfig.setWeixin("wxb83427622a6740f6", "97f837c0ae8b11af734041828ba4a737");
         PlatformConfig.setQQZone("101928546", "a8d76c68d7590b71f5254aa87c4b24c8");
         UMShareAPI.get(MineApp.instance);
-
         myInfo();
     }
 
@@ -58,9 +58,13 @@ public class LoginVideoViewModel extends BaseViewModel {
         myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
             @Override
             public void onNext(MineInfo o) {
+                Log.e("myInfoApi","1111111");
                 mBinding.videoView.stopPlayback();//停止播放视频,并且释放
+                Log.e("myInfoApi","222222222");
                 mBinding.videoView.suspend();//在任何状态下释放媒体播放器
+                Log.e("myInfoApi","3333333");
                 MineApp.mineInfo = o;
+                Log.e("myInfoApi","444444444");
                 ActivityUtils.getMainActivity();
                 activity.finish();
             }
@@ -68,8 +72,11 @@ public class LoginVideoViewModel extends BaseViewModel {
             @Override
             public void onError(Throwable e) {
                 if (e instanceof SocketTimeoutException || e instanceof ConnectException || e instanceof UnknownHostException) {
+                    Log.e("myInfoApi","5555555");
                     ActivityUtils.getLoginActivity(0);
+                    Log.e("myInfoApi","6666666");
                     mBinding.videoView.stopPlayback();//停止播放视频,并且释放
+                    Log.e("myInfoApi","777777777");
                     mBinding.videoView.suspend();//在任何状态下释放媒体播放器
                     activity.finish();
                 }

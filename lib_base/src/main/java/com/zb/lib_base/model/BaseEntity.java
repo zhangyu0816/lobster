@@ -126,7 +126,6 @@ public abstract class BaseEntity<T> implements Func1<BaseResultEntity<T>, T> {
             LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_bindPhone"));
             throw new HttpTimeException(httpResult.getCode());
         }
-
         if (httpResult.getCode() == 1) {
             return httpResult.getData();
         }  // 成功
