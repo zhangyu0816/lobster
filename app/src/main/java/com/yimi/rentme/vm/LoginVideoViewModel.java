@@ -12,12 +12,15 @@ import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 import com.yimi.rentme.R;
 import com.yimi.rentme.databinding.AcLoginVideoBinding;
+import com.zb.lib_base.api.functionSwitchApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
+import com.zb.lib_base.model.CommonSwitch;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DebuggerUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 
@@ -34,7 +37,20 @@ public class LoginVideoViewModel extends BaseViewModel {
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (AcLoginVideoBinding) binding;
-        initVideo();
+        functionSwitch();
+    }
+
+    private void functionSwitch() {
+        functionSwitchApi api = new functionSwitchApi(new HttpOnNextListener<CommonSwitch>() {
+            @Override
+            public void onNext(CommonSwitch o) {
+                if (o.getAndroidCommonSwitch() == 1) {
+                    DebuggerUtils.checkDebuggableInNotDebugModel(MineApp.sContext);
+                }
+                initVideo();
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
     }
 
     public void toLogin(View view) {
@@ -58,13 +74,13 @@ public class LoginVideoViewModel extends BaseViewModel {
         myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
             @Override
             public void onNext(MineInfo o) {
-                Log.e("myInfoApi","1111111");
+                Log.e("myInfoApi", "1111111");
                 mBinding.videoView.stopPlayback();//停止播放视频,并且释放
-                Log.e("myInfoApi","222222222");
+                Log.e("myInfoApi", "222222222");
                 mBinding.videoView.suspend();//在任何状态下释放媒体播放器
-                Log.e("myInfoApi","3333333");
+                Log.e("myInfoApi", "3333333");
                 MineApp.mineInfo = o;
-                Log.e("myInfoApi","444444444");
+                Log.e("myInfoApi", "444444444");
                 ActivityUtils.getMainActivity();
                 activity.finish();
             }
@@ -72,11 +88,11 @@ public class LoginVideoViewModel extends BaseViewModel {
             @Override
             public void onError(Throwable e) {
                 if (e instanceof SocketTimeoutException || e instanceof ConnectException || e instanceof UnknownHostException) {
-                    Log.e("myInfoApi","5555555");
+                    Log.e("myInfoApi", "5555555");
                     ActivityUtils.getLoginActivity(0);
-                    Log.e("myInfoApi","6666666");
+                    Log.e("myInfoApi", "6666666");
                     mBinding.videoView.stopPlayback();//停止播放视频,并且释放
-                    Log.e("myInfoApi","777777777");
+                    Log.e("myInfoApi", "777777777");
                     mBinding.videoView.suspend();//在任何状态下释放媒体播放器
                     activity.finish();
                 }

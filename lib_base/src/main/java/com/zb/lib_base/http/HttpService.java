@@ -10,6 +10,7 @@ import com.zb.lib_base.model.BottleInfo;
 import com.zb.lib_base.model.BottleMsg;
 import com.zb.lib_base.model.ChatList;
 import com.zb.lib_base.model.CheckUser;
+import com.zb.lib_base.model.CommonSwitch;
 import com.zb.lib_base.model.ContactNum;
 import com.zb.lib_base.model.DiscoverInfo;
 import com.zb.lib_base.model.FaceStatus;
@@ -812,4 +813,7 @@ public interface HttpService {
 
     @GET("api/Camera_readCameraFilmMsgForAllRead")
     Observable<BaseResultEntity> readCameraFilmMsgForAllRead();
+
+    @GET("api/AppCommon_functionSwitch")
+    Observable<BaseResultEntity<CommonSwitch>> functionSwitch();
 }

@@ -135,7 +135,6 @@ public class MineApp extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         if ("fc9d5c29456f3ce2d074757a71ab5079".equals(getSignture())) {//your sign 是你的签名，我这里用这个取代下
-            DebuggerUtils.checkDebuggableInNotDebugModel(getApplicationContext());
             sContext = this;
             instance = this;
             W = getApplicationContext().getResources().getDisplayMetrics().widthPixels;
