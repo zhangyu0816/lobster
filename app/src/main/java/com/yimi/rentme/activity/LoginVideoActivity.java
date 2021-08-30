@@ -17,6 +17,8 @@ import com.zb.lib_base.utils.StatusBarUtil;
 @Route(path = RouteUtils.Main_Login_Video)
 public class LoginVideoActivity extends BaseActivity {
 
+    private LoginVideoViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
@@ -38,7 +40,7 @@ public class LoginVideoActivity extends BaseActivity {
         if (!RomUtils.isHuawei()) {
             fitComprehensiveScreen();
         }
-        LoginVideoViewModel viewModel = new LoginVideoViewModel();
+        viewModel = new LoginVideoViewModel();
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
     }
@@ -56,6 +58,8 @@ public class LoginVideoActivity extends BaseActivity {
             } else {
                 MineApp.getApp().exit();
                 System.exit(0);
+                mBinding = null;
+                viewModel = null;
             }
             return true;
         }

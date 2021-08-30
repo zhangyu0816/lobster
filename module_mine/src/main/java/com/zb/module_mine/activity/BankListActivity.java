@@ -13,6 +13,8 @@ public class BankListActivity extends MineBaseActivity {
     @Autowired(name = "isSelect")
     boolean isSelect;
 
+    private BankListViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.mine_bank_list;
@@ -20,10 +22,17 @@ public class BankListActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
-        BankListViewModel viewModel = new BankListViewModel();
+        viewModel = new BankListViewModel();
         viewModel.isSelect = isSelect;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.title, "我的银行卡");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mBinding = null;
+        viewModel = null;
     }
 }

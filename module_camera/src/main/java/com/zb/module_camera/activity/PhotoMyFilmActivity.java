@@ -32,5 +32,7 @@ public class PhotoMyFilmActivity extends WhiteCameraBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         viewModel.onDestroy();
+        mBinding = null;
+        viewModel = null;
     }
 }

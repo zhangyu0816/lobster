@@ -34,6 +34,8 @@ public class VideoActivity extends CameraBaseActivity {
         super.onDestroy();
         if (viewModel != null) {
             viewModel.onDestroy();
+            mBinding = null;
+            viewModel = null;
         }
     }
 

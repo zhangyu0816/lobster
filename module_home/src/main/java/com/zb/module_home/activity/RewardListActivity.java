@@ -14,6 +14,8 @@ public class RewardListActivity extends HomeBaseActivity {
     @Autowired(name = "otherUserId")
     long otherUserId;
 
+    private RewardListViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.home_reward_list;
@@ -21,7 +23,7 @@ public class RewardListActivity extends HomeBaseActivity {
 
     @Override
     public void initUI() {
-        RewardListViewModel viewModel = new RewardListViewModel();
+        viewModel = new RewardListViewModel();
         viewModel.friendDynId = friendDynId;
         viewModel.otherUserId = otherUserId;
         viewModel.setBinding(mBinding);
@@ -30,4 +32,10 @@ public class RewardListActivity extends HomeBaseActivity {
         mBinding.setVariable(BR.remark, "暂无排行榜记录");
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mBinding = null;
+        viewModel = null;
+    }
 }

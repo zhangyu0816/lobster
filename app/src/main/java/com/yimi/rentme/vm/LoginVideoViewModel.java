@@ -74,13 +74,9 @@ public class LoginVideoViewModel extends BaseViewModel {
         myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
             @Override
             public void onNext(MineInfo o) {
-                Log.e("myInfoApi", "1111111");
                 mBinding.videoView.stopPlayback();//停止播放视频,并且释放
-                Log.e("myInfoApi", "222222222");
                 mBinding.videoView.suspend();//在任何状态下释放媒体播放器
-                Log.e("myInfoApi", "3333333");
                 MineApp.mineInfo = o;
-                Log.e("myInfoApi", "444444444");
                 ActivityUtils.getMainActivity();
                 activity.finish();
             }

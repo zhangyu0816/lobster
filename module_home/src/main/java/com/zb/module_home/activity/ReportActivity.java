@@ -65,6 +65,8 @@ public class ReportActivity extends HomeBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        mBinding = null;
+        viewModel = null;
     }
 
     @Override

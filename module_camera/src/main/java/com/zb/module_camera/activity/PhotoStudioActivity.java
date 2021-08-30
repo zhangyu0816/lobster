@@ -52,6 +52,8 @@ public class PhotoStudioActivity extends CameraBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         viewModel.onDestroy();
+        mBinding = null;
+        viewModel = null;
     }
 
     @Override

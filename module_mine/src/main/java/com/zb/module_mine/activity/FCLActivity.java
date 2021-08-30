@@ -42,6 +42,8 @@ public class FCLActivity extends MineBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         viewModel.onDestroy();
+        mBinding = null;
+        viewModel = null;
     }
 
     @Override

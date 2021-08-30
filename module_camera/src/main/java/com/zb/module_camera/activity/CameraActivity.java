@@ -17,6 +17,8 @@ public class CameraActivity extends CameraBaseActivity {
     @Autowired(name = "showVideo")
     boolean showVideo;
 
+    private CameraViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.camera_main;
@@ -24,7 +26,7 @@ public class CameraActivity extends CameraBaseActivity {
 
     @Override
     public void initUI() {
-        CameraViewModel viewModel = new CameraViewModel();
+        viewModel = new CameraViewModel();
         viewModel.isMore = isMore;
         viewModel.showBottom = showBottom;
         viewModel.showVideo = showVideo;
@@ -33,5 +35,12 @@ public class CameraActivity extends CameraBaseActivity {
         mBinding.setVariable(BR.isMore, isMore);
         mBinding.setVariable(BR.showBottom, showBottom);
         mBinding.setVariable(BR.showVideo, showVideo);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mBinding = null;
+        viewModel = null;
     }
 }

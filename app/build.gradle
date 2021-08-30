@@ -67,6 +67,7 @@ android {
             // true - 打开资源压缩
             shrinkResources true
             debuggable true
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro','../imagebrowserlib/proguard-rules.pro',
                     '../lib_base/proguard-rules.pro','../module_bottle/proguard-rules.pro','../module_camera/proguard-rules.pro',
                     '../module_card/proguard-rules.pro','../module_chat/proguard-rules.pro','../module_home/proguard-rules.pro',

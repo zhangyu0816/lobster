@@ -45,15 +45,12 @@ public class MemberDetailActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-//        mBinding.setVariable(BR.mineInfo, MineApp.mineInfo);
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (viewModel != null)
+        if (viewModel != null){
             viewModel.onDestroy();
+            mBinding = null;
+            viewModel = null;
+        }
     }
 }

@@ -9,6 +9,9 @@ import com.zb.module_mine.vm.ModifyPassViewModel;
 
 @Route(path = RouteUtils.Mine_Modify_Pass)
 public class ModifyPassActivity extends MineBaseActivity {
+
+    private ModifyPassViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.mine_modify_pass;
@@ -16,7 +19,7 @@ public class ModifyPassActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
-        ModifyPassViewModel viewModel = new ModifyPassViewModel();
+        viewModel = new ModifyPassViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.title, "修改密码");
@@ -26,7 +29,14 @@ public class ModifyPassActivity extends MineBaseActivity {
         mBinding.setVariable(BR.showNewPass, false);
         mBinding.setVariable(BR.showSurePass, false);
         mBinding.setVariable(BR.type, 1);
-        mBinding.setVariable(BR.phone, PreferenceUtil.readStringValue(activity,"userName"));
+        mBinding.setVariable(BR.phone, PreferenceUtil.readStringValue(activity, "userName"));
         mBinding.setVariable(BR.code, "");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mBinding = null;
+        viewModel = null;
     }
 }

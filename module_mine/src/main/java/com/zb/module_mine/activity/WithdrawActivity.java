@@ -40,5 +40,7 @@ public class WithdrawActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         viewModel.onDestroy();
+        mBinding = null;
+        viewModel = null;
     }
 }

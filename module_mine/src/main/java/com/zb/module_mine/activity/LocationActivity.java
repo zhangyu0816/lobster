@@ -34,5 +34,6 @@ public class LocationActivity extends MineBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         fragment = null;
+        mBinding = null;
     }
 }

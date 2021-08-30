@@ -36,8 +36,11 @@ public class BottleListActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (viewModel != null)
+        if (viewModel != null){
             viewModel.onDestroy();
+            mBinding = null;
+            viewModel = null;
+        }
     }
 
     @Override

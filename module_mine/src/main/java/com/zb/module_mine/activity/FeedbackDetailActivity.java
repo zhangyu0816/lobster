@@ -13,6 +13,8 @@ public class FeedbackDetailActivity extends MineBaseActivity {
     @Autowired(name = "feedbackInfo")
     FeedbackInfo feedbackInfo;
 
+    private FeedbackDetailViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.mine_feedback_detail;
@@ -20,9 +22,16 @@ public class FeedbackDetailActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
-        FeedbackDetailViewModel viewModel = new FeedbackDetailViewModel();
+        viewModel = new FeedbackDetailViewModel();
         viewModel.feedbackInfo = feedbackInfo;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mBinding = null;
+        viewModel = null;
     }
 }

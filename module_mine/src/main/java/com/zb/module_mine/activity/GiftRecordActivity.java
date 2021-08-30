@@ -17,6 +17,7 @@ import com.zb.module_mine.vm.GiftRecordViewModel;
 @Route(path = RouteUtils.Mine_Gift_Record)
 public class GiftRecordActivity extends BaseActivity {
     private BaseReceiver updateWalletReceiver;
+    private GiftRecordViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class GiftRecordActivity extends BaseActivity {
     @Override
     public void initUI() {
         fitComprehensiveScreen();
-        GiftRecordViewModel viewModel = new GiftRecordViewModel();
+        viewModel = new GiftRecordViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.title, "礼物收益");
@@ -53,5 +54,7 @@ public class GiftRecordActivity extends BaseActivity {
             updateWalletReceiver.unregisterReceiver();
         } catch (Exception ignored) {
         }
+        mBinding = null;
+        viewModel = null;
     }
 }

@@ -30,8 +30,11 @@ public class RealNameActivity extends MineBaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (viewModel != null)
+            if (viewModel != null){
                 viewModel.back(null);
+                mBinding = null;
+                viewModel = null;
+            }
             return true;
         }
         return false;

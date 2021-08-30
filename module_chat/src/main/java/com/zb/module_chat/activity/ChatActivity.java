@@ -44,8 +44,11 @@ public class ChatActivity extends ChatBaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (viewModel != null)
+        if (viewModel != null){
             viewModel.onDestroy();
+            mBinding = null;
+            viewModel = null;
+        }
     }
 
     @Override

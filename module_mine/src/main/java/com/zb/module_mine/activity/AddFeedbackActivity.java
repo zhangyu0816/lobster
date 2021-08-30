@@ -65,6 +65,8 @@ public class AddFeedbackActivity extends MineBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        mBinding = null;
+        viewModel = null;
     }
 
     @Override

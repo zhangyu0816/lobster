@@ -31,6 +31,8 @@ public class NewsManagerActivity extends MineBaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             viewModel.back(null);
+            mBinding = null;
+            viewModel = null;
             return true;
         }
         return false;

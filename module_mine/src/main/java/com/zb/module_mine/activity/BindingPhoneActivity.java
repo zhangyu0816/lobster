@@ -14,6 +14,8 @@ public class BindingPhoneActivity extends MineBaseActivity {
     @Autowired(name = "isFinish")
     boolean isFinish;
 
+    private BindingPhoneViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.ac_binding_phone;
@@ -21,11 +23,18 @@ public class BindingPhoneActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
-        BindingPhoneViewModel viewModel = new BindingPhoneViewModel();
+        viewModel = new BindingPhoneViewModel();
         viewModel.isRegister = isRegister;
         viewModel.isFinish = isFinish;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.title, "绑定手机号");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mBinding = null;
+        viewModel = null;
     }
 }

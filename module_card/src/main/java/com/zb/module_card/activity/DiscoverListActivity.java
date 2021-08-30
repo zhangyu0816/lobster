@@ -43,4 +43,11 @@ public class DiscoverListActivity extends CardBaseActivity {
             viewModel.onStart();
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mBinding = null;
+        viewModel = null;
+    }
 }

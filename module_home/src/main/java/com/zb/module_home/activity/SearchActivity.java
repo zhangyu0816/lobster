@@ -12,6 +12,9 @@ import com.zb.module_home.vm.SearchViewModel;
 
 @Route(path = RouteUtils.Home_Search)
 public class SearchActivity extends BaseActivity {
+
+    private SearchViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.HomeGreyTheme);
@@ -26,10 +29,16 @@ public class SearchActivity extends BaseActivity {
 
     @Override
     public void initUI() {
-        SearchViewModel viewModel = new SearchViewModel();
+        viewModel = new SearchViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.searchKey, "");
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mBinding = null;
+        viewModel = null;
     }
 }

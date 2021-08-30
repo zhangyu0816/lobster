@@ -21,6 +21,8 @@ public class EditContentActivity extends MineBaseActivity {
     @Autowired(name = "hint")
     String hint;
 
+    private EditContentViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.mine_edit_content;
@@ -28,7 +30,7 @@ public class EditContentActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
-        EditContentViewModel viewModel = new EditContentViewModel();
+        viewModel = new EditContentViewModel();
         viewModel.type = type;
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
@@ -41,5 +43,12 @@ public class EditContentActivity extends MineBaseActivity {
         MineEditContentBinding binding = (MineEditContentBinding) mBinding;
         binding.edContent.setText(content);
         binding.edContent.setSelection(content.length());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mBinding = null;
+        viewModel = null;
     }
 }

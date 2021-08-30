@@ -81,6 +81,9 @@ public class PublishImageActivity extends HomeBaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        mBinding = null;
+        viewModel = null;
     }
 
 

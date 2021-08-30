@@ -8,6 +8,9 @@ import com.zb.module_mine.vm.NoticeViewModel;
 
 @Route(path = RouteUtils.Mine_Notice)
 public class NoticeActivity extends MineBaseActivity {
+
+    private NoticeViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.mine_notice;
@@ -15,8 +18,15 @@ public class NoticeActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
-        NoticeViewModel viewModel = new NoticeViewModel();
+        viewModel = new NoticeViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mBinding = null;
+        viewModel = null;
     }
 }

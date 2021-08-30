@@ -34,6 +34,8 @@ public class FilmDetailActivity extends WhiteCameraBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         viewModel.onDestroy();
+        mBinding = null;
+        viewModel = null;
     }
 
     @Override

@@ -49,6 +49,8 @@ public class OpenVipActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        mBinding = null;
+        viewModel = null;
     }
 
     @Override

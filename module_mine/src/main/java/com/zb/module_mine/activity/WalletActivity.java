@@ -24,6 +24,8 @@ public class WalletActivity extends BaseActivity {
         StatusBarUtil.transparencyBar(this);
     }
 
+    private WalletViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.mine_wallet;
@@ -32,7 +34,7 @@ public class WalletActivity extends BaseActivity {
     @Override
     public void initUI() {
         fitComprehensiveScreen();
-        WalletViewModel viewModel = new WalletViewModel();
+        viewModel = new WalletViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
         mBinding.setVariable(BR.title, "我的钱包");
@@ -54,5 +56,7 @@ public class WalletActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        mBinding = null;
+        viewModel = null;
     }
 }

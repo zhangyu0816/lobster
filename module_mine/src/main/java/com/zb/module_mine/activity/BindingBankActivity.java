@@ -8,6 +8,8 @@ import com.zb.module_mine.vm.BindingBankViewModel;
 
 @Route(path = RouteUtils.Mine_Binding_Bank)
 public class BindingBankActivity extends MineBaseActivity {
+
+    private BindingBankViewModel viewModel;
     @Override
     public int getRes() {
         return R.layout.mine_binding_bank;
@@ -15,12 +17,19 @@ public class BindingBankActivity extends MineBaseActivity {
 
     @Override
     public void initUI() {
-        BindingBankViewModel viewModel = new BindingBankViewModel();
+         viewModel = new BindingBankViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel,viewModel);
         mBinding.setVariable(BR.title, "绑定银行卡");
         mBinding.setVariable(BR.name, "");
         mBinding.setVariable(BR.bankAccount, "");
         mBinding.setVariable(BR.bankAddress, "");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mBinding = null;
+        viewModel = null;
     }
 }

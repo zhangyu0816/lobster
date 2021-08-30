@@ -15,6 +15,8 @@ public class PhotoWallActivity extends WhiteCameraBaseActivity {
     @Autowired(name = "film")
     Film film;
 
+    private PhotoWallViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.ac_photo_wall;
@@ -22,10 +24,18 @@ public class PhotoWallActivity extends WhiteCameraBaseActivity {
 
     @Override
     public void initUI() {
-        PhotoWallViewModel viewModel = new PhotoWallViewModel();
+        viewModel = new PhotoWallViewModel();
         viewModel.surplusCount = surplusCount;
         viewModel.mFilm = film;
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mBinding = null;
+        viewModel = null;
+    }
+
 }

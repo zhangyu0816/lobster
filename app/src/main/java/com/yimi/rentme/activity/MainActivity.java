@@ -95,6 +95,8 @@ public class MainActivity extends AppBaseActivity {
         if (viewModel != null) {
             viewModel.onDestroy();
             viewModel.stopAnimator();
+            mBinding = null;
+            viewModel = null;
         }
     }
 
