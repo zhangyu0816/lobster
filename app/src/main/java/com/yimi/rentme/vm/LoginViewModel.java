@@ -382,11 +382,19 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
 
     @Override
     public void toQQ(View view) {
+        if (!mBinding.getClickSelect()) {
+            SCToastUtil.showToast(activity, "请仔细阅读底部协议，并勾选", false);
+            return;
+        }
         threeLogin.selectUnionType(2);
     }
 
     @Override
     public void toWX(View view) {
+        if (!mBinding.getClickSelect()) {
+            SCToastUtil.showToast(activity, "请仔细阅读底部协议，并勾选", false);
+            return;
+        }
         threeLogin.selectUnionType(1);
     }
 
@@ -816,7 +824,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     private void step(int step) {
         mBinding.setLoginStep(step);
         mBinding.setRight("");
-        mBinding.setVariable(R.id.tv_right,View.GONE);
+        mBinding.setVariable(R.id.tv_right, View.GONE);
         switch (step) {
             case 0: // 手机号
                 MineApp.registerInfo = new RegisterInfo();
@@ -837,7 +845,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                 mBinding.setCanNext(MineApp.registerInfo.getPass().length() >= 6);
                 mBinding.setRight("验证码登录");
                 mBinding.setBtnName("开启虾菇");
-                mBinding.setVariable(R.id.tv_right,View.VISIBLE);
+                mBinding.setVariable(R.id.tv_right, View.VISIBLE);
                 MineApp.getApp().getFixedThreadPool().execute(() -> {
                     SystemClock.sleep(200);
                     activity.runOnUiThread(() -> {

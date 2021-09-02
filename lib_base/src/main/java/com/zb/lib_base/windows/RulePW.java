@@ -19,6 +19,7 @@ import com.zb.lib_base.R;
 import com.zb.lib_base.databinding.PwsRuleBinding;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.SCToastUtil;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -39,6 +40,8 @@ public class RulePW extends PopupWindow {
         pw.setContentView(view);
         pw.showAtLocation(v, Gravity.CENTER, 0, 0);
         mBinding.setPw(RulePW.this);
+
+        mBinding.setClickSelect(false);
 
         mBinding.tvTitle.setText("注册协议及隐私政策");
 
@@ -103,6 +106,10 @@ public class RulePW extends PopupWindow {
         mBinding.tvContent.setMovementMethod(LinkMovementMethod.getInstance());
 
         mBinding.tvSure.setOnClickListener(v1 -> {
+            if (!mBinding.getClickSelect()) {
+                SCToastUtil.showToast(activity,"请仔细阅读底部协议，并勾选",true);
+                return;
+            }
             callBack.sureBack();
             pw.dismiss();
         });
@@ -110,6 +117,37 @@ public class RulePW extends PopupWindow {
             callBack.cancelBack();
             pw.dismiss();
         });
+
+        SpannableString style1 = new SpannableString("请阅读《用户注册协议》和《隐私政策》并勾选");
+
+        style1.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View view) {
+                ActivityUtils.getMineWeb("注册协议", HttpManager.BASE_URL + "mobile/xiagu_reg_protocol.html");
+            }
+
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                ds.setUnderlineText(false);
+            }
+        }, 3, 11, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        style1.setSpan(new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View view) {
+                ActivityUtils.getMineWeb("隐私政策", HttpManager.BASE_URL + "mobile/xiagu_privacy_protocol.html");
+            }
+
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                ds.setUnderlineText(false);
+            }
+        }, 12, 18, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        style1.setSpan(new ForegroundColorSpan(Color.parseColor("#0d88c1")), 3, 11, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        style1.setSpan(new ForegroundColorSpan(Color.parseColor("#0d88c1")), 12, 18, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mBinding.tvClick.setText(style1);
+        mBinding.tvClick.setMovementMethod(LinkMovementMethod.getInstance());
+
+        mBinding.clickLinear.setOnClickListener(v1 -> mBinding.setClickSelect(!mBinding.getClickSelect()));
     }
 
     public interface CallBack {
