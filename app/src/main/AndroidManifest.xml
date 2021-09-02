@@ -4,22 +4,6 @@
     package="com.yimi.rentme">
     <!-- 个推 SDK 权限配置开始 -->
     <!-- 必选权限 -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
-
-    <permission
-        android:name="getui.permission.GetuiService.${applicationId}"
-        android:protectionLevel="signature"
-        tools:replace="android:protectionLevel" />
-    <!-- 个推 SDK 权限配置结束 -->
-
     <application
         android:name="com.zb.lib_base.app.MineApp"
         android:allowBackup="false"
@@ -34,64 +18,6 @@
         tools:ignore="HardcodedDebugMode"
         tools:replace="android:theme,android:allowBackup,android:debuggable">
         <!--region 适配全面屏-->
-        <meta-data
-            android:name="android.max_aspect"
-            android:value="2.4" />
-        <!--华为刘海区域展示-->
-        <meta-data
-            android:name="android.notch_support"
-            android:value="true" />
-        <!--小米刘海区域展示-->
-        <meta-data
-            android:name="notch.config"
-            android:value="portrait" />
-
-        <service android:name=".service.ForegroundLiveService" />
-
-        <receiver
-            android:name=".utils.AlarmUtils$alarmReceiver"
-            android:exported="false"
-            android:protectionLevel="signature" />
-        <receiver
-            android:name=".utils.AlarmUtils$alarmReceiver1"
-            android:exported="false"
-            android:protectionLevel="signature" />
-        <receiver
-            android:name=".utils.AlarmUtils$alarmReceiver2"
-            android:exported="false"
-            android:protectionLevel="signature" />
-        <receiver
-            android:name=".utils.AlarmUtils$alarmShortReceiver"
-            android:exported="false"
-            android:protectionLevel="signature" />
-        <receiver
-            android:name=".utils.AlarmUtils$alarmShortReceiver1"
-            android:exported="false"
-            android:protectionLevel="signature" />
-        <receiver
-            android:name=".utils.AlarmUtils$alarmShortReceiver2"
-            android:exported="false"
-            android:protectionLevel="signature" />
-        <receiver
-            android:name=".utils.AlarmUtils$alarmShortReceiver3"
-            android:exported="false"
-            android:protectionLevel="signature" />
-        <receiver
-            android:name=".utils.AlarmUtils$alarmShortReceiver4"
-            android:exported="false"
-            android:protectionLevel="signature" />
-
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.yimi.rentme.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths" />
-        </provider>
-
-        <!-- 友盟配置 start-->
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -103,6 +29,7 @@
                 <data android:scheme="wxb83427622a6740f6" />
             </intent-filter>
         </activity>
+        <!--华为刘海区域展示-->
         <activity
             android:name=".wxapi.WXPayEntryActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -114,24 +41,7 @@
                 <data android:scheme="wxb83427622a6740f6" />
             </intent-filter>
         </activity>
-        <!-- 友盟配置 end-->
-
-        <!-- 个推 start-->
-        <meta-data
-            android:name="GETUI_APPID"
-            android:value="HHWzdCtaSz5j94MO2tqcT3"
-            tools:replace="android:value" />
-
-        <!-- 配置 SDK 核心服务 -->
-        <!-- permission 属性在 2.13.1.0 版本后必须配置 -->
-        <service
-            android:name=".getui.DemoIntentService"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-
-        <meta-data
-            android:name="UMENG_APPKEY"
-            android:value="55cac14467e58e8bd7000359" />
-
+        <!--小米刘海区域展示-->
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:exported="true"
@@ -178,7 +88,103 @@
         <activity
             android:name=".activity.LoginVideoActivity"
             android:exported="false" />
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.4" />
+        <meta-data
+            android:name="android.notch_support"
+            android:value="true" />
+        <meta-data
+            android:name="notch.config"
+            android:value="portrait" />
+        <meta-data
+            android:name="GETUI_APPID"
+            android:value="HHWzdCtaSz5j94MO2tqcT3"
+            tools:replace="android:value" />
+
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="55cac14467e58e8bd7000359" />
+
+        <!-- 友盟配置 start-->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.yimi.rentme.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+        <receiver
+            android:name=".utils.AlarmUtils$alarmReceiver"
+            android:exported="false"
+            android:protectionLevel="signature" />
+        <!-- 友盟配置 end-->
+
+        <!-- 个推 start-->
+        <receiver
+            android:name=".utils.AlarmUtils$alarmReceiver1"
+            android:exported="false"
+            android:protectionLevel="signature" />
+
+        <!-- 配置 SDK 核心服务 -->
+        <!-- permission 属性在 2.13.1.0 版本后必须配置 -->
+        <receiver
+            android:name=".utils.AlarmUtils$alarmReceiver2"
+            android:exported="false"
+            android:protectionLevel="signature" />
+
+        <receiver
+            android:name=".utils.AlarmUtils$alarmShortReceiver"
+            android:exported="false"
+            android:protectionLevel="signature" />
+
+        <receiver
+            android:name=".utils.AlarmUtils$alarmShortReceiver1"
+            android:exported="false"
+            android:protectionLevel="signature" />
+
+        <receiver
+            android:name=".utils.AlarmUtils$alarmShortReceiver2"
+            android:exported="false"
+            android:protectionLevel="signature" />
+
+        <receiver
+            android:name=".utils.AlarmUtils$alarmShortReceiver3"
+            android:exported="false"
+            android:protectionLevel="signature" />
+        <receiver
+            android:name=".utils.AlarmUtils$alarmShortReceiver4"
+            android:exported="false"
+            android:protectionLevel="signature" />
+        <service android:name=".service.ForegroundLiveService" />
+        <service
+            android:name=".getui.DemoIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
     </application>
+    <permission
+        android:name="getui.permission.GetuiService.${applicationId}"
+        android:protectionLevel="signature"
+        tools:replace="android:protectionLevel" />
+    <queries>
+        <package android:name="com.tencent.mm" />
+        <package android:name="com.tencent.mobileqq" />
+        <package android:name="com.qzone" />
+    </queries>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 个推 SDK 权限配置结束 -->
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <uses-permission android:name="android.permission.GET_TASKS" />
 
 </manifest>
