@@ -84,11 +84,8 @@ public class LoginVideoViewModel extends BaseViewModel {
             @Override
             public void onError(Throwable e) {
                 if (e instanceof SocketTimeoutException || e instanceof ConnectException || e instanceof UnknownHostException) {
-                    Log.e("myInfoApi", "5555555");
                     ActivityUtils.getLoginActivity(0);
-                    Log.e("myInfoApi", "6666666");
                     mBinding.videoView.stopPlayback();//停止播放视频,并且释放
-                    Log.e("myInfoApi", "777777777");
                     mBinding.videoView.suspend();//在任何状态下释放媒体播放器
                     activity.finish();
                 }

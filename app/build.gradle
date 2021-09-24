@@ -28,16 +28,20 @@ android {
             exclude 'META-INF/rxjava.properties'
         }
         manifestPlaceholders = [
-                qqappid       : "tencent101928546"
+                qqappid: "tencent101928546"
         ]
 
         ndk {
             //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
-            abiFilters "armeabi", "armeabi-v7a"
-            cFlags "-Wall -O2 -U_FORTIFY_SOURCE -fstack-protector-all"
+            abiFilters "armeabi-v7a"
         }
     }
-
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+            version "3.10.2"
+        }
+    }
     signingConfigs {
         release {
             keyAlias 'rm'
@@ -54,8 +58,8 @@ android {
             shrinkResources true
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro',
-                    '../lib_base/proguard-rules.pro','../module_bottle/proguard-rules.pro','../module_camera/proguard-rules.pro',
-                    '../module_card/proguard-rules.pro','../module_chat/proguard-rules.pro','../module_home/proguard-rules.pro',
+                    '../lib_base/proguard-rules.pro', '../module_bottle/proguard-rules.pro', '../module_camera/proguard-rules.pro',
+                    '../module_card/proguard-rules.pro', '../module_chat/proguard-rules.pro', '../module_home/proguard-rules.pro',
                     '../module_mine/proguard-rules.pro'
             //apk命名
             signingConfig signingConfigs.release
@@ -63,15 +67,14 @@ android {
 
         debug {
             // true - 打开混淆
-            minifyEnabled true
+            minifyEnabled false
             // true - 打开资源压缩
-            shrinkResources true
             debuggable true
-//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro',
-                    '../lib_base/proguard-rules.pro','../module_bottle/proguard-rules.pro','../module_camera/proguard-rules.pro',
-                    '../module_card/proguard-rules.pro','../module_chat/proguard-rules.pro','../module_home/proguard-rules.pro',
-                    '../module_mine/proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro',
+//                    '../lib_base/proguard-rules.pro','../module_bottle/proguard-rules.pro','../module_camera/proguard-rules.pro',
+//                    '../module_card/proguard-rules.pro','../module_chat/proguard-rules.pro','../module_home/proguard-rules.pro',
+//                    '../module_mine/proguard-rules.pro'
             signingConfig signingConfigs.release
         }
 
@@ -92,6 +95,7 @@ android {
         jniLibs.srcDirs = ['libs']//指定jniLibs文件夹路径
         jni.srcDirs = []//不编译jni
     }
+
 
 }
 

@@ -21,6 +21,7 @@ import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -942,32 +943,33 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
             return;
         }
         String ANDROID_ID = Settings.System.getString(activity.getContentResolver(), Settings.System.ANDROID_ID);
-        String imei = "";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            imei = tm.getImei();
-        } else {
-            imei = tm.getDeviceId();
-        }
+//        String imei = "";
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            imei = tm.getImei();
+//        } else {
+//        }
+//        imei = tm.getDeviceId();
 
-        if (imei == null) {
-            imei = ANDROID_ID;
-        }
-        PreferenceUtil.saveStringValue(activity, "deviceCode", imei);
-        String iccid = tm.getSimSerialNumber();
-        // CDMA手机返回MEID
-        String meid = imei;
-        // GSM手机返回IMEI
-        String mac = Mac.getMac(activity);
-
-        JSONObject object = new JSONObject();
-        try {
-            object.put("iccid", iccid);
-            object.put("meid", meid);
-            object.put("imei", imei);
-            object.put("mac", mac);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        PreferenceUtil.saveStringValue(activity, "deviceHardwareInfo", object.toString());
+//        if (imei == null) {
+//            imei = ANDROID_ID;
+//        }
+        PreferenceUtil.saveStringValue(activity, "deviceCode", ANDROID_ID);
+        Log.e("deviceCode",ANDROID_ID);
+//        String iccid = tm.getSimSerialNumber();
+//        // CDMA手机返回MEID
+//        String meid = ANDROID_ID;
+//        // GSM手机返回IMEI
+//        String mac = Mac.getMac(activity);
+//
+//        JSONObject object = new JSONObject();
+//        try {
+//            object.put("iccid", iccid);
+//            object.put("meid", meid);
+//            object.put("imei", ANDROID_ID);
+//            object.put("mac", mac);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        PreferenceUtil.saveStringValue(activity, "deviceHardwareInfo", object.toString());
     }
 }
