@@ -1,4 +1,4 @@
-package com.yimi.rentme;
+package com.zb.lib;
 
 import android.content.Context;
 

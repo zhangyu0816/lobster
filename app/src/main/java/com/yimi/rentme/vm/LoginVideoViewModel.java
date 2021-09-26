@@ -3,10 +3,8 @@ package com.yimi.rentme.vm;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 
-import com.igexin.sdk.PushManager;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;

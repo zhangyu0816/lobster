@@ -5,12 +5,10 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.WindowManager;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.yimi.rentme.BR;
-import com.yimi.rentme.EncryptionUtil;
 import com.yimi.rentme.R;
 import com.yimi.rentme.databinding.AcLoadingBinding;
 import com.yimi.rentme.vm.LoadingViewModel;
@@ -40,8 +38,8 @@ public class LoadingActivity extends RxAppCompatActivity {
         viewModel = new LoadingViewModel();
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
-        EncryptionUtil.encryptionMD5(MineApp.sContext, getSign(MineApp.sContext, getPackageName()), 0);
-        Log.e("androidSign", EncryptionUtil.encryptionMD5(MineApp.sContext, getSign(MineApp.sContext, getPackageName()), 0));
+//        EncryptionUtil.encryptionMD5(MineApp.sContext, "zzzzzzzzzz", 0);
+//        Log.e("androidSign", EncryptionUtil.encryptionMD5(MineApp.sContext, getSign(MineApp.sContext, getPackageName()), 0));
     }
 
 

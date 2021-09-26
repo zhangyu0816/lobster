@@ -30,7 +30,6 @@ android {
         manifestPlaceholders = [
                 qqappid: "tencent101928546"
         ]
-
         ndk {
             //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
             abiFilters "armeabi-v7a"
@@ -38,10 +37,9 @@ android {
     }
     externalNativeBuild {
         cmake {
-            path "src/main/cpp/CMakeLists.txt"
-            version "3.10.2"
         }
     }
+
     signingConfigs {
         release {
             keyAlias 'rm'
@@ -67,14 +65,15 @@ android {
 
         debug {
             // true - 打开混淆
-            minifyEnabled false
+            minifyEnabled true
             // true - 打开资源压缩
+            shrinkResources true
             debuggable true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro',
-//                    '../lib_base/proguard-rules.pro','../module_bottle/proguard-rules.pro','../module_camera/proguard-rules.pro',
-//                    '../module_card/proguard-rules.pro','../module_chat/proguard-rules.pro','../module_home/proguard-rules.pro',
-//                    '../module_mine/proguard-rules.pro'
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro',
+                    '../lib_base/proguard-rules.pro','../module_bottle/proguard-rules.pro','../module_camera/proguard-rules.pro',
+                    '../module_card/proguard-rules.pro','../module_chat/proguard-rules.pro','../module_home/proguard-rules.pro',
+                    '../module_mine/proguard-rules.pro'
             signingConfig signingConfigs.release
         }
 

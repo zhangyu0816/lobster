@@ -52,7 +52,6 @@ import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
-import com.zb.lib_base.utils.Mac;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.ThreeLogin;
@@ -60,9 +59,6 @@ import com.zb.lib_base.utils.uploadImage.PhotoManager;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.BirthdayPW;
 import com.zb.lib_base.windows.TextPW;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
