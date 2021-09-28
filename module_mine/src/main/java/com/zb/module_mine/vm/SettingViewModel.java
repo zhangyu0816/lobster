@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.view.View;
 
 import com.igexin.sdk.PushManager;
@@ -234,16 +235,37 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
     @Override
     public void toIdCard(View view) {
         if (mAuthentication == null) {
-            if (PreferenceUtil.readIntValue(activity, "bindingIdCard") == 0) {
-                new TextPW(activity, mBinding.getRoot(), "实名认证",
-                        "当您选择真人实名认证服务时，为确认您所提供的身份信息为您本人信息且属实，需要您提供以下信息供我们收集：真实姓名、身份证号及身份证核验授权。" +
-                                "\n真实姓名、身份证号属于个人敏感信息，收集此类信息是为了满足国家法律法规的网络实名制要求，同时保证虾菇产品真实安全的社交氛围。若您不提供这类信息，您可能无法正常使用虾菇认证服务。",
-                        "同意", false, true, () -> {
-                    PreferenceUtil.saveIntValue(activity, "bindingIdCard", 1);
-                    ActivityUtils.getMineAuthentication(new Authentication());
-                });
+            if (checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                setPermissions();
             } else {
-                ActivityUtils.getMineAuthentication(new Authentication());
+                if (PreferenceUtil.readIntValue(activity, "realNamePermission") == 0)
+                    new TextPW(activity, mBinding.getRoot(), "实名认证",
+                            "您在使用提现服务时，为确认您所提供的身份信息、提现账号（银行卡信息或支付宝信息）为您本人信息且属实，需要您提供以下信息供我们收集：真实姓名、身份证号及身份证核验授权，我们将会申请相机、存储权限：" +
+                                    "\n 1、申请相机权限--上传图片时获取拍摄照片功能，" +
+                                    "\n 2、申请存储权限--上传图片时获取保存和读取图片功能，" +
+                                    "\n 4、若您点击“同意”按钮，我们方可正式申请上述权限，以便拍摄照片及选取照片，上传身份证正反面照片及本人头像照片，" +
+                                    "\n 5、若您点击“拒绝”按钮，我们将不再主动弹出该提示，您也无法完成身份证认证，不影响使用其他的虾姑功能/服务，" +
+                                    "\n 6、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭相机、存储权限，" +
+                                    "\n 7、先在卡包内绑定提现账户，单次提现金额不少于10元。提交提现申请后，我们将会在3个工作日内打款至提现账户。",
+                            "同意", false, true, new TextPW.CallBack() {
+                        @Override
+                        public void sure() {
+                            PreferenceUtil.saveIntValue(activity, "realNamePermission", 1);
+                            getPermissions();
+                        }
+
+                        @Override
+                        public void cancel() {
+                            PreferenceUtil.saveIntValue(activity, "realNamePermission", 1);
+                        }
+                    });
+                else {
+                    if (!checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        SCToastUtil.showToast(activity, "你未开启存储权限，请前往我的--设置--权限管理--权限进行设置", true);
+                    } else if (!checkPermissionGranted(activity, Manifest.permission.CAMERA)) {
+                        SCToastUtil.showToast(activity, "你未开启相机权限，请前往我的--设置--权限管理--权限进行设置", true);
+                    }
+                }
             }
         } else if (mAuthentication.getIsChecked() == 1) {
             SCToastUtil.showToast(activity, "实名认证已通过，无需再次审核", true);
@@ -255,7 +277,31 @@ public class SettingViewModel extends BaseViewModel implements SettingVMInterfac
             }
         }
     }
+    /**
+     * 权限
+     */
+    private void getPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            performCodeWithPermission("虾菇需要访问存储权限及相机权限", new BaseActivity.PermissionCallback() {
+                        @Override
+                        public void hasPermission() {
+                            setPermissions();
+                        }
 
+                        @Override
+                        public void noPermission() {
+                            PreferenceUtil.saveIntValue(activity, "realNamePermission", 1);
+                        }
+                    }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        } else {
+            setPermissions();
+        }
+    }
+
+    private void setPermissions() {
+        ActivityUtils.getMineAuthentication(new Authentication());
+    }
     @Override
     public void toBindingPhone(View view) {
         ActivityUtils.getBindingPhoneActivity(activity, false, true);

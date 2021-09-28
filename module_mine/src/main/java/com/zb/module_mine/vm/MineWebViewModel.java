@@ -285,7 +285,7 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                     codeLayout = new CodeLayout(activity);
                     if (mWebShare.getShareType() == 5) {
                         if (checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                            setPermissions();
+                            setPermissions(0);
                         } else {
                             if (PreferenceUtil.readIntValue(activity, "writePermission") == 0)
                                 new TextPW(activity, mBinding.getRoot(), "权限说明",
@@ -298,7 +298,7 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                                     @Override
                                     public void sure() {
                                         PreferenceUtil.saveIntValue(activity, "writePermission", 1);
-                                        getPermissions();
+                                        getPermissions(0);
                                     }
 
                                     @Override
@@ -310,7 +310,7 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
                                 SCToastUtil.showToast(activity, "你未开启存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                             }
                         }
-                    } else setPermissions();
+                    } else setPermissions(0);
 
                 } else if (TextUtils.equals("openwx", type)) {
                     openWX();
@@ -329,26 +329,44 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
     /**
      * 权限
      */
-    private void getPermissions() {
+    private void getPermissions(int type) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            performCodeWithPermission("虾菇需要访问存储权限", new BaseActivity.PermissionCallback() {
-                @Override
-                public void hasPermission() {
-                    setPermissions();
-                }
+            if (type == 0)
+                performCodeWithPermission("虾菇需要访问存储权限", new BaseActivity.PermissionCallback() {
+                    @Override
+                    public void hasPermission() {
+                        setPermissions(type);
+                    }
 
-                @Override
-                public void noPermission() {
-                    PreferenceUtil.saveIntValue(activity, "writePermission", 1);
-                }
-            }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    @Override
+                    public void noPermission() {
+                        PreferenceUtil.saveIntValue(activity, "writePermission", 1);
+                    }
+                }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            else if (type == 1)
+                performCodeWithPermission("虾菇需要访问存储权限及相机权限", new BaseActivity.PermissionCallback() {
+                            @Override
+                            public void hasPermission() {
+                                setPermissions(type);
+                            }
+
+                            @Override
+                            public void noPermission() {
+                                PreferenceUtil.saveIntValue(activity, "realNamePermission", 1);
+                            }
+                        }, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE);
         } else {
-            setPermissions();
+            setPermissions(type);
         }
     }
 
-    private void setPermissions() {
-        codeLayout.setData(activity, mWebShare);
+    private void setPermissions(int type) {
+        if (type == 0)
+            codeLayout.setData(activity, mWebShare);
+        else {
+            ActivityUtils.getMineAuthentication(new Authentication());
+        }
     }
 
 
@@ -428,7 +446,38 @@ public class MineWebViewModel extends BaseViewModel implements MineWebVMInterfac
             public void onError(Throwable e) {
                 CustomProgressDialog.stopLoading();
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
-                    new TextPW(mBinding.getRoot(), "实名认证", "你还未实名认证无法提现,请前往提交实名认证信息！", "去认证", () -> ActivityUtils.getMineAuthentication(new Authentication()));
+                    if (checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        setPermissions(1);
+                    } else {
+                        if (PreferenceUtil.readIntValue(activity, "realNamePermission") == 0)
+                            new TextPW(activity, mBinding.getRoot(), "实名认证",
+                                    "您在使用提现服务时，为确认您所提供的身份信息、提现账号（银行卡信息或支付宝信息）为您本人信息且属实，需要您提供以下信息供我们收集：真实姓名、身份证号及身份证核验授权，我们将会申请相机、存储权限：" +
+                                            "\n 1、申请相机权限--上传图片时获取拍摄照片功能，" +
+                                            "\n 2、申请存储权限--上传图片时获取保存和读取图片功能，" +
+                                            "\n 4、若您点击“同意”按钮，我们方可正式申请上述权限，以便拍摄照片及选取照片，上传身份证正反面照片及本人头像照片，" +
+                                            "\n 5、若您点击“拒绝”按钮，我们将不再主动弹出该提示，您也无法完成身份证认证，不影响使用其他的虾姑功能/服务，" +
+                                            "\n 6、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭相机、存储权限，" +
+                                            "\n 7、先在卡包内绑定提现账户，单次提现金额不少于10元。提交提现申请后，我们将会在3个工作日内打款至提现账户。",
+                                    "同意", false, true, new TextPW.CallBack() {
+                                @Override
+                                public void sure() {
+                                    PreferenceUtil.saveIntValue(activity, "realNamePermission", 1);
+                                    getPermissions(1);
+                                }
+
+                                @Override
+                                public void cancel() {
+                                    PreferenceUtil.saveIntValue(activity, "realNamePermission", 1);
+                                }
+                            });
+                        else {
+                            if (!checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                                SCToastUtil.showToast(activity, "你未开启存储权限，请前往我的--设置--权限管理--权限进行设置", true);
+                            } else if (!checkPermissionGranted(activity, Manifest.permission.CAMERA)) {
+                                SCToastUtil.showToast(activity, "你未开启相机权限，请前往我的--设置--权限管理--权限进行设置", true);
+                            }
+                        }
+                    }
                 }
             }
         }, activity);

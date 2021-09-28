@@ -75,8 +75,6 @@ Java_com_zb_lib_EncryptionUtil_encryptionMD5(JNIEnv *env, jclass j_clz, jobject 
     char *c_output = new char[strlen(c_result_signature) + strlen(c_input) + 1];
     strcpy(c_output, c_result_signature);
     strcat(c_output,c_input );
-    LOGD("input signature2 = %s", c_input);
-    LOGD("input signature3 = %s", c_output);
 
     // 此处可以对需要加密的数据进行加密前的处理，增加破解难度
     MD5 md5_input;
