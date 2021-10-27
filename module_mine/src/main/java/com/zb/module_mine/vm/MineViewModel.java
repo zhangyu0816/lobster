@@ -260,7 +260,8 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         if (checkPermissionGranted(activity, per)) {
             setPermissions(1);
         } else {
-            if (PreferenceUtil.readIntValue(activity, "publishPermission") == 0)
+            if (PreferenceUtil.readIntValue(activity, "publishPermission") == 0) {
+                PreferenceUtil.saveIntValue(activity, "publishPermission", 1);
                 new TextPW(activity, mBinding.getRoot(), "权限说明",
                         "在使用发布动态功能，包括图文、视频时，我们将会申请相机、存储、麦克风权限：" +
                                 "\n 1、申请相机权限--发布动态时获取拍摄照片，录制视频功能，" +
@@ -269,19 +270,8 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                                 "\n 4、若您点击“同意”按钮，我们方可正式申请上述权限，以便正常发布图文动态、视频动态，" +
                                 "\n 5、若您点击“拒绝”按钮，我们将不再主动弹出该提示，您也无法使用发布动态功能，不影响使用其他的虾姑功能/服务，" +
                                 "\n 6、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭相机、存储、麦克风权限。",
-                        "同意", false, true, new TextPW.CallBack() {
-                    @Override
-                    public void sure() {
-                        PreferenceUtil.saveIntValue(activity, "publishPermission", 1);
-                        getPermissions(1);
-                    }
-
-                    @Override
-                    public void cancel() {
-                        PreferenceUtil.saveIntValue(activity, "publishPermission", 1);
-                    }
-                });
-            else {
+                        "同意", false, true, () -> getPermissions(1));
+            } else {
                 if (!checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     SCToastUtil.showToast(activity, "你未开启存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                 } else if (!checkPermissionGranted(activity, Manifest.permission.CAMERA)) {
@@ -336,7 +326,8 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         if (checkPermissionGranted(activity, per)) {
             setPermissions(2);
         } else {
-            if (PreferenceUtil.readIntValue(activity, "photoPermission") == 0)
+            if (PreferenceUtil.readIntValue(activity, "photoPermission") == 0) {
+                PreferenceUtil.saveIntValue(activity, "photoPermission", 1);
                 new TextPW(activity, mBinding.getRoot(), "权限说明",
                         "在使用照相馆功能时，我们将会申请相机、存储权限：" +
                                 "\n 1、申请相机权限--绘制胶卷时获取拍摄照片功能，" +
@@ -344,19 +335,8 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                                 "\n 3、若您点击“同意”按钮，我们方可正式申请上述权限，以便拍摄照片及选取照片，绘制图片胶卷，" +
                                 "\n 5、若您点击“拒绝”按钮，我们将不再主动弹出该提示，您也无法使用照相馆功能，不影响使用其他的虾姑功能/服务，" +
                                 "\n 6、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭相机、存储权限。",
-                        "同意", false, true, new TextPW.CallBack() {
-                    @Override
-                    public void sure() {
-                        PreferenceUtil.saveIntValue(activity, "photoPermission", 1);
-                        getPermissions(2);
-                    }
-
-                    @Override
-                    public void cancel() {
-                        PreferenceUtil.saveIntValue(activity, "photoPermission", 1);
-                    }
-                });
-            else {
+                        "同意", false, true, () -> getPermissions(2));
+            } else {
                 if (!checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     SCToastUtil.showToast(activity, "你未开启存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                 } else if (!checkPermissionGranted(activity, Manifest.permission.CAMERA)) {

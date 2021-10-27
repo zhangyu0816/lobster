@@ -243,26 +243,16 @@ public class MNImageBrowserActivity extends BaseActivity {
             if (checkPermissionGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 setPermissions();
             } else {
-                if (PreferenceUtil.readIntValue(activity, "writePermission") == 0)
+                if (PreferenceUtil.readIntValue(activity, "writePermission") == 0) {
+                    PreferenceUtil.saveIntValue(activity, "writePermission", 1);
                     new TextPW(activity, viewPagerBrowser, "权限说明",
                             "保存照片时，我们将会申请存储权限：" +
                                     "\n 1、申请存储权限--获取保存图片功能，" +
                                     "\n 4、若您点击“同意”按钮，我们方可正式申请上述权限，以便保存图片，" +
                                     "\n 5、若您点击“拒绝”按钮，我们将不再主动弹出该提示，您也无法保存图片，不影响使用其他的虾姑功能/服务，" +
                                     "\n 6、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭存储权限。",
-                            "同意", false, true, new TextPW.CallBack() {
-                        @Override
-                        public void sure() {
-                            PreferenceUtil.saveIntValue(activity, "writePermission", 1);
-                            getPermissions();
-                        }
-
-                        @Override
-                        public void cancel() {
-                            PreferenceUtil.saveIntValue(activity, "writePermission", 1);
-                        }
-                    });
-                else {
+                            "同意", false, true, this::getPermissions);
+                } else {
                     SCToastUtil.showToast(activity, "你未开启存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                 }
             }

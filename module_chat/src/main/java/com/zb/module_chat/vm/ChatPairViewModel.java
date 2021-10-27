@@ -61,6 +61,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
     private BaseReceiver publishReceiver;
     private List<ChatList> chatType4List = new ArrayList<>();
     private List<String> selectorList = new ArrayList<>();
+
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
@@ -207,7 +208,8 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
             if (checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)) {
                 setPermissions();
             } else {
-                if (PreferenceUtil.readIntValue(activity, "publishPermission") == 0)
+                if (PreferenceUtil.readIntValue(activity, "publishPermission") == 0) {
+                    PreferenceUtil.saveIntValue(activity, "publishPermission", 1);
                     new TextPW(activity, mBinding.getRoot(), "权限说明",
                             "在使用发布动态功能，包括图文、视频时，我们将会申请相机、存储、麦克风权限：" +
                                     "\n 1、申请相机权限--发布动态时获取拍摄照片，录制视频功能，" +
@@ -216,19 +218,8 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                                     "\n 4、若您点击“同意”按钮，我们方可正式申请上述权限，以便正常发布图文动态、视频动态，" +
                                     "\n 5、若您点击“拒绝”按钮，我们将不再主动弹出该提示，您也无法使用发布动态功能，不影响使用其他的虾姑功能/服务，" +
                                     "\n 6、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭相机、存储、麦克风权限。",
-                            "同意", false, true, new TextPW.CallBack() {
-                        @Override
-                        public void sure() {
-                            PreferenceUtil.saveIntValue(activity, "publishPermission", 1);
-                            getPermissions();
-                        }
-
-                        @Override
-                        public void cancel() {
-                            PreferenceUtil.saveIntValue(activity, "publishPermission", 1);
-                        }
-                    });
-                else {
+                            "同意", false, true, this::getPermissions);
+                } else {
                     if (!checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                         SCToastUtil.showToast(activity, "你未开启存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                     } else if (!checkPermissionGranted(activity, Manifest.permission.CAMERA)) {
@@ -265,7 +256,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
         personOtherDynApi api = new personOtherDynApi(new HttpOnNextListener<List<DiscoverInfo>>() {
             @Override
             public void onNext(List<DiscoverInfo> o) {
-                int a =DateUtil.getDateCount(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), o.get(0).getCreateTime(), DateUtil.yyyy_MM_dd_HH_mm_ss, 1000f * 3600f * 24f);
+                int a = DateUtil.getDateCount(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), o.get(0).getCreateTime(), DateUtil.yyyy_MM_dd_HH_mm_ss, 1000f * 3600f * 24f);
                 if (DateUtil.getDateCount(DateUtil.getNow(DateUtil.yyyy_MM_dd_HH_mm_ss), o.get(0).getCreateTime(), DateUtil.yyyy_MM_dd_HH_mm_ss, 1000f * 3600f * 24f) >= 2) {
                     int start = chatMsgList.size();
                     ChatList chatList = new ChatList();

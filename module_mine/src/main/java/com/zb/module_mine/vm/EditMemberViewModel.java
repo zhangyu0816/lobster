@@ -125,7 +125,8 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
             if (checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 setPermissions();
             } else {
-                if (PreferenceUtil.readIntValue(activity, "photoPermission") == 0)
+                if (PreferenceUtil.readIntValue(activity, "photoPermission") == 0) {
+                    PreferenceUtil.saveIntValue(activity, "photoPermission", 1);
                     new TextPW(activity, mBinding.getRoot(), "权限说明",
                             "上传多张本人形象图时需要使用上传图片功能，我们将会申请相机、存储权限：" +
                                     "\n 1、申请相机权限--上传图片时获取拍摄照片功能，" +
@@ -133,19 +134,8 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
                                     "\n 4、若您点击“同意”按钮，我们方可正式申请上述权限，以便拍摄照片及选取照片，完善个人信息，" +
                                     "\n 5、若您点击“拒绝”按钮，我们将不再主动弹出该提示，您也无法使用上传图片功能，不影响使用其他的虾姑功能/服务，" +
                                     "\n 6、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭相机、存储权限。",
-                            "同意", false, true, new TextPW.CallBack() {
-                        @Override
-                        public void sure() {
-                            PreferenceUtil.saveIntValue(activity, "photoPermission", 1);
-                            getPermissions();
-                        }
-
-                        @Override
-                        public void cancel() {
-                            PreferenceUtil.saveIntValue(activity, "photoPermission", 1);
-                        }
-                    });
-                else {
+                            "同意", false, true, this::getPermissions);
+                } else {
                     if (!checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                         SCToastUtil.showToast(activity, "你未开启存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                     } else if (!checkPermissionGranted(activity, Manifest.permission.CAMERA)) {

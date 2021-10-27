@@ -215,7 +215,8 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
         if (checkPermissionGranted(activity, Manifest.permission.READ_PHONE_STATE))
             setPermissions(0);
-        else if (PreferenceUtil.readIntValue(activity, "phonePermission") == 0)
+        else if (PreferenceUtil.readIntValue(activity, "phonePermission") == 0) {
+            PreferenceUtil.saveIntValue(activity, "phonePermission", 1);
             MineApp.getApp().getFixedThreadPool().execute(() -> {
                 SystemClock.sleep(300);
                 activity.runOnUiThread(() -> new TextPW(activity, mBinding.getRoot(), "权限说明",
@@ -233,19 +234,9 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                                 "\n 4、若您点击“同意”按钮，我们方可正式申请上述权限，以便获取设备信息，" +
                                 "\n 5、若您点击“拒绝”按钮，我们将不再主动弹出该提示，也不会获取设备信息，不影响使用其他的虾姑功能/服务，" +
                                 "\n 6、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭手机权限。",
-                        "同意", false, true, new TextPW.CallBack() {
-                    @Override
-                    public void sure() {
-                        PreferenceUtil.saveIntValue(activity, "phonePermission", 1);
-                        getPermissions(0);
-                    }
-
-                    @Override
-                    public void cancel() {
-                        PreferenceUtil.saveIntValue(activity, "phonePermission", 1);
-                    }
-                }));
+                        "同意", false, true, () -> getPermissions(0)));
             });
+        }
 
 
         photoManager = new PhotoManager(activity, () -> {
@@ -347,7 +338,8 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         if (checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             setPermissions(1);
         } else {
-            if (PreferenceUtil.readIntValue(activity, "photoPermission") == 0)
+            if (PreferenceUtil.readIntValue(activity, "photoPermission") == 0) {
+                PreferenceUtil.saveIntValue(activity, "photoPermission", 1);
                 new TextPW(activity, mBinding.getRoot(), "权限说明",
                         "提交本人真实头像时需要使用上传图片功能，我们将会申请相机、存储权限：" +
                                 "\n 1、申请相机权限--上传图片时获取拍摄照片功能，" +
@@ -355,19 +347,8 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                                 "\n 4、若您点击“同意”按钮，我们方可正式申请上述权限，以便拍摄照片及选取照片，完善个人信息，" +
                                 "\n 5、若您点击“拒绝”按钮，我们将不再主动弹出该提示，您也无法使用上传图片功能，不影响使用其他的虾姑功能/服务，" +
                                 "\n 6、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭相机、存储权限。",
-                        "同意", false, true, new TextPW.CallBack() {
-                    @Override
-                    public void sure() {
-                        PreferenceUtil.saveIntValue(activity, "photoPermission", 1);
-                        getPermissions(1);
-                    }
-
-                    @Override
-                    public void cancel() {
-                        PreferenceUtil.saveIntValue(activity, "photoPermission", 1);
-                    }
-                });
-            else {
+                        "同意", false, true, () -> getPermissions(1));
+            } else {
                 if (!checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     SCToastUtil.showToast(activity, "你未开启存储权限，请前往我的--设置--权限管理--权限进行设置", true);
                 } else if (!checkPermissionGranted(activity, Manifest.permission.CAMERA)) {
@@ -940,6 +921,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         }
         String ANDROID_ID = Settings.System.getString(activity.getContentResolver(), Settings.System.ANDROID_ID);
         PreferenceUtil.saveStringValue(activity, "deviceCode", ANDROID_ID);
-        Log.e("deviceCode",ANDROID_ID);
+        Log.e("deviceCode", ANDROID_ID);
     }
 }
