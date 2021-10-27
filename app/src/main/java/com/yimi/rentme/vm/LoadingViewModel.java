@@ -20,7 +20,6 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         MineApp.activity = activity;
-//        DebuggerUtils.checkDebuggableInNotDebugModel(MineApp.sContext);
         if (PreferenceUtil.readIntValue(activity, "ruleType1") == 0) {
             mCountDownTimer = new CountDownTimer(1000, 1000) {
                 @Override
