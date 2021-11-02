@@ -347,6 +347,11 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
     }
 
     @Override
+    public void toLove(View view) {
+        ActivityUtils.getLoveHome();
+    }
+
+    @Override
     public void contactNumDetail(int position) {
         if (position == 2) {
             if (MineApp.mineInfo.getMemberType() == 2) {

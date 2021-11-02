@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_mine.vm.LoveHomeViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@mipmap/ic_love_bg"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="70dp"
+            android:layout_marginEnd="20dp">
+
+            <TextView
+                onClickDelayed="@{viewModel::toLoveMoney}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:text="我的收益"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:drawableStartCompat="@mipmap/ic_love_money" />
+
+            <TextView
+                onClickDelayed="@{viewModel::toLoveShare}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:text="分享好友"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                app:drawableStartCompat="@mipmap/ic_love_share" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/iv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@mipmap/ic_love_title" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-10dp">
+
+            <ImageView
+                android:id="@+id/iv_logo_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/ic_love_logo_bg" />
+
+            <ImageView
+                android:id="@+id/iv_logo_wen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="80dp"
+                android:layout_marginTop="90dp"
+                android:background="@mipmap/ic_love_logo_wen" />
+
+            <ImageView
+                android:id="@+id/iv_logo_xin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/iv_logo_bg"
+                android:layout_marginTop="120dp"
+                android:layout_marginEnd="76dp"
+                android:background="@mipmap/ic_love_logo_xin" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                onClickDelayed="@{viewModel::onSave}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="-10dp"
+                android:background="@mipmap/ic_love_save" />
+
+            <ImageView
+                onClickDelayed="@{viewModel::onGet}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-10dp"
+                android:background="@mipmap/ic_love_get" />
+        </LinearLayout>
+
+        <TextView
+            onClickDelayed="@{viewModel::onOpen}"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:background="@drawable/btn_bg_black_4d000_radius60"
+            android:gravity="center"
+            android:paddingHorizontal="67dp"
+            android:text="我也要摆地摊盲盒"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+</layout>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.zb.lib_base.utils.ObjectUtils" />
+
+        <variable
+            name="viewModel"
+            type="com.zb.module_mine.vm.LoveSaveViewModel" />
+
+        <variable
+            name="sexIndex"
+            type="Integer" />
+
+        <variable
+            name="age"
+            type="String" />
+
+        <variable
+            name="wxNum"
+            type="String" />
+
+        <variable
+            name="provinceName"
+            type="String" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@mipmap/ic_love_bg"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                onClickDelayed="@{v->viewModel.selectSex(1)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/boy_icon" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-12dp"
+                    android:background="@{ObjectUtils.getSelectSex( sexIndex, 1) }"
+                    tools:background="@drawable/icon_grey_select_light" />
+            </LinearLayout>
+
+            <LinearLayout
+                onClickDelayed="@{v->viewModel.selectSex(0)}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/girl_icon" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-12dp"
+                    android:background="@{ObjectUtils.getSelectSex( sexIndex, 0) }"
+                    tools:background="@drawable/icon_grey_select_light" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginHorizontal="37dp"
+            android:layout_marginTop="17dp"
+            android:background="@drawable/btn_bg_black_4d000_radius60"
+            android:hint="年龄"
+            android:inputType="number"
+            android:maxLength="2"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@={age}"
+            android:textColor="@color/white"
+            android:textColorHint="#99ffffff"
+            android:textCursorDrawable="@drawable/cursor_color_white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="23" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginHorizontal="37dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_bg_black_4d000_radius60"
+            android:hint="微信号"
+            android:maxLength="10"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@={wxNum}"
+            android:textColor="@color/white"
+            android:textColorHint="#99ffffff"
+            android:textCursorDrawable="@drawable/cursor_color_white"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            onClickDelayed="@{viewModel::selectProvince}"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:layout_marginHorizontal="37dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_bg_black_4d000_radius60"
+            android:hint="省份"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="@{provinceName}"
+            android:textColor="@color/white"
+            android:textColorHint="#99ffffff"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tv_open"
+            onClickDelayed="@{viewModel::loveSave}"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="37dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/gradient_purple_6d5_ae7"
+            android:gravity="center"
+            android:text="登记"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+</layout>

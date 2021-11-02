@@ -108,7 +108,7 @@ public class CommonInterceptor implements Interceptor {
         }
 
         treeMap.put("pfDevice", "Android");
-        treeMap.put("pfAppType", "203");
+        treeMap.put("pfAppType", MineApp.pfAppType);
         treeMap.put("pfAppVersion", MineApp.versionName);
         treeMap.put("fullVersion", MineApp.versionName + ".1");
         treeMap.put("userId", BaseActivity.userId + "");
@@ -121,7 +121,7 @@ public class CommonInterceptor implements Interceptor {
         HttpUrl.Builder authorizedUrlBuilder = oldRequest.url().newBuilder().scheme(oldRequest.url().scheme()).host
                 (oldRequest.url().host())
                 .addQueryParameter("pfDevice", "Android")
-                .addQueryParameter("pfAppType", "203")
+                .addQueryParameter("pfAppType", MineApp.pfAppType)
                 .addQueryParameter("pfAppVersion", MineApp.versionName)
                 .addQueryParameter("fullVersion", MineApp.versionName + ".1")
                 .addQueryParameter("userId", BaseActivity.userId + "")

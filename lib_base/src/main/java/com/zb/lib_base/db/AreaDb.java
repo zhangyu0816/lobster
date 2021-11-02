@@ -44,6 +44,18 @@ public class AreaDb extends BaseDao {
         return results.size() > 0;
     }
 
+    public ArrayList<String> getProvinceNameList() {
+        ArrayList<String> provinceNameList = new ArrayList<>();
+        beginTransaction();
+        RealmResults<ProvinceInfo> results = realm.where(ProvinceInfo.class).findAll();
+        if (results.size() > 0) {
+            for (ProvinceInfo provinceInfo : results)
+                provinceNameList.add(provinceInfo.getProvinceName());
+        }
+        commitTransaction();
+        return provinceNameList;
+    }
+
     // 获取省份名称
     public String getProvinceName(long provinceId) {
         beginTransaction();
@@ -77,6 +89,18 @@ public class AreaDb extends BaseDao {
         }
         commitTransaction();
         return cityInfoList;
+    }
+
+    public ArrayList<String> getCityNameList(long provinceId) {
+        beginTransaction();
+        ArrayList<String> cityNameList = new ArrayList<>();
+        RealmResults<CityInfo> results = realm.where(CityInfo.class).equalTo("provinceId", provinceId).findAll();
+        if (results.size() > 0) {
+            for (CityInfo cityInfo : results)
+                cityNameList.add(cityInfo.getCityName());
+        }
+        commitTransaction();
+        return cityNameList;
     }
 
     // 获取城市名称

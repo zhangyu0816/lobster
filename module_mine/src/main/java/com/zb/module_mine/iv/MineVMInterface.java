@@ -20,5 +20,7 @@ public interface MineVMInterface {
 
     void toPhotoStudio(View view);
 
+    void toLove(View view);
+
     void contactNumDetail(int position);
 }

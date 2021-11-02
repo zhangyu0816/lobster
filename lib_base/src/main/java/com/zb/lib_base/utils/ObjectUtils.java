@@ -451,14 +451,13 @@ public class ObjectUtils {
     @SuppressLint("UseCompatLoadingForDrawables")
     public static Drawable getFilmRes(int filmType) {
         switch (filmType) {
-            case 1:
-                return MineApp.getApp().getResources().getDrawable(R.drawable.icon_film_1_small);
             case 2:
                 return MineApp.getApp().getResources().getDrawable(R.drawable.icon_film_2_small);
             case 3:
                 return MineApp.getApp().getResources().getDrawable(R.drawable.icon_film_3_small);
             case 4:
                 return MineApp.getApp().getResources().getDrawable(R.drawable.icon_film_4_small);
+            case 1:
             default:
                 return MineApp.getApp().getResources().getDrawable(R.drawable.icon_film_1_small);
         }
@@ -467,12 +466,32 @@ public class ObjectUtils {
     @SuppressLint("UseCompatLoadingForDrawables")
     public static Drawable getFilmMsgRes(int reviewType) {
         switch (reviewType) {
-            case 1:// 评论
-                return MineApp.getApp().getResources().getDrawable(R.mipmap.icon_comment_gray);
             case 2:// 点赞
                 return MineApp.getApp().getResources().getDrawable(R.mipmap.icon_like_gray);
+            case 1:// 评论
             default:
                 return MineApp.getApp().getResources().getDrawable(R.mipmap.icon_comment_gray);
+        }
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public static Drawable getSelectSex(int sexIndex, int sex) {
+        switch (sex) {
+            case 1:// 男
+                return MineApp.getApp().getResources().getDrawable(sexIndex == 1 ? R.drawable.icon_purple_select_light : R.drawable.icon_grey_select_light);
+            case 0:// 女
+            default:
+                return MineApp.getApp().getResources().getDrawable(sexIndex == 0 ? R.drawable.icon_purple_select_light : R.drawable.icon_grey_select_light);
+        }
+    }
+    @SuppressLint("UseCompatLoadingForDrawables")
+    public static Drawable getSelectSexGet(int sexIndex, int sex) {
+        switch (sex) {
+            case 1:// 男
+                return MineApp.getApp().getResources().getDrawable(sexIndex == 1 ? R.drawable.icon_purple_select_light : R.drawable.icon_grey_c3_select_light);
+            case 0:// 女
+            default:
+                return MineApp.getApp().getResources().getDrawable(sexIndex == 0 ? R.drawable.icon_purple_select_light : R.drawable.icon_grey_c3_select_light);
         }
     }
 }

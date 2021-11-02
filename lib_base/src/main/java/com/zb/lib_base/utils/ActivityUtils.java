@@ -274,6 +274,24 @@ public class ActivityUtils {
         ARouter.getInstance().build(RouteUtils.Camera_Film_Resource_Detail).withLong("cameraFilmResourceId", cameraFilmResourceId).withString("filmName", filmName).navigation();
     }
 
+    /*********************** 爱情魔盒 **************************/
+
+    public static void getLoveHome() {
+        ARouter.getInstance().build(RouteUtils.Mine_LoveHome).navigation();
+    }
+
+    public static void getLoveMoney() {
+        ARouter.getInstance().build(RouteUtils.Mine_LoveMoney).navigation();
+    }
+
+    public static void getLoveSave() {
+        ARouter.getInstance().build(RouteUtils.Mine_LoveSave).navigation();
+    }
+
+    public static void getLoveGet() {
+        ARouter.getInstance().build(RouteUtils.Mine_LoveGet).navigation();
+    }
+
 
     /*********************** 漂流瓶 **************************/
 

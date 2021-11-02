@@ -93,11 +93,15 @@
     <string name="vip_price">%d</string>
     <string name="vip_price_month">/%d月</string>
     <string name="vip_price_year">/2年</string>
+    <string name="love_price">省%d元</string>
     <string name="film_0">胶卷未用完</string>
     <string name="film_1">胶卷已用完</string>
     <string name="film_content_0">您的胶卷“%s”还有未使用底片，是否立即冲洗？</string>
     <string name="film_content_1">您的胶卷“%s”已用完，是否立即冲洗？</string>
     <string name="film_good">点赞了你的照片</string>
-
     <string name="camera_review_info"><Data><![CDATA[回复<font color="#827F9A">%s</font>：%s]]></Data></string>
+
+    <string name="love_save">本次存入需要花费：</string>
+    <string name="love_get">本次取出需要花费：</string>
+    <string name="love_price_year">/年</string>
 </resources>

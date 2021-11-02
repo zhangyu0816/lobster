@@ -97,6 +97,13 @@ public class RouteUtils {
 
     public static final String Mine_Binding_Phone = "/mine/BindingPhoneActivity";
 
+    /*********************** 爱情魔盒 **************************/
+    // 首页
+    public static final String Mine_LoveHome = "/mine/LoveHomeActivity";
+    public static final String Mine_LoveMoney = "/mine/LoveMoneyActivity";
+    public static final String Mine_LoveSave = "/mine/LoveSaveActivity";
+    public static final String Mine_LoveGet = "/mine/LoveGetActivity";
+
     /*********************** 相册 **************************/
     // 相册主页
     public static final String Camera_Main = "/camera/CameraActivity";

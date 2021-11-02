@@ -11,6 +11,7 @@ import android.widget.PopupWindow;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.api.payOrderForTranApi;
 import com.zb.lib_base.api.submitOpenedMemberOrderApi;
+import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.OrderNumber;
@@ -120,7 +121,13 @@ public abstract class BasePopupWindow extends PopupWindow {
         submitOpenedMemberOrderApi api = new submitOpenedMemberOrderApi(new HttpOnNextListener<OrderNumber>() {
             @Override
             public void onNext(OrderNumber o) {
+                MineApp.pfAppType = "203";
                 payOrderForTran(o.getOrderNumber(), 1, callBack);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MineApp.pfAppType = "203";
             }
         }, activity)
                 .setMemberOfOpenedProductId(memberOfOpenedProductId);

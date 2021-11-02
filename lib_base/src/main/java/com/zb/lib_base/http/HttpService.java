@@ -27,6 +27,7 @@ import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.ImageCaptcha;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.LoginInfo;
+import com.zb.lib_base.model.LoveNumber;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineBank;
 import com.zb.lib_base.model.MineInfo;
@@ -35,6 +36,7 @@ import com.zb.lib_base.model.MineNewsCount;
 import com.zb.lib_base.model.OrderNumber;
 import com.zb.lib_base.model.OrderTran;
 import com.zb.lib_base.model.PairInfo;
+import com.zb.lib_base.model.PersonInfo;
 import com.zb.lib_base.model.PrivateMsg;
 import com.zb.lib_base.model.RechargeInfo;
 import com.zb.lib_base.model.RecommendInfo;
@@ -789,7 +791,7 @@ public interface HttpService {
 
     @FormUrlEncoded
     @POST("api/Camera_review")
-    Observable<BaseResultEntity> cameraReview(@FieldMap Map<String,Object> map);
+    Observable<BaseResultEntity> cameraReview(@FieldMap Map<String, Object> map);
 
     @FormUrlEncoded
     @POST("api/Camera_doLike")
@@ -816,4 +818,19 @@ public interface HttpService {
 
     @GET("api/AppCommon_functionSwitch")
     Observable<BaseResultEntity<CommonSwitch>> functionSwitch();
+
+    @FormUrlEncoded
+    @POST("api/BlackBox_saveBlackBoxPersonInfo")
+    Observable<BaseResultEntity<Long>> saveBlackBoxPersonInfo(@Field("age") int age, @Field("wxNum") String wxNum,
+                                                                    @Field("sourceType") int sourceType, @Field("provinceId") long provinceId,
+                                                                    @Field("cityId") long cityId, @Field("sex") int sex);
+
+    @FormUrlEncoded
+    @POST("api/BlackBox_submitBlackBoxOrderForTran")
+    Observable<BaseResultEntity<LoveNumber>> submitBlackBoxOrderForTran(@FieldMap Map<String, Object> map);
+
+    // 获取交易订单号
+    @FormUrlEncoded
+    @POST("api/Interactive_payOrderForTran")
+    Observable<BaseResultEntity<OrderTran>> payOrderForTranLove(@Field("number") String number);
 }

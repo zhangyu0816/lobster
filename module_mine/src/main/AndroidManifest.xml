@@ -89,6 +89,10 @@
         <activity
             android:name=".activity.BindingPhoneActivity"
             android:exported="false" />
+        <activity android:name=".activity.LoveHomeActivity" />
+        <activity android:name=".activity.LoveMoneyActivity" />
+        <activity android:name=".activity.LoveSaveActivity" />
+        <activity android:name=".activity.LoveGetActivity" />
     </application>
 
 </manifest>
