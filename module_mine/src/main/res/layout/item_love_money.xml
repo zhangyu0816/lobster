@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="9dp"
-            android:background="@{isSelect?@drawable/btn_bg_white_red_radius7_big:@drawable/btn_bg_white_black_efe_radius7_big}"
+            android:background="@{isSelect?@drawable/btn_bg_white_f5e_radius7_big:@drawable/btn_bg_white_cec_radius7_big}"
             android:gravity="center"
             android:orientation="vertical">
 

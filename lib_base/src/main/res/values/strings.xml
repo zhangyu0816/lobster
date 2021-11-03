@@ -104,4 +104,5 @@
     <string name="love_save">本次存入需要花费：</string>
     <string name="love_get">本次取出需要花费：</string>
     <string name="love_price_year">/年</string>
+    <string name="price_love">%.1f</string>
 </resources>

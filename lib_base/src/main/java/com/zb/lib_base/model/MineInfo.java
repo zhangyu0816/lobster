@@ -27,6 +27,7 @@ public class MineInfo extends RealmObject {
 
     int surplusToDayLikeNumber; //当日剩余喜欢次数  如果是vip 无视
     int surplusToDaySuperLikeNumber; //当日剩余超级喜欢次数  如果是普通用户  无视
+    int appType;//205
 
     public long getUserId() {
         return userId;
@@ -194,5 +195,13 @@ public class MineInfo extends RealmObject {
 
     public void setSurplusToDaySuperLikeNumber(int surplusToDaySuperLikeNumber) {
         this.surplusToDaySuperLikeNumber = surplusToDaySuperLikeNumber;
+    }
+
+    public int getAppType() {
+        return appType;
+    }
+
+    public void setAppType(int appType) {
+        this.appType = appType;
     }
 }

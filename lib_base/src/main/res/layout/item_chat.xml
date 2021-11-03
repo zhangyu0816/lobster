@@ -48,7 +48,7 @@
             android:gravity="center"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
-            android:text="@{DateUtil.strToStr(item.creationDate)}"
+            android:text="@{DateUtil.strToStr(item.creationDate,DateUtil.CN_yyyy_MM_dd_HH_mm_ss)}"
             android:textColor="@color/white"
             android:textSize="12sp"
             android:visibility="@{item.showTime?View.VISIBLE:View.GONE}"

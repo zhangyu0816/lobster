@@ -27,6 +27,7 @@ import com.zb.lib_base.model.ImAccount;
 import com.zb.lib_base.model.ImageCaptcha;
 import com.zb.lib_base.model.LikeMe;
 import com.zb.lib_base.model.LoginInfo;
+import com.zb.lib_base.model.LoveMoney;
 import com.zb.lib_base.model.LoveNumber;
 import com.zb.lib_base.model.MemberInfo;
 import com.zb.lib_base.model.MineBank;
@@ -822,8 +823,8 @@ public interface HttpService {
     @FormUrlEncoded
     @POST("api/BlackBox_saveBlackBoxPersonInfo")
     Observable<BaseResultEntity<Long>> saveBlackBoxPersonInfo(@Field("age") int age, @Field("wxNum") String wxNum,
-                                                                    @Field("sourceType") int sourceType, @Field("provinceId") long provinceId,
-                                                                    @Field("cityId") long cityId, @Field("sex") int sex);
+                                                              @Field("sourceType") int sourceType, @Field("provinceId") long provinceId,
+                                                              @Field("cityId") long cityId, @Field("sex") int sex);
 
     @FormUrlEncoded
     @POST("api/BlackBox_submitBlackBoxOrderForTran")
@@ -838,4 +839,15 @@ public interface HttpService {
     @FormUrlEncoded
     @POST("api/BlackBox_getBlackBoxPersonInfo")
     Observable<BaseResultEntity<PersonInfo>> getBlackBoxPersonInfo(@Field("number") String number);
+
+    // 获取交易订单号
+    @FormUrlEncoded
+    @POST("api/BlackBox_statisticsRewardsCount")
+    Observable<BaseResultEntity<PersonInfo>> statisticsRewardsCount(@Field("tranStatusType") int tranStatusType);
+
+    // 获取交易订单号
+    @FormUrlEncoded
+    @POST("api/BlackBox_rewardsOrderList")
+    Observable<BaseResultEntity<List<LoveMoney>>> rewardsOrderList(@Field("tranStatusType") int tranStatusType, @Field("pageNo") int pageNo,
+                                                                   @Field("pageSize") int pageSize);
 }

@@ -70,6 +70,7 @@ public class MineApp extends MultiDexApplication {
 
     public static List<VipInfo> vipInfoList = new ArrayList<>();
     public static List<VideoInfo> videoInfoList = new ArrayList<>();
+    public static List<VipInfo> loveInfoList = new ArrayList<>();
     public static WalletInfo walletInfo = new WalletInfo();
     public static MineNewsCount mineNewsCount = new MineNewsCount();
     public static ContactNum contactNum = new ContactNum();

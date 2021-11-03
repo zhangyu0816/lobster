@@ -19,15 +19,16 @@ public class DateUtil {
 
     // HH24小时制  hh12小时制
     public final static String yyyy_MM_dd = "yyyy-MM-dd";
-    public final static String yyyy_MM_dd_nyr = "yyyy年MM月dd日";
-    public final static String CN_MM_dd = "MM月dd日";
-    public final static String CN_MM_dd_HH_mm = "MM月dd日 HH:mm";
     public final static String MM_dd_HH_mm = "MM/dd HH:mm";
     public final static String yyyy_MM_dd_HH_mm_ss = "yyyy-MM-dd HH:mm:ss";
     public final static String yyyy_MM_dd_HH_mm = "yyyy-MM-dd HH:mm";
     public final static String HH_mm = "HH:mm";
     public final static String US_yyyy_MMM_dd_HH_mm_ss = "EEE MMM dd HH:mm:ss 'CST' yyyy";
 
+    public final static String CN_MM_dd = "MM月dd日";
+    public final static String CN_MM_dd_HH_mm = "MM月dd日 HH:mm";
+    public final static String CN_yyyy_MM_dd_HH_mm_ss = "yyyy年MM月dd日 HH:mm";
+    public final static String CN_yyyy_MM_dd_nyr = "yyyy年MM月dd日";
 
     /**
      * 当前日期
@@ -49,7 +50,7 @@ public class DateUtil {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, -90);
         Date date = calendar.getTime();
-        return DateUtil.dateToStr(date, DateUtil.yyyy_MM_dd_nyr);
+        return DateUtil.dateToStr(date, DateUtil.CN_yyyy_MM_dd_nyr);
     }
 
     /**
@@ -88,15 +89,15 @@ public class DateUtil {
      * @param userTime
      * @return
      */
-    public static String strToStr(String userTime) {
+    public static String strToStr(String userTime,String pattern) {
         Date date;
         try {
-            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+            SimpleDateFormat fmt = new SimpleDateFormat(yyyy_MM_dd_HH_mm_ss, Locale.CHINA);
             date = fmt.parse(userTime);
         } catch (Exception e) {
             return "";
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
         return sdf.format(date);
     }
 
