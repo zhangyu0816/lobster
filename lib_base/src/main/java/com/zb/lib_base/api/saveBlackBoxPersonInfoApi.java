@@ -1,14 +1,9 @@
 package com.zb.lib_base.api;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.http.HttpService;
 import com.zb.lib_base.model.BaseEntity;
-import com.zb.lib_base.model.PersonInfo;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import rx.Observable;
 

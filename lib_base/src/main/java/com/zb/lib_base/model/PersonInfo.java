@@ -1,13 +1,13 @@
 package com.zb.lib_base.model;
 
 public class PersonInfo {
-    long blackBoxPersonInfoId;//盲盒信息人id
+    String  wxNum;
 
-    public long getBlackBoxPersonInfoId() {
-        return blackBoxPersonInfoId;
+    public String getWxNum() {
+        return wxNum;
     }
 
-    public void setBlackBoxPersonInfoId(long blackBoxPersonInfoId) {
-        this.blackBoxPersonInfoId = blackBoxPersonInfoId;
+    public void setWxNum(String wxNum) {
+        this.wxNum = wxNum;
     }
 }

@@ -833,4 +833,9 @@ public interface HttpService {
     @FormUrlEncoded
     @POST("api/Interactive_payOrderForTran")
     Observable<BaseResultEntity<OrderTran>> payOrderForTranLove(@Field("number") String number);
+
+    // 获取交易订单号
+    @FormUrlEncoded
+    @POST("api/BlackBox_getBlackBoxPersonInfo")
+    Observable<BaseResultEntity<PersonInfo>> getBlackBoxPersonInfo(@Field("number") String number);
 }

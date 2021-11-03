@@ -15,7 +15,6 @@ import com.zb.lib_base.utils.widget.WheelView;
 import com.zb.lib_base.utils.widget.adapters.AbstractWheelTextAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class AreaPW extends BasePopupWindow {
     private PwsAreaBinding binding;

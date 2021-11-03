@@ -61,6 +61,7 @@ public class MineApp extends MultiDexApplication {
     public static Typeface type;
     public static Typeface simplifiedType;
     public static Typeface QingSongShouXieTiType;
+    public static Typeface blackbold;
 
     public static String cityName = "";
     public static String versionName;
@@ -133,6 +134,7 @@ public class MineApp extends MultiDexApplication {
         type = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/semibold.ttf");
         simplifiedType = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/simplified.ttf");
         QingSongShouXieTiType = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/QingSongShouXieTi.ttf");
+        blackbold = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/blackbold.ttf");
         initRouter(this);
         initRealm();
         DisplayUtils.init(this);

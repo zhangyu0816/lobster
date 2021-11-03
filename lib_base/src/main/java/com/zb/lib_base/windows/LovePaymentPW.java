@@ -8,13 +8,13 @@ import android.view.View;
 import com.alipay.sdk.app.PayTask;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.zb.lib_base.BR;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.alipayFastPayTranApi;
-import com.zb.lib_base.api.walletPayTranApi;
 import com.zb.lib_base.api.wxpayAppPayTranApi;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.databinding.PwsLovePaymentBinding;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.AliPay;
@@ -23,16 +23,20 @@ import com.zb.lib_base.model.PayResult;
 import com.zb.lib_base.model.WXPay;
 import com.zb.lib_base.utils.SCToastUtil;
 
+import androidx.databinding.ViewDataBinding;
+import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-public class LovePaymentPW extends BasePopupWindow {
+public class LovePaymentPW extends BaseDialogFragment {
+    private PwsLovePaymentBinding mBinding;
     private OrderTran orderTran;
     private BaseReceiver paySuccessReceiver;
     private int type;
     private int payIndex = -1;
+    private CallBack callBack;
 
-    public LovePaymentPW(View parentView) {
-        super(parentView, true);
+    public LovePaymentPW(RxAppCompatActivity activity) {
+        super(activity, true, false);
     }
 
     public LovePaymentPW setOrderTran(OrderTran orderTran) {
@@ -46,15 +50,41 @@ public class LovePaymentPW extends BasePopupWindow {
     }
 
     @Override
-    public int getRes() {
+    public void onStart() {
+        super.onStart();
+        center(0.9f);
+    }
+
+    public LovePaymentPW setFinish(CallBack callBack) {
+        this.callBack = callBack;
+        setCallBack(callBack);
+        return this;
+    }
+
+    public void show(FragmentManager manager) {
+        show(manager, "LovePaymentPW");
+    }
+
+    @Override
+    public int getLayoutId() {
         return R.layout.pws_love_payment;
     }
 
     @Override
+    public void setDataBinding(ViewDataBinding viewDataBinding) {
+        mBinding = (PwsLovePaymentBinding) viewDataBinding;
+    }
+
+    @Override
     public void initUI() {
-        mBinding.setVariable(BR.pw, this);
-        mBinding.setVariable(BR.payIndex, payIndex);
-        mBinding.setVariable(BR.type,type);
+        mBinding.screenView.setOnClickListener(view -> {
+            if (callBack != null)
+                callBack.onFinish();
+            dismiss();
+        });
+        mBinding.setPw(this);
+        mBinding.setPayIndex(payIndex);
+        mBinding.setType(type);
         paySuccessReceiver = new BaseReceiver(activity, "lobster_paySuccess") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -65,7 +95,7 @@ public class LovePaymentPW extends BasePopupWindow {
 
     public void selectPay(int payIndex) {
         this.payIndex = payIndex;
-        mBinding.setVariable(BR.payIndex, payIndex);
+        mBinding.setPayIndex(payIndex);
     }
 
     public void pay(View view) {

@@ -12,12 +12,10 @@ import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.LoveNumber;
 import com.zb.lib_base.model.OrderTran;
-import com.zb.lib_base.model.PersonInfo;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.AreaPW;
 import com.zb.lib_base.windows.LovePaymentPW;
-import com.zb.lib_base.windows.PaymentPW;
 import com.zb.module_mine.databinding.AcLoveSaveBinding;
 
 import androidx.databinding.ViewDataBinding;
@@ -119,7 +117,7 @@ public class LoveSaveViewModel extends BaseViewModel {
         payOrderForTranLoveApi api = new payOrderForTranLoveApi(new HttpOnNextListener<OrderTran>() {
             @Override
             public void onNext(OrderTran o) {
-                new LovePaymentPW(mBinding.getRoot()).setOrderTran(o).setType(1).initUI();
+                new LovePaymentPW(activity).setOrderTran(o).setType(1).show(activity.getSupportFragmentManager());
             }
         }, activity).setNumber(number);
         HttpManager.getInstance().doHttpDeal(api);

@@ -33,6 +33,8 @@ public abstract class BaseDialogFragment extends DialogFragment {
     private boolean mIsKeyCanBack = true;
     private boolean mIsOutCanBack = true;
 
+    private CallBack callBack;
+
     public BaseDialogFragment(RxAppCompatActivity activity) {
         this.activity = activity;
     }
@@ -41,6 +43,11 @@ public abstract class BaseDialogFragment extends DialogFragment {
         this.activity = activity;
         mIsKeyCanBack = isKeyCanBack;
         mIsOutCanBack = isOutCanBack;
+    }
+
+    public BaseDialogFragment setCallBack(CallBack callBack) {
+        this.callBack = callBack;
+        return this;
     }
 
     @Nullable
@@ -103,10 +110,12 @@ public abstract class BaseDialogFragment extends DialogFragment {
      * 设置 可取消相关
      */
     private void setCanCancel() {
-        getDialog().setCanceledOnTouchOutside(mIsOutCanBack);               //弹出框外面是否可取消
-
+        //弹出框外面是否可取消
+        getDialog().setCanceledOnTouchOutside(mIsOutCanBack);
         getDialog().setOnKeyListener((dialog, keyCode, event) -> {
             if (keyCode == KeyEvent.KEYCODE_BACK) {
+                if (callBack != null)
+                    callBack.onFinish();
                 return !mIsKeyCanBack;                                      //return true 不往上传递则关闭不了，默认是可以取消，即return false
             } else {
                 return false;
@@ -146,6 +155,10 @@ public abstract class BaseDialogFragment extends DialogFragment {
         ft.add(this, tag);
         ft.commitAllowingStateLoss();
 
+    }
+
+    public interface CallBack {
+        void onFinish();
     }
 
 }

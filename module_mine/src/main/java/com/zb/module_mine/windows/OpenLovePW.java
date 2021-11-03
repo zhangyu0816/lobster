@@ -3,11 +3,7 @@ package com.zb.module_mine.windows;
 import android.view.View;
 
 import com.zb.lib_base.BR;
-import com.zb.lib_base.api.submitOpenedMemberOrderApi;
 import com.zb.lib_base.app.MineApp;
-import com.zb.lib_base.http.HttpManager;
-import com.zb.lib_base.http.HttpOnNextListener;
-import com.zb.lib_base.model.OrderNumber;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.windows.BasePopupWindow;
 import com.zb.module_mine.R;
@@ -68,6 +64,6 @@ public class OpenLovePW extends BasePopupWindow {
 
     public void openLove(View view) {
         MineApp.pfAppType = "205";
-        submitOpenedMemberOrder(MineApp.vipInfoList.get(preIndex).getMemberOfOpenedProductId(), null);
+        submitOpenedMemberOrder(vipInfoList.get(preIndex).getMemberOfOpenedProductId(), null);
     }
 }

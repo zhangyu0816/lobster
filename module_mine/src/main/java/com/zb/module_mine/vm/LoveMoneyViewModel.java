@@ -5,7 +5,6 @@ import android.view.View;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.module_mine.adapter.MineAdapter;
 import com.zb.module_mine.databinding.AcLoveMoneyBinding;
-import com.zb.module_mine.windows.OpenLovePW;
 
 import androidx.databinding.ViewDataBinding;
 
