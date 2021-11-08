@@ -7,7 +7,9 @@ import com.zb.module_mine.R;
 import com.zb.module_mine.vm.LoveMoneyViewModel;
 
 @Route(path = RouteUtils.Mine_LoveMoney)
-public class LoveMoneyActivity extends BaseScreenActivity{
+public class LoveMoneyActivity extends BaseScreenActivity {
+    private LoveMoneyViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.ac_love_money;
@@ -15,8 +17,20 @@ public class LoveMoneyActivity extends BaseScreenActivity{
 
     @Override
     public void initUI() {
-        LoveMoneyViewModel viewModel = new LoveMoneyViewModel();
+        viewModel = new LoveMoneyViewModel();
         viewModel.setBinding(mBinding);
-        mBinding.setVariable(BR.viewModel,viewModel);
+        mBinding.setVariable(BR.viewModel, viewModel);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewModel.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 }

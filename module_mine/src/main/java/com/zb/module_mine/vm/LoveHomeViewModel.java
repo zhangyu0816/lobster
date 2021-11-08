@@ -2,8 +2,16 @@ package com.zb.module_mine.vm;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
 
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMMin;
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.openedMemberPriceListApi;
@@ -15,10 +23,10 @@ import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.module_mine.R;
 import com.zb.module_mine.databinding.AcLoveHomeBinding;
 import com.zb.module_mine.windows.OpenLovePW;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import androidx.databinding.ViewDataBinding;
@@ -39,6 +47,8 @@ public class LoveHomeViewModel extends BaseViewModel {
                 myInfo();
             }
         };
+        myInfo();
+        openedMemberPriceList();
     }
 
     @Override
@@ -52,7 +62,7 @@ public class LoveHomeViewModel extends BaseViewModel {
     }
 
     public void toLoveMoney(View view) {
-        if (MineApp.mineInfo.getAppType() != 205) {
+        if (MineApp.loveMineInfo.getMemberType() == 1) {
             SCToastUtil.showToast(activity, "成为地摊主后才有收益哦", true);
             return;
         }
@@ -60,7 +70,26 @@ public class LoveHomeViewModel extends BaseViewModel {
     }
 
     public void toLoveShare(View view) {
+        //兼容低版本的网页链接
+        UMMin umMin = new UMMin("https://xgapi.zuwo.la");
+        UMImage umImage = new UMImage(activity, R.drawable.ic_min_logo);
+        umImage.compressStyle = UMImage.CompressStyle.SCALE;//大小压缩，默认为大小压缩，适合普通很大的图
+        umImage.compressFormat = Bitmap.CompressFormat.PNG;
+        // 小程序消息封面图片
+        umMin.setThumb(umImage);
+        // 小程序消息title
+        umMin.setTitle("爱情盲盒,缘分来了");
+        // 小程序消息描述
+        umMin.setDescription("邂逅最真实的ta");
+        //小程序页面路径
+        umMin.setPath("pages/index/index?userId=" + BaseActivity.userId);
+        // 小程序原始id,在微信平台查询
+        umMin.setUserName("gh_dd74e49d61df");
 
+        new ShareAction(activity)
+                .withMedia(umMin)
+                .setPlatform(SHARE_MEDIA.WEIXIN)
+                .setCallback(umShareListener).share();
     }
 
     public void onSave(View view) {
@@ -72,11 +101,7 @@ public class LoveHomeViewModel extends BaseViewModel {
     }
 
     public void onOpen(View view) {
-        if (MineApp.loveInfoList.size() == 0) {
-            openedMemberPriceList();
-        } else {
-            new OpenLovePW(mBinding.getRoot()).setVipInfoList(MineApp.loveInfoList).initUI();
-        }
+        new OpenLovePW(mBinding.getRoot()).setVipInfoList(MineApp.loveInfoList).initUI();
     }
 
     private void openedMemberPriceList() {
@@ -87,7 +112,6 @@ public class LoveHomeViewModel extends BaseViewModel {
                 MineApp.loveInfoList.clear();
                 MineApp.loveInfoList = o;
                 MineApp.pfAppType = "203";
-                new OpenLovePW(mBinding.getRoot()).setVipInfoList(MineApp.loveInfoList).initUI();
             }
 
             @Override
@@ -101,12 +125,44 @@ public class LoveHomeViewModel extends BaseViewModel {
 
     @Override
     public void myInfo() {
+        MineApp.pfAppType = "205";
         myInfoApi api = new myInfoApi(new HttpOnNextListener<MineInfo>() {
             @Override
             public void onNext(MineInfo o) {
-                MineApp.mineInfo = o;
+                MineApp.loveMineInfo = o;
+                MineApp.pfAppType = "203";
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                MineApp.pfAppType = "203";
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
+
+    private UMShareListener umShareListener = new UMShareListener() {
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+            SCToastUtil.showToast(activity, "小程序开始分享", true);
+        }
+
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            SCToastUtil.showToast(activity, "小程序分享成功啦", true);
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            SCToastUtil.showToast(activity, "小程序分享失败啦", true);
+            if (t != null) {
+                Log.d("throw", "throw:" + t.getMessage());
+            }
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            SCToastUtil.showToast(activity, "小程序分享取消了", true);
+        }
+    };
 }

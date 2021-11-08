@@ -9,6 +9,8 @@ import com.zb.module_mine.vm.LoveHomeViewModel;
 @Route(path = RouteUtils.Mine_LoveHome)
 public class LoveHomeActivity extends BaseScreenActivity {
 
+    private LoveHomeViewModel viewModel;
+
     @Override
     public int getRes() {
         return R.layout.ac_love_home;
@@ -16,8 +18,14 @@ public class LoveHomeActivity extends BaseScreenActivity {
 
     @Override
     public void initUI() {
-        LoveHomeViewModel viewModel = new LoveHomeViewModel();
+        viewModel = new LoveHomeViewModel();
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        viewModel.onDestroy();
     }
 }

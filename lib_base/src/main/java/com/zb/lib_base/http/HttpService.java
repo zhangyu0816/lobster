@@ -820,34 +820,40 @@ public interface HttpService {
     @GET("api/AppCommon_functionSwitch")
     Observable<BaseResultEntity<CommonSwitch>> functionSwitch();
 
+    // 保存 爱情盲盒
     @FormUrlEncoded
     @POST("api/BlackBox_saveBlackBoxPersonInfo")
     Observable<BaseResultEntity<Long>> saveBlackBoxPersonInfo(@Field("age") int age, @Field("wxNum") String wxNum,
                                                               @Field("sourceType") int sourceType, @Field("provinceId") long provinceId,
                                                               @Field("cityId") long cityId, @Field("sex") int sex);
 
+    // 创建爱情盲盒 存或取 订单
     @FormUrlEncoded
     @POST("api/BlackBox_submitBlackBoxOrderForTran")
     Observable<BaseResultEntity<LoveNumber>> submitBlackBoxOrderForTran(@FieldMap Map<String, Object> map);
 
-    // 获取交易订单号
+    // 支付订单
     @FormUrlEncoded
     @POST("api/Interactive_payOrderForTran")
     Observable<BaseResultEntity<OrderTran>> payOrderForTranLove(@Field("number") String number);
 
-    // 获取交易订单号
+    // 获取爱情盲盒信息
     @FormUrlEncoded
     @POST("api/BlackBox_getBlackBoxPersonInfo")
     Observable<BaseResultEntity<PersonInfo>> getBlackBoxPersonInfo(@Field("number") String number);
 
-    // 获取交易订单号
+    // 盲盒奖励 收益总额
     @FormUrlEncoded
     @POST("api/BlackBox_statisticsRewardsCount")
     Observable<BaseResultEntity<PersonInfo>> statisticsRewardsCount(@Field("tranStatusType") int tranStatusType);
 
-    // 获取交易订单号
+    // 盲盒奖励订单列表
     @FormUrlEncoded
     @POST("api/BlackBox_rewardsOrderList")
     Observable<BaseResultEntity<List<LoveMoney>>> rewardsOrderList(@Field("tranStatusType") int tranStatusType, @Field("pageNo") int pageNo,
                                                                    @Field("pageSize") int pageSize);
+
+    // 是否绑定微信钱包
+    @GET("api/Tran_myWeChatIsBind")
+    Observable<BaseResultEntity<PersonInfo>> myWeChatIsBind();
 }
