@@ -549,6 +549,12 @@
                                 android:background="@mipmap/arrow_right_short_icon" />
                         </RelativeLayout>
 
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1px"
+                            android:layout_marginHorizontal="15dp"
+                            android:background="#eeeeee" />
+
                         <RelativeLayout
                             onClickDelayed="@{viewModel::toPhotoStudio}"
                             android:layout_width="match_parent"
@@ -596,11 +602,6 @@
                                 android:background="@mipmap/arrow_right_short_icon" />
                         </RelativeLayout>
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:layout_marginHorizontal="15dp"
-                            android:background="#eeeeee" />
                     </LinearLayout>
                 </androidx.appcompat.widget.Toolbar>
 

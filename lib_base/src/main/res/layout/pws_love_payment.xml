@@ -162,6 +162,30 @@
                         android:background="@{payIndex==1?@drawable/icon_purple_select_light:@drawable/icon_grey_c3_select_light}"
                         tools:background="@drawable/icon_grey_c3_select_light" />
                 </RelativeLayout>
+                <RelativeLayout
+                    onClickDelayed="@{v->pw.selectPay(2)}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@mipmap/ic_xiagu_pay"
+                        android:drawablePadding="12dp"
+                        android:gravity="center"
+                        android:text="钱包支付"
+                        android:textColor="@color/black_252"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:background="@{payIndex==2?@drawable/icon_purple_select_light:@drawable/icon_grey_c3_select_light}"
+                        tools:background="@drawable/icon_grey_c3_select_light" />
+                </RelativeLayout>
 
                 <TextView
                     onClickDelayed="@{pw::pay}"

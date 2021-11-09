@@ -13,6 +13,9 @@
         <variable
             name="btnName"
             type="String" />
+        <variable
+            name="title"
+            type="String" />
     </data>
 
     <RelativeLayout
@@ -58,7 +61,7 @@
                     android:id="@+id/tv_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="开通地摊盲盒包季权限"
+                    android:text="@{title}"
                     android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />

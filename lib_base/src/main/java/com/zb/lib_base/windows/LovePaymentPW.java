@@ -12,6 +12,7 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.alipayFastPayTranApi;
+import com.zb.lib_base.api.walletPayTranApi;
 import com.zb.lib_base.api.wxpayAppPayTranApi;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.databinding.PwsLovePaymentBinding;
@@ -105,8 +106,10 @@ public class LovePaymentPW extends BaseDialogFragment {
         }
         if (payIndex == 0) {
             alipayFastPayTran(orderTran.getTranOrderId());
-        } else {
+        } else if (payIndex == 1) {
             wxpayAppPayTran(orderTran.getTranOrderId());
+        } else {
+            walletPayTran(orderTran.getTranOrderId());
         }
     }
 
@@ -172,6 +175,21 @@ public class LovePaymentPW extends BaseDialogFragment {
                 req.packageValue = "Sign=WXpay";
                 req.sign = pay.getSign();
                 WXAPIFactory.createWXAPI(activity, pay.getAppid()).sendReq(req);
+            }
+        }, activity).setTranOrderId(tranOrderId);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    /**
+     * 钱包支付
+     *
+     * @param tranOrderId
+     */
+    private void walletPayTran(String tranOrderId) {
+        walletPayTranApi api = new walletPayTranApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+                paySuccess();
             }
         }, activity).setTranOrderId(tranOrderId);
         HttpManager.getInstance().doHttpDeal(api);

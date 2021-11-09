@@ -52,6 +52,7 @@ public class CommonInterceptor implements Interceptor {
         String params = "";
         // 【请求参数】
         if ("POST".equalsIgnoreCase(method)) {
+
             if (oldRequest.body() instanceof FormBody) {// Form 提交
                 FormBody body = (FormBody) oldRequest.body();
                 // 数组参数
@@ -105,6 +106,8 @@ public class CommonInterceptor implements Interceptor {
                 }
                 params = buffer.readString(charset);
             }
+        }else if("GET".equalsIgnoreCase(method)){
+
         }
 
         treeMap.put("pfDevice", "Android");
@@ -114,7 +117,7 @@ public class CommonInterceptor implements Interceptor {
         treeMap.put("userId", BaseActivity.userId + "");
         treeMap.put("sessionId", BaseActivity.sessionId);
 
-        params = new JSONObject(treeMap).toString().replace("\\","");
+        params = new JSONObject(treeMap).toString().replace("\\", "");
         Log.e("CommonInterceptor", params);
 
         // 添加新的参数
@@ -129,8 +132,10 @@ public class CommonInterceptor implements Interceptor {
                 .addQueryParameter("androidSign", EncryptionUtil.encryptionMD5(MineApp.sContext, params, 0));
 
         // 新的请求
+
         Request newRequest = oldRequest.newBuilder().method(oldRequest.method(), oldRequest.body()).url
                 (authorizedUrlBuilder.build()).build();
+
         return chain.proceed(newRequest);
     }
 

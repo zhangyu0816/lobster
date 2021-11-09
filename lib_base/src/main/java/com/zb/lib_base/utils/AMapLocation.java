@@ -17,8 +17,6 @@ public class AMapLocation {
     public AMapLocationClient mLocationClient;
     //声明AMapLocationClientOption对象
     public AMapLocationClientOption mLocationOption;
-    //声明定位回调监听器
-//    public AMapLocationListener mLocationListener;
 
     public AMapLocation(Context context) {
         //初始化定位

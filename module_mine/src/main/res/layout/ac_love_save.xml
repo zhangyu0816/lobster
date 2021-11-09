@@ -28,6 +28,7 @@
     </data>
 
     <LinearLayout
+        onClickDelayed="@{viewModel::close}"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@mipmap/ic_love_bg"
@@ -109,6 +110,7 @@
             android:hint="微信号"
             android:maxLength="10"
             android:paddingStart="20dp"
+            android:inputType="textEmailAddress"
             android:paddingEnd="20dp"
             android:text="@={wxNum}"
             android:textColor="@color/white"

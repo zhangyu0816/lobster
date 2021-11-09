@@ -53,6 +53,10 @@ public class LoveSaveViewModel extends BaseViewModel {
         }
     }
 
+    public void close(View view){
+        hintKeyBoard();
+    }
+
     public void selectSex(int sexIndex) {
         mBinding.setSexIndex(sexIndex);
     }
@@ -83,10 +87,10 @@ public class LoveSaveViewModel extends BaseViewModel {
             SCToastUtil.showToast(activity, "请选择省份", true);
             return;
         }
-        getOrSaveBlackBoxPersonInfo();
+        saveBlackBoxPersonInfo();
     }
 
-    private void getOrSaveBlackBoxPersonInfo() {
+    private void saveBlackBoxPersonInfo() {
         saveBlackBoxPersonInfoApi api = new saveBlackBoxPersonInfoApi(new HttpOnNextListener<Long>() {
             @Override
             public void onNext(Long o) {
