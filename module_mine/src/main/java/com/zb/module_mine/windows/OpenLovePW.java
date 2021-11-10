@@ -58,9 +58,10 @@ public class OpenLovePW extends BasePopupWindow {
     }
 
     private void setBtn() {
-        String title = preIndex == 0 ? " 开通地摊盲盒包月权限" : (preIndex == 1 ? " 开通地摊盲盒包季权限" : " 开通地摊盲盒包年权限");
-        String name = preIndex == 0 ? " 开通包月权限" : (preIndex == 1 ? " 开通包季权限" : " 开通包年权限");
-        mBinding.setVariable(BR.btnName, "¥" + vipInfoList.get(preIndex).getPrice() + name);
+        String open = MineApp.loveMineInfo.getMemberType() == 2 ? "续费" : "开通";
+        String title = preIndex == 0 ? open + "地摊盲盒包月权限" : (preIndex == 1 ? open + "地摊盲盒包季权限" : open + "地摊盲盒包年权限");
+        String name = preIndex == 0 ? open + "包月权限" : (preIndex == 1 ? open + "包季权限" : open + "包年权限");
+        mBinding.setVariable(BR.btnName, "¥" + vipInfoList.get(preIndex).getPrice() + " " + name);
         mBinding.setVariable(BR.title, title);
     }
 

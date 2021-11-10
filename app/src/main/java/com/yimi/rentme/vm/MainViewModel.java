@@ -424,9 +424,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
                 MineApp.vipInfoList.clear();
                 MineApp.vipInfoList.addAll(o);
                 walletAndPop();
-                firstOpenMemberPage();
-                newDynMsgAllNum(false);
-                myImAccountInfo();
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
@@ -452,6 +449,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
             public void onNext(Integer o) {
                 MineApp.isFirstOpen = o == 1;
                 LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_isFirstOpen"));
+                newDynMsgAllNum(false);
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
@@ -464,6 +462,8 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
             public void onNext(WalletInfo o) {
                 MineApp.walletInfo = o;
                 LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_updateWallet"));
+                firstOpenMemberPage();
+
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
@@ -476,11 +476,11 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
             public void onNext(MineNewsCount o) {
                 MineApp.mineNewsCount = o;
                 LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_newsCount"));
+                myImAccountInfo();
                 if (!isUpdate) {
                     pageNo = 1;
                     bottlePageNo = 1;
                     chatList();
-                    driftBottleChatList();
                 }
             }
         }, activity);
@@ -539,6 +539,7 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
                     LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_updateChat"));
+                    driftBottleChatList();
                 }
             }
         }, activity).setPageNo(pageNo);

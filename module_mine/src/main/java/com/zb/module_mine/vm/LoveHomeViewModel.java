@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
 
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -23,6 +24,7 @@ import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.TextPW;
 import com.zb.module_mine.R;
 import com.zb.module_mine.databinding.AcLoveHomeBinding;
 import com.zb.module_mine.windows.OpenLovePW;
@@ -45,6 +47,7 @@ public class LoveHomeViewModel extends BaseViewModel {
             @Override
             public void onReceive(Context context, Intent intent) {
                 myInfo();
+                new TextPW(activity, mBinding.getRoot(), "恭喜您成功入驻！", "您已成为地摊主，分享盲盒赚分佣！", "分享盲盒", true, () -> toLoveShare(null));
             }
         };
         myInfo();

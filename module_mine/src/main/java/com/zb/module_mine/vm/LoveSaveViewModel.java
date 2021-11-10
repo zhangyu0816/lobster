@@ -38,6 +38,7 @@ public class LoveSaveViewModel extends BaseViewModel {
         loveSaveReceiver = new BaseReceiver(activity, "lobster_loveSave") {
             @Override
             public void onReceive(Context context, Intent intent) {
+                SCToastUtil.showToast(activity, "登记成功", true);
                 activity.finish();
             }
         };
@@ -53,7 +54,7 @@ public class LoveSaveViewModel extends BaseViewModel {
         }
     }
 
-    public void close(View view){
+    public void close(View view) {
         hintKeyBoard();
     }
 
@@ -75,7 +76,7 @@ public class LoveSaveViewModel extends BaseViewModel {
             SCToastUtil.showToast(activity, "请输入年龄", true);
             return;
         }
-        if(Integer.parseInt(mBinding.getAge())<18){
+        if (Integer.parseInt(mBinding.getAge()) < 18) {
             SCToastUtil.showToast(activity, "年龄未满18岁，无法存入", true);
             return;
         }

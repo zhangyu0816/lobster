@@ -29,7 +29,7 @@ public class AreaPW extends BasePopupWindow {
     private CallBack callBack;
 
     public AreaPW(View parentView) {
-        super(parentView, false);
+        super(parentView, true);
         provinceNameList = AreaDb.getInstance().getProvinceNameList();
         provinceName = provinceNameList.get(0);
         provinceId = AreaDb.getInstance().getProvinceId(provinceName);
