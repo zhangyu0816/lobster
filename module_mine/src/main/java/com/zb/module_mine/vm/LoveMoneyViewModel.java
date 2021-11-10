@@ -118,7 +118,7 @@ public class LoveMoneyViewModel extends BaseViewModel implements OnRefreshListen
             public void onNext(PersonInfo o) {
                 mBinding.setMoney(o.getTotalRewards());
             }
-        }, activity).setTranStatusType(200);
+        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 

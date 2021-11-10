@@ -843,14 +843,13 @@ public interface HttpService {
     Observable<BaseResultEntity<PersonInfo>> getBlackBoxPersonInfo(@Field("number") String number);
 
     // 盲盒奖励 收益总额
-    @FormUrlEncoded
-    @POST("api/BlackBox_statisticsRewardsCount")
-    Observable<BaseResultEntity<PersonInfo>> statisticsRewardsCount(@Field("tranStatusType") int tranStatusType);
+    @GET("api/BlackBox_statisticsRewardsCount")
+    Observable<BaseResultEntity<PersonInfo>> statisticsRewardsCount();
 
     // 盲盒奖励订单列表
     @FormUrlEncoded
     @POST("api/BlackBox_rewardsOrderList")
-    Observable<BaseResultEntity<List<LoveMoney>>> rewardsOrderList(@Field("tranStatusType") int tranStatusType, @Field("pageNo") int pageNo,
+    Observable<BaseResultEntity<List<LoveMoney>>> rewardsOrderList(@Field("pageNo") int pageNo,
                                                                    @Field("pageSize") int pageSize);
 
     // 是否绑定微信钱包

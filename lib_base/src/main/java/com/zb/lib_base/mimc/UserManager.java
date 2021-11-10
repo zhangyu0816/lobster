@@ -14,6 +14,7 @@ import com.xiaomi.mimc.common.MIMCConstant;
 import com.xiaomi.mimc.data.LaunchedResponse;
 import com.xiaomi.mimc.data.RtsChannelType;
 import com.xiaomi.mimc.data.RtsDataType;
+import com.zb.lib.EncryptionUtil;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
@@ -21,6 +22,7 @@ import com.zb.lib_base.http.HttpManager;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.TreeMap;
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -244,11 +246,22 @@ public class UserManager {
     class TokenFetcher implements MIMCTokenFetcher {
         @Override
         public String fetchToken() {
+            TreeMap<String, String> treeMap = new TreeMap<>();
+            String params = "";
+            treeMap.put("appAccountId", getAccount());
+            treeMap.put("pfDevice", "Android");
+            treeMap.put("pfAppType", MineApp.pfAppType);
+            treeMap.put("pfAppVersion", MineApp.versionName);
+            treeMap.put("fullVersion", MineApp.versionName + ".1");
+            treeMap.put("userId", BaseActivity.userId + "");
+            treeMap.put("sessionId", BaseActivity.sessionId);
+            params = new JSONObject(treeMap).toString().replace("\\", "");
 
             String url = HttpManager.BASE_URL + "myapi/Return_getToken?appAccountId=" + getAccount() +
                     "&userId=" + BaseActivity.userId +
                     "&sessionId=" + BaseActivity.sessionId +
-                    "&pfDevice=Android&pfAppType=203&pfAppVersion=" + MineApp.versionName;
+                    "&pfDevice=Android&pfAppType=203&pfAppVersion=" + MineApp.versionName +
+                    "&fullVersion=" + MineApp.versionName + ".1&androidSign=" + EncryptionUtil.encryptionMD5(MineApp.sContext, params, 0);
             OkHttpClient client = new OkHttpClient();
             Request request = new Request
                     .Builder()
@@ -266,7 +279,7 @@ public class UserManager {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            JSONObject returnData =data.optJSONObject("data");
+            JSONObject returnData = data.optJSONObject("data");
             return returnData != null ? returnData.toString() : null;
         }
     }

@@ -9,12 +9,6 @@ import com.zb.lib_base.model.PersonInfo;
 import rx.Observable;
 
 public class statisticsRewardsCountApi extends BaseEntity<PersonInfo> {
-    int tranStatusType;  //订单状态  10.代付款 (尚未派发奖励)    200.交易成功
-
-    public statisticsRewardsCountApi setTranStatusType(int tranStatusType) {
-        this.tranStatusType = tranStatusType;
-        return this;
-    }
 
     public statisticsRewardsCountApi(HttpOnNextListener listener, RxAppCompatActivity rxAppCompatActivity) {
         super(listener, rxAppCompatActivity);
@@ -23,6 +17,6 @@ public class statisticsRewardsCountApi extends BaseEntity<PersonInfo> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.statisticsRewardsCount(tranStatusType);
+        return methods.statisticsRewardsCount();
     }
 }

@@ -25,6 +25,6 @@ public class rewardsOrderListApi extends BaseEntity<List<LoveMoney>> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.rewardsOrderList(200, pageNo, 10);
+        return methods.rewardsOrderList(pageNo, 10);
     }
 }

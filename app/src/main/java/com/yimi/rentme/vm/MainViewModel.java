@@ -476,7 +476,6 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
             public void onNext(MineNewsCount o) {
                 MineApp.mineNewsCount = o;
                 LocalBroadcastManager.getInstance(MineApp.sContext).sendBroadcast(new Intent("lobster_newsCount"));
-                myImAccountInfo();
                 if (!isUpdate) {
                     pageNo = 1;
                     bottlePageNo = 1;
@@ -583,6 +582,13 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
                 }
                 bottlePageNo++;
                 driftBottleChatList();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
+                    myImAccountInfo();
+                }
             }
         }, activity).setPageNo(bottlePageNo);
         HttpManager.getInstance().doHttpDeal(api);
