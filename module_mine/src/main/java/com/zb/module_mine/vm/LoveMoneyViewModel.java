@@ -80,6 +80,14 @@ public class LoveMoneyViewModel extends BaseViewModel implements OnRefreshListen
     @Override
     public void right(View view) {
         super.right(view);
+        new TextPW(activity, mBinding.getRoot(), "爱情盲盒摊主规则", "一，玩法规则：\n" +
+                "1，花费一元把你的微信号存入盲盒中，等待异性用户拆盲盒。\n" +
+                "2，花费一元取出一个异性微信号盲盒。\n" +
+                "\n" +
+                "二，地摊主赚钱：\n" +
+                "1，开通地摊主功能，拥有自己的摊位，\n" +
+                "2，所有通过你分享的小程序，二维码，链接等的用户存取微信号，你都可以抽取税前7成的佣金，佣金可以直接提现到微信账号。\n" +
+                "3，地摊主到期后请及时续费。否则将不再享受分佣抽成。", "确认", true, null);
     }
 
     @Override
