@@ -46,8 +46,8 @@ public class LoveHomeViewModel extends BaseViewModel {
         openVipReceiver = new BaseReceiver(activity, "lobster_openVip") {
             @Override
             public void onReceive(Context context, Intent intent) {
+                new TextPW(activity, mBinding.getRoot(), MineApp.loveMineInfo.getMemberType() == 2 ? "恭喜您成功续费！" : "恭喜您成功入驻！", "您已成为地摊主，分享盲盒赚分佣！", "分享盲盒", true, () -> toLoveShare(null));
                 myInfo();
-                new TextPW(activity, mBinding.getRoot(), "恭喜您成功入驻！", "您已成为地摊主，分享盲盒赚分佣！", "分享盲盒", true, () -> toLoveShare(null));
             }
         };
         myInfo();

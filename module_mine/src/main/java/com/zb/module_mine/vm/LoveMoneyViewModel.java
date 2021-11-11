@@ -2,6 +2,8 @@ package com.zb.module_mine.vm;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -10,6 +12,11 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.tencent.mm.opensdk.modelbiz.WXLaunchMiniProgram;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMMin;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.api.myInfoApi;
@@ -23,7 +30,9 @@ import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.LoveMoney;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.PersonInfo;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
+import com.zb.lib_base.windows.TextPW;
 import com.zb.module_mine.R;
 import com.zb.module_mine.adapter.MineAdapter;
 import com.zb.module_mine.databinding.AcLoveMoneyBinding;
@@ -47,21 +56,30 @@ public class LoveMoneyViewModel extends BaseViewModel implements OnRefreshListen
         super.setBinding(binding);
         mBinding = (AcLoveMoneyBinding) binding;
         mBinding.setTitle("我的收益");
+        mBinding.setRight("规则");
         mBinding.setNoData(true);
         setAdapter();
         statisticsRewardsCount();
         openVipReceiver = new BaseReceiver(activity, "lobster_openVip") {
             @Override
             public void onReceive(Context context, Intent intent) {
+                new TextPW(activity, mBinding.getRoot(), MineApp.loveMineInfo.getMemberType() == 2 ? "恭喜您成功续费！" : "恭喜您成功入驻！", "您已成为地摊主，分享盲盒赚分佣！", "分享盲盒", true, () -> toLoveShare(null));
                 myInfo();
             }
         };
+        mBinding.setOpenTime(MineApp.loveMineInfo.getMemberExpireTime());
+        mBinding.setOpenBtn(MineApp.loveMineInfo.getMemberType() == 2 ? "续费权限" : "开通权限");
     }
 
     @Override
     public void back(View view) {
         super.back(view);
         activity.finish();
+    }
+
+    @Override
+    public void right(View view) {
+        super.right(view);
     }
 
     @Override
@@ -151,7 +169,7 @@ public class LoveMoneyViewModel extends BaseViewModel implements OnRefreshListen
         myWeChatIsBindApi api = new myWeChatIsBindApi(new HttpOnNextListener<PersonInfo>() {
             @Override
             public void onNext(PersonInfo o) {
-                mBinding.tvWx.setVisibility(o.getIsBindWxMiniAppAqxg() == 0 ? View.VISIBLE : View.GONE);
+                mBinding.setBindingWX(o.getIsBindWxMiniAppAqxg() == 0 ? "前往绑定" : "提现");
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
@@ -165,6 +183,7 @@ public class LoveMoneyViewModel extends BaseViewModel implements OnRefreshListen
             public void onNext(MineInfo o) {
                 MineApp.loveMineInfo = o;
                 MineApp.pfAppType = "203";
+                mBinding.setOpenTime(MineApp.loveMineInfo.getMemberExpireTime());
             }
 
             @Override
@@ -174,4 +193,52 @@ public class LoveMoneyViewModel extends BaseViewModel implements OnRefreshListen
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
+
+    public void toLoveShare(View view) {
+        //兼容低版本的网页链接
+        UMMin umMin = new UMMin("https://xgapi.zuwo.la");
+        UMImage umImage = new UMImage(activity, R.drawable.ic_min_logo);
+        umImage.compressStyle = UMImage.CompressStyle.SCALE;//大小压缩，默认为大小压缩，适合普通很大的图
+        umImage.compressFormat = Bitmap.CompressFormat.PNG;
+        // 小程序消息封面图片
+        umMin.setThumb(umImage);
+        // 小程序消息title
+        umMin.setTitle("爱情盲盒,缘分来了");
+        // 小程序消息描述
+        umMin.setDescription("邂逅最真实的ta");
+        //小程序页面路径
+        umMin.setPath("pages/index/index?userId=" + BaseActivity.userId);
+        // 小程序原始id,在微信平台查询
+        umMin.setUserName("gh_dd74e49d61df");
+
+        new ShareAction(activity)
+                .withMedia(umMin)
+                .setPlatform(SHARE_MEDIA.WEIXIN)
+                .setCallback(umShareListener).share();
+    }
+
+    private UMShareListener umShareListener = new UMShareListener() {
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+            SCToastUtil.showToast(activity, "小程序开始分享", true);
+        }
+
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            SCToastUtil.showToast(activity, "小程序分享成功啦", true);
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            SCToastUtil.showToast(activity, "小程序分享失败啦", true);
+            if (t != null) {
+                Log.d("throw", "throw:" + t.getMessage());
+            }
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            SCToastUtil.showToast(activity, "小程序分享取消了", true);
+        }
+    };
 }
