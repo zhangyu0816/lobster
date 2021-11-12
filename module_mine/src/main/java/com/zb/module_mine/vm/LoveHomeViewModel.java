@@ -134,6 +134,7 @@ public class LoveHomeViewModel extends BaseViewModel {
             public void onNext(MineInfo o) {
                 MineApp.loveMineInfo = o;
                 MineApp.pfAppType = "203";
+                mBinding.setLoveBtn(o.getMemberType()==2?"我的盲盒地摊":"我也要摆地摊盲盒");
             }
 
             @Override

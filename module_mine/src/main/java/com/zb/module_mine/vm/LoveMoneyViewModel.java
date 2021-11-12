@@ -177,7 +177,7 @@ public class LoveMoneyViewModel extends BaseViewModel implements OnRefreshListen
         myWeChatIsBindApi api = new myWeChatIsBindApi(new HttpOnNextListener<PersonInfo>() {
             @Override
             public void onNext(PersonInfo o) {
-                mBinding.setBindingWX(o.getIsBindWxMiniAppAqxg() == 0 ? "前往绑定" : "提现");
+                mBinding.tvWx.setVisibility(o.getIsBindWxMiniAppAqxg() == 0 ? View.VISIBLE : View.GONE);
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

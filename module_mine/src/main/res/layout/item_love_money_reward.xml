@@ -48,8 +48,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{item.tranStatusType==10?@string/status_type_10:@string/status_type_200}"
-                android:textColor="@{item.tranStatusType==10?@color/black_827:@color/black_252}"
+                android:text="@{item.statusType==10?@string/status_type_10:@string/status_type_200}"
+                android:textColor="@{item.statusType==10?@color/black_827:@color/black_252}"
                 android:textSize="12sp"
                 tools:text="未派发" />
 

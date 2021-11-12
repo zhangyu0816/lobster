@@ -9,7 +9,7 @@ public class LoveMoney extends BaseObservable {
     long rewardTransactionInfoId;//零钱奖励订单
     double realMoney;//收款
     String createTime = "";//创建时间
-    int tranStatusType;  //订单状态  10.代付款 (尚未派发奖励)    200.交易成功
+    int statusType;  //订单状态  10.代付款 (尚未派发奖励)    200.交易成功
 
     @Bindable
     public long getRewardTransactionInfoId() {
@@ -42,12 +42,12 @@ public class LoveMoney extends BaseObservable {
     }
 
     @Bindable
-    public int getTranStatusType() {
-        return tranStatusType;
+    public int getStatusType() {
+        return statusType;
     }
 
-    public void setTranStatusType(int tranStatusType) {
-        this.tranStatusType = tranStatusType;
-        notifyPropertyChanged(BR.tranStatusType);
+    public void setStatusType(int statusType) {
+        this.statusType = statusType;
+        notifyPropertyChanged(BR.statusType);
     }
 }

@@ -37,10 +37,6 @@
         <variable
             name="openTime"
             type="String" />
-
-        <variable
-            name="bindingWX"
-            type="String" />
     </data>
 
     <RelativeLayout
@@ -91,6 +87,7 @@
                     tools:text="200.00" />
 
                 <TextView
+                    android:id="@+id/tv_wx"
                     onClickDelayed="@{viewModel::withdraw}"
                     android:layout_width="wrap_content"
                     android:layout_height="38dp"
@@ -100,7 +97,7 @@
                     android:gravity="center"
                     android:paddingStart="45dp"
                     android:paddingEnd="45dp"
-                    android:text="@{bindingWX}"
+                    android:text="前往绑定"
                     android:textColor="#7A44F5"
                     android:textSize="16sp"
                     android:textStyle="bold" />

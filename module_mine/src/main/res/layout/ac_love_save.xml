@@ -126,7 +126,7 @@
             android:layout_marginHorizontal="37dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/btn_bg_black_4d000_radius60"
-            android:hint="省份"
+            android:hint="城市"
             android:gravity="center_vertical"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"

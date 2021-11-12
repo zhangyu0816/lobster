@@ -7,6 +7,10 @@
         <variable
             name="viewModel"
             type="com.zb.module_mine.vm.LoveHomeViewModel" />
+
+        <variable
+            name="loveBtn"
+            type="String" />
     </data>
 
     <LinearLayout
@@ -29,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="5dp"
                 android:gravity="center"
-                android:text="我的收益"
+                android:text="我的地摊"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 app:drawableStartCompat="@mipmap/ic_love_money" />
@@ -112,7 +116,7 @@
             android:background="@drawable/btn_bg_black_4d000_radius60"
             android:gravity="center"
             android:paddingHorizontal="67dp"
-            android:text="我也要摆地摊盲盒"
+            android:text="@{loveBtn}"
             android:textColor="@color/white"
             android:textSize="16sp" />
     </LinearLayout>
