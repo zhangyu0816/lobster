@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
 
-import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -65,10 +64,6 @@ public class LoveHomeViewModel extends BaseViewModel {
     }
 
     public void toLoveMoney(View view) {
-        if (MineApp.loveMineInfo.getMemberType() == 1) {
-            SCToastUtil.showToast(activity, "成为地摊主后才有收益哦", true);
-            return;
-        }
         ActivityUtils.getLoveMoney();
     }
 
@@ -104,7 +99,10 @@ public class LoveHomeViewModel extends BaseViewModel {
     }
 
     public void onOpen(View view) {
-        new OpenLovePW(mBinding.getRoot()).setVipInfoList(MineApp.loveInfoList).initUI();
+        if (MineApp.loveMineInfo.getMemberType() == 2) {
+            ActivityUtils.getLoveMoney();
+        } else
+            new OpenLovePW(mBinding.getRoot()).setVipInfoList(MineApp.loveInfoList).initUI();
     }
 
     private void openedMemberPriceList() {
@@ -134,7 +132,7 @@ public class LoveHomeViewModel extends BaseViewModel {
             public void onNext(MineInfo o) {
                 MineApp.loveMineInfo = o;
                 MineApp.pfAppType = "203";
-                mBinding.setLoveBtn(o.getMemberType()==2?"我的盲盒地摊":"我也要摆地摊盲盒");
+                mBinding.setLoveBtn(o.getMemberType() == 2 ? "我的盲盒地摊" : "入驻盲盒地摊，赚分佣");
             }
 
             @Override

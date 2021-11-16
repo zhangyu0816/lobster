@@ -17,6 +17,6 @@ public class statisticsRewardsCountApi extends BaseEntity<PersonInfo> {
 
     @Override
     public Observable getObservable(HttpService methods) {
-        return methods.statisticsRewardsCount();
+        return methods.statisticsRewardsCount(200);
     }
 }

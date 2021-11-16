@@ -88,7 +88,7 @@
             android:layout_marginHorizontal="37dp"
             android:layout_marginTop="17dp"
             android:background="@drawable/btn_bg_black_4d000_radius60"
-            android:hint="年龄"
+            android:hint="年龄(必须满18岁)"
             android:inputType="number"
             android:maxLength="2"
             android:paddingStart="20dp"
@@ -102,22 +102,23 @@
             tools:text="23" />
 
         <EditText
+            android:id="@+id/ed_wx"
             android:layout_width="match_parent"
             android:layout_height="46dp"
             android:layout_marginHorizontal="37dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/btn_bg_black_4d000_radius60"
             android:hint="微信号"
-            android:maxLength="10"
+            android:digits="_+abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ0123456789"
+            android:maxLength="20"
             android:paddingStart="20dp"
-            android:inputType="textEmailAddress"
             android:paddingEnd="20dp"
             android:text="@={wxNum}"
             android:textColor="@color/white"
             android:textColorHint="#99ffffff"
             android:textCursorDrawable="@drawable/cursor_color_white"
             android:textSize="16sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             onClickDelayed="@{viewModel::selectProvince}"
@@ -126,15 +127,15 @@
             android:layout_marginHorizontal="37dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/btn_bg_black_4d000_radius60"
-            android:hint="城市"
             android:gravity="center_vertical"
+            android:hint="省份"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             android:text="@{provinceName}"
             android:textColor="@color/white"
             android:textColorHint="#99ffffff"
             android:textSize="16sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_open"
@@ -148,6 +149,6 @@
             android:text="登记"
             android:textColor="@color/white"
             android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </LinearLayout>
 </layout>

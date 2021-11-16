@@ -2,6 +2,8 @@ package com.zb.module_mine.vm;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 
 import com.zb.lib_base.activity.BaseReceiver;
@@ -30,7 +32,7 @@ public class LoveSaveViewModel extends BaseViewModel {
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (AcLoveSaveBinding) binding;
-        mBinding.setSexIndex(1);
+        mBinding.setSexIndex(-1);
         mBinding.setAge("");
         mBinding.setWxNum("");
         mBinding.setProvinceName("");
@@ -42,6 +44,29 @@ public class LoveSaveViewModel extends BaseViewModel {
                 activity.finish();
             }
         };
+
+        mBinding.edWx.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String str = editable.toString();
+                if (!str.isEmpty()) {
+                    if (!Character.isLetter(str.charAt(0))) {
+                        mBinding.setWxNum("");
+                        SCToastUtil.showToast(activity, "必须以字母开头", true);
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -72,12 +97,16 @@ public class LoveSaveViewModel extends BaseViewModel {
     }
 
     public void loveSave(View view) {
+        if (mBinding.getSexIndex() == -1) {
+            SCToastUtil.showToast(activity, "请选择性别", true);
+            return;
+        }
         if (mBinding.getAge().isEmpty()) {
             SCToastUtil.showToast(activity, "请输入年龄", true);
             return;
         }
         if (Integer.parseInt(mBinding.getAge()) < 18) {
-            SCToastUtil.showToast(activity, "年龄未满18岁，无法存入", true);
+            SCToastUtil.showToast(activity, "年龄未满18岁，无法登记", true);
             return;
         }
         if (mBinding.getWxNum().isEmpty()) {

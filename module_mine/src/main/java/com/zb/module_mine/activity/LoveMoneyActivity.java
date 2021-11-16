@@ -27,10 +27,4 @@ public class LoveMoneyActivity extends BaseScreenActivity {
         super.onResume();
         viewModel.onResume();
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        viewModel.onDestroy();
-    }
 }

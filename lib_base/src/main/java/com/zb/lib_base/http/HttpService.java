@@ -843,8 +843,9 @@ public interface HttpService {
     Observable<BaseResultEntity<PersonInfo>> getBlackBoxPersonInfo(@Field("number") String number);
 
     // 盲盒奖励 收益总额
-    @GET("api/BlackBox_statisticsRewardsCount")
-    Observable<BaseResultEntity<PersonInfo>> statisticsRewardsCount();
+    @FormUrlEncoded
+    @POST("api/BlackBox_statisticsRewardsCount")
+    Observable<BaseResultEntity<PersonInfo>> statisticsRewardsCount(@Field("tranStatusType") int tranStatusType);
 
     // 盲盒奖励订单列表
     @FormUrlEncoded

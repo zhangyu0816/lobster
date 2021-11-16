@@ -13,6 +13,7 @@ import com.zb.lib_base.http.HttpOnNextListener;
 import com.zb.lib_base.model.LoveNumber;
 import com.zb.lib_base.model.OrderTran;
 import com.zb.lib_base.model.PersonInfo;
+import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.LovePaymentPW;
 import com.zb.lib_base.windows.WXPW;
@@ -29,7 +30,7 @@ public class LoveGetViewModel extends BaseViewModel {
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (AcLoveGetBinding) binding;
-        mBinding.setSexIndex(1);
+        mBinding.setSexIndex(-1);
         loveSaveReceiver = new BaseReceiver(activity, "lobster_loveSave") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -59,6 +60,10 @@ public class LoveGetViewModel extends BaseViewModel {
     }
 
     public void pay(View view) {
+        if (mBinding.getSexIndex() == -1) {
+            SCToastUtil.showToast(activity, "请选择性别", true);
+            return;
+        }
         submitBlackBoxOrderForTranApi api = new submitBlackBoxOrderForTranApi(new HttpOnNextListener<LoveNumber>() {
             @Override
             public void onNext(LoveNumber o) {

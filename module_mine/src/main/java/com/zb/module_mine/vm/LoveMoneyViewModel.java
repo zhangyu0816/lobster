@@ -30,6 +30,8 @@ import com.zb.lib_base.http.HttpTimeException;
 import com.zb.lib_base.model.LoveMoney;
 import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.PersonInfo;
+import com.zb.lib_base.utils.ActivityUtils;
+import com.zb.lib_base.utils.DateUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.TextPW;
@@ -55,11 +57,12 @@ public class LoveMoneyViewModel extends BaseViewModel implements OnRefreshListen
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         mBinding = (AcLoveMoneyBinding) binding;
-        mBinding.setTitle("我的收益");
+        mBinding.setTitle("我的地摊");
         mBinding.setRight("规则");
         mBinding.setNoData(true);
         setAdapter();
         statisticsRewardsCount();
+
         openVipReceiver = new BaseReceiver(activity, "lobster_openVip") {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -67,8 +70,9 @@ public class LoveMoneyViewModel extends BaseViewModel implements OnRefreshListen
                 myInfo();
             }
         };
-        mBinding.setOpenTime(MineApp.loveMineInfo.getMemberExpireTime());
-        mBinding.setOpenBtn(MineApp.loveMineInfo.getMemberType() == 2 ? "续费权限" : "开通权限");
+        mBinding.setOpenTime(MineApp.loveMineInfo.getMemberType() == 1 ? "未开通权限" : DateUtil.strToStr(MineApp.loveMineInfo.getMemberExpireTime(), DateUtil.yyyy_MM_dd));
+        mBinding.setOpenLove(MineApp.loveMineInfo.getMemberType() == 2 ? "续费>" : "去开通>");
+        mBinding.setLoveBtn(MineApp.loveMineInfo.getMemberType() == 1 ? "开通权限" : "分享赚佣金");
     }
 
     @Override
@@ -80,14 +84,11 @@ public class LoveMoneyViewModel extends BaseViewModel implements OnRefreshListen
     @Override
     public void right(View view) {
         super.right(view);
-        new TextPW(activity, mBinding.getRoot(), "爱情盲盒摊主规则", "一，玩法规则：\n" +
-                "1，花费一元把你的微信号存入盲盒中，等待异性用户拆盲盒。\n" +
-                "2，花费一元取出一个异性微信号盲盒。\n" +
-                "\n" +
-                "二，地摊主赚钱：\n" +
-                "1，开通地摊主功能，拥有自己的摊位，\n" +
-                "2，所有通过你分享的小程序，二维码，链接等的用户存取微信号，你都可以抽取税前7成的佣金，佣金可以直接提现到微信账号。\n" +
-                "3，地摊主到期后请及时续费。否则将不再享受分佣抽成。", "确认", true, null);
+        ActivityUtils.getMineWeb("爱情盲盒摊主规则", HttpManager.BASE_URL + "mobile/aqmh/aqmh_get_help.html");
+    }
+
+    public void onResume() {
+        myWeChatIsBind();
     }
 
     @Override
@@ -98,10 +99,6 @@ public class LoveMoneyViewModel extends BaseViewModel implements OnRefreshListen
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void onResume() {
-        myWeChatIsBind();
     }
 
     @Override
@@ -134,8 +131,15 @@ public class LoveMoneyViewModel extends BaseViewModel implements OnRefreshListen
         api.sendReq(req);
     }
 
-    public void openLove(View view) {
+    public void payVip(View view) {
         new OpenLovePW(mBinding.getRoot()).setVipInfoList(MineApp.loveInfoList).initUI();
+    }
+
+    public void openLove(View view) {
+        if (MineApp.loveMineInfo.getMemberType() == 1)
+            new OpenLovePW(mBinding.getRoot()).setVipInfoList(MineApp.loveInfoList).initUI();
+        else
+            toLoveShare(null);
     }
 
     private void statisticsRewardsCount() {

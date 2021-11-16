@@ -61,6 +61,7 @@ import com.zb.lib_base.utils.OpenNotice;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.FlashChatPW;
+import com.zb.lib_base.windows.TextPW;
 import com.zb.lib_base.windows.VipAdPW;
 import com.zb.module_card.windows.GuidancePW;
 
@@ -414,6 +415,16 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
 
     @Override
     public void openedMemberPriceList() {
+        if (PreferenceUtil.readIntValue(activity, "love_activity") == 0) {
+            PreferenceUtil.saveIntValue(activity, "love_activity", 1);
+            new TextPW(activity, mBinding.getRoot(), "新功能《爱情盲盒》", "一,爱情盲盒玩法。\n1，把你的微信号存入盲盒中，等待异性用户来拆盲盒。\n2，你也可以取出一个异性盲盒，然后添加TA的微信。\n3，入口在“我的->爱情盲盒", "去玩一玩", true, new TextPW.CallBack() {
+                @Override
+                public void sure() {
+                    ActivityUtils.getLoveHome();
+
+                }
+            });
+        }
         openedMemberPriceListApi api = new openedMemberPriceListApi(new HttpOnNextListener<List<VipInfo>>() {
             @Override
             public void onNext(List<VipInfo> o) {

@@ -8,8 +8,6 @@
 
         <import type="android.view.View" />
 
-        <import type="com.zb.lib_base.utils.DateUtil" />
-
         <variable
             name="viewModel"
             type="com.zb.module_mine.vm.LoveMoneyViewModel" />
@@ -31,11 +29,15 @@
             type="boolean" />
 
         <variable
-            name="openBtn"
+            name="openTime"
             type="String" />
 
         <variable
-            name="openTime"
+            name="openLove"
+            type="String" />
+
+        <variable
+            name="loveBtn"
             type="String" />
     </data>
 
@@ -71,7 +73,7 @@
                     android:id="@+id/tv_bi"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="总收益（元）"
+                    android:text="历史收益（元）"
                     android:textColor="@android:color/white"
                     android:textSize="14sp" />
 
@@ -108,10 +110,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/relativeLayout8"
                 android:layout_marginStart="15dp"
-                android:layout_marginBottom="15dp"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="@{openTime.empty?View.GONE:View.VISIBLE}">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -126,9 +126,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{DateUtil.strToStr(openTime,DateUtil.yyyy_MM_dd)}"
+                    android:text="@{openTime}"
                     android:textColor="#CBA8FF"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    tools:text="1988" />
+
+                <TextView
+                    onClickDelayed="@{viewModel::payVip}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:text="@{openLove}"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
             </LinearLayout>
 
         </RelativeLayout>
@@ -173,7 +183,7 @@
             android:layout_marginBottom="30dp"
             android:background="@drawable/gradient_purple_6d5_ae7"
             android:gravity="center"
-            android:text="@{openBtn}"
+            android:text="@{loveBtn}"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
