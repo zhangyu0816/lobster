@@ -132,7 +132,6 @@ public class CommonInterceptor implements Interceptor {
                 .addQueryParameter("androidSign", EncryptionUtil.encryptionMD5(MineApp.sContext, params, 0));
 
         // 新的请求
-
         Request newRequest = oldRequest.newBuilder().method(oldRequest.method(), oldRequest.body()).url
                 (authorizedUrlBuilder.build()).build();
 

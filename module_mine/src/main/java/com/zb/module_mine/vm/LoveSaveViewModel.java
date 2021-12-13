@@ -3,6 +3,7 @@ package com.zb.module_mine.vm;
 import android.content.Context;
 import android.content.Intent;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 
@@ -60,9 +61,10 @@ public class LoveSaveViewModel extends BaseViewModel {
             public void afterTextChanged(Editable editable) {
                 String str = editable.toString();
                 if (!str.isEmpty()) {
-                    if (!Character.isLetter(str.charAt(0))) {
+                    String s = str.substring(0, 1);
+                    if (!TextUtils.equals(s, "_") && !Character.isLetter(str.charAt(0))) {
                         mBinding.setWxNum("");
-                        SCToastUtil.showToast(activity, "必须以字母开头", true);
+                        SCToastUtil.showToast(activity, "微信号必须以字母或下划线开头，可以使用6-20位数字、字母、下划线、减号或他们的组合", true);
                     }
                 }
             }
@@ -109,8 +111,8 @@ public class LoveSaveViewModel extends BaseViewModel {
             SCToastUtil.showToast(activity, "年龄未满18岁，无法登记", true);
             return;
         }
-        if (mBinding.getWxNum().isEmpty()) {
-            SCToastUtil.showToast(activity, "请输入微信号", true);
+        if (mBinding.getWxNum().length() < 6) {
+            SCToastUtil.showToast(activity, "微信号必须以字母或下划线开头，可以使用6-20位数字、字母、下划线、减号或他们的组合", true);
             return;
         }
         if (mBinding.getProvinceName().isEmpty()) {

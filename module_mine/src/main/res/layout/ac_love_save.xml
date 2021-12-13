@@ -109,7 +109,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/btn_bg_black_4d000_radius60"
             android:hint="微信号"
-            android:digits="_+abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ0123456789"
+            android:digits="_-abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ0123456789"
             android:maxLength="20"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"

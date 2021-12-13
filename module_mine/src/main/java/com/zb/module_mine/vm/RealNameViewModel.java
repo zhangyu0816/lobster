@@ -70,9 +70,9 @@ public class RealNameViewModel extends BaseViewModel implements RealNameVMInterf
                     activity.runOnUiThread(() -> new TextPW(activity, mBinding.getRoot(), "权限说明",
                             "提交人脸认证信息时，我们将会申请相机权限：" +
                                     "\n 1、申请相机权限--获取拍摄人脸照片功能，" +
-                                    "\n 4、若您点击“同意”按钮，我们方可正式申请上述权限，以便拍摄照片，" +
-                                    "\n 5、若您点击“拒绝”按钮，我们将不再主动弹出该提示，您也无法拍摄图片，不影响使用其他的虾姑功能/服务，" +
-                                    "\n 6、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭相机权限。",
+                                    "\n 2、若您点击“同意”按钮，我们方可正式申请上述权限，以便拍摄照片，" +
+                                    "\n 3、若您点击“拒绝”按钮，我们将不再主动弹出该提示，您也无法拍摄图片，不影响使用其他的功能/服务，" +
+                                    "\n 4、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭相机权限。",
                             "同意", false, true, new TextPW.CallBack() {
                         @Override
                         public void sure() {

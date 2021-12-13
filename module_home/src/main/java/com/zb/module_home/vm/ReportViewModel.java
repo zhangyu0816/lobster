@@ -116,9 +116,9 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
                             "提供举报信息时需要使用上传图片功能，我们将会申请相机、存储权限：" +
                                     "\n 1、申请相机权限--上传图片时获取拍摄照片功能，" +
                                     "\n 2、申请存储权限--上传图片时获取保存和读取图片功能，" +
-                                    "\n 4、若您点击“同意”按钮，我们方可正式申请上述权限，以便拍摄照片及选取照片，提交图片证据，" +
-                                    "\n 5、若您点击“拒绝”按钮，我们将不再主动弹出该提示，您也无法使用上传图片功能，不影响使用其他的虾姑功能/服务，" +
-                                    "\n 6、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭相机、存储权限。",
+                                    "\n 3、若您点击“同意”按钮，我们方可正式申请上述权限，以便拍摄照片及选取照片，提交图片证据，" +
+                                    "\n 4、若您点击“拒绝”按钮，我们将不再主动弹出该提示，您也无法使用上传图片功能，不影响使用其他的虾菇功能/服务，" +
+                                    "\n 5、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭相机、存储权限。",
                             "同意", false, true, this::getPermissions);
                 } else {
                     if (!checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {

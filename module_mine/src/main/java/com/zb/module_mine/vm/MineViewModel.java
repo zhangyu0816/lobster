@@ -268,7 +268,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                                 "\n 2、申请存储权限--发布动态时获取保存和读取图片、视频，" +
                                 "\n 3、申请麦克风权限--发布视频动态时获取录制视频音频功能，" +
                                 "\n 4、若您点击“同意”按钮，我们方可正式申请上述权限，以便正常发布图文动态、视频动态，" +
-                                "\n 5、若您点击“拒绝”按钮，我们将不再主动弹出该提示，您也无法使用发布动态功能，不影响使用其他的虾姑功能/服务，" +
+                                "\n 5、若您点击“拒绝”按钮，我们将不再主动弹出该提示，您也无法使用发布动态功能，不影响使用其他的虾菇功能/服务，" +
                                 "\n 6、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭相机、存储、麦克风权限。",
                         "同意", false, true, () -> getPermissions(1));
             } else {
@@ -333,8 +333,8 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                                 "\n 1、申请相机权限--绘制胶卷时获取拍摄照片功能，" +
                                 "\n 2、申请存储权限--绘制胶卷时获取读取手机图片库功能，" +
                                 "\n 3、若您点击“同意”按钮，我们方可正式申请上述权限，以便拍摄照片及选取照片，绘制图片胶卷，" +
-                                "\n 5、若您点击“拒绝”按钮，我们将不再主动弹出该提示，您也无法使用照相馆功能，不影响使用其他的虾姑功能/服务，" +
-                                "\n 6、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭相机、存储权限。",
+                                "\n 4、若您点击“拒绝”按钮，我们将不再主动弹出该提示，您也无法使用照相馆功能，不影响使用其他的虾菇功能/服务，" +
+                                "\n 5、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭相机、存储权限。",
                         "同意", false, true, () -> getPermissions(2));
             } else {
                 if (!checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
