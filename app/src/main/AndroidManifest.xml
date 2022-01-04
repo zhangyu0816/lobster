@@ -2,7 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.yimi.rentme">
-    <!-- 个推 SDK 权限配置开始 -->
+
+    <queries>
+        <package android:name="com.tencent.mm" />
+        <package android:name="com.tencent.mobileqq" />
+        <package android:name="com.qzone" />
+    </queries>
     <!-- 必选权限 -->
     <application
         android:name="com.zb.lib_base.app.MineApp"

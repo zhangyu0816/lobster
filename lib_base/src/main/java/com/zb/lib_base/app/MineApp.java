@@ -142,6 +142,7 @@ public class MineApp extends MultiDexApplication {
         DisplayUtils.init(this);
         MultiDex.install(this);
         UMConfigure.preInit(MineApp.instance, "55cac14467e58e8bd7000359", null);
+        UMConfigure.setLogEnabled(true);
         try {
             PackageInfo packageInfo = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0);
             versionName = packageInfo.versionName;

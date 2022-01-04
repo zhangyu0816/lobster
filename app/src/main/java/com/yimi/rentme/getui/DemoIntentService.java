@@ -37,7 +37,6 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class DemoIntentService extends GTIntentService {
-    public static StringBuilder payloadData = new StringBuilder();
 
     public DemoIntentService() {
 
@@ -62,10 +61,6 @@ public class DemoIntentService extends GTIntentService {
         byte[] payload = msg.getPayload();
         if (payload != null) {
             String data = new String(payload);
-
-            payloadData.append(data);
-            payloadData.append("\n");
-
 
             NotificationManager notificationManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);

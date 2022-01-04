@@ -57,8 +57,15 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        UMShareAPI.get(this).onSaveInstanceState(outState);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        UMShareAPI.get(this).release();
         if (viewModel != null){
             viewModel.onDestroy();
             mBinding = null;

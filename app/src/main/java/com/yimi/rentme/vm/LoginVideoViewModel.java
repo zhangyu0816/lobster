@@ -62,7 +62,9 @@ public class LoginVideoViewModel extends BaseViewModel {
         );
 
         PlatformConfig.setWeixin("wxb83427622a6740f6", "97f837c0ae8b11af734041828ba4a737");
+        PlatformConfig.setWXFileProvider("com.yimi.rentme.fileprovider");
         PlatformConfig.setQQZone("101928546", "a8d76c68d7590b71f5254aa87c4b24c8");
+        PlatformConfig.setQQFileProvider("com.yimi.rentme.fileprovider");
         UMShareAPI.get(MineApp.instance);
         myInfo();
     }

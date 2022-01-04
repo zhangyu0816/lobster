@@ -83,14 +83,17 @@ dependencies {
     api 'com.github.1002326270xc:LayoutManager-FlowLayout:v1.6'
     // 多class
     api 'com.android.support:multidex:1.0.3'
-    // 友盟
-    api 'com.umeng.umsdk:common:9.4.0'// 必选
-    api 'com.umeng.umsdk:asms:1.2.3'// 必选
-    api 'com.umeng.umsdk:share-core:7.1.5'//分享核心库，必选
-    api 'com.umeng.umsdk:share-qq:7.1.5'
-    api 'com.tencent.tauth:qqopensdk:3.53.0'//QQ官方SDK依赖库
-    api 'com.umeng.umsdk:share-wx:7.1.5'
-    api 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.7.0'//微信官方SDK依赖库
+
+    // 友盟基础组件库（所有友盟业务SDK都依赖基础组件库）
+    api 'com.umeng.umsdk:common:9.4.4'// (必选)
+    api 'com.umeng.umsdk:asms:1.4.1'// asms包依赖必选
+    api 'com.umeng.umsdk:share-core:7.1.7'//分享核心库，必选
+    api 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:6.8.0'//微信官方依赖库，必选
+    api  files('libs/umeng-share-wechat-full-7.1.7.jar')
+    api  files('libs/umeng-share-QQ-full-7.1.7.jar')
+    api 'com.tencent.tauth:qqopensdk:3.53.0'//QQ官方依赖库，必选
+    api 'com.squareup.okhttp3:okhttp:4.4.1'//QQ SDK在3.53.0版本及以上时需要集成okhttp官方依赖库，必选
+
     // 网路请求
     implementation files('libs/xUtils-2.6.14.jar')
     // 个推
@@ -98,5 +101,5 @@ dependencies {
     api 'com.getui:gtc:3.1.0.0'  //个推核心组件
     // viewpager
     api "androidx.viewpager2:viewpager2:1.0.0"
-    api'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
+    api 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
 }
