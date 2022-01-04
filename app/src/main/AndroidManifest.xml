@@ -22,7 +22,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="HardcodedDebugMode"
         tools:replace="android:theme,android:allowBackup,android:debuggable">
-        <!--region 适配全面屏-->
+
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -34,7 +34,7 @@
                 <data android:scheme="wxb83427622a6740f6" />
             </intent-filter>
         </activity>
-        <!--华为刘海区域展示-->
+
         <activity
             android:name=".wxapi.WXPayEntryActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -46,7 +46,7 @@
                 <data android:scheme="wxb83427622a6740f6" />
             </intent-filter>
         </activity>
-        <!--小米刘海区域展示-->
+
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:exported="true"
