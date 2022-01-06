@@ -738,6 +738,9 @@ public interface HttpService {
     @POST("api/Share_setSendMessage")
     Observable<BaseResultEntity<Integer>> setSendMessage(@FieldMap Map<String, String> map);
 
+    @GET("api/Share_setSendMessageForApp")
+    Observable<BaseResultEntity<Integer>> getAi();
+
     @FormUrlEncoded
     @POST("api/Verify_checkFace")
     Observable<BaseResultEntity> checkFace(@Field("faceImage") String faceImage);

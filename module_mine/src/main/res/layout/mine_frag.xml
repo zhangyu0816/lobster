@@ -45,6 +45,9 @@
             name="showSubmit"
             type="boolean" />
 
+        <variable
+            name="showAi"
+            type="boolean" />
     </data>
 
     <RelativeLayout
@@ -507,7 +510,8 @@
                             onClickDelayed="@{viewModel::toLove}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="15dp">
+                            android:padding="15dp"
+                            android:visibility="@{showAi?View.VISIBLE:View.GONE}">
 
                             <ImageView
                                 android:id="@+id/iv_love"

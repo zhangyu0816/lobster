@@ -11,6 +11,7 @@ import android.view.View;
 import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.activity.BaseReceiver;
 import com.zb.lib_base.adapter.ViewPagerAdapter;
+import com.zb.lib_base.api.getAiApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.personOtherDynApi;
 import com.zb.lib_base.app.MineApp;
@@ -71,6 +72,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
         mBinding.setContactNum(MineApp.contactNum);
         mBinding.setHasNewBeLike(MineApp.contactNum.getBeLikeCount() > PreferenceUtil.readIntValue(activity, "beLikeCount" + BaseActivity.userId));
         mBinding.setHasNewVisitor(MineApp.contactNum.getVisitorCount() > PreferenceUtil.readIntValue(activity, "visitorCount" + BaseActivity.userId));
+        mBinding.setShowAi(false);
 
         updateMineInfoReceiver = new BaseReceiver(activity, "lobster_updateMineInfo") {
             @Override
@@ -157,6 +159,8 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             mBinding.vipLinear.setBackgroundResource(R.drawable.mine_share_item_bg);
         } else
             mHandler.postDelayed(ra, 500);
+
+        getAi();
     }
 
     private Handler mHandler = new Handler();
@@ -250,6 +254,16 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
                 .setDynType(0)
                 .setOtherUserId(BaseActivity.userId)
                 .setPageNo(1);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void getAi() {
+        getAiApi api = new getAiApi(new HttpOnNextListener<Integer>() {
+            @Override
+            public void onNext(Integer o) {
+                mBinding.setShowAi(o == 1);
+            }
+        }, activity);
         HttpManager.getInstance().doHttpDeal(api);
     }
 
