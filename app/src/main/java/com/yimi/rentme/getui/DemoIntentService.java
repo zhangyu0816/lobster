@@ -69,7 +69,7 @@ public class DemoIntentService extends GTIntentService {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 builder = new NotificationCompat.Builder(this, getChannelId(notificationManager));
             } else {
-                builder = new NotificationCompat.Builder(this, null);
+                builder = new NotificationCompat.Builder(this, MineApp.NOTIFICATION_CHANNEL_ID);
             }
 
             JSONObject object;

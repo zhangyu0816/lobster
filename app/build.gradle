@@ -20,7 +20,7 @@ android {
         }
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = [moduleName: project.getName()]
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
             }
         }
         multiDexEnabled true
@@ -30,10 +30,6 @@ android {
         manifestPlaceholders = [
                 qqappid: "tencent101928546"
         ]
-        ndk {
-            //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
-            abiFilters "armeabi-v7a"
-        }
     }
     externalNativeBuild {
         cmake {
@@ -105,14 +101,12 @@ android {
         jniLibs.srcDirs = ['libs']//指定jniLibs文件夹路径
         jni.srcDirs = []//不编译jni
     }
-
-
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     // 需要重新在子模块中再引用一次，否则报错
-    annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
+    annotationProcessor 'com.alibaba:arouter-compiler:1.5.2'
     implementation project(':module_home')
     implementation project(':module_card')
     implementation project(':module_chat')

@@ -56,7 +56,12 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
-        geocodeSearch = new GeocodeSearch(activity);
+        try {
+            geocodeSearch = new GeocodeSearch(activity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         geocodeSearch.setOnGeocodeSearchListener(this);
         mBinding = (FragLocationBinding) binding;
         setAdapter();
@@ -125,34 +130,38 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
     private void querySearch() {
         PoiSearch.Query query = new PoiSearch.Query("", "", "");
         query.setPageSize(10);
-        PoiSearch search = new PoiSearch(activity, query);
-        search.setBound(new PoiSearch.SearchBound(new LatLonPoint(tagLl.latitude, tagLl.longitude), 10000, true));
-        search.setOnPoiSearchListener(new PoiSearch.OnPoiSearchListener() {
-            @Override
-            public void onPoiSearched(PoiResult poiResult, int i) {
-                locationInfoList.clear();
-                adapter.setSelectIndex(-1);
-                adapter.notifyDataSetChanged();
-                if (poiResult != null) {
-                    for (PoiItem poi : poiResult.getPois()) {
-                        LocationInfo info = new LocationInfo();
-                        info.setCityName(poi.getCityName());
-                        info.setTitle(poi.getTitle());
-                        info.setAddress(poi.getSnippet());
-                        info.setLatitude(poi.getLatLonPoint().getLatitude());
-                        info.setLongitude(poi.getLatLonPoint().getLongitude());
-                        locationInfoList.add(info);
-                    }
+        try {
+            PoiSearch search = new PoiSearch(activity, query);
+            search.setBound(new PoiSearch.SearchBound(new LatLonPoint(tagLl.latitude, tagLl.longitude), 10000, true));
+            search.setOnPoiSearchListener(new PoiSearch.OnPoiSearchListener() {
+                @Override
+                public void onPoiSearched(PoiResult poiResult, int i) {
+                    locationInfoList.clear();
+                    adapter.setSelectIndex(-1);
                     adapter.notifyDataSetChanged();
+                    if (poiResult != null) {
+                        for (PoiItem poi : poiResult.getPois()) {
+                            LocationInfo info = new LocationInfo();
+                            info.setCityName(poi.getCityName());
+                            info.setTitle(poi.getTitle());
+                            info.setAddress(poi.getSnippet());
+                            info.setLatitude(poi.getLatLonPoint().getLatitude());
+                            info.setLongitude(poi.getLatLonPoint().getLongitude());
+                            locationInfoList.add(info);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
                 }
-            }
 
-            @Override
-            public void onPoiItemSearched(PoiItem poiItem, int i) {
+                @Override
+                public void onPoiItemSearched(PoiItem poiItem, int i) {
 
-            }
-        });
-        search.searchPOIAsyn();
+                }
+            });
+            search.searchPOIAsyn();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

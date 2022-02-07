@@ -246,16 +246,6 @@ public class AlarmUtils {
         setNoticeManager(context, temp[0], temp[1].replace("name", recommendInfo == null ? (mineInfo == null ? "TA" : (mineInfo.getSex() == 0 ? "他" : "她")) : recommendInfo.getUserNick()), recommendInfo);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public static String getChannelId(NotificationManager notificationManager) {
-        NotificationChannel channel = new NotificationChannel(MineApp.NOTIFICATION_CHANNEL_ID, "虾菇推送", NotificationManager.IMPORTANCE_DEFAULT);
-        channel.enableLights(true);//显示桌面红点
-        channel.setLightColor(Color.RED);
-        channel.setShowBadge(true);
-        notificationManager.createNotificationChannel(channel);
-        return channel.getId();
-    }
-
     private static void setNoticeManager(Context context, String title, String content, RecommendInfo recommendInfo) {
 
         NotificationManager notificationManager = (NotificationManager) context
@@ -265,7 +255,7 @@ public class AlarmUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             builder = new NotificationCompat.Builder(context, getChannelId(notificationManager));
         } else {
-            builder = new NotificationCompat.Builder(context, null);
+            builder = new NotificationCompat.Builder(context, MineApp.NOTIFICATION_CHANNEL_ID);
         }
 
         RemoteViews mRemoteViews = new RemoteViews("com.yimi.rentme", R.layout.remoteview_layout);
@@ -300,6 +290,16 @@ public class AlarmUtils {
         } catch (Exception e) {
             builder(context, builder, mRemoteViews, nmc);
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static String getChannelId(NotificationManager notificationManager) {
+        NotificationChannel channel = new NotificationChannel(MineApp.NOTIFICATION_CHANNEL_ID, "虾菇推送", NotificationManager.IMPORTANCE_DEFAULT);
+        channel.enableLights(true);//显示桌面红点
+        channel.setLightColor(Color.RED);
+        channel.setShowBadge(true);
+        notificationManager.createNotificationChannel(channel);
+        return channel.getId();
     }
 
     private static void builder(Context context, NotificationCompat.Builder builder, RemoteViews mRemoteViews, NotificationManagerCompat nmc) {

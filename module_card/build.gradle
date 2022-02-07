@@ -14,7 +14,7 @@ android {
         // 路由模块使用
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = [moduleName: project.getName()]
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
             }
         }
 
@@ -41,12 +41,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    ndkVersion '21.2.6472646'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // 需要重新在子模块中再引用一次，否则报错
-    annotationProcessor 'com.alibaba:arouter-compiler:1.1.4'
+    annotationProcessor 'com.alibaba:arouter-compiler:1.5.2'
     implementation project(':lib_base')
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.services.core.ServiceSettings;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.app.MineApp;
 
@@ -19,20 +20,26 @@ public class AMapLocation {
     public AMapLocationClientOption mLocationOption;
 
     public AMapLocation(Context context) {
+        ServiceSettings.updatePrivacyShow(context, true, true);
+        ServiceSettings.updatePrivacyAgree(context, true);
         //初始化定位
-        mLocationClient = new AMapLocationClient(context);
-        mLocationOption = new AMapLocationClientOption();
-        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        //接口为true，启动定位时SDK会返回最近3s内精度最高的一次定位结果
-        mLocationOption.setOnceLocationLatest(true);
-        //设置是否返回地址信息（默认返回地址信息）
-        mLocationOption.setNeedAddress(true);
-        //设置是否允许模拟位置,默认为true，允许模拟位置
-        mLocationOption.setMockEnable(true);
-        //关闭缓存机制
-        mLocationOption.setLocationCacheEnable(false);
-        //给定位客户端对象设置定位参数
-        mLocationClient.setLocationOption(mLocationOption);
+        try {
+            mLocationClient = new AMapLocationClient(context);
+            mLocationOption = new AMapLocationClientOption();
+            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+            //接口为true，启动定位时SDK会返回最近3s内精度最高的一次定位结果
+            mLocationOption.setOnceLocationLatest(true);
+            //设置是否返回地址信息（默认返回地址信息）
+            mLocationOption.setNeedAddress(true);
+            //设置是否允许模拟位置,默认为true，允许模拟位置
+            mLocationOption.setMockEnable(true);
+            //关闭缓存机制
+            mLocationOption.setLocationCacheEnable(false);
+            //给定位客户端对象设置定位参数
+            mLocationClient.setLocationOption(mLocationOption);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //    latitude=0.0#longitude=0.0#province=#coordType=GCJ02#city=#district=#cityCode=#adCode=#address=#country=#road=#poiName=#street=#streetNum=#aoiName=#poiid=#floor=#errorCode=12#errorInfo=缺少定位权限#locationDetail=定位服务没有开启，请在设置中打开定位服务开关#1206#description=#locationType=0#conScenario=0
