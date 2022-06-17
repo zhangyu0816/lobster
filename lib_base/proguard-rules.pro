@@ -310,5 +310,3 @@ public static final android.os.Parcelable$Creator *;
 ##====================zxing
 -keep class com.google.zxing.** {*;}
 -dontwarn com.google.zxing.**
-
--keep class com.zb.lib_base.model.*{*;}

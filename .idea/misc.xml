@@ -3,8 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/app/src/main/res/layout/ac_login.xml" value="0.1" />
+        <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/app/src/main/res/layout/ac_login.xml" value="0.2" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/app/src/main/res/layout/ac_login_video.xml" value="0.1" />
+        <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/app/src/main/res/layout/ac_main.xml" value="0.12132725430597771" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/drawable/btn_bg_black_4d000_radius60.xml" value="0.23981481481481481" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/drawable/btn_bg_black_99000_radius5.xml" value="0.23981481481481481" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/drawable/btn_bg_black_d8_radius40.xml" value="0.2490740740740741" />
@@ -19,6 +20,7 @@
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/drawable/btn_bg_white_radius_bottom13.xml" value="0.2490740740740741" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/drawable/btn_bg_white_red_radius7_big.xml" value="0.22962962962962963" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/drawable/btn_bg_white_tran_radius60.xml" value="0.22685185185185186" />
+        <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/drawable/gradient_black_00_80.xml" value="0.2835" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/layout/card_member_discover.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/layout/df_film_rinse.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/layout/frag_location.xml" value="0.1" />
@@ -36,6 +38,8 @@
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/layout/pws_vip_ad.xml" value="0.190234375" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/layout/pws_wx.xml" value="0.264" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_camera/src/main/res/layout/camera_back_black_layout.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_card/src/main/res/layout/card_member_detail.xml" value="0.3619791666666667" />
+        <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_home/src/main/res/layout/home_follow.xml" value="0.12132725430597771" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/ac_love_get.xml" value="0.2" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/ac_love_home.xml" value="0.2" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/ac_love_money.xml" value="0.264" />
