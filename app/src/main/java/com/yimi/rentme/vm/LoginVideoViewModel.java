@@ -1,16 +1,19 @@
 package com.yimi.rentme.vm;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.view.View;
 
+import com.alibaba.android.arouter.launcher.ARouter;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 import com.yimi.rentme.R;
 import com.yimi.rentme.databinding.AcLoginVideoBinding;
+import com.yimi.rentme.service.ForegroundLiveService;
 import com.zb.lib_base.api.functionSwitchApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.app.MineApp;
@@ -21,6 +24,7 @@ import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DebuggerUtils;
 import com.zb.lib_base.utils.SCToastUtil;
+import com.zb.lib_base.utils.UIUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 
 import java.net.ConnectException;
@@ -40,6 +44,8 @@ public class LoginVideoViewModel extends BaseViewModel {
         mBinding = (AcLoginVideoBinding) binding;
         functionSwitch();
         initVideo();
+        initRealm();
+        activity.startService(new Intent(activity, ForegroundLiveService.class));
     }
 
     private void functionSwitch() {
@@ -55,6 +61,7 @@ public class LoginVideoViewModel extends BaseViewModel {
     }
 
     public void toLogin(View view) {
+        UMConfigure.setLogEnabled(true);
         // 页面统计
         UMConfigure.init(
                 MineApp.instance,
@@ -71,7 +78,8 @@ public class LoginVideoViewModel extends BaseViewModel {
         PlatformConfig.setQQZone("101928546", "a8d76c68d7590b71f5254aa87c4b24c8");
         PlatformConfig.setQQFileProvider("com.yimi.rentme.fileprovider");
         UMShareAPI.get(MineApp.instance);
-        initRealm();
+        initRouter();
+
         myInfo();
     }
 
@@ -109,6 +117,20 @@ public class LoginVideoViewModel extends BaseViewModel {
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(config);
+    }
+
+    // 初始化路由
+    private void initRouter() {
+        // 这两行必须写在init之前，否则这些配置在init过程中将无效
+        if (UIUtils.isApkInDebug(MineApp.getApp())) {
+            //打印日志
+            ARouter.openLog();
+            //开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！
+            //线上版本需要关闭,否则有安全风险)
+            ARouter.openDebug();
+        }
+        // 尽可能早，推荐在Application中初始化
+        ARouter.init(MineApp.getApp());
     }
 
     private void initVideo() {

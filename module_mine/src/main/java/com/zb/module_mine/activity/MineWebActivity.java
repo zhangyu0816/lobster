@@ -1,35 +1,41 @@
 package com.zb.module_mine.activity;
 
+import android.annotation.SuppressLint;
+import android.content.pm.ActivityInfo;
+import android.os.Bundle;
 import android.view.KeyEvent;
 
-import com.alibaba.android.arouter.facade.annotation.Autowired;
-import com.alibaba.android.arouter.facade.annotation.Route;
-import com.zb.lib_base.utils.RouteUtils;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+import com.zb.lib_base.utils.StatusBarUtil;
 import com.zb.module_mine.BR;
 import com.zb.module_mine.R;
+import com.zb.module_mine.databinding.MineWebBinding;
 import com.zb.module_mine.vm.MineWebViewModel;
 
-@Route(path = RouteUtils.Mine_Web)
-public class MineWebActivity extends MineBaseActivity {
-    @Autowired(name = "title")
-    String title = "";
-    @Autowired(name = "url")
-    String url = "";
+import androidx.databinding.DataBindingUtil;
 
+public class MineWebActivity extends RxAppCompatActivity {
+
+    private MineWebBinding mBinding;
     private MineWebViewModel viewModel;
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
-    public int getRes() {
-        return R.layout.mine_web;
-    }
-
-    @Override
-    public void initUI() {
+    protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.MineTheme);
+        super.onCreate(savedInstanceState);
+        StatusBarUtil.statusBarLightMode(this);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.mine_web);
+        try {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         viewModel = new MineWebViewModel();
-        viewModel.url = url;
+        viewModel.url = getIntent().getStringExtra("url");
         viewModel.setBinding(mBinding);
         mBinding.setVariable(BR.viewModel, viewModel);
-        mBinding.setVariable(BR.title, title);
+        mBinding.setVariable(BR.title, getIntent().getStringExtra("title"));
     }
 
     @Override

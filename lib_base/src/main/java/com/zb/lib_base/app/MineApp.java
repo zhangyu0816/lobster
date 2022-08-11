@@ -134,10 +134,10 @@ public class MineApp extends MultiDexApplication {
         simplifiedType = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/simplified.ttf");
         QingSongShouXieTiType = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/QingSongShouXieTi.ttf");
         blackbold = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/blackbold.ttf");
-        initRouter(this);
+
         MultiDex.install(this);
-        UMConfigure.preInit(MineApp.instance, "55cac14467e58e8bd7000359", null);
-        UMConfigure.setLogEnabled(true);
+
+
         try {
             PackageInfo packageInfo = getApplicationContext().getPackageManager().getPackageInfo(getPackageName(), 0);
             versionName = packageInfo.versionName;
@@ -151,19 +151,6 @@ public class MineApp extends MultiDexApplication {
         return instance;
     }
 
-    // 初始化路由
-    private void initRouter(MineApp mApplication) {
-        // 这两行必须写在init之前，否则这些配置在init过程中将无效
-        if (UIUtils.isApkInDebug(instance)) {
-            //打印日志
-            ARouter.openLog();
-            //开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！
-            //线上版本需要关闭,否则有安全风险)
-            ARouter.openDebug();
-        }
-        // 尽可能早，推荐在Application中初始化
-        ARouter.init(mApplication);
-    }
 
     public LinkedList<RxAppCompatActivity> mActivityList = new LinkedList<>();
     public Map<String, RxAppCompatActivity> activityMap = new HashMap<>();

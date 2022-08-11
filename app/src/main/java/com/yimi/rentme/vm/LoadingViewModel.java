@@ -3,13 +3,18 @@ package com.yimi.rentme.vm;
 import android.content.Intent;
 import android.os.CountDownTimer;
 
+import com.umeng.commonsdk.UMConfigure;
+import com.umeng.commonsdk.debug.I;
+import com.yimi.rentme.activity.LoginVideoActivity;
 import com.yimi.rentme.iv.LoadingVMInterface;
 import com.yimi.rentme.service.ForegroundLiveService;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.RulePW;
+import com.zb.module_mine.activity.MineWebActivity;
 
 import androidx.databinding.ViewDataBinding;
 
@@ -32,22 +37,38 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
                     new RulePW(activity, mBinding.getRoot(), new RulePW.CallBack() {
                         @Override
                         public void sureBack() {
-                            activity.startService(new Intent(activity, ForegroundLiveService.class));
+                            UMConfigure.preInit(MineApp.instance, "55cac14467e58e8bd7000359", null);
                             PreferenceUtil.saveIntValue(activity, "ruleType1", 1);
-                            ActivityUtils.getLoginVideoActivity();
+                            activity.startActivity(new Intent(activity, LoginVideoActivity.class));
                         }
 
                         @Override
                         public void cancelBack() {
                             activity.finish();
                         }
+
+                        @Override
+                        public void registerRule() {
+                            Intent intent = new Intent(activity, MineWebActivity.class);
+                            intent.putExtra("url", HttpManager.BASE_URL + "mobile/xiagu_reg_protocol.html");
+                            intent.putExtra("title","注册协议");
+                            activity.startActivity(intent);
+                        }
+
+                        @Override
+                        public void privacyRule() {
+                            Intent intent = new Intent(activity, MineWebActivity.class);
+                            intent.putExtra("url", HttpManager.BASE_URL + "mobile/xiagu_privacy_protocol.html");
+                            intent.putExtra("title","隐私政策");
+                            activity.startActivity(intent);
+                        }
                     });
                 }
             };
             mCountDownTimer.start();
         } else {
-            activity.startService(new Intent(activity, ForegroundLiveService.class));
-            ActivityUtils.getLoginVideoActivity();
+            UMConfigure.preInit(MineApp.instance, "55cac14467e58e8bd7000359", null);
+            activity.startActivity(new Intent(activity, LoginVideoActivity.class));
         }
     }
 
