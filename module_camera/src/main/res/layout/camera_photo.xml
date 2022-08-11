@@ -111,8 +111,8 @@
                 onClickDelayed="@{viewModel::changeCameraId}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@+id/camera_light"
                 android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/camera_light"
                 android:padding="15dp"
                 app:srcCompat="@mipmap/photo_change" />
         </RelativeLayout>

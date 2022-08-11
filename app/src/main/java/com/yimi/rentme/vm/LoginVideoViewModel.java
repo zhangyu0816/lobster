@@ -36,6 +36,7 @@ public class LoginVideoViewModel extends BaseViewModel {
         super.setBinding(binding);
         mBinding = (AcLoginVideoBinding) binding;
         functionSwitch();
+        initVideo();
     }
 
     private void functionSwitch() {
@@ -45,7 +46,6 @@ public class LoginVideoViewModel extends BaseViewModel {
                 if (o.getAndroidCommonSwitch() == 1) {
                     DebuggerUtils.checkDebuggableInNotDebugModel(MineApp.sContext);
                 }
-                initVideo();
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

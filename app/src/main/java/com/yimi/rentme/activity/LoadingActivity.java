@@ -38,8 +38,6 @@ public class LoadingActivity extends RxAppCompatActivity {
         viewModel = new LoadingViewModel();
         mBinding.setVariable(BR.viewModel, viewModel);
         viewModel.setBinding(mBinding);
-//        EncryptionUtil.encryptionMD5(MineApp.sContext, "zzzzzzzzzz", 0);
-//        Log.e("androidSign", EncryptionUtil.encryptionMD5(MineApp.sContext, getSign(MineApp.sContext, getPackageName()), 0));
     }
 
 

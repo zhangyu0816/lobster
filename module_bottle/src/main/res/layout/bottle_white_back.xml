@@ -22,7 +22,7 @@
         <com.zb.module_bottle.views.BottleBGView
             android:id="@+id/bottle_bg"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <RelativeLayout
             android:layout_width="match_parent"

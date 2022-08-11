@@ -184,7 +184,6 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
     public void throwBottle(View view) {
         bottleInfo = new BottleInfo();
         mBinding.setTitle("扔一个瓶子");
-        mBinding.setBottleInfo(bottleInfo);
         mBinding.setIsBottle(true);
         mBinding.setShowBtn(false);
         mBinding.setShowBottleTop(false);
@@ -217,7 +216,6 @@ public class BottleThrowViewModel extends BaseViewModel implements BottleThrowVM
                 public void onNext(BottleInfo o) {
                     canClose = true;
                     bottleInfo = o;
-                    mBinding.setBottleInfo(bottleInfo);
                     otherInfo(bottleInfo.getUserId());
                     mBinding.edContent.setText(bottleInfo.getText());
                     throwIndex = 1;

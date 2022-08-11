@@ -21,10 +21,6 @@
             type="Integer" />
 
         <variable
-            name="bottleInfo"
-            type="com.zb.lib_base.model.BottleInfo" />
-
-        <variable
             name="isBottle"
             type="boolean" />
 

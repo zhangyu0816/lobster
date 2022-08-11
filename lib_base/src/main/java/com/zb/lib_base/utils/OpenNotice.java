@@ -19,7 +19,7 @@ import static android.provider.Settings.EXTRA_CHANNEL_ID;
 public class OpenNotice {
 
     public OpenNotice(RxAppCompatActivity activity, View view) {
-        if (PreferenceUtil.readIntValue(activity, "isNotificationEnabled") == 1) {
+        if (PreferenceUtil.readIntValue(activity, "isNotificationEnabled") == 0) {
             if (isNotNotification(activity)) {
                 MineApp.getApp().getFixedThreadPool().execute(() -> {
                     SystemClock.sleep(1000);

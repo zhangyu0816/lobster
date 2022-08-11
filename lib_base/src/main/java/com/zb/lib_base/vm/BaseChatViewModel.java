@@ -1295,6 +1295,10 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                     historyMsgList.get(i).setShowTime(false);
                 }
             }
+
+            for (int i = historyMsgList.size()-2; i >=0; i--) {
+
+            }
         }
     }
 

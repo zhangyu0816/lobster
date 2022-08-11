@@ -309,8 +309,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:background="@{rewardNum==0?@drawable/icon_meigui:@drawable/icon_qin}"
-                                    tools:background="@drawable/icon_meigui"
-                                    android:visibility="@{rewardNum>2?View.GONE:View.VISIBLE}"/>
+                                    android:visibility="@{rewardNum>2?View.GONE:View.VISIBLE}"
+                                    tools:background="@drawable/icon_meigui" />
 
                                 <TextView
                                     onClickDelayed="@{viewModel::selectGift}"
@@ -421,9 +421,9 @@
                 onLoadMoreListener="@{viewModel}"
                 onRefreshListener="@{viewModel}"
                 android:layout_width="match_parent"
-                android:paddingBottom="100dp"
                 android:layout_height="match_parent"
                 android:layout_marginTop="-13dp"
+                android:paddingBottom="100dp"
                 app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -450,6 +450,7 @@
             android:layout_marginBottom="8dp"
             android:background="@mipmap/icon_remind"
             android:visibility="gone" />
+
         <RelativeLayout
             android:id="@+id/like_layout"
             android:layout_width="match_parent"

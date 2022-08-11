@@ -8,8 +8,6 @@
 
         <import type="android.view.View" />
 
-        <import type="com.zb.lib_base.app.MineApp" />
-
         <variable
             name="item"
             type="com.zb.lib_base.model.RechargeInfo" />

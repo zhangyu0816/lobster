@@ -51,8 +51,4 @@ public class EditPW extends BasePopupWindow {
         api.setDialogTitle("正在回复");
         HttpManager.getInstance().doHttpDeal(api);
     }
-
-    public interface CallBack {
-        void sure();
-    }
 }

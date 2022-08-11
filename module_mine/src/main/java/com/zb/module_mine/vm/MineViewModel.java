@@ -162,7 +162,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
 
         getAi();
     }
-
+    private int index = 1;
     private Handler mHandler = new Handler();
     private Runnable ra = new Runnable() {
         @Override
@@ -175,7 +175,7 @@ public class MineViewModel extends BaseViewModel implements MineVMInterface {
             mHandler.postDelayed(ra, 500);
         }
     };
-    private int index = 1;
+
 
     public void onResume() {
         mBinding.setMineInfo(MineApp.mineInfo);
