@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.igexin.sdk.PushManager;
 import com.yimi.rentme.BR;
 import com.yimi.rentme.R;
 import com.yimi.rentme.vm.LoginVideoViewModel;
@@ -45,6 +46,12 @@ public class LoginVideoActivity extends BaseActivity {
         viewModel.setBinding(mBinding);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PushManager.getInstance().turnOffPush(MineApp.instance);
+    }
+
     // 监听程序退出
     private long exitTime = 0;
 
@@ -58,6 +65,7 @@ public class LoginVideoActivity extends BaseActivity {
             } else {
                 MineApp.getApp().exit();
                 System.exit(0);
+                PushManager.getInstance().turnOffPush(MineApp.instance);
                 mBinding = null;
                 viewModel = null;
             }

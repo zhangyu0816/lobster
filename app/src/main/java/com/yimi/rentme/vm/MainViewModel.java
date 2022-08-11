@@ -1,14 +1,19 @@
 package com.yimi.rentme.vm;
 
+import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.os.Vibrator;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -23,6 +28,7 @@ import com.zb.lib_base.api.contactNumApi;
 import com.zb.lib_base.api.driftBottleChatListApi;
 import com.zb.lib_base.api.firstOpenMemberPageApi;
 import com.zb.lib_base.api.flashChatListApi;
+import com.zb.lib_base.api.modifyPushInfoApi;
 import com.zb.lib_base.api.myImAccountInfoApi;
 import com.zb.lib_base.api.myInfoApi;
 import com.zb.lib_base.api.newDynMsgAllNumApi;
@@ -59,6 +65,7 @@ import com.zb.lib_base.utils.FragmentUtils;
 import com.zb.lib_base.utils.ObjectUtils;
 import com.zb.lib_base.utils.OpenNotice;
 import com.zb.lib_base.utils.PreferenceUtil;
+import com.zb.lib_base.utils.widget.DeviceUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 import com.zb.lib_base.windows.FlashChatPW;
 import com.zb.lib_base.windows.TextPW;
@@ -68,6 +75,7 @@ import com.zb.module_card.windows.GuidancePW;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.core.app.ActivityCompat;
 import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -206,6 +214,31 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
                 SystemClock.sleep(500);
                 activity.runOnUiThread(() -> new GuidancePW(mBinding.getRoot()));
             });
+
+        if (checkPermissionGranted(activity, Manifest.permission.READ_PHONE_STATE))
+            setPermissions();
+        else if (PreferenceUtil.readIntValue(activity, "phonePermission") == 0) {
+            PreferenceUtil.saveIntValue(activity, "phonePermission", 1);
+            MineApp.getApp().getFixedThreadPool().execute(() -> {
+                SystemClock.sleep(300);
+                activity.runOnUiThread(() -> new TextPW(activity, mBinding.getRoot(), "权限说明",
+                        "当您注册并使用虾菇时，我们希望知道您设备的一些信息（包括设备序列号、设备MAC地址、唯一设备识别码（IMEI/android ID/OPENUDID等）），因此我们将会申请电话权限：" +
+                                "\n 1、申请电话权限--获取设备信息（包括设备序列号、设备MAC地址、唯一设备识别码（IMEI/android ID/OPENUDID等））。" +
+                                "\n 2、我们的保护：" +
+                                "\n\t ①、请注意，单独的设备信息是无法识别特定自然人身份的信息。" +
+                                "\n\t ②、如果我们将这类信息与其他信息结合用于识别特定自然人身份，或者将其与个人信息结合使用，则在结合使用期间，这类信息将被视为个人信息，除取得您授权或法律法规另有规定外，我们会将该类个人信息做匿名化、去标识化处理。" +
+                                "\n 3、我们的用途：" +
+                                "\n\t ①、保障用户账号安全、平台安全、运营安全，便于辨别不同的设备，方便错误原因精准定位。" +
+                                "\n\t ②、您同意开启通知功能，即代表您同意将设备信息共享给每日互动股份有限公司，以便提供个推推送服务。" +
+                                "\n\t ③、您使用支付功能，即代表您同意将设备信息共享给支付宝和微信，以便提供app支付功能。" +
+                                "\n\t ④、为了保障及时了解软件使用情况及修复bug，我们将与友盟+共享设备信息，以便提供统计功能。" +
+                                "\n\t ⑤、您同意开启定位功能，即代表您同意将设备信息共享给高德地图，以便提供地图功能和精准定位功能。" +
+                                "\n 4、若您点击“同意”按钮，我们方可正式申请上述权限，以便获取设备信息，" +
+                                "\n 5、若您点击“拒绝”按钮，我们将不再主动弹出该提示，也不会获取设备信息，不影响使用其他的虾菇功能/服务，" +
+                                "\n 6、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭手机权限。",
+                        "同意", false, true, this::getPermissions));
+            });
+        }
     }
 
     @Override
@@ -315,6 +348,56 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
         adapter.notifyItemChanged(mBinding.viewPage.getCurrentItem());
     }
 
+    /**
+     * 权限
+     */
+    private void getPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            performCodeWithPermission("虾菇需要访问电话权限", new BaseActivity.PermissionCallback() {
+                @Override
+                public void hasPermission() {
+                    setPermissions();
+                }
+
+                @Override
+                public void noPermission() {
+                    PreferenceUtil.saveIntValue(activity, "phonePermission", 1);
+                }
+            }, Manifest.permission.READ_PHONE_STATE);
+        } else {
+            setPermissions();
+        }
+    }
+
+    private void setPermissions() {
+        TelephonyManager tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
+        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        String ANDROID_ID = Settings.System.getString(activity.getContentResolver(), Settings.System.ANDROID_ID);
+        String imei = "";
+        if (MineApp.sContext.getApplicationInfo().targetSdkVersion >= 29 && Build.VERSION.SDK_INT >= 29) {
+            //大于等于29使用特殊方法
+            imei = DeviceUtils.getUniqueId(MineApp.sContext);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            imei = tm.getImei();
+        } else {
+            imei = tm.getDeviceId();
+        }
+        if (imei == null) {
+            imei = ANDROID_ID;
+        }
+        if (imei != null) {
+            if (!PreferenceUtil.readStringValue(activity, "deviceCode").equals(imei)) {
+                PreferenceUtil.saveStringValue(activity, "deviceCode", imei);
+                MineApp.getApp().getFixedThreadPool().execute(() -> {
+                    SystemClock.sleep(2000L);
+                    modifyPushInfo();
+                });
+            }
+        }
+    }
+
     private ViewPagerAdapter adapter;
 
     private void initFragments() {
@@ -408,6 +491,16 @@ public class MainViewModel extends BaseViewModel implements MainVMInterface, Use
             public void onNext(MineInfo o) {
                 MineApp.mineInfo = o;
                 openedMemberPriceList();
+            }
+        }, activity);
+        HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    private void modifyPushInfo() {
+        modifyPushInfoApi api = new modifyPushInfoApi(new HttpOnNextListener() {
+            @Override
+            public void onNext(Object o) {
+
             }
         }, activity);
         HttpManager.getInstance().doHttpDeal(api);

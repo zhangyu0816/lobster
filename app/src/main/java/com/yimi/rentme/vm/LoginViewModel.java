@@ -1,16 +1,12 @@
 package com.yimi.rentme.vm;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
-import android.provider.Settings;
-import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
@@ -21,7 +17,6 @@ import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -68,7 +63,6 @@ import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.databinding.ViewDataBinding;
 
 public class LoginViewModel extends BaseViewModel implements LoginVMInterface, TextWatcher {
@@ -213,31 +207,6 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         };
 
         MineApp.cityName = PreferenceUtil.readStringValue(activity, "cityName");
-        if (checkPermissionGranted(activity, Manifest.permission.READ_PHONE_STATE))
-            setPermissions(0);
-        else if (PreferenceUtil.readIntValue(activity, "phonePermission") == 0) {
-            PreferenceUtil.saveIntValue(activity, "phonePermission", 1);
-            MineApp.getApp().getFixedThreadPool().execute(() -> {
-                SystemClock.sleep(300);
-                activity.runOnUiThread(() -> new TextPW(activity, mBinding.getRoot(), "权限说明",
-                        "当您注册并使用虾菇时，我们希望知道您设备的一些信息（包括设备序列号、设备MAC地址、唯一设备识别码（IMEI/android ID/OPENUDID等）），因此我们将会申请电话权限：" +
-                                "\n 1、申请电话权限--获取设备信息（包括设备序列号、设备MAC地址、唯一设备识别码（IMEI/android ID/OPENUDID等））。" +
-                                "\n 2、我们的保护：" +
-                                "\n\t ①、请注意，单独的设备信息是无法识别特定自然人身份的信息。" +
-                                "\n\t ②、如果我们将这类信息与其他信息结合用于识别特定自然人身份，或者将其与个人信息结合使用，则在结合使用期间，这类信息将被视为个人信息，除取得您授权或法律法规另有规定外，我们会将该类个人信息做匿名化、去标识化处理。" +
-                                "\n 3、我们的用途：" +
-                                "\n\t ①、保障用户账号安全、平台安全、运营安全，便于辨别不同的设备，方便错误原因精准定位。" +
-                                "\n\t ②、您同意开启通知功能，即代表您同意将设备信息共享给每日互动股份有限公司，以便提供个推推送服务。" +
-                                "\n\t ③、您使用支付功能，即代表您同意将设备信息共享给支付宝和微信，以便提供app支付功能。" +
-                                "\n\t ④、为了保障及时了解软件使用情况及修复bug，我们将与友盟+共享设备信息，以便提供统计功能。" +
-                                "\n\t ⑤、您同意开启定位功能，即代表您同意将设备信息共享给高德地图，以便提供地图功能和精准定位功能。" +
-                                "\n 4、若您点击“同意”按钮，我们方可正式申请上述权限，以便获取设备信息，" +
-                                "\n 5、若您点击“拒绝”按钮，我们将不再主动弹出该提示，也不会获取设备信息，不影响使用其他的虾菇功能/服务，" +
-                                "\n 6、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭手机权限。",
-                        "同意", false, true, () -> getPermissions(0)));
-            });
-        }
-
 
         photoManager = new PhotoManager(activity, () -> {
             String imageUrl = photoManager.jointWebUrl("#");
@@ -336,7 +305,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     @Override
     public void upload(View view) {
         if (checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            setPermissions(1);
+            setPermissions();
         } else {
             if (PreferenceUtil.readIntValue(activity, "photoPermission") == 0) {
                 PreferenceUtil.saveIntValue(activity, "photoPermission", 1);
@@ -347,7 +316,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                                 "\n 3、若您点击“同意”按钮，我们方可正式申请上述权限，以便拍摄照片及选取照片，完善个人信息，" +
                                 "\n 4、若您点击“拒绝”按钮，我们将不再主动弹出该提示，您也无法使用上传图片功能，不影响使用其他的虾菇功能/服务，" +
                                 "\n 5、您也可以通过“手机设置--应用--虾菇--权限”或app内“我的--设置--权限管理--权限”，手动开启或关闭相机、存储权限。",
-                        "同意", false, true, () -> getPermissions(1));
+                        "同意", false, true, this::getPermissions);
             } else {
                 if (!checkPermissionGranted(activity, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                     SCToastUtil.showToast(activity, "你未开启存储权限，请前往我的--设置--权限管理--权限进行设置", true);
@@ -873,54 +842,26 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     /**
      * 权限
      */
-    private void getPermissions(int type) {
+    private void getPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (type == 0)
-                performCodeWithPermission("虾菇需要访问电话权限", new BaseActivity.PermissionCallback() {
-                    @Override
-                    public void hasPermission() {
-                        setPermissions(type);
-                    }
+            performCodeWithPermission("虾菇需要访问相机权限及存储空间权限", new BaseActivity.PermissionCallback() {
+                @Override
+                public void hasPermission() {
+                    setPermissions();
+                }
 
-                    @Override
-                    public void noPermission() {
-                        PreferenceUtil.saveIntValue(activity, "phonePermission", 1);
-                    }
-                }, Manifest.permission.READ_PHONE_STATE);
-            else
-                performCodeWithPermission("虾菇需要访问相机权限及存储空间权限", new BaseActivity.PermissionCallback() {
-                    @Override
-                    public void hasPermission() {
-                        setPermissions(type);
-                    }
-
-                    @Override
-                    public void noPermission() {
-                        PreferenceUtil.saveIntValue(activity, "photoPermission", 1);
-                    }
-                }, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
+                @Override
+                public void noPermission() {
+                    PreferenceUtil.saveIntValue(activity, "photoPermission", 1);
+                }
+            }, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
         } else {
-            setPermissions(type);
+            setPermissions();
         }
     }
 
-    private void setPermissions(int type) {
-        if (type == 0) {
-            initPhone();
-        } else {
-            MineApp.toPublish = false;
-            ActivityUtils.getCameraMain(activity, false, true, false);
-        }
-    }
-
-    @SuppressLint("HardwareIds")
-    private void initPhone() {
-        TelephonyManager tm = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
-        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        String ANDROID_ID = Settings.System.getString(activity.getContentResolver(), Settings.System.ANDROID_ID);
-        PreferenceUtil.saveStringValue(activity, "deviceCode", ANDROID_ID);
-        Log.e("deviceCode", ANDROID_ID);
+    private void setPermissions() {
+        MineApp.toPublish = false;
+        ActivityUtils.getCameraMain(activity, false, true, false);
     }
 }

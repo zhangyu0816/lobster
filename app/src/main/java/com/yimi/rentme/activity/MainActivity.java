@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.igexin.sdk.PushManager;
 import com.xiaomi.mimc.logger.Logger;
 import com.xiaomi.mimc.logger.MIMCLog;
 import com.yimi.rentme.BR;
@@ -34,9 +35,7 @@ public class MainActivity extends AppBaseActivity {
     @Override
     public void initUI() {
         // 个推注册
-        MineApp.getApp().getFixedThreadPool().execute(() -> {
-            setNotificationChannel();
-        });
+        MineApp.getApp().getFixedThreadPool().execute(this::setNotificationChannel);
 
         fitComprehensiveScreen();
         viewModel = new MainViewModel();
@@ -98,6 +97,7 @@ public class MainActivity extends AppBaseActivity {
             mBinding = null;
             viewModel = null;
         }
+        PushManager.getInstance().turnOffPush(MineApp.instance);
     }
 
     @Override
@@ -142,6 +142,7 @@ public class MainActivity extends AppBaseActivity {
                 alarmUtils.startAlarm();
                 MineApp.sMIMCUser.logout();
                 MineApp.sMIMCUser.destroy();
+                PushManager.getInstance().turnOffPush(MineApp.instance);
                 MineApp.getApp().exit();
                 System.exit(0);
             }

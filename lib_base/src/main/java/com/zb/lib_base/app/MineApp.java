@@ -25,7 +25,6 @@ import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.model.VideoInfo;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WalletInfo;
-import com.zb.lib_base.utils.DisplayUtils;
 import com.zb.lib_base.utils.UIUtils;
 
 import java.util.ArrayList;
@@ -39,8 +38,6 @@ import java.util.concurrent.Executors;
 
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 public class MineApp extends MultiDexApplication {
     /**
@@ -138,8 +135,6 @@ public class MineApp extends MultiDexApplication {
         QingSongShouXieTiType = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/QingSongShouXieTi.ttf");
         blackbold = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/blackbold.ttf");
         initRouter(this);
-        initRealm();
-        DisplayUtils.init(this);
         MultiDex.install(this);
         UMConfigure.preInit(MineApp.instance, "55cac14467e58e8bd7000359", null);
         UMConfigure.setLogEnabled(true);
@@ -168,15 +163,6 @@ public class MineApp extends MultiDexApplication {
         }
         // 尽可能早，推荐在Application中初始化
         ARouter.init(mApplication);
-    }
-
-    // 初始化数据库
-    private void initRealm() {
-        Realm.init(this);
-        RealmConfiguration config = new RealmConfiguration.Builder()
-                .deleteRealmIfMigrationNeeded()
-                .build();
-        Realm.setDefaultConfiguration(config);
     }
 
     public LinkedList<RxAppCompatActivity> mActivityList = new LinkedList<>();

@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.view.View;
 
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
@@ -27,6 +28,8 @@ import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 import androidx.databinding.ViewDataBinding;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class LoginVideoViewModel extends BaseViewModel {
     private AcLoginVideoBinding mBinding;
@@ -60,12 +63,15 @@ public class LoginVideoViewModel extends BaseViewModel {
                 UMConfigure.DEVICE_TYPE_PHONE,
                 ""
         );
+        // 选用AUTO页面采集模式
+        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
 
         PlatformConfig.setWeixin("wxb83427622a6740f6", "97f837c0ae8b11af734041828ba4a737");
         PlatformConfig.setWXFileProvider("com.yimi.rentme.fileprovider");
         PlatformConfig.setQQZone("101928546", "a8d76c68d7590b71f5254aa87c4b24c8");
         PlatformConfig.setQQFileProvider("com.yimi.rentme.fileprovider");
         UMShareAPI.get(MineApp.instance);
+        initRealm();
         myInfo();
     }
 
@@ -94,6 +100,15 @@ public class LoginVideoViewModel extends BaseViewModel {
         api.setDialogTitle("loadingNotLogin");
         api.setShowProgress(false);
         HttpManager.getInstance().doHttpDeal(api);
+    }
+
+    // 初始化数据库
+    private void initRealm() {
+        Realm.init(activity);
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
     }
 
     private void initVideo() {

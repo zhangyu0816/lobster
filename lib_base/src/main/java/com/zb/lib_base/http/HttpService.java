@@ -186,6 +186,14 @@ public interface HttpService {
     @POST("api/Contact_otherInfo")
     Observable<BaseResultEntity<MemberInfo>> otherInfo(@Field("otherUserId") long otherUserId);
 
+    // 更新设备信息
+    @FormUrlEncoded
+    @POST("api/Login_modifyPushInfo")
+    Observable<BaseResultEntity> modifyPushInfo(@Field("deviceCode") String deviceCode,
+                                                @Field("channelId") String channelId,
+                                                @Field("deviceHardwareInfo") String deviceHardwareInfo,
+                                                @Field("usePl") int usePl);
+
     // 钱包和受欢迎信息
     @GET("api/Member_walletAndPop")
     Observable<BaseResultEntity<WalletInfo>> walletAndPop();
