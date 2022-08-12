@@ -5,12 +5,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
-import com.umeng.commonsdk.UMConfigure;
 import com.xiaomi.mimc.MIMCUser;
 import com.zb.lib_base.R;
 import com.zb.lib_base.db.FilmResourceDb;
@@ -25,7 +23,6 @@ import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.model.VideoInfo;
 import com.zb.lib_base.model.VipInfo;
 import com.zb.lib_base.model.WalletInfo;
-import com.zb.lib_base.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

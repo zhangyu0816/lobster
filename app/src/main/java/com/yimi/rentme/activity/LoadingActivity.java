@@ -39,7 +39,6 @@ public class LoadingActivity extends RxAppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        viewModel.onDestroy();
         mBinding = null;
         viewModel = null;
     }

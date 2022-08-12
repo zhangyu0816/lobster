@@ -7,20 +7,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 
-import com.alibaba.android.arouter.facade.annotation.Route;
 import com.igexin.sdk.PushManager;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.yimi.rentme.BR;
 import com.yimi.rentme.R;
 import com.yimi.rentme.databinding.AcLoginVideoBinding;
-import com.yimi.rentme.vm.LoadingViewModel;
 import com.yimi.rentme.vm.LoginVideoViewModel;
-import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.RomUtils;
-import com.zb.lib_base.utils.RouteUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.StatusBarUtil;
 

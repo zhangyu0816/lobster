@@ -27,10 +27,6 @@ import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.UIUtils;
 import com.zb.lib_base.vm.BaseViewModel;
 
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
-
 import androidx.databinding.ViewDataBinding;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -97,12 +93,10 @@ public class LoginVideoViewModel extends BaseViewModel {
 
             @Override
             public void onError(Throwable e) {
-                if (e instanceof SocketTimeoutException || e instanceof ConnectException || e instanceof UnknownHostException) {
-                    ActivityUtils.getLoginActivity(0);
-                    mBinding.videoView.stopPlayback();//停止播放视频,并且释放
-                    mBinding.videoView.suspend();//在任何状态下释放媒体播放器
-                    activity.finish();
-                }
+                ActivityUtils.getLoginActivity(0);
+                mBinding.videoView.stopPlayback();//停止播放视频,并且释放
+                mBinding.videoView.suspend();//在任何状态下释放媒体播放器
+                activity.finish();
             }
         }, activity);
         api.setDialogTitle("loadingNotLogin");

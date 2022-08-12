@@ -1,6 +1,5 @@
 package com.zb.lib_base.windows;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.Spannable;
@@ -19,8 +18,6 @@ import android.widget.PopupWindow;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import com.zb.lib_base.R;
 import com.zb.lib_base.databinding.PwsRuleBinding;
-import com.zb.lib_base.http.HttpManager;
-import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 
 import androidx.annotation.NonNull;
