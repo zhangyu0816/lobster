@@ -44,6 +44,8 @@ public class DemoIntentService extends GTIntentService {
 
     @Override
     public void onReceiveServicePid(Context context, int pid) {
+        PreferenceUtil.saveIntValue(MineApp.sContext, "servicePid", pid);
+        Log.i("servicePid", pid + "");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -136,7 +138,7 @@ public class DemoIntentService extends GTIntentService {
                         return;
                     }
                     String activity = activityContent.optString("ActivityName");
-                    if(TextUtils.equals(activity,"FilmResourceDetailActivity")){
+                    if (TextUtils.equals(activity, "FilmResourceDetailActivity")) {
                         LocalBroadcastManager.getInstance(context).sendBroadcast(new Intent("lobster_addFilmMsgCount"));
                     }
                     if (isAppRunning) {

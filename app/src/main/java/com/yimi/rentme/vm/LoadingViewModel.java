@@ -6,6 +6,7 @@ import android.os.SystemClock;
 import com.umeng.commonsdk.UMConfigure;
 import com.yimi.rentme.activity.LoginVideoActivity;
 import com.yimi.rentme.iv.LoadingVMInterface;
+import com.zb.lib_base.activity.BaseActivity;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.http.HttpManager;
 import com.zb.lib_base.utils.PreferenceUtil;
@@ -21,6 +22,8 @@ public class LoadingViewModel extends BaseViewModel implements LoadingVMInterfac
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         MineApp.activity = activity;
+        BaseActivity.userId = PreferenceUtil.readLongValue(activity, "userId");
+        BaseActivity.sessionId = PreferenceUtil.readStringValue(activity, "sessionId");
         if (PreferenceUtil.readIntValue(activity, "ruleType1") == 0) {
             MineApp.getApp().getFixedThreadPool().execute(() -> {
                 SystemClock.sleep(1000L);

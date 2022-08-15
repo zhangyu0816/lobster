@@ -87,74 +87,78 @@ public class ForegroundLiveService extends Service {
 
     private void getGPUImage() {
         MineApp.getApp().getFixedThreadPool().execute(() -> {
-            FilmResourceDb filmResourceDb = new FilmResourceDb(Realm.getDefaultInstance());
-            List<FilmResource> filmResourceList = filmResourceDb.getAllCameraFilm();
-            if (filmResourceList.size() > 0) {
-                for (FilmResource filmResource : filmResourceList) {
-                    if (filmResource.getImages().isEmpty()) {
-                        Log.e("ForegroundLiveService","deleteFilm");
-                        filmResourceDb.deleteFilm(filmResource.getCameraFilmId());
-                    } else {
-                        List<String> resourceImageList = Arrays.asList(filmResource.getImages().split("#"));
-                        long cameraFilmId = filmResource.getCameraFilmId();
-                        int cameraFilmType = filmResource.getCameraFilmType();
-                        for (String image : resourceImageList) {
-                            File file = new File(image);
-                            if (file.exists()) {
-                                if (image.contains("filmImages")) {
-                                    mPhotoManager.addFileUploadForFilm(0, file, cameraFilmId, cameraFilmType);
-                                } else {
-                                    Glide.with(MineApp.sContext).asBitmap().load(image).into(new SimpleTarget<Bitmap>() {
+            try{
+                FilmResourceDb filmResourceDb = new FilmResourceDb(Realm.getDefaultInstance());
+                List<FilmResource> filmResourceList = filmResourceDb.getAllCameraFilm();
+                if (filmResourceList.size() > 0) {
+                    for (FilmResource filmResource : filmResourceList) {
+                        if (filmResource.getImages().isEmpty()) {
+                            Log.e("ForegroundLiveService","deleteFilm");
+                            filmResourceDb.deleteFilm(filmResource.getCameraFilmId());
+                        } else {
+                            List<String> resourceImageList = Arrays.asList(filmResource.getImages().split("#"));
+                            long cameraFilmId = filmResource.getCameraFilmId();
+                            int cameraFilmType = filmResource.getCameraFilmType();
+                            for (String image : resourceImageList) {
+                                File file = new File(image);
+                                if (file.exists()) {
+                                    if (image.contains("filmImages")) {
+                                        mPhotoManager.addFileUploadForFilm(0, file, cameraFilmId, cameraFilmType);
+                                    } else {
+                                        Glide.with(MineApp.sContext).asBitmap().load(image).into(new SimpleTarget<Bitmap>() {
 
-                                        @Override
-                                        public void onLoadCleared(@Nullable Drawable placeholder) {
-                                            super.onLoadCleared(placeholder);
-                                            if (resourceImageList.size() == 1)
-                                                filmResourceDb.deleteFilm(cameraFilmId);
-                                            else
-                                                filmResourceDb.updateImages(cameraFilmId, image, false);
-                                        }
-
-                                        @Override
-                                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                            FilmResourceDb filmResourceDb = new FilmResourceDb(Realm.getDefaultInstance());
-                                            GPUImage gpuImage = new GPUImage(MineApp.sContext);
-                                            gpuImage.setImage(resource);
-                                            if (cameraFilmType == 1)
-                                                gpuImage.setFilter(new GPUImageMonochromeFilter(0.57f, new float[]{0.6f, 0.45f, 0.3f, 1.f}));
-                                            else if (cameraFilmType == 2) {
-                                                GPUImageColorBalanceFilter filter = new GPUImageColorBalanceFilter();
-                                                filter.setMidtones(new float[]{0.46f, 0.23f, 0.15f});
-                                                gpuImage.setFilter(filter);
-                                            } else if (cameraFilmType == 3)
-                                                gpuImage.setFilter(new GPUImageContrastFilter(1.49f));
-                                            else
-                                                gpuImage.setFilter(new GPUImageSaturationFilter(0.5f));
-                                            Bitmap bitmap = gpuImage.getBitmapWithFilterApplied();
-                                            File file1 = BaseActivity.getFilmImageFile();
-                                            try {
-                                                FileOutputStream os = new FileOutputStream(file1);
-                                                bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
-                                                os.flush();
-                                                os.close();
-                                                filmResourceDb.changeImages(cameraFilmId, image, file1.getAbsolutePath());
-                                                mPhotoManager.addFileUploadForFilm(0, file1, cameraFilmId, cameraFilmType);
-                                            } catch (Exception e) {
+                                            @Override
+                                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                                                super.onLoadCleared(placeholder);
                                                 if (resourceImageList.size() == 1)
                                                     filmResourceDb.deleteFilm(cameraFilmId);
                                                 else
                                                     filmResourceDb.updateImages(cameraFilmId, image, false);
-                                                e.printStackTrace();
                                             }
-                                        }
-                                    });
+
+                                            @Override
+                                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                                FilmResourceDb filmResourceDb = new FilmResourceDb(Realm.getDefaultInstance());
+                                                GPUImage gpuImage = new GPUImage(MineApp.sContext);
+                                                gpuImage.setImage(resource);
+                                                if (cameraFilmType == 1)
+                                                    gpuImage.setFilter(new GPUImageMonochromeFilter(0.57f, new float[]{0.6f, 0.45f, 0.3f, 1.f}));
+                                                else if (cameraFilmType == 2) {
+                                                    GPUImageColorBalanceFilter filter = new GPUImageColorBalanceFilter();
+                                                    filter.setMidtones(new float[]{0.46f, 0.23f, 0.15f});
+                                                    gpuImage.setFilter(filter);
+                                                } else if (cameraFilmType == 3)
+                                                    gpuImage.setFilter(new GPUImageContrastFilter(1.49f));
+                                                else
+                                                    gpuImage.setFilter(new GPUImageSaturationFilter(0.5f));
+                                                Bitmap bitmap = gpuImage.getBitmapWithFilterApplied();
+                                                File file1 = BaseActivity.getFilmImageFile();
+                                                try {
+                                                    FileOutputStream os = new FileOutputStream(file1);
+                                                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+                                                    os.flush();
+                                                    os.close();
+                                                    filmResourceDb.changeImages(cameraFilmId, image, file1.getAbsolutePath());
+                                                    mPhotoManager.addFileUploadForFilm(0, file1, cameraFilmId, cameraFilmType);
+                                                } catch (Exception e) {
+                                                    if (resourceImageList.size() == 1)
+                                                        filmResourceDb.deleteFilm(cameraFilmId);
+                                                    else
+                                                        filmResourceDb.updateImages(cameraFilmId, image, false);
+                                                    e.printStackTrace();
+                                                }
+                                            }
+                                        });
+                                    }
+                                } else {
+                                    filmResourceDb.updateImages(cameraFilmId, image, false);
                                 }
-                            } else {
-                                filmResourceDb.updateImages(cameraFilmId, image, false);
                             }
                         }
                     }
                 }
+            }catch (Exception e){
+                e.printStackTrace();
             }
         });
     }

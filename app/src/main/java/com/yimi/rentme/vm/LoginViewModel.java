@@ -1,6 +1,7 @@
 package com.yimi.rentme.vm;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,6 +21,7 @@ import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.TextView;
 
+import com.igexin.sdk.PushManager;
 import com.yimi.rentme.R;
 import com.yimi.rentme.adapter.MainAdapter;
 import com.yimi.rentme.databinding.AcLoginBinding;
@@ -47,6 +49,7 @@ import com.zb.lib_base.model.MineInfo;
 import com.zb.lib_base.model.RegisterInfo;
 import com.zb.lib_base.utils.ActivityUtils;
 import com.zb.lib_base.utils.DataCleanManager;
+import com.zb.lib_base.utils.OpenNotice;
 import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.ThreeLogin;
@@ -64,6 +67,8 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
+
+import static android.os.Process.killProcess;
 
 public class LoginViewModel extends BaseViewModel implements LoginVMInterface, TextWatcher {
     public Map<Integer, String> titleMap = new HashMap<>();
@@ -90,6 +95,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
         MineApp.getApp().getActivityMap().put("LoginActivity", activity);
+        PushManager.getInstance().initialize(MineApp.instance);
         titleMap.put(0, "登录/注册 更精彩");
         contentMap.put(0, "输入手机号后，开始探索虾菇！未注册手机，\n将自动进入注册页面。");
 
@@ -184,6 +190,7 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
         };
 
         memberReceiver = new BaseReceiver(activity, "lobster_member") {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onReceive(Context context, Intent intent) {
                 int type = intent.getIntExtra("type", 0);
@@ -731,6 +738,10 @@ public class LoginViewModel extends BaseViewModel implements LoginVMInterface, T
                     SCToastUtil.showToast(activity, "再按一次退出程序", false);
                     exitTime = System.currentTimeMillis();
                 } else {
+                    if (OpenNotice.isNotNotification(activity)) {
+                        killProcess(PreferenceUtil.readIntValue(activity, "servicePid"));
+                        PushManager.getInstance().turnOffPush(MineApp.instance);
+                    }
                     timer.cancel();
                     MineApp.getApp().exit();
                     System.exit(0);

@@ -40,8 +40,6 @@ public class LoginVideoViewModel extends BaseViewModel {
         mBinding = (AcLoginVideoBinding) binding;
         functionSwitch();
         initVideo();
-        initRealm();
-        activity.startService(new Intent(activity, ForegroundLiveService.class));
     }
 
     private void functionSwitch() {
@@ -74,8 +72,8 @@ public class LoginVideoViewModel extends BaseViewModel {
         PlatformConfig.setQQZone("101928546", "a8d76c68d7590b71f5254aa87c4b24c8");
         PlatformConfig.setQQFileProvider("com.yimi.rentme.fileprovider");
         UMShareAPI.get(MineApp.instance);
-        initRouter();
 
+        activity.startService(new Intent(activity, ForegroundLiveService.class));
         myInfo();
     }
 
@@ -102,29 +100,6 @@ public class LoginVideoViewModel extends BaseViewModel {
         api.setDialogTitle("loadingNotLogin");
         api.setShowProgress(false);
         HttpManager.getInstance().doHttpDeal(api);
-    }
-
-    // 初始化数据库
-    private void initRealm() {
-        Realm.init(activity);
-        RealmConfiguration config = new RealmConfiguration.Builder()
-                .deleteRealmIfMigrationNeeded()
-                .build();
-        Realm.setDefaultConfiguration(config);
-    }
-
-    // 初始化路由
-    private void initRouter() {
-        // 这两行必须写在init之前，否则这些配置在init过程中将无效
-        if (UIUtils.isApkInDebug(MineApp.getApp())) {
-            //打印日志
-            ARouter.openLog();
-            //开启调试模式(如果在InstantRun模式下运行，必须开启调试模式！
-            //线上版本需要关闭,否则有安全风险)
-            ARouter.openDebug();
-        }
-        // 尽可能早，推荐在Application中初始化
-        ARouter.init(MineApp.getApp());
     }
 
     private void initVideo() {

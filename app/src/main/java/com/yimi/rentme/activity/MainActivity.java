@@ -17,10 +17,14 @@ import com.yimi.rentme.utils.AlarmUtils;
 import com.yimi.rentme.vm.MainViewModel;
 import com.zb.lib_base.app.MineApp;
 import com.zb.lib_base.utils.DataCleanManager;
+import com.zb.lib_base.utils.OpenNotice;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.RouteUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 
 import java.io.File;
+
+import static android.os.Process.killProcess;
 
 @Route(path = RouteUtils.Main_MainActivity)
 public class MainActivity extends AppBaseActivity {
@@ -97,7 +101,10 @@ public class MainActivity extends AppBaseActivity {
             mBinding = null;
             viewModel = null;
         }
-        PushManager.getInstance().turnOffPush(MineApp.instance);
+        if (OpenNotice.isNotNotification(this)) {
+            killProcess(PreferenceUtil.readIntValue(MineApp.sContext, "servicePid"));
+            PushManager.getInstance().turnOffPush(MineApp.instance);
+        }
     }
 
     @Override
@@ -142,7 +149,10 @@ public class MainActivity extends AppBaseActivity {
                 alarmUtils.startAlarm();
                 MineApp.sMIMCUser.logout();
                 MineApp.sMIMCUser.destroy();
-                PushManager.getInstance().turnOffPush(MineApp.instance);
+                if (OpenNotice.isNotNotification(this)) {
+                    killProcess(PreferenceUtil.readIntValue(MineApp.sContext, "servicePid"));
+                    PushManager.getInstance().turnOffPush(MineApp.instance);
+                }
                 MineApp.getApp().exit();
                 System.exit(0);
             }

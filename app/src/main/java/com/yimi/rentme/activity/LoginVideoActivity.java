@@ -15,11 +15,15 @@ import com.yimi.rentme.R;
 import com.yimi.rentme.databinding.AcLoginVideoBinding;
 import com.yimi.rentme.vm.LoginVideoViewModel;
 import com.zb.lib_base.app.MineApp;
+import com.zb.lib_base.utils.OpenNotice;
+import com.zb.lib_base.utils.PreferenceUtil;
 import com.zb.lib_base.utils.RomUtils;
 import com.zb.lib_base.utils.SCToastUtil;
 import com.zb.lib_base.utils.StatusBarUtil;
 
 import androidx.databinding.DataBindingUtil;
+
+import static android.os.Process.killProcess;
 
 public class LoginVideoActivity extends RxAppCompatActivity {
 
@@ -63,7 +67,10 @@ public class LoginVideoActivity extends RxAppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        PushManager.getInstance().turnOffPush(MineApp.instance);
+        if (OpenNotice.isNotNotification(this)) {
+            killProcess(PreferenceUtil.readIntValue(MineApp.sContext, "servicePid"));
+            PushManager.getInstance().turnOffPush(MineApp.instance);
+        }
     }
 
     // 监听程序退出
@@ -79,7 +86,10 @@ public class LoginVideoActivity extends RxAppCompatActivity {
             } else {
                 MineApp.getApp().exit();
                 System.exit(0);
-                PushManager.getInstance().turnOffPush(MineApp.instance);
+                if (OpenNotice.isNotNotification(this)) {
+                    killProcess(PreferenceUtil.readIntValue(MineApp.sContext, "servicePid"));
+                    PushManager.getInstance().turnOffPush(MineApp.instance);
+                }
                 mBinding = null;
                 viewModel = null;
             }
