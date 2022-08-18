@@ -43,7 +43,7 @@ public class ChatListDb extends BaseDao {
     public List<ChatList> getChatList(int chatType) {
         beginTransaction();
         List<ChatList> chatMsgList = new ArrayList<>();
-        RealmResults<ChatList> results = realm.where(ChatList.class).notEqualTo("userId", 399583).equalTo("chatType", chatType).equalTo("mainUserId", BaseActivity.userId).findAllSorted("creationDate", Sort.DESCENDING);
+        RealmResults<ChatList> results = realm.where(ChatList.class).equalTo("chatType", chatType).equalTo("mainUserId", BaseActivity.userId).findAllSorted("creationDate", Sort.DESCENDING);
         if (results.size() > 0) {
             chatMsgList.addAll(results);
         }

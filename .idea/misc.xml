@@ -44,8 +44,10 @@
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/drawable/btn_bg_purple_825_radius_bottom13.xml" value="0.26564102564102565" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/drawable/btn_bg_purple_976_radius10.xml" value="0.246" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/drawable/btn_bg_purple_c4b_radius_bottom5.xml" value="0.246" />
+        <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/drawable/btn_bg_purple_e6d_radius40.xml" value="0.2495" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/drawable/btn_bg_red_f3b_radius_bottom10.xml" value="0.246" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/drawable/btn_bg_red_fe4_radius18.xml" value="0.246" />
+        <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/drawable/btn_bg_red_fe4_radius40.xml" value="0.2495" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/drawable/btn_bg_red_fe4_radius_bottom10.xml" value="0.246" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/drawable/btn_bg_red_fe4_radius_top5.xml" value="0.246" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/lib_base/src/main/res/drawable/btn_bg_red_ff3_radius60_4d.xml" value="0.246" />
@@ -177,6 +179,7 @@
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_card/src/main/res/layout/progress.xml" value="0.3307291666666667" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_chat/src/main/res/layout/chat_frag.xml" value="0.3578125" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_chat/src/main/res/layout/chat_pair_fragment.xml" value="0.3578125" />
+        <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_chat/src/main/res/layout/item_chat_pair.xml" value="0.44947916666666665" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_home/src/main/res/drawable/age_pink_bg.xml" value="0.246" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_home/src/main/res/layout/home_discover_detail.xml" value="0.3578125" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_home/src/main/res/layout/home_follow.xml" value="0.25" />
@@ -210,6 +213,7 @@
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/item_love_money.xml" value="0.3562610229276896" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/item_love_money_reward.xml" value="0.176" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/item_mine_member.xml" value="0.3578125" />
+        <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/item_mine_news_list.xml" value="0.44947916666666665" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/item_system_msg.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/item_tab.xml" value="0.3619791666666667" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/item_tag.xml" value="0.3619791666666667" />
@@ -218,10 +222,12 @@
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/mine_fcl.xml" value="0.190234375" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/mine_frag.xml" value="0.4" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/mine_gift_record.xml" value="0.190234375" />
+        <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/mine_news_list.xml" value="0.44947916666666665" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/mine_notice.xml" value="0.3578125" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/mine_open_vip.xml" value="0.264" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/mine_select_tag.xml" value="0.3619791666666667" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/mine_setting.xml" value="0.3578125" />
+        <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/mine_system_msg.xml" value="0.44947916666666665" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/mine_tran_record.xml" value="0.1" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/mine_withdraw.xml" value="0.2" />
         <entry key="..\:/Users/yu/Documents/AndroidStudioProjects/Lobster/module_mine/src/main/res/layout/pws_bank.xml" value="0.12335359675785208" />
