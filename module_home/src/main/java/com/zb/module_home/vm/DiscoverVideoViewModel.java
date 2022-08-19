@@ -3,6 +3,7 @@ package com.zb.module_home.vm;
 import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -170,6 +171,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void toReviews(View view) {
         new ReviewPW(mBinding.getRoot(), friendDynId, discoverInfo.getReviews(), () -> {
@@ -401,6 +403,7 @@ public class DiscoverVideoViewModel extends BaseViewModel implements DiscoverVid
     @Override
     public void dynDoLike() {
         dynDoLikeApi api = new dynDoLikeApi(new HttpOnNextListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onNext(Object o) {
                 int goodNum = discoverInfo.getGoodNum() + 1;

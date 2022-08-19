@@ -1,5 +1,6 @@
 package com.zb.module_chat.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 
@@ -50,6 +51,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
         mBinding = (ChatListFragmentBinding) binding;
         setAdapter();
         updateChatReceiver = new BaseReceiver(activity, "lobster_updateChat") {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onReceive(Context context, Intent intent) {
                 long userId = intent.getLongExtra("userId", 0);
@@ -103,6 +105,7 @@ public class ChatListViewModel extends BaseViewModel implements ChatListVMInterf
             }
         };
         relieveReceiver = new BaseReceiver(activity, "lobster_relieve_1") {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onReceive(Context context, Intent intent) {
                 long otherUserId = intent.getLongExtra("otherUserId", 0);

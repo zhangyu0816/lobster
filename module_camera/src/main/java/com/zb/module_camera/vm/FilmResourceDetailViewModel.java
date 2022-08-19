@@ -1,5 +1,6 @@
 package com.zb.module_camera.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.KeyEvent;
@@ -124,6 +125,7 @@ public class FilmResourceDetailViewModel extends BaseViewModel implements FilmRe
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void cameraDoLike() {
         cameraDoLikeApi api = new cameraDoLikeApi(new HttpOnNextListener() {
@@ -141,6 +143,7 @@ public class FilmResourceDetailViewModel extends BaseViewModel implements FilmRe
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void cameraCancelLike() {
         cameraCancelLikeApi api = new cameraCancelLikeApi(new HttpOnNextListener() {
@@ -221,6 +224,7 @@ public class FilmResourceDetailViewModel extends BaseViewModel implements FilmRe
                 cameraSeeLikers(pageNo + 1);
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
@@ -255,6 +259,7 @@ public class FilmResourceDetailViewModel extends BaseViewModel implements FilmRe
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void cameraReview() {
         cameraReviewApi api = new cameraReviewApi(new HttpOnNextListener() {

@@ -1,6 +1,7 @@
 package com.zb.module_mine.vm;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
@@ -61,6 +62,7 @@ public class AddFeedbackViewModel extends BaseViewModel implements AddFeedbackVM
         adapter = new MineAdapter<>(activity, R.layout.item_mine_feedback_image, images, this);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void selectPosition(int position) {
         super.selectPosition(position);

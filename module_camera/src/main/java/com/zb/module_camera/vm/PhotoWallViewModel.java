@@ -1,5 +1,6 @@
 package com.zb.module_camera.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.provider.MediaStore;
@@ -62,6 +63,7 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
         buildImagesBucketList();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void selectImage(int position, String image) {
         if (selectImages.contains(image)) {
@@ -91,6 +93,7 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void enlarge(int position, String image) {
         new BigPhotoDF(activity).setImageUrl(image).setBigPhotoCallBack(() -> {
@@ -136,6 +139,7 @@ public class PhotoWallViewModel extends BaseViewModel implements PhotoWallVMInte
     /**
      * 获取本地图片
      */
+    @SuppressLint("NotifyDataSetChanged")
     private void buildImagesBucketList() {
         MineApp.getApp().getFixedThreadPool().execute(() -> {
             if (cur.moveToFirst()) {

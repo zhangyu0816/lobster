@@ -1,5 +1,6 @@
 package com.zb.module_camera.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 
@@ -78,6 +79,7 @@ public class FilmFragViewModel extends BaseViewModel implements FilmFragVMInterf
         findCameraFilms();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         mBinding.refresh.setEnableLoadMore(true);
@@ -133,6 +135,6 @@ public class FilmFragViewModel extends BaseViewModel implements FilmFragVMInterf
         if (film.getWashType() == 2)
             ActivityUtils.getCameraFilmDetail(film);
         else
-            SCToastUtil.showToast(activity,"正在冲洗中",true);
+            SCToastUtil.showToast(activity, "正在冲洗中", true);
     }
 }

@@ -1,5 +1,6 @@
 package com.zb.module_mine.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.KeyEvent;
@@ -36,6 +37,7 @@ public class AddFeedbackActivity extends MineBaseActivity {
         mBinding.setVariable(BR.viewModel, viewModel);
 
         cameraReceiver = new BaseReceiver(activity, "lobster_camera") {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onReceive(Context context, Intent intent) {
                 int cameraType = intent.getIntExtra("cameraType", 0);

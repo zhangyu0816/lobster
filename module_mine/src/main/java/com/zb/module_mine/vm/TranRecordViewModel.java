@@ -1,5 +1,6 @@
 package com.zb.module_mine.vm;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -30,7 +31,8 @@ public class TranRecordViewModel extends BaseViewModel implements TranRecordVMIn
     private List<TranRecord> tranRecordList = new ArrayList<>();
     private int pageNo = 1;
     private MineTranRecordBinding mBinding;
-    public  Map<Integer, String> tranStatusMap = new HashMap<>();
+    public Map<Integer, String> tranStatusMap = new HashMap<>();
+
     @Override
     public void setBinding(ViewDataBinding binding) {
         super.setBinding(binding);
@@ -58,6 +60,7 @@ public class TranRecordViewModel extends BaseViewModel implements TranRecordVMIn
         tranRecords();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         // 下拉刷新
@@ -92,7 +95,7 @@ public class TranRecordViewModel extends BaseViewModel implements TranRecordVMIn
         HttpManager.getInstance().doHttpDeal(api);
     }
 
-    private void initData(){
+    private void initData() {
         // -10 交易超时 -20交易失败 -30用户取消 -40系统关闭(用户不能再操作) -50 已退款 -60原路退款
         // 10 ,"待付款" 20 ,"已付款" 30 ,"正在处理" 40,"待卖家发货" 46,"待买家确定收货" 200,"交易成功"
         tranStatusMap.put(-10, "交易超时");

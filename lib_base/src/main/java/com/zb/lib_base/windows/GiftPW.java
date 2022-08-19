@@ -1,5 +1,6 @@
 package com.zb.lib_base.windows;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 
 import com.zb.lib_base.BR;
@@ -85,6 +86,7 @@ public class GiftPW extends BasePopupWindow {
 
     private void giftList() {
         giftListApi api = new giftListApi(new HttpOnNextListener<List<GiftInfo>>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onNext(List<GiftInfo> o) {
                 giftInfoList.addAll(o);

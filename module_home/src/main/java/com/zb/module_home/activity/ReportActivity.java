@@ -1,5 +1,6 @@
 package com.zb.module_home.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.KeyEvent;
@@ -36,6 +37,7 @@ public class ReportActivity extends HomeBaseActivity {
         mBinding.setVariable(BR.content, "");
 
         cameraReceiver = new BaseReceiver(activity, "lobster_camera") {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onReceive(Context context, Intent intent) {
                 int cameraType = intent.getIntExtra("cameraType", 0);

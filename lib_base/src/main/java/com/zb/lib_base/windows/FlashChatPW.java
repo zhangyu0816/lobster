@@ -86,6 +86,7 @@ public class FlashChatPW extends BasePopupWindow {
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void otherRentInfo() {
         otherRentInfoApi api = new otherRentInfoApi(new HttpOnNextListener<RentInfo>() {
             @Override

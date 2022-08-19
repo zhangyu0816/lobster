@@ -1,6 +1,7 @@
 package com.zb.module_home.vm;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -109,6 +110,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
             }
         };
         deleteVideoReceiver = new BaseReceiver(activity, "lobster_deleteVideo") {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onReceive(Context context, Intent intent) {
                 MineApp.filePath = "";
@@ -134,6 +136,7 @@ public class PublishImageViewModel extends BaseViewModel implements PublishImage
         adapter = new HomeAdapter<>(activity, R.layout.item_home_image, images, this);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void previewImage(int position) {
         if (cameraType == 1) {

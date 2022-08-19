@@ -1,5 +1,6 @@
 package com.zb.module_camera.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -93,6 +94,7 @@ public class PhotoGroupViewModel extends BaseViewModel implements PhotoGroupVMIn
         findCameraFilmsForAll();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         mBinding.refresh.setEnableLoadMore(true);

@@ -217,6 +217,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
         activity.finish();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         if (updateAll) {
@@ -1296,7 +1297,7 @@ public class BaseChatViewModel extends BaseViewModel implements BaseChatVMInterf
                 }
             }
 
-            for (int i = historyMsgList.size()-2; i >=0; i--) {
+            for (int i = historyMsgList.size() - 2; i >= 0; i--) {
 
             }
         }

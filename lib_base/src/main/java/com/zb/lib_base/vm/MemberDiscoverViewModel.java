@@ -1,5 +1,6 @@
 package com.zb.lib_base.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -291,6 +292,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefreshForNet(View view) {
         // 下拉刷新
@@ -315,7 +317,7 @@ public class MemberDiscoverViewModel extends BaseViewModel implements MemberDisc
     @Override
     public void toMemberDetail(int position) {
         DiscoverInfo discoverInfo = discoverInfoList.get(position);
-        ActivityUtils.getCardMemberDetail(discoverInfo.getUserId(),false);
+        ActivityUtils.getCardMemberDetail(discoverInfo.getUserId(), false);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.zb.module_chat.vm;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -171,6 +172,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         // 下拉刷新
@@ -404,6 +406,7 @@ public class ChatPairViewModel extends BaseViewModel implements ChatPairVMInterf
                 pairList(pageNo + 1);
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {

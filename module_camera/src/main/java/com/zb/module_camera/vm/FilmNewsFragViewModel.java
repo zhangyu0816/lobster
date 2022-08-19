@@ -1,5 +1,6 @@
 package com.zb.module_camera.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 
@@ -84,6 +85,7 @@ public class FilmNewsFragViewModel extends BaseViewModel implements FilmNewsFrag
         cameraFilmMsgList();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         mBinding.refresh.setEnableLoadMore(true);
@@ -167,6 +169,7 @@ public class FilmNewsFragViewModel extends BaseViewModel implements FilmNewsFrag
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void deleteCameraFilmMsg(long cameraFilmResourceReviewMsgId) {
         deleteCameraFilmMsgApi api = new deleteCameraFilmMsgApi(new HttpOnNextListener() {

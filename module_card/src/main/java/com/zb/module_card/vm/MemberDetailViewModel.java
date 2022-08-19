@@ -188,6 +188,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
                 giveOrReceiveForUserList(pageNo + 1);
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
@@ -302,6 +303,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         ActivityUtils.getMineOpenVip(true);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void selectGift(View view) {
         hintKeyBoard();
@@ -309,13 +311,10 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
             ActivityUtils.getHomeRewardList(0, otherUserId);
         } else
             new GiftPW(mBinding.getRoot(), giftInfo ->
-                    new GiftPayPW(mBinding.getRoot(), giftInfo, 0, otherUserId, new GiftPayPW.CallBack() {
-                        @Override
-                        public void paySuccess() {
-                            rewardList.clear();
-                            rewardAdapter.notifyDataSetChanged();
-                            giveOrReceiveForUserList(1);
-                        }
+                    new GiftPayPW(mBinding.getRoot(), giftInfo, 0, otherUserId, () -> {
+                        rewardList.clear();
+                        rewardAdapter.notifyDataSetChanged();
+                        giveOrReceiveForUserList(1);
                     }));
     }
 
@@ -332,7 +331,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     @Override
     public void otherInfo() {
         otherInfoApi api = new otherInfoApi(new HttpOnNextListener<MemberInfo>() {
-            @SuppressLint("DefaultLocale")
+            @SuppressLint({"DefaultLocale", "NotifyDataSetChanged"})
             @Override
             public void onNext(MemberInfo o) {
                 memberInfo = o;
@@ -416,6 +415,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void otherRentInfo() {
         otherRentInfoApi api = new otherRentInfoApi(new HttpOnNextListener<RentInfo>() {
@@ -432,6 +432,7 @@ public class MemberDetailViewModel extends BaseViewModel implements MemberDetail
     @Override
     public void personOtherDyn() {
         personOtherDynApi api = new personOtherDynApi(new HttpOnNextListener<List<DiscoverInfo>>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onNext(List<DiscoverInfo> o) {
                 mBinding.discoverLayout.setVisibility(View.VISIBLE);

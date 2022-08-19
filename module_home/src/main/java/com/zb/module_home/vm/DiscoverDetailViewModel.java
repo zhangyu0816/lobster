@@ -233,6 +233,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void selectGift(View view) {
         hintKeyBoard();
@@ -354,6 +355,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 seeGiftRewards(pageNo + 1);
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
@@ -417,6 +419,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
                 mBinding.refresh.finishLoadMore();
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
@@ -797,6 +800,7 @@ public class DiscoverDetailViewModel extends BaseViewModel implements DiscoverDe
         seeReviews();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         // 下拉刷新

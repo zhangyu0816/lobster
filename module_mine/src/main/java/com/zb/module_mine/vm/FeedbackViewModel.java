@@ -1,5 +1,6 @@
 package com.zb.module_mine.vm;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -55,6 +56,7 @@ public class FeedbackViewModel extends BaseViewModel implements FeedbackVMInterf
         selfFeedBack();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         // 下拉刷新

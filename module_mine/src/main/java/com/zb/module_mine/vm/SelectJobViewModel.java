@@ -1,5 +1,6 @@
 package com.zb.module_mine.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
@@ -86,7 +87,7 @@ public class SelectJobViewModel extends BaseViewModel implements SelectJobVMInte
         activity.finish();
     }
 
-
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void setAdapter() {
         titleAdapter = new MineAdapter<>(activity, R.layout.item_mine_title, titleList, this);
@@ -105,6 +106,7 @@ public class SelectJobViewModel extends BaseViewModel implements SelectJobVMInte
         adapter.notifyDataSetChanged();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void selectPosition(int position) {
         super.selectPosition(position);
@@ -126,6 +128,7 @@ public class SelectJobViewModel extends BaseViewModel implements SelectJobVMInte
         adapter.notifyDataSetChanged();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void selectJob(int position) {
         _position = position;

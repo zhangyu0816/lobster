@@ -1,5 +1,6 @@
 package com.zb.module_mine.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.view.View;
 
@@ -97,6 +98,7 @@ public class SelectTagViewModel extends BaseViewModel implements SelectTagVMInte
         activity.finish();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void deleteTag(int position) {
         selectList.remove(position);
@@ -105,6 +107,7 @@ public class SelectTagViewModel extends BaseViewModel implements SelectTagVMInte
         mBinding.setVariable(BR.showTag, selectList.size() > 0);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void selectTab(int position) {
         tabAdapter.setSelectIndex(position);
@@ -114,6 +117,7 @@ public class SelectTagViewModel extends BaseViewModel implements SelectTagVMInte
         tagAdapter.notifyDataSetChanged();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void selectTag(int position) {
         if (selectList.contains(tagList.get(position))) {

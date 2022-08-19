@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -374,6 +375,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
 
     private List<Long> userIdList = new ArrayList<>();
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void prePairList(boolean needProgress) {
         if (needProgress) {
@@ -505,6 +507,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void createOutLike() {
         pairInfoList.clear();
         adapter.notifyDataSetChanged();
@@ -527,6 +530,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         mBinding.setPairInfo(pairInfo);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh(View view) {
         pairInfoList.clear();
@@ -648,6 +652,7 @@ public class CardViewModel extends BaseViewModel implements CardVMInterface, OnS
         ivDislike = null;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void setCardAnimationLeftToRight(PairInfo pairInfo) {
         mBinding.setVariable(BR.pairInfo, pairInfo);
         imageList.clear();

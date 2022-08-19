@@ -1,5 +1,6 @@
 package com.zb.lib_base.windows;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 
 import com.zb.lib_base.BR;
@@ -96,6 +97,7 @@ public class RechargePW extends BasePopupWindow {
 
     private void rechargeDiscountList() {
         rechargeDiscountListApi api = new rechargeDiscountListApi(new HttpOnNextListener<List<RechargeInfo>>() {
+            @SuppressLint({"NotifyDataSetChanged", "DefaultLocale"})
             @Override
             public void onNext(List<RechargeInfo> o) {
                 for (RechargeInfo item : o) {

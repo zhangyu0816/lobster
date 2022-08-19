@@ -2,6 +2,7 @@ package com.zb.module_mine.vm;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.AnimationDrawable;
@@ -87,6 +88,7 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
                 systemHistoryMsgList();
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
@@ -105,6 +107,7 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void updateTime() {
         String time;
         SystemMsgDb.getInstance().setShowTime(systemMsgList.get(0).getId(), true);
@@ -139,7 +142,7 @@ public class SystemMsgViewModel extends BaseViewModel implements SystemMsgVMInte
         if (systemMsg.getMsgType() == 2) {
             ArrayList<String> imageList = new ArrayList<>();
             imageList.add(systemMsg.getResLink());
-            MNImage.imageBrowser(activity, mBinding.getRoot(),0, imageList, 0, false, null);
+            MNImage.imageBrowser(activity, mBinding.getRoot(), 0, imageList, 0, false, null);
         } else {
             ImageView ivPlay = view.findViewById(R.id.iv_play);
             ImageView ivProgress = view.findViewById(R.id.iv_progress);

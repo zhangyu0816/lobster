@@ -1,5 +1,6 @@
 package com.zb.module_bottle.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -66,6 +67,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
             }
         };
         singleBottleCacheReceiver = new BaseReceiver(activity, "lobster_singleBottleCache") {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onReceive(Context context, Intent intent) {
                 long driftBottleId = intent.getLongExtra("driftBottleId", 0);
@@ -171,6 +173,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
                 myBottleList();
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onError(Throwable e) {
                 if (e instanceof HttpTimeException && ((HttpTimeException) e).getCode() == HttpTimeException.NO_DATA) {
@@ -231,6 +234,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
     // 销毁
     private void pickBottle(int position) {
         pickBottleApi api = new pickBottleApi(new HttpOnNextListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onNext(Object o) {
                 BottleInfo bottleInfo = bottleInfoList.get(position);
@@ -262,6 +266,7 @@ public class BottleListViewModel extends BaseViewModel implements BottleListVMIn
         myBottleList();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         // 下拉刷新

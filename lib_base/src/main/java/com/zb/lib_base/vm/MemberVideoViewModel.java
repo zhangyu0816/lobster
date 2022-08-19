@@ -1,5 +1,6 @@
 package com.zb.lib_base.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -213,6 +214,7 @@ public class MemberVideoViewModel extends BaseViewModel implements MemberVideoVM
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefreshForNet(View view) {
         // 下拉刷新

@@ -1,5 +1,6 @@
 package com.zb.module_mine.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -123,6 +124,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
         getData();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         // 下拉刷新
@@ -290,6 +292,7 @@ public class FCLViewModel extends BaseViewModel implements FCLVMInterface, OnRef
 
     private void relievePair(long otherUserId) {
         relievePairApi api = new relievePairApi(new HttpOnNextListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onNext(Object o) {
                 LikeTypeDb.getInstance().deleteLikeType(otherUserId);

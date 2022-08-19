@@ -1,5 +1,6 @@
 package com.zb.module_mine.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -107,6 +108,7 @@ public class LoveMoneyViewModel extends BaseViewModel implements OnRefreshListen
         rewardsOrderList();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         mBinding.refresh.setEnableLoadMore(true);

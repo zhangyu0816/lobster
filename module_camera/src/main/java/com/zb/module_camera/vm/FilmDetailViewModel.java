@@ -1,5 +1,6 @@
 package com.zb.module_camera.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -133,6 +134,7 @@ public class FilmDetailViewModel extends BaseViewModel implements FilmDetailVMIn
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void findCameraFilmsResourceList() {
         findCameraFilmsResourceListApi api = new findCameraFilmsResourceListApi(new HttpOnNextListener<List<FilmInfo>>() {

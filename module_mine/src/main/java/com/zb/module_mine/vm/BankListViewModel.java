@@ -1,5 +1,6 @@
 package com.zb.module_mine.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.view.View;
 
@@ -46,6 +47,7 @@ public class BankListViewModel extends BaseViewModel implements BankListVMInterf
         myBankCards();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void myBankCards() {
         myBankCardsApi api = new myBankCardsApi(new HttpOnNextListener<List<MineBank>>() {
@@ -73,6 +75,7 @@ public class BankListViewModel extends BaseViewModel implements BankListVMInterf
     public void removeBankCard(int position) {
         MineBank mineBank = mineBankList.get(position);
         removeBankCardApi api = new removeBankCardApi(new HttpOnNextListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onNext(Object o) {
                 mineBankList.remove(position);

@@ -115,6 +115,7 @@ public class MNImageBrowserActivity extends BaseActivity {
         initViewPager();
     }
 
+    @SuppressLint("SetTextI18n")
     private void initViews() {
         viewPagerBrowser = (MNViewPager) findViewById(R.id.viewPagerBrowser);
         numberIndicator = (TextView) findViewById(R.id.numberIndicator);

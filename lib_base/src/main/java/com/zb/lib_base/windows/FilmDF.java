@@ -1,5 +1,6 @@
 package com.zb.lib_base.windows;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
@@ -106,6 +107,7 @@ public class FilmDF extends BaseDialogFragment {
         setFilm();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void setFilm() {
         mFilm = null;
         for (Film film : mFilms) {

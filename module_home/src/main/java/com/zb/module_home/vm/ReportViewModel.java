@@ -1,6 +1,7 @@
 package com.zb.module_home.vm;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.text.TextUtils;
 import android.view.View;
@@ -104,6 +105,7 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
         comType();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void previewImage(int position) {
         if (position == images.size() - 1) {
@@ -168,6 +170,7 @@ public class ReportViewModel extends BaseViewModel implements ReportVMInterface 
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void comType() {
         comTypeApi api = new comTypeApi(new HttpOnNextListener<List<Report>>() {

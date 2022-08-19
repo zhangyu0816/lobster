@@ -3,6 +3,7 @@ package com.zb.module_home.vm;
 import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -126,6 +127,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         activity.finish();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void setAdapter() {
         adapter = new HomeAdapter<>(activity, R.layout.item_video, MineApp.discoverInfoList, this);
@@ -235,6 +237,7 @@ public class VideoListViewModel extends BaseViewModel implements VideoListVMInte
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void toReviews(int position) {
         DiscoverInfo discoverInfo = MineApp.discoverInfoList.get(position);

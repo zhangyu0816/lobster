@@ -1,5 +1,6 @@
 package com.zb.lib_base.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.view.View;
@@ -127,6 +128,7 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void querySearch() {
         PoiSearch.Query query = new PoiSearch.Query("", "", "");
         query.setPageSize(10);
@@ -134,6 +136,7 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
             PoiSearch search = new PoiSearch(activity, query);
             search.setBound(new PoiSearch.SearchBound(new LatLonPoint(tagLl.latitude, tagLl.longitude), 10000, true));
             search.setOnPoiSearchListener(new PoiSearch.OnPoiSearchListener() {
+                @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onPoiSearched(PoiResult poiResult, int i) {
                     locationInfoList.clear();
@@ -167,6 +170,7 @@ public class LocationViewModel extends BaseViewModel implements LocationVMInterf
     /**
      * 附近列表
      */
+    @SuppressLint("NotifyDataSetChanged")
     public void querySearchByTips(String keyWord) {
         if (keyWord.isEmpty()) return;
 

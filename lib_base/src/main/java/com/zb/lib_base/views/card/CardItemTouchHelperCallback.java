@@ -1,5 +1,6 @@
 package com.zb.lib_base.views.card;
 
+import android.annotation.SuppressLint;
 import android.graphics.Canvas;
 import android.view.View;
 
@@ -48,6 +49,7 @@ public class CardItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
         swiped(viewHolder.itemView, direction);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void swiped(View view, int direction) {
         view.setOnTouchListener(null);
         int layoutPosition = 0;

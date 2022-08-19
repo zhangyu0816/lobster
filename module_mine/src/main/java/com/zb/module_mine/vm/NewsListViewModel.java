@@ -1,5 +1,6 @@
 package com.zb.module_mine.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.view.View;
 
@@ -89,7 +90,7 @@ public class NewsListViewModel extends BaseViewModel implements NewsListVMInterf
 
     @Override
     public void toMember(MineNews mineNews) {
-        ActivityUtils.getCardMemberDetail(mineNews.getReviewUserId(),false);
+        ActivityUtils.getCardMemberDetail(mineNews.getReviewUserId(), false);
     }
 
     @Override
@@ -116,6 +117,7 @@ public class NewsListViewModel extends BaseViewModel implements NewsListVMInterf
         dynNewMsgList();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         // 下拉刷新

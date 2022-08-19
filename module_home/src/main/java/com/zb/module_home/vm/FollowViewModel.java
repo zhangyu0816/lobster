@@ -1,5 +1,6 @@
 package com.zb.module_home.vm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -179,6 +180,7 @@ public class FollowViewModel extends BaseViewModel implements FollowVMInterface,
         HttpManager.getInstance().doHttpDeal(api);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefreshForNet(View view) {
         // 下拉刷新

@@ -1,5 +1,6 @@
 package com.zb.module_home.windows;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -73,6 +74,7 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
         seeReviews();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         // 下拉刷新
@@ -93,7 +95,7 @@ public class ReviewPW extends BasePopupWindow implements OnRefreshListener, OnLo
                 for (Review item : o) {
                     item.setMainId(mainId);
                 }
-                if(start>0)
+                if (start > 0)
                     start--;
                 reviewList.addAll(o);
                 adapter.notifyItemRangeChanged(start, reviewList.size());

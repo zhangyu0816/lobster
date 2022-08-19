@@ -1,5 +1,6 @@
 package com.zb.module_home.vm;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -134,6 +135,7 @@ public class RewardListViewModel extends BaseViewModel implements RewardListVMIn
             giveOrReceiveForUserList();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         // 下拉刷新

@@ -1,5 +1,6 @@
 package com.zb.module_home.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.KeyEvent;
@@ -45,6 +46,7 @@ public class PublishImageActivity extends HomeBaseActivity {
         updateUI(MineApp.cameraType, MineApp.isMore, MineApp.filePath, MineApp.time);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void updateUI(int cameraType, boolean isMore, String path, long time) {
         viewModel.cameraType = cameraType;
         viewModel.videoUrl = "";
@@ -53,8 +55,8 @@ public class PublishImageActivity extends HomeBaseActivity {
             // 相册
             if (isMore) {
                 viewModel.images.clear();
-                if(!path.isEmpty())
-                viewModel.images.addAll(Arrays.asList(path.split(",")));
+                if (!path.isEmpty())
+                    viewModel.images.addAll(Arrays.asList(path.split(",")));
                 viewModel.images.add("add_image_icon");
                 viewModel.adapter.notifyDataSetChanged();
             }

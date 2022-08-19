@@ -1,6 +1,7 @@
 package com.zb.module_mine.vm;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
 import android.view.View;
@@ -118,6 +119,7 @@ public class EditMemberViewModel extends BaseViewModel implements EditMemberVMIn
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void selectImage(int position) {
         _position = position;
